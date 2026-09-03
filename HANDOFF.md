@@ -101,3 +101,24 @@ npm run dev     →  http://localhost:3000
 ## 9. הקשר לבריף
 
 `בריף-לקלוד-דיזיין.md` בשורש הפרויקט הוא מסמך העיצוב המלא (319 שורות): שלושה קהלי יעד שווי־משקל (פרטיים, חיילים, עסקים), צבע מותג `#089a47`, RTL, דארק מוד כברירת מחדל. הקוד המשוחזר תואם לו כמעט אחד לאחד — כל 13 העמודים שהבריף מבקש קיימים ובנויים.
+
+---
+
+## 10. עדכון — סשן המשך, 3 בספטמבר 2026 (מחשב חדש)
+
+הפרויקט הועבר כ־ZIP לסביבה חדשה ו**כל שלוש הבדיקות עוברות נקי**: `npx tsc --noEmit`, `npm run lint`, `npm run build` (29 עמודים).
+
+מה נעשה:
+
+- **`git init`** + שני קומיטים: (1) מצב ההעברה כפי שהתקבל, (2) התיקונים שלהלן. `_recovered-newest/`, `.next-old/` ו־`*.zip` הוחרגו ב־`.gitignore`.
+- **`tsconfig.json`** — `_recovered-newest` נוסף ל־`exclude`. בלי זה `tsc` ו־`next build` נופלים על `./types` שלא קיים בתיקייה ההיא.
+- **lint עובד** — `eslint.config.mjs` הוחלף ל־flat config עם `eslint-config-next/core-web-vitals` + `/typescript`, והסקריפט הוא `eslint .`. `ignoreRestSiblings` הופעל בגלל תבנית הסרת ה־props ב־`Btn.tsx`.
+- **7 שגיאות lint תוקנו** (כללי React 19 חדשים): `Math.random` בזמן render ב־`B2BClient`/`ContactClient` עבר ל־state שנקבע בעת שליחת הטופס; `setState` בתוך `useEffect` ב־`GalleryClient`/`ImageCarousel` הוחלף בתבנית "derived state during render"; `ThemeToggle` קורא את `html.light` דרך `useSyncExternalStore` עם `MutationObserver`; גרש לא־מוסתר ב־`GalleryClient`; ייבואים לא בשימוש הוסרו.
+- **`next.config.ts`** — `remotePatterns` צומצם ל־10 ה־hosts שמופיעים בפועל בנתונים. ה־wildcards של amazonaws/cloudfront/akamaized הוסרו.
+
+מה נשאר פתוח מסעיף 7:
+
+- `agentRules` — האופציה לא קיימת ב־Next 16.2.6 (חיפוש ב־`node_modules/next/dist` לא מוצא אותה). `npm run build` כאן לא דרס את `AGENTS.md`/`CLAUDE.md`. להשאיר במעקב.
+- `next-env.d.ts` — Next 16 כותב את שורת ה־`import` בעצמו בכל build/dev, והקובץ ב־`.gitignore`. אין מה לתקן.
+- כפילות `flame`/`brand`, `#F5F5F7`, וכיוון כפתורי "המשך"/"הקודם" במעצב — לא נגעתי.
+- **`public/` עדיין חסרה** ו־`D:\Claude Projects\Unit 3D` עדיין לא נבדקה. הגרסה שרצה נשארה 22.5.

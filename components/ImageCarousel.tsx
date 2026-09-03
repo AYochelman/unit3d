@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -24,9 +24,12 @@ export default function ImageCarousel({
   const trackRef = useRef<HTMLDivElement>(null);
 
   // Reset when images list changes (e.g. variant switch).
-  useEffect(() => {
+  const imagesKey = images.join("|");
+  const [prevImagesKey, setPrevImagesKey] = useState(imagesKey);
+  if (prevImagesKey !== imagesKey) {
+    setPrevImagesKey(imagesKey);
     setIndex(0);
-  }, [images.join("|")]);
+  }
 
   if (total === 0) return null;
 

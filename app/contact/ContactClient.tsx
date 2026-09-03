@@ -4,7 +4,7 @@ import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
-import { Field, Input, Textarea, Select } from "@/components/ui/Field";
+import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -41,7 +41,6 @@ const INQUIRY_FOR: Record<CustType, { id: Inquiry; label: string }[]> = {
 
 export default function ContactClient() {
   const { items, removeItem, clearCart } = useOrderStore();
-  const order = items[0] ?? null; // first item for legacy checks
 
   const [cust, setCust] = useState<CustType>(
     items.length > 0 ? "private" : "private",
@@ -51,10 +50,7 @@ export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
 
   const inquiries = useMemo(() => INQUIRY_FOR[cust], [cust]);
-  const refCode = useMemo(
-    () => `UNIT3D-${Math.floor(Math.random() * 90000 + 10000)}`,
-    [submitted],
-  );
+  const [refCode, setRefCode] = useState("");
 
   if (submitted) {
     return (
@@ -109,6 +105,7 @@ export default function ContactClient() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            setRefCode(`UNIT3D-${Math.floor(Math.random() * 90000 + 10000)}`);
             setSubmitted(true);
           }}
           className="lg:col-span-2 space-y-8"

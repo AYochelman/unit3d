@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
@@ -20,9 +20,12 @@ export default function GalleryClient() {
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
 
-  useEffect(() => {
+  // Follow ?cat= changes from the URL without a setState-in-effect round trip.
+  const [prevInitialCat, setPrevInitialCat] = useState(initialCat);
+  if (prevInitialCat !== initialCat) {
+    setPrevInitialCat(initialCat);
     setCat(initialCat);
-  }, [initialCat]);
+  }
 
   const items = useMemo(
     () => (cat === "all" ? GALLERY : GALLERY.filter((g) => g.cat === cat)),
@@ -50,7 +53,7 @@ export default function GalleryClient() {
           ככה זה נראה.
         </h1>
         <p className="mt-3 text-ink-300 max-w-xl">
-          עבודות מהזמן האחרון. לחץ על תמונה כדי לראות פרטים — או "אני רוצה משהו דומה".
+          עבודות מהזמן האחרון. לחץ על תמונה כדי לראות פרטים — או &quot;אני רוצה משהו דומה&quot;.
         </p>
       </header>
 

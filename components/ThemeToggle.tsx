@@ -1,19 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Icon from "./ui/Icon";
 
-export default function ThemeToggle() {
-  const [light, setLight] = useState(false);
+// Light mode is a class on <html> (see app/globals.css). Subscribe to it as an
+// external store so the initial value is read without a setState-in-effect.
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  return () => observer.disconnect();
+}
+const getSnapshot = () => document.documentElement.classList.contains("light");
+const getServerSnapshot = () => false;
 
-  useEffect(() => {
-    const isLight = document.documentElement.classList.contains("light");
-    setLight(isLight);
-  }, []);
+export default function ThemeToggle() {
+  const light = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const toggle = () => {
-    const next = !light;
-    setLight(next);
-    document.documentElement.classList.toggle("light", next);
+    document.documentElement.classList.toggle("light", !light);
   };
 
   return (

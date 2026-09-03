@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import ImageCarousel from "@/components/ImageCarousel";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import Emblem from "@/components/Emblem";

@@ -62,6 +62,7 @@ const CLIENTS = ["▲ MoonTech", "◆ Pixie", "● Orca Labs", "■ Halo HR", "�
 
 export default function B2BClient() {
   const [submitted, setSubmitted] = useState(false);
+  const [refCode, setRefCode] = useState("");
 
   return (
     <div>
@@ -226,6 +227,7 @@ export default function B2BClient() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                setRefCode(String(Math.floor(Math.random() * 9000 + 1000)));
                 setSubmitted(true);
               }}
               className="p-6 md:p-8 rounded-2xl bg-ink-900 border border-ink-800 space-y-5"
@@ -307,7 +309,7 @@ export default function B2BClient() {
                 ולוז ייצור.
               </p>
               <div className="font-mono text-[11px] text-ink-500" dir="ltr">
-                REF · B2B-{Math.floor(Math.random() * 9000 + 1000)}
+                REF · B2B-{refCode}
               </div>
             </div>
           )}
