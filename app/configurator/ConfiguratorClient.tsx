@@ -1,40 +1,90 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { Field, Input } from "@/components/ui/Field";
-import KeychainPreview from "@/components/KeychainPreview";
+import ProductArt from "@/components/ProductArt";
+import ProductPreview, { faceKindFor } from "@/components/ProductPreview";
+import DesignCanvas from "@/components/designer/DesignCanvas";
 import { SHAPES, FONTS, FILAMENTS, SIZES } from "@/lib/data";
+import { CONFIG_PRODUCTS, CONFIG_PRODUCT_BY_ID } from "@/lib/products";
+import { MATERIAL_BY_ID, materialFromFilamentDesc } from "@/lib/materials";
+import { designColorCount, designSummary, designToSvg, emptyDesign } from "@/lib/design";
+import { estimateCost, parseHours } from "@/lib/costing";
+import { useAdminStore } from "@/lib/admin-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
+import type { ConfigProductId, Design, ShapeId, SizeId } from "@/lib/types";
+
+type Mode = "text" | "design";
 
 type Config = {
-  shape: "round" | "rect" | "emblem" | "custom";
+  product: ConfigProductId;
+  model: string;
+  shape: ShapeId;
   text: string;
   number: string;
   font: string;
   color: string;
-  size: "sm" | "md" | "lg";
+  size: SizeId;
   qty: number;
+  mode: Mode;
+  design: Design;
 };
 
-const STEPS = [
-  { id: "shape", label: "צורה" },
-  { id: "text", label: "טקסט" },
-  { id: "color", label: "צבע" },
-  { id: "size", label: "גודל" },
-  { id: "qty", label: "כמות" },
-] as const;
+type StepId = "product" | "model" | "shape" | "text" | "color" | "size" | "qty";
+
+const STEP_LABEL: Record<StepId, string> = {
+  product: "מוצר",
+  model: "דגם",
+  shape: "צורה",
+  text: "טקסט / עיצוב",
+  color: "צבע",
+  size: "גודל",
+  qty: "כמות",
+};
+
+const DESIGN_SURCHARGE = 15;
+const DESIGN_EXTRA_COLOR = 10;
+const TPU_COLORS = new Set(["black", "white", "red", "blue", "orange", "green"]);
+
+/** "50×35mm" / "Ø90mm" / "Ø90mm ×4" → [w, h] in mm. */
+function parseFace(dim: string, fallback: [number, number]): [number, number] {
+  const wh = dim.match(/(\d+)\s*×\s*(\d+)\s*mm/);
+  if (wh) return [Number(wh[1]), Number(wh[2])];
+  const d = dim.match(/Ø\s*(\d+)/);
+  if (d) return [Number(d[1]), Number(d[1])];
+  return fallback;
+}
+
+/** Keep the drawing proportional when the face size changes. */
+function rescaleDesign(d: Design, w: number, h: number): Design {
+  if (d.w === w && d.h === h) return d;
+  const sx = w / d.w, sy = h / d.h, s = Math.min(sx, sy);
+  return {
+    w,
+    h,
+    elements: d.elements.map((e) =>
+      e.kind === "text"
+        ? { ...e, x: e.x * sx, y: e.y * sy, size: e.size * s }
+        : { ...e, x: e.x * sx, y: e.y * sy, w: e.w * s, h: e.h * s },
+    ),
+  };
+}
 
 export default function ConfiguratorClient() {
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
+  const adminUnlocked = useAdminStore((s) => s.unlocked);
+  const settings = useAdminStore((s) => s.settings);
 
   const [step, setStep] = useState(0);
   const [config, setConfig] = useState<Config>({
+    product: "keychain",
+    model: "",
     shape: "round",
     text: "יואב",
     number: "12345",
@@ -42,151 +92,226 @@ export default function ConfiguratorClient() {
     color: "orange",
     size: "md",
     qty: 1,
+    mode: "text",
+    design: emptyDesign(50, 35),
   });
 
-  const update = <K extends keyof Config>(k: K, v: Config[K]) =>
-    setConfig((c) => ({ ...c, [k]: v }));
+  const update = <K extends keyof Config>(k: K, v: Config[K]) => setConfig((c) => ({ ...c, [k]: v }));
 
-  const sizeObj = SIZES.find((s) => s.id === config.size)!;
+  const product = CONFIG_PRODUCT_BY_ID[config.product];
+  const sizes = product.sizes ?? SIZES;
+  const sizeObj = product.hasSize ? (sizes.find((s) => s.id === config.size) ?? sizes[0]) : null;
   const colorObj = FILAMENTS.find((f) => f.id === config.color)!;
   const fontObj = FONTS.find((f) => f.id === config.font)!;
-  const unitPrice = useMemo(
-    () => 55 + sizeObj.priceAdd + (config.shape === "emblem" ? 10 : 0),
-    [sizeObj.priceAdd, config.shape],
-  );
-  const totalPrice = unitPrice * config.qty;
+  const materialId = product.material === "tpu" ? "tpu" : materialFromFilamentDesc(colorObj.desc);
+  const material = MATERIAL_BY_ID[materialId];
+  const modelLabel = product.models?.items.find((m) => m.id === config.model)?.label;
 
-  const goNext = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  const face: [number, number] = sizeObj ? parseFace(sizeObj.dim, product.face) : product.face;
+  const design = rescaleDesign(config.design, face[0], face[1]);
+  const hasDesign = config.mode === "design" && design.elements.length > 0;
+  const designColors = hasDesign ? designColorCount(design) : 0;
+
+  const steps = useMemo<StepId[]>(() => {
+    const s: StepId[] = ["product"];
+    if (product.models) s.push("model");
+    if (product.hasShape) s.push("shape");
+    if (product.hasText) s.push("text");
+    s.push("color");
+    if (product.hasSize) s.push("size");
+    s.push("qty");
+    return s;
+  }, [product]);
+  const current = steps[Math.min(step, steps.length - 1)];
+
+  const unitPrice =
+    product.basePrice +
+    (sizeObj?.priceAdd ?? 0) +
+    material.priceAdd +
+    (product.hasShape && config.shape === "emblem" ? 10 : 0) +
+    (hasDesign ? DESIGN_SURCHARGE + Math.max(0, designColors - 1) * DESIGN_EXTRA_COLOR : 0);
+  const discount = config.qty >= 5 ? 0.1 : 0;
+  const totalPrice = Math.round(unitPrice * config.qty * (1 - discount));
+
+  // Production estimate: scales with the face area against the product's reference face.
+  const areaRatio = (face[0] * face[1]) / (product.face[0] * product.face[1]);
+  const hours = sizeObj ? parseHours(sizeObj.time) : product.hours;
+  const grams = Math.round(product.grams * Math.max(0.4, areaRatio));
+  const cost = estimateCost(
+    { grams, hours, material: materialId, colors: hasDesign ? designColors : 1, qty: config.qty, price: totalPrice / config.qty },
+    settings,
+  );
+  const timeLabel = sizeObj?.time ?? `${product.hours}h`;
+
+  const selectProduct = (id: ConfigProductId) => {
+    const p = CONFIG_PRODUCT_BY_ID[id];
+    setConfig((c) => ({
+      ...c,
+      product: id,
+      model: p.models?.items[0]?.id ?? "",
+      size: "sm",
+      mode: p.hasDesigner ? c.mode : "text",
+      design: emptyDesign(p.face[0], p.face[1]),
+      color: p.material === "tpu" && !TPU_COLORS.has(c.color) ? "black" : c.color,
+    }));
+    setStep(1);
+  };
+
+  const goNext = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const goPrev = () => setStep((s) => Math.max(s - 1, 0));
 
   const proceed = () => {
-    const shapeLabel = SHAPES.find((s) => s.id === config.shape)?.label ?? "";
+    const lines: string[] = [`מוצר: ${product.label}`];
+    if (modelLabel) lines.push(`${product.models!.label}: ${modelLabel}`);
+    if (product.hasShape) lines.push(`צורה: ${SHAPES.find((s) => s.id === config.shape)?.label ?? ""}`);
+    if (product.hasText) {
+      if (hasDesign) lines.push(...designSummary(design));
+      else lines.push(`טקסט: "${config.text}${config.number ? " " + config.number : ""}" · ${fontObj.name}`);
+    }
+    lines.push(`צבע: ${colorObj.name} · ${material.name}`);
+    if (sizeObj) lines.push(`גודל: ${sizeObj.label} (${sizeObj.dim})`);
+    else lines.push(`מידה: ${face[0]}×${face[1]}mm`);
+    lines.push(`כמות: ${config.qty}${discount ? " · הנחת כמות 10%" : ""}`);
+
+    const { design: _design, ...rest } = config;
     setOrder({
-      title: "מחזיק מפתחות מותאם",
-      summary: [
-        `צורה: ${shapeLabel}`,
-        `טקסט: "${config.text}${config.number ? " " + config.number : ""}"`,
-        `צבע: ${colorObj.name}`,
-        `גודל: ${sizeObj.label} (${sizeObj.dim})`,
-        `כמות: ${config.qty}`,
-      ],
+      title: `${product.label} מותאם`,
+      summary: lines,
       price: totalPrice,
       source: "configurator",
-      meta: { ...config },
+      meta: {
+        ...rest,
+        face,
+        material: materialId,
+        designSvg: hasDesign ? designToSvg(design, colorObj.hex) : undefined,
+        designElements: hasDesign ? design.elements : undefined,
+      },
     });
     router.push("/contact");
   };
 
+  const showCanvas = current === "text" && config.mode === "design" && product.hasDesigner;
+  const colorChoices = product.material === "tpu" ? FILAMENTS.filter((f) => TPU_COLORS.has(f.id)) : FILAMENTS;
+
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
       <header className="mb-6 md:mb-10">
-        <Pill tone="cyan" className="mb-3">
-          CONFIGURATOR · LIVE PREVIEW
-        </Pill>
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">
-          מעצב מחזיק מפתחות
-        </h1>
+        <Pill tone="cyan" className="mb-3">CONFIGURATOR · LIVE PREVIEW</Pill>
+        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">מעצב אישי</h1>
         <p className="text-ink-300">
-          הכל מתעדכן בזמן אמת. כשתסיים, נעבור לטופס יצירת קשר עם הבחירות שלך.
+          בוחרים מוצר, כותבים טקסט או מציירים עיצוב חופשי, בוחרים צבע. הכל מתעדכן בזמן אמת ונוסע איתך לטופס.
         </p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Preview */}
+        {/* Preview / canvas */}
         <div className="lg:col-span-3 order-2 lg:order-1">
-          <div className="sticky top-20 rounded-2xl border border-ink-800 bg-ink-900 overflow-hidden">
-            <div className="relative aspect-square md:aspect-[4/3] timelapse printer-grid flex items-center justify-center overflow-hidden">
-              <KeychainPreview
-                shape={config.shape}
-                text={config.text}
-                number={config.number}
-                colorObj={colorObj}
-                fontObj={fontObj}
+          <div className="sticky top-20">
+            {showCanvas ? (
+              <DesignCanvas
+                design={design}
+                onChange={(d) => update("design", d)}
+                faceKind={faceKindFor(product)}
+                baseColor={colorObj.hex}
               />
-              <div
-                className="absolute top-4 right-4 font-mono text-[10px] tracking-widest text-ink-400 flex items-center gap-2"
-                dir="ltr"
-              >
-                <span className="w-1.5 h-1.5 bg-cyan2 rounded-full live-dot" />
-                LIVE PREVIEW
-              </div>
-              <div
-                className="absolute bottom-4 right-4 left-4 flex items-end justify-between font-mono text-[10px] text-ink-400"
-                dir="ltr"
-              >
-                <span>
-                  {sizeObj.dim} · ~{sizeObj.time}
-                </span>
-                <span>FILAMENT · {colorObj.desc}</span>
-              </div>
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1">
-                {[0, 1, 2, 3].map((i) => (
-                  <button
-                    key={i}
-                    aria-label={`view ${i + 1}`}
-                    className={cn(
-                      "w-8 h-2 rounded-full transition-colors",
-                      i === 0 ? "bg-flame" : "bg-ink-700 hover:bg-ink-600",
-                    )}
+            ) : (
+              <div className="rounded-2xl border border-ink-800 bg-ink-900 overflow-hidden">
+                <div className="relative aspect-square md:aspect-[4/3] timelapse printer-grid flex items-center justify-center overflow-hidden">
+                  <ProductPreview
+                    product={product}
+                    shape={config.shape}
+                    text={config.text}
+                    number={config.number}
+                    colorObj={colorObj}
+                    fontObj={fontObj}
+                    design={config.mode === "design" ? design : null}
+                    face={face}
+                    modelLabel={modelLabel}
                   />
-                ))}
+                  <div className="absolute top-4 right-4 font-mono text-[10px] tracking-widest text-ink-400 flex items-center gap-2" dir="ltr">
+                    <span className="w-1.5 h-1.5 bg-cyan2 rounded-full live-dot" />
+                    LIVE PREVIEW
+                  </div>
+                  <div className="absolute bottom-4 right-4 left-4 flex items-end justify-between font-mono text-[10px] text-ink-400" dir="ltr">
+                    <span>{face[0]}×{face[1]}mm · ~{timeLabel}</span>
+                    <span>FILAMENT · {material.short}</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 divide-x divide-ink-800 rtl:divide-x-reverse border-t border-ink-800 font-mono text-[11px]" dir="ltr">
+                  <Stat label="PRODUCT" value={product.id.toUpperCase().replace("_", " ")} />
+                  <Stat label="SIZE" value={`${face[0]}×${face[1]}`} />
+                  <Stat label="TIME" value={`~${timeLabel}`} />
+                  <Stat label="QTY" value={`×${config.qty}`} />
+                </div>
               </div>
-            </div>
-            <div
-              className="grid grid-cols-4 divide-x divide-ink-800 rtl:divide-x-reverse border-t border-ink-800 font-mono text-[11px]"
-              dir="ltr"
-            >
-              <div className="px-4 py-3">
-                <div className="text-ink-500">SHAPE</div>
-                <div className="text-ink-100 font-semibold">{config.shape.toUpperCase()}</div>
-              </div>
-              <div className="px-4 py-3">
-                <div className="text-ink-500">SIZE</div>
-                <div className="text-ink-100 font-semibold">{sizeObj.dim}</div>
-              </div>
-              <div className="px-4 py-3">
-                <div className="text-ink-500">TIME</div>
-                <div className="text-ink-100 font-semibold">~{sizeObj.time}</div>
-              </div>
-              <div className="px-4 py-3">
-                <div className="text-ink-500">QTY</div>
-                <div className="text-ink-100 font-semibold">×{config.qty}</div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Config panel */}
+        {/* Panel */}
         <div className="lg:col-span-2 order-1 lg:order-2">
           <div className="rounded-2xl border border-ink-800 bg-ink-900 p-5 md:p-6">
-            <div className="flex items-center gap-1 mb-6">
-              {STEPS.map((s, i) => (
-                <button
-                  key={s.id}
-                  onClick={() => setStep(i)}
-                  className="flex-1 text-right group"
-                >
-                  <div
-                    className={cn(
-                      "h-1 rounded-full mb-2 transition-colors",
-                      i <= step ? "bg-flame" : "bg-ink-800",
-                    )}
-                  />
-                  <div
-                    className={cn(
-                      "font-mono text-[10px] tracking-wider",
-                      i === step ? "text-flame" : "text-ink-500",
-                    )}
-                    dir="ltr"
-                  >
-                    {String(i + 1).padStart(2, "0")} · {s.label}
+            {/* Stepper */}
+            <div className="flex items-center gap-1 mb-6 overflow-x-auto">
+              {steps.map((id, i) => (
+                <button key={id} onClick={() => setStep(i)} className="flex-1 min-w-[56px] text-right group">
+                  <div className={cn("h-1 rounded-full mb-2 transition-colors", i <= step ? "bg-flame" : "bg-ink-800")} />
+                  <div className={cn("font-mono text-[10px] tracking-wider truncate", i === step ? "text-flame" : "text-ink-500")} dir="ltr">
+                    {String(i + 1).padStart(2, "0")} · {STEP_LABEL[id]}
                   </div>
                 </button>
               ))}
             </div>
 
             <div className="min-h-[280px]">
-              {step === 0 && (
+              {current === "product" && (
+                <div>
+                  <h3 className="text-xl font-extrabold mb-1">מה מעצבים?</h3>
+                  <p className="text-sm text-ink-400 mb-5">בחר מוצר. המחיר הבסיסי כולל טקסט.</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {CONFIG_PRODUCTS.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => selectProduct(p.id)}
+                        className={cn(
+                          "p-3 rounded-xl border-2 text-right transition-all flex items-center gap-3",
+                          config.product === p.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                        )}
+                      >
+                        <ProductArt art={p.art} hue={config.product === p.id ? 145 : 210} size={44} className="shrink-0" />
+                        <div className="min-w-0">
+                          <div className="font-semibold text-sm leading-tight">{p.label}</div>
+                          <div className="text-[11px] text-ink-400 leading-snug line-clamp-1">{p.desc}</div>
+                          <div className="font-mono text-[11px] text-flame mt-0.5">מ-{fmtILS(p.basePrice)}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {current === "model" && product.models && (
+                <div>
+                  <h3 className="text-xl font-extrabold mb-1">{product.models.label}</h3>
+                  <p className="text-sm text-ink-400 mb-5">הקייס מודפס לפי המידות המדויקות של הדגם.</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {product.models.items.map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => update("model", m.id)}
+                        className={cn(
+                          "px-3 py-2.5 rounded-xl border-2 text-right text-sm font-semibold transition-all",
+                          config.model === m.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                        )}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {current === "shape" && (
                 <div>
                   <h3 className="text-xl font-extrabold mb-1">בחר צורת בסיס</h3>
                   <p className="text-sm text-ink-400 mb-5">מה הצורה הכללית של המחזיק?</p>
@@ -197,19 +322,10 @@ export default function ConfiguratorClient() {
                         onClick={() => update("shape", s.id)}
                         className={cn(
                           "p-4 rounded-xl border-2 text-right transition-all",
-                          config.shape === s.id
-                            ? "border-flame bg-flame/5"
-                            : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                          config.shape === s.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        <div
-                          className={cn(
-                            "text-3xl mb-2",
-                            config.shape === s.id ? "text-flame" : "text-ink-400",
-                          )}
-                        >
-                          {s.icon}
-                        </div>
+                        <div className={cn("text-3xl mb-2", config.shape === s.id ? "text-flame" : "text-ink-400")}>{s.icon}</div>
                         <div className="font-semibold">{s.label}</div>
                       </button>
                     ))}
@@ -217,186 +333,164 @@ export default function ConfiguratorClient() {
                 </div>
               )}
 
-              {step === 1 && (
+              {current === "text" && (
                 <div>
-                  <h3 className="text-xl font-extrabold mb-1">טקסט מותאם</h3>
-                  <p className="text-sm text-ink-400 mb-5">
-                    שם, מספר אישי, או שניהם. עד 12 תווים בכל שדה.
-                  </p>
-                  <div className="space-y-3 mb-5">
-                    <Field label="שורה ראשונה (שם)">
-                      <Input
-                        value={config.text}
-                        onChange={(e) => update("text", e.target.value.slice(0, 12))}
-                        placeholder="יואב"
-                      />
-                    </Field>
-                    <Field label="שורה שנייה" optional>
-                      <Input
-                        value={config.number}
-                        onChange={(e) => update("number", e.target.value.slice(0, 12))}
-                        placeholder="מספר אישי, יחידה, או תאריך"
-                      />
-                    </Field>
+                  <div className="flex items-center justify-between gap-3 mb-1">
+                    <h3 className="text-xl font-extrabold">{config.mode === "design" ? "עיצוב חופשי" : "טקסט מותאם"}</h3>
+                    {product.hasDesigner && (
+                      <div className="inline-flex rounded-lg border border-ink-700 p-0.5 bg-ink-950 shrink-0">
+                        {(["text", "design"] as Mode[]).map((m) => (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => update("mode", m)}
+                            className={cn(
+                              "px-3 h-8 rounded-md text-xs font-semibold transition-colors",
+                              config.mode === m ? "bg-flame text-white" : "text-ink-300 hover:text-ink-50",
+                            )}
+                          >
+                            {m === "text" ? "טקסט מהיר" : "עיצוב חופשי"}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="text-sm font-semibold mb-2">פונט</div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {FONTS.map((f) => (
-                      <button
-                        key={f.id}
-                        onClick={() => update("font", f.id)}
-                        className={cn(
-                          "p-3 rounded-xl border-2 text-center transition-all",
-                          config.font === f.id
-                            ? "border-flame bg-flame/5"
-                            : "border-ink-800 bg-ink-950 hover:border-ink-700",
-                        )}
-                      >
-                        <div
-                          style={{
-                            fontFamily: f.css,
-                            fontWeight: f.weight,
-                            letterSpacing: f.letter || "normal",
-                            textTransform: f.upper ? "uppercase" : "none",
-                          }}
-                          className="text-xl mb-1"
-                        >
-                          {f.preview}
-                        </div>
-                        <div className="text-[10px] text-ink-400 font-mono">{f.name}</div>
-                      </button>
-                    ))}
-                  </div>
+
+                  {config.mode === "design" && product.hasDesigner ? (
+                    <div>
+                      <p className="text-sm text-ink-400 mb-4">
+                        כמו בפאוורפוינט: טקסט בפונטים שונים, צורות, צבעים. גרור, שנה גודל, סובב. הקנבס הוא בגודל האמיתי של המוצר ({face[0]}×{face[1]}mm).
+                      </p>
+                      <div className="rounded-xl border border-cyan2/30 bg-cyan2/5 p-3 text-xs text-ink-300 leading-relaxed">
+                        <div className="font-semibold text-cyan2 mb-1">איך זה מודפס</div>
+                        כל צבע בעיצוב הוא פילמנט נפרד ב-AMS, עד 4 צבעים על מוצר. קווים דקים מ-1mm ואותיות קטנות מ-4mm לא יוצאים חדים, ואני אתאים אותם איתך לפני ההדפסה.
+                      </div>
+                      <div className="mt-4 font-mono text-[11px] text-ink-400 flex flex-wrap gap-x-3 gap-y-1" dir="ltr">
+                        <span>elements: {design.elements.length}</span>
+                        <span>colors: {designColors}</span>
+                        <span>surcharge: {hasDesign ? `+${fmtILS(DESIGN_SURCHARGE + Math.max(0, designColors - 1) * DESIGN_EXTRA_COLOR)}` : "—"}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-sm text-ink-400 mb-5">שם, מספר אישי, או שניהם. עד 12 תווים בכל שדה.</p>
+                      <div className="space-y-3 mb-5">
+                        <Field label="שורה ראשונה (שם)">
+                          <Input value={config.text} onChange={(e) => update("text", e.target.value.slice(0, 12))} placeholder="יואב" />
+                        </Field>
+                        <Field label="שורה שנייה" optional>
+                          <Input value={config.number} onChange={(e) => update("number", e.target.value.slice(0, 14))} placeholder="מספר אישי, יחידה, טלפון" />
+                        </Field>
+                      </div>
+                      <div className="text-sm font-semibold mb-2">פונט</div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {FONTS.map((f) => (
+                          <button
+                            key={f.id}
+                            onClick={() => update("font", f.id)}
+                            className={cn(
+                              "p-3 rounded-xl border-2 text-center transition-all",
+                              config.font === f.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                            )}
+                          >
+                            <div
+                              style={{ fontFamily: f.css, fontWeight: f.weight, letterSpacing: f.letter || "normal", textTransform: f.upper ? "uppercase" : "none" }}
+                              className="text-xl mb-1"
+                            >
+                              {f.preview}
+                            </div>
+                            <div className="text-[10px] text-ink-400 font-mono">{f.name}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 
-              {step === 2 && (
+              {current === "color" && (
                 <div>
                   <h3 className="text-xl font-extrabold mb-1">צבע פילמנט</h3>
                   <p className="text-sm text-ink-400 mb-5">
-                    בחר מתוך {FILAMENTS.length} צבעים שיש לי במלאי כרגע.
+                    {product.material === "tpu"
+                      ? "קייסים מודפסים ב-TPU גמיש. הצבעים שיש לי ב-TPU כרגע:"
+                      : `בחר מתוך ${FILAMENTS.length} צבעים שיש לי במלאי כרגע. החומר נקבע לפי הצבע.`}
                   </p>
                   <div className="grid grid-cols-4 gap-2">
-                    {FILAMENTS.map((f) => (
+                    {colorChoices.map((f) => (
                       <button
                         key={f.id}
                         onClick={() => update("color", f.id)}
-                        className={cn(
-                          "p-2 rounded-xl border-2 transition-all",
-                          config.color === f.id
-                            ? "border-flame"
-                            : "border-ink-800 hover:border-ink-700",
-                        )}
+                        className={cn("p-2 rounded-xl border-2 transition-all", config.color === f.id ? "border-flame" : "border-ink-800 hover:border-ink-700")}
                       >
-                        <div
-                          className="aspect-square rounded-lg mb-1.5 relative overflow-hidden"
-                          style={{ backgroundColor: f.hex }}
-                        >
-                          <div
-                            className="absolute inset-0"
-                            style={{
-                              background:
-                                "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 50%, rgba(0,0,0,0.25) 100%)",
-                            }}
-                          />
+                        <div className="aspect-square rounded-lg mb-1.5 relative overflow-hidden" style={{ backgroundColor: f.hex }}>
+                          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 50%, rgba(0,0,0,0.25) 100%)" }} />
                           {config.color === f.id && (
                             <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-flame text-white flex items-center justify-center">
                               <Icon name="check" size={10} strokeWidth={3} />
                             </div>
                           )}
                         </div>
-                        <div className="text-[10px] font-semibold leading-tight truncate">
-                          {f.name}
-                        </div>
+                        <div className="text-[10px] font-semibold leading-tight truncate">{f.name}</div>
+                        <div className="text-[9px] font-mono text-ink-500 truncate" dir="ltr">{f.desc}</div>
                       </button>
                     ))}
+                  </div>
+                  <div className="mt-4 text-xs text-ink-400">
+                    חומר: <span className="text-ink-100 font-semibold">{material.name}</span>
+                    {material.priceAdd > 0 && <span className="font-mono text-flame"> (+{fmtILS(material.priceAdd)})</span>}
+                    <span className="text-ink-500"> · {material.desc}</span>
                   </div>
                 </div>
               )}
 
-              {step === 3 && (
+              {current === "size" && (
                 <div>
                   <h3 className="text-xl font-extrabold mb-1">גודל</h3>
-                  <p className="text-sm text-ink-400 mb-5">
-                    המידות וזמן ההדפסה משוערים — המחיר משתנה בהתאם.
-                  </p>
+                  <p className="text-sm text-ink-400 mb-5">המידות וזמן ההדפסה משוערים. המחיר משתנה בהתאם.</p>
                   <div className="space-y-2">
-                    {SIZES.map((s) => (
+                    {sizes.map((s) => (
                       <button
                         key={s.id}
                         onClick={() => update("size", s.id)}
                         className={cn(
                           "w-full p-4 rounded-xl border-2 flex items-center gap-4 text-right transition-all",
-                          config.size === s.id
-                            ? "border-flame bg-flame/5"
-                            : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                          config.size === s.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        <div
-                          className={cn(
-                            "w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold",
-                            config.size === s.id
-                              ? "border-flame bg-flame text-white"
-                              : "border-ink-700 text-ink-400",
-                          )}
-                        >
+                        <div className={cn("w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold", config.size === s.id ? "border-flame bg-flame text-white" : "border-ink-700 text-ink-400")}>
                           {s.label.charAt(0)}
                         </div>
                         <div className="flex-1">
                           <div className="font-bold">{s.label}</div>
-                          <div className="font-mono text-xs text-ink-400" dir="ltr">
-                            {s.dim} · ~{s.time}
-                          </div>
+                          <div className="font-mono text-xs text-ink-400" dir="ltr">{s.dim} · ~{s.time}</div>
                         </div>
-                        <div className="font-mono font-bold text-flame">
-                          {s.priceAdd > 0 ? `+${fmtILS(s.priceAdd)}` : "כלול"}
-                        </div>
+                        <div className="font-mono font-bold text-flame">{s.priceAdd > 0 ? `+${fmtILS(s.priceAdd)}` : "כלול"}</div>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
 
-              {step === 4 && (
+              {current === "qty" && (
                 <div>
                   <h3 className="text-xl font-extrabold mb-1">כמה לעשות?</h3>
-                  <p className="text-sm text-ink-400 mb-5">
-                    הזמנות מעל 5 — הנחה אוטומטית. הזמנות לטקסים — דבר איתי בוואטסאפ.
-                  </p>
+                  <p className="text-sm text-ink-400 mb-5">הזמנות מעל 5: הנחה של 10% אוטומטית. הזמנות לטקסים או לעסק, דבר איתי בוואטסאפ.</p>
                   <div className="flex items-center gap-3 mb-6">
-                    <button
-                      onClick={() => update("qty", Math.max(1, config.qty - 1))}
-                      aria-label="הפחת"
-                      className="w-12 h-12 rounded-xl bg-ink-800 hover:bg-ink-700 flex items-center justify-center"
-                    >
+                    <button onClick={() => update("qty", Math.max(1, config.qty - 1))} aria-label="הפחת" className="w-12 h-12 rounded-xl bg-ink-800 hover:bg-ink-700 flex items-center justify-center">
                       <Icon name="minus" />
                     </button>
                     <div className="flex-1 text-center">
-                      <div className="font-mono text-6xl font-bold tabular-nums" dir="ltr">
-                        {config.qty}
-                      </div>
+                      <div className="font-mono text-6xl font-bold tabular-nums" dir="ltr">{config.qty}</div>
                       <div className="text-xs text-ink-400">יחידות</div>
                     </div>
-                    <button
-                      onClick={() => update("qty", config.qty + 1)}
-                      aria-label="הוסף"
-                      className="w-12 h-12 rounded-xl bg-ink-800 hover:bg-ink-700 flex items-center justify-center"
-                    >
+                    <button onClick={() => update("qty", config.qty + 1)} aria-label="הוסף" className="w-12 h-12 rounded-xl bg-ink-800 hover:bg-ink-700 flex items-center justify-center">
                       <Icon name="plus" />
                     </button>
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                     {[1, 3, 5, 10].map((n) => (
-                      <button
-                        key={n}
-                        onClick={() => update("qty", n)}
-                        className={cn(
-                          "h-9 rounded-lg font-mono font-semibold",
-                          config.qty === n
-                            ? "bg-flame text-white"
-                            : "bg-ink-800 text-ink-300 hover:bg-ink-700",
-                        )}
-                      >
+                      <button key={n} onClick={() => update("qty", n)} className={cn("h-9 rounded-lg font-mono font-semibold", config.qty === n ? "bg-flame text-white" : "bg-ink-800 text-ink-300 hover:bg-ink-700")}>
                         ×{n}
                       </button>
                     ))}
@@ -406,22 +500,11 @@ export default function ConfiguratorClient() {
             </div>
 
             <div className="flex items-center gap-2 mt-6 pt-6 border-t border-ink-800">
-              <Btn
-                variant="ghost"
-                icon="arrowRight"
-                onClick={goPrev}
-                disabled={step === 0}
-              >
-                הקודם
-              </Btn>
-              {step < STEPS.length - 1 ? (
-                <Btn variant="primary" iconRight="arrowLeft" onClick={goNext} className="flex-1">
-                  המשך
-                </Btn>
+              <Btn variant="ghost" icon="arrowRight" onClick={goPrev} disabled={step === 0}>הקודם</Btn>
+              {step < steps.length - 1 ? (
+                <Btn variant="primary" iconRight="arrowLeft" onClick={goNext} className="flex-1">המשך</Btn>
               ) : (
-                <Btn variant="primary" iconRight="arrowLeft" onClick={proceed} className="flex-1">
-                  המשך לטופס
-                </Btn>
+                <Btn variant="primary" iconRight="arrowLeft" onClick={proceed} className="flex-1">המשך לטופס</Btn>
               )}
             </div>
           </div>
@@ -431,19 +514,48 @@ export default function ConfiguratorClient() {
             <div className="flex items-baseline justify-between mb-1">
               <span className="text-sm font-semibold text-ink-300">מחיר משוער</span>
               <span className="font-mono text-[11px] text-ink-400" dir="ltr">
-                {unitPrice} × {config.qty}
+                {unitPrice} × {config.qty}{discount ? " − 10%" : ""}
               </span>
             </div>
             <div className="flex items-baseline justify-between">
               <span className="text-3xl font-extrabold tracking-tight">{fmtILS(totalPrice)}</span>
-              {config.qty >= 5 && <Pill tone="good">הנחת כמות</Pill>}
+              <div className="flex gap-1.5">
+                {hasDesign && <Pill tone="cyan">עיצוב חופשי</Pill>}
+                {config.qty >= 5 && <Pill tone="good">הנחת כמות</Pill>}
+              </div>
             </div>
-            <div className="text-xs text-ink-400 mt-2">
-              משלוח ייחושב בשיחה. הזמנות מעל ₪200 — חינם.
-            </div>
+            <div className="text-xs text-ink-400 mt-2">משלוח ייחושב בשיחה. הזמנות מעל ₪200, חינם.</div>
           </div>
+
+          {adminUnlocked && (
+            <div className="mt-3 p-4 rounded-2xl border border-amber-500/25 bg-amber-500/5 font-mono text-xs space-y-1">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px] tracking-wider mb-1">
+                <Icon name="settings" size={11} />
+                ADMIN · עלות ייצור ליחידה
+              </div>
+              <div className="flex justify-between">
+                <span className="text-ink-400">{material.short} · ~{cost.gramsUsed}g · ~{hours}h</span>
+                <span>{fmtILS(Math.round(cost.unitCost * 10) / 10)}</span>
+              </div>
+              <div className="flex justify-between font-bold">
+                <span className="text-amber-400">מרווח</span>
+                <span className={cn((cost.margin ?? 0) >= 0.6 ? "text-emerald-400" : (cost.margin ?? 0) >= 0.4 ? "text-amber-300" : "text-red-400")}>
+                  {((cost.margin ?? 0) * 100).toFixed(0)}%
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="px-4 py-3 min-w-0">
+      <div className="text-ink-500">{label}</div>
+      <div className="text-ink-100 font-semibold truncate">{value}</div>
     </div>
   );
 }

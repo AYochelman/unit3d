@@ -157,7 +157,9 @@ export type OrderSource =
   | "configurator"
   | "upload"
   | "gallery"
-  | "fidgets";
+  | "fidgets"
+  | "pets"
+  | "office";
 
 export type OrderConfig = {
   title: string;
@@ -165,4 +167,166 @@ export type OrderConfig = {
   price: number | null;
   source: OrderSource;
   meta?: Record<string, unknown>;
+};
+
+// ─── Materials (filament families) ───────────────────────────────────────────
+export type MaterialId =
+  | "pla"
+  | "pla_plus"
+  | "pla_matte"
+  | "pla_silk"
+  | "petg"
+  | "tpu"
+  | "abs";
+
+export type Material = {
+  id: MaterialId;
+  name: string;
+  /** Short label for chips, e.g. "PLA+" */
+  short: string;
+  desc: string;
+  /** Default retail price of a spool in Israel, ILS. Editable in /admin. */
+  spoolPriceILS: number;
+  /** Spool net weight in kg. */
+  spoolKg: number;
+  /** Customer-facing surcharge per item for choosing this material. */
+  priceAdd: number;
+};
+
+// ─── Shop products (pet tags, office & home) ─────────────────────────────────
+export type ProductCategory = "pets" | "office" | "home";
+
+export type ProductArtId =
+  | "bone" | "round" | "heart" | "fish" | "paw" | "qr" | "bagholder" | "scoop"
+  | "penholder" | "cableclip" | "headphones" | "phonestand" | "coaster" | "hook"
+  | "keyrack" | "cardholder" | "planter" | "bagclip" | "bookmark" | "doorsign"
+  | "organizer" | "lighter" | "phonecase" | "dogtag" | "luggage" | "nameplate"
+  | "keychain";
+
+export type ProductOption = {
+  id: string;
+  label: string;
+  priceAdd: number;
+};
+
+export type Product = {
+  id: string;
+  category: ProductCategory;
+  name: string;
+  desc: string;
+  price: number;
+  size: string;
+  time: string;
+  /** Print time in hours (for costing). */
+  hours: number;
+  /** Filament weight in grams (for costing). */
+  grams: number;
+  art: ProductArtId;
+  hue: number;
+  tag?: string;
+  ams?: boolean;
+  /** Default material family. */
+  material?: MaterialId;
+  /** Optional engraving/text field on the product (pet name, phone…). */
+  engraving?: { label: string; placeholder: string; max: number; second?: { label: string; placeholder: string; max: number } };
+  options?: { label: string; items: ProductOption[] };
+};
+
+// ─── Configurator products ───────────────────────────────────────────────────
+export type ConfigProductId =
+  | "keychain"
+  | "dog_tag"
+  | "phone_case"
+  | "lighter_case"
+  | "luggage_tag"
+  | "name_plate"
+  | "coaster"
+  | "wall_hook"
+  | "cable_clip"
+  | "bookmark";
+
+export type ConfigModel = { id: string; label: string };
+
+export type ConfigProduct = {
+  id: ConfigProductId;
+  label: string;
+  desc: string;
+  art: ProductArtId;
+  basePrice: number;
+  hours: number;
+  grams: number;
+  material: MaterialId;
+  /** Shows the base-shape step (round / rect / emblem / custom). */
+  hasShape: boolean;
+  /** Shows the size step (uses SIZES for keychain, or `sizes` below). */
+  hasSize: boolean;
+  /** Shows the text step. */
+  hasText: boolean;
+  /** Flat printable face available for the free designer. */
+  hasDesigner: boolean;
+  /** Device / model picker (phone cases, lighter cases). */
+  models?: { label: string; items: ConfigModel[] };
+  /** Product-specific sizes (when not using the keychain SIZES). */
+  sizes?: Size[];
+  /** Printable face in millimetres [width, height] for the designer canvas. */
+  face: [number, number];
+};
+
+// ─── Free designer (PowerPoint-style canvas) ─────────────────────────────────
+export type DesignFontId =
+  | "heebo"
+  | "rubik"
+  | "assistant"
+  | "secular"
+  | "frank"
+  | "suez"
+  | "karantina"
+  | "mono";
+
+export type DesignShapeKind =
+  | "rect"
+  | "roundrect"
+  | "circle"
+  | "triangle"
+  | "star"
+  | "hexagon"
+  | "heart"
+  | "arrow"
+  | "diamond"
+  | "line";
+
+export type DesignTextElement = {
+  id: string;
+  kind: "text";
+  text: string;
+  font: DesignFontId;
+  size: number;
+  bold: boolean;
+  fill: string;
+  x: number;
+  y: number;
+  rotation: number;
+};
+
+export type DesignShapeElement = {
+  id: string;
+  kind: "shape";
+  shape: DesignShapeKind;
+  fill: string;
+  stroke: string | null;
+  strokeWidth: number;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  rotation: number;
+};
+
+export type DesignElement = DesignTextElement | DesignShapeElement;
+
+export type Design = {
+  /** Canvas size in millimetres (the product face). */
+  w: number;
+  h: number;
+  elements: DesignElement[];
 };

@@ -28,9 +28,32 @@ lib/data.ts                   כל תוכן הדמה — יחידות, ביקו�
 lib/units-hierarchy.ts        עץ 187 יחידות צה"ל (זרוע → חיל → חטיבה → גדוד)
 lib/order-store.ts            zustand — עגלת ההזמנה
 lib/types.ts                  כל הטיפוסים המשותפים
+lib/products.ts               תגים לחיות + בית/משרד (PRODUCTS), מוצרי המעצב (CONFIG_PRODUCTS), משקלי פידג'טים
+lib/materials.ts              משפחות פילמנט (PLA/PLA+/Matte/Silk/PETG/TPU/ABS) + מחיר גליל ברירת מחדל
+lib/costing.ts                מודל עלות: חומר + מכונה + חשמל + עבודה + פחת AMS → עלות/רווח/מרווח/מחיר מומלץ
+lib/admin-store.ts            zustand — PIN, הגדרות עלות, דריסות לכל מוצר, ייצוא/ייבוא JSON (ADMIN_PIN כאן)
+lib/design.ts                 המעצב החופשי: פונטים, צורות (shapePath), פלטה, designToSvg, designSummary
+components/designer/          DesignCanvas (עורך בסגנון פאוורפוינט: גרירה, שינוי גודל, סיבוב, שכבות, undo) + DesignGroup (רנדור)
+components/ProductPreview.tsx תצוגה חיה לכל מוצרי המעצב (מחזיק מפתחות נשאר על KeychainPreview)
+components/ProductArt.tsx     איורי SVG למוצרים בלי תמונה (27 סוגים)
+components/ProductGrid.tsx    רשת כרטיסי מוצר → /products/[id]
+app/admin/                    אזור ניהול (PIN): טבלת עלויות לכל המוצרים, מחירי גלילים, פרמטרים, בדיקת קובצי סמלים, גיבוי
+app/pets/ · app/home-office/  הקטגוריות החדשות · app/products/[id] עמוד מוצר (צבע, חומר, AMS, חריטה, כמות, בלוק עלות למנהל)
 ```
 
-13 מסלולים: `/` `/catalog` `/configurator` `/fidgets` `/fidgets/[id]` `/b2b` `/contact` `/gallery` `/livestream` `/reviews` `/tracking` `/upload` `/faq`
+17 מסלולים: `/` `/catalog` `/configurator` `/fidgets` `/fidgets/[id]` `/pets` `/home-office` `/products/[id]` `/admin` `/b2b` `/contact` `/gallery` `/livestream` `/reviews` `/tracking` `/upload` `/faq`
+
+## המעצב האישי (`/configurator`) — מבנה
+
+שלבים דינמיים לפי המוצר (`CONFIG_PRODUCTS`): מוצר → (דגם) → (צורה) → טקסט/עיצוב → צבע → (גודל) → כמות.
+`face: [w, h]` במ"מ הוא הפנים המודפס; קנבס המעצב עובד ב-1 יחידה = 1mm, כך שהעיצוב נשמר בקנה מידה אמיתי.
+"עיצוב חופשי" (`mode: "design"`) מחליף את הטקסט המהיר; ההזמנה נושאת `meta.designSvg` (SVG עצמאי) + `meta.designElements`, וטופס יצירת הקשר מציג תמונה ממוזערת.
+תוספת מחיר: 15₪ לעיצוב חופשי + 10₪ לכל צבע נוסף (AMS). מחיר כולל חומר לפי הצבע (`materialFromFilamentDesc`); קייסים תמיד TPU.
+
+## אזור הניהול (`/admin`)
+
+PIN ב-`lib/admin-store.ts` (ברירת מחדל 1234). המצב נשמר לסשן בלבד (אין localStorage לפי כללי הפרויקט) — לשונית "גיבוי" מייצאת/מייבאת JSON.
+כשהמנהל פתוח, עמודי המוצר (פידג'טים, חנות, מעצב) מציגים בלוק עלות ייצור ומרווח. `estimateCost` ב-`lib/costing.ts` הוא מקור האמת היחיד לחישוב.
 
 ## מוסכמות
 
@@ -53,6 +76,7 @@ lib/types.ts                  כל הטיפוסים המשותפים
 6. **יש `.git` מאז 3.9** (קומיט ראשון = מצב ההעברה, קומיט שני = תיקוני lint/config). `_recovered-newest/`, `.next-old/` ו־`*.zip` מוחרגים ב־`.gitignore` וב־`tsconfig.json`.
 
 `HANDOFF.md` מכיל את הסיפור המלא ואת רשימת הממצאים הפתוחים.
+`docs/emblems-needed.md` — 100 שמות הקבצים ש-`/catalog` מחפש תחת `public/emblems/` (גם בלשונית "סמלי יחידות" ב-/admin, עם בדיקה חיה).
 `בריף-לקלוד-דיזיין.md` הוא מסמך העיצוב המקורי — קהלי יעד, פלטה, וכל דרישה לכל עמוד.
 
 ## המשימה הפתוחה הכי משתלמת

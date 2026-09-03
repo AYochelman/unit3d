@@ -128,26 +128,20 @@ function FidgetCard({
           </span>
         )}
 
-        {/* Hover overlay */}
-        {f.sourceUrl && (
-          <a
-            href={f.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-ink-950/70 flex flex-col items-center justify-center gap-1.5 text-ink-100"
-            aria-label={`צפה ב-${f.name} ב-${f.source ? SOURCE_LABEL[f.source] : "מקור"}`}
-          >
-            <Icon name="expand" size={20} className="text-flame" />
-            <span className="font-mono text-[10px] tracking-widest uppercase">
-              VIEW ON {f.source ? SOURCE_LABEL[f.source].toUpperCase() : "SOURCE"}
-            </span>
-          </a>
-        )}
+        {/* Hover overlay → our own product page */}
+        <Link
+          href={`/fidgets/${f.id}`}
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity bg-ink-950/70 flex flex-col items-center justify-center gap-1.5 text-ink-100"
+          aria-label={`לעמוד המוצר של ${f.name}`}
+        >
+          <Icon name="expand" size={20} className="text-flame" />
+          <span className="font-mono text-[10px] tracking-widest uppercase">צבע · חומר · AMS</span>
+        </Link>
       </div>
 
       <div className="p-3 flex flex-col flex-1">
         <h3 className="font-bold text-sm leading-tight line-clamp-1" dir="ltr" title={f.name}>
-          {f.name}
+          <Link href={`/fidgets/${f.id}`} className="hover:text-flame transition-colors">{f.name}</Link>
         </h3>
         <p className="text-ink-400 text-xs leading-snug mt-1 line-clamp-2 min-h-[2.5rem]">
           {f.desc}

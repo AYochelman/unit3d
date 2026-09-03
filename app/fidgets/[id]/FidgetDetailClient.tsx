@@ -10,19 +10,11 @@ import { cn } from "@/lib/cn";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
 import Emblem from "@/components/Emblem";
-
-// ─── Weight estimates (grams) ─────────────────────────────────────────────────
-const WEIGHT_G: Record<string, number> = {
-  "mw-01": 38,  "mw-02": 108, "mw-03": 155, "mw-04": 18,  "mw-05": 15,
-  "mw-06": 7,   "mw-07": 19,  "mw-08": 26,  "mw-09": 92,  "mw-10": 130,
-  "mw-11": 55,  "mw-12": 48,
-};
-
-function estWeightG(f: { id: string; time: string }): number {
-  if (WEIGHT_G[f.id]) return WEIGHT_G[f.id];
-  const m = f.time.match(/([\d.]+)/);
-  return Math.round((m ? parseFloat(m[1]) : 1) * 12);
-}
+import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
+import { fidgetGrams } from "@/lib/products";
+import { estimateCost, parseHours } from "@/lib/costing";
+import { useAdminStore } from "@/lib/admin-store";
+import type { MaterialId } from "@/lib/types";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
 const AMS_OPTIONS = [
@@ -30,8 +22,6 @@ const AMS_OPTIONS = [
   { colors: 3, label: "3 צבעים", surcharge: 35 },
   { colors: 4, label: "4 צבעים", surcharge: 50 },
 ] as const;
-
-const COST_PER_GRAM = 0.1;
 
 // Filaments that look better without multiply blend
 const LIGHT_FILAMENTS = new Set(["white", "silver", "glow"]);
@@ -48,7 +38,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const [amsOn, setAmsOn]         = useState(false);
   const [amsColors, setAmsColors] = useState<2 | 3 | 4>(2);
   const [qty, setQty]             = useState(1);
-  const [adminMode, setAdminMode] = useState(false);
+  const [material, setMaterial] = useState<MaterialId>("pla_plus");
+  const adminUnlocked = useAdminStore((s) => s.unlocked);
+  const settings = useAdminStore((s) => s.settings);
+  const override = useAdminStore((s) => s.overrides[id]);
   const [variantId, setVariantId] = useState(f?.variants?.[0]?.id);
   const [added, setAdded]         = useState(false);
 
@@ -66,7 +59,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   // ── derived state ─────────────────────────────────────────────────────────
   const variant       = f.variants && variantId ? f.variants.find((v) => v.id === variantId) : undefined;
   const amsSurcharge  = amsOn ? (AMS_OPTIONS.find((o) => o.colors === amsColors)?.surcharge ?? 0) : 0;
-  const unitPrice     = f.price + (variant?.surcharge ?? 0) + amsSurcharge;
+  const mat           = MATERIAL_BY_ID[material];
+  const unitPrice     = (override?.price ?? f.price) + (variant?.surcharge ?? 0) + amsSurcharge + mat.priceAdd;
   const totalPrice    = unitPrice * qty;
   const displayTime   = variant?.time ?? f.time;
   const displayColors = amsOn ? amsColors : variant?.colors ?? 1;
@@ -83,16 +77,17 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const blendMode    = LIGHT_FILAMENTS.has(colorId) ? "color" : "multiply";
   const tintOpacity  = colorId === "black" ? 0 : LIGHT_FILAMENTS.has(colorId) ? 0.18 : 0.30;
 
-  const weightG       = estWeightG(f);
-  const printCostUnit = weightG * COST_PER_GRAM;
-  const grossMargin   = totalPrice > 0 ? ((totalPrice - printCostUnit * qty) / totalPrice) * 100 : 0;
+  const weightG       = override?.grams ?? fidgetGrams(f);
+  const hours         = override?.hours ?? parseHours(displayTime);
+  const cost          = estimateCost({ grams: weightG, hours, material, colors: displayColors, qty, price: unitPrice }, settings);
 
   // ── handlers ─────────────────────────────────────────────────────────────
   const handleAddToCart = () => {
     const lines: string[] = [
       `גודל: ${f.size}`,
       `זמן הדפסה: ${displayTime}`,
-      `צבע: ${selectedFilament?.name ?? colorId} (${selectedFilament?.desc ?? ""})`,
+      `צבע: ${selectedFilament?.name ?? colorId}`,
+      `חומר: ${mat.name}`,
     ];
     if (variant) lines.push(`גרסה: ${variant.label}`);
     if (amsOn) lines.push(`AMS ${amsColors} צבעים (+${fmtILS(amsSurcharge)})`);
@@ -103,7 +98,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
       summary: lines,
       price: totalPrice,
       source: "fidgets",
-      meta: { fidgetId: id, colorId, amsOn, amsColors, qty, variantId },
+      meta: { fidgetId: id, colorId, material, amsOn, amsColors, qty, variantId },
     });
 
     setAdded(true);
@@ -317,6 +312,31 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             </div>
           )}
 
+          {/* ── Material ───────────────────────────────────────────────── */}
+          <div>
+            <div className="text-xs font-bold text-ink-300 mb-2">
+              חומר: <span className="text-ink-100 font-normal">{mat.name}</span>
+              <span className="text-ink-500 font-normal"> · {mat.desc}</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {MATERIALS.filter((m) => m.id !== "tpu").map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setMaterial(m.id)}
+                  title={m.desc}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-colors",
+                    material === m.id ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
+                  )}
+                  dir="ltr"
+                >
+                  {m.short}{m.priceAdd > 0 ? ` +${m.priceAdd}` : ""}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* ── Color picker ───────────────────────────────────────────── */}
           <div>
             <div className="text-xs font-bold text-ink-300 mb-2.5">
@@ -466,43 +486,34 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 </div>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => setAdminMode((p) => !p)}
-              title="Admin — עלות הדפסה"
-              className={cn(
-                "h-7 px-2.5 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-colors border",
-                adminMode
-                  ? "bg-amber-500/15 border-amber-500/50 text-amber-400"
-                  : "border-ink-800 text-ink-600 hover:border-ink-600 hover:text-ink-400",
-              )}
-            >
-              <Icon name="eye" size={11} />
-              Admin
-            </button>
+            {adminUnlocked ? (
+              <Pill tone="neutral" className="text-[10px] font-mono">ADMIN</Pill>
+            ) : (
+              <Link href="/admin" className="text-[10px] font-mono text-ink-600 hover:text-ink-400">admin</Link>
+            )}
           </div>
 
           {/* ── Admin cost panel ────────────────────────────────────────── */}
-          {adminMode && (
+          {adminUnlocked && (
             <div className="p-3.5 rounded-xl border border-amber-500/25 bg-amber-500/5 font-mono text-xs space-y-2">
               <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px] tracking-wider mb-1">
                 <Icon name="settings" size={11} />
-                PRINT COST ANALYSIS
+                עלות ייצור (ליחידה)
               </div>
-              <AdminRow label="משקל מוערך" value={`${weightG}g${qty > 1 ? ` × ${qty}` : ""}`} />
-              <AdminRow label="עלות חומר (₪0.10/g)" value={fmtILS(printCostUnit * qty)} muted />
-              {amsSurcharge > 0 && (
-                <AdminRow label={`תוספת AMS (${amsColors}C)`} value={`+${fmtILS(amsSurcharge * qty)}`} muted />
-              )}
+              <AdminRow label={`חומר ${mat.short} · ${cost.gramsUsed}g${displayColors > 1 ? ` (AMS ${displayColors}C)` : ""}`} value={fmtILS(Math.round(cost.materialCost * 10) / 10)} />
+              <AdminRow label={`מכונה · ${hours}h`} value={fmtILS(Math.round(cost.machineCost * 10) / 10)} muted />
+              <AdminRow label="חשמל" value={fmtILS(Math.round(cost.electricityCost * 100) / 100)} muted />
+              <AdminRow label="עבודה" value={fmtILS(cost.laborCost)} muted />
               <div className="border-t border-amber-500/20 pt-2 space-y-1.5">
-                <AdminRow label="מחיר מכירה" value={fmtILS(totalPrice)} highlight />
+                <AdminRow label="עלות ליחידה" value={fmtILS(Math.round(cost.unitCost * 10) / 10)} />
+                <AdminRow label="מחיר מכירה" value={fmtILS(unitPrice)} highlight />
                 <div className="flex justify-between font-bold">
                   <span className="text-amber-400">רווח גולמי</span>
                   <span className={cn(
                     "text-base",
-                    grossMargin >= 60 ? "text-emerald-400" : grossMargin >= 40 ? "text-amber-300" : "text-red-400",
+                    (cost.margin ?? 0) >= 0.6 ? "text-emerald-400" : (cost.margin ?? 0) >= 0.4 ? "text-amber-300" : "text-red-400",
                   )}>
-                    {grossMargin.toFixed(1)}%
+                    {((cost.margin ?? 0) * 100).toFixed(0)}% · {fmtILS(Math.round(cost.profit ?? 0))}
                   </span>
                 </div>
               </div>

@@ -41,6 +41,22 @@ const CATS: Cat[] = [
   },
   {
     index: "04",
+    title: "תגים לחיות",
+    desc: "שם וטלפון על הקולר. PETG עמיד, 4 גרם.",
+    href: "/pets",
+    hue: 30,
+    shape: "circle",
+  },
+  {
+    index: "05",
+    title: "לבית ולמשרד",
+    desc: "מעמדים, מארגנים, תחתיות ושלטים עם השם שלך.",
+    href: "/home-office",
+    hue: 200,
+    shape: "hex",
+  },
+  {
+    index: "06",
     title: "הדפסה לפי הקובץ שלך",
     desc: "STL/OBJ/3MF — אני מתאים, צובע, ומדפיס.",
     href: "/upload",
@@ -53,7 +69,7 @@ export default function Categories() {
   return (
     <section className="py-20 md:py-24">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {CATS.map((c) => (
             <Link
               key={c.index}

@@ -179,6 +179,16 @@ export default function ContactClient() {
                             </li>
                           ))}
                         </ul>
+                        {typeof item.meta?.designSvg === "string" && (
+                          <div className="mt-2 inline-block rounded-lg border border-ink-800 bg-ink-950 p-1.5">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={`data:image/svg+xml;utf8,${encodeURIComponent(item.meta.designSvg)}`}
+                              alt="תצוגה מקדימה של העיצוב"
+                              className="max-h-20 w-auto"
+                            />
+                          </div>
+                        )}
                       </div>
                       {item.price !== null && (
                         <span className="font-mono text-sm font-bold text-flame shrink-0 mt-0.5" dir="ltr">

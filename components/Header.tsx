@@ -14,6 +14,8 @@ const NAV = [
   { href: "/catalog", label: "סמלי יחידה" },
   { href: "/fidgets", label: "פידג'טים" },
   { href: "/configurator", label: "מעצב" },
+  { href: "/pets", label: "לחיות" },
+  { href: "/home-office", label: "בית ומשרד" },
   { href: "/upload", label: "העלאת קובץ" },
   { href: "/b2b", label: "עסקים" },
   { href: "/livestream", label: "לייב" },
@@ -25,6 +27,7 @@ const SECONDARY = [
   { href: "/tracking", label: "מעקב הזמנה" },
   { href: "/faq", label: "שאלות נפוצות" },
   { href: "/contact", label: "צור קשר" },
+  { href: "/admin", label: "ניהול" },
 ];
 
 export default function Header() {
