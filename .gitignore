@@ -48,3 +48,4 @@ next-env.d.ts
 /.next-old/
 /_recovered-newest/
 *.zip
+/out/
