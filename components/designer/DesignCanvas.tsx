@@ -1,12 +1,13 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Design, DesignElement, DesignShapeKind, DesignTextElement, DesignShapeElement } from "@/lib/types";
-import { DESIGN_FONTS, DESIGN_PALETTE, DESIGN_SHAPES, newShape, newText, shapePath } from "@/lib/design";
+import { DESIGN_FONTS, DESIGN_PALETTE, DESIGN_SHAPES, facePath as facePathFor, newShape, newText, shapePath } from "@/lib/design";
+import type { FaceKind } from "@/lib/design";
 import DesignGroup from "./DesignGroup";
 import Icon from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 
-export type FaceKind = "rect" | "roundrect" | "round" | "phone" | "tall";
+export type { FaceKind };
 
 type Props = {
   design: Design;
@@ -18,12 +19,6 @@ type Props = {
 };
 
 const MARGIN_RATIO = 0.08;
-
-function facePathFor(kind: FaceKind, w: number, h: number): string {
-  const r = kind === "round" ? Math.min(w, h) / 2 : kind === "rect" ? Math.min(w, h) * 0.06 : Math.min(w, h) * 0.16;
-  if (kind === "round") return `M${w / 2} 0 A${w / 2} ${h / 2} 0 1 0 ${w / 2} ${h} A${w / 2} ${h / 2} 0 1 0 ${w / 2} 0 Z`;
-  return `M${r} 0 H${w - r} A${r} ${r} 0 0 1 ${w} ${r} V${h - r} A${r} ${r} 0 0 1 ${w - r} ${h} H${r} A${r} ${r} 0 0 1 0 ${h - r} V${r} A${r} ${r} 0 0 1 ${r} 0 Z`;
-}
 
 /** Rough text extent for the selection box (no DOM measuring needed). */
 function textBox(el: DesignTextElement) {
@@ -38,7 +33,17 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
   const [past, setPast] = useState<Design[]>([]);
   const [future, setFuture] = useState<Design[]>([]);
   const [shapeMenu, setShapeMenu] = useState(false);
-  const drag = useRef<{ id: string; mode: "move" | "resize"; startX: number; startY: number; el: DesignElement } | null>(null);
+  const drag = useRef<{
+    pointerId: number;
+    id: string;
+    mode: "move" | "resize";
+    startX: number;
+    startY: number;
+    el: DesignElement;
+    moved: boolean;
+  } | null>(null);
+  /** State captured before a slider gesture, so undo returns to it. */
+  const sliderBefore = useRef<Design | null>(null);
 
   const { w, h } = design;
   const m = Math.max(w, h) * MARGIN_RATIO;
@@ -123,9 +128,15 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
   };
 
   const onPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (drag.current) return; // a gesture is already in progress — ignore extra fingers
     const target = e.target as SVGElement;
     const handle = target.getAttribute("data-handle");
     const elId = target.getAttribute("data-el") ?? (handle ? selectedId : null);
+    // Touching the canvas hands keyboard focus to it, otherwise a properties
+    // input keeps focus and Delete / arrow keys never reach the artboard.
+    const active = document.activeElement as HTMLElement | null;
+    if (active && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)) active.blur();
+    svgRef.current?.focus?.();
     if (!elId) {
       setSelectedId(null);
       return;
@@ -134,37 +145,49 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
     if (!el) return;
     setSelectedId(elId);
     const p = toSvg(e);
-    drag.current = { id: elId, mode: handle === "resize" ? "resize" : "move", startX: p.x, startY: p.y, el };
+    drag.current = { pointerId: e.pointerId, id: elId, mode: handle === "resize" ? "resize" : "move", startX: p.x, startY: p.y, el, moved: false };
     (e.currentTarget as SVGSVGElement).setPointerCapture(e.pointerId);
     e.preventDefault();
   };
 
   const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     const d = drag.current;
-    if (!d) return;
+    if (!d || e.pointerId !== d.pointerId) return;
     const p = toSvg(e);
     const dx = p.x - d.startX;
     const dy = p.y - d.startY;
+    if (Math.abs(dx) > 0.15 || Math.abs(dy) > 0.15) d.moved = true;
     if (d.mode === "move") {
       patchEl(d.id, { x: d.el.x + dx, y: d.el.y + dy }, false);
-    } else if (d.el.kind === "shape") {
-      patchEl(d.id, { w: Math.max(1, d.el.w + dx * 2), h: Math.max(1, d.el.h + dy * 2) }, false);
+      return;
+    }
+    // Resizing happens in the element's own frame: the handle is drawn inside
+    // the rotate() group, so a screen-space delta has to be un-rotated first.
+    const a = (-d.el.rotation * Math.PI) / 180;
+    const lx = dx * Math.cos(a) - dy * Math.sin(a);
+    const ly = dx * Math.sin(a) + dy * Math.cos(a);
+    if (d.el.kind === "shape") {
+      patchEl(d.id, { w: Math.max(1, d.el.w + lx * 2), h: Math.max(1, d.el.h + ly * 2) }, false);
     } else {
-      patchEl(d.id, { size: Math.max(2, d.el.size + dx * 0.6) }, false);
+      patchEl(d.id, { size: Math.max(2, d.el.size + lx * 0.6) }, false);
     }
   };
 
-  const onPointerUp = () => {
+  const onPointerUp = (e: React.PointerEvent<SVGSVGElement>) => {
     const d = drag.current;
-    if (!d) return;
+    if (!d || e.pointerId !== d.pointerId) return;
     drag.current = null;
-    // push the pre-drag state to history now that the gesture is done
-    const before = { ...design, elements: design.elements.map((e) => (e.id === d.id ? d.el : e)) };
+    // A click that only selected an element is not an edit — recording it would
+    // add a no-op undo step and throw away the redo stack.
+    if (!d.moved) return;
+    const before = { ...design, elements: design.elements.map((x) => (x.id === d.id ? d.el : x)) };
     setPast((p) => [...p.slice(-40), before]);
     setFuture([]);
   };
 
-  // keyboard: delete / nudge
+  // keyboard: delete / nudge. A run of arrow presses is ONE undo step —
+  // otherwise 40 nudges evict every real edit from the 40-entry stack.
+  const nudging = useRef(false);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
@@ -178,11 +201,19 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
         const step = e.shiftKey ? 2 : 0.5;
         const dx = e.key === "ArrowLeft" ? -step : e.key === "ArrowRight" ? step : 0;
         const dy = e.key === "ArrowUp" ? -step : e.key === "ArrowDown" ? step : 0;
-        patchEl(selected.id, { x: selected.x + dx, y: selected.y + dy });
+        patchEl(selected.id, { x: selected.x + dx, y: selected.y + dy }, !nudging.current);
+        nudging.current = true;
       }
     };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key.startsWith("Arrow")) nudging.current = false;
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("keyup", onKeyUp);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, design]);
 
@@ -242,6 +273,7 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
+          tabIndex={-1}
         >
           <defs>
             <clipPath id={clipId}>
@@ -327,16 +359,25 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
                 min={-180}
                 max={180}
                 value={selected.rotation}
+                onPointerDown={() => { sliderBefore.current = design; }}
                 onChange={(e) => patchEl(selected.id, { rotation: Number(e.target.value) }, false)}
-                onPointerUp={(e) => patchEl(selected.id, { rotation: Number((e.target as HTMLInputElement).value) })}
+                onPointerUp={() => {
+                  // Push the state from BEFORE the drag, not the rotated one —
+                  // otherwise undo restores the value you just set.
+                  const before = sliderBefore.current;
+                  sliderBefore.current = null;
+                  if (!before) return;
+                  setPast((p) => [...p.slice(-40), before]);
+                  setFuture([]);
+                }}
                 className="w-full accent-[#089a47]"
                 dir="ltr"
               />
             </label>
             <div className="flex gap-1">
-              <SmallBtn onClick={() => reorder(selected.id, 1)} title="קדימה">▲</SmallBtn>
-              <SmallBtn onClick={() => reorder(selected.id, -1)} title="אחורה">▼</SmallBtn>
-              <SmallBtn onClick={() => duplicate(selected.id)} title="שכפל">⧉</SmallBtn>
+              <SmallBtn onClick={() => reorder(selected.id, 1)} title="הבא קדימה" label="הבא קדימה">▲</SmallBtn>
+              <SmallBtn onClick={() => reorder(selected.id, -1)} title="שלח אחורה" label="שלח אחורה">▼</SmallBtn>
+              <SmallBtn onClick={() => duplicate(selected.id)} title="שכפל" label="שכפל">⧉</SmallBtn>
             </div>
             <SmallBtn onClick={() => remove(selected.id)} title="מחק" danger>
               מחק
@@ -366,12 +407,13 @@ function ToolBtn({ onClick, icon, label, active, disabled, flip }: { onClick: ()
   );
 }
 
-function SmallBtn({ children, onClick, title, danger }: { children: React.ReactNode; onClick: () => void; title: string; danger?: boolean }) {
+function SmallBtn({ children, onClick, title, danger, label }: { children: React.ReactNode; onClick: () => void; title: string; danger?: boolean; label?: string }) {
   return (
     <button
       type="button"
       onClick={onClick}
       title={title}
+      aria-label={label ?? title}
       className={cn(
         "h-8 min-w-8 px-2 rounded-lg border text-xs font-semibold transition-colors",
         danger ? "border-bad/40 text-bad hover:bg-bad/10" : "border-ink-800 text-ink-300 hover:border-ink-600",
@@ -477,7 +519,11 @@ function ShapeProps({ el, onPatch }: { el: DesignShapeElement; onPatch: (p: Part
           <button
             key={s.id}
             type="button"
-            onClick={() => onPatch({ shape: s.id })}
+            onClick={() =>
+              // A line is a thin bar: switching an existing square to "קו"
+              // must also collapse its height, or it stays a square.
+              onPatch(s.id === "line" ? { shape: s.id, h: Math.max(0.5, Math.min(el.h, el.w * 0.06)) } : { shape: s.id })
+            }
             title={s.label}
             className={cn("h-9 w-9 rounded-lg border flex items-center justify-center", el.shape === s.id ? "border-flame bg-flame/10" : "border-ink-800 hover:border-ink-600")}
           >

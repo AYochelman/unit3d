@@ -70,7 +70,8 @@ export function estimateCost(input: CostInput, s: CostSettings): CostBreakdown {
 
   const profit = input.price != null ? input.price - unitCost : null;
   const margin = input.price != null && input.price > 0 ? (input.price - unitCost) / input.price : null;
-  const recommendedPrice = Math.ceil(unitCost / (1 - s.targetMargin));
+  // Clamp: a 100% target would divide by zero and yield Infinity.
+  const recommendedPrice = Math.ceil(unitCost / (1 - Math.min(0.95, Math.max(0, s.targetMargin))));
 
   return {
     gramsUsed: Math.round(gramsUsed * 10) / 10,

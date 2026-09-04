@@ -4,11 +4,11 @@
 export type ListingStats = {
   id: string;
   price: number;
-  /** 1–5 */
+  /** 1-5 */
   rating: number;
   /** Orders to date (demo counters until there is a backend). */
   orders: number;
-  /** Max colours the item is offered in (1 = single colour, 2–4 = AMS). */
+  /** Max colours the item is offered in (1 = single colour, 2-4 = AMS). */
   colors: number;
   isNew?: boolean;
 };
@@ -34,13 +34,15 @@ export const COLOR_FILTERS: { id: ColorFilter; label: string }[] = [
   { id: "all", label: "כל הצבעים" },
   { id: "1", label: "צבע אחד" },
   { id: "2", label: "2 צבעים" },
-  { id: "3+", label: "3–4 צבעים (AMS)" },
+  // Plain hyphen, not an en dash: U+2013 is BiDi class ON and flips number
+  // ranges under an RTL base direction ("50-100" would render "100-50").
+  { id: "3+", label: "3-4 צבעים (AMS)" },
 ];
 
 export const PRICE_FILTERS: { id: PriceFilter; label: string }[] = [
   { id: "all", label: "כל מחיר" },
   { id: "lt50", label: "עד ₪50" },
-  { id: "50-100", label: "₪50–100" },
+  { id: "50-100", label: "₪50-100" },
   { id: "gt100", label: "מעל ₪100" },
 ];
 

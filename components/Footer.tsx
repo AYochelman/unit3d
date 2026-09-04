@@ -24,7 +24,7 @@ const SUPPORT = [
 ];
 
 const QUICK = [
-  { label: "זמן הדפסה", value: "3–5 ימי עסקים" },
+  { label: "זמן הדפסה", value: "3-5 ימי עסקים" },
   { label: "משלוח", value: "₪25 רגיל · ₪45 שליח" },
   { label: "אחריות", value: "30 ימים על שבר" },
   { label: "חינם", value: "במשלוח מעל ₪200" },

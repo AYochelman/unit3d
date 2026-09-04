@@ -55,7 +55,7 @@ export default function Hero() {
             </li>
             <li className="inline-flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-flame" />
-              תוצאות תוך 3–5 ימים
+              תוצאות תוך 3-5 ימים
             </li>
             <li className="inline-flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-flame" />

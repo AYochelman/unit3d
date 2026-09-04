@@ -145,6 +145,18 @@ export function shapePath(kind: DesignShapeKind, w: number, h: number): string {
   }
 }
 
+/** Silhouette of a product's printable face. One definition for the canvas,
+ *  the live preview and the exported SVG so all three agree. */
+export type FaceKind = "rect" | "roundrect" | "round" | "phone" | "tall";
+
+export function facePath(kind: FaceKind, w: number, h: number): string {
+  if (kind === "round") {
+    return `M${w / 2} 0 A${w / 2} ${h / 2} 0 1 0 ${w / 2} ${h} A${w / 2} ${h / 2} 0 1 0 ${w / 2} 0 Z`;
+  }
+  const r = kind === "rect" ? Math.min(w, h) * 0.06 : Math.min(w, h) * 0.16;
+  return `M${r} 0 H${w - r} A${r} ${r} 0 0 1 ${w} ${r} V${h - r} A${r} ${r} 0 0 1 ${w - r} ${h} H${r} A${r} ${r} 0 0 1 0 ${h - r} V${r} A${r} ${r} 0 0 1 ${r} 0 Z`;
+}
+
 function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
@@ -170,10 +182,22 @@ function elementSvg(el: DesignElement): string {
   return `<path transform="${t}" d="${shapePath(el.shape, el.w, el.h)}" fill="${el.fill}"${stroke}/>`;
 }
 
-/** Standalone SVG (mm units) — this is what travels with the order. */
-export function designToSvg(d: Design, background?: string): string {
-  const bg = background ? `<rect width="${d.w}" height="${d.h}" fill="${background}"/>` : "";
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${d.w}mm" height="${d.h}mm" viewBox="0 0 ${d.w} ${d.h}">${bg}${d.elements.map(elementSvg).join("")}</svg>`;
+/**
+ * Standalone SVG (mm units) — this is what travels with the order.
+ * `direction="rtl"` matches the canvas: without it an <img> renders the SVG as
+ * an isolated LTR document and mixed Hebrew/Latin text comes out reordered.
+ * The artwork is clipped to the product face so the export equals what was seen.
+ */
+export function designToSvg(d: Design, background?: string, facePath?: string): string {
+  const clip = facePath
+    ? `<clipPath id="face"><path d="${facePath}"/></clipPath>`
+    : `<clipPath id="face"><rect width="${d.w}" height="${d.h}"/></clipPath>`;
+  const bg = background
+    ? facePath
+      ? `<path d="${facePath}" fill="${background}"/>`
+      : `<rect width="${d.w}" height="${d.h}" fill="${background}"/>`
+    : "";
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${d.w}mm" height="${d.h}mm" viewBox="0 0 ${d.w} ${d.h}" direction="rtl"><defs>${clip}</defs>${bg}<g clip-path="url(#face)">${d.elements.map(elementSvg).join("")}</g></svg>`;
 }
 
 /** Human-readable lines for the order summary. */
@@ -192,11 +216,21 @@ export function designSummary(d: Design): string[] {
     }
     lines.push(`צורות: ${[...counts].map(([l, n]) => (n > 1 ? `${l} ×${n}` : l)).join(", ")}`);
   }
-  const colors = new Set(d.elements.map((e) => e.fill.toLowerCase()));
+  const colors = designColors(d);
   lines.push(`צבעים בעיצוב: ${colors.size}${colors.size > 1 ? " (הדפסת AMS)" : ""}`);
   return lines;
 }
 
+/** Every distinct printed colour: fills AND shape outlines (each is a filament). */
+export function designColors(d: Design): Set<string> {
+  const set = new Set<string>();
+  for (const e of d.elements) {
+    set.add(e.fill.toLowerCase());
+    if (e.kind === "shape" && e.stroke) set.add(e.stroke.toLowerCase());
+  }
+  return set;
+}
+
 export function designColorCount(d: Design): number {
-  return new Set(d.elements.map((e) => e.fill.toLowerCase())).size;
+  return designColors(d).size;
 }

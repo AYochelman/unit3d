@@ -60,7 +60,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const variant       = f.variants && variantId ? f.variants.find((v) => v.id === variantId) : undefined;
   const amsSurcharge  = amsOn ? (AMS_OPTIONS.find((o) => o.colors === amsColors)?.surcharge ?? 0) : 0;
   const mat           = MATERIAL_BY_ID[material];
-  const unitPrice     = (override?.price ?? f.price) + (variant?.surcharge ?? 0) + amsSurcharge + mat.priceAdd;
+  // Fidget list prices assume PLA+, so only the delta above it is a surcharge.
+  const baseMatAdd    = MATERIAL_BY_ID.pla_plus.priceAdd;
+  const matSurcharge  = Math.max(0, mat.priceAdd - baseMatAdd);
+  const unitPrice     = (override?.price ?? f.price) + (variant?.surcharge ?? 0) + amsSurcharge + matSurcharge;
   const totalPrice    = unitPrice * qty;
   const displayTime   = variant?.time ?? f.time;
   const displayColors = amsOn ? amsColors : variant?.colors ?? 1;
@@ -98,7 +101,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
       summary: lines,
       price: totalPrice,
       source: "fidgets",
-      meta: { fidgetId: id, colorId, material, amsOn, amsColors, qty, variantId },
+      meta: { fidgetId: id, colorId, material, amsOn, amsColors, qty, variantId, baseUnitPrice: unitPrice },
     });
 
     setAdded(true);
@@ -331,7 +334,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   )}
                   dir="ltr"
                 >
-                  {m.short}{m.priceAdd > 0 ? ` +${m.priceAdd}` : ""}
+                  {m.short}{Math.max(0, m.priceAdd - baseMatAdd) > 0 ? ` +${Math.max(0, m.priceAdd - baseMatAdd)}` : ""}
                 </button>
               ))}
             </div>
@@ -560,13 +563,13 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
           {/* Source attribution (CC-BY) — discreet, under the fold */}
           {f.creator && (
-            <p className="text-[10px] text-ink-600 text-center" dir="ltr">
+            <p className="text-[11px] text-ink-400 text-center" dir="ltr">
               Model by {f.creator}
               {f.license ? ` · ${f.license}` : ""}
               {f.sourceUrl && (
                 <>
                   {" · "}
-                  <a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-400">
+                  <a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-100">
                     source file
                   </a>
                 </>

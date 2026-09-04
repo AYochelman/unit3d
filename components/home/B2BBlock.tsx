@@ -4,8 +4,8 @@ import Icon from "@/components/ui/Icon";
 import { fmtILS } from "@/lib/format";
 
 const TIERS = [
-  { range: "10–50", price: 48, label: "" },
-  { range: "50–200", price: 36, label: "" },
+  { range: "10-50", price: 48, label: "" },
+  { range: "50-200", price: 36, label: "" },
   { range: "200+", price: 0, label: "פנה" },
 ];
 

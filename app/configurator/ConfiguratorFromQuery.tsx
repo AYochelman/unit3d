@@ -8,6 +8,8 @@ import type { ConfigProductId } from "@/lib/types";
 export default function ConfiguratorFromQuery() {
   const params = useSearchParams();
   const raw = params?.get("product") ?? "";
-  const product = (raw in CONFIG_PRODUCT_BY_ID ? raw : undefined) as ConfigProductId | undefined;
+  // Object.hasOwn, not `in`: `in` is also true for inherited keys like
+  // "constructor" and "__proto__", which would pass a non-product through.
+  const product = (Object.hasOwn(CONFIG_PRODUCT_BY_ID, raw) ? raw : undefined) as ConfigProductId | undefined;
   return <ConfiguratorClient key={product ?? "default"} initialProduct={product} />;
 }

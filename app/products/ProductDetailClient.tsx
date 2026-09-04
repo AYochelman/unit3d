@@ -52,7 +52,11 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const mat = MATERIAL_BY_ID[material];
   const option = p.options?.items.find((o) => o.id === optionId);
   const amsSurcharge = amsOn ? AMS_OPTIONS.find((o) => o.colors === amsColors)!.surcharge : 0;
-  const unitPrice = (override?.price ?? p.price) + mat.priceAdd + (option?.priceAdd ?? 0) + amsSurcharge;
+  // Only the DELTA from the product's own default material is a surcharge —
+  // the listed catalogue price already includes that default.
+  const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
+  const matSurcharge = Math.max(0, mat.priceAdd - baseMatAdd);
+  const unitPrice = (override?.price ?? p.price) + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
   const total = unitPrice * qty;
 
   const grams = override?.grams ?? p.grams;
@@ -79,7 +83,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
       summary: lines,
       price: total,
       source,
-      meta: { productId: id, colorId, material, amsOn, amsColors, engrave1, engrave2, optionId, qty },
+      meta: { productId: id, colorId, material, amsOn, amsColors, engrave1, engrave2, optionId, qty, baseUnitPrice: unitPrice },
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
@@ -191,7 +195,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   className={cn("px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-colors", material === m.id ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500")}
                   dir="ltr"
                 >
-                  {m.short}{m.priceAdd > 0 ? ` +${m.priceAdd}` : ""}
+                  {m.short}{Math.max(0, m.priceAdd - baseMatAdd) > 0 ? ` +${Math.max(0, m.priceAdd - baseMatAdd)}` : ""}
                 </button>
               ))}
             </div>

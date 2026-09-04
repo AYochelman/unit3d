@@ -20,11 +20,11 @@ const FILTERS: { id: Filter; label: string }[] = [
 export default function HomeOfficeClient() {
   const [filter, setFilter] = useState<Filter>("all");
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
-  const all = useMemo(() => OFFICE_PRODUCTS.map(productToCard), []);
-  const items = useMemo(() => {
-    const scoped = filter === "all" ? OFFICE_PRODUCTS : OFFICE_PRODUCTS.filter((p) => p.category === filter);
-    return applyListing(scoped.map(productToCard), state);
-  }, [filter, state]);
+  const scoped = useMemo(
+    () => (filter === "all" ? OFFICE_PRODUCTS : OFFICE_PRODUCTS.filter((p) => p.category === filter)).map(productToCard),
+    [filter],
+  );
+  const items = useMemo(() => applyListing(scoped, state), [scoped, state]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
@@ -53,7 +53,7 @@ export default function HomeOfficeClient() {
         </div>
       </header>
 
-      <ProductToolbar state={state} onChange={setState} shown={items.length} total={all.length} />
+      <ProductToolbar state={state} onChange={setState} shown={items.length} total={scoped.length} />
 
       <ProductGrid cards={items} />
 

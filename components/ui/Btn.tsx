@@ -1,5 +1,6 @@
 "use client";
 import { forwardRef } from "react";
+import Link from "next/link";
 import type { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode } from "react";
 import Icon, { type IconName } from "./Icon";
 import { cn } from "@/lib/cn";
@@ -71,6 +72,17 @@ const Btn = forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(function Bt
 
   if (props.as === "a") {
     const { as: _, variant: __, size: ___, icon: ____, iconRight: _____, className: ______, children: _______, ...rest } = props;
+    // An internal href MUST go through next/link: a plain <a> is a full document
+    // navigation, which recreates the in-memory cart store empty (there is no
+    // persistence by design). External links stay as real anchors.
+    const internal = rest.href.startsWith("/") && !rest.target;
+    if (internal) {
+      return (
+        <Link ref={ref as React.Ref<HTMLAnchorElement>} className={cls} {...rest} href={rest.href}>
+          {content}
+        </Link>
+      );
+    }
     return (
       <a ref={ref as React.Ref<HTMLAnchorElement>} className={cls} {...rest}>
         {content}

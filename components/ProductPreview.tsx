@@ -1,7 +1,7 @@
 import type { ConfigProduct, Design, Filament, FontOpt, ShapeId } from "@/lib/types";
 import KeychainPreview from "./KeychainPreview";
 import DesignGroup from "./designer/DesignGroup";
-import type { FaceKind } from "./designer/DesignCanvas";
+import { facePath, type FaceKind } from "@/lib/design";
 
 type Props = {
   product: ConfigProduct;
@@ -32,12 +32,6 @@ export function faceKindFor(product: ConfigProduct): FaceKind {
     default:
       return "roundrect";
   }
-}
-
-function facePath(kind: FaceKind, w: number, h: number): string {
-  const r = kind === "round" ? Math.min(w, h) / 2 : kind === "rect" ? Math.min(w, h) * 0.06 : Math.min(w, h) * 0.16;
-  if (kind === "round") return `M${w / 2} 0 A${w / 2} ${h / 2} 0 1 0 ${w / 2} ${h} A${w / 2} ${h / 2} 0 1 0 ${w / 2} 0 Z`;
-  return `M${r} 0 H${w - r} A${r} ${r} 0 0 1 ${w} ${r} V${h - r} A${r} ${r} 0 0 1 ${w - r} ${h} H${r} A${r} ${r} 0 0 1 0 ${h - r} V${r} A${r} ${r} 0 0 1 ${r} 0 Z`;
 }
 
 /**

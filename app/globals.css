@@ -120,7 +120,9 @@
     animation-direction: reverse;
     animation-duration: 56s;
   }
-  .reviews-row:hover .reviews-track {
+  /* Pause on hover AND on keyboard focus, so the strip is readable without a mouse. */
+  .reviews-row:hover .reviews-track,
+  .reviews-row:focus-within .reviews-track {
     animation-play-state: paused;
   }
 

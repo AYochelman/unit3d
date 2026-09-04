@@ -233,7 +233,7 @@ export type Product = {
   /** Listing stats (demo counters until there is a backend). */
   rating?: number;
   orders?: number;
-  /** Max colours offered (1 = single colour, 2–4 = AMS). Defaults to ams ? 2 : 1. */
+  /** Max colours offered (1 = single colour, 2-4 = AMS). Defaults to ams ? 2 : 1. */
   colors?: number;
   isNew?: boolean;
   /** Optional engraving/text field on the product (pet name, phone…). */

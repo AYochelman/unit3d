@@ -1,13 +1,14 @@
 "use client";
 import { create } from "zustand";
 import type { OrderConfig } from "./types";
+import { BULK_NOTE, bulkDiscount, lineTotal } from "./pricing";
 
 // ─── Cart item ────────────────────────────────────────────────────────────────
 export type CartItem = OrderConfig & {
   id: string;
   /** Units of this line. */
   qty: number;
-  /** Price per unit (null when the item has no price yet). */
+  /** UNDISCOUNTED price per unit (null when the item has no price yet). */
   unitPrice: number | null;
   /** Title without the "× n" suffix. */
   baseTitle: string;
@@ -17,20 +18,28 @@ export type CartItem = OrderConfig & {
 function toCartItem(item: OrderConfig): CartItem {
   const metaQty = typeof item.meta?.qty === "number" && item.meta.qty > 0 ? Math.round(item.meta.qty as number) : 1;
   const baseTitle = item.title.replace(/\s*×\s*\d+\s*$/, "");
-  const unitPrice = item.price == null ? null : Math.round((item.price / metaQty) * 100) / 100;
+  // Prefer the explicit undiscounted unit price the source page supplies; only
+  // fall back to dividing the total (which would bake a tier discount in).
+  const explicit = typeof item.meta?.baseUnitPrice === "number" ? (item.meta.baseUnitPrice as number) : null;
+  const unitPrice =
+    explicit != null
+      ? explicit
+      : item.price == null
+        ? null
+        : Math.round((item.price / (metaQty * (1 - bulkDiscount(metaQty)))) * 100) / 100;
   return { ...item, id: uid(), qty: metaQty, unitPrice, baseTitle, title: metaQty > 1 ? `${baseTitle} × ${metaQty}` : baseTitle };
 }
 
 function withQty(it: CartItem, qty: number): CartItem {
   const q = Math.max(1, Math.min(99, Math.round(qty)));
   const summary = it.summary.filter((l) => !/^כמות:/.test(l));
-  if (q > 1) summary.push(`כמות: ${q}`);
+  if (q > 1) summary.push(`כמות: ${q}${bulkDiscount(q) ? ` · ${BULK_NOTE}` : ""}`);
   return {
     ...it,
     qty: q,
     summary,
     title: q > 1 ? `${it.baseTitle} × ${q}` : it.baseTitle,
-    price: it.unitPrice == null ? it.price : Math.round(it.unitPrice * q),
+    price: it.unitPrice == null ? it.price : lineTotal(it.unitPrice, q),
     meta: { ...it.meta, qty: q },
   };
 }
@@ -49,7 +58,7 @@ type CartState = {
   /** Remove a single item by its id. */
   removeItem(id: string): void;
 
-  /** Change the quantity of a line (1–99); price and summary follow. */
+  /** Change the quantity of a line (1-99); price and summary follow. */
   setQty(id: string, qty: number): void;
 
   /** Empty the cart. */

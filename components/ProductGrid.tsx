@@ -96,13 +96,13 @@ export function ListingCardView({ c }: { c: ListingCard }) {
             </>
           )}
         </div>
-        <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400" dir="ltr">
+        <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400">
           <span className="inline-flex items-center gap-0.5 text-flame">
             <Icon name="star" size={10} className="fill-current" />
-            {c.rating.toFixed(1)}
+            <bdi dir="ltr">{c.rating.toFixed(1)}</bdi>
           </span>
           <span>·</span>
-          <span>{fmtOrders(c.orders)} הזמנות</span>
+          <span><bdi dir="ltr">{fmtOrders(c.orders)}</bdi> הזמנות</span>
         </div>
         <div className="mt-auto pt-2 flex items-center justify-between">
           <span className="font-mono text-flame text-sm" dir="ltr">{fmtILS(c.price)}</span>

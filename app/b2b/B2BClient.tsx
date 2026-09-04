@@ -30,16 +30,16 @@ const USE_CASES = [
 
 const TIERS = [
   {
-    range: "10–50",
+    range: "10-50",
     price: 48,
     label: "התחלה",
-    perks: ["חשבונית מס", "צבע אחיד", "אריזה סטנדרטית", "5–7 ימי עסקים"],
+    perks: ["חשבונית מס", "צבע אחיד", "אריזה סטנדרטית", "5-7 ימי עסקים"],
   },
   {
-    range: "50–200",
+    range: "50-200",
     price: 36,
     label: "Most popular",
-    perks: ["הכל ב-10-50", "עיצוב לוגו מותאם", "אריזה ממותגת", "צבע מותג מדויק", "4–6 ימי עסקים"],
+    perks: ["הכל ב-10-50", "עיצוב לוגו מותאם", "אריזה ממותגת", "צבע מותג מדויק", "4-6 ימי עסקים"],
     featured: true,
   },
   {
@@ -252,10 +252,10 @@ export default function B2BClient() {
                 <Field label="מספר עובדים בחברה">
                   <Select defaultValue="">
                     <option value="">בחר…</option>
-                    <option>1–10</option>
-                    <option>11–50</option>
-                    <option>51–200</option>
-                    <option>201–1000</option>
+                    <option>1-10</option>
+                    <option>11-50</option>
+                    <option>51-200</option>
+                    <option>201-1000</option>
                     <option>1000+</option>
                   </Select>
                 </Field>

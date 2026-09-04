@@ -156,13 +156,13 @@ function FidgetCard({
         {(() => {
           const st = fidgetStats(f);
           return (
-            <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400" dir="ltr">
+            <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400">
               <span className="inline-flex items-center gap-0.5 text-flame">
                 <Icon name="star" size={10} className="fill-current" />
-                {st.rating.toFixed(1)}
+                <bdi dir="ltr">{st.rating.toFixed(1)}</bdi>
               </span>
               <span>·</span>
-              <span>{fmtOrders(st.orders)} הזמנות</span>
+              <span><bdi dir="ltr">{fmtOrders(st.orders)}</bdi> הזמנות</span>
             </div>
           );
         })()}
@@ -235,7 +235,13 @@ export default function FidgetsClient() {
   const setOrder = useOrderStore((s) => s.setOrder);
 
   const items = useMemo(() => {
-    const withStats = FIDGETS.map((f) => ({ ...f, ...fidgetStats(f), isNew: f.tag === "חדש" }));
+    const withStats = FIDGETS.map((f) => ({
+      ...f,
+      ...fidgetStats(f),
+      // Sort/filter on the price the card actually shows (default variant).
+      price: f.price + (f.variants?.[0]?.surcharge ?? 0),
+      isNew: f.tag === "חדש",
+    }));
     return applyListing(withStats, listing);
   }, [listing]);
 
@@ -333,7 +339,7 @@ export default function FidgetsClient() {
           {[
             { t: "הדפסה אחת", d: "כל פיגורה מודפסת בחתיכה אחת — בלי דבק, בלי הרכבה, בלי חלקים שנופלים." },
             { t: "מתנה מנצחת", d: "פיגורה שיוצרת שיחה. סטוקינג סטאפר. גימיק לשולחן בעבודה." },
-            { t: "זמן הדפסה קצר", d: "פיגורות יוצאות תוך 1–4 שעות. שולחים תוך יומיים." },
+            { t: "זמן הדפסה קצר", d: "פיגורות יוצאות תוך 1-4 שעות. שולחים תוך יומיים." },
           ].map((b) => (
             <div key={b.t} className="p-4 rounded-xl border border-ink-800 bg-ink-950/40">
               <div className="font-bold mb-1.5">{b.t}</div>

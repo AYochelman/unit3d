@@ -201,7 +201,7 @@ export default function ContactClient() {
                             type="button"
                             onClick={() => setQty(item.id, item.qty - 1)}
                             disabled={item.qty <= 1}
-                            aria-label="הפחת כמות"
+                            aria-label={`הפחת כמות · ${item.baseTitle}`}
                             className="h-7 w-7 inline-flex items-center justify-center text-ink-300 hover:text-ink-50 disabled:opacity-30"
                           >
                             <Icon name="minus" size={11} />
@@ -210,7 +210,7 @@ export default function ContactClient() {
                           <button
                             type="button"
                             onClick={() => setQty(item.id, item.qty + 1)}
-                            aria-label="הוסף כמות"
+                            aria-label={`הוסף כמות · ${item.baseTitle}`}
                             className="h-7 w-7 inline-flex items-center justify-center text-ink-300 hover:text-ink-50"
                           >
                             <Icon name="plus" size={11} />
@@ -231,6 +231,9 @@ export default function ContactClient() {
                   <span className="text-sm text-ink-300 font-semibold">סה&quot;כ משוער</span>
                   <span className="font-mono text-2xl font-black text-flame" dir="ltr">
                     {fmtILS(items.reduce((sum, x) => sum + (x.price ?? 0), 0))}
+                    {items.some((x) => x.price == null) && (
+                      <span className="text-xs font-normal text-ink-400"> + פריטים לתמחור</span>
+                    )}
                   </span>
                 </div>
               )}

@@ -11,7 +11,8 @@ import DesignCanvas from "@/components/designer/DesignCanvas";
 import { SHAPES, FONTS, FILAMENTS, SIZES } from "@/lib/data";
 import { CONFIG_PRODUCTS, CONFIG_PRODUCT_BY_ID } from "@/lib/products";
 import { MATERIAL_BY_ID, materialFromFilamentDesc } from "@/lib/materials";
-import { designColorCount, designSummary, designToSvg, emptyDesign } from "@/lib/design";
+import { designColorCount, designSummary, designToSvg, emptyDesign, facePath } from "@/lib/design";
+import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { estimateCost, parseHours } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
 import { fmtILS } from "@/lib/format";
@@ -81,7 +82,7 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
   const adminUnlocked = useAdminStore((s) => s.unlocked);
   const settings = useAdminStore((s) => s.settings);
 
-  const startProduct = initialProduct && CONFIG_PRODUCT_BY_ID[initialProduct] ? initialProduct : "keychain";
+  const startProduct = initialProduct && Object.hasOwn(CONFIG_PRODUCT_BY_ID, initialProduct) ? initialProduct : "keychain";
   const [step, setStep] = useState(startProduct === "keychain" ? 0 : 1);
   const [config, setConfig] = useState<Config>({
     product: startProduct,
@@ -125,19 +126,24 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
   }, [product]);
   const current = steps[Math.min(step, steps.length - 1)];
 
+  // Only the DELTA above the product's own default material is a surcharge, so
+  // the configurator can actually reach the price advertised in the listings.
+  const matSurcharge = Math.max(0, material.priceAdd - MATERIAL_BY_ID[product.material].priceAdd);
   const unitPrice =
     product.basePrice +
     (sizeObj?.priceAdd ?? 0) +
-    material.priceAdd +
+    matSurcharge +
     (product.hasShape && config.shape === "emblem" ? 10 : 0) +
     (hasDesign ? DESIGN_SURCHARGE + Math.max(0, designColors - 1) * DESIGN_EXTRA_COLOR : 0);
-  const discount = config.qty >= 5 ? 0.1 : 0;
-  const totalPrice = Math.round(unitPrice * config.qty * (1 - discount));
+  const discount = bulkDiscount(config.qty);
+  const totalPrice = lineTotal(unitPrice, config.qty);
 
   // Production estimate: scales with the face area against the product's reference face.
   const areaRatio = (face[0] * face[1]) / (product.face[0] * product.face[1]);
   const hours = sizeObj ? parseHours(sizeObj.time) : product.hours;
-  const grams = Math.round(product.grams * Math.max(0.4, areaRatio));
+  // "Ø90mm ×4" is four printed pieces, not one — count them for the material cost.
+  const pieces = Number(sizeObj?.dim.match(/×\s*(\d+)\s*$/)?.[1] ?? 1);
+  const grams = Math.round(product.grams * Math.max(0.4, areaRatio) * pieces);
   const cost = estimateCost(
     { grams, hours, material: materialId, colors: hasDesign ? designColors : 1, qty: config.qty, price: totalPrice / config.qty },
     settings,
@@ -172,7 +178,7 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
     lines.push(`צבע: ${colorObj.name} · ${material.name}`);
     if (sizeObj) lines.push(`גודל: ${sizeObj.label} (${sizeObj.dim})`);
     else lines.push(`מידה: ${face[0]}×${face[1]}mm`);
-    lines.push(`כמות: ${config.qty}${discount ? " · הנחת כמות 10%" : ""}`);
+    lines.push(`כמות: ${config.qty}${discount ? ` · ${BULK_NOTE}` : ""}`);
 
     const { design: _design, ...rest } = config;
     setOrder({
@@ -184,7 +190,10 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
         ...rest,
         face,
         material: materialId,
-        designSvg: hasDesign ? designToSvg(design, colorObj.hex) : undefined,
+        baseUnitPrice: unitPrice,
+        designSvg: hasDesign
+          ? designToSvg(design, colorObj.hex, facePath(faceKindFor(product), face[0], face[1]))
+          : undefined,
         designElements: hasDesign ? design.elements : undefined,
       },
     });
@@ -439,7 +448,7 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
                   </div>
                   <div className="mt-4 text-xs text-ink-400">
                     חומר: <span className="text-ink-100 font-semibold">{material.name}</span>
-                    {material.priceAdd > 0 && <span className="font-mono text-flame"> (+{fmtILS(material.priceAdd)})</span>}
+                    {matSurcharge > 0 && <span className="font-mono text-flame"> (+{fmtILS(matSurcharge)})</span>}
                     <span className="text-ink-500"> · {material.desc}</span>
                   </div>
                 </div>

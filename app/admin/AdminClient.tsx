@@ -54,7 +54,7 @@ function baseRows(): Row[] {
     hours: p.hours,
     material: p.material ?? "pla",
     price: p.price,
-    colors: 1,
+    colors: p.colors ?? (p.ams ? 2 : 1),
   }));
   const config: Row[] = CONFIG_PRODUCTS.map((c) => ({
     id: `cfg-${c.id}`,
@@ -154,6 +154,31 @@ function ProductsTab() {
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<"name" | "margin" | "profit">("margin");
 
+  // The row ORDER is recomputed only when the sort or the query changes — not on
+  // every keystroke inside a cell (which would re-sort mid-edit).
+  const order = useMemo(() => {
+    const list = baseRows().map((r) => {
+      const o = overrides[r.id] ?? {};
+      const cost = estimateCost(
+        { grams: o.grams ?? r.grams, hours: o.hours ?? r.hours, material: r.material, colors: r.colors, price: o.price ?? r.price },
+        settings,
+      );
+      return { ...r, cost };
+    });
+    const filtered = q.trim() ? list.filter((r) => r.name.includes(q.trim()) || r.kind.includes(q.trim())) : list;
+    return filtered
+      .sort((a, b) =>
+        sort === "name"
+          ? a.name.localeCompare(b.name, "he")
+          : sort === "margin"
+            ? (a.cost.margin ?? 0) - (b.cost.margin ?? 0)
+            : (a.cost.profit ?? 0) - (b.cost.profit ?? 0),
+      )
+      .map((r) => r.id);
+    // Intentionally NOT reacting to `overrides`: see the comment above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q, sort]);
+
   const rows = useMemo(() => {
     const list = baseRows().map((r) => {
       const o = overrides[r.id] ?? {};
@@ -164,10 +189,11 @@ function ProductsTab() {
       return { ...r, grams, hours, price, cost, overridden: !!overrides[r.id] };
     });
     const filtered = q.trim() ? list.filter((r) => r.name.includes(q.trim()) || r.kind.includes(q.trim())) : list;
-    return filtered.sort((a, b) =>
-      sort === "name" ? a.name.localeCompare(b.name, "he") : sort === "margin" ? (a.cost.margin ?? 0) - (b.cost.margin ?? 0) : (a.cost.profit ?? 0) - (b.cost.profit ?? 0),
-    );
-  }, [overrides, settings, q, sort]);
+    // Order is computed from the SAVED order key, so typing in a cell does not
+    // make the row jump out from under the cursor.
+    const byId = new Map(filtered.map((r) => [r.id, r]));
+    return order.map((id) => byId.get(id)).filter((r): r is (typeof filtered)[number] => !!r);
+  }, [overrides, settings, q, order]);
 
   const avgMargin = rows.length ? rows.reduce((s, r) => s + (r.cost.margin ?? 0), 0) / rows.length : 0;
   const below = rows.filter((r) => (r.cost.margin ?? 0) < settings.targetMargin).length;
