@@ -407,10 +407,21 @@ function EmblemsTab() {
 
   return (
     <div>
-      <div className="p-4 rounded-xl border border-ink-800 bg-ink-900 text-sm text-ink-300 leading-relaxed mb-4">
-        הקטלוג מחפש קובץ תמונה לכל יחידה בנתיב <span className="font-mono text-ink-100" dir="ltr">public/emblems/&lt;slug&gt;.png</span>.
-        כשהקובץ חסר מוצג סמל גנרי. הכנס את הקבצים לתיקייה עם השמות ברשימה, הפעל <span className="font-mono">npm run dev</span> מחדש, והם יופיעו בקטלוג.
-        מומלץ PNG שקוף, 512×512.
+      <div className="p-4 rounded-xl border border-ink-800 bg-ink-900 text-sm text-ink-300 leading-relaxed mb-4 space-y-2">
+        <p>
+          הקטלוג מחפש קובץ תמונה לכל יחידה בנתיב <span className="font-mono text-ink-100" dir="ltr">public/emblems/&lt;slug&gt;.png</span>.
+          כשהקובץ חסר מוצג סמל גנרי, כך שחוסר לא שובר כלום. מומלץ PNG שקוף, 512×512.
+        </p>
+        <p className="pt-2 border-t border-ink-800">
+          <strong className="text-ink-100">הורדה אוטומטית:</strong> הרץ <span className="font-mono text-flame" dir="ltr">npm run emblems</span> בתיקיית
+          הפרויקט. הסקריפט מוריד מ-Wikimedia Commons את הסמלים שמופו ב-<span className="font-mono" dir="ltr">scripts/emblems.json</span>,
+          שומר בשמות הנכונים, וכותב קרדיטים ב-<span className="font-mono" dir="ltr">public/emblems/CREDITS.md</span>.
+          רישיונות CC BY-SA מחייבים ייחוס, אז אל תמחק אותו.
+        </p>
+        <p>
+          יחידות שאין להן סמל יחיד (טייסות, מערכים, קטגוריות כלליות) נשארות עם הסמל הגנרי בכוונה.
+          פירוט מלא: <span className="font-mono" dir="ltr">docs/emblems-sources.md</span>.
+        </p>
       </div>
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <Btn variant="primary" size="sm" onClick={check} disabled={running} icon="search">

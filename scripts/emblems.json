@@ -1,0 +1,917 @@
+[
+ {
+  "slug": "brigade-givati",
+  "name": "חטיבת גבעתי",
+  "level": "חטיבה",
+  "englishName": "Givati Brigade",
+  "file": "File:GivatiBrigade.svg",
+  "altFiles": [
+   "File:Flag of the Israeli Givati Brigade.svg",
+   "File:Flag givati.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Givati Brigade shoulder tag (תג יחידה) as a colour SVG on Commons, categorised under SVG military shoulder tags of Israel; chosen over the purple/white brigade flag SVGs because it is the unit insignia itself."
+ },
+ {
+  "slug": "brigade-nahal",
+  "name": "חטיבת הנח\"ל",
+  "level": "חטיבה",
+  "englishName": "Nahal Brigade",
+  "file": "File:Nahal Brigade.svg",
+  "altFiles": [
+   "File:Flag of the Israeli Nahal Brigade.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Nahal Brigade unit tag (sword, sickle and wheat) as a 400x556 colour SVG, categorised as IDF Infantry Corps insignia and used by he.wikipedia's תבנית:סמל/חטיבת הנח\"ל; the flag SVG is only a fallback."
+ },
+ {
+  "slug": "brigade-kfir",
+  "name": "חטיבת כפיר",
+  "level": "חטיבה",
+  "englishName": "Kfir Brigade",
+  "file": "File:Logo hativa 900.png",
+  "altFiles": [
+   "File:Flag of the Israeli Kfir Brigade.svg"
+  ],
+  "license": null,
+  "confidence": "medium",
+  "note": "The unified Kfir (900th) Brigade emblem (sword + wings), 645x875 PNG listed in Commons Category:Kfir Brigade and used by he.wikipedia's תבנית:סמל/חטיבת כפיר; seen only via category/template snippets (no direct file-page hit, license not shown), and no SVG tag exists - the flag SVG (CC BY-SA 3.0) is the fallback."
+ },
+ {
+  "slug": "corps-armor",
+  "name": "חיל השריון",
+  "level": "חיל",
+  "englishName": "Israeli Armored Corps",
+  "file": "File:תג חיל השריון.svg",
+  "altFiles": [
+   "File:Idf armored corps flag.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "The Armored Corps' own shoulder tag as a 379x496 colour SVG (attributed to אמיר / Groteddy / IDF Spokesperson's Unit) in Category:Israel Armored Corps insignia; preferred over the plain corps flag SVG and over sub-unit tags (401, 460, 7th, 188th)."
+ },
+ {
+  "slug": "branch-ground",
+  "name": "זרוע היבשה",
+  "level": "זרוע",
+  "englishName": "Israeli Ground Forces (GOC Army Headquarters / Ground Forces Command)",
+  "file": "File:Emblem of the Israeli Ground Forces.svg",
+  "altFiles": [
+   "File:Flag of the Israeli Army (Land Arm).svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Emblem/shoulder tag of the Ground Forces Command (SVG, 92x92, categorized under 'Military shoulder tags of Israel'); seen as a Commons result title. The Land Arm flag is the only alternate and is flag-only, so the emblem was preferred."
+ },
+ {
+  "slug": "corps-infantry",
+  "name": "חיל הרגלים (חי\"ר)",
+  "level": "חיל",
+  "englishName": "Infantry Corps (Israel) / Infantry and Paratroopers Corps",
+  "file": "File:Flag of the Israeli Infantry Corps.svg",
+  "altFiles": [
+   "File:IDF Infantry Corps Hat Badge.png"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "medium",
+  "note": "Only Commons file for the corps confirmed by a result title: the corps flag (diagonal green/yellow bicolor SVG, 450x300). A corps hat/beret badge ('IDF Infantry Corps Hat Badge', PNG 583x419, 227 KB, in Category:Military cap badges of Israel) surfaced in category-gallery snippets but never as a page title, so its exact spelling is unverified (a sibling file has a stray space before .png); if it verifies it is the better visual. Hebrew Wikipedia's emblem files 'Logo hir.png' (symbol template) and 'Infantry Corps (new).png' (current tag) did not turn up on Commons and appear to be local uploads."
+ },
+ {
+  "slug": "brigade-golani",
+  "name": "חטיבת גולני",
+  "level": "חטיבה",
+  "englishName": "Golani Brigade (1st Brigade)",
+  "file": "File:Golani tree color.svg",
+  "altFiles": [
+   "File:Golani tree.svg",
+   "File:Flag of the Israeli Golani Brigade.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Colour SVG of the Golani tree insignia (81x112, 16 KB), seen as a Commons result title. Alternates: monochrome 'Golani tree.svg' (public domain, Israeli government work published >50 years ago) and the brigade flag (CC BY-SA 3.0)."
+ },
+ {
+  "slug": "brigade-paratroopers",
+  "name": "חטיבת הצנחנים",
+  "level": "חטיבה",
+  "englishName": "35th Paratroopers Brigade (Israel)",
+  "file": "File:35th Brigade IDF.svg",
+  "altFiles": [
+   "File:35th Brigade Old Tag.svg",
+   "File:IDF Paratroopers Brigade.png",
+   "File:Flag of the Israeli Paratroopers Brigade.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Current shoulder tag of the 35th Paratroopers Brigade (winged-serpent tag; SVG 368x525, 72 KB), categorized under military shoulder tags of Israel and used by he.wikipedia's symbol template for the brigade. Alternates: the historic tag SVG, a PNG ORBAT graphic (286x712, CC BY-SA 3.0) and the red/white brigade flag. 'IDF Brigade 55 Tag.svg' belongs to the 55th reserve brigade and was excluded."
+ },
+ {
+  "slug": "brigade-armor-7",
+  "name": "חטיבה 7",
+  "level": "חטיבה",
+  "englishName": "7th Armored Brigade (Israel) — Sa'ar MiGolan",
+  "file": "File:7thArmoredBrigade.svg",
+  "altFiles": [
+   "File:7thArmoredBrigade-till-1983.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Current brigade emblem as SVG (394×555, 6 KB) in Commons Category:7th Armored Brigade (Israel) / Israel Armored Corps insignia; it is the infobox image on en+he Wikipedia (global usage in EN/AR/CS/FA/FI/IT/JA). Alt is the pre-1983 tag (246×335). Do NOT use 'File:7th armoured brigade.svg' — that is the British 7th Armoured Brigade formation badge."
+ },
+ {
+  "slug": "brigade-armor-188",
+  "name": "חטיבה 188",
+  "level": "חטיבה",
+  "englishName": "188th Armored Brigade (Israel) — Barak Brigade",
+  "file": "File:Barak Brigade insignia.svg",
+  "altFiles": [
+   "File:Hativa188.PNG",
+   "File:Hativa-188-till-1983.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Current emblem as SVG (744×1052, 8 KB): red-bordered rhombus with a sword over a blue/white Haifa-coastline background; en.wikipedia infobox image, in Commons Category:188th Barak Armored Brigade. Hativa188.PNG (596×845) is the PNG used by the he.wikipedia תבנית:סמל/חטיבה 188 template; Hativa-188-till-1983.svg is the historical pre-1983 tag."
+ },
+ {
+  "slug": "brigade-armor-401",
+  "name": "חטיבה 401",
+  "level": "חטיבה",
+  "englishName": "401st Brigade (Israel) — Iron Tracks (Ikvot HaBarzel)",
+  "file": "File:תג יחידה 401.svg",
+  "altFiles": [],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Unit tag (תג יחידה) as colour SVG (369×491, 341 KB) in Commons Category:401st Brigade (IDF) / Israel Armored Corps insignia; it is the infobox image of the he.wikipedia חטיבה 401 article. No other 401 emblem file was found on Commons."
+ },
+ {
+  "slug": "brigade-armor-460",
+  "name": "חטיבה 460",
+  "level": "חטיבה",
+  "englishName": "460th Brigade (Israel) — Bnei Or (Armored Corps training brigade)",
+  "file": "File:תג חטיבה 460.svg",
+  "altFiles": [],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Brigade tag (תג חטיבה) as SVG in Commons Category:460th Brigade (IDF) / Israel Armored Corps insignia; used by the he.wikipedia חטיבה 460 article and the תבנית:סמל/עוצבת בני אור emblem template. No PNG/alternate emblem file surfaced for this unit."
+ },
+ {
+  "slug": "corps-reserve-brigades",
+  "name": "חטיבות מילואים",
+  "level": "חיל",
+  "englishName": "IDF reserve brigades (Ground Forces reserve infantry/armored brigades)",
+  "file": "File:Emblem of the Israeli Ground Forces.svg",
+  "altFiles": [
+   "File:Badge of the Israel Defense Forces.svg",
+   "File:Flag of the Israeli Infantry Corps.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "low",
+  "note": "Generic category with no reserve-specific emblem on Commons (searched shoulder tags, reservist pins and reserve-service ribbons; nothing exists). Returned the parent branch emblem: the Israeli Ground Forces arm (92x92 SVG, categorized as a military shoulder tag of Israel), which is the common parent of the infantry and armored reserve brigades listed below."
+ },
+ {
+  "slug": "brigade-res-jerusalem",
+  "name": "חטיבת ירושלים",
+  "level": "חטיבה",
+  "englishName": "Jerusalem Brigade (16th Infantry Brigade)",
+  "file": "File:JerusalemBrigade.png",
+  "altFiles": [],
+  "license": null,
+  "confidence": "medium",
+  "note": "Brigade tag PNG (394x536 px, 49 KB) listed in the Commons categories 'Israel Armored Corps insignia' and 'Judea Division (IDF)'; the name appeared consistently in category-listing snippets across six searches but never as its own page title, and no SVG version surfaced. Follows the same naming pattern as the sibling brigade tags (NegevBrigade.svg, OdedBrigade.svg, YiftachBrigade.svg, HarelBrigade.svg)."
+ },
+ {
+  "slug": "brigade-res-alexandroni",
+  "name": "חטיבת אלכסנדרוני",
+  "level": "חטיבה",
+  "englishName": "Alexandroni Brigade (3rd Brigade)",
+  "file": "File:Alexandroni.svg",
+  "altFiles": [],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Brigade shoulder tag SVG (186x251 px, 23 KB) in Category:Alexandroni Brigade / military shoulder tags of Israel; confirmed as a Commons page title and used as the תג יחידה in the he.wikipedia 'חטיבת אלכסנדרוני' infobox and IDF brigade templates."
+ },
+ {
+  "slug": "brigade-res-harel",
+  "name": "חטיבת הראל",
+  "level": "חטיבה",
+  "englishName": "Harel Brigade (10th Brigade)",
+  "file": "File:HarelBrigade.svg",
+  "altFiles": [
+   "File:HarelBrigade-till-1983.svg"
+  ],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "Current brigade shoulder tag SVG (400x564 px, 41 KB; heraldic elements: two wheat ears, grapes and swords, i.e. the Palmach-derived Harel emblem), confirmed as a page title on Commons and he.wikipedia (used on the 'חטיבת הראל' article). Alt is the pre-1983 tag version (375x570, seen in a snippet). 'File:Harel.svg' is the Harel road interchange, not the brigade, and was excluded."
+ },
+ {
+  "slug": "brigade-res-yiftach",
+  "name": "חטיבת יפתח",
+  "level": "חטיבה",
+  "englishName": "Yiftach Formation / 679th (later 434th) Reserve Armored Brigade",
+  "file": "File:Logo-hativa-434.png",
+  "altFiles": [
+   "File:YiftachBrigade.svg"
+  ],
+  "license": null,
+  "confidence": "medium",
+  "note": "Colour PNG (645x875) brigade logo listed in Commons Category:679th Armored Brigade (Israel) (he.wiki: עוצבת יפתח, חטיבה 679 -> 434, reserve armour, Northern Command) - chosen because the catalog groups this under reserve brigades; license not visible in snippets. If the catalog means the 1948 Palmach Yiftach Brigade instead, use the alt File:YiftachBrigade.svg (400x564 SVG shield emblem, CC BY-SA 3.0)."
+ },
+ {
+  "slug": "brigade-res-brigade-5",
+  "name": "חטיבה 5 (קציעות)",
+  "level": "חטיבה",
+  "englishName": "5th Brigade (Sharon Formation) - reserve infantry brigade",
+  "file": "File:Hativa 5.png",
+  "altFiles": [],
+  "license": null,
+  "confidence": "high",
+  "note": "Colour PNG (622x869) brigade emblem in Commons Category:IDF 5th Brigade and Category:Insignia of the Ground forces of the IDF; no SVG variant surfaced (the brigade category holds only 2 files). Brigade 5 = עוצבת השרון, reserve infantry under Div. 340 (Ktzi'ot). License not shown in snippets."
+ },
+ {
+  "slug": "brigade-res-brigade-14",
+  "name": "חטיבה 14 (הביזון)",
+  "level": "חטיבה",
+  "englishName": "14th Brigade (Bison / Machatz Formation) - reserve armored brigade",
+  "file": "File:Brigade 14 sign.svg",
+  "altFiles": [],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "SVG (655x650) brigade sign in Commons Category:IDF 14th Brigade, used on the en.wiki List of brigades of the IDF; uploader own-work, CC BY-SA 3.0. A separate File:סמל פלסר חטיבה 14.jpg exists but is the recon-company (פלס\"ר) emblem, not the brigade's."
+ },
+ {
+  "slug": "brigade-res-brigade-55",
+  "name": "חטיבה 55 (צנחנים מילואים)",
+  "level": "חטיבה",
+  "englishName": "55th Paratroopers Brigade (Reserve) - Tip of the Spear",
+  "file": "File:IDF Brigade 55 Tag.svg",
+  "altFiles": [],
+  "license": "CC BY-SA 3.0",
+  "confidence": "high",
+  "note": "SVG (578x800) shoulder tag of the 55th Reserve Paratroopers Brigade, in Commons Category:55th Paratroopers Brigade and Category:SVG files of military shoulder tags of Israel; CC BY-SA 3.0."
+ },
+ {
+  "slug": "brigade-art-282",
+  "name": "אגד אש 282",
+  "level": "חטיבה",
+  "englishName": "282nd Fire Brigade (formerly 282nd 'Golan' Artillery Brigade)",
+  "file": "File:Hativat Haesh 282.svg",
+  "altFiles": [],
+  "license": null,
+  "confidence": "high",
+  "note": "Exact Commons title seen in a search result ('File:Hativat Haesh 282.svg - Wikimedia Commons'); 'Hativat HaEsh 282' is the transliteration of the unit's current Hebrew name חטיבת האש 282 (he.wikipedia article title confirms the 2017 rename from אגד ארטילרי 282), and Commons also has 'Category:282nd Golan Artillery Regiment' for it. SVG, so preferred; image content and license not visible in the snippet."
+ },
+ {
+  "slug": "brigade-art-meteor",
+  "name": "אגד מטאור",
+  "level": "חטיבה",
+  "englishName": "Meteor Artillery Brigade (Agad Meteor)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "Searches for 'אגד מטאור' returned only other artillery formations (282, 215, Tkuma, Kidon, Shalhevet) and no Commons file or Wikipedia article for a 'Meteor' formation; the session's web-search budget was then exhausted, so no file was seen and none is reported. Re-run with a fresh search budget."
+ },
+ {
+  "slug": "corps-engineering",
+  "name": "חיל הנדסה קרבית",
+  "level": "חיל",
+  "englishName": "Combat Engineering Corps",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: the web-search budget (200/200) was exhausted before this query executed, and no other tool is allowed for this task. No file was observed, so none is reported. Re-run this unit with a fresh budget (queries: 'Combat Engineering Corps Israel insignia' on commons.wikimedia.org, 'סמל חיל ההנדסה הקרבית')."
+ },
+ {
+  "slug": "brigade-eng-yahalom",
+  "name": "יחידת יהל\"ם",
+  "level": "חטיבה",
+  "englishName": "Yahalom Unit (Special Operations Engineering Unit)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: the web-search budget (200/200) was exhausted before this query executed, and no other tool is allowed for this task. No file was observed, so none is reported. Re-run this unit with a fresh budget (queries: 'Yahalom unit Israel insignia tag' on commons.wikimedia.org, 'סמל יחידת יהלם')."
+ },
+ {
+  "slug": "brigade-res-brigade-551",
+  "name": "חטיבה 551 (חצי האש)",
+  "level": "חטיבה",
+  "englishName": "551st Paratroopers Brigade (Hetzei HaEsh / \"Arrows of Fire\" Formation)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "No emblem/tag file surfaced: Commons 'Category:551st Paratroopers Brigade' (23 files) only showed exercise photos/videos (e.g. 'File:551st Paratroopers Brigade, November 2023. V.jpg'), and he.wiki 'עוצבת חצי האש' snippets named no infobox file; the search budget ran out before the category could be enumerated - recheck https://commons.wikimedia.org/wiki/Category:551st_Paratroopers_Brigade for an SVG/PNG tag."
+ },
+ {
+  "slug": "brigade-res-menashe",
+  "name": "חטיבת מנשה",
+  "level": "חטיבה",
+  "englishName": "Menashe Territorial Brigade (Menashe Regional Brigade, Judea & Samaria Division)",
+  "file": "File:YoSH h-Menashe.png",
+  "altFiles": [],
+  "license": null,
+  "confidence": "medium",
+  "note": "Shoulder tag of the Menashe Territorial Brigade (Gilboa-mountains design per he.wiki) - appeared in Commons 'Insignia of the Ground forces of the IDF' / 'Military shoulder tags of Israel' as thumbnail '431px-YoSH h-Menashe.png' (415x586 px, 60 KB), sibling of YoSH h-Yehuda / h-Shomron / h-Beniamin; title derived from the thumbnail name, so if the .png title 404s try the same base name with .svg (Commons also has 'Category:Menashe Territorial Brigade')."
+ },
+ {
+  "slug": "corps-artillery",
+  "name": "חיל התותחנים",
+  "level": "חיל",
+  "englishName": "Israeli Artillery Corps (IDF Artillery Corps)",
+  "file": "File:Flag of the Israeli Artillery Corps.svg",
+  "altFiles": [
+   "File:Idf artillery corps.svg",
+   "File:IDF Artillery Corps Symbol 1948.png"
+  ],
+  "license": null,
+  "confidence": "low",
+  "note": "Only flags and a historical badge surfaced within the budget: chose the current red-black corps flag (colour SVG) as fallback; alternatives are 'File:Idf artillery corps.svg' (minimal red/black diagonal bicolor flag, 640x480, 831 B) and 'File:IDF Artillery Corps Symbol 1948.png' (obsolete 1948-50 cap badge, 248x236, in 'Military cap badges of Israel'). The current corps emblem (towed field gun in olive-branch wreaths) is presumably among the 40 files of 'Category:Israeli Artillery Corps insignia' but its exact title was not captured."
+ },
+ {
+  "slug": "brigade-art-215",
+  "name": "אגד אש 215",
+  "level": "חטיבה",
+  "englishName": "215th Artillery Regiment / Fire Brigade 215 (Utzbat Amud HaEsh, \"Pillar of Fire\" Formation)",
+  "file": "File:Utzbat Amud Haesh Eged 215 Tag.svg",
+  "altFiles": [],
+  "license": null,
+  "confidence": "high",
+  "note": "Unit tag SVG of Fire Brigade 215 / Eged 215 (587x800 px, 19 KB) - listed in Commons 'Category:215th Artillery Regiment' and used as the infobox image of he.wiki 'חטיבת האש 215' (file page קובץ:Utzbat Amud Haesh Eged 215 Tag.svg)."
+ },
+ {
+  "slug": "brigade-eng-sadir",
+  "name": "סדיר (גדודי הנדסה)",
+  "level": "חטיבה",
+  "englishName": "Regular (conscript) combat engineering battalions – parent: Combat Engineering Corps (IDF)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: the session's WebSearch budget was already exhausted (200/200) before any query for this batch ran, so no Commons title was ever seen and none may be reported. This is a generic category; when re-run in a fresh session, search commons.wikimedia.org for the parent corps emblem ('Combat Engineering Corps insignia svg' / 'חיל ההנדסה הקרבית סמל') and use it as the fallback."
+ },
+ {
+  "slug": "corps-combat-intel",
+  "name": "חיל האיסוף הקרבי",
+  "level": "חיל",
+  "englishName": "Combat Intelligence Collection Corps",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200) before this batch started; no result title/snippet observed, so no file is reported per the never-invent rule. Re-run in a fresh session with 'Combat Intelligence Collection Corps insignia' (commons.wikimedia.org) and 'חיל האיסוף הקרבי סמל' (he.wikipedia.org)."
+ },
+ {
+  "slug": "brigade-ci-recon",
+  "name": "גדודי סיור גזרתיים",
+  "level": "חטיבה",
+  "englishName": "Sector (regional) reconnaissance battalions – parent: Combat Intelligence Collection Corps",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200) before this batch started. Generic category with no single emblem expected; the intended fallback is the Combat Intelligence Collection Corps emblem once it is verified in a fresh session (same query as corps-combat-intel)."
+ },
+ {
+  "slug": "brigade-ci-oketz",
+  "name": "יחידת עוקץ",
+  "level": "חטיבה",
+  "englishName": "Oketz Unit (IDF canine special forces unit)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200) before this batch started; no Commons title observed, so nothing is reported. Re-run in a fresh session with 'Oketz unit insignia svg' (commons.wikimedia.org) and 'יחידת עוקץ סמל' (he.wikipedia.org) — a unit-specific emblem is expected to exist."
+ },
+ {
+  "slug": "corps-border-defense",
+  "name": "חי\"ר גבולות ופלח\"ץ",
+  "level": "חיל",
+  "englishName": "Border Defense Corps (Israel Defense Forces)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: the session's WebSearch budget was already exhausted (200/200) when this subagent ran, and no other tool was permitted, so no Commons title could be verified. Re-run with queries: 'Border Defense Corps insignia site:commons.wikimedia.org', 'חיל הגנת הגבולות סמל' (he.wikipedia infobox image)."
+ },
+ {
+  "slug": "brigade-bd-plahatz",
+  "name": "חטיבת החילוץ וההדרכה (פלח\"ץ)",
+  "level": "חטיבה",
+  "englishName": "Search and Rescue Brigade (Palchatz)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted before any query ran; nothing verified. Re-run with: 'Search and Rescue Brigade Israel insignia site:commons.wikimedia.org', 'חטיבת החילוץ וההדרכה פלח\"ץ סמל'."
+ },
+ {
+  "slug": "brigade-bd-borders",
+  "name": "מערך הגבולות",
+  "level": "חטיבה",
+  "englishName": "Border Array (Ma'arach HaGvulot), Border Defense Corps",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted before any query ran. Likely a sub-formation without its own Commons emblem; if re-run finds nothing, fall back to the Border Defense Corps emblem. Queries: 'מערך הגבולות תג', 'Border Array IDF emblem'."
+ },
+ {
+  "slug": "brigade-bd-territorial",
+  "name": "חטיבות מרחביות",
+  "level": "חטיבה",
+  "englishName": "Territorial brigades (generic category)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted before any query ran. This is a generic category (regional/territorial brigades) that normally has no single emblem; the expected fallback is the parent Border Defense Corps emblem once that is verified."
+ },
+ {
+  "slug": "branch-commando",
+  "name": "חטיבת הקומנדו (89)",
+  "level": "זרוע",
+  "englishName": "89th Commando Brigade (\"Oz\" Brigade), Israel Defense Forces",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: the session's WebSearch budget was already exhausted (200/200) before any query ran, so no Commons title/snippet was seen; re-run with CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION raised using queries like \"89th Commando Brigade insignia svg\" / \"Oz Brigade emblem\" / \"סמל חטיבת הקומנדו\" on commons.wikimedia.org and he/en.wikipedia.org."
+ },
+ {
+  "slug": "corps-commando-89",
+  "name": "חטיבה 89",
+  "level": "חיל",
+  "englishName": "89th Brigade (89th Commando Brigade), Israel Defense Forces",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED (search budget exhausted); this is the same formation as branch-commando (the 89th \"Oz\" Commando Brigade), so whatever file is verified for that slug should be reused here."
+ },
+ {
+  "slug": "brigade-commando-units",
+  "name": "יחידות הקומנדו",
+  "level": "חטיבה",
+  "englishName": "Commando units of the 89th Commando Brigade (Maglan, Egoz, Duvdevan, Rimon)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED (search budget exhausted); this is a generic grouping with no single emblem of its own, so per the fallback rule it should inherit the parent 89th Commando Brigade emblem once that file is verified."
+ },
+ {
+  "slug": "branch-air",
+  "name": "זרוע האוויר והחלל",
+  "level": "זרוע",
+  "englishName": "Israeli Air Force (Israeli Air and Space Force / Air and Space Arm)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED (search budget exhausted): no Commons title/snippet seen, so no file reported; retry with \"Israeli Air Force emblem svg\" / \"סמל זרוע האוויר והחלל\" restricted to commons.wikimedia.org and he.wikipedia.org (the infobox emblem of the חיל האוויר article is the expected target)."
+ },
+ {
+  "slug": "brigade-training-squadrons",
+  "name": "טייסות הדרכה ואימון",
+  "level": "חטיבה",
+  "englishName": "Israeli Air Force Flight Academy training squadrons (IAF Flight School, בית הספר לטיסה)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: the session's WebSearch budget was already exhausted (200/200) and every query was refused before running, so no Commons file could be verified. Re-run with a fresh budget; suggested queries: 'Israeli Air Force Flight Academy emblem site:commons.wikimedia.org', 'IAF flight school insignia svg', 'סמל בית הספר לטיסה'. Expected fallback: the Flight Academy's own emblem, since the training squadrons (e.g. 100, 102) have no single shared emblem."
+ },
+ {
+  "slug": "corps-helicopter-squadrons",
+  "name": "טייסות מסוקים",
+  "level": "חיל",
+  "englishName": "Israeli Air Force helicopter squadrons",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200) before any query ran; nothing verified. This is a generic grouping with no single emblem — on re-run, expect to fall back to the Israeli Air Force emblem (parent corps). Suggested queries: 'Israeli Air Force emblem svg site:commons.wikimedia.org', 'סמל חיל האוויר'."
+ },
+ {
+  "slug": "brigade-attack-helicopters",
+  "name": "מסוקי תקיפה (AH-64 'פטן')",
+  "level": "חטיבה",
+  "englishName": "Israeli Air Force attack helicopter squadrons (AH-64 Apache 'Peten' — 113 'Hornet' and 190 'Magic Touch' Squadrons)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200) before any query ran; nothing verified. Generic grouping with no single emblem; on re-run, check for individual squadron emblems (113 Squadron 'The Hornet', 190 Squadron 'Magic Touch') and otherwise fall back to the IAF emblem. Suggested queries: '113 Squadron Israeli Air Force emblem site:commons.wikimedia.org', 'טייסת הצרעה סמל'."
+ },
+ {
+  "slug": "brigade-transport-helicopters",
+  "name": "מסוקי הובלה (CH-53/UH-60)",
+  "level": "חטיבה",
+  "englishName": "Israeli Air Force transport helicopter squadrons (CH-53 Yas'ur / UH-60 Yanshuf — 114, 118, 123, 124 Squadrons)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200) before any query ran; nothing verified. Generic grouping with no single emblem; on re-run, check individual squadron emblems (114 'Night Birds', 118 'Night Leaders', 123 'Desert Birds', 124 'Rolling Sword') and otherwise fall back to the IAF emblem. Suggested queries: '118 Squadron Israeli Air Force emblem site:commons.wikimedia.org', 'טייסת מובילי הלילה סמל'."
+ },
+ {
+  "slug": "corps-fighter-squadrons",
+  "name": "טייסות קרב",
+  "level": "חיל",
+  "englishName": "Israeli Air Force fighter squadrons (parent branch: Israeli Air Force)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: the session's WebSearch budget (200/200) was already exhausted before this subagent's first query, so no Commons title/snippet was seen and no file may be reported. Generic grouping with no emblem of its own; the intended fallback is the Israeli Air Force branch emblem (catalog parent slug 'air'). Re-run after raising CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION with: 'Israeli Air Force emblem svg' (commons.wikimedia.org) and 'סמל חיל האוויר' (he.wikipedia.org)."
+ },
+ {
+  "slug": "brigade-f35-squadrons",
+  "name": "טייסות F-35 (אדיר)",
+  "level": "חטיבה",
+  "englishName": "F-35I Adir squadrons (140 Squadron 'Golden Eagle', 116 Squadron 'Lions of the South')",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted before any query ran; no file verified. Grouping node with no single emblem - fallback would be the IAF branch emblem, with the individual squadron emblems as alternates. Re-run queries: '140 Squadron IAF emblem', '116 Squadron IAF emblem' on commons.wikimedia.org; 'טייסת 140' / 'טייסת 116' on he.wikipedia.org."
+ },
+ {
+  "slug": "brigade-f15-squadrons",
+  "name": "טייסות F-15 (בז/רעם)",
+  "level": "חטיבה",
+  "englishName": "F-15 Baz / F-15I Ra'am squadrons (106 Squadron 'Spearhead', 133 Squadron 'Knights of the Twin Tail', 69 Squadron 'Hammers')",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted before any query ran; no file verified. Grouping node with no single emblem - fallback would be the IAF branch emblem, with the individual squadron emblems as alternates. Re-run queries: '106 Squadron IAF emblem', '133 Squadron IAF emblem', '69 Squadron IAF Hammers emblem' on commons.wikimedia.org; 'טייסת 106' / 'טייסת 133' / 'טייסת 69' on he.wikipedia.org."
+ },
+ {
+  "slug": "brigade-f16-squadrons",
+  "name": "טייסות F-16 (סופה/ברק)",
+  "level": "חטיבה",
+  "englishName": "F-16I Sufa / F-16C-D Barak squadrons (101 'First Fighter', 105 'Scorpion', 107 'Knights of the Orange Tail', 109 'Valley', 110 'Knights of the North', 117 'First Jet', 119 'Bat', 201 'The One', 253 'Negev')",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted before any query ran; no file verified. Grouping node with no single emblem - fallback would be the IAF branch emblem, with the individual squadron emblems as alternates. Re-run queries: '101 Squadron IAF emblem', '105 Squadron IAF emblem', '107 Squadron IAF emblem', '201 Squadron IAF emblem', '253 Squadron IAF emblem' on commons.wikimedia.org; 'טייסת 101' etc. on he.wikipedia.org."
+ },
+ {
+  "slug": "corps-uav-squadrons",
+  "name": "טייסות מל\"ט",
+  "level": "חיל",
+  "englishName": "Israeli Air Force UAV squadrons (corps level)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: the session's WebSearch budget (200/200) was already exhausted when this unit was reached, so no Commons/Wikipedia search ran and no file name can be reported without inventing it. This is a generic category (individual UAV squadrons such as 166/200/161 carry their own badges; no single 'UAV squadrons' emblem is expected) — the intended fallback is the parent Israeli Air Force emblem, whose exact Commons title still needs a fresh-session search to confirm. Re-run this slug."
+ },
+ {
+  "slug": "brigade-uav-units",
+  "name": "טייסות מל\"ט",
+  "level": "חטיבה",
+  "englishName": "Israeli Air Force UAV squadrons (brigade level)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted before lookup, so nothing was verified. Same generic category as corps-uav-squadrons (per-squadron badges only, no umbrella emblem); fallback would be the parent Israeli Air Force emblem once its Commons title is confirmed in a fresh session. Re-run this slug."
+ },
+ {
+  "slug": "corps-transport-squadrons",
+  "name": "טייסות תובלה",
+  "level": "חיל",
+  "englishName": "Israeli Air Force transport squadrons (corps level)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted before lookup, so no Commons/Wikipedia result was seen and no file name can be reported honestly. Generic category (transport squadrons 103/120/122/131 each have their own badge; no umbrella 'transport squadrons' emblem expected) — fallback is the parent Israeli Air Force emblem, exact Commons title to be confirmed in a fresh session. Re-run this slug."
+ },
+ {
+  "slug": "brigade-transport-units",
+  "name": "טייסות תובלה",
+  "level": "חטיבה",
+  "englishName": "Israeli Air Force transport squadrons (brigade level)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted before lookup. Same generic category as corps-transport-squadrons (per-squadron badges only); fallback would be the parent Israeli Air Force emblem once verified via a fresh-session search. Re-run this slug."
+ },
+ {
+  "slug": "corps-air-special",
+  "name": "יחידות מיוחדות באוויר",
+  "level": "חיל",
+  "englishName": "Israeli Air Force special units (Shaldag / Unit 669 / Unit 5700 – IAF special forces wing)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch session budget was exhausted (200/200) before any query returned; no Commons title/snippet was seen, so no file may be reported. Generic grouping – on retry search commons.wikimedia.org for 'Israeli Air Force emblem svg' (parent branch) and 'IAF special forces wing 7 insignia'."
+ },
+ {
+  "slug": "brigade-air-elite-units",
+  "name": "יחידות עילית של חיל האוויר",
+  "level": "חטיבה",
+  "englishName": "Israeli Air Force elite units",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200), zero results seen. Generic grouping of the same IAF special units (Shaldag, 669, 5700); on retry fall back to the Israeli Air Force emblem on Commons (query 'Israeli Air Force emblem svg', he.wikipedia 'סמל חיל האוויר')."
+ },
+ {
+  "slug": "branch-sea",
+  "name": "זרוע הים",
+  "level": "זרוע",
+  "englishName": "Israeli Navy (Sea Arm)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200), zero results seen. A dedicated navy emblem very likely exists on Commons – on retry query 'Israeli Navy emblem svg' on commons.wikimedia.org and 'סמל זרוע הים' on he.wikipedia.org."
+ },
+ {
+  "slug": "corps-fleet",
+  "name": "מערך הספינות",
+  "level": "חיל",
+  "englishName": "Israeli Navy ships array / surface fleet (missile boats Shayetet 3, patrol flotillas)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted (200/200), zero results seen. Likely a generic grouping with no single emblem; on retry query 'Shayetet 3 missile boat flotilla insignia' on commons and 'מערך הספינות חיל הים' on he.wikipedia.org, else fall back to the Israeli Navy emblem."
+ },
+ {
+  "slug": "corps-air-defense",
+  "name": "מערך ההגנה האווירית",
+  "level": "חיל",
+  "englishName": "Israeli Air Defense Command (Israel Air Defense Forces / Air Defense Array)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: session WebSearch budget was exhausted (200/200) before any query ran, so no Commons title/snippet was seen; re-run with CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION raised using queries 'Israeli Air Defense Command emblem/insignia site:commons.wikimedia.org' and 'סמל מערך ההגנה האווירית'. A corps-level emblem very likely exists on Commons; local catalog (u3d/lib/units-hierarchy.ts) holds only a fallback shape, no mapping."
+ },
+ {
+  "slug": "brigade-iron-dome",
+  "name": "כיפת ברזל",
+  "level": "חטיבה",
+  "englishName": "Iron Dome",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: search budget exhausted before any query executed; no file title or snippet observed, so nothing can be reported without inventing. Suggested re-run queries: 'Iron Dome emblem symbol site:commons.wikimedia.org', 'סמל כיפת ברזל'; if no unit-specific emblem surfaces, fall back to the Air Defense Command emblem found for corps-air-defense."
+ },
+ {
+  "slug": "brigade-arrow",
+  "name": "מערך החץ",
+  "level": "חטיבה",
+  "englishName": "Arrow (Israeli missile defense array)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: search budget exhausted before any query executed; no file seen. Suggested re-run queries: 'Arrow missile system emblem Israel site:commons.wikimedia.org', 'סמל מערך החץ' / 'גדוד 136 חץ'; the Arrow array may have no distinct Commons emblem, in which case use the parent Air Defense Command emblem."
+ },
+ {
+  "slug": "brigade-patriot-davids",
+  "name": "פטריוט ושרביט קסמים",
+  "level": "חטיבה",
+  "englishName": "Patriot and David's Sling (IDF air defense)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: search budget exhausted before any query executed; no file seen. This is a combined grouping (Patriot battalion 879 + David's Sling battery) unlikely to have a single emblem; suggested re-run queries: 'David's Sling insignia site:commons.wikimedia.org', 'סמל שרביט קסמים', 'גדוד 879 פטריוט סמל' - otherwise fall back to the Air Defense Command emblem."
+ },
+ {
+  "slug": "brigade-shayetet-13",
+  "name": "שייטת 13",
+  "level": "חטיבה",
+  "englishName": "Shayetet 13 (Flotilla 13, Israeli Navy naval commandos)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: the session's WebSearch budget was already exhausted (200/200) before any query ran, so no Commons result title/snippet was seen and no file name can be reported without inventing one. Retry with 'Shayetet 13 insignia svg' / 'Shayetet 13 emblem' (commons.wikimedia.org) and 'סמל שייטת 13' (he.wikipedia.org) after raising CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION."
+ },
+ {
+  "slug": "corps-sea-coastal",
+  "name": "מערך החוף וההגנה",
+  "level": "חיל",
+  "englishName": "Israeli Navy Coast and Defense Array (coastal defense / patrol-boat array)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted (200/200) before any query ran; nothing seen, nothing reported. On retry search 'Israeli Navy coastal defense patrol boats insignia' (commons.wikimedia.org) and 'מערך החוף וההגנה חיל הים סמל' (he.wikipedia.org); if no array-specific emblem exists, fall back to the Israeli Navy corps emblem."
+ },
+ {
+  "slug": "brigade-coastal-units",
+  "name": "פלוגות הגנת חוף",
+  "level": "חטיבה",
+  "englishName": "Coastal Defense Companies (Israeli Navy)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted (200/200) before any query ran. This is a generic grouping that likely has no single emblem; on retry search 'פלוגות הגנת חוף חיל הים' (he.wikipedia.org) and, if nothing unit-specific exists, use the parent Israeli Navy emblem."
+ },
+ {
+  "slug": "branch-intel",
+  "name": "אגף המודיעין (אמ\"ן)",
+  "level": "זרוע",
+  "englishName": "Military Intelligence Directorate (Aman)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: WebSearch budget exhausted (200/200) before any query ran; no result seen, so no file name is reported. On retry search 'Israeli Military Intelligence Directorate Aman insignia svg' (commons.wikimedia.org) and 'סמל אגף המודיעין אמ\"ן' (he.wikipedia.org) — the he.wikipedia infobox image name is the best lead."
+ },
+ {
+  "slug": "brigade-fleet-3",
+  "name": "שייטת 3 - שייטת הטילים",
+  "level": "חטיבה",
+  "englishName": "Shayetet 3 (3rd Flotilla) - Israeli Navy Missile Boat Flotilla",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "No search could be run: the session's WebSearch budget (200/200) was already exhausted before this unit's first query, WebFetch to wikimedia is blocked and no other tool was permitted, so no Commons file title was seen and none is reported. Re-run with a raised CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION using queries such as \"Shayetet 3 missile boat flotilla insignia\", \"3rd Flotilla Israeli Navy emblem svg\", \"סמל שייטת 3\" (Commons + he.wikipedia)."
+ },
+ {
+  "slug": "brigade-fleet-7",
+  "name": "שייטת 7 - הצוללות",
+  "level": "חטיבה",
+  "englishName": "Shayetet 7 (7th Flotilla) - Israeli Navy Submarine Flotilla",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "No search could be run: the session's WebSearch budget (200/200) was already exhausted before this unit's first query, WebFetch to wikimedia is blocked and no other tool was permitted, so no Commons file title was seen and none is reported. Re-run with a raised search budget using queries such as \"Shayetet 7 submarine flotilla insignia\", \"Israeli Navy submarine flotilla emblem svg\", \"סמל שייטת הצוללות\" / \"סמל שייטת 7\"."
+ },
+ {
+  "slug": "brigade-fleet-9",
+  "name": "שייטת ספינות פטרול",
+  "level": "חטיבה",
+  "englishName": "Shayetet 9 (9th Flotilla) - Israeli Navy Patrol Boat Flotilla",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "No search could be run: the session's WebSearch budget (200/200) was already exhausted before this unit's first query, WebFetch to wikimedia is blocked and no other tool was permitted, so no Commons file title was seen and none is reported. Re-run with a raised search budget using queries such as \"Shayetet 9 patrol boat flotilla insignia\", \"Israeli Navy patrol boat flotilla emblem\", \"סמל שייטת ספינות הפטרול\" / \"סמל שייטת 9\"; if no unit emblem exists, fall back to the Israeli Navy corps emblem."
+ },
+ {
+  "slug": "corps-sea-special",
+  "name": "שייטת 13 - הקומנדו הימי",
+  "level": "חיל",
+  "englishName": "Shayetet 13 (13th Flotilla) - Israeli Naval Commando",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "No search could be run: the session's WebSearch budget (200/200) was already exhausted before this unit's first query, WebFetch to wikimedia is blocked and no other tool was permitted, so no Commons file title was seen and none is reported. Re-run with a raised search budget using queries such as \"Shayetet 13 insignia svg\", \"Shayetet 13 emblem site:commons.wikimedia.org\", \"סמל שייטת 13\" / \"תג שייטת 13\" - this unit almost certainly has a dedicated insignia file (the en/he Wikipedia infoboxes carry one), so a re-run should resolve it with high confidence."
+ },
+ {
+  "slug": "corps-humint",
+  "name": "מודיעין אנושי (חומינט)",
+  "level": "חיל",
+  "englishName": "IDF Human Intelligence (HUMINT) / Intelligence Corps",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: session WebSearch budget was exhausted (200/200) before any query ran; no search result was seen, so no file name can be reported. Re-run in a session with search budget (queries planned: 'Israeli Intelligence Corps insignia svg' on commons.wikimedia.org, 'מודיעין אנושי חומינט צה\"ל סמל' on he.wikipedia.org)."
+ },
+ {
+  "slug": "brigade-intel-504",
+  "name": "יחידה 504",
+  "level": "חטיבה",
+  "englishName": "Unit 504 (IDF HUMINT unit)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: session WebSearch budget was exhausted before any query ran; no file seen. Re-run with queries 'Unit 504 IDF insignia' / 'יחידה 504 סמל' on commons.wikimedia.org + he.wikipedia.org."
+ },
+ {
+  "slug": "branch-comm",
+  "name": "אגף התקשוב וההגנה בסייבר (ת\"ק)",
+  "level": "זרוע",
+  "englishName": "C4I and Cyber Defense Directorate",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: session WebSearch budget was exhausted before any query ran; no file seen. Re-run with queries 'C4I and Cyber Defense Directorate IDF emblem' / 'אגף התקשוב וההגנה בסייבר סמל'."
+ },
+ {
+  "slug": "corps-comm-lotem",
+  "name": "לוט\"ם",
+  "level": "חיל",
+  "englishName": "Lotem (IDF C4I technological unit)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: session WebSearch budget was exhausted before any query ran; no file seen. Re-run with queries 'Lotem IDF unit insignia' / 'לוט\"ם סמל יחידה'; fall back to the C4I Directorate emblem if the unit has none."
+ },
+ {
+  "slug": "corps-sigint",
+  "name": "מודיעין אותות (סיגינט)",
+  "level": "חיל",
+  "englishName": "IDF Signals Intelligence (SIGINT) branch / Intelligence Corps",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: the session's WebSearch budget (200/200) was already exhausted, so no query ran and no Commons file could be verified. SIGINT is a generic branch rather than a single unit; when re-run, the expected fallback is the Intelligence Corps (חיל המודיעין) emblem or the Unit 8200 tag — re-run this slug in a fresh session or raise CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION."
+ },
+ {
+  "slug": "brigade-intel-8200",
+  "name": "יחידה 8200",
+  "level": "חטיבה",
+  "englishName": "Unit 8200",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted before any query ran (all 8 planned searches refused), and no other channel is permitted for wikimedia domains. Unit 8200 does have a well-known emblem and Hebrew/English Wikipedia infobox images, so a fresh-session search of 'Unit 8200 insignia' / 'סמל יחידה 8200' on commons.wikimedia.org should resolve it quickly."
+ },
+ {
+  "slug": "corps-visint",
+  "name": "מודיעין ויזואלי (ויזינט)",
+  "level": "חיל",
+  "englishName": "IDF Visual Intelligence (VISINT) branch / Intelligence Corps",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted before any query ran. VISINT is a generic branch with no single emblem of its own; the expected fallback once verified is the Intelligence Corps (חיל המודיעין) emblem or the Unit 9900 tag. Re-run in a fresh session."
+ },
+ {
+  "slug": "brigade-intel-9900",
+  "name": "יחידה 9900",
+  "level": "חטיבה",
+  "englishName": "Unit 9900",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT RESEARCHED: WebSearch budget exhausted before any query ran, so no Commons file title was observed and none is reported (per the no-invention rule). A fresh-session search of 'Unit 9900 insignia' / 'סמל יחידה 9900' on commons.wikimedia.org and he.wikipedia.org is needed."
+ },
+ {
+  "slug": "brigade-comm-field-units",
+  "name": "גדודי תקשוב",
+  "level": "חטיבה",
+  "englishName": "IDF Signal / C4I battalions (C4I and Cyber Defense Directorate, formerly Teleprocessing Corps)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: session WebSearch budget was already exhausted (200/200) before this subagent ran, so no Commons/Wikipedia result could be seen; no file name is reported to avoid inventing one. Generic category (signal battalions) - on retry, look for the parent C4I/Teleprocessing Corps emblem with queries like 'C4I Corps Israel insignia svg' / 'סמל חיל התקשוב' restricted to commons.wikimedia.org and he.wikipedia.org."
+ },
+ {
+  "slug": "branch-tech",
+  "name": "חיל הטכנולוגיה והאחזקה",
+  "level": "זרוע",
+  "englishName": "Technology and Maintenance Corps (Israel)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: session WebSearch budget was already exhausted (200/200) before this subagent ran; no search result was seen, so no file name is reported. On retry, query 'Technology and Maintenance Corps Israel insignia svg' / 'סמל חיל הטכנולוגיה והאחזקה' on commons.wikimedia.org and he.wikipedia.org (the he.wikipedia infobox image name is the best lead)."
+ },
+ {
+  "slug": "corps-tech-corps",
+  "name": "החיל הטכנולוגי",
+  "level": "חיל",
+  "englishName": "Technological Corps (IDF)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: session WebSearch budget was already exhausted (200/200) before this subagent ran; no result seen, no file reported. Unit identity also needs confirming on retry - 'החיל הטכנולוגי' may be an alias of the Technology and Maintenance Corps; query 'החיל הטכנולוגי צה\"ל סמל' on he.wikipedia.org first, then the matching English name on commons.wikimedia.org."
+ },
+ {
+  "slug": "brigade-ordnance",
+  "name": "חיל החימוש",
+  "level": "חטיבה",
+  "englishName": "Ordnance Corps (Israel)",
+  "file": null,
+  "altFiles": [],
+  "license": null,
+  "confidence": "none",
+  "note": "NOT SEARCHED: session WebSearch budget was already exhausted (200/200) before this subagent ran; no result seen, no file reported. Historical corps (renamed Technology and Maintenance Corps in 2004) - on retry, query 'Israel Ordnance Corps insignia' / 'סמל חיל החימוש' on commons.wikimedia.org and he.wikipedia.org; the pre-2004 corps emblem is the target, falling back to the successor corps emblem if none exists."
+ }
+]
