@@ -137,7 +137,6 @@
   }
   .u3d-nozzle {
     animation: u3d-nozzle 6s ease-in-out infinite;
-    transform-origin: 260px 40px;
   }
   .u3d-drop {
     animation: u3d-drop 6s ease-in-out infinite;

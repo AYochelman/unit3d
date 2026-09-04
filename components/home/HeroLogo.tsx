@@ -10,6 +10,7 @@ export default function HeroLogo({ className }: { className?: string }) {
       className={className}
       role="img"
       aria-label="Unit 3D"
+      style={{ direction: "ltr" }}
     >
       <defs>
         <filter id="u3d-glow" x="-30%" y="-30%" width="160%" height="160%">
@@ -25,8 +26,9 @@ export default function HeroLogo({ className }: { className?: string }) {
         </linearGradient>
       </defs>
 
-      {/* nozzle */}
-      <g className="u3d-nozzle" transform="translate(260 40)">
+      {/* nozzle — positioned by the outer group; the inner group carries the CSS bob animation */}
+      <g transform="translate(275 40)">
+      <g className="u3d-nozzle">
         <rect x="-38" y="0" width="76" height="40" rx="4" fill="#F5F5F7" />
         <rect x="-26" y="10" width="52" height="6" rx="2" fill="#0A0A0B" />
         <rect x="-26" y="22" width="52" height="6" rx="2" fill="#0A0A0B" />
@@ -35,10 +37,11 @@ export default function HeroLogo({ className }: { className?: string }) {
         {/* heat shimmer */}
         <circle cx="0" cy="80" r="6" fill="#3FB872" className="u3d-drop" />
       </g>
+      </g>
 
       {/* filament path from nozzle into the "3" */}
       <path
-        d="M260 118 C260 140 258 150 275 150"
+        d="M275 118 C275 138 275 150 290 150"
         fill="none"
         stroke="url(#u3d-fil)"
         strokeWidth="14"
@@ -81,13 +84,15 @@ export default function HeroLogo({ className }: { className?: string }) {
         className="u3d-letter"
       />
 
-      {/* wordmark */}
-      <g className="u3d-word" fontFamily="var(--font-mono), monospace" fontWeight="700" fontSize="30" letterSpacing="12">
-        <text x="128" y="292" fill="#F5F5F7">UNIT</text>
-        <text x="300" y="292" fill="#089a47">3D</text>
+      {/* wordmark — forced LTR (the page is RTL) and centred under the mark */}
+      <g className="u3d-word" style={{ direction: "ltr" }}>
+        <text x="260" y="292" textAnchor="middle" fontFamily="var(--font-mono), monospace" fontWeight="700" fontSize="30" letterSpacing="12">
+          <tspan fill="#F5F5F7">UNIT </tspan>
+          <tspan fill="#089a47">3D</tspan>
+        </text>
       </g>
-      <path d="M40 282 H112" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
-      <path d="M400 282 H480" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
+      <path d="M52 282 H136" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
+      <path d="M384 282 H468" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
     </svg>
   );
 }
