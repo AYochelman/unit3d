@@ -1,6 +1,15 @@
 # סמלי יחידות: מקורות ומצב
 
-נמצא על ידי חיפוש ב-Wikimedia Commons. **24 יחידות** עם קובץ מועמד, **56** בלי (רובן קטגוריות כלליות שאין להן סמל יחיד: טייסות, מערכים, חטיבות מילואים כקבוצה).
+חיפוש ב-Wikimedia Commons על כל 100 היחידות בקטלוג, עם בדיקה עצמאית שנייה לכל התאמה.
+
+| מצב | כמות | מה זה אומר |
+|---|---|---|
+| אומת | 16 | נמצא ואושר בבדיקה שנייה ובלתי תלויה |
+| נמצא, לא נבדק | 25 | נמצא בחיפוש; הבדיקה השנייה לא הספיקה לרוץ. שווה מבט ויזואלי אחרי ההורדה |
+| נדחה | 2 | הבדיקה מצאה שהקובץ שגוי או לא קיים בקומונס |
+| אין סמל | 57 | קטגוריה כללית (טייסות, מערכים, חטיבות מילואים כקבוצה) שאין לה סמל אחד |
+
+**41 קבצים ניתנים להורדה.** שם קובץ שגוי פשוט נכשל בהודעת MISSING ומדולג, כך שהרצה חלקית בטוחה לגמרי.
 
 ## הורדה
 
@@ -8,45 +17,77 @@
 npm run emblems             # מוריד את מה שחסר
 npm run emblems -- --list   # רק מציג את התוכנית
 npm run emblems -- golani   # רק יחידות ששמן מכיל golani
+npm run emblems -- --force  # מוריד מחדש גם קבצים קיימים
 ```
 
-הסקריפט שומר ל-`public/emblems/<slug>.png` וכותב קרדיטים ל-`public/emblems/CREDITS.md`.
-צריך אינטרנט, לא צריך התקנה (Node 18+).
+הסקריפט שומר ל-`public/emblems/<slug>.png` (PNG 512px, גם עבור מקורות SVG) וכותב קרדיטים ל-`public/emblems/CREDITS.md`.
+צריך אינטרנט, לא צריך התקנה (Node 18 ומעלה).
 
 > **רישוי:** הקבצים הם CC BY-SA או נחלת הכלל. CC BY-SA מחייב ייחוס ליוצר ואזכור הרישיון בכל מקום שהתמונה מוצגת. אל תמחק את CREDITS.md, וכדאי לקשר אליו מהאתר.
 
-> **ודאות:** "גבוהה" = שם הקובץ נראה ישירות בתוצאת חיפוש בקומונס. "בינונית" = הופיע רק בתוך רשימת קטגוריה או תבנית, השם עלול להיות מאוית אחרת. "נמוכה" = סמל של יחידת האם, לא של היחידה עצמה. אחרי ההורדה שווה לפתוח את /catalog ולעבור על מה שירד.
-
-## יחידות עם קובץ (24)
+## אומת (16)
 
 | קובץ | יחידה | ודאות | מקור | רישיון |
 |---|---|---|---|---|
-| brigade-givati.png | חטיבת גבעתי | גבוהה | [File:GivatiBrigade.svg](https://commons.wikimedia.org/wiki/File%3AGivatiBrigade.svg) | CC BY-SA 3.0 |
-| brigade-nahal.png | חטיבת הנח"ל | גבוהה | [File:Nahal Brigade.svg](https://commons.wikimedia.org/wiki/File%3ANahal_Brigade.svg) | CC BY-SA 3.0 |
+| brigade-givati.png | חטיבת גבעתי | גבוהה | [File:תג חטיבת גבעתי.svg](https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%97%D7%98%D7%99%D7%91%D7%AA_%D7%92%D7%91%D7%A2%D7%AA%D7%99.svg) | CC BY-SA 3.0 |
+| brigade-nahal.png | חטיבת הנח"ל | גבוהה | [File:Nahal Brigade.svg](https://commons.wikimedia.org/wiki/File%3ANahal_Brigade.svg) | CC BY-SA 3.0 Unported |
 | brigade-kfir.png | חטיבת כפיר | בינונית | [File:Logo hativa 900.png](https://commons.wikimedia.org/wiki/File%3ALogo_hativa_900.png) | ראה עמוד הקובץ |
-| corps-armor.png | חיל השריון | גבוהה | [File:תג חיל השריון.svg](https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%97%D7%99%D7%9C_%D7%94%D7%A9%D7%A8%D7%99%D7%95%D7%9F.svg) | CC BY-SA 3.0 |
-| branch-ground.png | זרוע היבשה | גבוהה | [File:Emblem of the Israeli Ground Forces.svg](https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Israeli_Ground_Forces.svg) | CC BY-SA 3.0 |
+| corps-armor.png | חיל השריון | גבוהה | [File:תג חיל השריון.svg](https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%97%D7%99%D7%9C_%D7%94%D7%A9%D7%A8%D7%99%D7%95%D7%9F.svg) | CC BY-SA 3.0 (Attribution-ShareAlike 3.0 Unported); attribution אמיר / Groteddy / IDF Spokesperson's Unit |
+| branch-ground.png | זרוע היבשה | גבוהה | [File:Emblem of the Israeli Ground Forces.svg](https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Israeli_Ground_Forces.svg) | CC BY-SA 3.0 (source credited to the IDF Spokesperson's Unit) |
 | corps-infantry.png | חיל הרגלים (חי"ר) | בינונית | [File:Flag of the Israeli Infantry Corps.svg](https://commons.wikimedia.org/wiki/File%3AFlag_of_the_Israeli_Infantry_Corps.svg) | CC BY-SA 3.0 |
-| brigade-golani.png | חטיבת גולני | גבוהה | [File:Golani tree color.svg](https://commons.wikimedia.org/wiki/File%3AGolani_tree_color.svg) | CC BY-SA 3.0 |
-| brigade-paratroopers.png | חטיבת הצנחנים | גבוהה | [File:35th Brigade IDF.svg](https://commons.wikimedia.org/wiki/File%3A35th_Brigade_IDF.svg) | CC BY-SA 3.0 |
+| brigade-golani.png | חטיבת גולני | גבוהה | [File:Golani tree color.svg](https://commons.wikimedia.org/wiki/File%3AGolani_tree_color.svg) | CC BY-SA 3.0 (Creative Commons Attribution-ShareAlike 3.0 Unported; credited to Ynhockey / IDF Spokesperson's Unit) |
+| brigade-paratroopers.png | חטיבת הצנחנים | גבוהה | [File:35th Brigade IDF.svg](https://commons.wikimedia.org/wiki/File%3A35th_Brigade_IDF.svg) | CC BY-SA 3.0 (Creative Commons Attribution-Share Alike 3.0 Unported) |
 | brigade-armor-7.png | חטיבה 7 | גבוהה | [File:7thArmoredBrigade.svg](https://commons.wikimedia.org/wiki/File%3A7thArmoredBrigade.svg) | CC BY-SA 3.0 |
-| brigade-armor-188.png | חטיבה 188 | גבוהה | [File:Barak Brigade insignia.svg](https://commons.wikimedia.org/wiki/File%3ABarak_Brigade_insignia.svg) | CC BY-SA 3.0 |
-| brigade-armor-401.png | חטיבה 401 | גבוהה | [File:תג יחידה 401.svg](https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%99%D7%97%D7%99%D7%93%D7%94_401.svg) | CC BY-SA 3.0 |
+| brigade-armor-188.png | חטיבה 188 | גבוהה | [File:Barak Brigade insignia.svg](https://commons.wikimedia.org/wiki/File%3ABarak_Brigade_insignia.svg) | CC BY-SA 3.0 (from search snippet only — file page not opened, low confidence) |
+| brigade-armor-401.png | חטיבה 401 | גבוהה | [File:תג יחידה 401.svg](https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%99%D7%97%D7%99%D7%93%D7%94_401.svg) | CC BY-SA 3.0 (Creative Commons Attribution-ShareAlike 3.0 Unported) |
 | brigade-armor-460.png | חטיבה 460 | גבוהה | [File:תג חטיבה 460.svg](https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%97%D7%98%D7%99%D7%91%D7%94_460.svg) | CC BY-SA 3.0 |
-| corps-reserve-brigades.png | חטיבות מילואים | נמוכה | [File:Emblem of the Israeli Ground Forces.svg](https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Israeli_Ground_Forces.svg) | CC BY-SA 3.0 |
 | brigade-res-jerusalem.png | חטיבת ירושלים | בינונית | [File:JerusalemBrigade.png](https://commons.wikimedia.org/wiki/File%3AJerusalemBrigade.png) | ראה עמוד הקובץ |
-| brigade-res-alexandroni.png | חטיבת אלכסנדרוני | גבוהה | [File:Alexandroni.svg](https://commons.wikimedia.org/wiki/File%3AAlexandroni.svg) | CC BY-SA 3.0 |
-| brigade-res-harel.png | חטיבת הראל | גבוהה | [File:HarelBrigade.svg](https://commons.wikimedia.org/wiki/File%3AHarelBrigade.svg) | CC BY-SA 3.0 |
-| brigade-res-yiftach.png | חטיבת יפתח | בינונית | [File:Logo-hativa-434.png](https://commons.wikimedia.org/wiki/File%3ALogo-hativa-434.png) | ראה עמוד הקובץ |
+| brigade-res-alexandroni.png | חטיבת אלכסנדרוני | גבוהה | [File:Alexandroni.svg](https://commons.wikimedia.org/wiki/File%3AAlexandroni.svg) | CC BY-SA 3.0 (Creative Commons Attribution-ShareAlike 3.0 Unported; source credited to the IDF Spokesperson's Unit) |
+| brigade-res-harel.png | חטיבת הראל | גבוהה | [File:HarelBrigade.svg](https://commons.wikimedia.org/wiki/File%3AHarelBrigade.svg) | CC BY-SA 3.0 Unported |
 | brigade-res-brigade-5.png | חטיבה 5 (קציעות) | גבוהה | [File:Hativa 5.png](https://commons.wikimedia.org/wiki/File%3AHativa_5.png) | ראה עמוד הקובץ |
+
+## נמצא, לא נבדק שנית (25)
+
+מומלץ להעיף מבט על אלה ב-/catalog אחרי ההורדה.
+
+| קובץ | יחידה | ודאות | מקור | רישיון |
+|---|---|---|---|---|
 | brigade-res-brigade-14.png | חטיבה 14 (הביזון) | גבוהה | [File:Brigade 14 sign.svg](https://commons.wikimedia.org/wiki/File%3ABrigade_14_sign.svg) | CC BY-SA 3.0 |
 | brigade-res-brigade-55.png | חטיבה 55 (צנחנים מילואים) | גבוהה | [File:IDF Brigade 55 Tag.svg](https://commons.wikimedia.org/wiki/File%3AIDF_Brigade_55_Tag.svg) | CC BY-SA 3.0 |
 | brigade-art-282.png | אגד אש 282 | גבוהה | [File:Hativat Haesh 282.svg](https://commons.wikimedia.org/wiki/File%3AHativat_Haesh_282.svg) | ראה עמוד הקובץ |
 | brigade-res-menashe.png | חטיבת מנשה | בינונית | [File:YoSH h-Menashe.png](https://commons.wikimedia.org/wiki/File%3AYoSH_h-Menashe.png) | ראה עמוד הקובץ |
 | corps-artillery.png | חיל התותחנים | נמוכה | [File:Flag of the Israeli Artillery Corps.svg](https://commons.wikimedia.org/wiki/File%3AFlag_of_the_Israeli_Artillery_Corps.svg) | ראה עמוד הקובץ |
 | brigade-art-215.png | אגד אש 215 | גבוהה | [File:Utzbat Amud Haesh Eged 215 Tag.svg](https://commons.wikimedia.org/wiki/File%3AUtzbat_Amud_Haesh_Eged_215_Tag.svg) | ראה עמוד הקובץ |
+| brigade-lotem-units.png | יחידות לוט"ם | גבוהה | [File:Lotem.png](https://commons.wikimedia.org/wiki/File%3ALotem.png) | CC BY-SA 3.0 |
+| corps-cyber-defense.png | מערך ההגנה בסייבר | בינונית | [File:Computer Service Directorate.svg](https://commons.wikimedia.org/wiki/File%3AComputer_Service_Directorate.svg) | CC BY-SA 3.0 |
+| brigade-cyber-defense-units.png | יחידות הגנת סייבר | נמוכה | [File:Computer Service Directorate.svg](https://commons.wikimedia.org/wiki/File%3AComputer_Service_Directorate.svg) | CC BY-SA 3.0 |
+| corps-comm-field.png | תקשוב יחידתי | בינונית | [File:IDF Communications Corps.svg](https://commons.wikimedia.org/wiki/File%3AIDF_Communications_Corps.svg) | CC BY-SA 3.0 |
+| branch-mp.png | המשטרה הצבאית | גבוהה | [File:Military Police Corps tag.svg](https://commons.wikimedia.org/wiki/File%3AMilitary_Police_Corps_tag.svg) | CC BY-SA 3.0 |
+| corps-mp-units.png | יחידות המשטרה הצבאית | בינונית | [File:Military Police Corps tag.svg](https://commons.wikimedia.org/wiki/File%3AMilitary_Police_Corps_tag.svg) | CC BY-SA 3.0 |
+| brigade-mp-yamam-yatzbam.png | מ"צ - פיקוחיים | נמוכה | [File:Military Police Corps tag.svg](https://commons.wikimedia.org/wiki/File%3AMilitary_Police_Corps_tag.svg) | CC BY-SA 3.0 |
+| brigade-mp-investigations.png | מצ"ח - חקירות פליליות | נמוכה | [File:Military Police Corps tag.svg](https://commons.wikimedia.org/wiki/File%3AMilitary_Police_Corps_tag.svg) | CC BY-SA 3.0 |
+| brigade-logistics.png | חיל הלוגיסטיקה | גבוהה | [File:Logistics Corps IDF Tag.png](https://commons.wikimedia.org/wiki/File%3ALogistics_Corps_IDF_Tag.png) | ראה עמוד הקובץ |
+| branch-med.png | חיל הרפואה | בינונית | [File:RefuaArtboard 1.svg](https://commons.wikimedia.org/wiki/File%3ARefuaArtboard_1.svg) | CC BY-SA 3.0 |
+| corps-med-corps.png | מערך הרפואה הצבאי | בינונית | [File:RefuaArtboard 1.svg](https://commons.wikimedia.org/wiki/File%3ARefuaArtboard_1.svg) | CC BY-SA 3.0 |
+| brigade-med-field.png | גדודי רפואה | נמוכה | [File:RefuaArtboard 1.svg](https://commons.wikimedia.org/wiki/File%3ARefuaArtboard_1.svg) | CC BY-SA 3.0 |
+| brigade-mp-prisons.png | שב"ם וכליאה | בינונית | [File:Military Police Corps tag.svg](https://commons.wikimedia.org/wiki/File%3AMilitary_Police_Corps_tag.svg) | CC BY-SA 3.0 |
+| corps-matkal-units.png | יחידות מטכ"ל | נמוכה | [File:Badge of the Israel Defense Forces.svg](https://commons.wikimedia.org/wiki/File%3ABadge_of_the_Israel_Defense_Forces.svg) | CC BY-SA 3.0 |
+| brigade-sayeret-matkal.png | סיירת מטכ"ל | בינונית | [File:Flag of Sayeret Matkal.svg](https://commons.wikimedia.org/wiki/File%3AFlag_of_Sayeret_Matkal.svg) | CC BY 4.0 |
+| brigade-shaldag.png | שלדג | גבוהה | [File:Shaldag.svg](https://commons.wikimedia.org/wiki/File%3AShaldag.svg) | ראה עמוד הקובץ |
+| brigade-shayetet-13-elite.png | שייטת 13 (עילית) | בינונית | [File:Shayetet-13-pin.jpg](https://commons.wikimedia.org/wiki/File%3AShayetet-13-pin.jpg) | ראה עמוד הקובץ |
+| brigade-yahalom-elite.png | יהל"ם | גבוהה | [File:YahalomPin01.png](https://commons.wikimedia.org/wiki/File%3AYahalomPin01.png) | ראה עמוד הקובץ |
+| brigade-lotar-eilat.png | לוט"ר | גבוהה | [File:Lotar eilat.png](https://commons.wikimedia.org/wiki/File%3ALotar_eilat.png) | CC BY-SA 3.0 |
 
-## יחידות בלי קובץ (56)
+## נדחה (2)
+
+| יחידה | הקובץ שנדחה | סיבה |
+|---|---|---|
+| חטיבות מילואים | File:Emblem of the Israeli Ground Forces.svg | The file exists on Commons with exactly that title (92x92 SVG, CC BY-SA 3.0, in Category:Insignia of the Ground forces of the IDF), but it depicts the branch-level emblem of the Is |
+| חטיבת יפתח | File:Logo-hativa-434.png | The exact title "Logo-hativa-434.png" resolves only to a LOCAL Hebrew Wikipedia file page (he.wikipedia.org/wiki/קובץ:Logo-hativa-434.png), never to commons.wikimedia.org/wiki/File |
+
+## אין סמל יחיד (57)
+
+אלה נשארות עם הסמל הגנרי המצויר בקוד, בכוונה.
 
 | קובץ | יחידה | סיבה |
 |---|---|---|
@@ -106,3 +147,4 @@ npm run emblems -- golani   # רק יחידות ששמן מכיל golani
 | branch-tech.png | חיל הטכנולוגיה והאחזקה | NOT SEARCHED: session WebSearch budget was already exhausted (200/200) before this subagent ran; no search res |
 | corps-tech-corps.png | החיל הטכנולוגי | NOT SEARCHED: session WebSearch budget was already exhausted (200/200) before this subagent ran; no result see |
 | brigade-ordnance.png | חיל החימוש | NOT SEARCHED: session WebSearch budget was already exhausted (200/200) before this subagent ran; no result see |
+| branch-elite.png | יחידות מובחרות ועילית | 'יחידות מובחרות ועילית' is a generic grouping, not a real unit - Commons has only Category:Special forces of I |

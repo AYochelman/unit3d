@@ -419,8 +419,9 @@ function EmblemsTab() {
           רישיונות CC BY-SA מחייבים ייחוס, אז אל תמחק אותו.
         </p>
         <p>
-          יחידות שאין להן סמל יחיד (טייסות, מערכים, קטגוריות כלליות) נשארות עם הסמל הגנרי בכוונה.
-          פירוט מלא: <span className="font-mono" dir="ltr">docs/emblems-sources.md</span>.
+          <strong className="text-ink-100">מה נמצא:</strong> מתוך 100 היחידות בקטלוג נמצאו 41 קבצים (16 אומתו בבדיקה שנייה, 25 נמצאו ולא נבדקו שנית),
+          ו-57 הן קטגוריות כלליות (טייסות, מערכים, חטיבות מילואים כקבוצה) שאין להן סמל אחד ונשארות עם הסמל הגנרי בכוונה.
+          שם קובץ שגוי פשוט מדולג, כך שהרצה חלקית בטוחה. פירוט מלא: <span className="font-mono" dir="ltr">docs/emblems-sources.md</span>.
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-2 mb-4">

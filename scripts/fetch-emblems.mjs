@@ -93,8 +93,14 @@ async function main() {
   console.log(`\nUnit 3D — emblem fetcher`);
   console.log(`${todo.length} units with a candidate file (of ${entries.length} mapped)\n`);
 
+  const STATUS = { verified: "אומת ", unverified: "לא נבדק" };
   if (listOnly) {
-    for (const e of todo) console.log(`  ${e.slug.padEnd(30)} ${e.confidence.padEnd(7)} ${e.file}`);
+    for (const e of todo) {
+      console.log(`  ${e.slug.padEnd(30)} ${(STATUS[e.status] || e.status).padEnd(8)} ${e.file}`);
+    }
+    const v = todo.filter((e) => e.status === "verified").length;
+    console.log(`\n  ${v} verified by an independent check, ${todo.length - v} found but not double-checked.`);
+    console.log(`  A wrong file name simply fails with MISSING and is skipped — nothing breaks.`);
     console.log(`\n(--list: nothing downloaded)\n`);
     return;
   }
@@ -118,7 +124,8 @@ async function main() {
         continue;
       }
       const bytes = await download(info.url, dest);
-      console.log(`  ok      ${e.slug.padEnd(30)} ${(bytes / 1024).toFixed(0)}KB  ${info.license}`);
+      const tag = e.status === "verified" ? "" : "  (לא אומת — כדאי לוודא ויזואלית)";
+      console.log(`  ok      ${e.slug.padEnd(30)} ${(bytes / 1024).toFixed(0)}KB  ${info.license}${tag}`);
       credits.push({ slug: e.slug, name: e.name, file: e.file, ...info });
       ok++;
       await sleep(300); // be polite to the API
@@ -141,7 +148,12 @@ async function main() {
   }
 
   console.log(`\ndone: ${ok} downloaded, ${skipped} skipped, ${failed} failed`);
-  console.log(`restart the dev server (npm run dev) to see them in /catalog\n`);
+  if (ok) {
+    console.log(`\nהסמלים נשמרו ב-public/emblems/. הפעל מחדש את השרת (npm run dev) ופתח /catalog.`);
+    console.log(`סמלים שסומנו "לא אומת" — שווה מבט מהיר שהתמונה באמת של היחידה הנכונה.`);
+  }
+  if (failed) console.log(`\nכשלונות הם בדרך כלל שם קובץ שהשתנה בקומונס. חפש ידנית והחלף ב-scripts/emblems.json.`);
+  console.log("");
 }
 
 main().catch((e) => {
