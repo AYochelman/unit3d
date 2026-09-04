@@ -1,4 +1,5 @@
 import Btn from "@/components/ui/Btn";
+import HeroLogo from "./HeroLogo";
 
 export default function Hero() {
   return (
@@ -16,7 +17,8 @@ export default function Hero() {
           />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-10 pt-24 md:pt-32 pb-12 md:pb-16 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-10 pt-16 md:pt-20 pb-12 md:pb-16 text-center">
+          <HeroLogo className="u3d-hero mx-auto w-[240px] md:w-[340px] h-auto mb-6 md:mb-8" />
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/30 bg-flame/10 text-flame text-xs font-mono uppercase tracking-widest mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-flame live-dot" />
             <span>המדפסת רצה עכשיו</span>

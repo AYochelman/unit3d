@@ -40,7 +40,7 @@ const INQUIRY_FOR: Record<CustType, { id: Inquiry; label: string }[]> = {
 };
 
 export default function ContactClient() {
-  const { items, removeItem, clearCart } = useOrderStore();
+  const { items, removeItem, clearCart, setQty } = useOrderStore();
 
   const [cust, setCust] = useState<CustType>(
     items.length > 0 ? "private" : "private",
@@ -190,11 +190,36 @@ export default function ContactClient() {
                           </div>
                         )}
                       </div>
-                      {item.price !== null && (
-                        <span className="font-mono text-sm font-bold text-flame shrink-0 mt-0.5" dir="ltr">
-                          {fmtILS(item.price)}
-                        </span>
-                      )}
+                      <div className="flex flex-col items-end gap-2 shrink-0 mt-0.5">
+                        {item.price !== null && (
+                          <span className="font-mono text-sm font-bold text-flame" dir="ltr">
+                            {fmtILS(item.price)}
+                          </span>
+                        )}
+                        <div className="inline-flex items-center rounded-lg border border-ink-700 bg-ink-950/60" dir="ltr" aria-label="כמות">
+                          <button
+                            type="button"
+                            onClick={() => setQty(item.id, item.qty - 1)}
+                            disabled={item.qty <= 1}
+                            aria-label="הפחת כמות"
+                            className="h-7 w-7 inline-flex items-center justify-center text-ink-300 hover:text-ink-50 disabled:opacity-30"
+                          >
+                            <Icon name="minus" size={11} />
+                          </button>
+                          <span className="min-w-[1.75rem] text-center font-mono text-xs font-bold text-ink-100">{item.qty}</span>
+                          <button
+                            type="button"
+                            onClick={() => setQty(item.id, item.qty + 1)}
+                            aria-label="הוסף כמות"
+                            className="h-7 w-7 inline-flex items-center justify-center text-ink-300 hover:text-ink-50"
+                          >
+                            <Icon name="plus" size={11} />
+                          </button>
+                        </div>
+                        {item.unitPrice != null && item.qty > 1 && (
+                          <span className="font-mono text-[10px] text-ink-500" dir="ltr">{fmtILS(item.unitPrice)} ליחידה</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}

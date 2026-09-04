@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import ConfiguratorFromQuery from "./ConfiguratorFromQuery";
 import ConfiguratorClient from "./ConfiguratorClient";
 
 export const metadata = {
@@ -7,5 +9,9 @@ export const metadata = {
 };
 
 export default function ConfiguratorPage() {
-  return <ConfiguratorClient />;
+  return (
+    <Suspense fallback={<ConfiguratorClient />}>
+      <ConfiguratorFromQuery />
+    </Suspense>
+  );
 }

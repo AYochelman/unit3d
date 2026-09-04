@@ -3,8 +3,10 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
-import ProductGrid from "@/components/ProductGrid";
+import ProductGrid, { productToCard } from "@/components/ProductGrid";
+import ProductToolbar from "@/components/ProductToolbar";
 import { OFFICE_PRODUCTS } from "@/lib/products";
+import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 import { cn } from "@/lib/cn";
 
 type Filter = "all" | "office" | "home";
@@ -17,10 +19,12 @@ const FILTERS: { id: Filter; label: string }[] = [
 
 export default function HomeOfficeClient() {
   const [filter, setFilter] = useState<Filter>("all");
-  const items = useMemo(
-    () => (filter === "all" ? OFFICE_PRODUCTS : OFFICE_PRODUCTS.filter((p) => p.category === filter)),
-    [filter],
-  );
+  const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
+  const all = useMemo(() => OFFICE_PRODUCTS.map(productToCard), []);
+  const items = useMemo(() => {
+    const scoped = filter === "all" ? OFFICE_PRODUCTS : OFFICE_PRODUCTS.filter((p) => p.category === filter);
+    return applyListing(scoped.map(productToCard), state);
+  }, [filter, state]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
@@ -33,26 +37,25 @@ export default function HomeOfficeClient() {
           מעמדים, מארגנים, תחתיות, ווים ושלטים. כל מוצר אפשר להזמין עם טקסט או לוגו
           מובלט, בכל צבע שבמלאי. לעסקים: מ-10 יחידות עם הלוגו שלכם.
         </p>
-      </header>
-
-      <div className="sticky top-16 z-20 bg-ink-950/85 backdrop-blur-md py-4 -mx-6 px-6 md:-mx-10 md:px-10 border-b border-ink-800 mb-6">
-        <div className="flex flex-wrap gap-1.5">
+        <div className="mt-6 flex flex-wrap gap-1.5">
           {FILTERS.map((f) => (
             <button
               key={f.id}
               onClick={() => setFilter(f.id)}
               className={cn(
                 "px-3 py-1.5 rounded-full text-sm font-medium border transition-colors",
-                filter === f.id ? "bg-flame text-white border-flame" : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
+                filter === f.id ? "bg-ink-50 text-ink-950 border-ink-50" : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
               )}
             >
               {f.label}
             </button>
           ))}
         </div>
-      </div>
+      </header>
 
-      <ProductGrid products={items} />
+      <ProductToolbar state={state} onChange={setState} shown={items.length} total={all.length} />
+
+      <ProductGrid cards={items} />
 
       <Link href="/b2b" className="mt-10 block p-5 rounded-2xl border border-flame/30 bg-gradient-to-bl from-flame/10 to-cyan2/5 hover:border-flame/60 transition-colors">
         <div className="flex flex-wrap items-center gap-4">

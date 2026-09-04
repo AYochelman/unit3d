@@ -205,7 +205,60 @@ export const CATEGORY_LABEL: Record<Product["category"], string> = {
   pets: "לחיות",
   office: "למשרד",
   home: "לבית",
+  trendy: "טרנדי",
 };
+
+// ─── Listing stats for products (demo counters until there is a backend) ─────
+const PRODUCT_STATS: Record<string, { rating: number; orders: number; colors?: number; isNew?: boolean }> = {
+  "pet-bone": { rating: 4.9, orders: 412, colors: 2 },
+  "pet-round": { rating: 4.7, orders: 188, colors: 2 },
+  "pet-heart": { rating: 4.8, orders: 240, colors: 2 },
+  "pet-fish": { rating: 4.8, orders: 133, colors: 2 },
+  "pet-paw": { rating: 4.7, orders: 156, colors: 2 },
+  "pet-qr": { rating: 4.9, orders: 97, colors: 3, isNew: true },
+  "pet-bag-holder": { rating: 4.6, orders: 64 },
+  "pet-scoop": { rating: 4.7, orders: 51 },
+  "off-pen-holder": { rating: 4.8, orders: 233, colors: 2 },
+  "off-cable-clips": { rating: 4.5, orders: 310 },
+  "off-headphone-stand": { rating: 4.9, orders: 142 },
+  "off-phone-stand": { rating: 4.7, orders: 388 },
+  "home-coasters": { rating: 4.8, orders: 176, colors: 4 },
+  "home-wall-hook": { rating: 4.6, orders: 201 },
+  "home-key-rack": { rating: 4.9, orders: 88, colors: 2 },
+  "off-card-holder": { rating: 4.7, orders: 73, colors: 2 },
+  "home-planter": { rating: 4.8, orders: 119 },
+  "home-bag-clips": { rating: 4.4, orders: 264 },
+  "off-bookmark": { rating: 4.6, orders: 95, colors: 2 },
+  "home-door-sign": { rating: 4.9, orders: 61, colors: 2, isNew: true },
+  "off-organizer": { rating: 4.7, orders: 108 },
+};
+
+for (const p of PRODUCTS) {
+  const st = PRODUCT_STATS[p.id];
+  if (!st) continue;
+  p.rating ??= st.rating;
+  p.orders ??= st.orders;
+  p.colors ??= st.colors ?? (p.ams ? 2 : 1);
+  p.isNew ??= st.isNew;
+}
+
+// ─── Fidget stats (rating/orders derived from downloads when not set) ────────
+const FIDGET_STATS: Record<string, { rating: number; orders: number }> = {
+  f1: { rating: 4.9, orders: 780 }, f2: { rating: 4.9, orders: 1240 }, f3: { rating: 4.7, orders: 210 },
+  f4: { rating: 4.6, orders: 160 }, f5: { rating: 4.8, orders: 530 }, f6: { rating: 4.8, orders: 340 },
+  f10: { rating: 4.9, orders: 610 }, f11: { rating: 4.9, orders: 890 }, f12: { rating: 4.7, orders: 300 },
+  f13: { rating: 4.8, orders: 410 }, f14: { rating: 4.7, orders: 270 }, f15: { rating: 4.6, orders: 150 },
+};
+
+export function fidgetStats(f: { id: string; downloads?: number; ams?: boolean; variants?: { colors: number }[]; rating?: number; orders?: number }) {
+  const st = FIDGET_STATS[f.id];
+  const colors = f.variants?.length ? Math.max(...f.variants.map((v) => v.colors)) : f.ams ? 2 : 1;
+  return {
+    rating: f.rating ?? st?.rating ?? 4.7,
+    orders: f.orders ?? st?.orders ?? Math.max(20, Math.round((f.downloads ?? 800) / 40)),
+    colors,
+  };
+}
 
 // ─── Configurator products (what the designer can be applied to) ─────────────
 const PLATE_SIZES: Size[] = [

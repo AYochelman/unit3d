@@ -107,6 +107,9 @@ export type Fidget = {
   downloads?: number;
   ams?: boolean;
   variants?: FidgetVariant[];
+  /** Listing stats (demo counters until there is a backend). */
+  rating?: number;
+  orders?: number;
 };
 
 // ─── Configurator options ─────────────────────────────────────────────────────
@@ -194,7 +197,7 @@ export type Material = {
 };
 
 // ─── Shop products (pet tags, office & home) ─────────────────────────────────
-export type ProductCategory = "pets" | "office" | "home";
+export type ProductCategory = "pets" | "office" | "home" | "trendy";
 
 export type ProductArtId =
   | "bone" | "round" | "heart" | "fish" | "paw" | "qr" | "bagholder" | "scoop"
@@ -227,6 +230,12 @@ export type Product = {
   ams?: boolean;
   /** Default material family. */
   material?: MaterialId;
+  /** Listing stats (demo counters until there is a backend). */
+  rating?: number;
+  orders?: number;
+  /** Max colours offered (1 = single colour, 2–4 = AMS). Defaults to ams ? 2 : 1. */
+  colors?: number;
+  isNew?: boolean;
   /** Optional engraving/text field on the product (pet name, phone…). */
   engraving?: { label: string; placeholder: string; max: number; second?: { label: string; placeholder: string; max: number } };
   options?: { label: string; items: ProductOption[] };

@@ -75,25 +75,26 @@ function rescaleDesign(d: Design, w: number, h: number): Design {
   };
 }
 
-export default function ConfiguratorClient() {
+export default function ConfiguratorClient({ initialProduct }: { initialProduct?: ConfigProductId }) {
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
   const adminUnlocked = useAdminStore((s) => s.unlocked);
   const settings = useAdminStore((s) => s.settings);
 
-  const [step, setStep] = useState(0);
+  const startProduct = initialProduct && CONFIG_PRODUCT_BY_ID[initialProduct] ? initialProduct : "keychain";
+  const [step, setStep] = useState(startProduct === "keychain" ? 0 : 1);
   const [config, setConfig] = useState<Config>({
-    product: "keychain",
-    model: "",
+    product: startProduct,
+    model: CONFIG_PRODUCT_BY_ID[startProduct].models?.items[0]?.id ?? "",
     shape: "round",
     text: "יואב",
     number: "12345",
     font: "sans",
-    color: "orange",
-    size: "md",
+    color: CONFIG_PRODUCT_BY_ID[startProduct].material === "tpu" ? "black" : "orange",
+    size: startProduct === "keychain" ? "md" : "sm",
     qty: 1,
     mode: "text",
-    design: emptyDesign(50, 35),
+    design: emptyDesign(CONFIG_PRODUCT_BY_ID[startProduct].face[0], CONFIG_PRODUCT_BY_ID[startProduct].face[1]),
   });
 
   const update = <K extends keyof Config>(k: K, v: Config[K]) => setConfig((c) => ({ ...c, [k]: v }));

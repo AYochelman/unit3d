@@ -3,9 +3,12 @@ import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 
 const SHOP = [
+  { href: "/trendy", label: "טרנדי כרגע" },
   { href: "/catalog", label: "סמלי יחידה" },
   { href: "/fidgets", label: "פידג'טים" },
-  { href: "/configurator", label: "מעצב מחזיק" },
+  { href: "/pets", label: "תגים לחיות" },
+  { href: "/home-office", label: "לבית ולמשרד" },
+  { href: "/configurator", label: "מעצב אישי" },
   { href: "/upload", label: "העלאת קובץ" },
   { href: "/b2b", label: "B2B" },
 ];
@@ -17,6 +20,7 @@ const SUPPORT = [
   { href: "/gallery", label: "גלריה" },
   { href: "/faq", label: "שאלות נפוצות" },
   { href: "/contact", label: "צור קשר" },
+  { href: "/admin", label: "ניהול (מנהל)" },
 ];
 
 const QUICK = [
@@ -119,7 +123,7 @@ export default function Footer() {
       <div className="border-t border-ink-800">
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
-            © 2026 Unit3D · MADE IN PETACH TIKVA · NOZZLE 0.4mm
+            © 2026 Unit3D · MADE IN PETACH TIKVA · NOZZLE 0.4mm · v2.2
           </div>
           <div className="flex items-center gap-2 font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             <span className="w-1.5 h-1.5 rounded-full bg-good live-dot" />

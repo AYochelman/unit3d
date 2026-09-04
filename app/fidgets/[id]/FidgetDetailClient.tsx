@@ -558,6 +558,22 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             לחץ &quot;לסל הקנייה&quot; כדי לסיים את ההזמנה ·  24H response
           </p>
 
+          {/* Source attribution (CC-BY) — discreet, under the fold */}
+          {f.creator && (
+            <p className="text-[10px] text-ink-600 text-center" dir="ltr">
+              Model by {f.creator}
+              {f.license ? ` · ${f.license}` : ""}
+              {f.sourceUrl && (
+                <>
+                  {" · "}
+                  <a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-400">
+                    source file
+                  </a>
+                </>
+              )}
+            </p>
+          )}
+
           {/* Trust strip */}
           <div className="grid grid-cols-3 gap-2 pt-2 border-t border-ink-800">
             {[

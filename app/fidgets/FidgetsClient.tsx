@@ -7,6 +7,9 @@ import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import Emblem from "@/components/Emblem";
 import { FIDGETS } from "@/lib/data";
+import { fidgetStats } from "@/lib/products";
+import ProductToolbar from "@/components/ProductToolbar";
+import { applyListing, DEFAULT_LISTING, fmtOrders, type ListingState } from "@/lib/listing";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -19,19 +22,6 @@ const SOURCE_LABEL: Record<FidgetSource, string> = {
   printables: "Printables",
   myminifactory: "MyMiniFactory",
 };
-
-type Sort = "popular" | "priceAsc" | "fastest" | "cc0";
-
-const SORTS: { id: Sort; label: string }[] = [
-  { id: "popular", label: "פופולרי" },
-  { id: "priceAsc", label: "מחיר עולה" },
-  { id: "fastest", label: "הכי מהיר" },
-];
-
-function timeHours(t: string): number {
-  const m = t.match(/([\d.]+)/);
-  return m ? parseFloat(m[1]) : 99;
-}
 
 function FidgetCard({
   f,
@@ -162,6 +152,21 @@ function FidgetCard({
           )}
         </div>
 
+        {/* Rating · orders */}
+        {(() => {
+          const st = fidgetStats(f);
+          return (
+            <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400" dir="ltr">
+              <span className="inline-flex items-center gap-0.5 text-flame">
+                <Icon name="star" size={10} className="fill-current" />
+                {st.rating.toFixed(1)}
+              </span>
+              <span>·</span>
+              <span>{fmtOrders(st.orders)} הזמנות</span>
+            </div>
+          );
+        })()}
+
         {/* Variant dropdown */}
         {hasVariants && f.variants && (
           <div className="mt-2 relative">
@@ -188,19 +193,12 @@ function FidgetCard({
           </div>
         )}
 
-        {/* Creator credit */}
+        {/* Creator credit (attribution only — the source link is on the product page) */}
         <div className="mt-2 flex items-center justify-between gap-2">
-          {f.creator && f.sourceUrl ? (
-            <a
-              href={f.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] text-ink-400 hover:text-flame transition-colors truncate min-w-0"
-              dir="ltr"
-              title={`by ${f.creator} on ${f.source ? SOURCE_LABEL[f.source] : ""}`}
-            >
-              by {f.creator}
-            </a>
+          {f.creator ? (
+            <span className="text-[10px] text-ink-500 truncate min-w-0" dir="ltr" title={`by ${f.creator}${f.source ? ` on ${SOURCE_LABEL[f.source]}` : ""}`}>
+              by {f.creator}{f.license ? ` · ${f.license}` : ""}
+            </span>
           ) : (
             <span />
           )}
@@ -232,24 +230,14 @@ function FidgetCard({
 }
 
 export default function FidgetsClient() {
-  const [sort, setSort] = useState<Sort>("popular");
+  const [listing, setListing] = useState<ListingState>(DEFAULT_LISTING);
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
 
   const items = useMemo(() => {
-    let arr = [...FIDGETS];
-    if (sort === "cc0") {
-      arr = arr.filter((f) => f.license === "CC0");
-    } else if (sort === "priceAsc") {
-      arr.sort((a, b) => a.price - b.price);
-    } else if (sort === "fastest") {
-      arr.sort((a, b) => timeHours(a.time) - timeHours(b.time));
-    } else {
-      // popular — by downloads desc, undefined last
-      arr.sort((a, b) => (b.downloads ?? -1) - (a.downloads ?? -1));
-    }
-    return arr;
-  }, [sort]);
+    const withStats = FIDGETS.map((f) => ({ ...f, ...fidgetStats(f), isNew: f.tag === "חדש" }));
+    return applyListing(withStats, listing);
+  }, [listing]);
 
   const addToOrder = (id: string, variantId?: string) => {
     const f = FIDGETS.find((x) => x.id === id);
@@ -296,25 +284,7 @@ export default function FidgetsClient() {
         </p>
       </header>
 
-      {/* Sort */}
-      <div className="sticky top-16 z-20 bg-ink-950/85 backdrop-blur-md py-4 -mx-6 px-6 md:-mx-10 md:px-10 border-b border-ink-800 mb-6">
-        <div className="flex flex-wrap gap-1.5">
-          {SORTS.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => setSort(s.id)}
-              className={cn(
-                "px-3 py-1.5 rounded-full text-sm font-medium border transition-colors",
-                sort === s.id
-                  ? "bg-flame text-white border-flame"
-                  : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
-              )}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      <ProductToolbar state={listing} onChange={setListing} shown={items.length} total={FIDGETS.length} />
 
       {/* Custom fidget banner */}
       <Link

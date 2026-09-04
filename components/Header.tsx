@@ -11,17 +11,18 @@ import { useOrderStore } from "@/lib/order-store";
 
 const NAV = [
   { href: "/", label: "בית" },
+  { href: "/trendy", label: "טרנדי" },
   { href: "/catalog", label: "סמלי יחידה" },
   { href: "/fidgets", label: "פידג'טים" },
-  { href: "/configurator", label: "מעצב" },
   { href: "/pets", label: "לחיות" },
   { href: "/home-office", label: "בית ומשרד" },
-  { href: "/upload", label: "העלאת קובץ" },
+  { href: "/configurator", label: "מעצב" },
   { href: "/b2b", label: "עסקים" },
-  { href: "/livestream", label: "לייב" },
 ];
 
 const SECONDARY = [
+  { href: "/upload", label: "העלאת קובץ" },
+  { href: "/livestream", label: "לייב" },
   { href: "/gallery", label: "גלריה" },
   { href: "/reviews", label: "ביקורות" },
   { href: "/tracking", label: "מעקב הזמנה" },
@@ -43,7 +44,7 @@ export default function Header() {
       <header className="sticky top-0 z-40 h-16 bg-ink-950/85 backdrop-blur-md border-b border-ink-800">
         <div className="max-w-7xl mx-auto h-full px-6 md:px-10 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="Unit 3D · דף הבית">
-            <Logo size={32} />
+            <Logo size={30} />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1 text-sm">
@@ -65,6 +66,15 @@ export default function Header() {
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
+
+            <Link
+              href="/admin"
+              aria-label="אזור ניהול"
+              title="ניהול"
+              className="hidden md:inline-flex items-center justify-center h-10 w-10 rounded-lg border border-ink-700/60 text-ink-400 hover:text-ink-100 hover:border-ink-600 transition-colors"
+            >
+              <Icon name="settings" size={18} />
+            </Link>
 
             {/* Cart badge */}
             <Link

@@ -16,6 +16,15 @@ type Cat = {
 const CATS: Cat[] = [
   {
     index: "01",
+    title: "טרנדי כרגע",
+    desc: "מה שכולם מזמינים השבוע. פידג'טים, קייסים, מתנות.",
+    href: "/trendy",
+    hue: 145,
+    shape: "hex",
+    popular: true,
+  },
+  {
+    index: "02",
     title: "סמלי יחידה צה\"ליים",
     desc: "מחזיקי מפתחות, פסלי שולחן, מתנות לטקסים.",
     href: "/catalog",
@@ -23,24 +32,23 @@ const CATS: Cat[] = [
     shape: "shield",
   },
   {
-    index: "02",
-    title: "מחזיקי מפתחות מותאמים",
-    desc: "שם, מספר, סמל — לוקחים אצלי 1.5 שעות.",
+    index: "03",
+    title: "מעצב אישי",
+    desc: "מחזיק, קייס, דיסקית, שלט. טקסט או עיצוב חופשי.",
     href: "/configurator",
     hue: 200,
     shape: "rect",
   },
   {
-    index: "03",
+    index: "04",
     title: "פידג'טים ומפיגי שיעמום",
     desc: "Articulated dragons, spinners, infinity cubes.",
     href: "/fidgets",
     hue: 90,
     shape: "hex",
-    popular: true,
   },
   {
-    index: "04",
+    index: "05",
     title: "תגים לחיות",
     desc: "שם וטלפון על הקולר. PETG עמיד, 4 גרם.",
     href: "/pets",
@@ -48,15 +56,23 @@ const CATS: Cat[] = [
     shape: "circle",
   },
   {
-    index: "05",
+    index: "06",
     title: "לבית ולמשרד",
     desc: "מעמדים, מארגנים, תחתיות ושלטים עם השם שלך.",
     href: "/home-office",
-    hue: 200,
+    hue: 260,
     shape: "hex",
   },
   {
-    index: "06",
+    index: "07",
+    title: "לעסקים",
+    desc: "מתנות לעובדים עם הלוגו שלכם. מ-10 יחידות.",
+    href: "/b2b",
+    hue: 190,
+    shape: "rect",
+  },
+  {
+    index: "08",
     title: "הדפסה לפי הקובץ שלך",
     desc: "STL/OBJ/3MF — אני מתאים, צובע, ומדפיס.",
     href: "/upload",
@@ -69,7 +85,7 @@ export default function Categories() {
   return (
     <section className="py-20 md:py-24">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {CATS.map((c) => (
             <Link
               key={c.index}
