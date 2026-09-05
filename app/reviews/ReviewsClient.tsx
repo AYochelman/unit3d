@@ -2,8 +2,8 @@
 import { useState } from "react";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
+import ReviewForm from "@/components/ReviewForm";
 import Icon from "@/components/ui/Icon";
-import { Field, Input, Textarea, Select } from "@/components/ui/Field";
 import { REVIEWS } from "@/lib/data";
 import type { ReviewSeg } from "@/lib/types";
 
@@ -22,8 +22,6 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 
 export default function ReviewsClient() {
   const [showForm, setShowForm] = useState(false);
-  const [stars, setStars] = useState(5);
-  const [submitted, setSubmitted] = useState(false);
 
   return (
     <div className="max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-16">
@@ -50,66 +48,7 @@ export default function ReviewsClient() {
         </Btn>
       </header>
 
-      {showForm && !submitted && (
-        <form
-          className="mb-10 p-6 rounded-2xl bg-ink-900 border border-ink-800"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSubmitted(true);
-          }}
-        >
-          <div className="grid md:grid-cols-2 gap-4 mb-4">
-            <Field label="שם מלא" required>
-              <Input placeholder="שם פרטי + שם משפחה" required />
-            </Field>
-            <Field label="תיאור / יחידה / חברה" optional>
-              <Input placeholder="חטיבה 51 / VP People · Acme" />
-            </Field>
-          </div>
-          <Field label="סגמנט" required>
-            <Select required defaultValue="private">
-              <option value="private">לקוח פרטי</option>
-              <option value="soldier">חייל/ת</option>
-              <option value="family">משפחה</option>
-              <option value="b2b">חברה</option>
-            </Select>
-          </Field>
-          <div className="my-4">
-            <div className="text-sm font-semibold text-ink-100 mb-2">
-              דירוג <span className="text-flame">*</span>
-            </div>
-            <div className="flex gap-1.5">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setStars(n)}
-                  aria-label={`${n} כוכבים`}
-                  className={n <= stars ? "text-flame" : "text-ink-700"}
-                >
-                  <Icon name="star" size={28} className="fill-current" strokeWidth={1.5} />
-                </button>
-              ))}
-            </div>
-          </div>
-          <Field label="הביקורת שלך" required>
-            <Textarea placeholder="ספר על ההזמנה — מה הזמנת, איך היה התהליך, איך התוצאה." required />
-          </Field>
-          <div className="mt-5 flex justify-end">
-            <Btn type="submit">פרסם ביקורת</Btn>
-          </div>
-        </form>
-      )}
-
-      {submitted && (
-        <div className="mb-10 p-6 rounded-2xl border border-good/30 bg-good/10 text-center">
-          <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-good/20 text-good mb-3">
-            <Icon name="check" size={24} strokeWidth={2.5} />
-          </div>
-          <div className="font-bold text-lg mb-1">תודה!</div>
-          <div className="text-ink-300 text-sm">הביקורת שלך נשלחה. תפורסם אחרי אימות תוך 24 שעות.</div>
-        </div>
-      )}
+      {showForm && <div className="mb-10"><ReviewForm /></div>}
 
       <div className="grid md:grid-cols-2 gap-5">
         {REVIEWS.map((r) => (

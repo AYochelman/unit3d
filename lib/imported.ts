@@ -1,6 +1,7 @@
 import type { Fidget, Product, ProductArtId, ProductCategory } from "./types";
 import { DEFAULT_COST_SETTINGS, estimateCost, fmtHours } from "./costing";
 import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
+import { heName } from "./he-names";
 
 // ─── Models imported from a maker site ───────────────────────────────────────
 //
@@ -33,7 +34,7 @@ import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
 // a MakerWorld collection page does not show licences, so the licence has to be
 // read on the model's own page before that model is sold.
 
-export type ImportedShelf = "flexi" | "fidget" | "statues" | "pets" | "home" | "office" | "trendy";
+export type ImportedShelf = "flexi" | "fidget" | "statues" | "pets" | "home" | "office" | "trendy" | "b2b";
 
 export type ImportedModel = {
   id: string;
@@ -63,6 +64,8 @@ export type ImportedModel = {
   holds: string[];
   /** True only once someone has read the licence on the model's own page. */
   licenseChecked: boolean;
+  /** The original title, kept for the credit line and for finding the source. */
+  nameEn?: string;
 };
 
 /**
@@ -95,6 +98,7 @@ const SHELF_TO_CATEGORY: Record<Exclude<ImportedShelf, "flexi" | "fidget">, Prod
   home: "home",
   office: "office",
   trendy: "trendy",
+  b2b: "b2b",
 };
 
 /** Imported rows that belong on the fidgets tab. */
@@ -104,7 +108,8 @@ export function importedFidgets(): Fidget[] {
     .map((m) => ({
       id: m.id,
       kind: m.shelf === "flexi" ? "flexi" : "fidget",
-      name: m.name,
+      name: heName(m.id, m.name),
+      nameEn: m.name,
       desc: m.desc,
       price: suggestPrice(m.grams, m.hours, m.colors),
       size: m.size,
@@ -128,7 +133,8 @@ export function importedProducts(): Product[] {
     .map((m) => ({
       id: m.id,
       category: SHELF_TO_CATEGORY[m.shelf as Exclude<ImportedShelf, "flexi" | "fidget">],
-      name: m.name,
+      name: heName(m.id, m.name),
+      nameEn: m.name,
       desc: m.desc,
       price: suggestPrice(m.grams, m.hours, m.colors),
       size: m.size,
@@ -136,6 +142,7 @@ export function importedProducts(): Product[] {
       hours: m.hours,
       grams: m.grams,
       art: m.art ?? "lowpoly",
+      image: m.image,
       hue: m.hue,
       material: "pla_plus",
       colors: m.colors,

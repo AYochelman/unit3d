@@ -15,6 +15,8 @@ import { fidgetGrams } from "@/lib/products";
 import { parseHours } from "@/lib/costing";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
+import ShippingEstimate from "@/components/ShippingEstimate";
+import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import type { MaterialId } from "@/lib/types";
 
@@ -493,6 +495,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           </div>
 
           {/* ── Admin cost panel ────────────────────────────────────────── */}
+          <ShippingEstimate grams={weightG} qty={qty} />
+
           {adminUnlocked && (
             <AdminCostPanel
               itemId={id}
@@ -546,7 +550,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           {/* Source attribution (CC-BY) — discreet, under the fold */}
           {f.creator && (
             <p className="text-[11px] text-ink-400 text-center" dir="ltr">
-              Model by {f.creator}
+              {f.nameEn && f.nameEn !== f.name ? `${f.nameEn} · ` : ""}Model by {f.creator}
               {f.license ? ` · ${f.license}` : ""}
               {f.sourceUrl && (
                 <>
@@ -574,7 +578,15 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           </div>
         </div>
       </div>
+
+      {/* ── Rate what you bought ─────────────────────────────────────── */}
+      <section className="mt-12 max-w-2xl">
+        <h2 className="text-xl font-extrabold tracking-tight mb-1">כבר הזמנת את זה?</h2>
+        <p className="text-sm text-ink-400 mb-4">
+          דירוג וביקורת עוזרים ללקוח הבא להחליט, ולי לדעת מה לשפר.
+        </p>
+        <ReviewForm itemName={f.name} compact />
+      </section>
     </div>
   );
 }
-

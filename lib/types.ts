@@ -126,6 +126,8 @@ export type Fidget = {
   /** Listing stats (demo counters until there is a backend). */
   rating?: number;
   orders?: number;
+  /** Original (usually English) title of an imported model. */
+  nameEn?: string;
 };
 
 // ─── Configurator options ─────────────────────────────────────────────────────
@@ -213,7 +215,7 @@ export type Material = {
 };
 
 // ─── Shop products (pet tags, office & home) ─────────────────────────────────
-export type ProductCategory = "pets" | "office" | "home" | "trendy" | "statues";
+export type ProductCategory = "pets" | "office" | "home" | "trendy" | "statues" | "b2b";
 
 export type ProductArtId =
   | "bone" | "round" | "heart" | "fish" | "paw" | "qr" | "bagholder" | "scoop"
@@ -260,6 +262,10 @@ export type Product = {
   options?: { label: string; items: ProductOption[] };
   /** Credit for an imported design — CC-BY requires naming the designer. */
   creator?: string;
+  /** Original (usually English) title of an imported model. */
+  nameEn?: string;
+  /** Photograph of the printed model, when the source published one. */
+  image?: string;
   source?: FidgetSource;
   sourceUrl?: string;
   license?: string;

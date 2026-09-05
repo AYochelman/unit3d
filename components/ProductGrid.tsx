@@ -41,6 +41,7 @@ export function productToCard(p: Product): ListingCard {
     time: p.time,
     hue: p.hue,
     art: p.art,
+    image: p.image,
     tag: p.tag,
     category: CATEGORY_LABEL[p.category],
     materialShort: p.material ? MATERIAL_BY_ID[p.material].short : undefined,

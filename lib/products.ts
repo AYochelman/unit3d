@@ -294,6 +294,7 @@ export const CATEGORY_LABEL: Record<Product["category"], string> = {
   home: "לבית",
   trendy: "טרנדי",
   statues: "פסלים",
+  b2b: "לעסקים",
 };
 
 // ─── Listing stats for products (demo counters until there is a backend) ─────

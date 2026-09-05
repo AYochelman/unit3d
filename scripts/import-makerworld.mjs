@@ -36,6 +36,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const RAW = path.join(ROOT, "data", "makerworld-raw.json");
 const CACHE = path.join(ROOT, "data", "makerworld-details.tsv");
+const OVERRIDES = path.join(ROOT, "scripts", "shelf-overrides.json");
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 
 const ARGS = new Set(process.argv.slice(2));
@@ -105,6 +106,11 @@ async function doctor() {
 //
 // MakerWorld tells us its own categories and tags, which beat guessing from a
 // title. The title is only the tie-breaker.
+// MakerWorld's categories are right most of the time and wrong sometimes: a
+// "Quick-Lock Dumbbell Collar" is not a pet product, an iPhone case is not a
+// sculpture. scripts/shelf-overrides.json fixes those by id, by hand.
+const SHELF_OVERRIDES = fs.existsSync(OVERRIDES) ? JSON.parse(fs.readFileSync(OVERRIDES, "utf8")) : {};
+
 const CAT_SHELF = [
   [/(sculpture|art|characters|people)/i, "statues"],
   [/(pets)/i, "pets"],
@@ -176,10 +182,11 @@ const ESTIMATE = {
   office:  { hours: 1.8, grams: 35,  colors: 1 },
   home:    { hours: 2.2, grams: 45,  colors: 1 },
   trendy:  { hours: 2.0, grams: 40,  colors: 1 },
+  b2b:     { hours: 2.0, grams: 45,  colors: 2 },
 };
 
-const HUE = { flexi: 90, fidget: 280, statues: 320, pets: 30, office: 200, home: 260, trendy: 145 };
-const ART = { statues: "lowpoly", pets: "round", office: "penholder", home: "planter", trendy: "keychain" };
+const HUE = { flexi: 90, fidget: 280, statues: 320, pets: 30, office: 200, home: 260, trendy: 145, b2b: 190 };
+const ART = { statues: "lowpoly", pets: "round", office: "penholder", home: "planter", trendy: "keychain", b2b: "nameplate" };
 
 const HE_DESC = {
   flexi: "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
@@ -189,6 +196,7 @@ const HE_DESC = {
   office: "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
   home: "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
   trendy: "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+  b2b: "מתנה ממותגת. אפשר עם הלוגו שלכם, מ-10 יחידות ומעלה.",
 };
 
 // ── detail cache (TSV, one row per model) ────────────────────────────────────
@@ -333,7 +341,7 @@ async function main() {
     const name = readableTitle((d.title || m.title || "").trim(), m.slug || d.slug);
     if (!name) continue;
 
-    const shelf = classify(name, d.tags || [], d.cats || []);
+    const shelf = SHELF_OVERRIDES[m.id] ?? classify(name, d.tags || [], d.cats || []);
     const est = ESTIMATE[shelf];
     const grams = d.grams || est.grams;
     const hours = d.seconds ? Math.round((d.seconds / 3600) * 10) / 10 : est.hours;

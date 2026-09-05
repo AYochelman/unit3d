@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
+import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
 import { Field, Input } from "@/components/ui/Field";
 import { FILAMENTS } from "@/lib/data";
@@ -10,6 +11,8 @@ import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
+import ShippingEstimate from "@/components/ShippingEstimate";
+import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
@@ -112,7 +115,20 @@ export default function ProductDetailClient({ id }: { id: string }) {
             className="relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
             style={{ background: `radial-gradient(circle at 50% 40%, ${color.hex}33, #111114 65%)` }}
           >
-            <ProductArt art={p.art} color={color.hex} size={360} className="max-w-[80%] h-auto drop-shadow-2xl" />
+            {p.image ? (
+              // A photograph of the actual model beats a drawing of it. The
+              // colour swatch below still says which filament it prints in.
+              <Image
+                src={p.image}
+                alt={p.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <ProductArt art={p.art} color={color.hex} size={360} className="max-w-[80%] h-auto drop-shadow-2xl" />
+            )}
             <div className="absolute top-3 right-3 flex flex-col gap-1.5">
               <Pill tone="neutral" className="text-[10px]">{CATEGORY_LABEL[p.category]}</Pill>
               {p.tag && <Pill tone="flame" className="text-[10px]">{p.tag}</Pill>}
@@ -142,6 +158,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
             {p.sourceUrl && (
               <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-ink-500">
                 <span>
+                  {p.nameEn && p.nameEn !== p.name && (
+                    <><bdi dir="ltr" className="text-ink-400">{p.nameEn}</bdi>{" · "}</>
+                  )}
                   עיצוב מקורי: <span className="text-ink-300">{p.creator ?? "MakerWorld"}</span>
                   {p.license && <span className="text-ink-400"> · {p.license}</span>}
                 </span>
@@ -296,6 +315,12 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <AdminUnlock />
           </div>
 
+          <ShippingEstimate
+            grams={grams}
+            fragile={p.category === "statues"}
+            qty={qty}
+          />
+
           {adminUnlocked && (
             <AdminCostPanel
               itemId={id}
@@ -323,7 +348,15 @@ export default function ProductDetailClient({ id }: { id: string }) {
           )}
         </div>
       </div>
+
+      {/* ── Rate what you bought ─────────────────────────────────────── */}
+      <section className="mt-12 max-w-2xl">
+        <h2 className="text-xl font-extrabold tracking-tight mb-1">כבר הזמנת את זה?</h2>
+        <p className="text-sm text-ink-400 mb-4">
+          דירוג וביקורת עוזרים ללקוח הבא להחליט, ולי לדעת מה לשפר.
+        </p>
+        <ReviewForm itemName={p.name} compact />
+      </section>
     </div>
   );
 }
-

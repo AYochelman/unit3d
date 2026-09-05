@@ -5,6 +5,11 @@ import Btn from "@/components/ui/Btn";
 import Icon, { type IconName } from "@/components/ui/Icon";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { fmtILS } from "@/lib/format";
+import ProductGrid, { productToCard } from "@/components/ProductGrid";
+import { productsByCategory } from "@/lib/products";
+import { photoMix } from "@/lib/photos";
+import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 
 const USE_CASES = [
@@ -61,6 +66,11 @@ const INCLUDED: { iconKey: IconName; title: string; desc: string }[] = [
 const CLIENTS = ["▲ MoonTech", "◆ Pixie", "● Orca Labs", "■ Halo HR", "⬢ Nimbus", "✦ Forge"];
 
 export default function B2BClient() {
+  // Real, brandable products with real photographs, instead of a page that only
+  // describes what a corporate order could be.
+  const b2bCards = productsByCategory("b2b").map(productToCard);
+  const ideaPhotos = photoMix(["office", "home", "statues"], 5);
+
   const [submitted, setSubmitted] = useState(false);
   const [refCode, setRefCode] = useState("");
 
@@ -313,6 +323,44 @@ export default function B2BClient() {
               </div>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* ── Products a company actually orders ─────────────────────────── */}
+      <section className="py-16 border-t border-ink-800">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <div className="mb-8">
+            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
+              WHAT COMPANIES ORDER
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tightest mb-2">
+              מוצרים שאפשר למתג.
+            </h2>
+            <p className="text-ink-300 max-w-2xl">
+              כל אחד מאלה מודפס עם הלוגו או השם שלכם, בצבעי המותג, מ-10 יחידות ומעלה.
+              מעל 5 יחידות יש 10% הנחת כמות אוטומטית.
+            </p>
+          </div>
+
+          {b2bCards.length > 0 && <ProductGrid cards={b2bCards} />}
+
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {ideaPhotos.map((ph) => (
+              <Link
+                key={ph.id}
+                href={ph.href}
+                className="group relative aspect-square rounded-2xl overflow-hidden bg-ink-900 border border-ink-800 hover:border-ink-700 transition-colors"
+              >
+                <Image src={ph.src} alt={ph.name} fill sizes="(max-width: 640px) 50vw, 20vw" className="object-cover transition-transform duration-500 group-hover:scale-105" unoptimized />
+                <div className="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-ink-950/95 to-transparent">
+                  <div className="text-xs font-bold leading-tight line-clamp-2">{ph.name}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <p className="mt-3 text-[11px] text-ink-500">
+            רעיונות נוספים שאפשר למתג — לחיצה פותחת את עמוד המוצר.
+          </p>
         </div>
       </section>
 
