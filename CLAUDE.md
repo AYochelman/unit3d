@@ -118,3 +118,15 @@ PIN ב-`lib/admin-store.ts` (ברירת מחדל 1234). המצב נשמר לסש
 
 `npm run import:makerworld` מוסיף מודלים מיובאים לאותן עמודות בלי שינוי UI.
 ראה HANDOFF.md סעיף 15 — כולל אזהרת הרישוי (NC לא נמכר) והמסלול דרך הדפדפן.
+
+
+## ייבוא ממייקרוורלד — הדרך שעובדת
+
+דפי HTML של makerworld.com חסומים ב-Cloudflare (403). ה-API לא:
+`https://makerworld.com/api/v1/design-service/design/<id>` מחזיר 200 לבקשה
+רגילה, עם רישיון, שם מעצב, משקל בגרמים, זמן הדפסה בשניות, מספר צבעים, תגיות
+וקטגוריות. `scripts/import-makerworld.mjs` בנוי סביב זה, עם מטמון ב-
+`data/makerworld-details.tsv` ומצב `--offline`.
+
+אין endpoint ציבורי לתוכן אוסף, ולכן את הרשימה עצמה אוספים מהדפדפן דרך
+`collect-models.html`. ראה HANDOFF.md סעיף 17.

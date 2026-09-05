@@ -292,3 +292,46 @@ backend, הגדרות אדמין לסשן בלבד, `public/` עדיין חסר 
 (Print in Place)" הוא פידג'ט ולא פלקסי; כותרת שאינה לטינית (סינית/גרמנית)
 מוחלפת בשם מהסלאג. `lib/trending.ts` מצרף עכשיו את מוצרי `trendy` המיובאים,
 אחרת הם היו בקטלוג בלי עמוד שמציג אותם.
+
+
+## 17. הדרך פנימה למייקרוורלד — ה-API (5 בספטמבר 2026)
+
+**מה שלא עובד:** דפי ה-HTML של מייקרוורלד מוגנים ב-Cloudflare. curl, Chromium
+headless עם stealth, ושירותי scraping — כולם מקבלים 403 ו-"Just a moment…".
+
+**מה כן עובד:** ה-API שלהם פתוח לגמרי.
+
+```
+GET https://makerworld.com/api/v1/design-service/design/<id>   → 200
+```
+
+בלי מפתח, בלי עוגייה, בלי User-Agent מיוחד. הוא מחזיר את כל מה שניחוש מהכותרת
+לא יכול לתת:
+
+| שדה | מה זה |
+|-----|-------|
+| `license` | הרישיון האמיתי (BY-SA / BY-NC / CC0 / Standard Digital File License…) |
+| `designCreator.name` / `.handle` | שם המעצב, בשביל הקרדיט של CC-BY |
+| `instances[].weight` | משקל בגרמים מהסלייסר |
+| `instances[].prediction` | זמן הדפסה **בשניות** |
+| `instances[].materialColorCnt` / `needAms` | מספר צבעים ו-AMS |
+| `tags` / `categories` | הקטגוריות של מייקרוורלד עצמה — מסווגות מדף הרבה יותר טוב מהכותרת |
+| `downloadCount` / `likeCount` / `printCount` | פופולריות אמיתית |
+
+לא נמצא endpoint ציבורי לתוכן של אוסף (`/collection/<id>` וכל הווריאציות → 404),
+כנראה כי אוספים דורשים הזדהות. לכן החלוקה שנשארת:
+
+1. **הרשימה** של האוסף — מהדפדפן של המשתמש, `collect-models.html` →
+   `data/makerworld-raw.json`
+2. **הפרטים** של כל מודל — מה-API, בסקריפט.
+
+התשובות נשמרות ב-`data/makerworld-details.tsv` (מטמון), כך שהרצה חוזרת מיידית
+ועובדת גם בלי רשת (`--offline`).
+
+**התוצאה על 134 המודלים:** 41 פידג'ט, 27 בית, 23 פסלים, 20 משרד, 11 טרנדי,
+10 פלקסי, 2 חיות. הרישיונות: 113 Standard Digital File License, 9 MakerWorld
+Exclusive, 3 BY-SA, 3 BY-NC-SA, 2 BY-NC, 2 CC0, 1 BY, 1 BY-NC-ND.
+
+**מה נחסם עכשיו** (`BLOCKED_HOLDS` ב-`lib/imported.ts`): `weapon` (17) ו-
+`license-nc` (6 — המעצב כתב במפורש שאסור מסחר). `brand` הוסר מהחסימה לבקשת
+המשתמש (2026-09-05), אחרי שהוסבר לו הסיכון; 27 מודלי מותגים ודמויות מוצגים.

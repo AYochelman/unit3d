@@ -1,25 +1,32 @@
 #!/usr/bin/env node
 /**
- * Import MakerWorld collections into the shop.
+ * Import MakerWorld models into the shop.
  *
- *   npm run import:makerworld            # fetch + write lib/imported.generated.ts
+ *   npm run import:makerworld            # enrich + write lib/imported.generated.ts
  *   npm run import:makerworld -- --dry   # show what it found, write nothing
- *   npm run import:makerworld -- --raw   # skip the network, read data/makerworld-raw.json
  *   npm run import:makerworld -- --doctor# check the connection and explain failures
  *
- * WHAT IT IMPORTS: the model's title, picture, designer, licence and a link
- * back — plus our own estimate of print time, weight and price. It does NOT
- * download or redistribute any STL. We sell a printing service and credit the
- * designer, which is what CC-BY asks for. Models under a NON-COMMERCIAL (NC)
- * licence are marked commercialOk:false and stay hidden until you have the
- * designer's written permission (see lib/imported.ts).
+ * HOW IT GETS THE DATA
  *
- * Sources live in scripts/makerworld-sources.json.
+ * MakerWorld's HTML pages sit behind a Cloudflare challenge: curl, headless
+ * Chromium and scraper services all get a 403 "Just a moment…". Their JSON API
+ * does NOT: `GET /api/v1/design-service/design/<id>` answers 200 to a plain
+ * request. So the split is:
  *
- * If MakerWorld is unreachable or changes its markup, run with --doctor: it
- * names the failure and the fix. As a last resort you can save a collection's
- * JSON response from the browser's Network tab to data/makerworld-raw.json and
- * re-run — the script will read that instead of the network.
+ *   1. the LIST of models in a collection comes from your own browser, via
+ *      scripts/collect-in-browser.js → data/makerworld-raw.json
+ *   2. the DETAILS of each model come from that API, right here.
+ *
+ * The API gives us the things guessing never could: the real licence, the
+ * designer's name, the sliced weight in grams, the predicted print time in
+ * seconds, the colour count, and MakerWorld's own categories and tags — which
+ * classify a model onto the right shelf far better than its title does.
+ *
+ * Responses are cached in data/makerworld-details.tsv, so a re-run is instant
+ * and still works with no network at all (--offline forces that).
+ *
+ * scripts/makerworld-sources.json is no longer read by this script; it is kept
+ * as the written record of which collections the catalogue came from.
  */
 
 import fs from "node:fs";
@@ -27,22 +34,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SOURCES = path.join(ROOT, "scripts", "makerworld-sources.json");
-const RAW_FALLBACK = path.join(ROOT, "data", "makerworld-raw.json");
+const RAW = path.join(ROOT, "data", "makerworld-raw.json");
+const CACHE = path.join(ROOT, "data", "makerworld-details.tsv");
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 
 const ARGS = new Set(process.argv.slice(2));
 const DRY = ARGS.has("--dry");
 const DOCTOR = ARGS.has("--doctor");
-// --raw skips the network entirely and reads data/makerworld-raw.json, which is
-// what scripts/collect-in-browser.js produces from your own logged-in browser.
-const RAW_ONLY = ARGS.has("--raw");
+const NO_NET = ARGS.has("--offline");
 
+const API = (id) => `https://makerworld.com/api/v1/design-service/design/${id}`;
 const UA =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const TIMEOUT_MS = 25_000;
 
-// ── tiny console helpers ─────────────────────────────────────────────────────
 const c = {
   g: (s) => `\x1b[32m${s}\x1b[0m`,
   r: (s) => `\x1b[31m${s}\x1b[0m`,
@@ -53,20 +58,16 @@ const c = {
 const log = (...a) => console.log(...a);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function get(url, as = "text") {
+async function getJson(url) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
     const res = await fetch(url, {
       signal: ctrl.signal,
-      headers: {
-        "user-agent": UA,
-        "accept-language": "en-US,en;q=0.9,he;q=0.8",
-        accept: as === "json" ? "application/json" : "text/html,application/xhtml+xml",
-      },
+      headers: { "user-agent": UA, accept: "application/json" },
     });
     if (!res.ok) return { ok: false, status: res.status };
-    return { ok: true, status: res.status, body: as === "json" ? await res.json() : await res.text() };
+    return { ok: true, body: await res.json() };
   } catch (e) {
     return { ok: false, status: 0, error: e.name === "AbortError" ? "timeout" : e.message };
   } finally {
@@ -80,83 +81,101 @@ async function doctor() {
   const nodeOk = Number(process.versions.node.split(".")[0]) >= 18;
   log(`  Node ${process.versions.node} ${nodeOk ? c.g("תקין") : c.r("ישן מדי")}`);
   if (!nodeOk) {
-    log(c.r("  צריך Node 18 ומעלה (fetch מובנה). התקן מ-https://nodejs.org והרץ שוב.\n"));
+    log(c.r("  צריך Node 18 ומעלה. התקן מ-https://nodejs.org והרץ שוב.\n"));
     return false;
   }
-
-  const srcOk = fs.existsSync(SOURCES);
-  log(`  scripts/makerworld-sources.json ${srcOk ? c.g("קיים") : c.r("חסר")}`);
-  if (!srcOk) return false;
+  log(`  data/makerworld-raw.json ${fs.existsSync(RAW) ? c.g("קיים") : c.y("חסר — הרץ קודם את collect-models.html")}`);
+  log(`  מטמון פרטים ${fs.existsSync(CACHE) ? c.g("קיים") : c.d("ריק")}`);
 
   const proxy = process.env.HTTPS_PROXY || process.env.https_proxy;
   if (proxy) log(c.y(`  שים לב: מוגדר פרוקסי (${proxy}). אם ההורדה נכשלת — בטל אותו.`));
 
-  const probe = await get("https://makerworld.com/en", "text");
+  const probe = await getJson(API(90174));
   if (probe.ok) {
-    log(`  חיבור ל-makerworld.com ${c.g("עובד")}`);
+    log(`  ה-API של מייקרוורלד ${c.g("עונה")} ${c.d("(דפי ה-HTML חסומים, ה-API לא)")}`);
     return true;
   }
-  log(`  חיבור ל-makerworld.com ${c.r("נכשל")} ${c.d(`(${probe.status || probe.error})`)}`);
-  if (probe.status === 403 || probe.status === 429) {
-    log(c.y("  האתר חוסם בקשות אוטומטיות כרגע. נסה שוב בעוד כמה דקות, או שמור את"));
-    log(c.y("  ה-JSON של האוסף מלשונית Network בדפדפן אל data/makerworld-raw.json."));
-  } else {
-    log(c.y("  אין גישה לאינטרנט מהמחשב הזה, או שחומת אש חוסמת את node."));
-  }
-  log("");
+  log(`  ה-API של מייקרוורלד ${c.r("לא עונה")} ${c.d(`(${probe.status || probe.error})`)}`);
+  log(c.y("  אין גישה לאינטרנט, או שחומת אש חוסמת את node."));
+  log(c.y("  אפשר להריץ עם --offline ולהשתמש במטמון הקיים.\n"));
   return false;
 }
 
-// ── classification ───────────────────────────────────────────────────────────
+// ── shelves ──────────────────────────────────────────────────────────────────
 //
-// Order matters. "Flexi Baby Dragon Mini Fidget" is a flexi; "Ultimate Button
-// Clicker Fidget (Print in Place)" is a fidget - so the flexi/articulated words
-// are tested before the generic fidget words, and "print in place" on its own
-// is not enough to call something a flexi.
-const RULES = [
-  { shelf: "flexi",   re: /(flexi|articulat|bendy)/i },
-  { shelf: "fidget",  re: /(fidget|spinner|clicker|clicky|slider|popper|squishy|sensory|infinity|twisty|puzzle|pin art|slime)/i },
-  { shelf: "flexi",   re: /(dragon|snake|serpent|worm|octopus|axolotl|shark|lizard|gecko|pangolin|scorpion|skorpion|crab|dino|t-?rex|raptor|caterpillar|frog|manta)/i },
-  { shelf: "statues", re: /(statue|bust|sculpt|figure|figurine|replica|model kit|low[- ]?poly|vase|trophy|lamp|moon|chess|diorama|display|skull|mask|charm|art\b)/i },
-  { shelf: "pets",    re: /(pet |dog |cat |collar|paw|kibble|leash|aquarium)/i },
-  { shelf: "office",  re: /(desk|pen |cable|usb|headphone|monitor|organizer|card holder|controller|tray|clip|bookmark|calendar|phone stand|keychain)/i },
-  { shelf: "home",    re: /(planter|coaster|hook|kitchen|shelf|rack|box|lid|bathroom|door|wall|towel|toilet|shower|broom|holder|dispenser|stand|chair|opener|winder)/i },
+// MakerWorld tells us its own categories and tags, which beat guessing from a
+// title. The title is only the tie-breaker.
+const CAT_SHELF = [
+  [/(sculpture|art|characters|people)/i, "statues"],
+  [/(pets)/i, "pets"],
+  [/(office|organizer|tools|3d printer|electronics|gadgets|hand tools)/i, "office"],
+  [/(household|decor|house models|kitchen|footwear|fashion)/i, "home"],
+  [/(animals|creatures|miniatures)/i, "flexi"],
+  [/(toys & games|puzzles|construction sets|outdoor toys)/i, "fidget"],
 ];
 
-function classify(name, fallback = "trendy") {
-  for (const r of RULES) if (r.re.test(name)) return r.shelf;
-  return fallback === "auto" ? "trendy" : fallback;
+const FLEXI_TAG = /(flexi|articulat|print in place|dragon|snake|dino|t-rex|octopus|frog|skeleton)/i;
+const FIDGET_TAG = /(fidget|spinner|clicker|clicky|slider|popper|squishy|sensory|twisty|infinity|puzzle|slime)/i;
+const STATUE_TAG = /(sculpture|statue|bust|figurine|figure|display|low poly|art|deko|shelf)/i;
+
+const TITLE_RULES = [
+  [/(flexi|articulat|bendy)/i, "flexi"],
+  [/(fidget|spinner|clicker|clicky|slider|popper|squishy|sensory|infinity|twisty|slime)/i, "fidget"],
+  [/(dragon|snake|serpent|worm|octopus|axolotl|shark|lizard|gecko|pangolin|scorpion|skorpion|crab|dino|t-?rex|raptor|frog|manta)/i, "flexi"],
+  [/(statue|bust|sculpt|figurine|replica|low[- ]?poly|vase|trophy|lamp|moon|chess|skull|mask|charm)/i, "statues"],
+  [/(pet |dog |cat |collar|paw|leash)/i, "pets"],
+  [/(desk|pen |cable|usb|headphone|monitor|organizer|card holder|controller|tray|clip|bookmark|calendar|phone stand|keychain)/i, "office"],
+  [/(planter|coaster|hook|kitchen|shelf|rack|box|lid|bathroom|door|wall|towel|toilet|shower|broom|holder|dispenser|stand|chair|opener|winder)/i, "home"],
+];
+
+function classify(title, tags = [], cats = []) {
+  const tagStr = tags.join(" ");
+  const catStr = cats.join(" ");
+
+  // A flexi or a fidget can sit in any category, so the tags decide first.
+  if (FLEXI_TAG.test(tagStr) && !FIDGET_TAG.test(title)) return "flexi";
+  if (FIDGET_TAG.test(tagStr)) return "fidget";
+
+  for (const [re, shelf] of CAT_SHELF) {
+    if (re.test(catStr)) {
+      // "Animals / Miniatures" is a flexi only when it actually articulates;
+      // otherwise it is something for the display shelf.
+      if (shelf === "flexi" && !FLEXI_TAG.test(tagStr) && !FLEXI_TAG.test(title)) {
+        return STATUE_TAG.test(tagStr) ? "statues" : "statues";
+      }
+      return shelf;
+    }
+  }
+  for (const [re, shelf] of TITLE_RULES) if (re.test(title)) return shelf;
+  return "trendy";
 }
 
 // ── what we import but do NOT put on sale ────────────────────────────────────
-//
-// These two lists exist because selling the model is a legal problem, not a
-// taste one. See the note at the top of lib/imported.ts.
 const WEAPON_RE =
-  /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|axe\b|blowgun|bb (launcher|gun)|airsoft|pistol|shotgun|rifle|gun\b|ammo|bullet|throwing|nunchaku|brass knuckle|taser|crossbow|arrow|spear|whistle)/i;
+  /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|bb (launcher|gun)|airsoft|pistol|shotgun|rifle|\bgun\b|ammo|bullet|throwing|nunchaku|taser|crossbow|spear)/i;
 
 const BRAND_RE =
-  /(kaws|bearbrick|be@rbrick|smiski|hello kitty|spider[- ]?man|spiderman|spider noir|miles morales|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|master sword|nintendo|star wars|mandalorian|jujutsu|mahoraga|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|naruto|dragon ball|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go)/i;
+  /(kaws|bearbrick|be@rbrick|smiski|hello kitty|spider[- ]?man|spiderman|spider noir|miles morales|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|master sword|nintendo|star wars|mandalorian|jujutsu|mahoraga|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|naruto|dragon ball|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go|cheburashka|tscheburaschka)/i;
 
-/** Reasons a model is imported but kept out of the shop. */
-function holdsFor(name) {
+function holdsFor(text, license) {
   const holds = [];
-  if (WEAPON_RE.test(name)) holds.push("weapon");
-  if (BRAND_RE.test(name)) holds.push("brand");
+  if (WEAPON_RE.test(text)) holds.push("weapon");
+  if (BRAND_RE.test(text)) holds.push("brand");
+  // A CC "NC" licence is the designer stating in writing that the model may not
+  // be used commercially. That is not a judgement call like the two above.
+  if (/(^|-)NC(-|$)/i.test(license || "")) holds.push("license-nc");
   return holds;
 }
 
-// Print-time / weight estimates per shelf. MakerWorld does not expose the
-// slicer numbers publicly, so these are deliberate, stated assumptions — edit
-// them in /admin per item once you have sliced the model for real.
+// Fallbacks for a model the API could not describe.
 const ESTIMATE = {
-  flexi:   { hours: 5.0, grams: 70,  size: "~160mm", colors: 2 },
-  fidget:  { hours: 1.6, grams: 30,  size: "~65mm",  colors: 1 },
-  statues: { hours: 9.0, grams: 140, size: "~150mm", colors: 1 },
-  pets:    { hours: 0.6, grams: 7,   size: "~35mm",  colors: 2 },
-  office:  { hours: 1.8, grams: 35,  size: "~90mm",  colors: 1 },
-  home:    { hours: 2.2, grams: 45,  size: "~100mm", colors: 1 },
-  trendy:  { hours: 2.0, grams: 40,  size: "~90mm",  colors: 1 },
+  flexi:   { hours: 5.0, grams: 70,  colors: 2 },
+  fidget:  { hours: 1.6, grams: 30,  colors: 1 },
+  statues: { hours: 9.0, grams: 140, colors: 1 },
+  pets:    { hours: 0.6, grams: 7,   colors: 2 },
+  office:  { hours: 1.8, grams: 35,  colors: 1 },
+  home:    { hours: 2.2, grams: 45,  colors: 1 },
+  trendy:  { hours: 2.0, grams: 40,  colors: 1 },
 };
 
 const HUE = { flexi: 90, fidget: 280, statues: 320, pets: 30, office: 200, home: 260, trendy: 145 };
@@ -172,23 +191,71 @@ const HE_DESC = {
   trendy: "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
 };
 
-// ── extraction ───────────────────────────────────────────────────────────────
-/** Pull /en/models/<id>-<slug> links out of a page, keeping first-seen order. */
-function modelsFromHtml(html) {
-  const found = new Map();
-  const re = /\/(?:en\/)?models\/(\d+)-([a-z0-9-]+)/gi;
-  let m;
-  while ((m = re.exec(html))) {
-    const id = m[1];
-    if (!found.has(id)) found.set(id, { id, slug: m[2], title: titleFromSlug(m[2]) });
+// ── detail cache (TSV, one row per model) ────────────────────────────────────
+const CACHE_COLS = [
+  "id", "license", "creator", "handle", "grams", "seconds", "colors", "ams",
+  "downloads", "likes", "prints", "score", "tags", "cats",
+];
+
+function readCache() {
+  if (!fs.existsSync(CACHE)) return new Map();
+  const map = new Map();
+  for (const line of fs.readFileSync(CACHE, "utf8").split("\n")) {
+    if (!line.trim()) continue;
+    const f = line.split("\t");
+    if (f.length < CACHE_COLS.length) continue;
+    map.set(f[0], {
+      id: f[0], license: f[1], creator: f[2], handle: f[3],
+      grams: +f[4] || 0, seconds: +f[5] || 0, colors: +f[6] || 1, ams: f[7] === "1",
+      downloads: +f[8] || 0, likes: +f[9] || 0, prints: +f[10] || 0, score: +f[11] || 0,
+      tags: f[12] ? f[12].split(",") : [], cats: f[13] ? f[13].split(",") : [],
+    });
   }
-  // A nicer title, when the embedded JSON carries one for that id.
-  for (const [id, item] of found) {
-    const t = new RegExp(`"id"\\s*:\\s*${id}\\b[^{}]{0,400}?"(?:title|name)"\\s*:\\s*"([^"]{3,120})"`).exec(html)
-      || new RegExp(`"(?:title|name)"\\s*:\\s*"([^"]{3,120})"[^{}]{0,400}?"id"\\s*:\\s*${id}\\b`).exec(html);
-    if (t) item.title = unescapeJson(t[1]);
-  }
-  return [...found.values()];
+  return map;
+}
+
+function writeCache(map) {
+  const lines = [...map.values()].map((d) =>
+    [
+      d.id, d.license || "-", (d.creator || "-").replace(/\t/g, " "), d.handle || "-",
+      d.grams, d.seconds, d.colors, d.ams ? 1 : 0,
+      d.downloads, d.likes, d.prints, d.score,
+      d.tags.join(","), d.cats.join(","),
+    ].join("\t"),
+  );
+  fs.writeFileSync(CACHE, lines.join("\n") + "\n", "utf8");
+}
+
+/** One model's details, straight from MakerWorld's API. */
+async function fetchDetails(id) {
+  const res = await getJson(API(id));
+  if (!res.ok) return null;
+  const d = res.body;
+  const instances = d.instances || [];
+  const best =
+    instances.find((x) => x.isDefault) ||
+    instances.slice().sort((a, b) => (b.downloadCount || 0) - (a.downloadCount || 0))[0] ||
+    {};
+  return {
+    id: String(d.id ?? id),
+    title: d.title || "",
+    cover: (d.coverUrl || "").split("?")[0],
+    slug: d.slug || "",
+    license: d.license || "",
+    creator: (d.designCreator || {}).name || "",
+    handle: (d.designCreator || {}).handle || "",
+    grams: best.weight || 0,
+    seconds: best.prediction || 0,
+    colors: best.materialColorCnt || best.materialCnt || 1,
+    ams: !!best.needAms,
+    downloads: d.downloadCount || 0,
+    likes: d.likeCount || 0,
+    prints: d.printCount || 0,
+    score: Math.round((best.score || 0) * 1000) / 1000,
+    tags: (d.tags || []).slice(0, 6),
+    cats: (d.categories || []).map((x) => x.name || "").slice(0, 3),
+    nsfw: !!d.nsfw,
+  };
 }
 
 const titleFromSlug = (slug) =>
@@ -197,35 +264,12 @@ const titleFromSlug = (slug) =>
 /** Latin letters in at least a third of the title, else fall back to the slug. */
 const readableTitle = (title, slug) => {
   const latin = (title.match(/[A-Za-z]/g) || []).length;
-  const letters = (title.match(/[\p{L}]/gu) || []).length;
+  const letters = (title.match(/\p{L}/gu) || []).length;
   return letters && latin / letters >= 0.34 ? title : titleFromSlug(slug || "") || title;
 };
 
-const unescapeJson = (s) =>
-  s.replace(/\\u([\da-f]{4})/gi, (_, h) => String.fromCharCode(parseInt(h, 16))).replace(/\\(.)/g, "$1");
-
-function firstMatch(html, ...res) {
-  for (const re of res) {
-    const m = re.exec(html);
-    if (m) return unescapeJson(m[1]);
-  }
-  return undefined;
-}
-
-/** Best-effort details from a single model page. */
-async function modelDetails(id, slug) {
-  const res = await get(`https://makerworld.com/en/models/${id}-${slug}`, "text");
-  if (!res.ok) return {};
-  const h = res.body;
-  return {
-    title: firstMatch(h, /<meta property="og:title" content="([^"]+)"/i),
-    image: firstMatch(h, /<meta property="og:image" content="([^"]+)"/i, /"coverUrl"\s*:\s*"([^"]+)"/i),
-    creator: firstMatch(h, /"(?:designerName|nickname|handle)"\s*:\s*"([^"]{2,60})"/i),
-    license: firstMatch(h, /"license"\s*:\s*"([^"]{2,40})"/i, /(CC[- ]BY(?:[- ]NC)?(?:[- ]ND|[- ]SA)?)/i),
-    downloads: Number(firstMatch(h, /"downloadCount"\s*:\s*(\d+)/i) ?? 0) || undefined,
-    likes: Number(firstMatch(h, /"likeCount"\s*:\s*(\d+)/i) ?? 0) || undefined,
-  };
-}
+const fmtSize = (grams) =>
+  grams >= 300 ? "~250mm" : grams >= 120 ? "~160mm" : grams >= 40 ? "~100mm" : "~60mm";
 
 // ── main ─────────────────────────────────────────────────────────────────────
 async function main() {
@@ -234,136 +278,128 @@ async function main() {
     return;
   }
 
-  if (!fs.existsSync(SOURCES)) {
-    log(c.r("\n  scripts/makerworld-sources.json חסר. הרץ עם --doctor.\n"));
+  if (!fs.existsSync(RAW)) {
+    log(c.r("\n  data/makerworld-raw.json חסר."));
+    log(c.y("  לחץ פעמיים על collect-models.html, עקוב אחרי ההוראות, והרץ שוב.\n"));
     process.exitCode = 1;
     return;
   }
-  const cfg = JSON.parse(fs.readFileSync(SOURCES, "utf8"));
-  const limit = cfg.limitPerSource ?? 60;
 
-  log(c.b(`\n  ייבוא מ-${cfg.sources.length} מקורות\n`));
-
-  const rows = [];
+  const raw = JSON.parse(fs.readFileSync(RAW, "utf8"));
+  const list = Array.isArray(raw) ? raw : raw.hits ?? raw.list ?? raw.models ?? [];
   const seen = new Set();
-  let networkFailures = 0;
-
-  for (const src of RAW_ONLY ? [] : cfg.sources) {
-    process.stdout.write(`  ${c.d("•")} ${src.label ?? src.url} … `);
-    const res = await get(src.url, "text");
-    if (!res.ok) {
-      networkFailures++;
-      log(c.r(`נכשל (${res.status || res.error})`));
-      continue;
-    }
-    const models = modelsFromHtml(res.body).slice(0, limit);
-    if (!models.length) {
-      log(c.y("0 מודלים — ייתכן שהמבנה של האתר השתנה"));
-      continue;
-    }
-    log(c.g(`${models.length} מודלים`));
-
-    for (const m of models) {
-      if (seen.has(m.id)) continue;
-      seen.add(m.id);
-
-      let d = {};
-      if (cfg.fetchModelPages) {
-        d = await modelDetails(m.id, m.slug);
-        await sleep(350); // be a polite guest on their servers
-      }
-
-      const name = readableTitle((d.title || m.title).replace(/\s*[|·-]\s*MakerWorld.*$/i, "").trim(), m.slug);
-      const shelf = src.shelf && src.shelf !== "auto" ? src.shelf : classify(name);
-      const est = ESTIMATE[shelf];
-      rows.push({
-        id: `mw-${m.id}`,
-        name,
-        desc: HE_DESC[shelf],
-        shelf,
-        hours: est.hours,
-        grams: est.grams,
-        size: est.size,
-        colors: est.colors,
-        image: d.image,
-        creator: d.creator,
-        sourceUrl: `https://makerworld.com/en/models/${m.id}-${m.slug}`,
-        license: d.license,
-        downloads: d.downloads,
-        likes: d.likes,
-        hue: HUE[shelf],
-        art: ART[shelf],
-        status: holdsFor(name).length ? "hold" : "live",
-        holds: holdsFor(name),
-        licenseChecked: !!d.license,
-      });
-    }
+  const models = [];
+  for (const it of list) {
+    const id = String(it.id ?? it.designId ?? "");
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    models.push({ id, slug: it.slug || "", title: it.title || it.name || "", cover: it.cover || it.coverUrl });
   }
 
-  // Offline path: the JSON produced by scripts/collect-in-browser.js.
-  if (!rows.length && fs.existsSync(RAW_FALLBACK)) {
-    log(c.y("\n  קורא מ-data/makerworld-raw.json"));
-    const raw = JSON.parse(fs.readFileSync(RAW_FALLBACK, "utf8"));
-    const list = Array.isArray(raw) ? raw : (raw.hits ?? raw.list ?? raw.models ?? []);
-    for (const it of list) {
-      const raw = it.title ?? it.name ?? "";
-      if (!raw) continue;
-      const name = readableTitle(raw.trim(), it.slug);
-      const shelf = classify(name);
-      const est = ESTIMATE[shelf];
-      rows.push({
-        id: `mw-${it.id ?? it.designId ?? name.replace(/\W+/g, "-").toLowerCase()}`,
-        name, desc: HE_DESC[shelf], shelf,
-        hours: est.hours, grams: est.grams, size: est.size, colors: est.colors,
-        image: it.cover ?? it.coverUrl ?? it.image,
-        // A slug-only row still gets a usable link.
-        creator: it.designerName ?? it.nickname,
-        sourceUrl:
-          it.url ??
-          (it.id ? `https://makerworld.com/en/models/${it.id}${it.slug ? `-${it.slug}` : ""}` : undefined),
-        license: it.license,
-        downloads: it.downloadCount, likes: it.likeCount,
-        hue: HUE[shelf], art: ART[shelf],
-        status: holdsFor(name).length ? "hold" : "live",
-        holds: holdsFor(name),
-        licenseChecked: !!it.license,
-      });
+  log(c.b(`\n  ${models.length} מודלים ברשימה\n`));
+
+  const cache = readCache();
+  let fetched = 0;
+  let failed = 0;
+
+  if (!NO_NET) {
+    const todo = models.filter((m) => !cache.has(m.id));
+    if (todo.length) {
+      log(`  מוריד פרטים מה-API של מייקרוורלד (${todo.length})…`);
+      for (const m of todo) {
+        const d = await fetchDetails(m.id);
+        if (d) {
+          cache.set(m.id, d);
+          fetched++;
+          if (fetched % 10 === 0) process.stdout.write(c.d(`   ${fetched}/${todo.length}\r`));
+        } else {
+          failed++;
+        }
+        await sleep(200); // be a polite guest
+      }
+      if (fetched) writeCache(cache);
+      log(`  ${c.g(`${fetched} הורדו`)}${failed ? c.y(`, ${failed} נכשלו`) : ""}`);
+    } else {
+      log(c.d("  כל הפרטים כבר במטמון."));
     }
+  } else {
+    log(c.d("  --offline: משתמש רק במטמון."));
+  }
+
+  // ── build the rows ────────────────────────────────────────────────────────
+  const rows = [];
+  for (const m of models) {
+    const d = cache.get(m.id) || {};
+    const name = readableTitle((d.title || m.title || "").trim(), m.slug || d.slug);
+    if (!name) continue;
+
+    const shelf = classify(name, d.tags || [], d.cats || []);
+    const est = ESTIMATE[shelf];
+    const grams = d.grams || est.grams;
+    const hours = d.seconds ? Math.round((d.seconds / 3600) * 10) / 10 : est.hours;
+    const holds = holdsFor(`${name} ${(d.tags || []).join(" ")} ${(d.cats || []).join(" ")}`, d.license);
+
+    rows.push({
+      id: `mw-${m.id}`,
+      name,
+      desc: HE_DESC[shelf],
+      shelf,
+      hours: Math.max(0.2, hours),
+      grams: Math.max(1, grams),
+      size: fmtSize(grams),
+      colors: Math.max(1, d.colors || est.colors),
+      image: d.cover || m.cover,
+      creator: d.creator || undefined,
+      sourceUrl: `https://makerworld.com/en/models/${m.id}${m.slug ? `-${m.slug}` : ""}`,
+      license: d.license || undefined,
+      downloads: d.downloads || undefined,
+      likes: d.likes || undefined,
+      hue: HUE[shelf],
+      art: ART[shelf],
+      status: holds.length ? "hold" : "live",
+      holds,
+      licenseChecked: !!d.license,
+    });
   }
 
   if (!rows.length) {
-    log(c.r("\n  לא יובאו מודלים."));
-    log(c.y("  אם האתר חוסם: פתח את דף האוסף בדפדפן שלך, הדבק ב-Console את"));
-    log(c.y("  scripts/collect-in-browser.js, שמור את הקובץ שיורד ל-data/makerworld-raw.json"));
-    log(c.y("  והרץ שוב עם --raw.\n"));
+    log(c.r("\n  לא יובאו מודלים.\n"));
     await doctor();
     process.exitCode = 1;
     return;
   }
 
   // ── report ────────────────────────────────────────────────────────────────
-  const byShelf = rows.reduce((acc, r) => ((acc[r.shelf] = (acc[r.shelf] ?? 0) + 1), acc), {});
+  const byShelf = rows.reduce((a, r) => ((a[r.shelf] = (a[r.shelf] ?? 0) + 1), a), {});
   log(c.b(`\n  ${rows.length} מודלים:`));
   for (const [k, v] of Object.entries(byShelf)) log(`    ${k.padEnd(9)} ${v}`);
+
   const weapons = rows.filter((r) => r.holds.includes("weapon"));
   const brands = rows.filter((r) => r.holds.includes("brand"));
-  const live = rows.filter((r) => r.status === "live").length;
+  const ncs = rows.filter((r) => r.holds.includes("license-nc"));
+  const live = rows.filter((r) => !r.holds.includes("weapon") && !r.holds.includes("license-nc")).length;
   log(c.b(`\n  ${live} מודלים נכנסים לחנות.`));
+
   if (weapons.length) {
     log(c.y(`\n  ${weapons.length} מודלים סווגו כנשק ולא יוצגו למכירה:`));
-    for (const w of weapons.slice(0, 12)) log(c.d(`    · ${w.name}`));
-    if (weapons.length > 12) log(c.d(`    · ועוד ${weapons.length - 12}`));
+    for (const w of weapons.slice(0, 10)) log(c.d(`    · ${w.name}`));
+    if (weapons.length > 10) log(c.d(`    · ועוד ${weapons.length - 10}`));
     log(c.y("    מכירת נשק קר בישראל היא עבירה גם כשהוא מודפס בפלסטיק."));
   }
   if (brands.length) {
-    log(c.y(`\n  ${brands.length} מודלים של דמויות ומותגים מוגנים לא יוצגו למכירה:`));
-    for (const b2 of brands.slice(0, 12)) log(c.d(`    · ${b2.name}`));
-    if (brands.length > 12) log(c.d(`    · ועוד ${brands.length - 12}`));
-    log(c.y("    להדפיס לעצמך זה בסדר. למכור העתקים של דמות מוגנת זו הפרת זכויות."));
+    log(c.y(`\n  ${brands.length} מודלים של דמויות ומותגים מוגנים — מוצגים לפי בקשתך:`));
+    for (const b2 of brands.slice(0, 10)) log(c.d(`    · ${b2.name}`));
+    if (brands.length > 10) log(c.d(`    · ועוד ${brands.length - 10}`));
+    log(c.y("    מכירת העתקים של דמות מוגנת חושפת אותך לתביעה. זו החלטה שלך."));
   }
-  const unchecked = rows.filter((r) => r.status === "live" && !r.licenseChecked).length;
-  if (unchecked) log(c.y(`\n  ${unchecked} מודלים ללא רישיון ידוע — פתח את הקישור בעמוד המוצר ובדוק לפני מכירה.`));
-  if (networkFailures) log(c.y(`  ${networkFailures} מקורות נכשלו — הרץ --doctor לפרטים.`));
+
+  const licences = rows.reduce((a, r) => ((a[r.license || "לא ידוע"] = (a[r.license || "לא ידוע"] ?? 0) + 1), a), {});
+  log(c.b("\n  רישיונות:"));
+  for (const [k, v] of Object.entries(licences).sort((a, b) => b[1] - a[1])) log(`    ${String(v).padStart(4)}  ${k}`);
+  if (ncs.length) {
+    log(c.y(`\n  ${ncs.length} מודלים ברישיון NC — המעצב כתב במפורש "לא למסחר", ולכן הם לא מוצגים:`));
+    for (const n of ncs) log(c.d(`    · ${n.name} (${n.license})`));
+  }
 
   if (DRY) {
     log(c.d("\n  --dry: לא נכתב קובץ.\n"));

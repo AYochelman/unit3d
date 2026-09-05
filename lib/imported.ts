@@ -15,17 +15,19 @@ import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
 // PRINTING SERVICE of it. We never redistribute the STL. CC-BY (MakerWorld's
 // common licence) requires crediting the designer, which the product page does.
 //
-// Two kinds of model are imported but NOT put on sale, because selling them is
-// a legal problem rather than a taste question:
+// The import tags two kinds of model in `holds`:
 //   • "weapon"  — knives, katanas, shuriken, launchers. Israeli law (חוק
-//                 העונשין, נשק קר) makes selling these an offence regardless of
-//                 the material they are made of.
+//                 העונשין, נשק קר) makes SELLING these an offence regardless of
+//                 the material they are made of, so they stay out of the shop.
 //   • "brand"   — KAWS, Bearbrick, Spider-Man, Hello Kitty, anime characters…
-//                 Printing one for yourself is one thing; selling copies of a
-//                 protected character is trademark/copyright infringement.
-// Those rows arrive with `status: "hold"` and the reason in `holds`, and are
-// filtered out of the shop. Flip SHOW_HELD_MODELS only for rows you have
-// cleared yourself.
+//                 Selling copies of a protected character is a trademark /
+//                 copyright exposure. The owner asked for these to be listed
+//                 anyway (2026-09-05); it is a commercial risk they carry, not
+//                 an illegal act on our side, so "brand" is NOT in BLOCKED_HOLDS.
+//   • "license-nc" — the designer chose a CC licence with the NC (non-commercial)
+//                 term, i.e. wrote down that this model may not be sold. Unlike
+//                 the two above this is not a judgement call, so it blocks.
+// Change BLOCKED_HOLDS to change what is offered for sale.
 //
 // `licenseChecked` is false for anything collected through the browser snippet:
 // a MakerWorld collection page does not show licences, so the licence has to be
@@ -63,16 +65,23 @@ export type ImportedModel = {
   licenseChecked: boolean;
 };
 
-/** Set to true only for held models you have cleared yourself. */
+/**
+ * Hold reasons that keep a model out of the shop. Anything tagged only with a
+ * reason NOT listed here is still offered for sale.
+ */
+export const BLOCKED_HOLDS: string[] = ["weapon", "license-nc"];
+
+/** Set to true to list everything, weapons included. Leave false. */
 export const SHOW_HELD_MODELS = false;
 
 export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED;
 export const IMPORTED_DATE = IMPORTED_AT;
 
-const sellable = (m: ImportedModel) => m.status === "live" || SHOW_HELD_MODELS;
+const sellable = (m: ImportedModel) =>
+  SHOW_HELD_MODELS || !m.holds.some((h) => BLOCKED_HOLDS.includes(h));
 
-/** Rows the import held back, for the admin page and the import report. */
-export const heldModels = (): ImportedModel[] => IMPORTED.filter((m) => m.status === "hold");
+/** Rows kept out of the shop, for the admin page and the import report. */
+export const heldModels = (): ImportedModel[] => IMPORTED.filter((m) => !sellable(m));
 
 /** Retail price from the shared cost model, rounded up to the nearest ₪5. */
 export function suggestPrice(grams: number, hours: number, colors = 1): number {
