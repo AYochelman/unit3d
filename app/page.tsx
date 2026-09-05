@@ -13,6 +13,9 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      {/* Social proof before anything else — it is the first question a new
+          visitor has, and it used to sit at the bottom of the page. */}
+      <ReviewsRow />
       <AudienceSwitcher />
       <Categories />
       <ProductShowcase />
@@ -20,7 +23,6 @@ export default function HomePage() {
       <LivePreview />
       <Marquee />
       <B2BBlock />
-      <ReviewsRow />
       <FinalCTA />
     </>
   );

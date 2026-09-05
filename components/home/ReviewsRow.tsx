@@ -3,7 +3,10 @@ import SectionHead from "@/components/ui/SectionHead";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import Btn from "@/components/ui/Btn";
+import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
+import { photoAt } from "@/lib/photos";
+import type { ImportedShelf } from "@/lib/imported";
 import { REVIEWS } from "@/lib/data";
 import type { Review, ReviewSeg } from "@/lib/types";
 
@@ -22,6 +25,17 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 };
 
 const AVG = (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1);
+
+/**
+ * Which shelf to pull the review's photo from. Reviews about a made-to-order
+ * item (a unit emblem, a branded batch) have no catalogue photo that honestly
+ * represents them, so they keep the illustration.
+ */
+const REVIEW_SHELF: Record<string, ImportedShelf | null> = {
+  r1: null, r2: null, r3: "statues", r4: null, r5: null,
+  r6: "office", r7: null, r8: "statues", r9: "statues", r10: "flexi",
+  r11: "pets", r12: "home", r13: "statues", r14: "office",
+};
 
 function Stars({ n }: { n: number }) {
   return (
@@ -43,7 +57,9 @@ function Stars({ n }: { n: number }) {
  * and who wrote it. The picture is the product illustration for the item they
  * bought — the same drawing the shop uses on that product's own card.
  */
-function ReviewCard({ r }: { r: Review }) {
+function ReviewCard({ r, i }: { r: Review; i: number }) {
+  const shelf = REVIEW_SHELF[r.id];
+  const photo = shelf ? photoAt(i, [shelf]) : undefined;
   const Body = (
     <>
       <div
@@ -52,7 +68,11 @@ function ReviewCard({ r }: { r: Review }) {
           background: `radial-gradient(circle at 50% 40%, hsla(${r.hue ?? 145}, 70%, 50%, 0.20), transparent 62%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
         }}
       >
-        <ProductArt art={r.art ?? "keychain"} hue={r.hue ?? 145} size={92} />
+        {photo ? (
+          <Image src={photo.src} alt={photo.name} fill sizes="300px" className="object-cover" unoptimized />
+        ) : (
+          <ProductArt art={r.art ?? "keychain"} hue={r.hue ?? 145} size={92} />
+        )}
         <span className="absolute top-2 right-2">
           <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>
         </span>
@@ -108,7 +128,7 @@ function Track({ items, reverse }: { items: Review[]; reverse?: boolean }) {
     <div className="reviews-row" dir="ltr">
       <div className={reverse ? "reviews-track reviews-track--reverse" : "reviews-track"}>
         {[...items, ...items].map((r, i) => (
-          <ReviewCard key={`${r.id}-${i}`} r={r} />
+          <ReviewCard key={`${r.id}-${i}`} r={r} i={i % items.length} />
         ))}
       </div>
     </div>

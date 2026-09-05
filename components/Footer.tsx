@@ -15,6 +15,7 @@ const SHOP = [
 ];
 
 const SUPPORT = [
+  { href: "/shipping", label: "משלוחים ומחירים" },
   { href: "/tracking", label: "מעקב הזמנה" },
   { href: "/livestream", label: "מדפסת בלייב" },
   { href: "/reviews", label: "ביקורות" },

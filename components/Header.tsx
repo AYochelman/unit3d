@@ -23,6 +23,7 @@ const NAV = [
 
 const SECONDARY = [
   { href: "/upload", label: "העלאת קובץ" },
+  { href: "/shipping", label: "משלוחים" },
   { href: "/livestream", label: "לייב" },
   { href: "/gallery", label: "גלריה" },
   { href: "/reviews", label: "ביקורות" },
