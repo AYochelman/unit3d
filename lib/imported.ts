@@ -9,13 +9,27 @@ import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
 // module turns those raw rows into the same Fidget / Product shapes the rest
 // of the site already renders, so an import needs no UI changes anywhere.
 //
-// IMPORTANT — licensing. We import the model's NAME, PICTURE, CREATOR and a
-// LINK BACK, and we sell a PRINTING SERVICE of it. We never redistribute the
-// STL. Most MakerWorld models are CC-BY / CC-BY-NC / CC-BY-NC-ND: BY always
-// requires crediting the designer (we do, on the card and the product page),
-// and NC forbids commercial use — so `commercialOk` is false for those and
-// they are kept out of the shop by default. Flip `SHOW_NON_COMMERCIAL` only
-// for models whose designer gave you permission in writing.
+// IMPORTANT — what we import and what we hold back.
+//
+// We import the model's NAME, PICTURE, CREATOR and a LINK BACK, and we sell a
+// PRINTING SERVICE of it. We never redistribute the STL. CC-BY (MakerWorld's
+// common licence) requires crediting the designer, which the product page does.
+//
+// Two kinds of model are imported but NOT put on sale, because selling them is
+// a legal problem rather than a taste question:
+//   • "weapon"  — knives, katanas, shuriken, launchers. Israeli law (חוק
+//                 העונשין, נשק קר) makes selling these an offence regardless of
+//                 the material they are made of.
+//   • "brand"   — KAWS, Bearbrick, Spider-Man, Hello Kitty, anime characters…
+//                 Printing one for yourself is one thing; selling copies of a
+//                 protected character is trademark/copyright infringement.
+// Those rows arrive with `status: "hold"` and the reason in `holds`, and are
+// filtered out of the shop. Flip SHOW_HELD_MODELS only for rows you have
+// cleared yourself.
+//
+// `licenseChecked` is false for anything collected through the browser snippet:
+// a MakerWorld collection page does not show licences, so the licence has to be
+// read on the model's own page before that model is sold.
 
 export type ImportedShelf = "flexi" | "fidget" | "statues" | "pets" | "home" | "office" | "trendy";
 
@@ -41,17 +55,24 @@ export type ImportedModel = {
   hue: number;
   /** Drawing to fall back on when the remote picture is missing. */
   art?: ProductArtId;
-  /** False for NC (non-commercial) licences — hidden from the shop. */
-  commercialOk: boolean;
+  /** "live" shows in the shop; "hold" is imported but not offered for sale. */
+  status: "live" | "hold";
+  /** Why it is held: "weapon", "brand", "license". Empty when live. */
+  holds: string[];
+  /** True only once someone has read the licence on the model's own page. */
+  licenseChecked: boolean;
 };
 
-/** Set to true only for models you have written permission to sell. */
-export const SHOW_NON_COMMERCIAL = false;
+/** Set to true only for held models you have cleared yourself. */
+export const SHOW_HELD_MODELS = false;
 
 export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED;
 export const IMPORTED_DATE = IMPORTED_AT;
 
-const sellable = (m: ImportedModel) => m.commercialOk || SHOW_NON_COMMERCIAL;
+const sellable = (m: ImportedModel) => m.status === "live" || SHOW_HELD_MODELS;
+
+/** Rows the import held back, for the admin page and the import report. */
+export const heldModels = (): ImportedModel[] => IMPORTED.filter((m) => m.status === "hold");
 
 /** Retail price from the shared cost model, rounded up to the nearest ₪5. */
 export function suggestPrice(grams: number, hours: number, colors = 1): number {
@@ -113,5 +134,10 @@ export function importedProducts(): Product[] {
       rating: 4.8,
       orders: Math.round((m.downloads ?? 0) / 500),
       isNew: true,
+      // CC-BY asks for the designer's name next to the work.
+      creator: m.creator,
+      source: "makerworld",
+      sourceUrl: m.sourceUrl,
+      license: m.license,
     }));
 }

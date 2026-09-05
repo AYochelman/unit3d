@@ -258,6 +258,11 @@ export type Product = {
   /** Optional engraving/text field on the product (pet name, phone…). */
   engraving?: { label: string; placeholder: string; max: number; second?: { label: string; placeholder: string; max: number } };
   options?: { label: string; items: ProductOption[] };
+  /** Credit for an imported design — CC-BY requires naming the designer. */
+  creator?: string;
+  source?: FidgetSource;
+  sourceUrl?: string;
+  license?: string;
 };
 
 // ─── Configurator products ───────────────────────────────────────────────────

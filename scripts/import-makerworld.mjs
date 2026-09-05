@@ -108,18 +108,42 @@ async function doctor() {
 }
 
 // ── classification ───────────────────────────────────────────────────────────
+//
+// Order matters. "Flexi Baby Dragon Mini Fidget" is a flexi; "Ultimate Button
+// Clicker Fidget (Print in Place)" is a fidget - so the flexi/articulated words
+// are tested before the generic fidget words, and "print in place" on its own
+// is not enough to call something a flexi.
 const RULES = [
-  { shelf: "flexi",   re: /(flexi|articulat|print[- ]?in[- ]?place|dragon|snake|serpent|worm|octopus|axolotl|shark|lizard|gecko|pangolin|spider|scorpion|crab|dino|t-?rex|raptor|caterpillar|slug|seahorse|turtle)/i },
-  { shelf: "fidget",  re: /(fidget|spinner|cube|slider|clicker|clicky|knob|popper|whirl|rattle|snapper|toy)/i },
-  { shelf: "statues", re: /(statue|bust|sculpt|figure|figurine|model kit|low[- ]?poly|vase|trophy|lamp|moon|chess|diorama|display)/i },
-  { shelf: "pets",    re: /(pet|dog|cat|collar|tag|paw|kibble|leash|aquarium)/i },
-  { shelf: "office",  re: /(desk|pen|cable|headphone|monitor|organizer|card holder|stand|tray|clip|bookmark)/i },
-  { shelf: "home",    re: /(planter|coaster|hook|kitchen|shelf|box|lid|bathroom|door|wall|light|holder)/i },
+  { shelf: "flexi",   re: /(flexi|articulat|bendy)/i },
+  { shelf: "fidget",  re: /(fidget|spinner|clicker|clicky|slider|popper|squishy|sensory|infinity|twisty|puzzle|pin art|slime)/i },
+  { shelf: "flexi",   re: /(dragon|snake|serpent|worm|octopus|axolotl|shark|lizard|gecko|pangolin|scorpion|skorpion|crab|dino|t-?rex|raptor|caterpillar|frog|manta)/i },
+  { shelf: "statues", re: /(statue|bust|sculpt|figure|figurine|replica|model kit|low[- ]?poly|vase|trophy|lamp|moon|chess|diorama|display|skull|mask|charm|art\b)/i },
+  { shelf: "pets",    re: /(pet |dog |cat |collar|paw|kibble|leash|aquarium)/i },
+  { shelf: "office",  re: /(desk|pen |cable|usb|headphone|monitor|organizer|card holder|controller|tray|clip|bookmark|calendar|phone stand|keychain)/i },
+  { shelf: "home",    re: /(planter|coaster|hook|kitchen|shelf|rack|box|lid|bathroom|door|wall|towel|toilet|shower|broom|holder|dispenser|stand|chair|opener|winder)/i },
 ];
 
 function classify(name, fallback = "trendy") {
   for (const r of RULES) if (r.re.test(name)) return r.shelf;
   return fallback === "auto" ? "trendy" : fallback;
+}
+
+// ── what we import but do NOT put on sale ────────────────────────────────────
+//
+// These two lists exist because selling the model is a legal problem, not a
+// taste one. See the note at the top of lib/imported.ts.
+const WEAPON_RE =
+  /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|axe\b|blowgun|bb (launcher|gun)|airsoft|pistol|shotgun|rifle|gun\b|ammo|bullet|throwing|nunchaku|brass knuckle|taser|crossbow|arrow|spear|whistle)/i;
+
+const BRAND_RE =
+  /(kaws|bearbrick|be@rbrick|smiski|hello kitty|spider[- ]?man|spiderman|spider noir|miles morales|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|master sword|nintendo|star wars|mandalorian|jujutsu|mahoraga|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|naruto|dragon ball|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go)/i;
+
+/** Reasons a model is imported but kept out of the shop. */
+function holdsFor(name) {
+  const holds = [];
+  if (WEAPON_RE.test(name)) holds.push("weapon");
+  if (BRAND_RE.test(name)) holds.push("brand");
+  return holds;
 }
 
 // Print-time / weight estimates per shelf. MakerWorld does not expose the
@@ -144,12 +168,9 @@ const HE_DESC = {
   statues: "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
   pets: "אביזר לחיה, מודפס ב-PETG שעמיד במים ובשמש.",
   office: "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
-  home: "פריט לבית. אפשר לבחור צבע וגודל.",
+  home: "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
   trendy: "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
 };
-
-// CC-BY-NC / ND wording → not sellable without permission.
-const isCommercialOk = (license) => !!license && !/nc|non[- ]?commercial/i.test(license);
 
 // ── extraction ───────────────────────────────────────────────────────────────
 /** Pull /en/models/<id>-<slug> links out of a page, keeping first-seen order. */
@@ -172,6 +193,13 @@ function modelsFromHtml(html) {
 
 const titleFromSlug = (slug) =>
   slug.replace(/-/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase()).trim();
+
+/** Latin letters in at least a third of the title, else fall back to the slug. */
+const readableTitle = (title, slug) => {
+  const latin = (title.match(/[A-Za-z]/g) || []).length;
+  const letters = (title.match(/[\p{L}]/gu) || []).length;
+  return letters && latin / letters >= 0.34 ? title : titleFromSlug(slug || "") || title;
+};
 
 const unescapeJson = (s) =>
   s.replace(/\\u([\da-f]{4})/gi, (_, h) => String.fromCharCode(parseInt(h, 16))).replace(/\\(.)/g, "$1");
@@ -245,7 +273,7 @@ async function main() {
         await sleep(350); // be a polite guest on their servers
       }
 
-      const name = (d.title || m.title).replace(/\s*[|·-]\s*MakerWorld.*$/i, "").trim();
+      const name = readableTitle((d.title || m.title).replace(/\s*[|·-]\s*MakerWorld.*$/i, "").trim(), m.slug);
       const shelf = src.shelf && src.shelf !== "auto" ? src.shelf : classify(name);
       const est = ESTIMATE[shelf];
       rows.push({
@@ -265,7 +293,9 @@ async function main() {
         likes: d.likes,
         hue: HUE[shelf],
         art: ART[shelf],
-        commercialOk: isCommercialOk(d.license),
+        status: holdsFor(name).length ? "hold" : "live",
+        holds: holdsFor(name),
+        licenseChecked: !!d.license,
       });
     }
   }
@@ -276,8 +306,9 @@ async function main() {
     const raw = JSON.parse(fs.readFileSync(RAW_FALLBACK, "utf8"));
     const list = Array.isArray(raw) ? raw : (raw.hits ?? raw.list ?? raw.models ?? []);
     for (const it of list) {
-      const name = it.title ?? it.name ?? "";
-      if (!name) continue;
+      const raw = it.title ?? it.name ?? "";
+      if (!raw) continue;
+      const name = readableTitle(raw.trim(), it.slug);
       const shelf = classify(name);
       const est = ESTIMATE[shelf];
       rows.push({
@@ -293,7 +324,9 @@ async function main() {
         license: it.license,
         downloads: it.downloadCount, likes: it.likeCount,
         hue: HUE[shelf], art: ART[shelf],
-        commercialOk: isCommercialOk(it.license),
+        status: holdsFor(name).length ? "hold" : "live",
+        holds: holdsFor(name),
+        licenseChecked: !!it.license,
       });
     }
   }
@@ -312,8 +345,24 @@ async function main() {
   const byShelf = rows.reduce((acc, r) => ((acc[r.shelf] = (acc[r.shelf] ?? 0) + 1), acc), {});
   log(c.b(`\n  ${rows.length} מודלים:`));
   for (const [k, v] of Object.entries(byShelf)) log(`    ${k.padEnd(9)} ${v}`);
-  const blocked = rows.filter((r) => !r.commercialOk).length;
-  if (blocked) log(c.y(`\n  ${blocked} מודלים ברישיון לא-מסחרי (NC) — מיובאים אבל מוסתרים מהחנות.`));
+  const weapons = rows.filter((r) => r.holds.includes("weapon"));
+  const brands = rows.filter((r) => r.holds.includes("brand"));
+  const live = rows.filter((r) => r.status === "live").length;
+  log(c.b(`\n  ${live} מודלים נכנסים לחנות.`));
+  if (weapons.length) {
+    log(c.y(`\n  ${weapons.length} מודלים סווגו כנשק ולא יוצגו למכירה:`));
+    for (const w of weapons.slice(0, 12)) log(c.d(`    · ${w.name}`));
+    if (weapons.length > 12) log(c.d(`    · ועוד ${weapons.length - 12}`));
+    log(c.y("    מכירת נשק קר בישראל היא עבירה גם כשהוא מודפס בפלסטיק."));
+  }
+  if (brands.length) {
+    log(c.y(`\n  ${brands.length} מודלים של דמויות ומותגים מוגנים לא יוצגו למכירה:`));
+    for (const b2 of brands.slice(0, 12)) log(c.d(`    · ${b2.name}`));
+    if (brands.length > 12) log(c.d(`    · ועוד ${brands.length - 12}`));
+    log(c.y("    להדפיס לעצמך זה בסדר. למכור העתקים של דמות מוגנת זו הפרת זכויות."));
+  }
+  const unchecked = rows.filter((r) => r.status === "live" && !r.licenseChecked).length;
+  if (unchecked) log(c.y(`\n  ${unchecked} מודלים ללא רישיון ידוע — פתח את הקישור בעמוד המוצר ובדוק לפני מכירה.`));
   if (networkFailures) log(c.y(`  ${networkFailures} מקורות נכשלו — הרץ --doctor לפרטים.`));
 
   if (DRY) {

@@ -135,6 +135,27 @@ export default function ProductDetailClient({ id }: { id: string }) {
           <div>
             <h1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</h1>
             <p className="mt-2 text-ink-300 text-sm leading-relaxed">{p.desc}</p>
+
+            {/* Credit for an imported design. CC-BY asks for the designer's
+                name next to the work, and the link is also how you check the
+                licence before selling a print of it. */}
+            {p.sourceUrl && (
+              <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-ink-500">
+                <span>
+                  עיצוב מקורי: <span className="text-ink-300">{p.creator ?? "MakerWorld"}</span>
+                  {p.license && <span className="text-ink-400"> · {p.license}</span>}
+                </span>
+                <a
+                  href={p.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-cyan2 hover:underline"
+                >
+                  לדף המקור
+                  <Icon name="arrowLeft" size={10} />
+                </a>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-mono text-ink-400 border-y border-ink-800 py-3" dir="ltr">

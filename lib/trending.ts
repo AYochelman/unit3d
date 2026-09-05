@@ -1,5 +1,5 @@
 import { FIDGETS } from "./data";
-import { PRODUCT_BY_ID, CONFIG_PRODUCT_BY_ID, fidgetStats } from "./products";
+import { PRODUCT_BY_ID, CONFIG_PRODUCT_BY_ID, fidgetStats, productsByCategory } from "./products";
 import { productToCard, type ListingCard } from "@/components/ProductGrid";
 
 // "טרנדי כרגע" — a curated shelf that mixes the items people order most right
@@ -75,6 +75,11 @@ export function trendingCards(): ListingCard[] {
         isNew: c.id === "phone_case" || c.id === "lighter_case",
       });
     }
+  }
+  // Imported models that did not fit a named shelf land on "trendy" — without
+  // this they would be in the catalogue but on no page.
+  for (const p of productsByCategory("trendy")) {
+    cards.push({ ...productToCard(p), id: `product-${p.id}`, tag: p.tag ?? "חדש באתר" });
   }
   return cards;
 }
