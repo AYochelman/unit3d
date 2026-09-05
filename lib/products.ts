@@ -283,8 +283,19 @@ export const PRODUCTS: Product[] = [
   ...importedProducts(),
 ];
 
-/** Every product on one shelf, curated and imported alike. */
+/**
+ * Every product on one shelf that we can show a photograph of.
+ *
+ * A shop page full of drawings reads as a shop that has never printed
+ * anything, so a product with no `image` is not listed. It still exists in
+ * PRODUCTS (its own page and the admin costing still work) — it is simply not
+ * put on a shelf until there is a picture of it.
+ */
 export const productsByCategory = (...cats: ProductCategory[]): Product[] =>
+  PRODUCTS.filter((p) => cats.includes(p.category) && !!p.image);
+
+/** Including the ones with no photograph — for /admin and internal tooling. */
+export const allProductsByCategory = (...cats: ProductCategory[]): Product[] =>
   PRODUCTS.filter((p) => cats.includes(p.category));
 export const PRODUCT_BY_ID: Record<string, Product> = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
 

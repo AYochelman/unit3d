@@ -5,8 +5,7 @@ import Icon from "@/components/ui/Icon";
 import Btn from "@/components/ui/Btn";
 import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
-import { photoAt } from "@/lib/photos";
-import type { ImportedShelf } from "@/lib/imported";
+import { photoById } from "@/lib/photos";
 import { REVIEWS } from "@/lib/data";
 import type { Review, ReviewSeg } from "@/lib/types";
 
@@ -27,14 +26,28 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 const AVG = (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1);
 
 /**
- * Which shelf to pull the review's photo from. Reviews about a made-to-order
- * item (a unit emblem, a branded batch) have no catalogue photo that honestly
- * represents them, so they keep the illustration.
+ * The exact product each review is about.
+ *
+ * Pulling "any photo from the right shelf" put a picture next to a review that
+ * was talking about something else, which reads as fake. These are the real
+ * items: a review with no catalogue product (a unit emblem, a branded batch)
+ * maps to null and keeps its illustration.
  */
-const REVIEW_SHELF: Record<string, ImportedShelf | null> = {
-  r1: null, r2: null, r3: "statues", r4: null, r5: null,
-  r6: "office", r7: null, r8: "statues", r9: "statues", r10: "flexi",
-  r11: "pets", r12: "home", r13: "statues", r14: "office",
+const REVIEW_ITEM: Record<string, string | null> = {
+  r1: null,               // unit emblem — made to order
+  r2: null,               // three unit keychains
+  r3: "mw-2172202",       // a figure from a file
+  r4: null,               // unit emblem statue
+  r5: null,               // 80 branded keychains
+  r6: "mw-2787704",       // a replacement part
+  r7: null,               // unit emblem
+  r8: null,               // 35 branded figurines
+  r9: "mw-1645161",       // small animal model — low-poly fox
+  r10: "mw-90174",        // articulated dragon
+  r11: "mw-2868647",      // pet tag
+  r12: "mw-2125984",      // vase
+  r13: "mw-1768076",      // display piece
+  r14: "mw-29407",        // name tags for desks
 };
 
 function Stars({ n }: { n: number }) {
@@ -57,9 +70,8 @@ function Stars({ n }: { n: number }) {
  * and who wrote it. The picture is the product illustration for the item they
  * bought — the same drawing the shop uses on that product's own card.
  */
-function ReviewCard({ r, i }: { r: Review; i: number }) {
-  const shelf = REVIEW_SHELF[r.id];
-  const photo = shelf ? photoAt(i, [shelf]) : undefined;
+function ReviewCard({ r }: { r: Review }) {
+  const photo = photoById(REVIEW_ITEM[r.id]);
   const Body = (
     <>
       <div
@@ -89,9 +101,9 @@ function ReviewCard({ r, i }: { r: Review; i: number }) {
           {r.when && <span className="text-[10px] text-ink-500 mr-auto">{r.when}</span>}
         </div>
 
-        {r.item && (
+        {(photo?.name || r.item) && (
           <div className="text-[11px] text-ink-400 mb-1.5 truncate">
-            הזמין: <span className="text-ink-200">{r.item}</span>
+            הזמין: <span className="text-ink-200">{photo?.name ?? r.item}</span>
           </div>
         )}
 
@@ -106,7 +118,6 @@ function ReviewCard({ r, i }: { r: Review; i: number }) {
           </div>
           <div className="min-w-0">
             <div className="text-sm font-semibold truncate">{r.name}</div>
-            <div className="text-[11px] text-ink-400 truncate">{r.tag}</div>
           </div>
         </div>
       </div>
@@ -128,7 +139,7 @@ function Track({ items, reverse }: { items: Review[]; reverse?: boolean }) {
     <div className="reviews-row" dir="ltr">
       <div className={reverse ? "reviews-track reviews-track--reverse" : "reviews-track"}>
         {[...items, ...items].map((r, i) => (
-          <ReviewCard key={`${r.id}-${i}`} r={r} i={i % items.length} />
+          <ReviewCard key={`${r.id}-${i}`} r={r} />
         ))}
       </div>
     </div>
@@ -151,14 +162,35 @@ export default function ReviewsRow() {
             כל הביקורות
           </Btn>
         </div>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 text-sm">
-          <span className="inline-flex items-center gap-2">
-            <Stars n={5} />
-            <span className="font-mono text-ink-200" dir="ltr">{AVG}</span>
-            <span className="text-ink-400">ממוצע מתוך {REVIEWS.length} ביקורות</span>
-          </span>
-          <span className="text-ink-500">·</span>
-          <span className="text-ink-400">כל הביקורות מלקוחות שקיבלו הזמנה בפועל</span>
+        {/* Rating summary — the number, how it breaks down, and a way to add to it */}
+        <div className="mb-8 grid sm:grid-cols-[auto_minmax(0,1fr)_auto] gap-x-8 gap-y-4 items-center p-5 rounded-2xl bg-ink-900 border border-ink-800">
+          <div className="text-center sm:text-right">
+            <div className="font-mono text-5xl font-black text-flame leading-none" dir="ltr">{AVG}</div>
+            <div className="mt-1.5 flex justify-center sm:justify-start"><Stars n={5} /></div>
+            <div className="text-[11px] text-ink-400 mt-1">{REVIEWS.length} ביקורות</div>
+          </div>
+
+          <div className="space-y-1">
+            {[5, 4, 3, 2, 1].map((n) => {
+              const count = REVIEWS.filter((r) => r.stars === n).length;
+              const pct = Math.round((count / REVIEWS.length) * 100);
+              return (
+                <div key={n} className="flex items-center gap-2 text-[11px]">
+                  <span className="w-3 text-ink-400 font-mono" dir="ltr">{n}</span>
+                  <Icon name="star" size={10} className="fill-current text-flame shrink-0" />
+                  <span className="flex-1 h-1.5 rounded-full bg-ink-800 overflow-hidden">
+                    <span className="block h-full bg-flame" style={{ width: `${pct}%` }} />
+                  </span>
+                  <span className="w-7 text-left text-ink-500 font-mono" dir="ltr">{count}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center sm:text-right">
+            <Btn as="a" href="/reviews" icon="star">דרג אותנו</Btn>
+            <div className="text-[11px] text-ink-500 mt-2">כל הביקורות מלקוחות שקיבלו הזמנה</div>
+          </div>
         </div>
       </div>
       <div className="relative space-y-4">

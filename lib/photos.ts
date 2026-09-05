@@ -66,6 +66,13 @@ export function photoFor(match: RegExp, shelf?: ImportedShelf): Photo | undefine
   return hit ? toPhoto(hit) : undefined;
 }
 
+/** The photo of one specific model, by id. */
+export function photoById(id: string | null | undefined): Photo | undefined {
+  if (!id) return undefined;
+  const m = withImage.find((x) => x.id === id);
+  return m ? toPhoto(m) : undefined;
+}
+
 /** Deterministic photo for a slot index — same input, same photo every render. */
 export function photoAt(i: number, shelves?: ImportedShelf[]): Photo | undefined {
   const pool = shelves ? ranked.filter((m) => shelves.includes(m.shelf)) : ranked;

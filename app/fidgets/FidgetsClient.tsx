@@ -241,10 +241,11 @@ export default function FidgetsClient() {
 
   // Split the shelf before filtering, so the toolbar's counter reflects the
   // tab you are actually looking at.
-  const pool = useMemo(
-    () => (kind === "all" ? FIDGETS : FIDGETS.filter((f) => fidgetKind(f) === kind)),
-    [kind],
-  );
+  const pool = useMemo(() => {
+    // A card with no photograph is not shown — see productsByCategory.
+    const withPhoto = FIDGETS.filter((f) => !!(f.thumbnail ?? f.images?.[0]));
+    return kind === "all" ? withPhoto : withPhoto.filter((f) => fidgetKind(f) === kind);
+  }, [kind]);
 
   const items = useMemo(() => {
     const withStats = pool.map((f) => ({
@@ -306,7 +307,8 @@ export default function FidgetsClient() {
       {/* ── Flexi / fidget shelves ─────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         {FIDGET_KIND_TABS.map((t) => {
-          const count = t.id === "all" ? FIDGETS.length : FIDGETS.filter((f) => fidgetKind(f) === t.id).length;
+          const withPhoto = FIDGETS.filter((f) => !!(f.thumbnail ?? f.images?.[0]));
+          const count = t.id === "all" ? withPhoto.length : withPhoto.filter((f) => fidgetKind(f) === t.id).length;
           const active = kind === t.id;
           return (
             <button

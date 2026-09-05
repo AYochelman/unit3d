@@ -68,7 +68,6 @@ export default function ReviewsClient() {
                 </div>
                 <div>
                   <div className="font-semibold leading-tight">{r.name}</div>
-                  <div className="text-[11px] text-ink-400 mt-0.5">{r.tag}</div>
                 </div>
               </div>
               <Pill tone={SEG_TONE[r.seg]}>{SEG_LABEL[r.seg]}</Pill>

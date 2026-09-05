@@ -81,5 +81,6 @@ export function trendingCards(): ListingCard[] {
   for (const p of productsByCategory("trendy")) {
     cards.push({ ...productToCard(p), id: `product-${p.id}`, tag: p.tag ?? "חדש באתר" });
   }
-  return cards;
+  // Same rule as the shelves: nothing without a picture.
+  return cards.filter((c) => !!c.image);
 }

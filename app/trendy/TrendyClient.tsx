@@ -31,7 +31,33 @@ export default function TrendyClient() {
 
       <ProductToolbar state={state} onChange={setState} shown={items.length} total={all.length} />
 
+      <p className="text-[11px] text-ink-500 mb-4">
+        התמונות הן של המעצבים המקוריים. אנחנו מדפיסים בצבע ובחומר שתבחר בעמוד המוצר —
+        לא כל דגם אפשרי בכל צבע.
+      </p>
       <ProductGrid cards={items} />
+
+      {/* The designer has no catalogue photo — it is a service, not a model —
+          so it gets a banner here instead of a card with a drawing on it. */}
+      <Link
+        href="/configurator"
+        className="mt-8 block p-5 rounded-2xl border border-cyan2/30 bg-gradient-to-bl from-cyan2/10 to-flame/5 hover:border-cyan2/60 transition-colors"
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-cyan2/15 text-cyan2">
+            <Icon name="sparkles" size={20} />
+          </span>
+          <div className="flex-1 min-w-[200px]">
+            <div className="font-bold mb-0.5">רוצה משהו משלך?</div>
+            <div className="text-sm text-ink-300">
+              מחזיק מפתחות, קייס, שלט או תג — עם הטקסט והצורה שתבחר, במעצב האישי.
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-cyan2 font-semibold text-sm">
+            לעיצוב אישי<Icon name="arrowLeft" size={14} />
+          </span>
+        </div>
+      </Link>
 
       <Link href="/configurator" className="mt-10 block p-5 rounded-2xl border border-cyan2/30 bg-gradient-to-bl from-cyan2/10 to-flame/5 hover:border-cyan2/60 transition-colors">
         <div className="flex flex-wrap items-center gap-4">

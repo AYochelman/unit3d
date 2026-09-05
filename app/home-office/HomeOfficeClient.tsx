@@ -55,6 +55,10 @@ export default function HomeOfficeClient() {
 
       <ProductToolbar state={state} onChange={setState} shown={items.length} total={scoped.length} />
 
+      <p className="text-[11px] text-ink-500 mb-4">
+        התמונות הן של המעצבים המקוריים. אנחנו מדפיסים בצבע ובחומר שתבחר בעמוד המוצר —
+        לא כל דגם אפשרי בכל צבע.
+      </p>
       <ProductGrid cards={items} />
 
       <Link href="/b2b" className="mt-10 block p-5 rounded-2xl border border-flame/30 bg-gradient-to-bl from-flame/10 to-cyan2/5 hover:border-flame/60 transition-colors">

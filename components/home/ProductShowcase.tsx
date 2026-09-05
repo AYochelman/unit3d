@@ -3,19 +3,14 @@ import Image from "next/image";
 import SectionHead from "@/components/ui/SectionHead";
 import Btn from "@/components/ui/Btn";
 import Pill from "@/components/ui/Pill";
-import ProductArt from "@/components/ProductArt";
 import { photoMix } from "@/lib/photos";
-import { PRODUCT_BY_ID, CONFIG_PRODUCT_BY_ID } from "@/lib/products";
-import { fmtILS } from "@/lib/format";
 
 type Tile = {
   href: string;
   name: string;
-  price?: number;
   label: string;
-  image?: string;
+  image: string;
   credit?: string;
-  art?: React.ReactNode;
 };
 
 const SHELF_LABEL: Record<string, string> = {
@@ -37,37 +32,15 @@ const SHELF_LABEL: Record<string, string> = {
  * custom phone case and the unit emblem.
  */
 export default function ProductShowcase() {
-  const photos = photoMix(["flexi", "statues", "fidget", "home", "office"], 10);
+  const photos = photoMix(["flexi", "statues", "fidget", "home", "office", "pets"], 10);
 
-  const tiles: Tile[] = photos.slice(0, 8).map((ph) => ({
+  const tiles: Tile[] = photos.map((ph) => ({
     href: ph.href,
     name: ph.name,
     label: SHELF_LABEL[ph.shelf] ?? "מודפס",
     image: ph.src,
     credit: ph.creator,
   }));
-
-  tiles.splice(2, 0, {
-    href: "/configurator?product=phone_case",
-    name: "קייס לטלפון בעיצוב אישי",
-    price: CONFIG_PRODUCT_BY_ID.phone_case.basePrice,
-    label: "מעצב",
-    art: <ProductArt art="phonecase" hue={200} size={140} />,
-  });
-  tiles.splice(6, 0, {
-    href: "/catalog",
-    name: "סמל היחידה שלך",
-    price: 65,
-    label: "חיילים",
-    art: <ProductArt art="keychain" hue={145} size={140} />,
-  });
-  tiles.push({
-    href: "/products/pet-bone",
-    name: PRODUCT_BY_ID["pet-bone"].name,
-    price: PRODUCT_BY_ID["pet-bone"].price,
-    label: "לחיות",
-    art: <ProductArt art="bone" hue={30} size={140} />,
-  });
 
   return (
     <section className="py-20 md:py-24">
@@ -89,18 +62,14 @@ export default function ProductShowcase() {
               href={t.href}
               className="group relative aspect-square rounded-2xl overflow-hidden bg-ink-900 border border-ink-800 hover:border-ink-700 hover:-translate-y-1 transition-all duration-300 ease-smooth"
             >
-              {t.image ? (
-                <Image
+              <Image
                   src={t.image}
                   alt={t.name}
                   fill
                   sizes="(max-width: 640px) 50vw, 20vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  unoptimized
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center stripes">{t.art}</div>
-              )}
+                unoptimized
+              />
               <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-ink-950/95 via-ink-950/60 to-transparent">
                 <div
                   className="text-sm font-bold leading-tight line-clamp-1"
@@ -108,10 +77,7 @@ export default function ProductShowcase() {
                 >
                   {t.name}
                 </div>
-                <div className="flex items-center justify-between mt-1">
-                  <span className="font-mono text-xs text-flame" dir="ltr">
-                    {t.price != null ? fmtILS(t.price) : ""}
-                  </span>
+                <div className="flex items-center justify-end mt-1">
                   <Pill tone="neutral" className="text-[10px] px-1.5 py-0.5">
                     {t.label}
                   </Pill>

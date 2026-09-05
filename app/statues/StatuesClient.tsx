@@ -28,6 +28,10 @@ export default function StatuesClient() {
 
       <ProductToolbar state={state} onChange={setState} shown={items.length} total={all.length} />
 
+      <p className="text-[11px] text-ink-500 mb-4">
+        התמונות הן של המעצבים המקוריים. אנחנו מדפיסים בצבע ובחומר שתבחר בעמוד המוצר —
+        לא כל דגם אפשרי בכל צבע.
+      </p>
       <ProductGrid cards={items} />
 
       <section className="mt-12 p-6 md:p-8 rounded-2xl bg-ink-900 border border-ink-800 grid md:grid-cols-3 gap-5">
