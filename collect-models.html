@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 3D · איסוף מודלים ממייקרוורלד</title>
+<style>
+  :root { color-scheme: dark; }
+  body{font-family:"Segoe UI",Arial,sans-serif;background:#0d0d0f;color:#f2f2f5;margin:0;padding:28px;line-height:1.8}
+  .wrap{max-width:780px;margin:0 auto}
+  h1{color:#3fb872;font-size:24px;margin:0 0 6px}
+  .sub{color:#9a9aa2;margin:0 0 22px}
+  ol{padding-inline-start:22px;margin:10px 0}
+  li{margin:9px 0}
+  code{background:#26262b;color:#ffd479;padding:2px 7px;border-radius:5px;font-size:13px;direction:ltr;display:inline-block;unicode-bidi:isolate}
+  button{font:inherit;font-weight:800;cursor:pointer;border:0;border-radius:12px;padding:16px 28px;background:#089a47;color:#fff;font-size:17px}
+  button:hover{background:#0aad50}
+  button:disabled{background:#1f5c39;cursor:default}
+  .box{background:#151518;border:1px solid #26262b;border-radius:12px;padding:18px 22px;margin:16px 0}
+  .warn{background:#2a1f0e;border:1px solid #6b4d17;color:#ffd479;border-radius:12px;padding:14px 20px;margin:16px 0}
+  textarea{width:100%;height:130px;background:#0a0a0b;color:#8e8e93;border:1px solid #26262b;border-radius:8px;padding:10px;font-family:ui-monospace,monospace;font-size:11px;direction:ltr;text-align:left}
+  .ok{color:#3fb872;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>איסוף מודלים ממייקרוורלד</h1>
+<p class="sub">שלוש דקות, בלי להתקין כלום.</p>
+
+<div class="warn">
+<b>שים לב:</b> אל תלחץ פעמיים על הקובץ <code>collect-in-browser.js</code>. ווינדוס מנסה להריץ אותו כתוכנה ונותן שגיאה.
+הקוד הזה נועד לרוץ בתוך הדפדפן בלבד. הדף הזה עושה את זה במקומך.
+</div>
+
+<div class="box">
+<ol>
+  <li>פתח בלשונית אחרת את דף האוסף שלך במייקרוורלד, וגלול עד הסוף עד שכל המודלים נטענו.</li>
+  <li>חזור לכאן ולחץ על הכפתור הירוק — הקוד יועתק.</li>
+  <li>חזור ללשונית של מייקרוורלד ולחץ <code>F12</code>.</li>
+  <li>בחר בלשונית <code>Console</code>.</li>
+  <li>לחץ <code>Ctrl+V</code> ואז <code>Enter</code>.
+      <br><span style="color:#9a9aa2;font-size:14px">אם הדפדפן מבקש לכתוב <code>allow pasting</code> — כתוב את זה, Enter, ואז הדבק שוב.</span></li>
+  <li>יירד קובץ בשם <code>makerworld-raw.json</code>.</li>
+  <li>העבר אותו לתיקייה <code>data</code> בתוך תיקיית הפרויקט.</li>
+  <li>לחץ פעמיים על <code>import-models.bat</code>.</li>
+</ol>
+</div>
+
+<div style="text-align:center;margin:26px 0">
+  <button id="copy">העתק את הקוד</button>
+  <div id="msg" style="margin-top:10px;min-height:24px"></div>
+</div>
+
+<details>
+  <summary style="cursor:pointer;color:#9a9aa2">להצגת הקוד (לא חובה)</summary>
+  <textarea id="code" readonly></textarea>
+</details>
+
+<p style="color:#7a7a82;font-size:13px;margin-top:24px">
+אפשר לחזור על זה לכל אוסף בנפרד. כל הרצה דורסת את הקובץ הקודם, אז ייבא אחד ואז את הבא.
+</p>
+
+</div>
+<script>
+const SNIPPET = "/* ============================================================================\n   Unit 3D \u2014 \u05d0\u05d9\u05e1\u05d5\u05e3 \u05de\u05d5\u05d3\u05dc\u05d9\u05dd \u05de\u05d3\u05e3 \u05de\u05d9\u05d9\u05e7\u05e8\u05d5\u05d5\u05e8\u05dc\u05d3, \u05de\u05ea\u05d5\u05da \u05d4\u05d3\u05e4\u05d3\u05e4\u05df \u05e9\u05dc\u05da.\n\n   \u05dc\u05de\u05d4 \u05d6\u05d4 \u05e7\u05d9\u05d9\u05dd: \u05de\u05d9\u05d9\u05e7\u05e8\u05d5\u05d5\u05e8\u05dc\u05d3 \u05d7\u05d5\u05e1\u05dd \u05d4\u05d5\u05e8\u05d3\u05d4 \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9\u05ea (Cloudflare). \u05d4\u05d3\u05e4\u05d3\u05e4\u05df \u05e9\u05dc\u05da \u05dc\u05d0\n   \u05d7\u05e1\u05d5\u05dd, \u05db\u05d9 \u05d0\u05ea\u05d4 \u05de\u05e9\u05ea\u05de\u05e9 \u05d0\u05de\u05d9\u05ea\u05d9. \u05d0\u05d6 \u05d1\u05de\u05e7\u05d5\u05dd \u05e9\u05d4\u05e1\u05e7\u05e8\u05d9\u05e4\u05d8 \u05d9\u05d9\u05db\u05e0\u05e1 \u05dc\u05d0\u05ea\u05e8 \u2014 \u05d0\u05ea\u05d4 \u05e0\u05db\u05e0\u05e1, \u05d5\u05d4\u05d5\u05d0\n   \u05e8\u05e7 \u05d0\u05d5\u05e1\u05e3 \u05d0\u05ea \u05de\u05d4 \u05e9\u05db\u05d1\u05e8 \u05e4\u05ea\u05d5\u05d7 \u05e2\u05dc \u05d4\u05de\u05e1\u05da.\n\n   \u05d0\u05d9\u05da \u05de\u05e9\u05ea\u05de\u05e9\u05d9\u05dd:\n   1. \u05e4\u05ea\u05d7 \u05d1\u05d3\u05e4\u05d3\u05e4\u05df \u05d0\u05ea \u05d3\u05e3 \u05d4\u05d0\u05d5\u05e1\u05e3 (\u05dc\u05de\u05e9\u05dc \u05d4\u05d0\u05d5\u05e1\u05e3 \"flexi\").\n   2. \u05d2\u05dc\u05d5\u05dc \u05e2\u05d3 \u05d4\u05e1\u05d5\u05e3, \u05e2\u05d3 \u05e9\u05db\u05dc \u05d4\u05de\u05d5\u05d3\u05dc\u05d9\u05dd \u05e0\u05d8\u05e2\u05e0\u05d5.\n   3. \u05dc\u05d7\u05e5 F12 \u2192 \u05dc\u05e9\u05d5\u05e0\u05d9\u05ea Console.\n   4. \u05d4\u05d3\u05d1\u05e7 \u05d0\u05ea \u05db\u05dc \u05d4\u05e7\u05d5\u05d1\u05e5 \u05d4\u05d6\u05d4 \u05d5\u05dc\u05d7\u05e5 Enter.\n   5. \u05d9\u05d9\u05d5\u05d5\u05e6\u05e8 \u05e7\u05d5\u05d1\u05e5 \u05d1\u05e9\u05dd makerworld-raw.json \u05d1\u05ea\u05d9\u05e7\u05d9\u05d9\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea.\n   6. \u05d4\u05e2\u05d1\u05e8 \u05d0\u05d5\u05ea\u05d5 \u05dc\u05ea\u05d9\u05e7\u05d9\u05d9\u05d4 data/ \u05d1\u05e4\u05e8\u05d5\u05d9\u05e7\u05d8, \u05d5\u05dc\u05d7\u05e5 \u05e4\u05e2\u05de\u05d9\u05d9\u05dd \u05e2\u05dc import-models.bat.\n\n   \u05d0\u05e4\u05e9\u05e8 \u05dc\u05d7\u05d6\u05d5\u05e8 \u05e2\u05dc \u05d6\u05d4 \u05dc\u05db\u05dc \u05d0\u05d5\u05e1\u05e3. \u05d4\u05e7\u05d5\u05d1\u05e5 \u05d4\u05d7\u05d3\u05e9 \u05d3\u05d5\u05e8\u05e1 \u05d0\u05ea \u05d4\u05e7\u05d5\u05d3\u05dd, \u05d0\u05d6 \u05d0\u05dd \u05e8\u05d5\u05e6\u05d9\u05dd \u05dc\u05d0\u05d7\u05d3\n   \u05db\u05de\u05d4 \u05d0\u05d5\u05e1\u05e4\u05d9\u05dd \u2014 \u05e4\u05ea\u05d7 \u05d0\u05d5\u05ea\u05dd \u05d1\u05d6\u05d4 \u05d0\u05d7\u05e8 \u05d6\u05d4 \u05d5\u05e4\u05e9\u05d5\u05d8 \u05d4\u05e8\u05e5 \u05e9\u05d5\u05d1 \u05d0\u05d7\u05e8\u05d9 \u05e9\u05d0\u05d9\u05d7\u05d3\u05ea \u05d9\u05d3\u05e0\u05d9\u05ea, \u05d0\u05d5\n   \u05d4\u05d5\u05e1\u05e3 \u05d0\u05ea \u05db\u05ea\u05d5\u05d1\u05d5\u05ea \u05d4\u05d0\u05d5\u05e1\u05e4\u05d9\u05dd \u05dc-scripts/makerworld-sources.json.\n   ========================================================================== */\n(() => {\n  const seen = new Map();\n  document.querySelectorAll('a[href*=\"/models/\"]').forEach((a) => {\n    const m = (a.getAttribute(\"href\") || \"\").match(/\\/models\\/(\\d+)-?([a-z0-9-]*)/i);\n    if (!m) return;\n    const img = a.querySelector(\"img\");\n    const lines = (a.innerText || \"\").split(\"\\n\").map((s) => s.trim()).filter(Boolean);\n    if (!seen.has(m[1])) {\n      seen.set(m[1], {\n        id: m[1],\n        slug: m[2] || \"\",\n        title: lines[0] || (img && img.alt) || \"\",\n        cover: img ? img.currentSrc || img.src : undefined,\n        designerName: lines.find((l) => /^@/.test(l))?.replace(/^@/, \"\"),\n        url: new URL(a.getAttribute(\"href\"), location.origin).href,\n      });\n    }\n  });\n\n  const list = [...seen.values()].filter((x) => x.title);\n  if (!list.length) {\n    alert(\"\u05dc\u05d0 \u05e0\u05de\u05e6\u05d0\u05d5 \u05de\u05d5\u05d3\u05dc\u05d9\u05dd \u05d1\u05d3\u05e3 \u05d4\u05d6\u05d4. \u05d5\u05d3\u05d0 \u05e9\u05d0\u05ea\u05d4 \u05e2\u05dc \u05d3\u05e3 \u05d0\u05d5\u05e1\u05e3 \u05d5\u05e9\u05d2\u05dc\u05dc\u05ea \u05e2\u05d3 \u05d4\u05e1\u05d5\u05e3.\");\n    return;\n  }\n\n  const blob = new Blob([JSON.stringify(list, null, 2)], { type: \"application/json\" });\n  const a = document.createElement(\"a\");\n  a.href = URL.createObjectURL(blob);\n  a.download = \"makerworld-raw.json\";\n  document.body.appendChild(a);\n  a.click();\n  a.remove();\n  console.log(`\u05e0\u05d0\u05e1\u05e4\u05d5 ${list.length} \u05de\u05d5\u05d3\u05dc\u05d9\u05dd. \u05d4\u05e7\u05d5\u05d1\u05e5 \u05d9\u05e8\u05d3 \u05d1\u05e9\u05dd makerworld-raw.json`);\n  alert(`\u05e0\u05d0\u05e1\u05e4\u05d5 ${list.length} \u05de\u05d5\u05d3\u05dc\u05d9\u05dd.\\n\u05d4\u05e7\u05d5\u05d1\u05e5 \u05d9\u05e8\u05d3 \u05d1\u05e9\u05dd makerworld-raw.json \u2014 \u05d4\u05e2\u05d1\u05e8 \u05d0\u05d5\u05ea\u05d5 \u05dc\u05ea\u05d9\u05e7\u05d9\u05d9\u05ea data \u05d1\u05e4\u05e8\u05d5\u05d9\u05e7\u05d8.`);\n})();\n";
+document.getElementById("code").value = SNIPPET;
+const btn = document.getElementById("copy");
+const msg = document.getElementById("msg");
+btn.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(SNIPPET);
+  } catch {
+    // Clipboard API is blocked on file:// in some browsers - fall back to the textarea.
+    const ta = document.getElementById("code");
+    ta.closest("details").open = true;
+    ta.select();
+    document.execCommand("copy");
+  }
+  msg.innerHTML = '<span class="ok">הקוד הועתק. עכשיו עבור למייקרוורלד, F12, Console, Ctrl+V, Enter.</span>';
+  btn.textContent = "הועתק";
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent = "העתק את הקוד"; btn.disabled = false; }, 4000);
+});
+</script>
+</body>
+</html>
