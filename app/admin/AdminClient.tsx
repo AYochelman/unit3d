@@ -117,7 +117,7 @@ export default function AdminClient() {
         <div>
           <Pill tone="neutral" className="mb-3 font-mono">ADMIN · COSTING</Pill>
           <h1 className="text-3xl md:text-4xl font-black tracking-tightest">ניהול עלויות</h1>
-          <p className="text-ink-400 text-sm mt-1">הנתונים נשמרים לסשן הנוכחי. ייצוא JSON בלשונית &quot;גיבוי&quot; שומר אותם לקובץ.</p>
+          <p className="text-ink-400 text-sm mt-1">הנתונים חיים לסשן הנוכחי. לשונית &quot;גיבוי&quot; ← &quot;שמירה&quot; מורידה קובץ שמעדכן את המחירים והמלאי לכל מי שנכנס לאתר.</p>
         </div>
         <Btn variant="ghost" size="sm" icon="x" onClick={lock}>נעילה</Btn>
       </header>

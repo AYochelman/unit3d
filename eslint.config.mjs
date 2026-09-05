@@ -10,6 +10,9 @@ const eslintConfig = [
       "handoff/**",
       "_recovered-newest/**",
       "next-env.d.ts",
+      "out/**",
+      // Throw-away Playwright checks run by hand; not part of the site.
+      "*.cjs",
     ],
   },
   ...coreWebVitals,

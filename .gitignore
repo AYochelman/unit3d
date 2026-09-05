@@ -49,3 +49,8 @@ next-env.d.ts
 /_recovered-newest/
 *.zip
 /out/
+
+# local verification scripts / screenshots (never shipped)
+/*.cjs
+/m-*.png
+/shot-*.png

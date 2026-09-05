@@ -35,7 +35,7 @@ const QUICK = [
 export default function Footer() {
   return (
     <footer className="border-t border-ink-800 mt-24">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 py-16">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 pt-16 pb-28 md:pb-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-10">
           <div className="col-span-2">
             <Logo size={40} />

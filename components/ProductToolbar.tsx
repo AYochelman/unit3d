@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Icon from "@/components/ui/Icon";
 import { COLOR_FILTERS, PRICE_FILTERS, SORTS, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 import { cn } from "@/lib/cn";
@@ -14,13 +15,38 @@ type Props = {
 /**
  * Sticky filter + sort bar shared by every listing page.
  * Row 1: sort chips. Row 2: colour-count and price filters.
+ *
+ * On a phone those two rows wrap to five and eat half the screen before a
+ * single product shows, so below `sm` they collapse behind one "סינון ומיון"
+ * button and the sticky bar stays a single line.
  */
 export default function ProductToolbar({ state, onChange, shown, total }: Props) {
   const set = <K extends keyof ListingState>(k: K, v: ListingState[K]) => onChange({ ...state, [k]: v });
   const dirty = state.colors !== "all" || state.price !== "all" || state.sort !== "popular";
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="sticky top-16 z-20 bg-ink-950/85 backdrop-blur-md py-3 -mx-6 px-6 md:-mx-10 md:px-10 border-b border-ink-800 mb-6">
+      {/* phone: one line — open the filters, see how many are showing */}
+      <div className="sm:hidden flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className={cn(
+            "inline-flex items-center gap-2 h-9 px-3.5 rounded-full text-sm font-semibold border transition-colors",
+            dirty ? "bg-flame/15 text-flame border-flame/50" : "bg-ink-900 text-ink-200 border-ink-700",
+          )}
+        >
+          <Icon name="list" size={14} />
+          סינון ומיון
+          {dirty && <span className="h-1.5 w-1.5 rounded-full bg-flame" />}
+          <Icon name="chevDown" size={13} className={cn("transition-transform", open && "rotate-180")} />
+        </button>
+        <span className="font-mono text-[11px] text-ink-400" dir="ltr">{shown} / {total}</span>
+      </div>
+
+      <div className={cn("sm:block", open ? "block mt-3" : "hidden")}>
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-mono text-[10px] tracking-widest text-ink-500 uppercase ml-1">מיון</span>
         {SORTS.map((s) => (
@@ -69,7 +95,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
             </button>
           ))}
         </div>
-        <span className="mr-auto font-mono text-[11px] text-ink-400" dir="ltr">
+        <span className="mr-auto hidden sm:inline font-mono text-[11px] text-ink-400" dir="ltr">
           {shown} / {total}
         </span>
         {dirty && (
@@ -82,6 +108,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
             נקה
           </button>
         )}
+      </div>
       </div>
     </div>
   );

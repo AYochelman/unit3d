@@ -195,9 +195,9 @@ export function ListingCardView({ c }: { c: ListingCard }) {
         <Link href={c.designHref} className="flex flex-col flex-1">
           {body}
         </Link>
-        <div className="px-3 pb-3 flex items-center justify-between gap-2">
+        <div className="px-3 pb-3 flex items-center justify-between gap-1.5">
           {priceRow}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <Link
               href={c.href}
               className="px-2 py-1 rounded-md text-[11px] font-semibold text-ink-400 border border-ink-800 hover:border-ink-600 hover:text-ink-200 transition-colors"
@@ -208,7 +208,8 @@ export function ListingCardView({ c }: { c: ListingCard }) {
               href={c.designHref}
               className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold bg-flame/15 text-flame border border-flame/40 hover:bg-flame hover:text-white transition-colors"
             >
-              עצב עכשיו
+              <span className="hidden sm:inline">עצב עכשיו</span>
+              <span className="sm:hidden">עצב</span>
               <Icon name="arrowLeft" size={11} />
             </Link>
           </div>
