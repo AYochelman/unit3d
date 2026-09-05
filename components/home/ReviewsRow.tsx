@@ -28,28 +28,28 @@ const AVG = (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(
 /**
  * The exact product each review is about.
  *
- * Pulling "any photo from the right shelf" put a picture next to a review that
- * was talking about something else, which reads as fake. These are the real
- * items: a review with no catalogue product (a unit emblem, a branded batch)
- * maps to null and keeps its illustration.
+ * Only a review that is genuinely about a catalogue item is mapped: a picture
+ * of a fox next to a review about a cat, or a USB cable guard next to a review
+ * about a coffee-machine part, reads as fake — which is worse than a drawing.
+ * Unit emblems and branded batches are made to order, have no product page,
+ * and keep their illustration.
  */
 const REVIEW_ITEM: Record<string, string | null> = {
   r1: null,               // unit emblem — made to order
   r2: null,               // three unit keychains
-  r3: "mw-2172202",       // a figure from a file
+  r3: "mw-1645081",       // דרקון מינימליסטי
   r4: null,               // unit emblem statue
   r5: null,               // 80 branded keychains
-  r6: "mw-2787704",       // a replacement part
+  r6: "mw-1971172",       // וו מגבת נועל-אוטומטי
   r7: null,               // unit emblem
   r8: null,               // 35 branded figurines
-  r9: "mw-1645161",       // small animal model — low-poly fox
-  r10: "mw-90174",        // articulated dragon
-  r11: "mw-2868647",      // pet tag
-  r12: "mw-2125984",      // vase
-  r13: "mw-1768076",      // display piece
-  r14: "mw-29407",        // name tags for desks
+  r9: "mw-1645161",       // שועל חולם · לואו-פולי
+  r10: "mw-90174",        // דרקון מפרקי גמיש
+  r11: "mw-2868647",      // תג לחיה עם שם וטלפון
+  r12: "mw-2125984",      // מעמד עטים ואגרטל · וורונוי
+  r13: "mw-2735060",      // סמיסקי עם חתול על הראש
+  r14: "mw-26806",        // מעמד כרטיסי ביקור
 };
-
 function Stars({ n }: { n: number }) {
   return (
     <span className="inline-flex gap-0.5" aria-label={`${n} מתוך 5`}>
@@ -101,9 +101,9 @@ function ReviewCard({ r }: { r: Review }) {
           {r.when && <span className="text-[10px] text-ink-500 mr-auto">{r.when}</span>}
         </div>
 
-        {(photo?.name || r.item) && (
+        {r.item && (
           <div className="text-[11px] text-ink-400 mb-1.5 truncate">
-            הזמין: <span className="text-ink-200">{photo?.name ?? r.item}</span>
+            הזמין: <span className="text-ink-200">{r.item}</span>
           </div>
         )}
 
