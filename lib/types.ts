@@ -49,6 +49,14 @@ export type Review = {
   seg: ReviewSeg;
   stars: number;
   txt: string;
+  /** What they ordered — drawn on the card as a picture of the item. */
+  item?: string;
+  art?: ProductArtId;
+  hue?: number;
+  /** When the review was left, e.g. "לפני שבועיים". */
+  when?: string;
+  /** Link to the product they are talking about. */
+  href?: string;
 };
 
 // ─── Gallery ──────────────────────────────────────────────────────────────────
@@ -86,8 +94,16 @@ export type FidgetVariant = {
   time: string;
 };
 
+/**
+ * Two shelves live under the fidgets tab: `flexi` = print-in-place articulated
+ * creatures (dragons, pangolins, axolotls), `fidget` = spinners, cubes, sliders.
+ * Missing values are inferred by `fidgetKind()` in lib/fidget-kind.ts.
+ */
+export type FidgetKind = "flexi" | "fidget";
+
 export type Fidget = {
   id: string;
+  kind?: FidgetKind;
   name: string;
   desc: string;
   price: number;
@@ -197,14 +213,17 @@ export type Material = {
 };
 
 // ─── Shop products (pet tags, office & home) ─────────────────────────────────
-export type ProductCategory = "pets" | "office" | "home" | "trendy";
+export type ProductCategory = "pets" | "office" | "home" | "trendy" | "statues";
 
 export type ProductArtId =
   | "bone" | "round" | "heart" | "fish" | "paw" | "qr" | "bagholder" | "scoop"
   | "penholder" | "cableclip" | "headphones" | "phonestand" | "coaster" | "hook"
   | "keyrack" | "cardholder" | "planter" | "bagclip" | "bookmark" | "doorsign"
   | "organizer" | "lighter" | "phonecase" | "dogtag" | "luggage" | "nameplate"
-  | "keychain";
+  | "keychain"
+  // Statues / display pieces (עמודת הפסלים)
+  | "bust" | "chess" | "dragonstatue" | "lowpoly" | "vase" | "trophy"
+  | "moon" | "torso";
 
 export type ProductOption = {
   id: string;

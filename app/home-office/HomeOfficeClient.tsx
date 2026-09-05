@@ -5,7 +5,7 @@ import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import ProductToolbar from "@/components/ProductToolbar";
-import { OFFICE_PRODUCTS } from "@/lib/products";
+import { productsByCategory } from "@/lib/products";
 import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 import { cn } from "@/lib/cn";
 
@@ -21,7 +21,7 @@ export default function HomeOfficeClient() {
   const [filter, setFilter] = useState<Filter>("all");
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
   const scoped = useMemo(
-    () => (filter === "all" ? OFFICE_PRODUCTS : OFFICE_PRODUCTS.filter((p) => p.category === filter)).map(productToCard),
+    () => (filter === "all" ? productsByCategory("home", "office") : productsByCategory(filter)).map(productToCard),
     [filter],
   );
   const items = useMemo(() => applyListing(scoped, state), [scoped, state]);

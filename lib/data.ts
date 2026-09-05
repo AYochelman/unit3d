@@ -1,3 +1,4 @@
+import { importedFidgets } from "./imported";
 import type {
   Unit,
   Review,
@@ -40,16 +41,20 @@ export const BRANCHES = [
 ] as const;
 
 export const REVIEWS: Review[] = [
-  { id: "r1", name: "יואב", tag: "חטיבה 51", seg: "soldier", stars: 5, txt: "הזמנתי לקצין שלי לסוף מסלול. הגיע תוך 4 ימים, איכות הדפסה מטורפת, הצבעים מדויקים. הוא כל הזמן מנפנף איתו." },
-  { id: "r2", name: "מאיה", tag: "אמא של חייל", seg: "family", stars: 5, txt: "קניתי 3 מחזיקי מפתחות לטקס תום שירות. אריאל היה זמין כל הזמן בוואטסאפ ועזר לבחור. שווה כל שקל." },
-  { id: "r3", name: "רון", tag: "גיימר מחיפה", seg: "private", stars: 5, txt: "הדפסתי פיגורה של הדמות שלי מ-DnD. ביקש קובץ, חזר אליי תוך שעה עם הצעות לשיפור הפוזה, ובסוף יצא לי משהו שלא חלמתי." },
-  { id: "r4", name: "שיר", tag: "שייטת 13", seg: "soldier", stars: 5, txt: "איכות מטורפת. הסמל יצא חד ובהיר, ההגרבה החיצונית מושלמת. ממליצה לכל החבר'ה." },
-  { id: "r5", name: "דניאלה", tag: "מנהלת תפעול · MoonTech", seg: "b2b", stars: 5, txt: "הזמנו 80 מחזיקי מפתחות עם הלוגו שלנו לועידה. חשבונית מס מסודרת, אריזה אישית לכל עובד, הגיע יומיים לפני התאריך. ספק שאני חוזרת אליו." },
-  { id: "r6", name: "נטע", tag: "תושבת רעננה", seg: "private", stars: 5, txt: "הזמנתי חלק חילוף לקפסולת קפה ישנה שלי. אריאל הצליח לדגום, להדפיס ולשלוח תוך שבוע. גאון." },
-  { id: "r7", name: "איתי", tag: "גולני 13", seg: "soldier", stars: 5, txt: "הטופס שלהם שומר את כל הבחירות שעשית. נכנסתי, בחרתי, שלחתי. שיחה ב-וואטסאפ אחר כך והכל סגור." },
-  { id: "r8", name: "גיא", tag: "VP People · Pixie", seg: "b2b", stars: 5, txt: "חיפשנו welcome-kit שלא ישכח בארון. 35 פיגורות מיניאטוריות בעיצוב הלוגו, צבע מותג מדויק, ארוז יפה. עובדים חדשים בטירוף." },
-  { id: "r9", name: "לירון", tag: "מורת מתמטיקה", seg: "family", stars: 5, txt: "קניתי מתנה לתלמיד שעבר ניתוח – מודל קטן של חתול שלו. ההורים בכו. שירות מצוין." },
-  { id: "r10", name: "אביב", tag: "חובב פידג'טים", seg: "private", stars: 5, txt: "הזמנתי articulated dragon וspinner מותאם עם השם שלי. שניהם מתנועעים מושלם, בלי טיפת דבק. לקוח חוזר." },
+  { id: "r1", name: "יואב", tag: "חטיבה 51", seg: "soldier", stars: 5, when: "לפני שבוע", item: "סמל יחידה · מחזיק מפתחות", art: "keychain", hue: 18, href: "/catalog", txt: "הזמנתי לקצין שלי לסוף מסלול. הגיע תוך 4 ימים, איכות הדפסה מטורפת, הצבעים מדויקים. הוא כל הזמן מנפנף איתו." },
+  { id: "r2", name: "מאיה", tag: "אמא של חייל", seg: "family", stars: 5, when: "לפני שבועיים", item: "3 מחזיקי מפתחות", art: "keychain", hue: 145, href: "/catalog", txt: "קניתי 3 מחזיקי מפתחות לטקס תום שירות. אריאל היה זמין כל הזמן בוואטסאפ ועזר לבחור. שווה כל שקל." },
+  { id: "r3", name: "רון", tag: "גיימר מחיפה", seg: "private", stars: 5, when: "לפני 3 שבועות", item: "פיגורת DnD מקובץ", art: "bust", hue: 45, href: "/upload", txt: "הדפסתי פיגורה של הדמות שלי מ-DnD. ביקש קובץ, חזר אליי תוך שעה עם הצעות לשיפור הפוזה, ובסוף יצא לי משהו שלא חלמתי." },
+  { id: "r4", name: "שיר", tag: "שייטת 13", seg: "soldier", stars: 5, when: "לפני חודש", item: "סמל יחידה · פסל שולחן", art: "trophy", hue: 195, href: "/catalog", txt: "איכות מטורפת. הסמל יצא חד ובהיר, ההגרבה החיצונית מושלמת. ממליצה לכל החבר'ה." },
+  { id: "r5", name: "דניאלה", tag: "מנהלת תפעול · MoonTech", seg: "b2b", stars: 5, when: "לפני חודש", item: "80 מחזיקים ממותגים", art: "nameplate", hue: 190, href: "/b2b", txt: "הזמנו 80 מחזיקי מפתחות עם הלוגו שלנו לועידה. חשבונית מס מסודרת, אריזה אישית לכל עובד, הגיע יומיים לפני התאריך. ספק שאני חוזרת אליו." },
+  { id: "r6", name: "נטע", tag: "תושבת רעננה", seg: "private", stars: 5, when: "לפני שבועיים", item: "חלק חילוף לפי דגימה", art: "organizer", hue: 30, href: "/upload", txt: "הזמנתי חלק חילוף לקפסולת קפה ישנה שלי. אריאל הצליח לדגום, להדפיס ולשלוח תוך שבוע. גאון." },
+  { id: "r7", name: "איתי", tag: "גולני 13", seg: "soldier", stars: 5, when: "לפני 5 ימים", item: "סמל גולני", art: "dogtag", hue: 90, href: "/catalog", txt: "הטופס שלהם שומר את כל הבחירות שעשית. נכנסתי, בחרתי, שלחתי. שיחה ב-וואטסאפ אחר כך והכל סגור." },
+  { id: "r8", name: "גיא", tag: "VP People · Pixie", seg: "b2b", stars: 5, when: "לפני חודשיים", item: "35 פיגורות ממותגות", art: "torso", hue: 10, href: "/b2b", txt: "חיפשנו welcome-kit שלא ישכח בארון. 35 פיגורות מיניאטוריות בעיצוב הלוגו, צבע מותג מדויק, ארוז יפה. עובדים חדשים בטירוף." },
+  { id: "r9", name: "לירון", tag: "מורת מתמטיקה", seg: "family", stars: 5, when: "לפני 3 שבועות", item: "מודל חתול אישי", art: "lowpoly", hue: 330, href: "/statues", txt: "קניתי מתנה לתלמיד שעבר ניתוח – מודל קטן של חתול שלו. ההורים בכו. שירות מצוין." },
+  { id: "r10", name: "אביב", tag: "חובב פידג'טים", seg: "private", stars: 5, when: "לפני שבוע", item: "דרקון מפרקי + ספינר", art: "dragonstatue", hue: 90, href: "/fidgets", txt: "הזמנתי articulated dragon וspinner מותאם עם השם שלי. שניהם מתנועעים מושלם, בלי טיפת דבק. לקוח חוזר." },
+  { id: "r11", name: "אורי", tag: "בעל כלב · חולון", seg: "private", stars: 5, when: "לפני 10 ימים", item: "תג עצם ל-PETG", art: "bone", hue: 30, href: "/pets", txt: "התג של לוקה שרד ים, בוץ ושלושה חודשים. השם עדיין קריא כמו ביום הראשון. הזמנתי עוד אחד לכלבה החדשה." },
+  { id: "r12", name: "הילה", tag: "מעצבת פנים", seg: "private", stars: 5, when: "לפני שבועיים", item: "אגרטל ספירלה 220mm", art: "vase", hue: 165, href: "/statues", txt: "לקוחה שלי ביקשה משהו לפינת הכניסה. האגרטל בירוק משי נראה כמו קרמיקה יקרה. כבר הזמנתי שניים נוספים." },
+  { id: "r13", name: "עומר", tag: "אבא לשלושה", seg: "family", stars: 5, when: "לפני 4 ימים", item: "מנורת ירח", art: "moon", hue: 50, href: "/statues", txt: "קניתי מנורת ירח ליום ההולדת של הבן. הוא ישן איתה דולקת כל לילה מאז. האור רך והמכתשים באמת נראים אמיתיים." },
+  { id: "r14", name: "רותם", tag: "מנהלת משרד · Aquila", seg: "b2b", stars: 4, when: "לפני חודש", item: "12 שלטי שם לשולחנות", art: "nameplate", hue: 260, href: "/home-office", txt: "השלטים יצאו מדויקים והלוגו חד. לקח יום יותר ממה שסוכם בגלל שינוי שביקשנו באמצע, אבל עדכנו אותי בזמן. נחזור." },
 ];
 
 export const GALLERY: GalleryItem[] = [
@@ -83,7 +88,7 @@ export const GALLERY_CATS = [
   { id: "b2b", label: "מתנות עסקיות" },
 ] as const;
 
-export const FIDGETS: Fidget[] = [
+const CURATED_FIDGETS: Fidget[] = [
   {
     id: "f1",
     name: "Air Spinner",
@@ -483,6 +488,9 @@ export const FIDGETS: Fidget[] = [
     ],
   },
 ];
+
+// The curated shelf plus whatever the MakerWorld import brought in.
+export const FIDGETS: Fidget[] = [...CURATED_FIDGETS, ...importedFidgets()];
 
 export const AUDIENCES: Audience[] = [
   { id: "private", label: "אני מזמין בשבילי", desc: "מתנה, פיגורה, חלק חילוף, פידג'ט, או כל רעיון שיש לך בראש.", iconKey: "sparkles" },

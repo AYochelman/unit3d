@@ -99,3 +99,22 @@ PIN ב-`lib/admin-store.ts` (ברירת מחדל 1234). המצב נשמר לסש
 ## המשימה הפתוחה הכי משתלמת
 
 לבדוק אם `D:\Claude Projects\Unit 3D` עדיין קיימת. שם נמצאים `public/`, ה־`lib/types.ts` המקורי, והגרסה האחרונה האמיתית של הקוד.
+
+
+## עמודות החנות (v2.6)
+
+| נתיב | מקור הנתונים | הערות |
+|------|--------------|-------|
+| `/trendy` | `lib/trending.ts` | מדף מעורב שנבנה מהשאר |
+| `/catalog` | `lib/data.ts` UNITS | סמלי יחידות |
+| `/fidgets` | `FIDGETS` (data.ts + ייבוא) | טאבים פלקסי/פידג'ט לפי `lib/fidget-kind.ts` |
+| `/pets` | `productsByCategory("pets")` | |
+| `/statues` | `productsByCategory("statues")` | חדש |
+| `/home-office` | `productsByCategory("home","office")` | |
+| `/configurator` | `CONFIG_PRODUCTS` | מעצב חופשי |
+
+מוצר חדש נכנס ל-`lib/products.ts` עם `hours` ו-`grams` — בלעדיהם פאנל העלות
+למנהל לא יידע לחשב. ציור חדש נוסף ל-`ProductArt.tsx` ול-`ProductArtId`.
+
+`npm run import:makerworld` מוסיף מודלים מיובאים לאותן עמודות בלי שינוי UI.
+ראה HANDOFF.md סעיף 15 — כולל אזהרת הרישוי (NC לא נמכר) והמסלול דרך הדפדפן.

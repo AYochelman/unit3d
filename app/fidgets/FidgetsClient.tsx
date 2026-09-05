@@ -10,6 +10,7 @@ import { FIDGETS } from "@/lib/data";
 import { fidgetStats } from "@/lib/products";
 import ProductToolbar from "@/components/ProductToolbar";
 import { applyListing, DEFAULT_LISTING, fmtOrders, type ListingState } from "@/lib/listing";
+import { fidgetKind, FIDGET_KIND_TABS, FIDGET_KIND_LABEL, type FidgetKindFilter } from "@/lib/fidget-kind";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -152,11 +153,14 @@ function FidgetCard({
           )}
         </div>
 
-        {/* Rating · orders */}
+        {/* Shelf · rating · orders */}
         {(() => {
           const st = fidgetStats(f);
           return (
             <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400">
+              <span className="px-1.5 py-0.5 rounded bg-ink-800 text-ink-300 font-sans font-semibold">
+                {FIDGET_KIND_LABEL[fidgetKind(f)]}
+              </span>
               <span className="inline-flex items-center gap-0.5 text-flame">
                 <Icon name="star" size={10} className="fill-current" />
                 <bdi dir="ltr">{st.rating.toFixed(1)}</bdi>
@@ -231,11 +235,19 @@ function FidgetCard({
 
 export default function FidgetsClient() {
   const [listing, setListing] = useState<ListingState>(DEFAULT_LISTING);
+  const [kind, setKind] = useState<FidgetKindFilter>("all");
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
 
+  // Split the shelf before filtering, so the toolbar's counter reflects the
+  // tab you are actually looking at.
+  const pool = useMemo(
+    () => (kind === "all" ? FIDGETS : FIDGETS.filter((f) => fidgetKind(f) === kind)),
+    [kind],
+  );
+
   const items = useMemo(() => {
-    const withStats = FIDGETS.map((f) => ({
+    const withStats = pool.map((f) => ({
       ...f,
       ...fidgetStats(f),
       // Sort/filter on the price the card actually shows (default variant).
@@ -243,7 +255,7 @@ export default function FidgetsClient() {
       isNew: f.tag === "חדש",
     }));
     return applyListing(withStats, listing);
-  }, [listing]);
+  }, [pool, listing]);
 
   const addToOrder = (id: string, variantId?: string) => {
     const f = FIDGETS.find((x) => x.id === id);
@@ -279,18 +291,49 @@ export default function FidgetsClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
         <Pill tone="cyan" className="mb-4">
-          פידג&apos;טים · ANTI-BOREDOM
+          פלקסי ופידג&apos;טים · ANTI-BOREDOM
         </Pill>
         <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
-          פידג&apos;טים שעוצרים את השיעמום.
+          שני מדפים. אותה מדפסת.
         </h1>
         <p className="text-ink-300 max-w-2xl">
-          הדפסות מפרקיות שיוצאות מהמדפסת מוכנות לתנועה — בלי דבק, בלי הרכבה.
+          <strong className="text-ink-100">פלקסי</strong> — יצורים מפרקיים שיוצאים מהמדפסת כשהם כבר זזים, בלי דבק ובלי הרכבה.
+          <strong className="text-ink-100"> פידג&apos;טים</strong> — ספינרים, קוביות אינסוף, סליידרים וכפתורים.
           כל הדגמים מבוססים על קבצים פתוחים (CC0 או CC-BY), עם קרדיט ליוצרים.
         </p>
       </header>
 
-      <ProductToolbar state={listing} onChange={setListing} shown={items.length} total={FIDGETS.length} />
+      {/* ── Flexi / fidget shelves ─────────────────────────────────────── */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        {FIDGET_KIND_TABS.map((t) => {
+          const count = t.id === "all" ? FIDGETS.length : FIDGETS.filter((f) => fidgetKind(f) === t.id).length;
+          const active = kind === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setKind(t.id)}
+              title={t.hint}
+              className={cn(
+                "px-4 py-2 rounded-xl text-sm font-bold border transition-colors",
+                active
+                  ? "bg-flame text-white border-flame"
+                  : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
+              )}
+            >
+              {t.label}
+              <span className={cn("mr-1.5 font-mono text-[11px]", active ? "text-white/70" : "text-ink-500")} dir="ltr">
+                {count}
+              </span>
+            </button>
+          );
+        })}
+        <span className="text-xs text-ink-500 mr-2 hidden sm:inline">
+          {FIDGET_KIND_TABS.find((t) => t.id === kind)?.hint}
+        </span>
+      </div>
+
+      <ProductToolbar state={listing} onChange={setListing} shown={items.length} total={pool.length} />
 
       {/* Custom fidget banner */}
       <Link

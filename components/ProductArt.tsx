@@ -252,6 +252,116 @@ export default function ProductArt({ art, hue = 200, color, size = 120, classNam
             <rect x="28" y="49" width="44" height="9" rx="2" fill={dark} />
           </>
         );
+      // ── Statues / display pieces ─────────────────────────────────────────
+      case "bust":
+        return (
+          <>
+            <path d="M28 90 Q28 66 50 62 Q72 66 72 90 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M38 62 Q38 40 50 40 Q62 40 62 62 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M36 34 a14 16 0 0 1 28 0 v10 a14 14 0 0 1-28 0 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M36 34 a14 16 0 0 1 28 0 q-14 6-28 0 Z" fill={dark} />
+            <circle cx="44" cy="40" r="1.6" fill={line} /><circle cx="56" cy="40" r="1.6" fill={line} />
+            <rect x="22" y="88" width="56" height="6" rx="2" fill={dark} />
+          </>
+        );
+      case "torso":
+        return (
+          <>
+            {/* shoulders + chest */}
+            <path d="M30 44 q6-10 20-10 q14 0 20 10 l-3 24 q-17 9-34 0 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            {/* arm stumps */}
+            <path d="M30 44 q-8 3-9 12 q5 4 10 1 Z" fill={dark} stroke={line} strokeWidth="1.2" />
+            <path d="M70 44 q8 3 9 12 q-5 4-10 1 Z" fill={dark} stroke={line} strokeWidth="1.2" />
+            {/* neck stump */}
+            <path d="M43 34 q7-6 14 0 q-7 4-14 0 Z" fill={dark} />
+            {/* waist */}
+            <path d="M33 68 q17 9 34 0 l-3 14 H36 Z" fill={fg} stroke={line} strokeWidth="1.2" />
+            <path d="M50 40 v40" stroke={dark} strokeWidth="1.4" opacity="0.7" />
+            <path d="M38 52 q12 6 24 0" fill="none" stroke={dark} strokeWidth="1.4" opacity="0.6" />
+            {/* plinth */}
+            <rect x="30" y="82" width="40" height="5" rx="2" fill={dark} />
+            <rect x="26" y="87" width="48" height="6" rx="3" fill={line} opacity="0.6" />
+          </>
+        );
+      case "chess":
+        return (
+          <>
+            <path d="M34 34 h32 l-4 10 H38 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M32 22 h6 v6 h6 v-6 h4 v6 h6 v-6 h6 v12 H32 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M40 44 q-3 20 -6 30 h32 q-3-10-6-30 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <rect x="28" y="74" width="44" height="8" rx="3" fill={fg} stroke={line} strokeWidth="1.5" />
+            <rect x="24" y="82" width="52" height="8" rx="3" fill={dark} />
+            <path d="M42 50 h16" stroke={dark} strokeWidth="2" />
+          </>
+        );
+      case "dragonstatue":
+        return (
+          <>
+            {/* coiled body on a rock base */}
+            <path d="M24 76 q-2-16 12-22 q10-4 16 2" fill="none" stroke={fg} strokeWidth="11" strokeLinecap="round" />
+            <path d="M24 76 q-2-16 12-22 q10-4 16 2" fill="none" stroke={line} strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+            {/* tail curling out to the left */}
+            <path d="M26 76 q-8 2-12 8 q6 2 10-1" fill={fg} stroke={line} strokeWidth="1.2" />
+            {/* wing */}
+            <path d="M40 52 q6-20 22-22 q-4 12-2 20 q-10-4-20 2 Z" fill={dark} stroke={line} strokeWidth="1.2" />
+            <path d="M48 34 q4 8 4 16 M56 32 q1 8 0 14" fill="none" stroke={fg} strokeWidth="1.2" opacity="0.7" />
+            {/* neck + head */}
+            <path d="M54 56 q10-4 14-12" fill="none" stroke={fg} strokeWidth="9" strokeLinecap="round" />
+            <path d="M64 42 q8-6 15-1 q4 3 1 7 l-13 4 q-6-4-3-10 Z" fill={fg} stroke={line} strokeWidth="1.2" />
+            <path d="M78 44 l6-1 -4 5 Z" fill={dark} />
+            <path d="M66 38 l3-8 4 7 Z" fill={dark} />
+            <circle cx="72" cy="45" r="1.8" fill="#0a0a0b" />
+            {/* spikes along the back */}
+            {[[36, 54], [44, 50], [52, 50]].map(([x, y]) => (
+              <path key={x} d={`M${x} ${y} l3-6 3 6 Z`} fill={dark} />
+            ))}
+            {/* rock plinth */}
+            <path d="M14 80 q10-5 22-4 q14 1 26-2 q14-3 22 6 l2 6 H12 Z" fill={dark} />
+            <rect x="10" y="86" width="80" height="6" rx="2" fill={line} opacity="0.6" />
+          </>
+        );
+      case "lowpoly":
+        return (
+          <>
+            <path d="M50 16 L74 38 L66 78 H34 L26 38 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M50 16 L50 78 M26 38 L50 52 L74 38 M34 78 L50 52 L66 78" fill="none" stroke={dark} strokeWidth="1.4" />
+            <path d="M50 16 L74 38 L50 52 Z" fill={light} />
+            <rect x="24" y="78" width="52" height="8" rx="3" fill={dark} />
+          </>
+        );
+      case "vase":
+        return (
+          <>
+            <path d="M38 22 h24 l-4 10 q16 12 16 30 q0 20-22 22 q-22-2-22-22 q0-18 16-30 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M32 56 q18 8 36 0" fill="none" stroke={dark} strokeWidth="1.6" />
+            <path d="M31 66 q19 9 38 0" fill="none" stroke={dark} strokeWidth="1.6" />
+            <path d="M34 46 q16 7 32 0" fill="none" stroke={dark} strokeWidth="1.6" />
+            <ellipse cx="50" cy="22" rx="12" ry="4" fill={dark} />
+          </>
+        );
+      case "trophy":
+        return (
+          <>
+            <path d="M34 20 h32 v18 a16 16 0 0 1-32 0 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <path d="M34 24 h-10 a10 10 0 0 0 10 12 M66 24 h10 a10 10 0 0 1-10 12" fill="none" stroke={fg} strokeWidth="4" />
+            <rect x="46" y="54" width="8" height="14" fill={dark} />
+            <path d="M36 68 h28 l4 10 H32 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <rect x="28" y="78" width="44" height="8" rx="3" fill={dark} />
+            <path d="M50 26 l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8Z" fill={light} />
+          </>
+        );
+      case "moon":
+        return (
+          <>
+            <circle cx="50" cy="44" r="26" fill={fg} stroke={line} strokeWidth="1.5" />
+            <circle cx="40" cy="36" r="5" fill={dark} opacity="0.6" />
+            <circle cx="58" cy="48" r="7" fill={dark} opacity="0.5" />
+            <circle cx="46" cy="56" r="3.5" fill={dark} opacity="0.6" />
+            <circle cx="62" cy="32" r="3" fill={dark} opacity="0.5" />
+            <path d="M34 72 q16 8 32 0 l6 14 H28 Z" fill={dark} />
+            <rect x="24" y="86" width="52" height="6" rx="3" fill={dark} />
+          </>
+        );
       case "keychain":
       default:
         return (

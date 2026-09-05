@@ -1,0 +1,19 @@
+{
+  "_readme": [
+    "Sources for `npm run import:makerworld`.",
+    "Add any MakerWorld collection URL, a user's likes page, or a single model URL.",
+    "`shelf` decides which column of the shop the models land in:",
+    "  flexi | fidget | statues | pets | home | office | trendy",
+    "Use \"auto\" to let the script classify each model by its name."
+  ],
+  "sources": [
+    { "url": "https://makerworld.com/en/collections/28743692-flexi",  "shelf": "flexi",  "label": "Flexi" },
+    { "url": "https://makerworld.com/en/collections/29900505-fidget", "shelf": "fidget", "label": "Fidget" },
+    { "url": "https://makerworld.com/en/collections/26614634-mine",   "shelf": "auto",   "label": "Mine" },
+    { "url": "https://makerworld.com/en/collections/27816148-statue", "shelf": "statues","label": "Statue" },
+    { "url": "https://makerworld.com/en/collections/29558316-game",   "shelf": "auto",   "label": "Game" },
+    { "url": "https://makerworld.com/en/@Erez.yoch/likes",            "shelf": "auto",   "label": "Likes" }
+  ],
+  "limitPerSource": 60,
+  "fetchModelPages": true
+}

@@ -12,7 +12,9 @@ import Pill from "@/components/ui/Pill";
 import Emblem from "@/components/Emblem";
 import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { fidgetGrams } from "@/lib/products";
-import { estimateCost, parseHours } from "@/lib/costing";
+import { parseHours } from "@/lib/costing";
+import AdminCostPanel from "@/components/AdminCostPanel";
+import AdminUnlock from "@/components/AdminUnlock";
 import { useAdminStore } from "@/lib/admin-store";
 import type { MaterialId } from "@/lib/types";
 
@@ -40,7 +42,6 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const [qty, setQty]             = useState(1);
   const [material, setMaterial] = useState<MaterialId>("pla_plus");
   const adminUnlocked = useAdminStore((s) => s.unlocked);
-  const settings = useAdminStore((s) => s.settings);
   const override = useAdminStore((s) => s.overrides[id]);
   const [variantId, setVariantId] = useState(f?.variants?.[0]?.id);
   const [added, setAdded]         = useState(false);
@@ -82,7 +83,6 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
   const weightG       = override?.grams ?? fidgetGrams(f);
   const hours         = override?.hours ?? parseHours(displayTime);
-  const cost          = estimateCost({ grams: weightG, hours, material, colors: displayColors, qty, price: unitPrice }, settings);
 
   // ── handlers ─────────────────────────────────────────────────────────────
   const handleAddToCart = () => {
@@ -489,38 +489,20 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 </div>
               )}
             </div>
-            {adminUnlocked ? (
-              <Pill tone="neutral" className="text-[10px] font-mono">ADMIN</Pill>
-            ) : (
-              <Link href="/admin" className="text-[10px] font-mono text-ink-600 hover:text-ink-400">admin</Link>
-            )}
+            <AdminUnlock />
           </div>
 
           {/* ── Admin cost panel ────────────────────────────────────────── */}
           {adminUnlocked && (
-            <div className="p-3.5 rounded-xl border border-amber-500/25 bg-amber-500/5 font-mono text-xs space-y-2">
-              <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px] tracking-wider mb-1">
-                <Icon name="settings" size={11} />
-                עלות ייצור (ליחידה)
-              </div>
-              <AdminRow label={`חומר ${mat.short} · ${cost.gramsUsed}g${displayColors > 1 ? ` (AMS ${displayColors}C)` : ""}`} value={fmtILS(Math.round(cost.materialCost * 10) / 10)} />
-              <AdminRow label={`מכונה · ${hours}h`} value={fmtILS(Math.round(cost.machineCost * 10) / 10)} muted />
-              <AdminRow label="חשמל" value={fmtILS(Math.round(cost.electricityCost * 100) / 100)} muted />
-              <AdminRow label="עבודה" value={fmtILS(cost.laborCost)} muted />
-              <div className="border-t border-amber-500/20 pt-2 space-y-1.5">
-                <AdminRow label="עלות ליחידה" value={fmtILS(Math.round(cost.unitCost * 10) / 10)} />
-                <AdminRow label="מחיר מכירה" value={fmtILS(unitPrice)} highlight />
-                <div className="flex justify-between font-bold">
-                  <span className="text-amber-400">רווח גולמי</span>
-                  <span className={cn(
-                    "text-base",
-                    (cost.margin ?? 0) >= 0.6 ? "text-emerald-400" : (cost.margin ?? 0) >= 0.4 ? "text-amber-300" : "text-red-400",
-                  )}>
-                    {((cost.margin ?? 0) * 100).toFixed(0)}% · {fmtILS(Math.round(cost.profit ?? 0))}
-                  </span>
-                </div>
-              </div>
-            </div>
+            <AdminCostPanel
+              itemId={id}
+              grams={weightG}
+              hours={hours}
+              material={material}
+              colors={displayColors}
+              qty={qty}
+              price={unitPrice}
+            />
           )}
 
           {/* ── CTA ─────────────────────────────────────────────────────── */}
@@ -596,15 +578,3 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   );
 }
 
-function AdminRow({
-  label, value, muted, highlight,
-}: {
-  label: string; value: string; muted?: boolean; highlight?: boolean;
-}) {
-  return (
-    <div className="flex justify-between">
-      <span className={muted ? "text-ink-500" : "text-ink-400"}>{label}</span>
-      <span className={highlight ? "text-flame font-bold" : muted ? "text-ink-400" : "text-ink-200"}>{value}</span>
-    </div>
-  );
-}

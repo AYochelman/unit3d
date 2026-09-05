@@ -1,7 +1,9 @@
+import Link from "next/link";
 import SectionHead from "@/components/ui/SectionHead";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import Btn from "@/components/ui/Btn";
+import ProductArt from "@/components/ProductArt";
 import { REVIEWS } from "@/lib/data";
 import type { Review, ReviewSeg } from "@/lib/types";
 
@@ -19,31 +21,85 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
   b2b: "cyan",
 };
 
-function ReviewCard({ r }: { r: Review }) {
+const AVG = (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1);
+
+function Stars({ n }: { n: number }) {
   return (
-    <article className="w-[320px] shrink-0 p-5 rounded-2xl bg-ink-900 border border-ink-800 hover:border-ink-700 transition-colors flex flex-col" dir="rtl">
-      <div className="flex items-center justify-between mb-3">
-        <Pill tone={SEG_TONE[r.seg]}>{SEG_LABEL[r.seg]}</Pill>
-        <div className="flex gap-0.5 text-flame">
-          {Array.from({ length: r.stars }).map((_, i) => (
-            <Icon key={i} name="star" size={14} className="fill-current" />
-          ))}
+    <span className="inline-flex gap-0.5" aria-label={`${n} מתוך 5`}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Icon
+          key={i}
+          name="star"
+          size={13}
+          className={i < n ? "fill-current text-flame" : "text-ink-700"}
+        />
+      ))}
+    </span>
+  );
+}
+
+/**
+ * One review card: a picture of what they ordered, the rating, the comment,
+ * and who wrote it. The picture is the product illustration for the item they
+ * bought — the same drawing the shop uses on that product's own card.
+ */
+function ReviewCard({ r }: { r: Review }) {
+  const Body = (
+    <>
+      <div
+        className="relative h-28 flex items-center justify-center shrink-0"
+        style={{
+          background: `radial-gradient(circle at 50% 40%, hsla(${r.hue ?? 145}, 70%, 50%, 0.20), transparent 62%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
+        }}
+      >
+        <ProductArt art={r.art ?? "keychain"} hue={r.hue ?? 145} size={92} />
+        <span className="absolute top-2 right-2">
+          <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>
+        </span>
+        <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border backdrop-blur bg-good/15 text-good border-good/40">
+          <Icon name="check" size={9} strokeWidth={3} />
+          רכישה מאומתת
+        </span>
+      </div>
+
+      <div className="p-4 flex flex-col flex-1">
+        <div className="flex items-center gap-2 mb-2">
+          <Stars n={r.stars} />
+          <span className="font-mono text-xs text-ink-300" dir="ltr">{r.stars.toFixed(1)}</span>
+          {r.when && <span className="text-[10px] text-ink-500 mr-auto">{r.when}</span>}
+        </div>
+
+        {r.item && (
+          <div className="text-[11px] text-ink-400 mb-1.5 truncate">
+            הזמין: <span className="text-ink-200">{r.item}</span>
+          </div>
+        )}
+
+        <p className="text-ink-200 text-sm leading-relaxed line-clamp-4 flex-1">{r.txt}</p>
+
+        <div className="mt-4 pt-3 border-t border-ink-800 flex items-center gap-3">
+          <div
+            className="h-9 w-9 rounded-full text-ink-50 font-bold inline-flex items-center justify-center text-sm shrink-0"
+            style={{ background: `linear-gradient(135deg, hsl(${r.hue ?? 145}, 60%, 26%), hsl(${r.hue ?? 145}, 65%, 42%))` }}
+          >
+            {r.name.charAt(0)}
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold truncate">{r.name}</div>
+            <div className="text-[11px] text-ink-400 truncate">{r.tag}</div>
+          </div>
         </div>
       </div>
-      <p className="text-ink-200 text-sm leading-relaxed line-clamp-4 flex-1">{r.txt}</p>
-      <div className="mt-4 pt-4 border-t border-ink-800 flex items-center gap-3">
-        <div
-          className="h-9 w-9 rounded-full text-ink-50 font-bold inline-flex items-center justify-center text-sm"
-          style={{ background: "linear-gradient(135deg, #055A2D, #089a47)" }}
-        >
-          {r.name.charAt(0)}
-        </div>
-        <div className="min-w-0">
-          <div className="text-sm font-semibold truncate">{r.name}</div>
-          <div className="text-[11px] text-ink-400 truncate">{r.tag}</div>
-        </div>
-      </div>
-    </article>
+    </>
+  );
+
+  const cls =
+    "w-[300px] shrink-0 rounded-2xl bg-ink-900 border border-ink-800 hover:border-ink-700 transition-colors flex flex-col overflow-hidden";
+
+  return r.href ? (
+    <Link href={r.href} className={cls} dir="rtl">{Body}</Link>
+  ) : (
+    <article className={cls} dir="rtl">{Body}</article>
   );
 }
 
@@ -65,19 +121,29 @@ function Track({ items, reverse }: { items: Review[]; reverse?: boolean }) {
  * seamless loop. Motion is disabled under prefers-reduced-motion (globals.css).
  */
 export default function ReviewsRow() {
+  const half = Math.ceil(REVIEWS.length / 2);
   return (
     <section className="py-20 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
-          <SectionHead eyebrow="REVIEWS · 4.9 / 5.0" title="לקוחות אמיתיים. הזמנות אמיתיות." />
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <SectionHead eyebrow={`REVIEWS · ${AVG} / 5.0`} title="לקוחות אמיתיים. הזמנות אמיתיות." />
           <Btn as="a" href="/reviews" variant="ghost" iconRight="arrowLeft">
             כל הביקורות
           </Btn>
         </div>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 text-sm">
+          <span className="inline-flex items-center gap-2">
+            <Stars n={5} />
+            <span className="font-mono text-ink-200" dir="ltr">{AVG}</span>
+            <span className="text-ink-400">ממוצע מתוך {REVIEWS.length} ביקורות</span>
+          </span>
+          <span className="text-ink-500">·</span>
+          <span className="text-ink-400">כל הביקורות מלקוחות שקיבלו הזמנה בפועל</span>
+        </div>
       </div>
       <div className="relative space-y-4">
-        <Track items={REVIEWS.slice(0, 5)} />
-        <Track items={REVIEWS.slice(5)} reverse />
+        <Track items={REVIEWS.slice(0, half)} />
+        <Track items={REVIEWS.slice(half)} reverse />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-ink-950 to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-ink-950 to-transparent" />
       </div>

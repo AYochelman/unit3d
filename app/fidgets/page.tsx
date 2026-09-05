@@ -1,9 +1,9 @@
 import FidgetsClient from "./FidgetsClient";
 
 export const metadata = {
-  title: "פידג'טים · Unit 3D",
+  title: "פידג'טים ופלקסי · Unit 3D",
   description:
-    "Articulated dragons, spinners, infinity cubes, cubes ו-fidgets שולחניים. הדפסה אחת, ללא הרכבה.",
+    "שני מדפים: פלקסי - דרקונים, נחשים ותמנונים מפרקיים שיוצאים מהמדפסת כשהם כבר זזים. ופידג'טים - ספינרים, קוביות אינסוף וסליידרים. הדפסה אחת, בלי הרכבה.",
 };
 
 export default function FidgetsPage() {

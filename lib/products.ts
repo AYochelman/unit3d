@@ -1,4 +1,5 @@
-import type { ConfigProduct, Product, Size } from "./types";
+import type { ConfigProduct, Product, ProductCategory, Size } from "./types";
+import { importedProducts } from "./imported";
 
 // ─── Pet tags (תגים לחיות) ────────────────────────────────────────────────────
 const PET_ENGRAVING = {
@@ -198,7 +199,93 @@ export const OFFICE_PRODUCTS: Product[] = [
   },
 ];
 
-export const PRODUCTS: Product[] = [...PET_PRODUCTS, ...OFFICE_PRODUCTS];
+
+// ─── Statues & display pieces (פסלים) ────────────────────────────────────────
+// Display prints: bigger, slower, heavier than the everyday shelf. Priced on
+// print hours rather than on the little bit of filament they use.
+export const STATUE_PRODUCTS: Product[] = [
+  {
+    id: "st-bust",
+    category: "statues",
+    name: "בוסט דיוקן",
+    desc: "בוסט 150mm על בסיס. מתמונה שלך או מקובץ מוכן. גימור מאט שמסתיר שכבות.",
+    price: 320, size: "150mm", time: "11h", hours: 11, grams: 190,
+    art: "bust", hue: 35, tag: "עבודת יד", material: "pla_matte", colors: 1,
+    options: { label: "גובה", items: [{ id: "h120", label: "120mm", priceAdd: 0 }, { id: "h150", label: "150mm", priceAdd: 60 }, { id: "h200", label: "200mm", priceAdd: 150 }] },
+  },
+  {
+    id: "st-dragon",
+    category: "statues",
+    name: "פסל דרקון",
+    desc: "דרקון שוכב על בסיס סלע, 220mm. הפסל שהכי מבקשים למדף גיימינג.",
+    price: 280, size: "220×130mm", time: "14h", hours: 14, grams: 215,
+    art: "dragonstatue", hue: 145, tag: "נמכר ביותר", material: "pla_matte", ams: true, colors: 2,
+  },
+  {
+    id: "st-lowpoly",
+    category: "statues",
+    name: "חיה בלואו-פולי",
+    desc: "צבי, זאב או ינשוף בסגנון מצולעים. חד, מודרני, מדהים ב-PLA משי.",
+    price: 150, size: "140mm", time: "6h", hours: 6, grams: 95,
+    art: "lowpoly", hue: 190, material: "pla_silk", colors: 1,
+    options: { label: "דגם", items: [{ id: "deer", label: "צבי", priceAdd: 0 }, { id: "wolf", label: "זאב", priceAdd: 0 }, { id: "owl", label: "ינשוף", priceAdd: 0 }, { id: "lion", label: "אריה", priceAdd: 15 }] },
+  },
+  {
+    id: "st-chess",
+    category: "statues",
+    name: "סט שחמט מודפס",
+    desc: "32 כלים בשני צבעים, מלך 75mm. בלי לוח. הכלים מגיעים משוקללים בבסיס.",
+    price: 420, size: "מלך 75mm", time: "22h", hours: 22, grams: 340,
+    art: "chess", hue: 260, material: "pla_plus", ams: true, colors: 2, isNew: true,
+  },
+  {
+    id: "st-trophy",
+    category: "statues",
+    name: "גביע / פרס מותאם",
+    desc: "פרס לתחרות, לטורניר או ל\"עובד החודש\". שם ותאריך חרוטים בבסיס.",
+    price: 190, size: "180mm", time: "8h", hours: 8, grams: 130,
+    art: "trophy", hue: 45, material: "pla_silk", ams: true, colors: 2,
+    engraving: { label: "טקסט על הבסיס", placeholder: "אלוף 2026", max: 22, second: { label: "שורה שנייה", placeholder: "מועדון הכדורסל", max: 22 } },
+  },
+  {
+    id: "st-vase",
+    category: "statues",
+    name: "אגרטל ספירלה",
+    desc: "הדפסת vase-mode בקיר אחד: קווים רציפים, אור עובר דרכם. אטום למים עם ליינר.",
+    price: 110, size: "Ø120×220mm", time: "5h", hours: 5, grams: 105,
+    art: "vase", hue: 165, material: "pla_silk", colors: 1,
+    options: { label: "גובה", items: [{ id: "v160", label: "160mm", priceAdd: 0 }, { id: "v220", label: "220mm", priceAdd: 30 }, { id: "v280", label: "280mm", priceAdd: 70 }] },
+  },
+  {
+    id: "st-moon",
+    category: "statues",
+    name: "מנורת ירח",
+    desc: "כדור ירח 150mm עם מכתשים אמיתיים מנתוני נאס\"א, מואר מבפנים. בסיס עץ כלול.",
+    price: 175, size: "Ø150mm", time: "9h", hours: 9, grams: 120,
+    art: "moon", hue: 50, tag: "מתנה", material: "pla", colors: 1,
+  },
+  {
+    id: "st-torso",
+    category: "statues",
+    name: "פסל קלאסי",
+    desc: "טורסו בהשראת פיסול יווני, 200mm. מאט לבן או שיש. לחדר עבודה ולסטודיו.",
+    price: 230, size: "200mm", time: "12h", hours: 12, grams: 175,
+    art: "torso", hue: 210, material: "pla_matte", colors: 1,
+  },
+];
+
+// The hand-written catalogue plus anything pulled in by the MakerWorld import
+// (empty until `npm run import:makerworld` has run).
+export const PRODUCTS: Product[] = [
+  ...PET_PRODUCTS,
+  ...OFFICE_PRODUCTS,
+  ...STATUE_PRODUCTS,
+  ...importedProducts(),
+];
+
+/** Every product on one shelf, curated and imported alike. */
+export const productsByCategory = (...cats: ProductCategory[]): Product[] =>
+  PRODUCTS.filter((p) => cats.includes(p.category));
 export const PRODUCT_BY_ID: Record<string, Product> = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
 
 export const CATEGORY_LABEL: Record<Product["category"], string> = {
@@ -206,6 +293,7 @@ export const CATEGORY_LABEL: Record<Product["category"], string> = {
   office: "למשרד",
   home: "לבית",
   trendy: "טרנדי",
+  statues: "פסלים",
 };
 
 // ─── Listing stats for products (demo counters until there is a backend) ─────
@@ -228,6 +316,14 @@ const PRODUCT_STATS: Record<string, { rating: number; orders: number; colors?: n
   "off-card-holder": { rating: 4.7, orders: 73, colors: 2 },
   "home-planter": { rating: 4.8, orders: 119 },
   "home-bag-clips": { rating: 4.4, orders: 264 },
+  "st-bust": { rating: 5.0, orders: 41 },
+  "st-dragon": { rating: 4.9, orders: 128, colors: 2 },
+  "st-lowpoly": { rating: 4.8, orders: 96 },
+  "st-chess": { rating: 4.9, orders: 34, colors: 2, isNew: true },
+  "st-trophy": { rating: 4.8, orders: 67, colors: 2 },
+  "st-vase": { rating: 4.7, orders: 152 },
+  "st-moon": { rating: 4.9, orders: 205 },
+  "st-torso": { rating: 4.7, orders: 58 },
   "off-bookmark": { rating: 4.6, orders: 95, colors: 2 },
   "home-door-sign": { rating: 4.9, orders: 61, colors: 2, isNew: true },
   "off-organizer": { rating: 4.7, orders: 108 },

@@ -5,12 +5,12 @@ import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import ProductToolbar from "@/components/ProductToolbar";
-import { PET_PRODUCTS } from "@/lib/products";
+import { productsByCategory } from "@/lib/products";
 import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 
 export default function PetsClient() {
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
-  const all = useMemo(() => PET_PRODUCTS.map(productToCard), []);
+  const all = useMemo(() => productsByCategory("pets").map(productToCard), []);
   const items = useMemo(() => applyListing(all, state), [all, state]);
 
   return (

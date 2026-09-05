@@ -8,7 +8,8 @@ import { Field, Input } from "@/components/ui/Field";
 import { FILAMENTS } from "@/lib/data";
 import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
-import { estimateCost } from "@/lib/costing";
+import AdminCostPanel from "@/components/AdminCostPanel";
+import AdminUnlock from "@/components/AdminUnlock";
 import { useAdminStore } from "@/lib/admin-store";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
@@ -26,7 +27,6 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const addItem = useOrderStore((s) => s.addItem);
   const cartCount = useOrderStore((s) => s.items.length);
   const adminUnlocked = useAdminStore((s) => s.unlocked);
-  const settings = useAdminStore((s) => s.settings);
   const override = useAdminStore((s) => s.overrides[id]);
 
   const [colorId, setColorId] = useState(FILAMENTS[2].id);
@@ -61,9 +61,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
 
   const grams = override?.grams ?? p.grams;
   const hours = override?.hours ?? p.hours;
-  const cost = estimateCost({ grams, hours, material, colors: amsOn ? amsColors : 1, qty, price: unitPrice }, settings);
 
-  const backHref = p.category === "pets" ? "/pets" : "/home-office";
+  const backHref = p.category === "pets" ? "/pets" : p.category === "statues" ? "/statues" : "/home-office";
   const source = p.category === "pets" ? "pets" : "office";
 
   const handleAdd = () => {
@@ -273,34 +272,19 @@ export default function ProductDetailClient({ id }: { id: string }) {
               <div className="text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
               {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(unitPrice)} ליחידה</div>}
             </div>
-            {adminUnlocked ? (
-              <Pill tone="neutral" className="text-[10px] font-mono">ADMIN</Pill>
-            ) : (
-              <Link href="/admin" className="text-[10px] font-mono text-ink-600 hover:text-ink-400">admin</Link>
-            )}
+            <AdminUnlock />
           </div>
 
           {adminUnlocked && (
-            <div className="p-3.5 rounded-xl border border-amber-500/25 bg-amber-500/5 font-mono text-xs space-y-1.5">
-              <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px] tracking-wider mb-1">
-                <Icon name="settings" size={11} />
-                עלות ייצור (ליחידה)
-              </div>
-              <Row label={`חומר ${mat.short} · ${cost.gramsUsed}g`} value={fmtILS(Math.round(cost.materialCost * 10) / 10)} />
-              <Row label={`מכונה · ${hours}h`} value={fmtILS(Math.round(cost.machineCost * 10) / 10)} />
-              <Row label="חשמל" value={fmtILS(Math.round(cost.electricityCost * 100) / 100)} />
-              <Row label="עבודה" value={fmtILS(cost.laborCost)} />
-              <div className="border-t border-amber-500/20 pt-1.5 flex justify-between font-bold">
-                <span className="text-amber-400">עלות ליחידה</span>
-                <span>{fmtILS(Math.round(cost.unitCost * 10) / 10)}</span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span className="text-amber-400">רווח גולמי</span>
-                <span className={cn(cost.margin! >= 0.6 ? "text-emerald-400" : cost.margin! >= 0.4 ? "text-amber-300" : "text-red-400")}>
-                  {(cost.margin! * 100).toFixed(0)}% · {fmtILS(Math.round(cost.profit!))}
-                </span>
-              </div>
-            </div>
+            <AdminCostPanel
+              itemId={id}
+              grams={grams}
+              hours={hours}
+              material={material}
+              colors={amsOn ? amsColors : 1}
+              qty={qty}
+              price={unitPrice}
+            />
           )}
 
           <button
@@ -322,11 +306,3 @@ export default function ProductDetailClient({ id }: { id: string }) {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between">
-      <span className="text-ink-400">{label}</span>
-      <span className="text-ink-200">{value}</span>
-    </div>
-  );
-}
