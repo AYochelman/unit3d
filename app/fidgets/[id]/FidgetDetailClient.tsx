@@ -12,7 +12,7 @@ import Pill from "@/components/ui/Pill";
 import Emblem from "@/components/Emblem";
 import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { fidgetGrams } from "@/lib/products";
-import { parseHours } from "@/lib/costing";
+import { estimateCost, parseHours } from "@/lib/costing";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
 import ShippingEstimate from "@/components/ShippingEstimate";
@@ -49,6 +49,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const [material, setMaterial] = useState<MaterialId>("pla_plus");
   const adminUnlocked = useAdminStore((s) => s.unlocked);
   const stock = useAdminStore((s) => s.stock);
+  const settings = useAdminStore((s) => s.settings);
   const override = useAdminStore((s) => s.overrides[id]);
   const [variantId, setVariantId] = useState(f?.variants?.[0]?.id);
   const [added, setAdded]         = useState(false);
@@ -77,7 +78,17 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
   // ── derived state ─────────────────────────────────────────────────────────
   const variant       = f.variants && variantId ? f.variants.find((v) => v.id === variantId) : undefined;
-  const amsSurcharge  = amsOn ? (AMS_OPTIONS.find((o) => o.colors === amsColors)?.surcharge ?? 0) : 0;
+  // Same as the product page: the AMS plate is a different print, so its
+  // surcharge is the difference in what the two plates are worth under the
+  // admin cost model, never a flat number.
+  const amsExtra = (colors: number): number => {
+    const flat = AMS_OPTIONS.find((o) => o.colors === colors)?.surcharge ?? 0;
+    if (!f?.hoursAms || !f?.gramsAms) return flat;
+    const one = estimateCost({ grams: fidgetGrams(f), hours: parseHours(f.time), material, colors: 1 }, settings).recommendedPrice;
+    const many = estimateCost({ grams: f.gramsAms, hours: f.hoursAms, material, colors }, settings).recommendedPrice;
+    return Math.max(flat, Math.ceil((many - one) / 5) * 5);
+  };
+  const amsSurcharge  = amsOn ? amsExtra(amsColors) : 0;
   const mat           = MATERIAL_BY_ID[material];
   // Fidget list prices assume PLA+, so only the delta above it is a surcharge.
   const baseMatAdd    = MATERIAL_BY_ID.pla_plus.priceAdd;
@@ -438,16 +449,16 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 role="switch"
                 aria-checked={amsOn}
                 onClick={() => setAmsOn((p) => !p)}
-                dir="ltr"
                 className={cn(
                   "relative h-6 w-11 rounded-full transition-colors flex-shrink-0",
                   amsOn ? "bg-cyan2" : "bg-ink-700",
                 )}
               >
-                <span className={cn(
-                  "absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-md transition-transform",
-                  amsOn ? "translate-x-[23px]" : "translate-x-[3px]",
-                )} />
+                {/* Travels along the reading direction, so "on" is left in Hebrew. */}
+                <span
+                  className="absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-md transition-[inset-inline-start] duration-200"
+                  style={{ insetInlineStart: amsOn ? 23 : 3 }}
+                />
               </button>
             </div>
             {amsOn && (

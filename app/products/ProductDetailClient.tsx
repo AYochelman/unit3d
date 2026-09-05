@@ -16,6 +16,7 @@ import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
+import { estimateCost } from "@/lib/costing";
 import { useLivePrice } from "@/lib/live-price";
 import { designHref, isPersonalizable } from "@/lib/designable";
 import { useOrderStore } from "@/lib/order-store";
@@ -48,6 +49,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [added, setAdded] = useState(false);
   const [askRestock, setAskRestock] = useState(false);
   const stock = useAdminStore((s) => s.stock);
+  const settings = useAdminStore((s) => s.settings);
   // Hooks run before the "not found" bail-out, so this uses safe fallbacks.
   const basePrice = useLivePrice({
     id,
@@ -70,7 +72,18 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const color = FILAMENTS.find((f) => f.id === colorId) ?? FILAMENTS[0];
   const mat = MATERIAL_BY_ID[material];
   const option = p.options?.items.find((o) => o.id === optionId);
-  const amsSurcharge = amsOn ? AMS_OPTIONS.find((o) => o.colors === amsColors)!.surcharge : 0;
+  // A flat +15 / +25 / +35 cannot pay for an AMS plate: Iron Man is 3h23 and
+  // 64g in one colour against 35h47 and 385g in four. The surcharge is the
+  // difference between what the two plates are worth under the admin's own
+  // cost model, so the price follows /admin instead of a guess.
+  const amsExtra = (colors: number): number => {
+    const flat = AMS_OPTIONS.find((o) => o.colors === colors)!.surcharge;
+    if (!p?.hoursAms || !p?.gramsAms) return flat;
+    const one = estimateCost({ grams: p.grams, hours: p.hours, material, colors: 1 }, settings).recommendedPrice;
+    const many = estimateCost({ grams: p.gramsAms, hours: p.hoursAms, material, colors }, settings).recommendedPrice;
+    return Math.max(flat, Math.ceil((many - one) / 5) * 5);
+  };
+  const amsSurcharge = amsOn ? amsExtra(amsColors) : 0;
   // Only the DELTA from the product's own default material is a surcharge —
   // the listed catalogue price already includes that default.
   const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
@@ -310,8 +323,14 @@ export default function ProductDetailClient({ id }: { id: string }) {
                     <div className="text-[11px] text-ink-400 mt-0.5">טקסט או פרט בצבע שני, שלישי ורביעי</div>
                   </div>
                 </div>
-                <button type="button" role="switch" aria-checked={amsOn} onClick={() => setAmsOn((v) => !v)} dir="ltr" className={cn("relative h-6 w-11 rounded-full transition-colors flex-shrink-0", amsOn ? "bg-cyan2" : "bg-ink-700")}>
-                  <span className={cn("absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-md transition-transform", amsOn ? "translate-x-[23px]" : "translate-x-[3px]")} />
+                {/* dir="ltr" + translate-x pushed the knob right on an RTL page,
+                    so "on" travelled backwards. Inset-inline moves it along the
+                    reading direction: right→left here, left→right in English. */}
+                <button type="button" role="switch" aria-checked={amsOn} onClick={() => setAmsOn((v) => !v)} className={cn("relative h-6 w-11 rounded-full transition-colors flex-shrink-0", amsOn ? "bg-cyan2" : "bg-ink-700")}>
+                  <span
+                    className="absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-md transition-[inset-inline-start] duration-200"
+                    style={{ insetInlineStart: amsOn ? 23 : 3 }}
+                  />
                 </button>
               </div>
               {amsOn && (
@@ -319,7 +338,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   {AMS_OPTIONS.map((o) => (
                     <button key={o.colors} type="button" onClick={() => setAmsColors(o.colors)} className={cn("py-2.5 rounded-xl text-xs font-semibold border transition-all", amsColors === o.colors ? "bg-cyan2/20 border-cyan2 text-cyan2" : "border-ink-700 text-ink-400 hover:border-ink-500")}>
                       {o.label}
-                      <div className="font-mono text-[10px] mt-0.5 opacity-80">+{fmtILS(o.surcharge)}</div>
+                      <div className="font-mono text-[10px] mt-0.5 opacity-80">+{fmtILS(amsExtra(o.colors))}</div>
                     </button>
                   ))}
                 </div>
