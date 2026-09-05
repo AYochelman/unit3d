@@ -57,3 +57,5 @@ next-env.d.ts
 /c-*.png
 /d-*.png
 /shot-*.png
+/p-*.png
+/n-*.png
