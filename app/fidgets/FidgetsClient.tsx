@@ -13,6 +13,9 @@ import { applyListing, DEFAULT_LISTING, fmtOrders, type ListingState } from "@/l
 import { fidgetKind, FIDGET_KIND_TABS, FIDGET_KIND_LABEL, type FidgetKindFilter } from "@/lib/fidget-kind";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
+import { useLivePrice } from "@/lib/live-price";
+import { fidgetGrams } from "@/lib/products";
+import { parseHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { Fidget, FidgetSource } from "@/lib/types";
 
@@ -42,7 +45,8 @@ function FidgetCard({
       : undefined;
 
   const displayThumb = variant?.thumbnail ?? f.thumbnail;
-  const displayPrice = f.price + (variant?.surcharge ?? 0);
+  const basePrice = useLivePrice({ id: f.id, price: f.price, grams: fidgetGrams(f), hours: parseHours(f.time) });
+  const displayPrice = basePrice + (variant?.surcharge ?? 0);
   const displayTime = variant?.time ?? f.time;
   const displayColors = variant?.colors ?? 1;
   const showImage = displayThumb && !imgFailed;
@@ -216,7 +220,7 @@ function FidgetCard({
             </span>
             {variant && variant.surcharge > 0 && (
               <span className="font-mono text-[10px] text-ink-500 line-through" dir="ltr">
-                {fmtILS(f.price)}
+                {fmtILS(basePrice)}
               </span>
             )}
           </div>

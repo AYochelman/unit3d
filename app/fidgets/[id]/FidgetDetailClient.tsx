@@ -16,8 +16,12 @@ import { parseHours } from "@/lib/costing";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
 import ShippingEstimate from "@/components/ShippingEstimate";
+import RestockModal from "@/components/RestockModal";
+import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
+import { useLivePrice } from "@/lib/live-price";
+import { designHrefForItem } from "@/lib/designable";
 import type { MaterialId } from "@/lib/types";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
@@ -44,9 +48,21 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const [qty, setQty]             = useState(1);
   const [material, setMaterial] = useState<MaterialId>("pla_plus");
   const adminUnlocked = useAdminStore((s) => s.unlocked);
+  const stock = useAdminStore((s) => s.stock);
   const override = useAdminStore((s) => s.overrides[id]);
   const [variantId, setVariantId] = useState(f?.variants?.[0]?.id);
   const [added, setAdded]         = useState(false);
+  const [askRestock, setAskRestock] = useState(false);
+
+  // Hooks must run before the "not found" bail-out below, so the price is
+  // resolved here with safe fallbacks rather than next to the other derived state.
+  const basePrice = useLivePrice({
+    id,
+    price: f?.price ?? 0,
+    grams: f ? fidgetGrams(f) : 0,
+    hours: f ? parseHours(f.time) : 0,
+    material,
+  });
 
   if (!f) {
     return (
@@ -66,7 +82,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   // Fidget list prices assume PLA+, so only the delta above it is a surcharge.
   const baseMatAdd    = MATERIAL_BY_ID.pla_plus.priceAdd;
   const matSurcharge  = Math.max(0, mat.priceAdd - baseMatAdd);
-  const unitPrice     = (override?.price ?? f.price) + (variant?.surcharge ?? 0) + amsSurcharge + matSurcharge;
+  const unitPrice     = basePrice + (variant?.surcharge ?? 0) + amsSurcharge + matSurcharge;
   const totalPrice    = unitPrice * qty;
   const displayTime   = variant?.time ?? f.time;
   const displayColors = amsOn ? amsColors : variant?.colors ?? 1;
@@ -78,6 +94,9 @@ export default function FidgetDetailClient({ id }: { id: string }) {
     : [];
 
   const selectedFilament = FILAMENTS.find((c) => c.id === colorId);
+  const matInStock   = isMaterialInStock(stock, material);
+  const colorInStock = isColorInStock(stock, material, colorId);
+  const sellable     = matInStock && colorInStock;
   const tintHex          = selectedFilament?.hex ?? "#888";
   // Multiply blend: white/silver/glow look odd — use "color" blend instead
   const blendMode    = LIGHT_FILAMENTS.has(colorId) ? "color" : "multiply";
@@ -365,9 +384,15 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                     colorId === c.id
                       ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]"
                       : "border-ink-700/50",
+                    !isColorInStock(stock, material, c.id) && "opacity-35",
                   )}
                   style={{ backgroundColor: c.hex }}
                 >
+                  {!isColorInStock(stock, material, c.id) && (
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />
+                    </span>
+                  )}
                   {colorId === c.id && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <Icon
@@ -516,28 +541,65 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           )}
 
           {/* ── CTA ─────────────────────────────────────────────────────── */}
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            className={cn(
-              "w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg",
-              added
-                ? "bg-good text-white shadow-good/20"
-                : "bg-flame text-white hover:bg-flame/90 shadow-flame/20",
-            )}
+          {sellable ? (
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className={cn(
+                "w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg",
+                added
+                  ? "bg-good text-white shadow-good/20"
+                  : "bg-flame text-white hover:bg-flame/90 shadow-flame/20",
+              )}
+            >
+              {added ? (
+                <>
+                  <Icon name="check" size={18} strokeWidth={3} />
+                  נוסף לסל!
+                </>
+              ) : (
+                <>
+                  <Icon name="plus" size={18} />
+                  הוסף לסל
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="space-y-2">
+              <div className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 text-sm text-amber-300 flex items-start gap-2">
+                <Icon name="clock" size={15} className="mt-0.5 shrink-0" />
+                <span>
+                  {matInStock
+                    ? `נגמר לי ${selectedFilament?.name ?? ""} ב${mat.name}. אפשר לבחור צבע אחר למעלה.`
+                    : `נגמר לי ה${mat.name}. המוצר אינו זמין כרגע.`}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAskRestock(true)}
+                className="w-full h-12 rounded-xl font-black text-base bg-ink-800 text-ink-100 hover:bg-ink-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <Icon name="clock" size={18} />
+                עדכנו אותי כשחוזר למלאי
+              </button>
+            </div>
+          )}
+
+          <Link
+            href={designHrefForItem(id)}
+            className="w-full h-11 rounded-xl font-bold text-sm border border-ink-700 text-ink-300 hover:border-ink-500 hover:text-ink-100 transition-colors flex items-center justify-center gap-2"
           >
-            {added ? (
-              <>
-                <Icon name="check" size={18} strokeWidth={3} />
-                נוסף לסל!
-              </>
-            ) : (
-              <>
-                <Icon name="plus" size={18} />
-                הוסף לסל
-              </>
-            )}
-          </button>
+            <Icon name="sparkles" size={15} />
+            רוצה עליו טקסט משלך? פתח את המעצב
+          </Link>
+
+          <RestockModal
+            open={askRestock}
+            onClose={() => setAskRestock(false)}
+            itemId={id}
+            itemName={f.name}
+            material={material}
+          />
 
           {cartCount > 0 && (
             <Link

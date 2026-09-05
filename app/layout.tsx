@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWA from "@/components/FloatingWA";
 import HelpBot from "@/components/HelpBot";
+import AdminSettingsBoot from "@/components/AdminSettingsBoot";
 
 const heebo = Heebo({
   subsets: ["latin", "hebrew"],
@@ -64,6 +65,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <AdminSettingsBoot />
         <FloatingWA />
         <HelpBot />
       </body>

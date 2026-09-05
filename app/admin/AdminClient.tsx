@@ -4,8 +4,9 @@ import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/Field";
-import { FIDGETS } from "@/lib/data";
+import { FIDGETS, FILAMENTS } from "@/lib/data";
 import { PRODUCTS, CONFIG_PRODUCTS, fidgetGrams, CATEGORY_LABEL } from "@/lib/products";
+import { DEFAULT_MATERIAL, buyAdvice, colorsInStock, isColorInStock, isMaterialInStock, type Sellable } from "@/lib/inventory";
 import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { estimateCost, parseHours, fmtHours, type CostSettings } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
@@ -14,10 +15,11 @@ import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "products" | "materials" | "params" | "emblems" | "backup";
+type Tab = "products" | "stock" | "materials" | "params" | "emblems" | "backup";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "products", label: "מוצרים" },
+  { id: "stock", label: "מלאי" },
   { id: "materials", label: "גלילים" },
   { id: "params", label: "פרמטרים" },
   { id: "emblems", label: "סמלי יחידות" },
@@ -137,6 +139,7 @@ export default function AdminClient() {
       </div>
 
       {tab === "products" && <ProductsTab />}
+      {tab === "stock" && <StockTab />}
       {tab === "materials" && <MaterialsTab />}
       {tab === "params" && <ParamsTab />}
       {tab === "emblems" && <EmblemsTab />}
@@ -329,10 +332,239 @@ function MaterialsTab() {
   );
 }
 
+// ─── Stock (מלאי) ────────────────────────────────────────────────────────────
+// What is actually on the shelf, per material family and colour. Everything is
+// in stock until it is switched off here — that way a fresh session (and a new
+// colour added later) starts as a fully stocked shop rather than an empty one.
+
+/** Every sellable thing, so we can say what an empty spool blocks. */
+function sellableItems(): Sellable[] {
+  return [
+    ...PRODUCTS.map((p) => ({ id: p.id, name: p.name, material: p.material ?? DEFAULT_MATERIAL })),
+    ...FIDGETS.map((f) => ({ id: f.id, name: f.name, material: DEFAULT_MATERIAL as MaterialId })),
+    ...CONFIG_PRODUCTS.map((c) => ({ id: `cfg-${c.id}`, name: c.label, material: c.material })),
+  ];
+}
+
+function StockTab() {
+  const stock = useAdminStore((s) => s.stock);
+  const setStock = useAdminStore((s) => s.setStock);
+  const setMaterialStock = useAdminStore((s) => s.setMaterialStock);
+  const interest = useAdminStore((s) => s.interest);
+  const clearInterest = useAdminStore((s) => s.clearInterest);
+  const settings = useAdminStore((s) => s.settings);
+
+  const items = useMemo(() => sellableItems(), []);
+  const advice = useMemo(
+    () => buyAdvice(stock, interest, items, settings.spoolPrices),
+    [stock, interest, items, settings.spoolPrices],
+  );
+  const allColorIds = useMemo(() => FILAMENTS.map((f) => f.id), []);
+
+  const blockedCount = items.filter((i) => !isMaterialInStock(stock, i.material ?? DEFAULT_MATERIAL)).length;
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <p className="text-sm text-ink-400 mb-1">
+          לחיצה על עיגול צבע מסמנת שהוא נגמר. מוצר שהחומר שלו נגמר לגמרי הופך אפור באתר, נכתב עליו
+          &quot;המוצר אינו זמין כרגע&quot;, ולקוח שילחץ עליו יכול להשאיר מייל.
+        </p>
+        <p className="text-xs text-ink-500">
+          כרגע {blockedCount === 0 ? "אין מוצרים חסומים" : `${blockedCount} מוצרים חסומים`} מתוך {items.length}.
+        </p>
+      </div>
+
+      {/* ── material × colour grid ─────────────────────────────────────── */}
+      <div className="rounded-2xl border border-ink-800 divide-y divide-ink-800">
+        {MATERIALS.map((m) => {
+          const live = colorsInStock(stock, m.id);
+          const out = allColorIds.length - live.length;
+          const blocked = items.filter((i) => (i.material ?? DEFAULT_MATERIAL) === m.id).length;
+          return (
+            <div key={m.id} className="p-4">
+              <div className="flex flex-wrap items-center gap-3 mb-3">
+                <span className="font-mono font-bold text-ink-100 min-w-[80px]" dir="ltr">{m.short}</span>
+                <span className="text-sm font-semibold">{m.name}</span>
+                {live.length === 0 ? (
+                  <Pill tone="flame" className="text-[10px]">נגמר · חוסם {blocked} מוצרים</Pill>
+                ) : out > 0 ? (
+                  <Pill tone="neutral" className="text-[10px]">{out} צבעים חסרים</Pill>
+                ) : (
+                  <Pill tone="cyan" className="text-[10px]">מלא</Pill>
+                )}
+                <span className="flex-1" />
+                <button
+                  type="button"
+                  onClick={() => setMaterialStock(m.id, allColorIds, true)}
+                  className="px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-ink-700 text-ink-300 hover:border-ink-500"
+                >
+                  הכל יש
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMaterialStock(m.id, allColorIds, false)}
+                  className="px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-ink-700 text-ink-300 hover:border-flame hover:text-flame"
+                >
+                  הכל נגמר
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {FILAMENTS.map((c) => {
+                  const have = isColorInStock(stock, m.id, c.id);
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      title={`${c.name} · ${have ? "במלאי" : "נגמר"}`}
+                      aria-label={`${m.short} ${c.name}`}
+                      aria-pressed={have}
+                      onClick={() => setStock(m.id, c.id, !have)}
+                      className={cn(
+                        "h-9 w-9 rounded-full border-2 relative transition-all hover:scale-110 active:scale-95",
+                        have ? "border-good/70" : "border-ink-800 opacity-35",
+                      )}
+                      style={{ backgroundColor: c.hex }}
+                    >
+                      {!have && (
+                        <span className="absolute inset-0 flex items-center justify-center">
+                          <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── what to buy next ───────────────────────────────────────────── */}
+      <div>
+        <h2 className="text-lg font-black mb-1">מה כדאי לקנות עכשיו</h2>
+        <p className="text-xs text-ink-500 mb-3">
+          מדורג לפי כמה אנשים מחכים לחומר וכמה מוצרים הוא פותח. לקוח שהשאיר מייל שווה יותר ממוצר
+          שאף אחד לא ביקש.
+        </p>
+        {advice.length === 0 ? (
+          <div className="p-4 rounded-2xl border border-ink-800 text-sm text-ink-400">
+            הכל במלאי. אין מה לקנות כרגע.
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {advice.map((a, i) => (
+              <div
+                key={a.material}
+                className={cn(
+                  "p-4 rounded-2xl border",
+                  i === 0 ? "border-flame/50 bg-flame/5" : "border-ink-800 bg-ink-900/40",
+                )}
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  {i === 0 && <Pill tone="flame" className="text-[10px]">קודם כל</Pill>}
+                  <span className="font-bold">{a.materialName}</span>
+                  <span className="font-mono text-xs text-ink-500" dir="ltr">
+                    {MATERIAL_BY_ID[a.material].short}
+                  </span>
+                </div>
+                <p className="text-sm text-ink-300">
+                  {a.waiting > 0
+                    ? `${a.waiting} ${a.waiting === 1 ? "לקוח מחכה" : "לקוחות מחכים"} · חוסם ${a.blocked} מוצרים`
+                    : `אף אחד עוד לא ביקש, אבל זה חוסם ${a.blocked} מוצרים`}
+                </p>
+                {a.colors.length > 0 && (
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                    <span className="text-[11px] text-ink-500">הכי מבוקש:</span>
+                    {a.colors.slice(0, 4).map((c) => (
+                      <span
+                        key={c.id}
+                        title={`${c.name} · ${c.count}`}
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full border border-ink-700 text-[10px]"
+                      >
+                        <span className="h-3 w-3 rounded-full border border-ink-700" style={{ backgroundColor: c.hex }} />
+                        {c.name} ×{c.count}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="mt-2 font-mono text-xs text-ink-400" dir="ltr">
+                  ~{fmtILS(a.spoolPrice)} / 1kg
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── waiting list ───────────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-end justify-between gap-3 mb-3">
+          <div>
+            <h2 className="text-lg font-black mb-1">מי מחכה ({interest.length})</h2>
+            <p className="text-xs text-ink-500">
+              לקוחות שהשאירו מייל על מוצר שנגמר. הרשימה נשמרת לסשן — ייצוא בלשונית &quot;גיבוי&quot;.
+            </p>
+          </div>
+          {interest.length > 0 && (
+            <Btn variant="ghost" size="sm" icon="x" onClick={clearInterest}>ניקוי</Btn>
+          )}
+        </div>
+        {interest.length === 0 ? (
+          <div className="p-4 rounded-2xl border border-ink-800 text-sm text-ink-400">
+            אף אחד לא ביקש עדכון עדיין.
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-2xl border border-ink-800">
+            <table className="w-full text-xs" dir="rtl">
+              <thead className="bg-ink-900 text-ink-400">
+                <tr>
+                  <th className="text-right p-2 font-semibold">מוצר</th>
+                  <th className="text-right p-2 font-semibold">חומר</th>
+                  <th className="text-right p-2 font-semibold">צבע</th>
+                  <th className="text-right p-2 font-semibold">מייל</th>
+                  <th className="text-right p-2 font-semibold">מתי</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-ink-800">
+                {[...interest].reverse().map((r) => {
+                  const f = FILAMENTS.find((x) => x.id === r.color);
+                  return (
+                    <tr key={r.id}>
+                      <td className="p-2">{r.itemName}</td>
+                      <td className="p-2 font-mono" dir="ltr">{MATERIAL_BY_ID[r.material]?.short ?? r.material}</td>
+                      <td className="p-2">
+                        {f ? (
+                          <span className="inline-flex items-center gap-1.5">
+                            <span className="h-3 w-3 rounded-full border border-ink-700" style={{ backgroundColor: f.hex }} />
+                            {f.name}
+                          </span>
+                        ) : (
+                          <span className="text-ink-600">—</span>
+                        )}
+                      </td>
+                      <td className="p-2 font-mono text-ink-300" dir="ltr">{r.email}</td>
+                      <td className="p-2 font-mono text-ink-500" dir="ltr">
+                        {new Date(r.at).toLocaleDateString("he-IL")}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Parameters ──────────────────────────────────────────────────────────────
 function ParamsTab() {
   const settings = useAdminStore((s) => s.settings);
   const setSetting = useAdminStore((s) => s.setSetting);
+  const pricing = useAdminStore((s) => s.pricing);
+  const setPricing = useAdminStore((s) => s.setPricing);
   const fields: { k: Exclude<keyof CostSettings, "spoolPrices">; label: string; hint: string; step: number; pct?: boolean }[] = [
     { k: "machineRatePerHour", label: "עלות מכונה לשעה (₪)", hint: "פחת מדפסת, תחזוקה, נוזלים. 6 ₪ לשעה = מדפסת של 4,000 ₪ על ~1,300 שעות עבודה בשנה, פלוס תחזוקה.", step: 0.5 },
     { k: "printerWatts", label: "צריכת חשמל בהדפסה (W)", hint: "Bambu X1C ממוצע ~120W ב-PLA, ~180W ב-ABS עם תא סגור.", step: 5 },
@@ -343,6 +575,46 @@ function ParamsTab() {
   ];
   return (
     <div className="max-w-3xl grid gap-3">
+      {/* ── automatic pricing: what the customer actually sees ─────────── */}
+      <div className={cn("p-4 rounded-xl border", pricing.auto ? "border-flame/50 bg-flame/5" : "border-ink-800 bg-ink-900")}>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex-1 min-w-[220px]">
+            <div className="text-sm font-semibold">תמחור אוטומטי לכל האתר</div>
+            <div className="text-xs text-ink-500 leading-relaxed">
+              כשזה דולק, <b>כל מחיר באתר</b> מחושב מחדש לפי העלות והמרווח שלמטה, ולא לפי המחיר שכתוב בקטלוג.
+              מחיר שקבעת ידנית בלשונית &quot;מוצרים&quot; תמיד גובר.
+            </div>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={pricing.auto}
+            onClick={() => setPricing({ auto: !pricing.auto })}
+            className={cn(
+              "h-9 px-4 rounded-lg text-sm font-bold border transition-colors",
+              pricing.auto ? "bg-flame text-white border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
+            )}
+          >
+            {pricing.auto ? "דולק" : "כבוי"}
+          </button>
+        </div>
+        {pricing.auto && (
+          <label className="mt-3 flex items-center gap-2 text-xs text-ink-400">
+            עיגול מחיר כלפי מעלה לכפולה של
+            <input
+              type="number"
+              min={1}
+              step={1}
+              value={pricing.round}
+              onChange={(e) => setPricing({ round: Math.max(1, Number(e.target.value)) })}
+              className="h-8 w-20 px-2 rounded-lg bg-ink-950 border border-ink-800 text-ink-100 font-mono text-center focus:border-flame outline-none"
+              dir="ltr"
+            />
+            ₪
+          </label>
+        )}
+      </div>
+
       {fields.map((f) => (
         <div key={f.k} className="flex flex-wrap items-center gap-3 p-4 rounded-xl border border-ink-800 bg-ink-900">
           <div className="flex-1 min-w-[220px]">
@@ -495,14 +767,60 @@ function BackupTab() {
   const [text, setText] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
 
+  /** The file the site itself reads. Customer e-mails stay out of it. */
+  const siteFile = () => {
+    const parsed = JSON.parse(exportJson()) as Record<string, unknown>;
+    delete parsed.interest;
+    return JSON.stringify(parsed, null, 2);
+  };
+
+  const download = () => {
+    const blob = new Blob([siteFile()], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "admin-settings.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setMsg("הקובץ ירד. עכשיו העתק אותו לתיקייה public שבפרויקט ודחוף ל-GitHub.");
+  };
+
   return (
-    <div className="max-w-3xl grid gap-4">
+    <div className="max-w-3xl grid gap-5">
+      {/* ── save for real ───────────────────────────────────────────────── */}
+      <div className="p-4 rounded-2xl border border-flame/40 bg-flame/5">
+        <h2 className="font-black text-lg mb-1">שמירת ההגדרות באתר</h2>
+        <p className="text-sm text-ink-300 leading-relaxed mb-3">
+          לחיצה על &quot;שמירה&quot; מורידה קובץ בשם <span className="font-mono text-ink-100" dir="ltr">admin-settings.json</span>.
+          שים אותו בתיקייה <span className="font-mono text-ink-100" dir="ltr">public/</span> של הפרויקט ודחוף ל-GitHub —
+          מהרגע הזה <b>כל מי שנכנס לאתר</b> רואה את המחירים, המרווח והמלאי שקבעת כאן, לא רק אתה.
+          המיילים של הלקוחות שמחכים לא נכנסים לקובץ.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Btn variant="primary" size="sm" icon="file" onClick={download}>שמירה · הורדת הקובץ</Btn>
+          <Btn
+            variant="ghost"
+            size="sm"
+            icon="list"
+            onClick={() => {
+              setText(siteFile());
+              setMsg("התוכן למטה — אפשר להעתיק אותו ידנית לקובץ.");
+            }}
+          >
+            העתקה כטקסט
+          </Btn>
+        </div>
+      </div>
+
+      {/* ── session backup ──────────────────────────────────────────────── */}
       <div className="p-4 rounded-xl border border-ink-800 bg-ink-900 text-sm text-ink-300 leading-relaxed">
-        האתר לא שומר נתונים בדפדפן (זו החלטה של הפרויקט). כדי לא לאבד את מחירי הגלילים והעריכות בין סשנים,
-        ייצא אותם לטקסט, שמור בקובץ, וייבא בפעם הבאה. שמירה אמיתית תגיע עם שרת.
+        גיבוי מהיר בין סשנים: האתר לא שומר נתונים בדפדפן (זו החלטה של הפרויקט), אז אפשר לייצא לטקסט,
+        לשמור אותו איפשהו, ולייבא בפעם הבאה. הייצוא כאן <b>כולל</b> את רשימת ההמתנה.
       </div>
       <div className="flex flex-wrap gap-2">
-        <Btn variant="primary" size="sm" icon="file" onClick={() => { setText(exportJson()); setMsg("ההגדרות מוכנות להעתקה למטה."); }}>ייצוא להגדרות</Btn>
+        <Btn variant="ghost" size="sm" icon="file" onClick={() => { setText(exportJson()); setMsg("ההגדרות מוכנות להעתקה למטה."); }}>ייצוא מלא</Btn>
         <Btn variant="ghost" size="sm" icon="check" onClick={() => { const ok = importJson(text); setMsg(ok ? "יובא בהצלחה." : "הטקסט אינו קובץ הגדרות תקין."); }}>ייבוא מהטקסט</Btn>
         <Btn variant="danger" size="sm" icon="rotate" onClick={() => { resetAll(); setText(""); setMsg("אופס לברירות המחדל."); }}>איפוס</Btn>
       </div>

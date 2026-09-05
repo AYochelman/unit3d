@@ -11,5 +11,7 @@ export default function ConfiguratorFromQuery() {
   // Object.hasOwn, not `in`: `in` is also true for inherited keys like
   // "constructor" and "__proto__", which would pass a non-product through.
   const product = (Object.hasOwn(CONFIG_PRODUCT_BY_ID, raw) ? raw : undefined) as ConfigProductId | undefined;
-  return <ConfiguratorClient key={product ?? "default"} initialProduct={product} />;
+  // ?from=<catalogue id> — which shelf product sent the customer here.
+  const from = params?.get("from") || undefined;
+  return <ConfiguratorClient key={`${product ?? "default"}:${from ?? ""}`} initialProduct={product} fromItem={from} />;
 }

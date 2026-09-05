@@ -8,13 +8,14 @@ import { Field, Input } from "@/components/ui/Field";
 import ProductArt from "@/components/ProductArt";
 import ProductPreview, { faceKindFor } from "@/components/ProductPreview";
 import DesignCanvas from "@/components/designer/DesignCanvas";
-import { SHAPES, FONTS, FILAMENTS, SIZES } from "@/lib/data";
-import { CONFIG_PRODUCTS, CONFIG_PRODUCT_BY_ID } from "@/lib/products";
+import { SHAPES, FONTS, FILAMENTS, SIZES, FIDGETS } from "@/lib/data";
+import { CONFIG_PRODUCTS, CONFIG_PRODUCT_BY_ID, PRODUCT_BY_ID } from "@/lib/products";
 import { MATERIAL_BY_ID, materialFromFilamentDesc } from "@/lib/materials";
 import { designColorCount, designSummary, designToSvg, emptyDesign, facePath } from "@/lib/design";
 import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { estimateCost, parseHours } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
+import { useLivePrice, useLivePricer } from "@/lib/live-price";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
@@ -76,7 +77,20 @@ function rescaleDesign(d: Design, w: number, h: number): Design {
   };
 }
 
-export default function ConfiguratorClient({ initialProduct }: { initialProduct?: ConfigProductId }) {
+/** Name of the shelf product the customer came from, when they came from one. */
+function fromLabel(id?: string): string | undefined {
+  if (!id) return undefined;
+  return PRODUCT_BY_ID[id]?.name ?? FIDGETS.find((f) => f.id === id)?.name;
+}
+
+export default function ConfiguratorClient({
+  initialProduct,
+  fromItem,
+}: {
+  initialProduct?: ConfigProductId;
+  fromItem?: string;
+}) {
+  const fromName = fromLabel(fromItem);
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
   const adminUnlocked = useAdminStore((s) => s.unlocked);
@@ -129,8 +143,17 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
   // Only the DELTA above the product's own default material is a surcharge, so
   // the configurator can actually reach the price advertised in the listings.
   const matSurcharge = Math.max(0, material.priceAdd - MATERIAL_BY_ID[product.material].priceAdd);
+  const priceOf = useLivePricer();
+  // Follows /admin like every other price on the site.
+  const baseProductPrice = useLivePrice({
+    id: `cfg-${product.id}`,
+    price: product.basePrice,
+    grams: product.grams,
+    hours: product.hours,
+    material: product.material,
+  });
   const unitPrice =
-    product.basePrice +
+    baseProductPrice +
     (sizeObj?.priceAdd ?? 0) +
     matSurcharge +
     (product.hasShape && config.shape === "emblem" ? 10 : 0) +
@@ -169,6 +192,7 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
 
   const proceed = () => {
     const lines: string[] = [`מוצר: ${product.label}`];
+    if (fromName) lines.push(`הגיע מ: ${fromName}`);
     if (modelLabel) lines.push(`${product.models!.label}: ${modelLabel}`);
     if (product.hasShape) lines.push(`צורה: ${SHAPES.find((s) => s.id === config.shape)?.label ?? ""}`);
     if (product.hasText) {
@@ -211,6 +235,14 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
         <p className="text-ink-300">
           בוחרים מוצר, כותבים טקסט או מציירים עיצוב חופשי, בוחרים צבע. הכל מתעדכן בזמן אמת ונוסע איתך לטופס.
         </p>
+        {fromName && (
+          <div className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-cyan2/40 bg-cyan2/5 text-sm">
+            <Icon name="sparkles" size={14} className="text-cyan2" />
+            <span className="text-ink-200">
+              מעצבים את <b>{fromName}</b> — בחרתי לך את הבסיס המתאים, אפשר להחליף בכל שלב.
+            </span>
+          </div>
+        )}
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -292,7 +324,7 @@ export default function ConfiguratorClient({ initialProduct }: { initialProduct?
                         <div className="min-w-0">
                           <div className="font-semibold text-sm leading-tight">{p.label}</div>
                           <div className="text-[11px] text-ink-400 leading-snug line-clamp-1">{p.desc}</div>
-                          <div className="font-mono text-[11px] text-flame mt-0.5">מ-{fmtILS(p.basePrice)}</div>
+                          <div className="font-mono text-[11px] text-flame mt-0.5">מ-{fmtILS(priceOf({ id: `cfg-${p.id}`, price: p.basePrice, grams: p.grams, hours: p.hours, material: p.material }))}</div>
                         </div>
                       </button>
                     ))}

@@ -1,5 +1,6 @@
 import { FIDGETS } from "./data";
-import { PRODUCT_BY_ID, CONFIG_PRODUCT_BY_ID, fidgetStats, productsByCategory } from "./products";
+import { PRODUCT_BY_ID, CONFIG_PRODUCT_BY_ID, fidgetGrams, fidgetStats, productsByCategory } from "./products";
+import { parseHours } from "./costing";
 import { productToCard, type ListingCard } from "@/components/ProductGrid";
 
 // "טרנדי כרגע" — a curated shelf that mixes the items people order most right
@@ -37,12 +38,15 @@ export function trendingCards(): ListingCard[] {
       const st = fidgetStats(f);
       cards.push({
         id: `fidget-${f.id}`,
+        itemId: f.id,
         href: `/fidgets/${f.id}`,
         name: f.name,
         desc: f.desc,
         price: f.price,
         size: f.size,
         time: f.time,
+        grams: fidgetGrams(f),
+        hours: parseHours(f.time),
         hue: f.hue,
         image: f.thumbnail ?? f.images?.[0],
         tag: p.tag,
@@ -54,17 +58,20 @@ export function trendingCards(): ListingCard[] {
     } else if (p.kind === "product") {
       const pr = PRODUCT_BY_ID[p.id];
       if (!pr) continue;
-      cards.push({ ...productToCard(pr), id: `product-${pr.id}`, tag: p.tag });
+      cards.push({ ...productToCard(pr), id: `product-${pr.id}`, itemId: pr.id, tag: p.tag });
     } else {
       const c = CONFIG_PRODUCT_BY_ID[p.id];
       cards.push({
         id: `config-${c.id}`,
+        itemId: `cfg-${c.id}`,
         href: `/configurator?product=${c.id}`,
         name: c.label,
         desc: c.desc + " עיצוב אישי במעצב.",
         price: c.basePrice,
         size: `${c.face[0]}×${c.face[1]}mm`,
         time: `${c.hours}h`,
+        grams: c.grams,
+        hours: c.hours,
         hue: p.hue,
         art: c.art,
         tag: p.tag,

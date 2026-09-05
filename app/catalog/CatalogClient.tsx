@@ -17,6 +17,8 @@ import {
 } from "@/lib/units-hierarchy";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
+import { useLivePrice } from "@/lib/live-price";
+import { CONFIG_PRODUCT_BY_ID } from "@/lib/products";
 import { cn } from "@/lib/cn";
 
 const DEFAULT_PRICE = 65;
@@ -55,6 +57,15 @@ const FILTERS: { id: FilterId; label: string }[] = [
 ];
 
 export default function CatalogClient() {
+  // The emblem keychain is the configurator keychain, so it follows the same
+  // admin price as everything else on the site.
+  const emblemPrice = useLivePrice({
+    id: "cfg-keychain",
+    price: DEFAULT_PRICE,
+    grams: CONFIG_PRODUCT_BY_ID.keychain.grams,
+    hours: CONFIG_PRODUCT_BY_ID.keychain.hours,
+    material: CONFIG_PRODUCT_BY_ID.keychain.material,
+  });
   const [branchFilter, setBranchFilter] = useState<FilterId>("all");
   const [query, setQuery] = useState("");
   const [openBranches, setOpenBranches] = useState<Set<string>>(new Set());
@@ -160,7 +171,7 @@ export default function CatalogClient() {
         `גודל: ${DEFAULT_SIZE}`,
         `זמן הדפסה: ${DEFAULT_TIME}`,
       ],
-      price: DEFAULT_PRICE,
+      price: emblemPrice,
       source: "catalog",
       meta: { unitSlug: battalion.slug, brigadeSlug: brigade.slug },
     });

@@ -12,8 +12,12 @@ import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
 import ShippingEstimate from "@/components/ShippingEstimate";
+import RestockModal from "@/components/RestockModal";
+import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
+import { useLivePrice } from "@/lib/live-price";
+import { designHref, isPersonalizable } from "@/lib/designable";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -41,6 +45,17 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [optionId, setOptionId] = useState(p?.options?.items[0]?.id);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [askRestock, setAskRestock] = useState(false);
+  const stock = useAdminStore((s) => s.stock);
+  // Hooks run before the "not found" bail-out, so this uses safe fallbacks.
+  const basePrice = useLivePrice({
+    id,
+    price: p?.price ?? 0,
+    grams: p?.grams ?? 0,
+    hours: p?.hours ?? 0,
+    material,
+    colors: amsOn ? amsColors : 1,
+  });
 
   if (!p) {
     return (
@@ -59,11 +74,16 @@ export default function ProductDetailClient({ id }: { id: string }) {
   // the listed catalogue price already includes that default.
   const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
   const matSurcharge = Math.max(0, mat.priceAdd - baseMatAdd);
-  const unitPrice = (override?.price ?? p.price) + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
+  const unitPrice = basePrice + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
   const total = unitPrice * qty;
 
   const grams = override?.grams ?? p.grams;
   const hours = override?.hours ?? p.hours;
+
+  // Availability follows the filament we actually have on the shelf.
+  const matInStock = isMaterialInStock(stock, material);
+  const colorInStock = isColorInStock(stock, material, colorId);
+  const sellable = matInStock && colorInStock;
 
   const backHref = p.category === "pets" ? "/pets" : p.category === "statues" ? "/statues" : "/home-office";
   const source = p.category === "pets" ? "pets" : "office";
@@ -254,9 +274,19 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   title={c.name}
                   aria-label={c.name}
                   aria-pressed={colorId === c.id}
-                  className={cn("h-9 w-9 rounded-full border-2 transition-all hover:scale-110 active:scale-95", colorId === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50")}
+                  className={cn(
+                    "h-9 w-9 rounded-full border-2 transition-all hover:scale-110 active:scale-95 relative",
+                    colorId === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50",
+                    !isColorInStock(stock, material, c.id) && "opacity-35",
+                  )}
                   style={{ backgroundColor: c.hex }}
-                />
+                >
+                  {!isColorInStock(stock, material, c.id) && (
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />
+                    </span>
+                  )}
+                </button>
               ))}
             </div>
           </div>
@@ -341,13 +371,57 @@ export default function ProductDetailClient({ id }: { id: string }) {
             />
           )}
 
-          <button
-            type="button"
-            onClick={handleAdd}
-            className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-white" : "bg-flame text-white hover:bg-flame/90")}
+          {sellable ? (
+            <button
+              type="button"
+              onClick={handleAdd}
+              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-white" : "bg-flame text-white hover:bg-flame/90")}
+            >
+              {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
+            </button>
+          ) : (
+            <div className="space-y-2">
+              <div className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 text-sm text-amber-300 flex items-start gap-2">
+                <Icon name="clock" size={15} className="mt-0.5 shrink-0" />
+                <span>
+                  {matInStock
+                    ? `נגמר לי ${color.name} ב${mat.name}. אפשר לבחור צבע אחר למעלה.`
+                    : `נגמר לי ה${mat.name}. המוצר אינו זמין כרגע.`}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAskRestock(true)}
+                className="w-full h-12 rounded-xl font-black text-base bg-ink-800 text-ink-100 hover:bg-ink-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <Icon name="clock" size={18} />
+                עדכנו אותי כשחוזר למלאי
+              </button>
+            </div>
+          )}
+
+          {/* Everything on the site can be taken into the designer — a product
+              you write your own name on says so loudly. */}
+          <Link
+            href={designHref(p)}
+            className={cn(
+              "w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors",
+              isPersonalizable(p)
+                ? "bg-cyan2/15 text-cyan2 border border-cyan2/50 hover:bg-cyan2 hover:text-ink-950"
+                : "border border-ink-700 text-ink-300 hover:border-ink-500 hover:text-ink-100",
+            )}
           >
-            {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
-          </button>
+            <Icon name="sparkles" size={15} />
+            {isPersonalizable(p) ? "עצב את זה בעצמך" : "פתח את המוצר במעצב"}
+          </Link>
+
+          <RestockModal
+            open={askRestock}
+            onClose={() => setAskRestock(false)}
+            itemId={id}
+            itemName={p.name}
+            material={material}
+          />
           {cartCount > 0 && (
             <Link href="/contact" className="w-full h-10 rounded-xl border border-flame text-flame font-semibold text-sm hover:bg-flame/10 transition-colors flex items-center justify-center gap-2">
               <Icon name="package" size={14} />
