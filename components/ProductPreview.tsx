@@ -17,7 +17,20 @@ type Props = {
   modelLabel?: string;
 };
 
-export function faceKindFor(product: ConfigProduct): FaceKind {
+const PET_FACE: Partial<Record<ShapeId, FaceKind>> = {
+  bone: "bone",
+  heart: "heart",
+  fish: "fish",
+  paw: "paw",
+  round: "round",
+};
+
+/** The illustrated keychain preview only draws these four. */
+const KEYCHAIN_SHAPES: ShapeId[] = ["round", "rect", "emblem", "custom"];
+
+export function faceKindFor(product: ConfigProduct, shape?: ShapeId): FaceKind {
+  // For a pet tag the silhouette IS the product, so the chosen shape wins.
+  if (product.id === "pet_tag") return (shape && PET_FACE[shape]) ?? "bone";
   switch (product.id) {
     case "coaster":
       return "round";
@@ -42,12 +55,20 @@ export function faceKindFor(product: ConfigProduct): FaceKind {
 export default function ProductPreview({ product, shape, text, number, colorObj, fontObj, design, face, modelLabel }: Props) {
   const hasDesign = !!design && design.elements.length > 0;
 
-  if (product.id === "keychain" && !hasDesign) {
-    return <KeychainPreview shape={shape} text={text} number={number} colorObj={colorObj} fontObj={fontObj} />;
+  if (product.id === "keychain" && !hasDesign && KEYCHAIN_SHAPES.includes(shape)) {
+    return (
+      <KeychainPreview
+        shape={shape as "round" | "rect" | "emblem" | "custom"}
+        text={text}
+        number={number}
+        colorObj={colorObj}
+        fontObj={fontObj}
+      />
+    );
   }
 
   const [fw, fh] = face;
-  const kind = faceKindFor(product);
+  const kind = faceKindFor(product, shape);
   const W = 300, H = 220;
   // fit the face into the stage with padding
   const pad = 0.16;

@@ -74,6 +74,29 @@ export type ImportedModel = {
  */
 export const BLOCKED_HOLDS: string[] = ["weapon", "license-nc"];
 
+/**
+ * Models the owner pulled from the shop by hand.
+ *
+ * Not a licence or a legal matter — these are simply things Unit 3D does not
+ * want to sell (a printer accessory nobody outside the hobby wants, a car-brand
+ * keyring, a trophy that duplicates a better one, a novelty that does not fit
+ * the shelf). Removing the id here takes the model off every shelf, out of the
+ * trendy row and out of the photo pool, and its page stops being generated.
+ */
+export const REMOVED_IDS = new Set<string>([
+  "mw-1376675",  // מייבש AMS · קיט קארד
+  "mw-18687",    // מארגן שולחן · רובוט
+  "mw-2253620",  // קופסת ממחטות למדפסת
+  "mw-2375134",  // מתקן קוקטיילים משולש
+  "mw-1509282",  // מחזיק מפתחות BYD
+  "mw-19006",    // גביע צמיג
+  "mw-1797688",  // מחזיק חדר כושר
+  "mw-2624902",  // מערבב קלפים
+  "mw-27048",    // כדור גמיש לחתול
+  "mw-2863365",  // פיגורת אסטה
+  "mw-115260",   // לוח שנה נצחי מתהפך
+]);
+
 /** Set to true to list everything, weapons included. Leave false. */
 export const SHOW_HELD_MODELS = false;
 
@@ -81,7 +104,7 @@ export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED;
 export const IMPORTED_DATE = IMPORTED_AT;
 
 const sellable = (m: ImportedModel) =>
-  SHOW_HELD_MODELS || !m.holds.some((h) => BLOCKED_HOLDS.includes(h));
+  !REMOVED_IDS.has(m.id) && (SHOW_HELD_MODELS || !m.holds.some((h) => BLOCKED_HOLDS.includes(h)));
 
 /** Rows kept out of the shop, for the admin page and the import report. */
 export const heldModels = (): ImportedModel[] => IMPORTED.filter((m) => !sellable(m));

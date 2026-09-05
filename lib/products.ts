@@ -1,4 +1,4 @@
-import type { ConfigProduct, Product, ProductCategory, Size } from "./types";
+import type { ConfigProduct, Product, ProductCategory, Shape, Size } from "./types";
 import { importedProducts } from "./imported";
 
 // ─── Pet tags (תגים לחיות) ────────────────────────────────────────────────────
@@ -375,6 +375,22 @@ const PLATE_SIZES: Size[] = [
   { id: "lg", label: "גדול", dim: "250×70mm", priceAdd: 55, time: "4.5h" },
 ];
 
+/** Pet-tag silhouettes. The shape IS the product here, so it gets its own list. */
+const PET_TAG_SHAPES: Shape[] = [
+  { id: "bone", label: "עצם", icon: "🦴" },
+  { id: "round", label: "עגול", icon: "●" },
+  { id: "heart", label: "לב", icon: "♥" },
+  { id: "fish", label: "דג", icon: "🐟" },
+  { id: "paw", label: "כף רגל", icon: "🐾" },
+];
+
+/** Pet tags are small; the ladder is tighter than the keychain's. */
+const PET_TAG_SIZES: Size[] = [
+  { id: "sm", label: "לחתול", dim: "30×18mm", priceAdd: 0, time: "25min" },
+  { id: "md", label: "בינוני", dim: "40×24mm", priceAdd: 5, time: "35min" },
+  { id: "lg", label: "לכלב גדול", dim: "50×30mm", priceAdd: 10, time: "45min" },
+];
+
 const COASTER_SIZES: Size[] = [
   { id: "sm", label: "יחידה", dim: "Ø90mm", priceAdd: 0, time: "40min" },
   { id: "md", label: "סט 4", dim: "Ø90mm ×4", priceAdd: 45, time: "2.5h" },
@@ -386,6 +402,12 @@ export const CONFIG_PRODUCTS: ConfigProduct[] = [
     id: "keychain", label: "מחזיק מפתחות", desc: "שם, מספר אישי, סמל יחידה.",
     art: "keychain", basePrice: 55, hours: 1.5, grams: 12, material: "pla_plus",
     hasShape: true, hasSize: true, hasText: true, hasDesigner: true, face: [50, 35],
+  },
+  {
+    id: "pet_tag", label: "תג לחיה", desc: "שם מלפנים, טלפון מאחור. חמש צורות.",
+    art: "bone", basePrice: 35, hours: 0.6, grams: 6, material: "petg",
+    hasShape: true, shapes: PET_TAG_SHAPES, hasSize: true, sizes: PET_TAG_SIZES,
+    hasText: true, hasDesigner: true, face: [40, 24],
   },
   {
     id: "dog_tag", label: "דיסקית", desc: "דיסקית צבאית עם שרשרת.",

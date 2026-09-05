@@ -12,6 +12,6 @@ export default function ConfiguratorFromQuery() {
   // "constructor" and "__proto__", which would pass a non-product through.
   const product = (Object.hasOwn(CONFIG_PRODUCT_BY_ID, raw) ? raw : undefined) as ConfigProductId | undefined;
   // ?from=<catalogue id> — which shelf product sent the customer here.
-  const from = params?.get("from") || undefined;
+  const from = params?.get("item") || params?.get("from") || undefined;
   return <ConfiguratorClient key={`${product ?? "default"}:${from ?? ""}`} initialProduct={product} fromItem={from} />;
 }

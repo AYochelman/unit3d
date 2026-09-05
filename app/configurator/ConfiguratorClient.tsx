@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
@@ -19,7 +20,7 @@ import { useLivePrice, useLivePricer } from "@/lib/live-price";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
-import type { ConfigProductId, Design, ShapeId, SizeId } from "@/lib/types";
+import type { ConfigProduct, ConfigProductId, Design, ShapeId, SizeId } from "@/lib/types";
 
 type Mode = "text" | "design";
 
@@ -77,10 +78,31 @@ function rescaleDesign(d: Design, w: number, h: number): Design {
   };
 }
 
-/** Name of the shelf product the customer came from, when they came from one. */
-function fromLabel(id?: string): string | undefined {
+/**
+ * The catalogue row the customer clicked, when they came from a product card.
+ *
+ * The designer works on ten generic bases, so opening one of those straight
+ * from a product card names the CATEGORY ("דיסקית") rather than the thing that
+ * was clicked. This lets the base keep the drawing, the face and the steps
+ * while the product supplies the name, the price and the print figures.
+ */
+function itemOverride(id?: string): Partial<ConfigProduct> & { href?: string } | undefined {
   if (!id) return undefined;
-  return PRODUCT_BY_ID[id]?.name ?? FIDGETS.find((f) => f.id === id)?.name;
+  const p = PRODUCT_BY_ID[id];
+  if (p) {
+    return {
+      label: p.name,
+      desc: p.desc,
+      basePrice: p.price,
+      grams: p.grams,
+      hours: p.hours,
+      ...(p.material ? { material: p.material } : {}),
+      href: `/products/${p.id}`,
+    };
+  }
+  const f = FIDGETS.find((x) => x.id === id);
+  if (!f) return undefined;
+  return { label: f.name, desc: f.desc, basePrice: f.price, href: `/fidgets/${f.id}` };
 }
 
 export default function ConfiguratorClient({
@@ -90,7 +112,11 @@ export default function ConfiguratorClient({
   initialProduct?: ConfigProductId;
   fromItem?: string;
 }) {
-  const fromName = fromLabel(fromItem);
+  // Dropped as soon as the customer picks a different base in the picker —
+  // from that point on they are designing that base, not the product.
+  const [itemId, setItemId] = useState(fromItem);
+  const override = useMemo(() => itemOverride(itemId), [itemId]);
+  const fromName = override?.label;
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
   const adminUnlocked = useAdminStore((s) => s.unlocked);
@@ -114,7 +140,10 @@ export default function ConfiguratorClient({
 
   const update = <K extends keyof Config>(k: K, v: Config[K]) => setConfig((c) => ({ ...c, [k]: v }));
 
-  const product = CONFIG_PRODUCT_BY_ID[config.product];
+  const base = CONFIG_PRODUCT_BY_ID[config.product];
+  const product: ConfigProduct = useMemo(() => (override ? { ...base, ...override } : base), [base, override]);
+  const shapes = product.shapes ?? SHAPES;
+  const shape: ShapeId = shapes.some((sh) => sh.id === config.shape) ? config.shape : shapes[0].id;
   const sizes = product.sizes ?? SIZES;
   const sizeObj = product.hasSize ? (sizes.find((s) => s.id === config.size) ?? sizes[0]) : null;
   const colorObj = FILAMENTS.find((f) => f.id === config.color)!;
@@ -156,7 +185,7 @@ export default function ConfiguratorClient({
     baseProductPrice +
     (sizeObj?.priceAdd ?? 0) +
     matSurcharge +
-    (product.hasShape && config.shape === "emblem" ? 10 : 0) +
+    (product.hasShape && shape === "emblem" ? 10 : 0) +
     (hasDesign ? DESIGN_SURCHARGE + Math.max(0, designColors - 1) * DESIGN_EXTRA_COLOR : 0);
   const discount = bulkDiscount(config.qty);
   const totalPrice = lineTotal(unitPrice, config.qty);
@@ -174,6 +203,7 @@ export default function ConfiguratorClient({
   const timeLabel = sizeObj?.time ?? `${product.hours}h`;
 
   const selectProduct = (id: ConfigProductId) => {
+    setItemId(undefined);
     const p = CONFIG_PRODUCT_BY_ID[id];
     setConfig((c) => ({
       ...c,
@@ -192,9 +222,9 @@ export default function ConfiguratorClient({
 
   const proceed = () => {
     const lines: string[] = [`מוצר: ${product.label}`];
-    if (fromName) lines.push(`הגיע מ: ${fromName}`);
+    if (override?.href) lines.push(`מתוך הקטלוג: ${product.label}`);
     if (modelLabel) lines.push(`${product.models!.label}: ${modelLabel}`);
-    if (product.hasShape) lines.push(`צורה: ${SHAPES.find((s) => s.id === config.shape)?.label ?? ""}`);
+    if (product.hasShape) lines.push(`צורה: ${shapes.find((s) => s.id === shape)?.label ?? ""}`);
     if (product.hasText) {
       if (hasDesign) lines.push(...designSummary(design));
       else lines.push(`טקסט: "${config.text}${config.number ? " " + config.number : ""}" · ${fontObj.name}`);
@@ -216,7 +246,7 @@ export default function ConfiguratorClient({
         material: materialId,
         baseUnitPrice: unitPrice,
         designSvg: hasDesign
-          ? designToSvg(design, colorObj.hex, facePath(faceKindFor(product), face[0], face[1]))
+          ? designToSvg(design, colorObj.hex, facePath(faceKindFor(product, shape), face[0], face[1]))
           : undefined,
         designElements: hasDesign ? design.elements : undefined,
       },
@@ -236,11 +266,16 @@ export default function ConfiguratorClient({
           בוחרים מוצר, כותבים טקסט או מציירים עיצוב חופשי, בוחרים צבע. הכל מתעדכן בזמן אמת ונוסע איתך לטופס.
         </p>
         {fromName && (
-          <div className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-cyan2/40 bg-cyan2/5 text-sm">
-            <Icon name="sparkles" size={14} className="text-cyan2" />
+          <div className="mt-4 inline-flex flex-wrap items-center gap-x-2 gap-y-1 px-3 py-2 rounded-xl border border-cyan2/40 bg-cyan2/5 text-sm">
+            <Icon name="sparkles" size={14} className="text-cyan2 shrink-0" />
             <span className="text-ink-200">
-              מעצבים את <b>{fromName}</b> — בחרתי לך את הבסיס המתאים, אפשר להחליף בכל שלב.
+              מעצבים את <b>{fromName}</b>. בחירת מוצר אחר למטה תחליף אותו.
             </span>
+            {override?.href && (
+              <Link href={override.href} className="text-cyan2 font-semibold underline underline-offset-2">
+                לעמוד המוצר
+              </Link>
+            )}
           </div>
         )}
       </header>
@@ -253,7 +288,7 @@ export default function ConfiguratorClient({
               <DesignCanvas
                 design={design}
                 onChange={(d) => update("design", d)}
-                faceKind={faceKindFor(product)}
+                faceKind={faceKindFor(product, shape)}
                 baseColor={colorObj.hex}
               />
             ) : (
@@ -261,7 +296,7 @@ export default function ConfiguratorClient({
                 <div className="relative aspect-square md:aspect-[4/3] timelapse printer-grid flex items-center justify-center overflow-hidden">
                   <ProductPreview
                     product={product}
-                    shape={config.shape}
+                    shape={shape}
                     text={config.text}
                     number={config.number}
                     colorObj={colorObj}
@@ -280,10 +315,11 @@ export default function ConfiguratorClient({
                   </div>
                 </div>
                 <div className="grid grid-cols-4 divide-x divide-ink-800 rtl:divide-x-reverse border-t border-ink-800 font-mono text-[11px]" dir="ltr">
-                  <Stat label="PRODUCT" value={product.id.toUpperCase().replace("_", " ")} />
-                  <Stat label="SIZE" value={`${face[0]}×${face[1]}`} />
-                  <Stat label="TIME" value={`~${timeLabel}`} />
-                  <Stat label="QTY" value={`×${config.qty}`} />
+                  {/* The name of the thing being designed, not the id of its base. */}
+                  <Stat label="מוצר" value={product.label} rtl />
+                  <Stat label="מידה" value={`${face[0]}×${face[1]}mm`} />
+                  <Stat label="זמן" value={`~${timeLabel}`} />
+                  <Stat label="כמות" value={`×${config.qty}`} />
                 </div>
               </div>
             )}
@@ -356,18 +392,20 @@ export default function ConfiguratorClient({
               {current === "shape" && (
                 <div>
                   <h3 className="text-xl font-extrabold mb-1">בחר צורת בסיס</h3>
-                  <p className="text-sm text-ink-400 mb-5">מה הצורה הכללית של המחזיק?</p>
+                  <p className="text-sm text-ink-400 mb-5">
+                    {product.id === "pet_tag" ? "איזו צורה תלויה על הקולר?" : "מה הצורה הכללית של המחזיק?"}
+                  </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {SHAPES.map((s) => (
+                    {shapes.map((s) => (
                       <button
                         key={s.id}
                         onClick={() => update("shape", s.id)}
                         className={cn(
                           "p-4 rounded-xl border-2 text-right transition-all",
-                          config.shape === s.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                          shape === s.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        <div className={cn("text-3xl mb-2", config.shape === s.id ? "text-flame" : "text-ink-400")}>{s.icon}</div>
+                        <div className={cn("text-3xl mb-2", shape === s.id ? "text-flame" : "text-ink-400")}>{s.icon}</div>
                         <div className="font-semibold">{s.label}</div>
                       </button>
                     ))}
@@ -593,9 +631,10 @@ export default function ConfiguratorClient({
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+/** `rtl` for a Hebrew value inside the LTR measurements strip. */
+function Stat({ label, value, rtl }: { label: string; value: string; rtl?: boolean }) {
   return (
-    <div className="px-4 py-3 min-w-0">
+    <div className="px-4 py-3 min-w-0" dir={rtl ? "rtl" : undefined}>
       <div className="text-ink-500">{label}</div>
       <div className="text-ink-100 font-semibold truncate">{value}</div>
     </div>

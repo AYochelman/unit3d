@@ -50,7 +50,7 @@ export default function TrendyClient() {
           <div className="flex-1 min-w-[200px]">
             <div className="font-bold mb-0.5">רוצה משהו משלך?</div>
             <div className="text-sm text-ink-300">
-              מחזיק מפתחות, קייס, שלט או תג — עם הטקסט והצורה שתבחר, במעצב האישי.
+              מחזיק מפתחות, קייס, שלט או תג לחיה — עם הטקסט והצורה שתבחר, במעצב האישי.
             </div>
           </div>
           <span className="inline-flex items-center gap-1.5 text-cyan2 font-semibold text-sm">
@@ -59,16 +59,6 @@ export default function TrendyClient() {
         </div>
       </Link>
 
-      <Link href="/configurator" className="mt-10 block p-5 rounded-2xl border border-cyan2/30 bg-gradient-to-bl from-cyan2/10 to-flame/5 hover:border-cyan2/60 transition-colors">
-        <div className="flex flex-wrap items-center gap-4">
-          <span className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-cyan2/15 text-cyan2"><Icon name="sparkles" size={20} /></span>
-          <div className="flex-1 min-w-[200px]">
-            <div className="font-bold mb-0.5">לא מצאת? תעצב בעצמך</div>
-            <div className="text-sm text-ink-300">10 מוצרים, טקסט או עיצוב חופשי כמו בפאוורפוינט, 12 צבעים.</div>
-          </div>
-          <span className="inline-flex items-center gap-1.5 text-cyan2 font-semibold text-sm">למעצב<Icon name="arrowLeft" size={14} /></span>
-        </div>
-      </Link>
     </div>
   );
 }

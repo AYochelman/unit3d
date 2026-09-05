@@ -148,7 +148,16 @@ export type FontOpt = {
   upper?: boolean;
 };
 
-export type ShapeId = "round" | "rect" | "emblem" | "custom";
+export type ShapeId =
+  | "round"
+  | "rect"
+  | "emblem"
+  | "custom"
+  // Pet-tag silhouettes — only offered by the pet_tag product.
+  | "bone"
+  | "heart"
+  | "fish"
+  | "paw";
 
 export type Shape = {
   id: ShapeId;
@@ -274,6 +283,7 @@ export type Product = {
 // ─── Configurator products ───────────────────────────────────────────────────
 export type ConfigProductId =
   | "keychain"
+  | "pet_tag"
   | "dog_tag"
   | "phone_case"
   | "lighter_case"
@@ -297,6 +307,8 @@ export type ConfigProduct = {
   material: MaterialId;
   /** Shows the base-shape step (round / rect / emblem / custom). */
   hasShape: boolean;
+  /** Shape choices for this product. Defaults to SHAPES when not given. */
+  shapes?: Shape[];
   /** Shows the size step (uses SIZES for keychain, or `sizes` below). */
   hasSize: boolean;
   /** Shows the text step. */

@@ -147,9 +147,53 @@ export function shapePath(kind: DesignShapeKind, w: number, h: number): string {
 
 /** Silhouette of a product's printable face. One definition for the canvas,
  *  the live preview and the exported SVG so all three agree. */
-export type FaceKind = "rect" | "roundrect" | "round" | "phone" | "tall";
+export type FaceKind = "rect" | "roundrect" | "round" | "phone" | "tall" | "bone" | "heart" | "fish" | "paw";
 
 export function facePath(kind: FaceKind, w: number, h: number): string {
+  // Pet-tag silhouettes. Drawn from the face box so they scale with the size
+  // the customer picks, the same way the rounded rectangle does.
+  if (kind === "bone") {
+    const r = h / 2, k = r * 0.55;
+    return [
+      `M${r} ${h * 0.22}`,
+      `A${k} ${k} 0 1 0 ${r * 0.62} ${h * 0.5}`,
+      `A${k} ${k} 0 1 0 ${r} ${h * 0.78}`,
+      `H${w - r}`,
+      `A${k} ${k} 0 1 0 ${w - r * 0.62} ${h * 0.5}`,
+      `A${k} ${k} 0 1 0 ${w - r} ${h * 0.22}`,
+      "Z",
+    ].join(" ");
+  }
+  if (kind === "heart") {
+    const cx = w / 2;
+    return `M${cx} ${h} C${-w * 0.08} ${h * 0.62} ${w * 0.06} ${-h * 0.06} ${cx} ${h * 0.26} C${w * 0.94} ${-h * 0.06} ${w * 1.08} ${h * 0.62} ${cx} ${h} Z`;
+  }
+  if (kind === "fish") {
+    const bw = w * 0.72;
+    return [
+      `M0 ${h / 2}`,
+      `C${bw * 0.1} ${-h * 0.05} ${bw * 0.75} ${-h * 0.05} ${bw} ${h / 2}`,
+      `C${bw * 0.75} ${h * 1.05} ${bw * 0.1} ${h * 1.05} 0 ${h / 2}`,
+      "Z",
+      `M${bw * 0.94} ${h / 2}`,
+      `L${w} ${h * 0.14}`,
+      `L${w} ${h * 0.86}`,
+      "Z",
+    ].join(" ");
+  }
+  if (kind === "paw") {
+    const pr = Math.min(w, h) * 0.15;
+    const pad = `M${w / 2} ${h} C${w * 0.14} ${h} ${w * 0.1} ${h * 0.52} ${w / 2} ${h * 0.52} C${w * 0.9} ${h * 0.52} ${w * 0.86} ${h} ${w / 2} ${h} Z`;
+    const toe = (cx: number, cy: number, rx: number) =>
+      `M${cx} ${cy - rx} A${rx} ${rx * 1.2} 0 1 0 ${cx} ${cy + rx} A${rx} ${rx * 1.2} 0 1 0 ${cx} ${cy - rx} Z`;
+    return [
+      pad,
+      toe(w * 0.16, h * 0.34, pr * 0.8),
+      toe(w * 0.38, h * 0.17, pr * 0.85),
+      toe(w * 0.62, h * 0.17, pr * 0.85),
+      toe(w * 0.84, h * 0.34, pr * 0.8),
+    ].join(" ");
+  }
   if (kind === "round") {
     return `M${w / 2} 0 A${w / 2} ${h / 2} 0 1 0 ${w / 2} ${h} A${w / 2} ${h / 2} 0 1 0 ${w / 2} 0 Z`;
   }
