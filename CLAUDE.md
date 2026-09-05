@@ -50,6 +50,11 @@ app/pets/ · app/home-office/  הקטגוריות החדשות · app/products/[
 "עיצוב חופשי" (`mode: "design"`) מחליף את הטקסט המהיר; ההזמנה נושאת `meta.designSvg` (SVG עצמאי) + `meta.designElements`, וטופס יצירת הקשר מציג תמונה ממוזערת.
 תוספת מחיר: 15₪ לעיצוב חופשי + 10₪ לכל צבע נוסף (AMS). מחיר כולל חומר לפי הצבע (`materialFromFilamentDesc`); קייסים תמיד TPU.
 
+## פרסום
+
+`.github/workflows/deploy.yml` → GitHub Pages בכל דחיפה ל-main. הוורקפלואו מריץ `tsc` ו-`lint` לפני הבנייה, כך שקוד שבור לא מגיע לאוויר.
+`NEXT_PUBLIC_BASE_PATH` מוזרק ע"י הוורקפלואו (Pages מגיש תחת `/<repo>/`); מקומית הוא ריק.
+
 ## תמחור: כלל אחד, במקום אחד
 
 `lib/pricing.ts` מחזיק את מדרגת הנחת הכמות (`bulkDiscount` / `lineTotal`). המעצב מצטט דרכה, והסל מחשב אותה מחדש בכל שינוי כמות — לכן שורת סל שומרת מחיר יחידה **לפני** הנחה ב-`meta.baseUnitPrice`, ולא נגזרת מחלוקת הסכום.

@@ -2,10 +2,14 @@ import type { NextConfig } from "next";
 
 // STATIC_EXPORT=1 npm run build  ->  ./out (plain HTML/JS, host anywhere: Netlify Drop, GitHub Pages, any static server)
 const staticExport = process.env.STATIC_EXPORT === "1";
+// GitHub Pages serves a project repo under /<repo>/. The workflow passes that
+// prefix in; locally it is empty and everything stays at the root.
+const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   ...(staticExport ? { output: "export" as const, trailingSlash: true } : {}),
+  ...(basePath ? { basePath, assetPrefix: basePath } : {}),
   images: {
     unoptimized: staticExport,
     // Only the hosts referenced by lib/data.ts / lib/fidgets.generated.ts.
