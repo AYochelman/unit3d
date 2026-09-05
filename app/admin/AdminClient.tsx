@@ -10,6 +10,7 @@ import { DEFAULT_MATERIAL, buyAdvice, colorsInStock, isColorInStock, isMaterialI
 import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { estimateCost, parseHours, fmtHours, type CostSettings } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
+import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -789,14 +790,16 @@ function BackupTab() {
 
   return (
     <div className="max-w-3xl grid gap-5">
-      {/* ── save for real ───────────────────────────────────────────────── */}
-      <div className="p-4 rounded-2xl border border-flame/40 bg-flame/5">
-        <h2 className="font-black text-lg mb-1">שמירת ההגדרות באתר</h2>
+      {/* ── save straight from the browser (phone included) ─────────────── */}
+      <AdminSaveToSite json={siteFile} />
+
+      {/* ── save by hand: download, drop into public/, push ─────────────── */}
+      <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900">
+        <h2 className="font-black text-lg mb-1">שמירה ידנית (מהמחשב)</h2>
         <p className="text-sm text-ink-300 leading-relaxed mb-3">
           לחיצה על &quot;שמירה&quot; מורידה קובץ בשם <span className="font-mono text-ink-100" dir="ltr">admin-settings.json</span>.
-          שים אותו בתיקייה <span className="font-mono text-ink-100" dir="ltr">public/</span> של הפרויקט ודחוף ל-GitHub —
-          מהרגע הזה <b>כל מי שנכנס לאתר</b> רואה את המחירים, המרווח והמלאי שקבעת כאן, לא רק אתה.
-          המיילים של הלקוחות שמחכים לא נכנסים לקובץ.
+          שים אותו בתיקייה <span className="font-mono text-ink-100" dir="ltr">public/</span> של הפרויקט ודחוף ל-GitHub.
+          זו אותה תוצאה כמו הכפתור למעלה, בלי טוקן. המיילים של הלקוחות שמחכים לא נכנסים לקובץ.
         </p>
         <div className="flex flex-wrap gap-2">
           <Btn variant="primary" size="sm" icon="file" onClick={download}>שמירה · הורדת הקובץ</Btn>

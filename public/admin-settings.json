@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "settings": {
+    "spoolPrices": {
+      "pla": 95,
+      "pla_plus": 110,
+      "pla_matte": 115,
+      "pla_silk": 120,
+      "petg": 125,
+      "tpu": 160,
+      "abs": 105
+    },
+    "machineRatePerHour": 3.5,
+    "printerWatts": 150,
+    "kwhPriceILS": 0.5,
+    "laborPerItem": 5,
+    "amsWastePerColor": 0.1,
+    "targetMargin": 0.5
+  },
+  "overrides": {},
+  "pricing": {
+    "auto": false,
+    "round": 5
+  },
+  "stock": {}
+}
