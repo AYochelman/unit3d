@@ -123,7 +123,7 @@ export default function Footer() {
       <div className="border-t border-ink-800">
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
-            © 2026 Unit3D · MADE IN PETACH TIKVA · NOZZLE 0.4mm · v2.3
+            © 2026 Unit3D · MADE IN PETACH TIKVA · NOZZLE 0.4mm · v2.4
           </div>
           <div className="flex items-center gap-2 font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             <span className="w-1.5 h-1.5 rounded-full bg-good live-dot" />
