@@ -21,6 +21,9 @@ type Shot = {
   wide?: boolean;
 };
 
+// Ordered so the 4-column grid fills exactly: a wide photo takes two columns,
+// a tall one takes one, and 4 wide + 4 tall lands on three full rows with no
+// hole at the end. `object-cover` crops the last portrait into its wide box.
 const SHOTS: Shot[] = [
   {
     src: "/studio/print-04.jpg",
@@ -35,6 +38,22 @@ const SHOTS: Shot[] = [
     wide: true,
   },
   {
+    src: "/studio/print-07.jpg",
+    alt: "שלט PlayStation 5 מונח על מעמד מודפס בצורת מסכת אוני",
+    caption: "מעמד לשלט PS5 בצורת מסכת אוני — שחור ולבן בהדפסה אחת",
+  },
+  {
+    src: "/studio/print-08.jpg",
+    alt: "ראש מואאי אפור עם משקפיים לבנים, מוחזק ביד",
+    caption: "ראש מואאי — שני צבעים יחד, בלי צביעה אחרי ההדפסה",
+  },
+  {
+    src: "/studio/print-06.jpg",
+    alt: "דרקון קטן בשחור וסגול על בד אפור",
+    caption: "דרקון קטן בשחור וסגול — שני הצבעים יצאו יחד מה-AMS",
+    wide: true,
+  },
+  {
     src: "/studio/print-05.jpg",
     alt: "פסל חוטים אפור — דמות תלויה בתוך מסגרת קשת",
     caption: "פסל חוטים — הדמות תלויה על מאות חוטים דקים שנמתחו בהדפסה",
@@ -46,8 +65,9 @@ const SHOTS: Shot[] = [
   },
   {
     src: "/studio/print-01.jpg",
-    alt: "מיכל מודפס בצבע חרדל עם מכסה מסתובב",
+    alt: "הדפסה גדולה בצבע חרדל עם מכסה מסתובב, מוחזקת ביד",
     caption: "הדפסה גדולה בחלק אחד — הצבע והברק הם של החומר, בלי צביעה",
+    wide: true,
   },
 ];
 
