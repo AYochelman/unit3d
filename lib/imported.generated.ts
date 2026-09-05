@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Generated: 2026-09-05T15:04:45.169Z
-// Items: 185
+// Items: 187
 
 import type { ImportedModel } from "./imported";
 
@@ -4042,6 +4042,46 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "downloads": 39,
     "likes": 98,
     "hue": 190,
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2821771",
+    "name": "One Wish Willow",
+    "desc": "פסלון תצוגה קטן ומדויק. הדפסה אחת, בלי הרכבה.",
+    "shelf": "screen",
+    "hours": 1.32,
+    "grams": 14,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US710cf1986bcef3/design/49451e90c2958330.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AutoRefill",
+    "sourceUrl": "https://makerworld.com/en/models/2821771-one-wish-willow",
+    "license": "Standard Digital File License - Community Use",
+    "downloads": 3665,
+    "likes": 491,
+    "hue": 300,
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-615735",
+    "name": "the rocktopus",
+    "desc": "תמנון קטן שמנגן. אחד המודלים המורדים ביותר באתר, 18 אלף הורדות.",
+    "shelf": "trendy",
+    "hours": 0.7,
+    "grams": 6,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5859d8209d3ca6/design/2024-08-31_e3ca9c7bec5e.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Ariking9802",
+    "sourceUrl": "https://makerworld.com/en/models/615735-the-rocktopus",
+    "license": "Standard Digital File License",
+    "downloads": 18135,
+    "likes": 1719,
+    "hue": 250,
     "status": "live",
     "holds": [],
     "licenseChecked": true

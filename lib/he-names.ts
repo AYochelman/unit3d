@@ -190,6 +190,8 @@ export const HE_NAMES: Record<string, string> = {
   "mw-3251767": "מחזיק סכין גילוח",
   "mw-3249292": "תחתיות כפתור עם מעמד",
   "mw-3242523": "כיסויי חיות לברגי אסלה",
+  "mw-2821771": "ווילו · משאלה אחת",
+  "mw-615735": "תמנון הרוק",
 };
 
 /** Hebrew name when we have one, the original title otherwise. */
