@@ -64,7 +64,7 @@ export default function UploadClient() {
         <Pill tone="cyan" className="mb-3">
           UPLOAD · STL · OBJ · 3MF
         </Pill>
-        <h1 className="font-display text-3xl md:text-[42px] font-bold leading-[1.15] mb-3">
+        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05] mb-3">
           יש קובץ. תעלה.
         </h1>
         <p className="text-ink-300 max-w-2xl">

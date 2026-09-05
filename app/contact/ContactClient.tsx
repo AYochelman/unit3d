@@ -92,7 +92,7 @@ export default function ContactClient() {
         <Pill tone="flame" className="mb-3">
           CONTACT · 24H RESPONSE
         </Pill>
-        <h1 className="font-display text-3xl md:text-[42px] font-bold leading-[1.15]">
+        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
           ספר לי מה אתה צריך.
         </h1>
         <p className="mt-3 text-ink-300 max-w-2xl">

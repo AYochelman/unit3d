@@ -298,7 +298,7 @@ export default function FidgetsClient() {
         <Pill tone="cyan" className="mb-4">
           פלקסי ופידג&apos;טים · ANTI-BOREDOM
         </Pill>
-        <h1 className="font-display text-3xl md:text-5xl font-bold leading-[1.15] mb-3">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
           שני מדפים. אותה מדפסת.
         </h1>
         <p className="text-ink-300 max-w-2xl">
@@ -379,7 +379,7 @@ export default function FidgetsClient() {
       {/* Why fidgets */}
       <section className="mt-16 p-6 md:p-8 rounded-2xl bg-ink-900 border border-ink-800">
         <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-          למה פידג&apos;טים
+          WHY FIDGETS
         </div>
         <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">
           למה זה עובד.

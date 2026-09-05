@@ -29,7 +29,7 @@ export default function AdminUnlock() {
         title="נעל את מצב המנהל"
         className="shrink-0"
       >
-        <Pill tone="neutral" className="text-[10px]">ניהול</Pill>
+        <Pill tone="neutral" className="text-[10px] font-mono">ADMIN</Pill>
       </button>
     );
   }

@@ -153,45 +153,53 @@ export function facePath(kind: FaceKind, w: number, h: number): string {
   // Pet-tag silhouettes. Drawn from the face box so they scale with the size
   // the customer picks, the same way the rounded rectangle does.
   if (kind === "bone") {
-    const r = h / 2, k = r * 0.55;
+    // A classic dog bone: a bar across the middle with two lobes at each end.
+    // Built as a bar plus four circles in one path - a union always reads as a
+    // bone, where a single outline drifts into a blob at some proportions.
+    const r = h * 0.26;
+    const cy1 = r, cy2 = h - r;
+    const cx1 = r, cx2 = w - r;
+    const circle = (cx: number, cy: number) =>
+      `M${cx - r} ${cy} a${r} ${r} 0 1 1 ${r * 2} 0 a${r} ${r} 0 1 1 ${-r * 2} 0 Z`;
     return [
-      `M${r} ${h * 0.22}`,
-      `A${k} ${k} 0 1 0 ${r * 0.62} ${h * 0.5}`,
-      `A${k} ${k} 0 1 0 ${r} ${h * 0.78}`,
-      `H${w - r}`,
-      `A${k} ${k} 0 1 0 ${w - r * 0.62} ${h * 0.5}`,
-      `A${k} ${k} 0 1 0 ${w - r} ${h * 0.22}`,
-      "Z",
+      `M${cx1} ${h * 0.34} H${cx2} V${h * 0.66} H${cx1} Z`,
+      circle(cx1, cy1),
+      circle(cx1, cy2),
+      circle(cx2, cy1),
+      circle(cx2, cy2),
     ].join(" ");
   }
   if (kind === "heart") {
     const cx = w / 2;
-    return `M${cx} ${h} C${-w * 0.08} ${h * 0.62} ${w * 0.06} ${-h * 0.06} ${cx} ${h * 0.26} C${w * 0.94} ${-h * 0.06} ${w * 1.08} ${h * 0.62} ${cx} ${h} Z`;
+    return `M${cx} ${h * 0.97} C${w * 0.02} ${h * 0.66} ${w * 0.06} ${h * 0.04} ${cx} ${h * 0.28} C${w * 0.94} ${h * 0.04} ${w * 0.98} ${h * 0.66} ${cx} ${h * 0.97} Z`;
   }
   if (kind === "fish") {
-    const bw = w * 0.72;
+    // Body as two arcs, tail as a notched triangle joined to it.
+    const bw = w * 0.7, cy = h / 2;
     return [
-      `M0 ${h / 2}`,
-      `C${bw * 0.1} ${-h * 0.05} ${bw * 0.75} ${-h * 0.05} ${bw} ${h / 2}`,
-      `C${bw * 0.75} ${h * 1.05} ${bw * 0.1} ${h * 1.05} 0 ${h / 2}`,
-      "Z",
-      `M${bw * 0.94} ${h / 2}`,
-      `L${w} ${h * 0.14}`,
-      `L${w} ${h * 0.86}`,
+      `M${w * 0.02} ${cy}`,
+      `C${bw * 0.18} ${h * 0.04} ${bw * 0.72} ${h * 0.04} ${bw} ${cy}`,
+      `L${w} ${h * 0.1}`,
+      `L${w * 0.88} ${cy}`,
+      `L${w} ${h * 0.9}`,
+      `L${bw} ${cy}`,
+      `C${bw * 0.72} ${h * 0.96} ${bw * 0.18} ${h * 0.96} ${w * 0.02} ${cy}`,
       "Z",
     ].join(" ");
   }
   if (kind === "paw") {
-    const pr = Math.min(w, h) * 0.15;
-    const pad = `M${w / 2} ${h} C${w * 0.14} ${h} ${w * 0.1} ${h * 0.52} ${w / 2} ${h * 0.52} C${w * 0.9} ${h * 0.52} ${w * 0.86} ${h} ${w / 2} ${h} Z`;
-    const toe = (cx: number, cy: number, rx: number) =>
-      `M${cx} ${cy - rx} A${rx} ${rx * 1.2} 0 1 0 ${cx} ${cy + rx} A${rx} ${rx * 1.2} 0 1 0 ${cx} ${cy - rx} Z`;
+    // One pad and four toes. Sizes are relative to the width so the toes stay
+    // in proportion on a wide tag as well as a square one.
+    const ellipse = (cx: number, cy: number, rx: number, ry: number) =>
+      `M${cx - rx} ${cy} a${rx} ${ry} 0 1 1 ${rx * 2} 0 a${rx} ${ry} 0 1 1 ${-rx * 2} 0 Z`;
+    const tx = w * 0.115, ty = h * 0.17;
     return [
-      pad,
-      toe(w * 0.16, h * 0.34, pr * 0.8),
-      toe(w * 0.38, h * 0.17, pr * 0.85),
-      toe(w * 0.62, h * 0.17, pr * 0.85),
-      toe(w * 0.84, h * 0.34, pr * 0.8),
+      // pad
+      `M${w * 0.5} ${h * 0.99} C${w * 0.16} ${h * 0.99} ${w * 0.13} ${h * 0.46} ${w * 0.5} ${h * 0.46} C${w * 0.87} ${h * 0.46} ${w * 0.84} ${h * 0.99} ${w * 0.5} ${h * 0.99} Z`,
+      ellipse(w * 0.15, h * 0.29, tx, ty),
+      ellipse(w * 0.38, h * 0.19, tx, ty),
+      ellipse(w * 0.62, h * 0.19, tx, ty),
+      ellipse(w * 0.85, h * 0.29, tx, ty),
     ].join(" ");
   }
   if (kind === "round") {

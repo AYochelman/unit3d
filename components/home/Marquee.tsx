@@ -16,7 +16,7 @@ export default function Marquee() {
     <section className="py-20 md:py-24 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-10 mb-10">
         <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-          עבודות אחרונות
+          RECENT WORK
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05]">
           ככה זה נראה כשזה יוצא מהמדפסת.

@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
@@ -86,7 +87,7 @@ function rescaleDesign(d: Design, w: number, h: number): Design {
  * was clicked. This lets the base keep the drawing, the face and the steps
  * while the product supplies the name, the price and the print figures.
  */
-function itemOverride(id?: string): Partial<ConfigProduct> & { href?: string } | undefined {
+function itemOverride(id?: string): Partial<ConfigProduct> & { href?: string; image?: string } | undefined {
   if (!id) return undefined;
   const p = PRODUCT_BY_ID[id];
   if (p) {
@@ -98,11 +99,12 @@ function itemOverride(id?: string): Partial<ConfigProduct> & { href?: string } |
       hours: p.hours,
       ...(p.material ? { material: p.material } : {}),
       href: `/products/${p.id}`,
+      image: p.image,
     };
   }
   const f = FIDGETS.find((x) => x.id === id);
   if (!f) return undefined;
-  return { label: f.name, desc: f.desc, basePrice: f.price, href: `/fidgets/${f.id}` };
+  return { label: f.name, desc: f.desc, basePrice: f.price, href: `/fidgets/${f.id}`, image: f.thumbnail ?? f.images?.[0] };
 }
 
 export default function ConfiguratorClient({
@@ -260,8 +262,8 @@ export default function ConfiguratorClient({
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
       <header className="mb-6 md:mb-10">
-        <Pill tone="neutral" className="mb-3">מעצב · תצוגה חיה</Pill>
-        <h1 className="font-display text-3xl md:text-[42px] font-bold mb-2">מעצב אישי</h1>
+        <Pill tone="cyan" className="mb-3">CONFIGURATOR · LIVE PREVIEW</Pill>
+        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">מעצב אישי</h1>
         <p className="text-ink-300">
           בוחרים מוצר, כותבים טקסט או מציירים עיצוב חופשי, בוחרים צבע. הכל מתעדכן בזמן אמת ונוסע איתך לטופס.
         </p>
@@ -284,6 +286,25 @@ export default function ConfiguratorClient({
         {/* Preview / canvas */}
         <div className="lg:col-span-3 order-2 lg:order-1">
           <div className="sticky top-20">
+            {/* The designer works on ten generic bases, so a customer who came
+                from a specific shelf product needs to see that product here or
+                the page reads as "a basic keychain". */}
+            {override?.image && (
+              <div className="mb-3 flex items-center gap-3 rounded-xl border border-ink-800 bg-ink-900 p-2.5">
+                <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-ink-950">
+                  <Image src={override.image} alt={product.label} fill sizes="56px" className="object-cover" unoptimized />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] text-ink-400">המוצר שבחרת</div>
+                  <div className="truncate text-sm font-semibold">{product.label}</div>
+                </div>
+                {override.href && (
+                  <Link href={override.href} className="shrink-0 text-xs font-semibold text-cyan2 hover:underline">
+                    לעמוד המוצר
+                  </Link>
+                )}
+              </div>
+            )}
             {showCanvas ? (
               <DesignCanvas
                 design={design}
@@ -307,11 +328,11 @@ export default function ConfiguratorClient({
                   />
                   <div className="absolute top-4 right-4 font-mono text-[10px] tracking-widest text-ink-400 flex items-center gap-2" dir="ltr">
                     <span className="w-1.5 h-1.5 bg-cyan2 rounded-full live-dot" />
-                    תצוגה חיה
+                    LIVE PREVIEW
                   </div>
                   <div className="absolute bottom-4 right-4 left-4 flex items-end justify-between font-mono text-[10px] text-ink-400" dir="ltr">
                     <span>{face[0]}×{face[1]}mm · ~{timeLabel}</span>
-                    <span>חומר · {material.short}</span>
+                    <span>FILAMENT · {material.short}</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 divide-x divide-ink-800 rtl:divide-x-reverse border-t border-ink-800 font-mono text-[11px]" dir="ltr">
@@ -405,7 +426,18 @@ export default function ConfiguratorClient({
                           shape === s.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        <div className={cn("text-3xl mb-2", shape === s.id ? "text-flame" : "text-ink-400")}>{s.icon}</div>
+                        {/* Draw the real silhouette, not an emoji: on a pet tag
+                            the shape IS the product, so the button should look
+                            like what comes out of the printer. */}
+                        <div className={cn("mb-2", shape === s.id ? "text-flame" : "text-ink-400")}>
+                          {product.hasShape && product.shapes ? (
+                            <svg viewBox="0 0 64 40" className="h-9 w-16" aria-hidden="true">
+                              <path d={facePath(faceKindFor(product, s.id), 64, 40)} fill="currentColor" />
+                            </svg>
+                          ) : (
+                            <span className="text-3xl">{s.icon}</span>
+                          )}
+                        </div>
                         <div className="font-semibold">{s.label}</div>
                       </button>
                     ))}

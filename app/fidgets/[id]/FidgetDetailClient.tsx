@@ -428,7 +428,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 </div>
                 <div>
                   <div className="font-semibold text-sm">הדפסת AMS — ריבוי צבעים</div>
-                  <div className="text-[11px] text-ink-400 mt-0.5">Bambu Lab P2S · 4 גלילים במקביל</div>
+                  <div className="text-[11px] text-ink-400 mt-0.5">Bambu X1C · 4 גלילים במקביל</div>
                 </div>
               </div>
               <button

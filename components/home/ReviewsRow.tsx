@@ -5,7 +5,6 @@ import Icon from "@/components/ui/Icon";
 import Btn from "@/components/ui/Btn";
 import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
-import { photoById } from "@/lib/photos";
 import { REVIEWS } from "@/lib/data";
 import type { Review, ReviewSeg } from "@/lib/types";
 
@@ -25,31 +24,12 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 
 const AVG = (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1);
 
-/**
- * The exact product each review is about.
- *
- * Only a review that is genuinely about a catalogue item is mapped: a picture
- * of a fox next to a review about a cat, or a USB cable guard next to a review
- * about a coffee-machine part, reads as fake — which is worse than a drawing.
- * Unit emblems and branded batches are made to order, have no product page,
- * and keep their illustration.
- */
-const REVIEW_ITEM: Record<string, string | null> = {
-  r1: null,               // unit emblem — made to order
-  r2: null,               // three unit keychains
-  r3: "mw-1645081",       // דרקון מינימליסטי
-  r4: null,               // unit emblem statue
-  r5: null,               // 80 branded keychains
-  r6: "mw-1971172",       // וו מגבת נועל-אוטומטי
-  r7: null,               // unit emblem
-  r8: null,               // 35 branded figurines
-  r9: "mw-1645161",       // שועל חולם · לואו-פולי
-  r10: "mw-90174",        // דרקון מפרקי גמיש
-  r11: "mw-2868647",      // תג לחיה עם שם וטלפון
-  r12: "mw-2125984",      // מעמד עטים ואגרטל · וורונוי
-  r13: "mw-2735060",      // סמיסקי עם חתול על הראש
-  r14: "mw-26806",        // מעמד כרטיסי ביקור
-};
+// GitHub Pages serves the site under /<repo>/, and next/image does NOT prefix
+// that onto a local src when images are unoptimised — which is why the studio
+// photographs 404'd on the live site while the remote catalogue ones worked.
+const BASE = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+const photoUrl = (p?: string) => (p ? `${BASE}${p}` : undefined);
+
 function Stars({ n }: { n: number }) {
   return (
     <span className="inline-flex gap-0.5" aria-label={`${n} מתוך 5`}>
@@ -58,7 +38,7 @@ function Stars({ n }: { n: number }) {
           key={i}
           name="star"
           size={13}
-          className={i < n ? "fill-current text-amber2" : "text-ink-700"}
+          className={i < n ? "fill-current text-flame" : "text-ink-700"}
         />
       ))}
     </span>
@@ -71,26 +51,27 @@ function Stars({ n }: { n: number }) {
  * bought — the same drawing the shop uses on that product's own card.
  */
 function ReviewCard({ r }: { r: Review }) {
-  const photo = photoById(REVIEW_ITEM[r.id]);
+  const photo = photoUrl(r.photo);
   const Body = (
     <>
       <div
-        className={`relative h-28 flex items-center justify-center shrink-0 ${photo ? "bg-ink-800" : "bg-ink-900"}`}
-        style={
-          photo
-            ? undefined
-            : { background: "radial-gradient(circle at 50% 38%, rgba(255,255,255,0.055), transparent 62%)" }
-        }
+        className="relative h-28 flex items-center justify-center shrink-0"
+        style={{
+          background: `radial-gradient(circle at 50% 40%, hsla(${r.hue ?? 145}, 70%, 50%, 0.20), transparent 62%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
+        }}
       >
         {photo ? (
-          <Image src={photo.src} alt={photo.name} fill sizes="300px" className="object-cover" unoptimized />
+          <Image src={photo} alt={r.item ?? r.name} fill sizes="300px" className="object-cover" unoptimized />
         ) : (
           <ProductArt art={r.art ?? "keychain"} hue={r.hue ?? 145} size={92} />
         )}
         <span className="absolute top-2 right-2">
           <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>
         </span>
-
+        <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border backdrop-blur bg-good/15 text-good border-good/40">
+          <Icon name="check" size={9} strokeWidth={3} />
+          רכישה מאומתת
+        </span>
       </div>
 
       <div className="p-4 flex flex-col flex-1">
@@ -106,17 +87,7 @@ function ReviewCard({ r }: { r: Review }) {
           </div>
         )}
 
-        <p className="text-ink-200 text-sm leading-relaxed line-clamp-4">{r.txt}</p>
-
-        {/* Answering the review that went wrong is worth more than hiding it. */}
-        {r.reply && (
-          <div className="mt-2.5 rounded-lg border-r-2 border-ink-600 bg-ink-950/60 px-3 py-2">
-            <div className="text-[10px] font-semibold text-ink-400 mb-0.5">אריאל, Unit 3D</div>
-            <p className="text-[12px] leading-relaxed text-ink-300 line-clamp-3">{r.reply}</p>
-          </div>
-        )}
-
-        <div className="flex-1" />
+        <p className="text-ink-200 text-sm leading-relaxed line-clamp-4 flex-1">{r.txt}</p>
 
         <div className="mt-4 pt-3 border-t border-ink-800 flex items-center gap-3">
           <div
@@ -166,7 +137,7 @@ export default function ReviewsRow() {
     <section className="py-20 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <SectionHead eyebrow={`${AVG} מתוך 5 · ${REVIEWS.length} ביקורות`} title="מה כתבו אחרי שקיבלו את החבילה" />
+          <SectionHead eyebrow={`REVIEWS · ${AVG} / 5.0`} title="לקוחות אמיתיים. הזמנות אמיתיות." />
           <Btn as="a" href="/reviews" variant="ghost" iconRight="arrowLeft">
             כל הביקורות
           </Btn>

@@ -10,7 +10,7 @@ export default function LivePreview() {
         <div className="grid md:grid-cols-5 gap-10 items-center">
           <div className="md:col-span-2">
             <SectionHead
-              eyebrow="שידור מהסטודיו"
+              eyebrow="LIVE · CAM ONLINE"
               title={
                 <>
                   המדפסת רצה <span className="text-flame">בזמן שאתה קורא.</span>

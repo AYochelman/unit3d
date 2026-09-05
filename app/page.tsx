@@ -7,7 +7,6 @@ import LivePreview from "@/components/home/LivePreview";
 import Marquee from "@/components/home/Marquee";
 import B2BBlock from "@/components/home/B2BBlock";
 import ReviewsRow from "@/components/home/ReviewsRow";
-import PrintsStrip from "@/components/home/PrintsStrip";
 import FinalCTA from "@/components/home/FinalCTA";
 
 export default function HomePage() {
@@ -17,8 +16,6 @@ export default function HomePage() {
       {/* Social proof before anything else — it is the first question a new
           visitor has, and it used to sit at the bottom of the page. */}
       <ReviewsRow />
-      {/* Real photographs, at a different rhythm to the card grids around it. */}
-      <PrintsStrip />
       <AudienceSwitcher />
       <Categories />
       <ProductShowcase />

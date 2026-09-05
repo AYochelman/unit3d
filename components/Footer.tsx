@@ -70,7 +70,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
-              החנות
+              SHOP
             </h4>
             <ul className="space-y-2.5 text-sm">
               {SHOP.map((it) => (
@@ -88,7 +88,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
-              עזרה
+              SUPPORT
             </h4>
             <ul className="space-y-2.5 text-sm">
               {SUPPORT.map((it) => (
@@ -106,7 +106,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
-              שאלות נפוצות
+              FAQ · QUICK
             </h4>
             <ul className="space-y-2.5 text-sm">
               {QUICK.map((q) => (
@@ -129,7 +129,7 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-2 font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             <span className="w-1.5 h-1.5 rounded-full bg-good live-dot" />
-            <span>המדפסת פעילה</span>
+            <span>PRINTER ONLINE</span>
           </div>
         </div>
       </div>

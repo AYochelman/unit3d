@@ -20,7 +20,7 @@ export default function TrendyClient() {
           <span className="w-1.5 h-1.5 rounded-full bg-flame live-dot" />
           טרנדי כרגע · HOT RIGHT NOW
         </Pill>
-        <h1 className="font-display text-3xl md:text-5xl font-bold leading-[1.15] mb-3">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
           מה שכולם מזמינים השבוע.
         </h1>
         <p className="text-ink-300 max-w-2xl">

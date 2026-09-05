@@ -83,7 +83,7 @@ export default function AdminClient() {
   if (!unlocked) {
     return (
       <div className="max-w-md mx-auto px-6 py-24">
-        <Pill tone="neutral" className="mb-4">ניהול</Pill>
+        <Pill tone="neutral" className="mb-4 font-mono">ADMIN</Pill>
         <h1 className="text-3xl font-black tracking-tightest mb-2">אזור ניהול</h1>
         <p className="text-ink-400 text-sm mb-6">
           עלויות ייצור, מחירי גלילים ומרווחים. הקוד מוגדר בקובץ <span className="font-mono text-ink-200" dir="ltr">lib/admin-store.ts</span>.
@@ -116,7 +116,7 @@ export default function AdminClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
       <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <Pill tone="neutral" className="mb-3">ניהול · עלויות</Pill>
+          <Pill tone="neutral" className="mb-3 font-mono">ADMIN · COSTING</Pill>
           <h1 className="text-3xl md:text-4xl font-black tracking-tightest">ניהול עלויות</h1>
           <p className="text-ink-400 text-sm mt-1">הנתונים חיים לסשן הנוכחי. לשונית &quot;גיבוי&quot; ← &quot;שמירה&quot; מורידה קובץ שמעדכן את המחירים והמלאי לכל מי שנכנס לאתר.</p>
         </div>
@@ -568,7 +568,7 @@ function ParamsTab() {
   const setPricing = useAdminStore((s) => s.setPricing);
   const fields: { k: Exclude<keyof CostSettings, "spoolPrices">; label: string; hint: string; step: number; pct?: boolean }[] = [
     { k: "machineRatePerHour", label: "עלות מכונה לשעה (₪)", hint: "פחת מדפסת, תחזוקה, נוזלים. 6 ₪ לשעה = מדפסת של 4,000 ₪ על ~1,300 שעות עבודה בשנה, פלוס תחזוקה.", step: 0.5 },
-    { k: "printerWatts", label: "צריכת חשמל בהדפסה (W)", hint: "Bambu Lab P2S ממוצע ~150W ב-PLA, יותר עם תא סגור.", step: 5 },
+    { k: "printerWatts", label: "צריכת חשמל בהדפסה (W)", hint: "Bambu X1C ממוצע ~120W ב-PLA, ~180W ב-ABS עם תא סגור.", step: 5 },
     { k: "kwhPriceILS", label: "מחיר קוט\"ש (₪)", hint: "תעריף חברת החשמל הביתי.", step: 0.01 },
     { k: "laborPerItem", label: "עבודה ליחידה (₪)", hint: "הורדה מהמשטח, ניקוי תמיכות, אריזה. גם אם זה אתה, הזמן שווה כסף.", step: 1 },
     { k: "amsWastePerColor", label: "פחת AMS לכל צבע נוסף", hint: "מגדל הניקוי והפיילים. 12% מהמשקל לכל צבע נוסף זה אומדן סביר לחלקים קטנים.", step: 0.01, pct: true },

@@ -13,7 +13,7 @@ export default function FAQPage() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           FAQ · 8 ANSWERS
         </div>
-        <h1 className="font-display text-3xl md:text-[42px] font-bold leading-[1.15]">
+        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
           שאלות. תשובות.
         </h1>
       </header>
