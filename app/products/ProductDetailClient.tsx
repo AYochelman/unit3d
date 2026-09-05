@@ -20,6 +20,7 @@ import { useLivePrice } from "@/lib/live-price";
 import { designHref, isPersonalizable } from "@/lib/designable";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
+import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
@@ -77,8 +78,13 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const unitPrice = basePrice + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
   const total = unitPrice * qty;
 
-  const grams = override?.grams ?? p.grams;
-  const hours = override?.hours ?? p.hours;
+  // An AMS print is a different plate: MakerWorld publishes its own weight and
+  // time for it, and they are far higher than the single-colour ones. Costing
+  // the AMS option off the plain figures is how a two-colour job gets underpriced.
+  const grams = override?.grams ?? (amsOn && p.gramsAms ? p.gramsAms : p.grams);
+  const hours = override?.hours ?? (amsOn && p.hoursAms ? p.hoursAms : p.hours);
+  // Show the customer the time for the plate they actually chose.
+  const timeLabel = amsOn && p.hoursAms ? fmtHours(p.hoursAms) : p.time;
 
   // Availability follows the filament we actually have on the shelf.
   const matInStock = isMaterialInStock(stock, material);
@@ -91,7 +97,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const handleAdd = () => {
     const lines = [
       `גודל: ${p.size}`,
-      `זמן הדפסה: ${p.time}`,
+      `זמן הדפסה: ${timeLabel}`,
       `חומר: ${mat.name}`,
       `צבע: ${color.name}`,
     ];
@@ -200,7 +206,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-mono text-ink-400 border-y border-ink-800 py-3" dir="ltr">
             <span className="flex items-center gap-1.5"><Icon name="expand" size={11} />{p.size}</span>
             <span className="text-ink-700">·</span>
-            <span className="flex items-center gap-1.5"><Icon name="clock" size={11} />{p.time}</span>
+            <span className="flex items-center gap-1.5"><Icon name="clock" size={11} />{timeLabel}</span>
             <span className="text-ink-700">·</span>
             <span className="flex items-center gap-1.5"><Icon name="layers" size={11} />{grams}g</span>
           </div>

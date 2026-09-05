@@ -44,9 +44,20 @@ export type ImportedModel = {
   /** Hebrew one-liner for the card. */
   desc: string;
   shelf: ImportedShelf;
-  /** Print time in hours and filament weight in grams (estimated by the script). */
+  /**
+   * Print time and filament for the SINGLE-COLOUR plate.
+   *
+   * The import used to take instances[0], which is whichever plate the designer
+   * uploaded first — on 147 of 183 models that was not the one-colour version,
+   * so the shop was costing a multi-colour print as if it were plain. These two
+   * are now always the cheapest single-colour instance.
+   */
   hours: number;
   grams: number;
+  /** The AMS plate, when the designer published one. Much slower: colour
+   *  changes and the purge tower can triple the time and the filament. */
+  hoursAms?: number;
+  gramsAms?: number;
   /** Longest dimension, e.g. "~120mm". */
   size: string;
   /** Colours the model is designed for (AMS). */
@@ -149,6 +160,8 @@ export function importedFidgets(): Fidget[] {
       license: m.license,
       downloads: m.downloads,
       ams: m.colors > 1,
+      hoursAms: m.hoursAms,
+      gramsAms: m.gramsAms,
     }));
 }
 
@@ -167,6 +180,8 @@ export function importedProducts(): Product[] {
       time: fmtHours(m.hours),
       hours: m.hours,
       grams: m.grams,
+      hoursAms: m.hoursAms,
+      gramsAms: m.gramsAms,
       art: m.art ?? "lowpoly",
       image: m.image,
       hue: m.hue,

@@ -124,6 +124,9 @@ export type Fidget = {
   license?: string;
   downloads?: number;
   ams?: boolean;
+  /** Print time and weight of the AMS plate, when the designer published one. */
+  hoursAms?: number;
+  gramsAms?: number;
   variants?: FidgetVariant[];
   /** Listing stats (demo counters until there is a backend). */
   rating?: number;
@@ -256,6 +259,9 @@ export type Product = {
   hours: number;
   /** Filament weight in grams (for costing). */
   grams: number;
+  /** Print time and weight for the AMS (multi-colour) plate, when one exists. */
+  hoursAms?: number;
+  gramsAms?: number;
   art: ProductArtId;
   hue: number;
   tag?: string;

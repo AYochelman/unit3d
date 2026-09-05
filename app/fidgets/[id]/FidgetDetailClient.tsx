@@ -102,8 +102,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const blendMode    = LIGHT_FILAMENTS.has(colorId) ? "color" : "multiply";
   const tintOpacity  = colorId === "black" ? 0 : LIGHT_FILAMENTS.has(colorId) ? 0.18 : 0.30;
 
-  const weightG       = override?.grams ?? fidgetGrams(f);
-  const hours         = override?.hours ?? parseHours(displayTime);
+  // The AMS plate is its own print: heavier and much slower than the
+  // single-colour one, so costing has to switch to it when AMS is on.
+  const weightG       = override?.grams ?? (amsOn && f.gramsAms ? f.gramsAms : fidgetGrams(f));
+  const hours         = override?.hours ?? (amsOn && f.hoursAms ? f.hoursAms : parseHours(displayTime));
 
   // ── handlers ─────────────────────────────────────────────────────────────
   const handleAddToCart = () => {
