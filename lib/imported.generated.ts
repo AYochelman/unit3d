@@ -48,7 +48,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 35.83,
-    "gramsAms": 584
+    "gramsAms": 584,
+    "plates": [
+      {
+        "g": 12,
+        "h": 2.52
+      },
+      {
+        "g": 489,
+        "h": 50.01
+      }
+    ]
   },
   {
     "id": "mw-2336776",
@@ -121,7 +131,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 20.27,
-    "gramsAms": 314
+    "gramsAms": 314,
+    "plates": [
+      {
+        "g": 19,
+        "h": 1.19
+      },
+      {
+        "g": 110,
+        "h": 4.3
+      }
+    ]
   },
   {
     "id": "mw-2249212",
@@ -146,7 +166,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 16.95,
-    "gramsAms": 300
+    "gramsAms": 300,
+    "plates": [
+      {
+        "g": 81,
+        "h": 3.38
+      },
+      {
+        "g": 183,
+        "h": 5.41
+      }
+    ]
   },
   {
     "id": "mw-2956325",
@@ -232,7 +262,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "weapon"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 53,
+        "h": 1.61
+      },
+      {
+        "g": 99,
+        "h": 2.76
+      }
+    ]
   },
   {
     "id": "mw-1271221",
@@ -263,8 +303,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Collapsible Twisting Sword (Print-in-Place)",
     "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
     "shelf": "fidget",
-    "hours": 4.73,
-    "grams": 123,
+    "hours": 4.8,
+    "grams": 96,
     "size": "~160mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/US34680350dc89c9/design/2025-06-22_8f771d384f9328.gif?x-oss-process=image/resize,w_400/format,jpeg",
@@ -302,7 +342,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "weapon"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 27,
+        "h": 1.21
+      },
+      {
+        "g": 39,
+        "h": 2.62
+      }
+    ]
   },
   {
     "id": "mw-2000966",
@@ -324,7 +374,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 4.98,
-    "gramsAms": 70
+    "gramsAms": 70,
+    "plates": [
+      {
+        "g": 7,
+        "h": 0.39
+      },
+      {
+        "g": 39,
+        "h": 1.88
+      }
+    ]
   },
   {
     "id": "mw-2694968",
@@ -353,8 +413,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Fidget Click Clack Swoosh! Print in Place - 32 min",
     "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
     "shelf": "fidget",
-    "hours": 0.44,
-    "grams": 15,
+    "hours": 0.58,
+    "grams": 13,
     "size": "~60mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/USb3716c1f295a31/design/2024-10-26_68ae23883c6d48.png?x-oss-process=image/resize,w_400/format,webp",
@@ -412,7 +472,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 1.55,
-    "gramsAms": 31
+    "gramsAms": 31,
+    "plates": [
+      {
+        "g": 22,
+        "h": 1.16
+      },
+      {
+        "g": 30,
+        "h": 1.47
+      }
+    ]
   },
   {
     "id": "mw-850834",
@@ -434,7 +504,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "weapon"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 27,
+        "h": 1.52
+      },
+      {
+        "g": 73,
+        "h": 5.38
+      }
+    ]
   },
   {
     "id": "mw-2661039",
@@ -456,7 +536,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 1.24,
-    "gramsAms": 13
+    "gramsAms": 13,
+    "plates": [
+      {
+        "g": 2,
+        "h": 0.38
+      },
+      {
+        "g": 3,
+        "h": 0.39
+      },
+      {
+        "g": 6,
+        "h": 0.66
+      },
+      {
+        "g": 10,
+        "h": 1.2
+      }
+    ]
   },
   {
     "id": "mw-2875932",
@@ -476,7 +574,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 280,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 2,
+        "h": 0.3
+      },
+      {
+        "g": 3,
+        "h": 0.37
+      },
+      {
+        "g": 7,
+        "h": 0.8
+      },
+      {
+        "g": 19,
+        "h": 1.27
+      }
+    ]
   },
   {
     "id": "mw-2554479",
@@ -520,7 +636,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 0.75,
-    "gramsAms": 10
+    "gramsAms": 10,
+    "plates": [
+      {
+        "g": 3,
+        "h": 0.38
+      },
+      {
+        "g": 10,
+        "h": 1.07
+      },
+      {
+        "g": 14,
+        "h": 1.39
+      }
+    ]
   },
   {
     "id": "mw-2801921",
@@ -562,7 +692,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 6.58,
-    "gramsAms": 95
+    "gramsAms": 95,
+    "plates": [
+      {
+        "g": 42,
+        "h": 2.2
+      },
+      {
+        "g": 90,
+        "h": 4.17
+      }
+    ]
   },
   {
     "id": "mw-1167297",
@@ -584,15 +724,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 7.74,
-    "gramsAms": 89
+    "gramsAms": 89,
+    "plates": [
+      {
+        "g": 86,
+        "h": 7.56
+      },
+      {
+        "g": 342,
+        "h": 17.91
+      }
+    ]
   },
   {
     "id": "mw-2759820",
     "name": "6g Spinning Mini Octopus Spinner Octopus Flexi Fid",
     "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
     "shelf": "fidget",
-    "hours": 0.62,
-    "grams": 7,
+    "hours": 0.69,
+    "grams": 6,
     "size": "~60mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/US895fc49929b186/design/4894d2d9733cd670.png?x-oss-process=image/resize,w_400/format,webp",
@@ -613,8 +763,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Flexi Articulated T-Rex",
     "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
-    "hours": 1.3,
-    "grams": 21,
+    "hours": 1.34,
+    "grams": 20,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US2b30e14583b2d4/design/58060d570b49ff81.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -626,7 +776,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 90,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 20,
+        "h": 1.34
+      },
+      {
+        "g": 50,
+        "h": 2.61
+      }
+    ]
   },
   {
     "id": "mw-567166",
@@ -709,7 +869,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 280,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 9,
+        "h": 0.8
+      },
+      {
+        "g": 15,
+        "h": 2.21
+      }
+    ]
   },
   {
     "id": "mw-2196193",
@@ -731,7 +901,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 2.31,
-    "gramsAms": 32
+    "gramsAms": 32,
+    "plates": [
+      {
+        "g": 10,
+        "h": 0.73
+      },
+      {
+        "g": 26,
+        "h": 1.84
+      },
+      {
+        "g": 68,
+        "h": 3.4
+      },
+      {
+        "g": 108,
+        "h": 7.39
+      }
+    ]
   },
   {
     "id": "mw-1841781",
@@ -751,7 +939,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 280,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 2,
+        "h": 0.33
+      },
+      {
+        "g": 4,
+        "h": 0.5
+      },
+      {
+        "g": 23,
+        "h": 2.61
+      }
+    ]
   },
   {
     "id": "mw-2478859",
@@ -797,7 +999,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 0.95,
-    "gramsAms": 21
+    "gramsAms": 21,
+    "plates": [
+      {
+        "g": 12,
+        "h": 0.66
+      },
+      {
+        "g": 20,
+        "h": 1.0
+      },
+      {
+        "g": 28,
+        "h": 1.59
+      },
+      {
+        "g": 41,
+        "h": 1.53
+      }
+    ]
   },
   {
     "id": "mw-2532701",
@@ -826,8 +1046,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Panda by Bambu",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 0.75,
-    "grams": 21,
+    "hours": 1.02,
+    "grams": 14,
     "size": "~60mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/US156c19237a770e/design/2025-03-27_9a58c17d6400f.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -844,15 +1064,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 4.9,
-    "gramsAms": 74
+    "gramsAms": 74,
+    "plates": [
+      {
+        "g": 14,
+        "h": 1.02
+      },
+      {
+        "g": 21,
+        "h": 0.75
+      }
+    ]
   },
   {
     "id": "mw-2869418",
     "name": "Articulated Skeleton Frog",
     "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
-    "hours": 1.87,
-    "grams": 37,
+    "hours": 4.59,
+    "grams": 24,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US9b80319f1f6a5c/design/f6b49388771e6c12.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -864,7 +1094,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 90,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 24,
+        "h": 4.59
+      },
+      {
+        "g": 36,
+        "h": 2.19
+      },
+      {
+        "g": 167,
+        "h": 9.75
+      },
+      {
+        "g": 398,
+        "h": 17.98
+      }
+    ]
   },
   {
     "id": "mw-1517687",
@@ -893,8 +1141,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "USB-C Cable Protector - UPDATED",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 0.3,
-    "grams": 2,
+    "hours": 0.31,
+    "grams": 1,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USa23686bdcf5bf3/design/4a9840d4df4e2ee4.png?x-oss-process=image/resize,w_400/format,webp",
@@ -907,7 +1155,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 1,
+        "h": 0.31
+      },
+      {
+        "g": 2,
+        "h": 0.3
+      }
+    ]
   },
   {
     "id": "mw-1032328",
@@ -951,7 +1209,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 133,
+        "h": 4.65
+      },
+      {
+        "g": 318,
+        "h": 9.5
+      }
+    ]
   },
   {
     "id": "mw-2735060",
@@ -999,7 +1267,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 6.68,
-    "gramsAms": 189
+    "gramsAms": 189,
+    "plates": [
+      {
+        "g": 99,
+        "h": 3.74
+      },
+      {
+        "g": 156,
+        "h": 5.92
+      }
+    ]
   },
   {
     "id": "mw-2121218",
@@ -1045,7 +1323,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 80.03,
-    "gramsAms": 1087
+    "gramsAms": 1087,
+    "plates": [
+      {
+        "g": 127,
+        "h": 9.26
+      },
+      {
+        "g": 206,
+        "h": 12.48
+      }
+    ]
   },
   {
     "id": "mw-1209712",
@@ -1066,15 +1354,33 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 2,
+        "h": 0.24
+      },
+      {
+        "g": 27,
+        "h": 1.06
+      },
+      {
+        "g": 38,
+        "h": 1.41
+      },
+      {
+        "g": 52,
+        "h": 1.99
+      }
+    ]
   },
   {
     "id": "mw-3025314",
     "name": "Window Stop • Eccentric Clamping • Parametric",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 1.54,
-    "grams": 59,
+    "hours": 1.76,
+    "grams": 58,
     "size": "~100mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US289b0b4cd6f2db/design/6b7f1c1afed6a00d.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -1087,15 +1393,29 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 58,
+        "h": 1.76
+      },
+      {
+        "g": 99,
+        "h": 3.0
+      },
+      {
+        "g": 280,
+        "h": 10.32
+      }
+    ]
   },
   {
     "id": "mw-471428",
     "name": "Playstation 5 Controller Pillow",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 4.67,
-    "grams": 207,
+    "hours": 5.81,
+    "grams": 191,
     "size": "~250mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US3d886d6c95c232/design/2024-05-21_c296d8cb84039.gif?x-oss-process=image/resize,w_400/format,jpeg",
@@ -1108,15 +1428,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 191,
+        "h": 5.81
+      },
+      {
+        "g": 319,
+        "h": 6.38
+      }
+    ]
   },
   {
     "id": "mw-95207",
     "name": "Gravity Broom Holder",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 1.2,
-    "grams": 37,
+    "hours": 1.25,
+    "grams": 29,
     "size": "~60mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/US7af08f97efd62f/design/2023-12-16_ljnwwrjoby9d.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -1131,7 +1461,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 1.63,
-    "gramsAms": 40
+    "gramsAms": 40,
+    "plates": [
+      {
+        "g": 29,
+        "h": 1.25
+      },
+      {
+        "g": 218,
+        "h": 10.51
+      }
+    ]
   },
   {
     "id": "mw-2772314",
@@ -1175,7 +1515,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 3,
+        "h": 0.26
+      },
+      {
+        "g": 21,
+        "h": 1.02
+      },
+      {
+        "g": 41,
+        "h": 1.93
+      },
+      {
+        "g": 81,
+        "h": 3.75
+      }
+    ]
   },
   {
     "id": "mw-2375134",
@@ -1261,7 +1619,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "weapon"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 7,
+        "h": 0.44
+      },
+      {
+        "g": 11,
+        "h": 0.95
+      },
+      {
+        "g": 20,
+        "h": 0.85
+      }
+    ]
   },
   {
     "id": "mw-2673148",
@@ -1306,7 +1678,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 3.14,
-    "gramsAms": 81
+    "gramsAms": 81,
+    "plates": [
+      {
+        "g": 19,
+        "h": 0.64
+      },
+      {
+        "g": 27,
+        "h": 1.53
+      },
+      {
+        "g": 39,
+        "h": 1.82
+      },
+      {
+        "g": 62,
+        "h": 2.9
+      }
+    ]
   },
   {
     "id": "mw-1616971",
@@ -1354,7 +1744,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "weapon"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 17,
+        "h": 1.2
+      },
+      {
+        "g": 27,
+        "h": 1.55
+      }
+    ]
   },
   {
     "id": "mw-1970508",
@@ -1399,7 +1799,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 7.83,
-    "gramsAms": 147
+    "gramsAms": 147,
+    "plates": [
+      {
+        "g": 83,
+        "h": 2.77
+      },
+      {
+        "g": 398,
+        "h": 12.29
+      }
+    ]
   },
   {
     "id": "mw-1087625",
@@ -1420,7 +1830,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 23,
+        "h": 0.86
+      },
+      {
+        "g": 262,
+        "h": 5.1
+      },
+      {
+        "g": 433,
+        "h": 8.41
+      },
+      {
+        "g": 1394,
+        "h": 23.07
+      }
+    ]
   },
   {
     "id": "mw-1797688",
@@ -1462,7 +1890,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 83,
+        "h": 3.28
+      },
+      {
+        "g": 127,
+        "h": 5.71
+      },
+      {
+        "g": 181,
+        "h": 9.18
+      }
+    ]
   },
   {
     "id": "mw-2630726",
@@ -1484,7 +1926,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "weapon"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 4,
+        "h": 0.77
+      },
+      {
+        "g": 139,
+        "h": 5.87
+      }
+    ]
   },
   {
     "id": "mw-1261340",
@@ -1525,7 +1977,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 280,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 115,
+        "h": 3.31
+      },
+      {
+        "g": 194,
+        "h": 14.74
+      }
+    ]
   },
   {
     "id": "mw-1608147",
@@ -1572,15 +2034,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "lowpoly",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 28,
+        "h": 2.41
+      },
+      {
+        "g": 38,
+        "h": 3.03
+      }
+    ]
   },
   {
     "id": "mw-1761373",
     "name": "Shower Head - 3 Stream Versions",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 13.64,
-    "grams": 334,
+    "hours": 14.34,
+    "grams": 320,
     "size": "~250mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USbae70c11fcbeea/design/2025-09-13_d3ae54443e98e.png?x-oss-process=image/resize,w_400/format,webp",
@@ -1600,8 +2072,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "SPIDER-MAN STRING-ART / MARVEL / SPIDER MAN (LOGO)",
     "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
     "shelf": "screen",
-    "hours": 1.04,
-    "grams": 44,
+    "hours": 1.13,
+    "grams": 28,
     "size": "~60mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/USbe7688652c4923/design/2024-12-04_c28b22fd6955f8.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -1618,7 +2090,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 2.87,
-    "gramsAms": 77
+    "gramsAms": 77,
+    "plates": [
+      {
+        "g": 28,
+        "h": 1.13
+      },
+      {
+        "g": 44,
+        "h": 1.04
+      }
+    ]
   },
   {
     "id": "mw-1532701",
@@ -1639,7 +2121,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "lowpoly",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 5,
+        "h": 0.63
+      },
+      {
+        "g": 15,
+        "h": 1.47
+      },
+      {
+        "g": 57,
+        "h": 4.12
+      }
+    ]
   },
   {
     "id": "mw-2624902",
@@ -1661,7 +2157,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 1.04,
-    "gramsAms": 16
+    "gramsAms": 16,
+    "plates": [
+      {
+        "g": 7,
+        "h": 0.54
+      },
+      {
+        "g": 24,
+        "h": 0.86
+      },
+      {
+        "g": 39,
+        "h": 1.75
+      }
+    ]
   },
   {
     "id": "mw-1292618",
@@ -1682,7 +2192,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 342,
+        "h": 12.67
+      },
+      {
+        "g": 1041,
+        "h": 28.64
+      }
+    ]
   },
   {
     "id": "mw-1909628",
@@ -1705,7 +2225,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "brand"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 67,
+        "h": 3.29
+      },
+      {
+        "g": 96,
+        "h": 3.47
+      },
+      {
+        "g": 132,
+        "h": 3.91
+      }
+    ]
   },
   {
     "id": "mw-1889932",
@@ -1726,7 +2260,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "lowpoly",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 45,
+        "h": 1.24
+      },
+      {
+        "g": 63,
+        "h": 3.34
+      }
+    ]
   },
   {
     "id": "mw-115260",
@@ -1777,8 +2321,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Set Scrivania 4 Pezzi Design Moderno stile Voronoi",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 2.43,
-    "grams": 62,
+    "hours": 2.62,
+    "grams": 56,
     "size": "~100mm",
     "colors": 3,
     "image": "https://makerworld.bblmw.com/makerworld/model/US57263c4fa5dd7e/design/9e02bacde7f13b3b.png?x-oss-process=image/resize,w_400/format,webp",
@@ -1793,7 +2337,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 14.7,
-    "gramsAms": 325
+    "gramsAms": 325,
+    "plates": [
+      {
+        "g": 56,
+        "h": 2.62
+      },
+      {
+        "g": 82,
+        "h": 3.63
+      }
+    ]
   },
   {
     "id": "mw-2822595",
@@ -1814,15 +2368,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 132,
+        "h": 3.43
+      },
+      {
+        "g": 180,
+        "h": 3.85
+      }
+    ]
   },
   {
     "id": "mw-731832",
     "name": "Gear Phone Stand  by Pork3D.com",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 3.41,
-    "grams": 102,
+    "hours": 4.37,
+    "grams": 84,
     "size": "~100mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US5b09dd1bb76b3b/design/2024-10-26_af276e69e5155.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -1856,7 +2420,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 7,
+        "h": 0.27
+      },
+      {
+        "g": 20,
+        "h": 0.74
+      },
+      {
+        "g": 29,
+        "h": 1.44
+      }
+    ]
   },
   {
     "id": "mw-2125984",
@@ -1919,15 +2497,33 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 3,
+        "h": 0.2
+      },
+      {
+        "g": 5,
+        "h": 0.25
+      },
+      {
+        "g": 7,
+        "h": 0.3
+      },
+      {
+        "g": 17,
+        "h": 0.56
+      }
+    ]
   },
   {
     "id": "mw-1076262",
     "name": "Smiski House Display Shelf Collectible",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 4.69,
-    "grams": 186,
+    "hours": 5.02,
+    "grams": 165,
     "size": "~160mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USe633c6d32c913/design/2025-02-05_5555f8c729249.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -1949,8 +2545,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Squeeze Fan",
     "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
-    "hours": 3.84,
-    "grams": 93,
+    "hours": 4.12,
+    "grams": 83,
     "size": "~100mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/US39efd666f54f24/design/2024-05-20_ce372f3b03061.gif?x-oss-process=image/resize,w_400/format,jpeg",
@@ -2008,7 +2604,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 53,
+        "h": 1.79
+      },
+      {
+        "g": 101,
+        "h": 3.77
+      }
+    ]
   },
   {
     "id": "mw-2253620",
@@ -2084,8 +2690,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Dreaming Fox – Low Poly Charm",
     "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
     "shelf": "statues",
-    "hours": 0.63,
-    "grams": 10,
+    "hours": 1.36,
+    "grams": 9,
     "size": "~60mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/USec020a406250e/design/2025-07-27_257d779a916488.png?x-oss-process=image/resize,w_400/format,webp",
@@ -2142,7 +2748,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "lowpoly",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 16,
+        "h": 1.4
+      },
+      {
+        "g": 233,
+        "h": 9.56
+      }
+    ]
   },
   {
     "id": "mw-2172202",
@@ -2296,8 +2912,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Kaws figure sitting",
     "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
     "shelf": "statues",
-    "hours": 3.07,
-    "grams": 108,
+    "hours": 3.52,
+    "grams": 106,
     "size": "~100mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US61e0f8e84fb399/design/2025-11-13_f6fb4e1295dd88.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -2312,7 +2928,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "brand"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 106,
+        "h": 3.52
+      },
+      {
+        "g": 154,
+        "h": 7.19
+      }
+    ]
   },
   {
     "id": "mw-2634318",
@@ -2358,7 +2984,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 16.93,
-    "gramsAms": 175
+    "gramsAms": 175,
+    "plates": [
+      {
+        "g": 60,
+        "h": 5.84
+      },
+      {
+        "g": 93,
+        "h": 8.44
+      }
+    ]
   },
   {
     "id": "mw-2863365",
@@ -2436,8 +3072,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "No Evil Trio",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 1.93,
-    "grams": 36,
+    "hours": 3.24,
+    "grams": 27,
     "size": "~160mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US4b9b2fa7c0f119/design/2025-01-02_840a1a228b88c.png?x-oss-process=image/resize,w_400/format,webp",
@@ -2450,7 +3086,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 27,
+        "h": 3.24
+      },
+      {
+        "g": 101,
+        "h": 4.52
+      },
+      {
+        "g": 149,
+        "h": 12.49
+      },
+      {
+        "g": 417,
+        "h": 18.91
+      }
+    ]
   },
   {
     "id": "mw-2835851",
@@ -2473,7 +3127,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "brand"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 81,
+        "h": 7.77
+      },
+      {
+        "g": 176,
+        "h": 11.13
+      }
+    ]
   },
   {
     "id": "mw-550723",
@@ -2618,8 +3282,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "iPhone 17 Pro/Max Modular Customizable Case",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 4.01,
-    "grams": 105,
+    "hours": 4.03,
+    "grams": 91,
     "size": "~100mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US4d77a9b475e833/design/2025-09-28_632526e040b558.png?x-oss-process=image/resize,w_400/format,webp",
@@ -2655,7 +3319,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "license-nc"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 43,
+        "h": 2.66
+      },
+      {
+        "g": 86,
+        "h": 2.83
+      },
+      {
+        "g": 163,
+        "h": 3.46
+      }
+    ]
   },
   {
     "id": "mw-1376675",
@@ -2678,7 +3356,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 1.51,
-    "gramsAms": 29
+    "gramsAms": 29,
+    "plates": [
+      {
+        "g": 10,
+        "h": 0.54
+      },
+      {
+        "g": 22,
+        "h": 0.65
+      }
+    ]
   },
   {
     "id": "mw-2426234",
@@ -2755,8 +3443,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Modular Shoe Rack - Honeycomb Design",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 4.37,
-    "grams": 126,
+    "hours": 9.48,
+    "grams": 124,
     "size": "~160mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US3aac3881dd54e9/design/2025-01-22_8a5316c6a6e03.png?x-oss-process=image/resize,w_400/format,webp",
@@ -2769,7 +3457,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 124,
+        "h": 9.48
+      },
+      {
+        "g": 214,
+        "h": 5.46
+      }
+    ]
   },
   {
     "id": "mw-849620",
@@ -2790,7 +3488,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 27,
+        "h": 1.25
+      },
+      {
+        "g": 44,
+        "h": 1.64
+      }
+    ]
   },
   {
     "id": "mw-427080",
@@ -2811,7 +3519,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 8,
+        "h": 0.37
+      },
+      {
+        "g": 14,
+        "h": 0.75
+      },
+      {
+        "g": 23,
+        "h": 0.73
+      },
+      {
+        "g": 41,
+        "h": 3.16
+      }
+    ]
   },
   {
     "id": "mw-3037751",
@@ -2858,7 +3584,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 7.6,
-    "gramsAms": 101
+    "gramsAms": 101,
+    "plates": [
+      {
+        "g": 14,
+        "h": 2.35
+      },
+      {
+        "g": 50,
+        "h": 4.01
+      }
+    ]
   },
   {
     "id": "mw-2520704",
@@ -2904,7 +3640,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 2.22,
-    "gramsAms": 48
+    "gramsAms": 48,
+    "plates": [
+      {
+        "g": 1,
+        "h": 0.16
+      },
+      {
+        "g": 14,
+        "h": 1.01
+      },
+      {
+        "g": 33,
+        "h": 1.62
+      }
+    ]
   },
   {
     "id": "mw-490385",
@@ -2927,7 +3677,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 19.25,
-    "gramsAms": 613
+    "gramsAms": 613,
+    "plates": [
+      {
+        "g": 297,
+        "h": 7.35
+      },
+      {
+        "g": 625,
+        "h": 11.1
+      }
+    ]
   },
   {
     "id": "mw-587584",
@@ -2949,7 +3709,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 1.53,
-    "gramsAms": 22
+    "gramsAms": 22,
+    "plates": [
+      {
+        "g": 1,
+        "h": 0.13
+      },
+      {
+        "g": 8,
+        "h": 0.53
+      },
+      {
+        "g": 83,
+        "h": 2.23
+      }
+    ]
   },
   {
     "id": "mw-2984861",
@@ -2971,7 +3745,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 53.57,
-    "gramsAms": 1330
+    "gramsAms": 1330,
+    "plates": [
+      {
+        "g": 4,
+        "h": 0.34
+      },
+      {
+        "g": 11,
+        "h": 0.71
+      },
+      {
+        "g": 22,
+        "h": 0.97
+      },
+      {
+        "g": 34,
+        "h": 1.67
+      }
+    ]
   },
   {
     "id": "mw-1203450",
@@ -2996,7 +3788,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 1.81,
-    "gramsAms": 34
+    "gramsAms": 34,
+    "plates": [
+      {
+        "g": 13,
+        "h": 0.79
+      },
+      {
+        "g": 32,
+        "h": 1.7
+      }
+    ]
   },
   {
     "id": "mw-40644",
@@ -3083,8 +3885,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Pet Bowl XXL ears",
     "desc": "אביזר לחיה, מודפס ב-PETG שעמיד במים ובשמש.",
     "shelf": "pets",
-    "hours": 3.98,
-    "grams": 245,
+    "hours": 8.42,
+    "grams": 165,
     "size": "~160mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USbc6190e2af4a02/design/2025-06-29_db9d0e29becb88.jpeg",
@@ -3096,7 +3898,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "round",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 165,
+        "h": 8.42
+      },
+      {
+        "g": 245,
+        "h": 3.98
+      }
+    ]
   },
   {
     "id": "mw-27048",
@@ -3138,15 +3950,33 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 12.62,
-    "gramsAms": 279
+    "gramsAms": 279,
+    "plates": [
+      {
+        "g": 1,
+        "h": 0.17
+      },
+      {
+        "g": 35,
+        "h": 1.47
+      },
+      {
+        "g": 49,
+        "h": 2.7
+      },
+      {
+        "g": 77,
+        "h": 2.97
+      }
+    ]
   },
   {
     "id": "mw-13801",
     "name": "Chubby Dinosaur T-Rex Pencil Holder",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 2.47,
-    "grams": 65,
+    "hours": 3.08,
+    "grams": 63,
     "size": "~100mm",
     "colors": 4,
     "image": "https://makerworld.bblmw.com/makerworld/model/USa42b50895279a4/design/2023-08-27_059ff7cbf70c3.png",
@@ -3167,8 +3997,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Woven Pencil Holder",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 3.1,
-    "grams": 109,
+    "hours": 3.66,
+    "grams": 94,
     "size": "~100mm",
     "colors": 2,
     "image": "https://makerworld.bblmw.com/makerworld/model/US2b5895de2cf322/design/2023-08-14_77ed0625c0313.png",
@@ -3182,7 +4012,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 17.4,
-    "gramsAms": 264
+    "gramsAms": 264,
+    "plates": [
+      {
+        "g": 94,
+        "h": 3.66
+      },
+      {
+        "g": 333,
+        "h": 13.49
+      },
+      {
+        "g": 463,
+        "h": 46.39
+      }
+    ]
   },
   {
     "id": "mw-18687",
@@ -3222,7 +4066,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 108,
+        "h": 5.81
+      },
+      {
+        "g": 223,
+        "h": 12.07
+      }
+    ]
   },
   {
     "id": "mw-14913",
@@ -3242,15 +4096,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 135,
+        "h": 2.43
+      },
+      {
+        "g": 196,
+        "h": 4.75
+      }
+    ]
   },
   {
     "id": "mw-16632",
     "name": "Display Stand - Tile, Coaster, Picture",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 0.77,
-    "grams": 22,
+    "hours": 1.16,
+    "grams": 17,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USa2234ea0b29d15/design/2023-09-22_412180c50bcc4.webp",
@@ -3262,7 +4126,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 17,
+        "h": 1.16
+      },
+      {
+        "g": 28,
+        "h": 0.97
+      }
+    ]
   },
   {
     "id": "mw-18356",
@@ -3326,7 +4200,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 4.1,
-    "gramsAms": 88
+    "gramsAms": 88,
+    "plates": [
+      {
+        "g": 6,
+        "h": 0.75
+      },
+      {
+        "g": 23,
+        "h": 1.54
+      },
+      {
+        "g": 249,
+        "h": 14.44
+      }
+    ]
   },
   {
     "id": "mw-2868647",
@@ -3355,8 +4243,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Customizable fidget Name keychain spinner",
     "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
     "shelf": "trendy",
-    "hours": 12.05,
-    "grams": 261,
+    "hours": 12.11,
+    "grams": 222,
     "size": "~160mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US6f26fb7d05ef68/design/2023-10-01_4d204fb6f06a8.png",
@@ -3441,8 +4329,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Spiral Pen Holder (Vase mode)",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 0.49,
-    "grams": 18,
+    "hours": 1.05,
+    "grams": 12,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US236abf3d9a004a/design/2023-09-24_d3c986040a2f4.jpg",
@@ -3454,7 +4342,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 12,
+        "h": 1.05
+      },
+      {
+        "g": 17,
+        "h": 0.59
+      }
+    ]
   },
   {
     "id": "mw-18145",
@@ -3474,7 +4372,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 8,
+        "h": 0.51
+      },
+      {
+        "g": 21,
+        "h": 1.09
+      }
+    ]
   },
   {
     "id": "mw-50369",
@@ -3561,8 +4469,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Business Card Holder - Take One",
     "desc": "מתנה ממותגת. אפשר עם הלוגו שלכם, מ-10 יחידות ומעלה.",
     "shelf": "b2b",
-    "hours": 2.09,
-    "grams": 62,
+    "hours": 2.14,
+    "grams": 58,
     "size": "~100mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US3970554bd9be50/design/2023-09-28_d5ttayd0nmbs.jpg",
@@ -3636,15 +4544,33 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 34,
+        "h": 1.01
+      },
+      {
+        "g": 46,
+        "h": 1.05
+      },
+      {
+        "g": 123,
+        "h": 2.84
+      },
+      {
+        "g": 287,
+        "h": 7.22
+      }
+    ]
   },
   {
     "id": "mw-31430",
     "name": "Universal Drawer Organizers (IKEA ALEX)",
     "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
     "shelf": "office",
-    "hours": 0.48,
-    "grams": 25,
+    "hours": 0.49,
+    "grams": 16,
     "size": "~250mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USdf5dea9f3dcfe0/design/2023-10-02_6ca9b5d797b0e.jpg",
@@ -3656,7 +4582,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 16,
+        "h": 0.49
+      },
+      {
+        "g": 25,
+        "h": 0.48
+      },
+      {
+        "g": 799,
+        "h": 16.54
+      }
+    ]
   },
   {
     "id": "mw-48552",
@@ -3745,8 +4685,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "The Original Octopus Chip Clip",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 0.33,
-    "grams": 9,
+    "hours": 0.36,
+    "grams": 7,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USc1398183142986/design/2023-10-07_s6274l6gz5jk.jpg",
@@ -3758,15 +4698,33 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 7,
+        "h": 0.36
+      },
+      {
+        "g": 10,
+        "h": 0.48
+      },
+      {
+        "g": 16,
+        "h": 0.57
+      },
+      {
+        "g": 26,
+        "h": 1.01
+      }
+    ]
   },
   {
     "id": "mw-15083",
     "name": "Curvy Cam Lock Bag Clip",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
     "shelf": "home",
-    "hours": 0.56,
-    "grams": 25,
+    "hours": 0.8,
+    "grams": 16,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USdcec186917e3e/design/2023-09-21_ga5hthbazm91.jpg",
@@ -3778,7 +4736,21 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 16,
+        "h": 0.8
+      },
+      {
+        "g": 22,
+        "h": 1.05
+      },
+      {
+        "g": 249,
+        "h": 7.89
+      }
+    ]
   },
   {
     "id": "mw-64384",
@@ -3818,7 +4790,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 2,
+        "h": 0.19
+      },
+      {
+        "g": 6,
+        "h": 0.32
+      }
+    ]
   },
   {
     "id": "mw-17927",
@@ -3838,7 +4820,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 3,
+        "h": 0.25
+      },
+      {
+        "g": 5,
+        "h": 0.33
+      }
+    ]
   },
   {
     "id": "mw-3157560",
@@ -3865,8 +4857,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Iron Man - Ultra Detailed",
     "desc": "פסל תצוגה בפירוט גבוה. יוצא טוב במיוחד ב-PLA משי אדום וזהב.",
     "shelf": "screen",
-    "hours": 3.38,
-    "grams": 64,
+    "hours": 3.45,
+    "grams": 41,
     "size": "~150mm",
     "colors": 4,
     "image": "https://makerworld.bblmw.com/makerworld/model/USa166c9ff323cdc/design/3cdc3ea0c3230c18.png?x-oss-process=image/resize,w_400/format,webp",
@@ -3880,15 +4872,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 35.79,
-    "gramsAms": 385
+    "gramsAms": 385,
+    "plates": [
+      {
+        "g": 41,
+        "h": 3.45
+      },
+      {
+        "g": 64,
+        "h": 3.38
+      }
+    ]
   },
   {
     "id": "mw-2714054",
     "name": "Life Accelerator V8",
     "desc": "גאדג'ט שולחני קטן בצורת מנוע V8. הדפסה מהירה, מתנה מצחיקה.",
     "shelf": "trendy",
-    "hours": 0.95,
-    "grams": 10,
+    "hours": 0.98,
+    "grams": 9,
     "size": "~60mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/US347ea3a70ba4a0/design/5eec2ec446fa2149.jpg?x-oss-process=image/resize,w_400/format,webp",
@@ -3900,7 +4902,25 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 200,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 9,
+        "h": 0.98
+      },
+      {
+        "g": 20,
+        "h": 1.85
+      },
+      {
+        "g": 37,
+        "h": 4.6
+      },
+      {
+        "g": 108,
+        "h": 6.8
+      }
+    ]
   },
   {
     "id": "mw-3146829",
@@ -3922,7 +4942,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 5.95,
-    "gramsAms": 146
+    "gramsAms": 146,
+    "plates": [
+      {
+        "g": 5,
+        "h": 0.27
+      },
+      {
+        "g": 161,
+        "h": 7.59
+      }
+    ]
   },
   {
     "id": "mw-3174552",
@@ -4002,7 +5032,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 195,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 6,
+        "h": 0.56
+      },
+      {
+        "g": 19,
+        "h": 1.2
+      }
+    ]
   },
   {
     "id": "mw-3249292",
@@ -4031,8 +5071,8 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "name": "Toilet Hardware Animal Covers",
     "desc": "מכסים את הברגים של מושב האסלה בחיה קטנה. הדפסה מהירה, מתחלפת בשנייה.",
     "shelf": "home",
-    "hours": 0.88,
-    "grams": 19,
+    "hours": 0.91,
+    "grams": 17,
     "size": "~40mm",
     "colors": 1,
     "image": "https://makerworld.bblmw.com/makerworld/model/USbc4b9e940d806f/design/f332bdb3fc9af39b.png?x-oss-process=image/resize,w_400/format,webp",
@@ -4084,7 +5124,17 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hue": 250,
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 6,
+        "h": 0.7
+      },
+      {
+        "g": 12,
+        "h": 1.01
+      }
+    ]
   }
 ];
 

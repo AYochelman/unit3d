@@ -127,6 +127,8 @@ export type Fidget = {
   /** Print time and weight of the AMS plate, when the designer published one. */
   hoursAms?: number;
   gramsAms?: number;
+  /** Size options, lightest first. */
+  plates?: { g: number; h: number }[];
   variants?: FidgetVariant[];
   /** Listing stats (demo counters until there is a backend). */
   rating?: number;
@@ -262,6 +264,8 @@ export type Product = {
   /** Print time and weight for the AMS (multi-colour) plate, when one exists. */
   hoursAms?: number;
   gramsAms?: number;
+  /** Size options, lightest first. `grams`/`hours` are always the first one. */
+  plates?: { g: number; h: number }[];
   art: ProductArtId;
   hue: number;
   tag?: string;

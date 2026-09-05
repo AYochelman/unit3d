@@ -17,6 +17,7 @@ import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { estimateCost } from "@/lib/costing";
+import { suggestPrice } from "@/lib/imported";
 import { useLivePrice } from "@/lib/live-price";
 import { designHref, isPersonalizable } from "@/lib/designable";
 import { useOrderStore } from "@/lib/order-store";
@@ -24,6 +25,9 @@ import { fmtILS } from "@/lib/format";
 import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
+
+/** MakerWorld plates have no names, so sizes are named by their order. */
+const PLATE_LABEL = ["קטן", "בינוני", "גדול", "ענק"];
 
 const AMS_OPTIONS = [
   { colors: 2, label: "2 צבעים", surcharge: 15 },
@@ -45,6 +49,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [engrave1, setEngrave1] = useState("");
   const [engrave2, setEngrave2] = useState("");
   const [optionId, setOptionId] = useState(p?.options?.items[0]?.id);
+  // Lightest plate first, so the price the customer lands on is the cheapest one.
+  const [plateIdx, setPlateIdx] = useState(0);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [askRestock, setAskRestock] = useState(false);
@@ -69,6 +75,15 @@ export default function ProductDetailClient({ id }: { id: string }) {
     );
   }
 
+  // Several models are published in more than one size. The shop quotes the
+  // smallest, and picking a bigger one adds what it actually costs.
+  const plates = p.plates ?? [];
+  const plate = plates[Math.min(plateIdx, Math.max(0, plates.length - 1))];
+  const plateExtra =
+    plate && plates.length > 1
+      ? Math.max(0, suggestPrice(plate.g, plate.h, 1) - suggestPrice(plates[0].g, plates[0].h, 1))
+      : 0;
+
   const color = FILAMENTS.find((f) => f.id === colorId) ?? FILAMENTS[0];
   const mat = MATERIAL_BY_ID[material];
   const option = p.options?.items.find((o) => o.id === optionId);
@@ -88,16 +103,16 @@ export default function ProductDetailClient({ id }: { id: string }) {
   // the listed catalogue price already includes that default.
   const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
   const matSurcharge = Math.max(0, mat.priceAdd - baseMatAdd);
-  const unitPrice = basePrice + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
+  const unitPrice = basePrice + plateExtra + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
   const total = unitPrice * qty;
 
   // An AMS print is a different plate: MakerWorld publishes its own weight and
   // time for it, and they are far higher than the single-colour ones. Costing
   // the AMS option off the plain figures is how a two-colour job gets underpriced.
-  const grams = override?.grams ?? (amsOn && p.gramsAms ? p.gramsAms : p.grams);
-  const hours = override?.hours ?? (amsOn && p.hoursAms ? p.hoursAms : p.hours);
+  const grams = override?.grams ?? (amsOn && p.gramsAms ? p.gramsAms : plate?.g ?? p.grams);
+  const hours = override?.hours ?? (amsOn && p.hoursAms ? p.hoursAms : plate?.h ?? p.hours);
   // Show the customer the time for the plate they actually chose.
-  const timeLabel = amsOn && p.hoursAms ? fmtHours(p.hoursAms) : p.time;
+  const timeLabel = amsOn && p.hoursAms ? fmtHours(p.hoursAms) : plate ? fmtHours(plate.h) : p.time;
 
   // Availability follows the filament we actually have on the shelf.
   const matInStock = isMaterialInStock(stock, material);
@@ -223,6 +238,36 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <span className="text-ink-700">·</span>
             <span className="flex items-center gap-1.5"><Icon name="layers" size={11} />{grams}g</span>
           </div>
+
+          {/* Sizes the designer actually published, cheapest first */}
+          {plates.length > 1 && (
+            <div>
+              <div className="text-xs font-bold text-ink-300 mb-2">
+                גודל: <span className="text-ink-100 font-normal">{PLATE_LABEL[plateIdx] ?? `גודל ${plateIdx + 1}`}</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {plates.map((pl, i) => {
+                  const extra = Math.max(0, suggestPrice(pl.g, pl.h, 1) - suggestPrice(plates[0].g, plates[0].h, 1));
+                  return (
+                    <button
+                      key={`${pl.g}-${pl.h}`}
+                      type="button"
+                      onClick={() => setPlateIdx(i)}
+                      className={cn(
+                        "px-3 py-2 rounded-xl text-xs font-semibold border transition-colors text-right",
+                        plateIdx === i ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
+                      )}
+                    >
+                      <div>{PLATE_LABEL[i] ?? `גודל ${i + 1}`}</div>
+                      <div className="font-mono text-[10px] opacity-80 mt-0.5" dir="ltr">
+                        {pl.g}g · {fmtHours(pl.h)}{extra > 0 ? ` · +${fmtILS(extra)}` : ""}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Options */}
           {p.options && (

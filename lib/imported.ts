@@ -58,6 +58,16 @@ export type ImportedModel = {
    *  changes and the purge tower can triple the time and the filament. */
   hoursAms?: number;
   gramsAms?: number;
+  /**
+   * Size options, lightest first, when the designer published more than one.
+   *
+   * MakerWorld plates carry no names, so these are the distinct single-colour
+   * plates after collapsing anything within 35% of the one before it — those
+   * are colour variants of the same size, not a bigger version. `hours` and
+   * `grams` above are always the first of these, so the shop quotes the
+   * cheapest size and the customer chooses up from there.
+   */
+  plates?: { g: number; h: number }[];
   /** Longest dimension, e.g. "~120mm". */
   size: string;
   /** Colours the model is designed for (AMS). */
@@ -148,7 +158,7 @@ export function importedFidgets(): Fidget[] {
       name: heName(m.id, m.name),
       nameEn: m.name,
       desc: m.desc,
-      price: suggestPrice(m.grams, m.hours, m.colors),
+      price: suggestPrice(m.grams, m.hours, 1),
       size: m.size,
       time: fmtHours(m.hours),
       hue: m.hue,
@@ -162,6 +172,7 @@ export function importedFidgets(): Fidget[] {
       ams: m.colors > 1,
       hoursAms: m.hoursAms,
       gramsAms: m.gramsAms,
+      plates: m.plates,
     }));
 }
 
@@ -175,13 +186,14 @@ export function importedProducts(): Product[] {
       name: heName(m.id, m.name),
       nameEn: m.name,
       desc: m.desc,
-      price: suggestPrice(m.grams, m.hours, m.colors),
+      price: suggestPrice(m.grams, m.hours, 1),
       size: m.size,
       time: fmtHours(m.hours),
       hours: m.hours,
       grams: m.grams,
       hoursAms: m.hoursAms,
       gramsAms: m.gramsAms,
+      plates: m.plates,
       art: m.art ?? "lowpoly",
       image: m.image,
       hue: m.hue,
