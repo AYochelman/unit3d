@@ -1,5 +1,15 @@
 import type { ConfigProduct, Product, ProductCategory, Shape, Size } from "./types";
-import { importedProducts } from "./imported";
+import { IMPORTED, importedProducts } from "./imported";
+
+/**
+ * A photograph for a designer option.
+ *
+ * The ten bases are shapes, not catalogue rows, so they had only drawings. A
+ * drawing next to ten photographs reads as a placeholder, so each base borrows
+ * the picture of a real printed thing of that kind from the imported shelf -
+ * no new asset, and it is a genuine print either way.
+ */
+const shelfPhoto = (id: string): string | undefined => IMPORTED.find((m) => m.id === id)?.image;
 
 // ─── Pet tags (תגים לחיות) ────────────────────────────────────────────────────
 const PET_ENGRAVING = {
@@ -305,6 +315,7 @@ export const CATEGORY_LABEL: Record<Product["category"], string> = {
   home: "לבית",
   trendy: "טרנדי",
   statues: "פסלים",
+  screen: "סרטים וסדרות",
   b2b: "לעסקים",
 };
 
@@ -400,23 +411,23 @@ const COASTER_SIZES: Size[] = [
 export const CONFIG_PRODUCTS: ConfigProduct[] = [
   {
     id: "keychain", label: "מחזיק מפתחות", desc: "שם, מספר אישי, סמל יחידה.",
-    art: "keychain", basePrice: 55, hours: 1.5, grams: 12, material: "pla_plus",
+    art: "keychain", image: shelfPhoto("mw-65972"), basePrice: 55, hours: 1.5, grams: 12, material: "pla_plus",
     hasShape: true, hasSize: true, hasText: true, hasDesigner: true, face: [50, 35],
   },
   {
     id: "pet_tag", label: "תג לחיה", desc: "שם מלפנים, טלפון מאחור. חמש צורות.",
-    art: "bone", basePrice: 35, hours: 0.6, grams: 6, material: "petg",
+    art: "bone", image: shelfPhoto("mw-2868647"), basePrice: 35, hours: 0.6, grams: 6, material: "petg",
     hasShape: true, shapes: PET_TAG_SHAPES, hasSize: true, sizes: PET_TAG_SIZES,
     hasText: true, hasDesigner: true, face: [40, 24],
   },
   {
     id: "dog_tag", label: "דיסקית", desc: "דיסקית צבאית עם שרשרת.",
-    art: "dogtag", basePrice: 60, hours: 1, grams: 10, material: "pla_plus",
+    art: "dogtag", image: shelfPhoto("mw-59619"), basePrice: 60, hours: 1, grams: 10, material: "pla_plus",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [50, 28],
   },
   {
     id: "phone_case", label: "קייס לטלפון", desc: "TPU גמיש, עיצוב על הגב.",
-    art: "phonecase", basePrice: 120, hours: 3.5, grams: 45, material: "tpu",
+    art: "phonecase", image: shelfPhoto("mw-1835046"), basePrice: 120, hours: 3.5, grams: 45, material: "tpu",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [70, 145],
     models: {
       label: "דגם הטלפון",
@@ -440,32 +451,32 @@ export const CONFIG_PRODUCTS: ConfigProduct[] = [
   },
   {
     id: "luggage_tag", label: "תג למזוודה", desc: "שם וטלפון, רצועה כלולה.",
-    art: "luggage", basePrice: 50, hours: 1.3, grams: 15, material: "petg",
+    art: "luggage", image: shelfPhoto("mw-35620"), basePrice: 50, hours: 1.3, grams: 15, material: "petg",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [85, 54],
   },
   {
     id: "name_plate", label: "שלט שם", desc: "לשולחן, לדלת המשרד או לבית.",
-    art: "nameplate", basePrice: 70, hours: 2, grams: 30, material: "pla_matte",
+    art: "nameplate", image: shelfPhoto("mw-41887"), basePrice: 70, hours: 2, grams: 30, material: "pla_matte",
     hasShape: false, hasSize: true, hasText: true, hasDesigner: true, face: [120, 35], sizes: PLATE_SIZES,
   },
   {
     id: "coaster", label: "תחתית לכוס", desc: "עגולה, עם שם או עיצוב.",
-    art: "coaster", basePrice: 35, hours: 0.7, grams: 15, material: "pla_matte",
+    art: "coaster", image: shelfPhoto("mw-13127"), basePrice: 35, hours: 0.7, grams: 15, material: "pla_matte",
     hasShape: false, hasSize: true, hasText: true, hasDesigner: true, face: [90, 90], sizes: COASTER_SIZES,
   },
   {
     id: "wall_hook", label: "וו לקיר", desc: "עם מילה או שם על הבסיס.",
-    art: "hook", basePrice: 40, hours: 1, grams: 20, material: "petg",
+    art: "hook", image: shelfPhoto("mw-59837"), basePrice: 40, hours: 1, grams: 20, material: "petg",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: false, face: [60, 40],
   },
   {
     id: "cable_clip", label: "קליפ לכבלים", desc: "קליפ שולחני, ללא טקסט.",
-    art: "cableclip", basePrice: 25, hours: 0.4, grams: 6, material: "tpu",
+    art: "cableclip", image: shelfPhoto("mw-26130"), basePrice: 25, hours: 0.4, grams: 6, material: "tpu",
     hasShape: false, hasSize: false, hasText: false, hasDesigner: false, face: [25, 20],
   },
   {
     id: "bookmark", label: "סימנייה", desc: "דקה, עם שם או עיצוב.",
-    art: "bookmark", basePrice: 30, hours: 0.6, grams: 6, material: "pla_plus",
+    art: "bookmark", image: shelfPhoto("mw-26009"), basePrice: 30, hours: 0.6, grams: 6, material: "pla_plus",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [40, 140],
   },
 ];

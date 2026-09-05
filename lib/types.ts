@@ -226,7 +226,7 @@ export type Material = {
 };
 
 // ─── Shop products (pet tags, office & home) ─────────────────────────────────
-export type ProductCategory = "pets" | "office" | "home" | "trendy" | "statues" | "b2b";
+export type ProductCategory = "pets" | "office" | "home" | "trendy" | "statues" | "screen" | "b2b";
 
 export type ProductArtId =
   | "bone" | "round" | "heart" | "fish" | "paw" | "qr" | "bagholder" | "scoop"
@@ -304,6 +304,8 @@ export type ConfigProduct = {
   desc: string;
   art: ProductArtId;
   basePrice: number;
+  /** A photograph of a real print of this kind of thing, for the picker. */
+  image?: string;
   hours: number;
   grams: number;
   material: MaterialId;

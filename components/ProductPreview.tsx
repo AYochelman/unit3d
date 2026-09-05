@@ -1,7 +1,7 @@
 import type { ConfigProduct, Design, Filament, FontOpt, ShapeId } from "@/lib/types";
 import KeychainPreview from "./KeychainPreview";
 import DesignGroup from "./designer/DesignGroup";
-import { facePath, type FaceKind } from "@/lib/design";
+import { facePath, faceTextBox, type FaceKind } from "@/lib/design";
 
 type Props = {
   product: ConfigProduct;
@@ -81,7 +81,19 @@ export default function ProductPreview({ product, shape, text, number, colorObj,
   const path = facePath(kind, fw, fh);
   const clipId = `pp-clip-${product.id}`;
 
-  const quickTextSize = Math.min(fh * 0.34, (fw * 0.9) / Math.max(4, (text || "טקסט").length * 0.6));
+  // Keep the engraving inside the shape's own panel rather than the centre of
+  // its bounding box - on a paw the box centre is empty air between the toes.
+  const box = faceTextBox(kind);
+  const boxW = fw * box.w, boxH = fh * box.h;
+  const lines = number ? 2 : 1;
+  const quickTextSize = Math.min(
+    (boxH / lines) * 0.82,
+    (boxW * 0.96) / Math.max(3, (text || "טקסט").length * 0.58),
+  );
+  const numberSize = quickTextSize * 0.72;
+  const textX = fw * box.cx;
+  const textY = number ? fh * box.cy - boxH * 0.2 : fh * box.cy;
+  const numberY = fh * box.cy + boxH * 0.24;
 
   return (
     <div className="relative" style={{ transformStyle: "preserve-3d", transform: "rotateY(-8deg) rotateX(6deg)" }}>
@@ -128,8 +140,8 @@ export default function ProductPreview({ product, shape, text, number, colorObj,
             ) : (
               <>
                 <text
-                  x={fw / 2}
-                  y={number ? fh * 0.42 : fh * 0.5}
+                  x={textX}
+                  y={textY}
                   textAnchor="middle"
                   dominantBaseline="central"
                   fill={textColor}
@@ -142,15 +154,15 @@ export default function ProductPreview({ product, shape, text, number, colorObj,
                 </text>
                 {number && (
                   <text
-                    x={fw / 2}
-                    y={fh * 0.7}
+                    x={textX}
+                    y={numberY}
                     textAnchor="middle"
                     dominantBaseline="central"
                     fill={textColor}
                     opacity="0.85"
                     fontFamily="var(--font-mono), monospace"
                     fontWeight="500"
-                    fontSize={Math.min(fh * 0.18, (fw * 0.85) / Math.max(4, number.length * 0.65))}
+                    fontSize={Math.min(numberSize, (boxW * 0.9) / Math.max(4, number.length * 0.6))}
                     letterSpacing={fw * 0.01}
                   >
                     {number}

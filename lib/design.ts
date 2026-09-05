@@ -149,6 +149,33 @@ export function shapePath(kind: DesignShapeKind, w: number, h: number): string {
  *  the live preview and the exported SVG so all three agree. */
 export type FaceKind = "rect" | "roundrect" | "round" | "phone" | "tall" | "bone" | "heart" | "fish" | "paw";
 
+/**
+ * Where text may sit on a face, as fractions of the face box.
+ *
+ * The centre of the bounding box is not the centre of the SHAPE: on a paw it
+ * falls between the pad and the toes, on a fish it lands in the tail. Each
+ * silhouette names its own printable panel so the engraving stays on material.
+ */
+export type TextBox = { cx: number; cy: number; w: number; h: number };
+
+const TEXT_BOX: Record<FaceKind, TextBox> = {
+  rect: { cx: 0.5, cy: 0.5, w: 0.86, h: 0.6 },
+  roundrect: { cx: 0.5, cy: 0.5, w: 0.82, h: 0.58 },
+  round: { cx: 0.5, cy: 0.5, w: 0.72, h: 0.55 },
+  phone: { cx: 0.5, cy: 0.55, w: 0.8, h: 0.5 },
+  tall: { cx: 0.5, cy: 0.5, w: 0.78, h: 0.5 },
+  // the bar between the lobes
+  bone: { cx: 0.5, cy: 0.5, w: 0.6, h: 0.3 },
+  // the wide upper half, above the point
+  heart: { cx: 0.5, cy: 0.45, w: 0.62, h: 0.34 },
+  // the body, not the tail
+  fish: { cx: 0.34, cy: 0.5, w: 0.46, h: 0.44 },
+  // the pad, below the toes
+  paw: { cx: 0.5, cy: 0.73, w: 0.58, h: 0.38 },
+};
+
+export const faceTextBox = (kind: FaceKind): TextBox => TEXT_BOX[kind];
+
 export function facePath(kind: FaceKind, w: number, h: number): string {
   // Pet-tag silhouettes. Drawn from the face box so they scale with the size
   // the customer picks, the same way the rounded rectangle does.

@@ -16,6 +16,7 @@ const NAV = [
   { href: "/fidgets", label: "פידג'טים" },
   { href: "/pets", label: "לחיות" },
   { href: "/statues", label: "פסלים" },
+  { href: "/screen", label: "סרטים וסדרות" },
   { href: "/home-office", label: "בית ומשרד" },
   { href: "/configurator", label: "מעצב" },
   { href: "/b2b", label: "עסקים" },

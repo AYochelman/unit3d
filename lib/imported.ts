@@ -34,7 +34,9 @@ import { heName } from "./he-names";
 // a MakerWorld collection page does not show licences, so the licence has to be
 // read on the model's own page before that model is sold.
 
-export type ImportedShelf = "flexi" | "fidget" | "statues" | "pets" | "home" | "office" | "trendy" | "b2b";
+// "trendy" doubles as the catch-all: anything that does not belong on a named
+// shelf lands there rather than being forced into one that nearly fits.
+export type ImportedShelf = "flexi" | "fidget" | "statues" | "screen" | "pets" | "home" | "office" | "trendy" | "b2b";
 
 export type ImportedModel = {
   id: string;
@@ -117,6 +119,7 @@ export function suggestPrice(grams: number, hours: number, colors = 1): number {
 
 const SHELF_TO_CATEGORY: Record<Exclude<ImportedShelf, "flexi" | "fidget">, ProductCategory> = {
   statues: "statues",
+  screen: "screen",
   pets: "pets",
   home: "home",
   office: "office",

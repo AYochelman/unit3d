@@ -8,6 +8,7 @@ const SHOP = [
   { href: "/fidgets", label: "פידג'טים" },
   { href: "/pets", label: "תגים לחיות" },
   { href: "/statues", label: "פסלים" },
+  { href: "/screen", label: "סרטים וסדרות" },
   { href: "/home-office", label: "לבית ולמשרד" },
   { href: "/configurator", label: "מעצב אישי" },
   { href: "/upload", label: "העלאת קובץ" },

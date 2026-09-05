@@ -74,6 +74,7 @@ export function trendingCards(): ListingCard[] {
         hours: c.hours,
         hue: p.hue,
         art: c.art,
+        image: c.image,
         tag: p.tag,
         category: "מעצב",
         colors: c.hasDesigner ? 4 : 1,

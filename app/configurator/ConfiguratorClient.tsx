@@ -377,7 +377,13 @@ export default function ConfiguratorClient({
                           config.product === p.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        <ProductArt art={p.art} hue={config.product === p.id ? 145 : 210} size={44} className="shrink-0" />
+                        {p.image ? (
+                          <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-ink-900">
+                            <Image src={p.image} alt={p.label} fill sizes="44px" className="object-cover" unoptimized />
+                          </span>
+                        ) : (
+                          <ProductArt art={p.art} hue={config.product === p.id ? 145 : 210} size={44} className="shrink-0" />
+                        )}
                         <div className="min-w-0">
                           <div className="font-semibold text-sm leading-tight">{p.label}</div>
                           <div className="text-[11px] text-ink-400 leading-snug line-clamp-1">{p.desc}</div>
