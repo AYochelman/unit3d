@@ -58,7 +58,7 @@ function Stars({ n }: { n: number }) {
           key={i}
           name="star"
           size={13}
-          className={i < n ? "fill-current text-flame" : "text-ink-700"}
+          className={i < n ? "fill-current text-amber2" : "text-ink-700"}
         />
       ))}
     </span>
@@ -75,10 +75,12 @@ function ReviewCard({ r }: { r: Review }) {
   const Body = (
     <>
       <div
-        className="relative h-28 flex items-center justify-center shrink-0"
-        style={{
-          background: `radial-gradient(circle at 50% 40%, hsla(${r.hue ?? 145}, 70%, 50%, 0.20), transparent 62%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
-        }}
+        className={`relative h-28 flex items-center justify-center shrink-0 ${photo ? "bg-ink-800" : "bg-ink-900"}`}
+        style={
+          photo
+            ? undefined
+            : { background: "radial-gradient(circle at 50% 38%, rgba(255,255,255,0.055), transparent 62%)" }
+        }
       >
         {photo ? (
           <Image src={photo.src} alt={photo.name} fill sizes="300px" className="object-cover" unoptimized />
@@ -88,10 +90,7 @@ function ReviewCard({ r }: { r: Review }) {
         <span className="absolute top-2 right-2">
           <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>
         </span>
-        <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border backdrop-blur bg-good/15 text-good border-good/40">
-          <Icon name="check" size={9} strokeWidth={3} />
-          רכישה מאומתת
-        </span>
+
       </div>
 
       <div className="p-4 flex flex-col flex-1">
@@ -107,7 +106,17 @@ function ReviewCard({ r }: { r: Review }) {
           </div>
         )}
 
-        <p className="text-ink-200 text-sm leading-relaxed line-clamp-4 flex-1">{r.txt}</p>
+        <p className="text-ink-200 text-sm leading-relaxed line-clamp-4">{r.txt}</p>
+
+        {/* Answering the review that went wrong is worth more than hiding it. */}
+        {r.reply && (
+          <div className="mt-2.5 rounded-lg border-r-2 border-ink-600 bg-ink-950/60 px-3 py-2">
+            <div className="text-[10px] font-semibold text-ink-400 mb-0.5">אריאל, Unit 3D</div>
+            <p className="text-[12px] leading-relaxed text-ink-300 line-clamp-3">{r.reply}</p>
+          </div>
+        )}
+
+        <div className="flex-1" />
 
         <div className="mt-4 pt-3 border-t border-ink-800 flex items-center gap-3">
           <div
@@ -157,7 +166,7 @@ export default function ReviewsRow() {
     <section className="py-20 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <SectionHead eyebrow={`REVIEWS · ${AVG} / 5.0`} title="לקוחות אמיתיים. הזמנות אמיתיות." />
+          <SectionHead eyebrow={`${AVG} מתוך 5 · ${REVIEWS.length} ביקורות`} title="מה כתבו אחרי שקיבלו את החבילה" />
           <Btn as="a" href="/reviews" variant="ghost" iconRight="arrowLeft">
             כל הביקורות
           </Btn>

@@ -57,6 +57,8 @@ export type Review = {
   when?: string;
   /** Link to the product they are talking about. */
   href?: string;
+  /** Ariel's answer, shown under the review. Used where something went wrong. */
+  reply?: string;
 };
 
 // ─── Gallery ──────────────────────────────────────────────────────────────────

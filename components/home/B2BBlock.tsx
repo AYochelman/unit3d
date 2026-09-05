@@ -39,7 +39,7 @@ export default function B2BBlock() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <Pill tone="flame" className="mb-4">
-              B2B · BUSINESSES
+              לעסקים
             </Pill>
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05]">
               מזמינים לחברה?
@@ -68,7 +68,7 @@ export default function B2BBlock() {
 
           <div className="rounded-2xl bg-ink-900 border border-ink-800 p-6 md:p-7">
             <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-4">
-              VOLUME PRICING · ILS PER UNIT
+              מחיר ליחידה לפי כמות
             </div>
             <div className="grid grid-cols-3 gap-3">
               {TIERS.map((t, i) => {
@@ -103,7 +103,7 @@ export default function B2BBlock() {
             </div>
             <div className="mt-6 pt-5 border-t border-ink-800">
               <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-                PRODUCED FOR
+                הדפסנו עבור
               </div>
               <div className="flex flex-wrap gap-2">
                 {CLIENTS.map((c) => (

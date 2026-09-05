@@ -20,7 +20,7 @@ export default function HowItWorks() {
     <section className="py-20 md:py-24 bg-ink-900/40 border-y border-ink-800/60">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <SectionHead
-          eyebrow="HOW IT WORKS · 4 STEPS"
+          eyebrow="איך זה עובד · 4 שלבים"
           title={
             <>
               4 צעדים מהרעיון <span className="text-flame">לקופסה אצלך הביתה.</span>

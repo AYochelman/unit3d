@@ -13,13 +13,15 @@ export default function SectionHead({
 }) {
   return (
     <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center")}>
+      {/* The accent colour is for things you can click. An eyebrow is not one,
+          so it is quiet type, not a green label. */}
       {eyebrow && (
-        <div className="flex items-center gap-2 text-flame text-xs font-semibold tracking-widest uppercase mb-3">
-          <span className="w-6 h-px bg-flame" />
-          <span className="font-mono">{eyebrow}</span>
+        <div className="flex items-center gap-2 text-ink-400 text-xs font-semibold tracking-wide mb-3">
+          <span className="w-6 h-px bg-ink-700" />
+          <span>{eyebrow}</span>
         </div>
       )}
-      <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05] text-balance">
+      <h2 className="font-display text-3xl md:text-[42px] font-bold leading-[1.15] text-balance">
         {title}
       </h2>
       {sub && (

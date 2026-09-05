@@ -17,7 +17,7 @@ type Card = {
 
 const CARDS: Card[] = [
   {
-    lane: "LANE 01 · PRIVATE",
+    lane: "01 · פרטי",
     iconKey: "sparkles",
     title: "אני מזמין בשבילי",
     desc: "מתנה, פיגורה, חלק חילוף, פידג'ט, או כל רעיון שיש לך בראש.",
@@ -26,7 +26,7 @@ const CARDS: Card[] = [
     href: "/trendy",
   },
   {
-    lane: "LANE 02 · SOLDIER",
+    lane: "02 · חייל",
     iconKey: "shieldMini",
     title: "אני חייל/ת",
     desc: "סמל היחידה שלך כמחזיק מפתחות, פסל, או מתנה לטקס.",
@@ -36,7 +36,7 @@ const CARDS: Card[] = [
     highlight: true,
   },
   {
-    lane: "LANE 03 · BUSINESS",
+    lane: "03 · עסקי",
     iconKey: "building",
     title: "אני מזמין לחברה",
     desc: "מתנות לעובדים, פרסים פנימיים, ערכות קליטה. מ-10 יחידות ומעלה.",
@@ -51,7 +51,7 @@ export default function AudienceSwitcher() {
     <section className="py-20 md:py-24">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <SectionHead
-          eyebrow="FOR YOU · FOR YOUR UNIT · FOR YOUR COMPANY"
+          eyebrow="לך · ליחידה שלך · לחברה שלך"
           title="מי שולח את הבקשה?"
         />
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">

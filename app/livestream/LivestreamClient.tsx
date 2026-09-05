@@ -43,11 +43,11 @@ export default function LivestreamClient() {
           <span className="w-1.5 h-1.5 rounded-full bg-bad live-dot" />
           LIVE NOW
         </Pill>
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">
+        <h1 className="font-display text-3xl md:text-[42px] font-bold mb-2">
           המדפסת רצה עכשיו.
         </h1>
         <p className="text-ink-300">
-          שקוף, חי, ובלי פילטרים. הסטודיו בפתח תקווה — Bambu Lab X1C — 24/7 כמעט.
+          שקוף, חי, ובלי פילטרים. הסטודיו בפתח תקווה — Bambu Lab P2S — 24/7 כמעט.
         </p>
       </header>
 
@@ -98,7 +98,7 @@ export default function LivestreamClient() {
               className="absolute top-4 left-4 z-10 font-mono text-[11px] text-ink-200 bg-ink-950/60 backdrop-blur px-2 py-1.5 rounded"
               dir="ltr"
             >
-              <div>CAM · BAMBU X1C</div>
+              <div>מצלמה · BAMBU LAB P2S</div>
               <div className="text-flame">{clock}</div>
             </div>
 
@@ -162,11 +162,11 @@ export default function LivestreamClient() {
             <div className="grid grid-cols-2 divide-x divide-ink-800 rtl:divide-x-reverse" dir="ltr">
               <div className="text-center">
                 <div className="font-mono text-2xl font-bold tabular-nums">1:22</div>
-                <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">REMAINING</div>
+                <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">נותרו</div>
               </div>
               <div className="text-center">
                 <div className="font-mono text-2xl font-bold tabular-nums">87 / 142</div>
-                <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">LAYER</div>
+                <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">שכבה</div>
               </div>
             </div>
           </div>

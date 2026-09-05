@@ -47,7 +47,7 @@ export default function ProductShowcase() {
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
           <SectionHead
-            eyebrow="WHAT WE PRINT"
+            eyebrow="מה אנחנו מדפיסים"
             title="ככה זה נראה כשזה יוצא מהמדפסת."
             sub="תמונות אמיתיות של הדגמים שאנחנו מדפיסים. לחיצה פותחת את עמוד המוצר עם צבע, חומר, זמן הדפסה ומחיר."
           />

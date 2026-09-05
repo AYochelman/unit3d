@@ -24,7 +24,7 @@ export default function TrackingClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           ORDER TRACKING
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05] mb-3">
+        <h1 className="font-display text-3xl md:text-[42px] font-bold leading-[1.15] mb-3">
           איפה ההזמנה שלי?
         </h1>
         <p className="text-ink-300">הזן את מספר ההזמנה — דוגמה: <span className="num text-flame">#4781</span></p>

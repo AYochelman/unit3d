@@ -11,21 +11,27 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        // Headings get their own face. One typeface doing everything is the
+        // look of a template; a text face plus a display face is a brand.
+        display: ["var(--font-frank)", "var(--font-sans)", "Georgia", "serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       colors: {
+        // A warm charcoal, not a cold slate. The blue-grey neutral plus one
+        // saturated accent is the default palette of generated sites; a few
+        // degrees of warmth reads as a studio instead of a dashboard.
         ink: {
-          950: "#0A0A0B",
-          900: "#111114",
-          800: "#1C1C1F",
-          700: "#2A2A2E",
-          600: "#3A3A3F",
-          500: "#48484C",
-          400: "#8E8E93",
-          300: "#C7C7CC",
-          200: "#E5E5EA",
-          100: "#F2F2F4",
-          50: "#FAFAFA",
+          950: "#100E0C",
+          900: "#181613",
+          800: "#23201C",
+          700: "#312D28",
+          600: "#433D36",
+          500: "#5A534A",
+          400: "#9A9188",
+          300: "#CBC4BA",
+          200: "#E7E2DA",
+          100: "#F4F1EC",
+          50: "#FBF9F6",
         },
         flame: {
           DEFAULT: "#089a47",
@@ -48,6 +54,14 @@ const config: Config = {
         amber2: "#FBBF24",
         good: "#34D399",
         bad: "#F87171",
+      },
+      // Two radii, not six. Cards and panels are crisp; only chips are round.
+      borderRadius: {
+        md: "4px",
+        lg: "5px",
+        xl: "6px",
+        "2xl": "8px",
+        "3xl": "10px",
       },
       boxShadow: {
         soft: "0 8px 32px rgba(0,0,0,0.12)",

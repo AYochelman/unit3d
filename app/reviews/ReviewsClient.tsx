@@ -30,7 +30,7 @@ export default function ReviewsClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             REVIEWS · {REVIEWS.length}+
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
+          <h1 className="font-display text-3xl md:text-[42px] font-bold leading-[1.15]">
             לקוחות שדיברו.
           </h1>
           <div className="mt-3 flex items-center gap-2 text-ink-300">
@@ -83,7 +83,7 @@ export default function ReviewsClient() {
                 className="font-mono text-[10px] tracking-widest uppercase text-ink-500"
                 dir="ltr"
               >
-                VERIFIED ORDER · 2024
+                הזמנה מאומתת
               </span>
               <button className="text-xs text-ink-400 hover:text-flame transition-colors">
                 מועיל

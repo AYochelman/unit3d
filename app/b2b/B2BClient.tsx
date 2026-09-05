@@ -94,7 +94,7 @@ export default function B2BClient() {
           <Pill tone="flame" className="mb-5">
             UNIT3D · BUSINESS
           </Pill>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-4">
+          <h1 className="font-display text-3xl md:text-5xl font-bold leading-[1.15] mb-4">
             הדפסות בכמויות.
             <br />
             <span className="text-flame">עבור החברה שלך.</span>
@@ -119,7 +119,7 @@ export default function B2BClient() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="mb-8">
             <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-              WHAT COMPANIES ORDER
+              מה חברות מזמינות
             </div>
             <h2 className="text-3xl md:text-4xl font-black tracking-tightest mb-2">
               מוצרים שאפשר למתג.
@@ -156,9 +156,9 @@ export default function B2BClient() {
       <section className="py-16 md:py-20 bg-ink-900/40 border-y border-ink-800/60">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-            USE CASES
+            מקרי שימוש
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-[1.05] mb-10">
+          <h2 className="font-display text-2xl md:text-4xl font-bold leading-[1.15] mb-10">
             למה חברות מזמינות אצלי.
           </h2>
           <div className="grid md:grid-cols-3 gap-5">
@@ -186,7 +186,7 @@ export default function B2BClient() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="text-center mb-10">
             <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-              VOLUME PRICING
+              מחיר לפי כמות
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
               ככל שיותר, יותר זול.
@@ -205,7 +205,7 @@ export default function B2BClient() {
               >
                 {t.featured && (
                   <div className="text-[10px] font-mono uppercase tracking-widest text-flame mb-3">
-                    MOST POPULAR
+                    הכי מבוקש
                   </div>
                 )}
                 <div className="font-mono text-sm text-ink-400 mb-1" dir="ltr">
@@ -239,7 +239,7 @@ export default function B2BClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             WHAT&apos;S INCLUDED
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-[1.05] mb-10">
+          <h2 className="font-display text-2xl md:text-4xl font-bold leading-[1.15] mb-10">
             הכל כלול. אין סודות.
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
@@ -264,7 +264,7 @@ export default function B2BClient() {
         <div className="max-w-3xl mx-auto px-6 md:px-10">
           <div className="text-center mb-8">
             <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-              REQUEST A QUOTE
+              בקשת הצעת מחיר
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
               קבל הצעת מחיר תוך 24 שעות.
@@ -368,7 +368,7 @@ export default function B2BClient() {
       <section className="py-12 border-t border-ink-800">
         <div className="max-w-7xl mx-auto px-6 md:px-10 text-center">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-4">
-            PRODUCED FOR
+            הדפסנו עבור
           </div>
           <div className="flex flex-wrap justify-center gap-2">
             {CLIENTS.map((c) => (

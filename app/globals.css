@@ -31,20 +31,20 @@
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #111114;
+    background: #181613;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2a2a2e;
+    background: #312d28;
     border-radius: 8px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3a3a3f;
+    background: #433d36;
   }
   html.light ::-webkit-scrollbar-track {
-    background: #f2f2f4;
+    background: #f4f1ec;
   }
   html.light ::-webkit-scrollbar-thumb {
-    background: #c7c7cc;
+    background: #cbc4ba;
   }
 }
 
@@ -89,7 +89,7 @@
     animation-play-state: paused;
   }
   .hero-tinted {
-    background: #0a0a0b;
+    background: #100e0c;
   }
   .hero-video {
     filter: saturate(0.9) contrast(1.05);

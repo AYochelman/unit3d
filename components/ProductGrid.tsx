@@ -89,11 +89,19 @@ export function ListingCardView({ c }: { c: ListingCard }) {
 
   const body = (
     <>
+      {/* A photograph is the only colour a product card needs. The coloured
+          glow that used to sit behind every one of these read as a
+          placeholder, and it sat behind the real photographs too. */}
       <div
-        className="relative aspect-square flex items-center justify-center overflow-hidden"
-        style={{
-          background: `radial-gradient(circle at 50% 40%, hsla(${c.hue}, 70%, 50%, 0.22), transparent 60%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
-        }}
+        className={cn(
+          "relative aspect-square flex items-center justify-center overflow-hidden",
+          c.image ? "bg-ink-800" : "bg-ink-900",
+        )}
+        style={
+          c.image
+            ? undefined
+            : { background: "radial-gradient(circle at 50% 38%, rgba(255,255,255,0.055), transparent 62%)" }
+        }
       >
         {c.image ? (
           <Image src={c.image} alt={c.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" unoptimized />
@@ -135,7 +143,7 @@ export function ListingCardView({ c }: { c: ListingCard }) {
           )}
         </div>
         <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400">
-          <span className="inline-flex items-center gap-0.5 text-flame">
+          <span className="inline-flex items-center gap-0.5 text-amber2">
             <Icon name="star" size={10} className="fill-current" />
             <bdi dir="ltr">{c.rating.toFixed(1)}</bdi>
           </span>
