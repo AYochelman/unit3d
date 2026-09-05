@@ -1,5 +1,6 @@
 import Btn from "@/components/ui/Btn";
 import HeroLogo from "./HeroLogo";
+import PrinterPanel from "./PrinterPanel";
 
 export default function Hero() {
   return (
@@ -65,58 +66,11 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Video window — looped, framed */}
+      {/* Machine readout — replaces the missing hero video with live printer data */}
       <div className="max-w-6xl mx-auto px-6 md:px-10 pb-20 md:pb-28">
-        <div className="hero-tinted relative isolate overflow-hidden rounded-2xl border border-ink-50/10 shadow-2xl aspect-[16/9] md:aspect-[21/9]">
-          <video
-            className="hero-video absolute inset-0 w-full h-full object-cover"
-            src="/hero-loop.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 hero-color-grade" />
-          <div className="absolute inset-0 hero-color-warm" />
-          <div className="absolute inset-0 printer-grid mix-blend-overlay opacity-30" />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse at center, transparent 40%, rgba(10,10,11,0.45) 80%, rgba(10,10,11,0.7) 100%)",
-            }}
-          />
-
-          {/* HUD — printer stats */}
-          <div
-            className="hidden md:block absolute top-4 right-4 z-10 font-mono text-[10px] tracking-widest uppercase text-ink-200 bg-ink-950/50 backdrop-blur-sm border border-ink-50/10 rounded-lg p-3"
-            dir="ltr"
-          >
-            <div className="text-flame mb-1">PRINTER · LIVE</div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-ink-300">
-              <span>NOZZLE</span>
-              <span className="text-ink-50">209°C</span>
-              <span>BED</span>
-              <span className="text-ink-50">60°C</span>
-              <span>LAYER</span>
-              <span className="text-ink-50">87/142</span>
-              <span>SPEED</span>
-              <span className="text-ink-50">118 mm/s</span>
-            </div>
-          </div>
-
-          {/* HUD — current job */}
-          <div
-            className="hidden md:block absolute top-4 left-4 z-10 font-mono text-[10px] tracking-widest uppercase text-ink-200 bg-ink-950/50 backdrop-blur-sm border border-ink-50/10 rounded-lg p-3"
-            dir="ltr"
-          >
-            <div className="text-3xl font-extrabold text-ink-50 tracking-tight mb-1">47%</div>
-            <div className="text-ink-400">CURRENT JOB</div>
-            <div className="text-ink-50 mt-1">1h 22m REMAINING</div>
-          </div>
-        </div>
+        <PrinterPanel />
       </div>
+
     </section>
   );
 }

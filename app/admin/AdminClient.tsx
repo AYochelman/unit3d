@@ -440,7 +440,8 @@ function EmblemsTab() {
         </p>
         <p className="pt-2 border-t border-ink-800">
           <strong className="text-ink-100">הורדה אוטומטית:</strong> הרץ <span className="font-mono text-flame" dir="ltr">npm run emblems</span> בתיקיית
-          הפרויקט. הסקריפט מוריד מ-Wikimedia Commons את הסמלים שמופו ב-<span className="font-mono" dir="ltr">scripts/emblems.json</span>,
+          הפרויקט (או לחיצה כפולה על <span className="font-mono" dir="ltr">emblems.bat</span>).
+          אם משהו לא עובד: <span className="font-mono" dir="ltr">npm run emblems -- --doctor</span> בודק Node, קבצים וחיבור ואומר בדיוק מה חסר. הסקריפט מוריד מ-Wikimedia Commons את הסמלים שמופו ב-<span className="font-mono" dir="ltr">scripts/emblems.json</span>,
           שומר בשמות הנכונים, וכותב קרדיטים ב-<span className="font-mono" dir="ltr">public/emblems/CREDITS.md</span>.
           רישיונות CC BY-SA מחייבים ייחוס, אז אל תמחק אותו.
         </p>
