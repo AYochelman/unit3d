@@ -53,4 +53,7 @@ next-env.d.ts
 # local verification scripts / screenshots (never shipped)
 /*.cjs
 /m-*.png
+/m2-*.png
+/c-*.png
+/d-*.png
 /shot-*.png
