@@ -1,0 +1,80 @@
+# Adds to the shop whatever the owner saved on MakerWorld.
+#
+# He curates from the Bambu Lab app on his phone: a model he wants goes into one
+# of his collections. This reads those collections every night, appends the ones
+# the catalogue does not have, fetches their photos, commits, and asks the site
+# to rebuild — so a model saved in the evening is on the shop in the morning
+# without anyone opening a laptop.
+#
+# It only ever adds. Existing rows are never rewritten, and a weapon or a model
+# under a non-commercial licence is imported but held out of the shop, exactly
+# as in a manual import. The run summary lists what landed and under which
+# licence.
+name: Sync MakerWorld collections
+
+on:
+  schedule:
+    # 03:10 UTC — early morning in Israel, after the day's saving is done.
+    - cron: "10 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: sync-collections
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # The collection pages render server-side but only in a real browser;
+      # every documented collection API answers `{}`.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Read the collections
+        run: npm run sync:collections
+
+      - name: Fetch the new photos
+        run: npm run fetch:images
+        continue-on-error: true
+
+      # Type check before committing: a bad row must not reach the site.
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Commit what is new
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/imported.generated.ts lib/localImages.generated.ts data/makerworld-raw.json public/img/catalog
+          if git diff --cached --quiet; then
+            echo "nothing new"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Add the models saved to the MakerWorld collections"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not start another workflow, so the
+      # deploy has to be asked for by name or the commit would sit unpublished.
+      - name: Publish the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main

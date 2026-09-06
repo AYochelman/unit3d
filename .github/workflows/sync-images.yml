@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: sync-images
@@ -45,6 +46,7 @@ jobs:
         run: npm run fetch:images
 
       - name: Commit what changed
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -55,3 +57,12 @@ jobs:
           fi
           git commit -m "Store the catalogue photos the shop is missing"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not start another workflow, so the
+      # deploy has to be asked for by name.
+      - name: Publish the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main
