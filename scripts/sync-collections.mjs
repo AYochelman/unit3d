@@ -61,20 +61,61 @@ async function browser() {
 const MODEL_ID = /models\\?\/(\d{3,9})-/g;
 const idsIn = (html) => [...new Set([...html.matchAll(MODEL_ID)].map((m) => m[1]))];
 
-/** Every public collection on the profile: id, slug and display name. */
+const COLLECTION_HREF = /\/collections\/(\d+)-([a-z0-9-]+)/gi;
+
+/**
+ * Every public collection on the profile: id, slug and display name.
+ *
+ * The page is a React app behind a CDN that is slower for some visitors than
+ * others, so this waits for the first collection link rather than for a fixed
+ * number of seconds, and falls back to reading the ids out of the HTML when the
+ * anchors are rendered in a way the selector misses.
+ */
 async function readCollections(page) {
   await page.goto(`https://makerworld.com/en/@${PROFILE}/collections`, { waitUntil: "domcontentloaded", timeout: 90_000 });
-  await page.waitForTimeout(6000);
+  await page.waitForSelector('a[href*="/collections/"]', { timeout: 45_000 }).catch(() => {});
+  await page.waitForTimeout(3000);
+
+  const out = new Map();
   const found = await page.$$eval('a[href*="/collections/"]', (as) =>
     as.map((a) => ({ href: a.getAttribute("href") || "", text: (a.textContent || "").trim() })),
   );
-  const out = new Map();
   for (const { href, text } of found) {
-    const m = href.match(/\/collections\/(\d+)-([a-z0-9-]+)/i);
-    if (!m) continue;
-    out.set(m[1], { id: m[1], slug: m[2], name: (text.split("\n")[0] || m[2]).slice(0, 40) });
+    const m = /\/collections\/(\d+)-([a-z0-9-]+)/i.exec(href);
+    if (m) out.set(m[1], { id: m[1], slug: m[2], name: (text.split("\n")[0] || m[2]).slice(0, 40) });
+  }
+  if (!out.size) {
+    for (const m of (await page.content()).matchAll(COLLECTION_HREF)) {
+      out.set(m[1], { id: m[1], slug: m[2], name: m[2] });
+    }
+  }
+  if (!out.size) {
+    // Say what the page actually was — a challenge, a sign-in wall or an empty
+    // profile all look the same from "no collections found".
+    const title = await page.title();
+    const text = (await page.evaluate(() => document.body.innerText)).slice(0, 220).replace(/\s+/g, " ");
+    log(c.y(`  הפרופיל לא החזיר קולקציות. כותרת: "${title}"`));
+    log(c.d(`  ${text}`));
   }
   return [...out.values()];
+}
+
+/**
+ * The collections the catalogue was originally built from.
+ *
+ * Used as a floor under whatever the profile page returns: if MakerWorld serves
+ * a runner a page with no links, the job still checks the collections we know
+ * about instead of reporting that he has none.
+ */
+function knownCollections() {
+  const f = path.join(ROOT, "scripts", "makerworld-sources.json");
+  if (!fs.existsSync(f)) return [];
+  const out = [];
+  for (const src of JSON.parse(fs.readFileSync(f, "utf8")).sources ?? []) {
+    const m = /\/collections\/(\d+)-([a-z0-9-]+)/i.exec(src.url || "");
+    if (m) out.push({ id: m[1], slug: m[2], name: src.label || m[2] });
+  }
+  return out;
 }
 
 /** Model ids in one collection, scrolling until the page stops adding any. */
@@ -183,8 +224,12 @@ async function main() {
   const wanted = [];
   const skipped = [];
   try {
-    collections = await readCollections(page);
-    if (!collections.length) throw new Error("לא נמצאו קולקציות בפרופיל");
+    const seenCollections = new Map();
+    for (const col of [...(await readCollections(page)), ...knownCollections()]) {
+      if (!seenCollections.has(col.id)) seenCollections.set(col.id, col);
+    }
+    collections = [...seenCollections.values()];
+    if (!collections.length) throw new Error("לא נמצאו קולקציות בפרופיל ואין רשימה שמורה");
     log(`  ${collections.length} קולקציות: ${collections.map((x) => x.name).join(", ")}\n`);
 
     for (const col of collections) {
