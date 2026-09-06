@@ -21,7 +21,7 @@ import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { useLivePrice } from "@/lib/live-price";
-import { designHrefForItem } from "@/lib/designable";
+import { PERSONALIZE_PRICE, SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
@@ -54,6 +54,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const [variantId, setVariantId] = useState(f?.variants?.[0]?.id);
   const [added, setAdded]         = useState(false);
   const [askRestock, setAskRestock] = useState(false);
+  const [scale, setScale] = useState<number>(0);
 
   // Hooks must run before the "not found" bail-out below, so the price is
   // resolved here with safe fallbacks rather than next to the other derived state.
@@ -88,14 +89,18 @@ export default function FidgetDetailClient({ id }: { id: string }) {
     const many = estimateCost({ grams: f.gramsAms, hours: f.hoursAms, material, colors }, settings).recommendedPrice;
     return Math.max(flat, Math.ceil((many - one) / 5) * 5);
   };
+  const displayTime   = variant?.time ?? f.time;
+  const pickedG       = fidgetGrams(f);
+  const pickedH       = parseHours(displayTime);
+  const scaleRatio    = scale > 0 && pickedG > 0 ? (pickedG + scale) / pickedG : 1;
+  const scaleAdd      = scaleExtra(pickedG, pickedH, scale);
   const amsSurcharge  = amsOn ? amsExtra(amsColors) : 0;
   const mat           = MATERIAL_BY_ID[material];
   // Fidget list prices assume PLA+, so only the delta above it is a surcharge.
   const baseMatAdd    = MATERIAL_BY_ID.pla_plus.priceAdd;
   const matSurcharge  = Math.max(0, mat.priceAdd - baseMatAdd);
-  const unitPrice     = basePrice + (variant?.surcharge ?? 0) + amsSurcharge + matSurcharge;
+  const unitPrice     = basePrice + scaleAdd + (variant?.surcharge ?? 0) + amsSurcharge + matSurcharge;
   const totalPrice    = unitPrice * qty;
-  const displayTime   = variant?.time ?? f.time;
   const displayColors = amsOn ? amsColors : variant?.colors ?? 1;
 
   const images: string[] = variant?.thumbnail
@@ -115,8 +120,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
   // The AMS plate is its own print: heavier and much slower than the
   // single-colour one, so costing has to switch to it when AMS is on.
-  const weightG       = override?.grams ?? (amsOn && f.gramsAms ? f.gramsAms : fidgetGrams(f));
-  const hours         = override?.hours ?? (amsOn && f.hoursAms ? f.hoursAms : parseHours(displayTime));
+  const weightG       = override?.grams ?? Math.round((amsOn && f.gramsAms ? f.gramsAms : pickedG) * scaleRatio);
+  const hours         = override?.hours ?? (amsOn && f.hoursAms ? f.hoursAms : pickedH) * scaleRatio;
 
   // ── handlers ─────────────────────────────────────────────────────────────
   const handleAddToCart = () => {
@@ -424,6 +429,32 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             </div>
           </div>
 
+          {/* ── Bigger, same as every other product ─────────────────────── */}
+          <div>
+            <div className="text-xs font-bold text-ink-300 mb-2">
+              רוצה להגדיל? <span className="text-ink-500 font-normal">תוספת חומר על אותו דגם</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {SCALE_STEPS.map((g) => {
+                const extra = scaleExtra(pickedG, pickedH, g);
+                return (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setScale(g)}
+                    className={cn(
+                      "px-3 py-2 rounded-xl text-xs font-semibold border transition-colors",
+                      scale === g ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
+                    )}
+                  >
+                    {SCALE_LABEL[g]}
+                    {extra > 0 && <span className="font-mono text-[10px] opacity-80 block mt-0.5" dir="ltr">+{fmtILS(extra)}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* ── AMS multi-colour toggle ─────────────────────────────────── */}
           <div
             className={cn(
@@ -599,11 +630,11 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           )}
 
           <Link
-            href={designHrefForItem(id)}
-            className="w-full h-11 rounded-xl font-bold text-sm border border-ink-700 text-ink-300 hover:border-ink-500 hover:text-ink-100 transition-colors flex items-center justify-center gap-2"
+            href={`/personalize?item=${encodeURIComponent(id)}`}
+            className="w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors bg-cyan2/15 text-cyan2 border border-cyan2/50 hover:bg-cyan2 hover:text-ink-950"
           >
             <Icon name="sparkles" size={15} />
-            רוצה עליו טקסט משלך? פתח את המעצב
+            רוצה עליו טקסט משלך? <span className="font-mono">+{fmtILS(PERSONALIZE_PRICE)}</span>
           </Link>
 
           <RestockModal

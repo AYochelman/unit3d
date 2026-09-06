@@ -18,8 +18,9 @@ import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { estimateCost } from "@/lib/costing";
 import { suggestPrice } from "@/lib/imported";
+import { PERSONALIZE_PRICE, SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import { useLivePrice } from "@/lib/live-price";
-import { designHref, isPersonalizable } from "@/lib/designable";
+
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { fmtHours } from "@/lib/costing";
@@ -51,6 +52,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [optionId, setOptionId] = useState(p?.options?.items[0]?.id);
   // Lightest plate first, so the price the customer lands on is the cheapest one.
   const [plateIdx, setPlateIdx] = useState(0);
+  const [scale, setScale] = useState<number>(0);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [askRestock, setAskRestock] = useState(false);
@@ -84,6 +86,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
       ? Math.max(0, suggestPrice(plate.g, plate.h, 1) - suggestPrice(plates[0].g, plates[0].h, 1))
       : 0;
 
+  const pickedG = plate?.g ?? p.grams;
+  const pickedH = plate?.h ?? p.hours;
+  const scaleRatio = scale > 0 && pickedG > 0 ? (pickedG + scale) / pickedG : 1;
+  const scaleAdd = scaleExtra(pickedG, pickedH, scale);
   const color = FILAMENTS.find((f) => f.id === colorId) ?? FILAMENTS[0];
   const mat = MATERIAL_BY_ID[material];
   const option = p.options?.items.find((o) => o.id === optionId);
@@ -103,14 +109,14 @@ export default function ProductDetailClient({ id }: { id: string }) {
   // the listed catalogue price already includes that default.
   const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
   const matSurcharge = Math.max(0, mat.priceAdd - baseMatAdd);
-  const unitPrice = basePrice + plateExtra + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
+  const unitPrice = basePrice + plateExtra + scaleAdd + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
   const total = unitPrice * qty;
 
   // An AMS print is a different plate: MakerWorld publishes its own weight and
   // time for it, and they are far higher than the single-colour ones. Costing
   // the AMS option off the plain figures is how a two-colour job gets underpriced.
-  const grams = override?.grams ?? (amsOn && p.gramsAms ? p.gramsAms : plate?.g ?? p.grams);
-  const hours = override?.hours ?? (amsOn && p.hoursAms ? p.hoursAms : plate?.h ?? p.hours);
+  const grams = override?.grams ?? Math.round((amsOn && p.gramsAms ? p.gramsAms : pickedG) * scaleRatio);
+  const hours = override?.hours ?? (amsOn && p.hoursAms ? p.hoursAms : pickedH) * scaleRatio;
   // Show the customer the time for the plate they actually chose.
   const timeLabel = amsOn && p.hoursAms ? fmtHours(p.hoursAms) : plate ? fmtHours(plate.h) : p.time;
 
@@ -355,6 +361,33 @@ export default function ProductDetailClient({ id }: { id: string }) {
             </div>
           </div>
 
+          {/* Bigger, on every product - not just the ones a designer happened
+              to publish in several sizes. */}
+          <div>
+            <div className="text-xs font-bold text-ink-300 mb-2">
+              רוצה להגדיל? <span className="text-ink-500 font-normal">תוספת חומר על אותו דגם</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {SCALE_STEPS.map((g) => {
+                const extra = scaleExtra(plate?.g ?? p.grams, plate?.h ?? p.hours, g);
+                return (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setScale(g)}
+                    className={cn(
+                      "px-3 py-2 rounded-xl text-xs font-semibold border transition-colors",
+                      scale === g ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
+                    )}
+                  >
+                    {SCALE_LABEL[g]}
+                    {extra > 0 && <span className="font-mono text-[10px] opacity-80 block mt-0.5" dir="ltr">+{fmtILS(extra)}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* AMS */}
           {p.ams && (
             <div className={cn("rounded-xl border transition-colors overflow-hidden", amsOn ? "border-cyan2/40 bg-cyan2/5" : "border-ink-800 bg-ink-900/40")}>
@@ -470,19 +503,15 @@ export default function ProductDetailClient({ id }: { id: string }) {
             </div>
           )}
 
-          {/* Everything on the site can be taken into the designer — a product
-              you write your own name on says so loudly. */}
+          {/* Every product offers the same thing on the same terms: your text
+              on it for a flat +15 ₪, on one shared page that arrives already
+              knowing which product you came from. */}
           <Link
-            href={designHref(p)}
-            className={cn(
-              "w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors",
-              isPersonalizable(p)
-                ? "bg-cyan2/15 text-cyan2 border border-cyan2/50 hover:bg-cyan2 hover:text-ink-950"
-                : "border border-ink-700 text-ink-300 hover:border-ink-500 hover:text-ink-100",
-            )}
+            href={`/personalize?item=${encodeURIComponent(id)}`}
+            className="w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors bg-cyan2/15 text-cyan2 border border-cyan2/50 hover:bg-cyan2 hover:text-ink-950"
           >
             <Icon name="sparkles" size={15} />
-            {isPersonalizable(p) ? "עצב את זה בעצמך" : "פתח את המוצר במעצב"}
+            רוצה עליו טקסט משלך? <span className="font-mono">+{fmtILS(PERSONALIZE_PRICE)}</span>
           </Link>
 
           <RestockModal
