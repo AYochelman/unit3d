@@ -20,7 +20,10 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import sharp from "sharp";
+
+// Resizing is a nice-to-have, not a reason to fail: without sharp the photos
+// are stored exactly as the CDN sent them, which is bigger but still correct.
+const sharp = await import("sharp").then((m) => m.default).catch(() => null);
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(ROOT, "public", "img", "catalog");
@@ -69,7 +72,8 @@ const stemFor = (url) => crypto.createHash("sha1").update(url).digest("hex").sli
  * we care about reads it, and it is a third of the JPEG. An animated GIF is
  * left alone — resizing one frame of it would throw the animation away.
  */
-async function optimise(buf) {
+async function optimise(buf, url) {
+  if (!sharp) return { data: buf, ext: url.split("?")[0].match(/\.(webp|png|gif)$/i)?.[1]?.toLowerCase() ?? "jpg" };
   const img = sharp(buf, { animated: false });
   const meta = await img.metadata();
   if (meta.format === "gif") return { data: buf, ext: "gif" };
@@ -100,7 +104,7 @@ async function download(url, stem) {
     // A 200 that hands back an error page is worse than a miss: it would sit
     // in the folder looking like the photo.
     if (raw.length < 1024) throw new Error(`too small (${raw.length}b)`);
-    return write(stem, await optimise(raw));
+    return write(stem, await optimise(raw, url));
   } catch (e) {
     throw new Error(e.name === "AbortError" ? "timeout" : e.message);
   } finally {
@@ -130,7 +134,7 @@ async function main() {
       const p = path.join(OUT_DIR, j.file);
       const before = fs.statSync(p).size;
       try {
-        j.file = write(j.stem, await optimise(fs.readFileSync(p)));
+        j.file = write(j.stem, await optimise(fs.readFileSync(p), j.url));
         saved += before - fs.statSync(path.join(OUT_DIR, j.file)).size;
       } catch { /* leave the original alone */ }
     }

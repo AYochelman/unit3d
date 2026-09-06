@@ -36,8 +36,13 @@ jobs:
         with:
           node-version: 22
 
+      # sharp does the resizing, and it is a dependency of the app rather than
+      # something the runner has lying around.
+      - name: Install
+        run: npm ci
+
       - name: Download missing images
-        run: node scripts/fetch-images.mjs
+        run: npm run fetch:images
 
       - name: Commit what changed
         run: |
