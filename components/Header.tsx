@@ -51,20 +51,25 @@ export default function Header() {
             <Logo size={30} />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1 text-sm">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "px-3 py-2 rounded-md font-medium transition-colors",
-                  isActive(item.href)
-                    ? "text-flame bg-flame/5"
-                    : "text-ink-300 hover:text-ink-50",
-                )}
-              >
-                {item.label}
-              </Link>
+          {/* Eleven links, four of them two words long. Without nowrap the row
+              wraps "מוצרי עישון" onto two lines and the whole bar grows; the
+              hairline between items keeps them apart at this tighter spacing. */}
+          <nav className="hidden lg:flex items-center text-[13px] xl:text-sm">
+            {NAV.map((item, i) => (
+              <span key={item.href} className="flex items-center">
+                {i > 0 && <span aria-hidden className="h-3 w-px bg-good/35" />}
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "whitespace-nowrap px-2 xl:px-2.5 py-2 rounded-md font-medium transition-colors",
+                    isActive(item.href)
+                      ? "text-flame bg-flame/5"
+                      : "text-ink-300 hover:text-ink-50",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </span>
             ))}
           </nav>
 
