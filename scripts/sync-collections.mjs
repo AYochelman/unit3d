@@ -55,7 +55,38 @@ async function browser() {
   const { chromium } = await import("playwright").catch(() => ({ chromium: null }));
   if (!chromium) throw new Error("playwright חסר — הרץ npm i -D playwright");
   const exe = process.env.PLAYWRIGHT_CHROMIUM;
-  return chromium.launch(exe ? { executablePath: exe } : {});
+  // MakerWorld sits behind Cloudflare, which challenges datacenter addresses on
+  // sight. None of this defeats a challenge, but a headless browser that does
+  // not announce itself as one gets shown far fewer of them.
+  return chromium.launch({
+    ...(exe ? { executablePath: exe } : {}),
+    args: ["--disable-blink-features=AutomationControlled"],
+  });
+}
+
+const CHALLENGE = /just a moment|security verification|checking your browser|verify you are (not a bot|human)/i;
+
+/**
+ * Load a page and wait for it to be the page, not a challenge.
+ *
+ * Cloudflare's interstitial answers 200 with real HTML, so a naive read sees a
+ * page with no models on it and concludes the collection is empty. That would
+ * quietly stop importing anything the day the challenge starts appearing, which
+ * is the one failure this job must never have.
+ */
+async function open(page, url, tries = 3) {
+  for (let i = 1; i <= tries; i++) {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90_000 }).catch(() => {});
+    // The challenge clears itself on the same URL when it clears at all.
+    for (let w = 0; w < 12; w++) {
+      const title = await page.title().catch(() => "");
+      if (!CHALLENGE.test(title)) return true;
+      await page.waitForTimeout(2500);
+    }
+    log(c.d(`  אימות של Cloudflare (${i}/${tries}) — מנסה שוב`));
+    await sleep(4000 * i);
+  }
+  return false;
 }
 
 const MODEL_ID = /models\\?\/(\d{3,9})-/g;
@@ -72,7 +103,8 @@ const COLLECTION_HREF = /\/collections\/(\d+)-([a-z0-9-]+)/gi;
  * anchors are rendered in a way the selector misses.
  */
 async function readCollections(page) {
-  await page.goto(`https://makerworld.com/en/@${PROFILE}/collections`, { waitUntil: "domcontentloaded", timeout: 90_000 });
+  const ok = await open(page, `https://makerworld.com/en/@${PROFILE}/collections`);
+  if (!ok) { log(c.y("  הפרופיל חסום כרגע על ידי Cloudflare — משתמש ברשימה השמורה")); return []; }
   await page.waitForSelector('a[href*="/collections/"]', { timeout: 45_000 }).catch(() => {});
   await page.waitForTimeout(3000);
 
@@ -120,11 +152,19 @@ function knownCollections() {
 
 /** Model ids in one collection, scrolling until the page stops adding any. */
 async function readCollection(page, col) {
-  await page.goto(`https://makerworld.com/en/collections/${col.id}-${col.slug}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
-  await page.waitForTimeout(5000);
-  if ((await page.evaluate(() => document.body.innerText)).includes("collection does not exist")) return null;
+  const ok = await open(page, `https://makerworld.com/en/collections/${col.id}-${col.slug}`);
+  if (!ok) return { blocked: true };
+  await page.waitForTimeout(4000);
+  if ((await page.evaluate(() => document.body.innerText)).includes("collection does not exist")) return { private: true };
 
   let ids = idsIn(await page.content());
+  // A collection with models always renders at least one card. None at all
+  // means the page did not finish, not that he emptied it.
+  if (!ids.length) {
+    await page.waitForTimeout(6000);
+    ids = idsIn(await page.content());
+    if (!ids.length) return { blocked: true };
+  }
   for (let i = 0; i < 25; i++) {
     await page.mouse.wheel(0, 4000);
     await page.waitForTimeout(900);
@@ -132,7 +172,7 @@ async function readCollection(page, col) {
     if (next.length === ids.length) break;
     ids = next;
   }
-  return ids;
+  return { ids };
 }
 
 /** Ids the shop already knows about, whatever shelf or state they are in. */
@@ -211,7 +251,7 @@ function summary(rows, skipped) {
       lines.push(`| [${r.name}](${r.sourceUrl}) | ${r.shelf} | ${state} | ${r.license ?? "—"} |`);
     }
   }
-  if (skipped.length) lines.push("", `קולקציות פרטיות שלא ניתן לקרוא: ${skipped.join(", ")}`);
+  if (skipped.length) lines.push("", `קולקציות שלא נקראו: ${skipped.join(", ")}`, "", "קולקציה \"חסומה\" תיקרא בהרצה הבאה — Cloudffare חוסם לפעמים כתובות של שרתים.".replace("Cloudffare", "Cloudflare"));
   fs.appendFileSync(f, lines.join("\n") + "\n", "utf8");
 }
 
@@ -233,11 +273,12 @@ async function main() {
     log(`  ${collections.length} קולקציות: ${collections.map((x) => x.name).join(", ")}\n`);
 
     for (const col of collections) {
-      const ids = await readCollection(page, col);
-      if (ids === null) { skipped.push(col.name); log(c.y(`  ${col.name}: פרטית, מדולגת`)); continue; }
-      log(`  ${col.name}: ${ids.length} מודלים`);
+      const res = await readCollection(page, col);
+      if (res.private) { skipped.push(`${col.name} (פרטית)`); log(c.y(`  ${col.name}: פרטית, מדולגת`)); continue; }
+      if (res.blocked) { skipped.push(`${col.name} (חסומה)`); log(c.y(`  ${col.name}: לא נקראה — Cloudflare`)); continue; }
+      log(`  ${col.name}: ${res.ids.length} מודלים`);
       const shelf = shelfForCollection(col.name) ?? shelfForCollection(col.slug);
-      for (const id of ids) wanted.push({ id, shelf });
+      for (const id of res.ids) wanted.push({ id, shelf });
     }
   } finally {
     await b.close();
