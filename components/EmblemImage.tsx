@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { photoSrc } from "@/lib/assets";
 import Emblem from "./Emblem";
 import type { EmblemShape } from "@/lib/types";
 import { cn } from "@/lib/cn";
@@ -34,7 +35,7 @@ export default function EmblemImage({
   paddingRatio = 0.05,
 }: Props) {
   const [failed, setFailed] = useState(false);
-  const src = `/emblems/${slug}.png`;
+  const src = photoSrc(`/emblems/${slug}.png`);
   const fillMode = size === undefined;
 
   if (failed) {

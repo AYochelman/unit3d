@@ -235,6 +235,52 @@ export default function ProductArt({ art, hue = 200, color, size = 120, classNam
             <path d="M32 36 C20 24 24 10 40 12" fill="none" stroke="#c0c0c5" strokeWidth="2.5" strokeDasharray="2 2" />
           </>
         );
+      case "bagtag":
+        return (
+          <>
+            {/* A strap loop at the top, not a keyring — that is what tells a
+                bag tag apart from a luggage tag at thumbnail size. */}
+            <rect x="22" y="30" width="56" height="52" rx="10" fill={fg} stroke={line} strokeWidth="1.5" />
+            <rect x="42" y="14" width="16" height="18" rx="8" fill="none" stroke="#c0c0c5" strokeWidth="4" />
+            <rect x="30" y="44" width="40" height="7" rx="2" fill={dark} />
+            <rect x="30" y="57" width="26" height="6" rx="2" fill={dark} />
+            <rect x="30" y="69" width="14" height="6" rx="2" fill={dark} />
+          </>
+        );
+      case "brushcase":
+        return (
+          <>
+            <path d="M32 44 h36 v38 a8 8 0 0 1-8 8 H40 a8 8 0 0 1-8-8 Z" fill={fg} stroke={line} strokeWidth="1.5" />
+            <rect x="30" y="40" width="40" height="8" rx="4" fill={dark} />
+            {[41, 50, 59].map((x, i) => (
+              <g key={x}>
+                <rect x={x - 3} y={20 + i * 3} width="6" height={24 - i * 3} rx="3" fill="#c7c7cc" />
+                <path d={`M${x - 4} ${16 + i * 3} q4 -10 8 0 z`} fill={dark} />
+              </g>
+            ))}
+          </>
+        );
+      case "pokerchip":
+        return (
+          <>
+            <circle cx="50" cy="50" r="34" fill={fg} stroke={line} strokeWidth="1.5" />
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+              <rect key={a} x="46" y="12" width="8" height="12" rx="2" fill={dark} transform={`rotate(${a} 50 50)`} />
+            ))}
+            <circle cx="50" cy="50" r="22" fill="none" stroke={dark} strokeWidth="2" />
+            <circle cx="50" cy="50" r="15" fill={dark} opacity="0.35" />
+          </>
+        );
+      case "ashtray":
+        return (
+          <>
+            <ellipse cx="50" cy="62" rx="34" ry="18" fill={fg} stroke={line} strokeWidth="1.5" />
+            <ellipse cx="50" cy="58" rx="24" ry="12" fill={dark} />
+            {/* the two rests a cigarette actually sits in */}
+            <rect x="12" y="56" width="16" height="6" rx="3" fill={fg} stroke={line} strokeWidth="1.2" />
+            <rect x="72" y="56" width="16" height="6" rx="3" fill={fg} stroke={line} strokeWidth="1.2" />
+          </>
+        );
       case "luggage":
         return (
           <>

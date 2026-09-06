@@ -316,6 +316,7 @@ export const CATEGORY_LABEL: Record<Product["category"], string> = {
   trendy: "טרנדי",
   statues: "פסלים",
   screen: "סרטים וסדרות",
+  smoke: "מוצרי עישון",
   b2b: "לעסקים",
 };
 
@@ -421,11 +422,8 @@ export const CONFIG_PRODUCTS: ConfigProduct[] = [
     hasText: true, hasDesigner: true, face: [40, 24],
   },
   {
-    // No photo: the only "dog tag" on the shelf is the one that hangs on a
-    // collar, and a bone next to "דיסקית צבאית" reads as the wrong product.
-    // The drawn silhouette is a military tag, so it stands on its own.
     id: "dog_tag", label: "דיסקית", desc: "דיסקית צבאית עם שרשרת.",
-    art: "dogtag", basePrice: 60, hours: 1, grams: 10, material: "pla_plus",
+    art: "dogtag", image: shelfPhoto("mw-2335039"), basePrice: 60, hours: 1, grams: 10, material: "pla_plus",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [50, 28],
   },
   {
@@ -444,8 +442,10 @@ export const CONFIG_PRODUCTS: ConfigProduct[] = [
     },
   },
   {
+    // The Clipper case the owner sent is licensed BY-NC-SA — non-commercial —
+    // so the shelf photo comes from the BIC sleeve, which is not.
     id: "lighter_case", label: "קייס למצית", desc: "נרתיק ל-BIC עם עיצוב בחזית.",
-    art: "lighter", basePrice: 45, hours: 1.2, grams: 14, material: "pla_plus",
+    art: "lighter", image: shelfPhoto("mw-96585"), basePrice: 45, hours: 1.2, grams: 14, material: "pla_plus",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [24, 60],
     models: {
       label: "סוג המצית",
@@ -481,6 +481,26 @@ export const CONFIG_PRODUCTS: ConfigProduct[] = [
     id: "bookmark", label: "סימנייה", desc: "דקה, עם שם או עיצוב.",
     art: "bookmark", image: shelfPhoto("mw-26009"), basePrice: 30, hours: 0.6, grams: 6, material: "pla_plus",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [40, 140],
+  },
+  {
+    id: "bag_tag", label: "BAG TAG", desc: "תג לתיק אימון או לתיק גולף.",
+    art: "bagtag", image: shelfPhoto("mw-710726"), basePrice: 45, hours: 0.9, grams: 13, material: "pla_plus",
+    hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [55, 80],
+  },
+  {
+    id: "brush_case", label: "כיס מברשות נייד", desc: "נרתיק סגור למברשות איפור או צבע.",
+    art: "brushcase", image: shelfPhoto("mw-1298742"), basePrice: 95, hours: 3.6, grams: 110, material: "petg",
+    hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [60, 150],
+  },
+  {
+    id: "poker_chip", label: "ז'יטון פוקר", desc: "עם לוגו, שם או מספר. סטים לפי הזמנה.",
+    art: "pokerchip", image: shelfPhoto("mw-741443"), basePrice: 12, hours: 0.24, grams: 4, material: "pla_matte",
+    hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [39, 39],
+  },
+  {
+    id: "ashtray", label: "מאפרה", desc: "מאפרה שולחנית, עם שם או עיצוב בתחתית.",
+    art: "ashtray", image: shelfPhoto("mw-697819"), basePrice: 40, hours: 0.6, grams: 20, material: "petg",
+    hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [70, 70],
   },
 ];
 

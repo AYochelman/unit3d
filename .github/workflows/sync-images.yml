@@ -1,0 +1,52 @@
+# Keeps public/img/catalog in step with the catalogue.
+#
+# Every photo the shop shows is stored in the repo rather than hotlinked from
+# the designer's CDN. This job downloads whatever is missing and commits it, so
+# adding a model is the only manual step — the picture follows by itself.
+#
+# It runs on a push that changes the catalogue, weekly (a CDN can move a path
+# under us), and on demand.
+name: Sync catalogue images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "lib/imported.generated.ts"
+      - "lib/data.ts"
+      - "scripts/fetch-images.mjs"
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-images
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download missing images
+        run: node scripts/fetch-images.mjs
+
+      - name: Commit what changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/img/catalog lib/localImages.generated.ts
+          if git diff --cached --quiet; then
+            echo "nothing new"
+            exit 0
+          fi
+          git commit -m "Store the catalogue photos the shop is missing"
+          git push

@@ -1,4 +1,5 @@
 import { importedFidgets } from "./imported";
+import { photoSrc } from "./assets";
 import type {
   Unit,
   Review,
@@ -492,8 +493,18 @@ const CURATED_FIDGETS: Fidget[] = [
   },
 ];
 
+/** Same treatment the imported models get: our copy of the photo, not theirs. */
+function localPhotos(f: Fidget): Fidget {
+  return {
+    ...f,
+    ...(f.thumbnail ? { thumbnail: photoSrc(f.thumbnail) } : {}),
+    ...(f.images ? { images: f.images.map((u) => photoSrc(u)) } : {}),
+    ...(f.variants ? { variants: f.variants.map((v) => ({ ...v, thumbnail: photoSrc(v.thumbnail) })) } : {}),
+  };
+}
+
 // The curated shelf plus whatever the MakerWorld import brought in.
-export const FIDGETS: Fidget[] = [...CURATED_FIDGETS, ...importedFidgets()];
+export const FIDGETS: Fidget[] = [...CURATED_FIDGETS.map(localPhotos), ...importedFidgets()];
 
 export const AUDIENCES: Audience[] = [
   { id: "private", label: "אני מזמין בשבילי", desc: "מתנה, פיגורה, חלק חילוף, פידג'ט, או כל רעיון שיש לך בראש.", iconKey: "sparkles" },

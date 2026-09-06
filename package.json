@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "emblems": "node scripts/fetch-emblems.mjs",
-    "import:makerworld": "node scripts/import-makerworld.mjs"
+    "import:makerworld": "node scripts/import-makerworld.mjs",
+    "fetch:images": "node scripts/fetch-images.mjs"
   },
   "dependencies": {
     "next": "^16.2.6",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import SectionHead from "@/components/ui/SectionHead";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
+import { photoSrc } from "@/lib/assets";
 import Btn from "@/components/ui/Btn";
 import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
@@ -24,11 +25,10 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 
 const AVG = (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1);
 
-// GitHub Pages serves the site under /<repo>/, and next/image does NOT prefix
-// that onto a local src when images are unoptimised — which is why the studio
-// photographs 404'd on the live site while the remote catalogue ones worked.
-const BASE = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
-const photoUrl = (p?: string) => (p ? `${BASE}${p}` : undefined);
+// photoSrc handles the base path GitHub Pages serves the site under; next/image
+// does NOT prefix it onto a local src when images are unoptimised, which is why
+// the studio photographs once 404'd live while the catalogue ones worked.
+const photoUrl = (p?: string) => photoSrc(p);
 
 function Stars({ n }: { n: number }) {
   return (

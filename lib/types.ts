@@ -231,14 +231,14 @@ export type Material = {
 };
 
 // ─── Shop products (pet tags, office & home) ─────────────────────────────────
-export type ProductCategory = "pets" | "office" | "home" | "trendy" | "statues" | "screen" | "b2b";
+export type ProductCategory = "pets" | "office" | "home" | "trendy" | "statues" | "screen" | "smoke" | "b2b";
 
 export type ProductArtId =
   | "bone" | "round" | "heart" | "fish" | "paw" | "qr" | "bagholder" | "scoop"
   | "penholder" | "cableclip" | "headphones" | "phonestand" | "coaster" | "hook"
   | "keyrack" | "cardholder" | "planter" | "bagclip" | "bookmark" | "doorsign"
   | "organizer" | "lighter" | "phonecase" | "dogtag" | "luggage" | "nameplate"
-  | "keychain"
+  | "keychain" | "bagtag" | "brushcase" | "pokerchip" | "ashtray"
   // Statues / display pieces (עמודת הפסלים)
   | "bust" | "chess" | "dragonstatue" | "lowpoly" | "vase" | "trophy"
   | "moon" | "torso";
@@ -304,7 +304,11 @@ export type ConfigProductId =
   | "coaster"
   | "wall_hook"
   | "cable_clip"
-  | "bookmark";
+  | "bookmark"
+  | "bag_tag"
+  | "brush_case"
+  | "poker_chip"
+  | "ashtray";
 
 export type ConfigModel = { id: string; label: string };
 

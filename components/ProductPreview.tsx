@@ -33,11 +33,14 @@ export function faceKindFor(product: ConfigProduct, shape?: ShapeId): FaceKind {
   if (product.id === "pet_tag") return (shape && PET_FACE[shape]) ?? "bone";
   switch (product.id) {
     case "coaster":
+    case "poker_chip":
+    case "ashtray":
       return "round";
     case "phone_case":
       return "phone";
     case "lighter_case":
     case "bookmark":
+    case "brush_case":
       return "tall";
     case "name_plate":
     case "luggage_tag":

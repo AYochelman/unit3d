@@ -41,6 +41,15 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # The catalogue photos live in the repo (public/img/catalog). This picks
+      # up anything a new model added but nobody has fetched yet, so the built
+      # site never has to hotlink a designer's CDN. It is a no-op when the
+      # folder is already complete, and a failure here is not fatal — an image
+      # with no local copy falls back to its original URL.
+      - name: Fetch catalogue images
+        run: npm run fetch:images
+        continue-on-error: true
+
       - uses: actions/configure-pages@v5
         id: pages
         with:

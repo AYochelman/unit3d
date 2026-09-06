@@ -1,6 +1,7 @@
 import type { Fidget, Product, ProductArtId, ProductCategory } from "./types";
 import { DEFAULT_COST_SETTINGS, estimateCost, fmtHours } from "./costing";
 import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
+import { photoSrc } from "./assets";
 import { heName } from "./he-names";
 
 // ─── Models imported from a maker site ───────────────────────────────────────
@@ -36,7 +37,7 @@ import { heName } from "./he-names";
 
 // "trendy" doubles as the catch-all: anything that does not belong on a named
 // shelf lands there rather than being forced into one that nearly fits.
-export type ImportedShelf = "flexi" | "fidget" | "statues" | "screen" | "pets" | "home" | "office" | "trendy" | "b2b";
+export type ImportedShelf = "flexi" | "fidget" | "statues" | "screen" | "pets" | "home" | "office" | "smoke" | "trendy" | "b2b";
 
 export type ImportedModel = {
   id: string;
@@ -123,7 +124,11 @@ export const REMOVED_IDS = new Set<string>([
 /** Set to true to list everything, weapons included. Leave false. */
 export const SHOW_HELD_MODELS = false;
 
-export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED;
+// Photos resolve to the copies in public/img/catalog (see lib/assets.ts), so
+// nothing on the shop is loaded from a designer's CDN at page view.
+export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED.map((m) =>
+  m.image ? { ...m, image: photoSrc(m.image) } : m,
+);
 export const IMPORTED_DATE = IMPORTED_AT;
 
 const sellable = (m: ImportedModel) =>
@@ -141,6 +146,7 @@ export function suggestPrice(grams: number, hours: number, colors = 1): number {
 const SHELF_TO_CATEGORY: Record<Exclude<ImportedShelf, "flexi" | "fidget">, ProductCategory> = {
   statues: "statues",
   screen: "screen",
+  smoke: "smoke",
   pets: "pets",
   home: "home",
   office: "office",

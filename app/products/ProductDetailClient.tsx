@@ -125,7 +125,11 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const colorInStock = isColorInStock(stock, material, colorId);
   const sellable = matInStock && colorInStock;
 
-  const backHref = p.category === "pets" ? "/pets" : p.category === "statues" ? "/statues" : "/home-office";
+  // Back to the shelf the product actually sits on, not the one it nearly fits.
+  const BACK_BY_CATEGORY: Partial<Record<typeof p.category, string>> = {
+    pets: "/pets", statues: "/statues", screen: "/screen", smoke: "/smoke", trendy: "/trendy", b2b: "/b2b",
+  };
+  const backHref = BACK_BY_CATEGORY[p.category] ?? "/home-office";
   const source = p.category === "pets" ? "pets" : "office";
 
   const handleAdd = () => {

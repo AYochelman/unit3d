@@ -259,6 +259,7 @@ export default function ConfiguratorClient({
     router.push("/contact");
   };
 
+  const photo = override?.image ?? product.image;
   const showCanvas = current === "text" && config.mode === "design" && product.hasDesigner;
   const colorChoices = product.material === "tpu" ? FILAMENTS.filter((f) => TPU_COLORS.has(f.id)) : FILAMENTS;
 
@@ -289,25 +290,6 @@ export default function ConfiguratorClient({
         {/* Preview / canvas */}
         <div className="lg:col-span-3 order-2 lg:order-1">
           <div className="sticky top-20">
-            {/* The designer works on ten generic bases, so a customer who came
-                from a specific shelf product needs to see that product here or
-                the page reads as "a basic keychain". */}
-            {override?.image && (
-              <div className="mb-3 flex items-center gap-3 rounded-xl border border-ink-800 bg-ink-900 p-2.5">
-                <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-ink-950">
-                  <Image src={override.image} alt={product.label} fill sizes="56px" className="object-cover" unoptimized />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[11px] text-ink-400">המוצר שבחרת</div>
-                  <div className="truncate text-sm font-semibold">{product.label}</div>
-                </div>
-                {override.href && (
-                  <Link href={override.href} className="shrink-0 text-xs font-semibold text-cyan2 hover:underline">
-                    לעמוד המוצר
-                  </Link>
-                )}
-              </div>
-            )}
             {showCanvas ? (
               <DesignCanvas
                 design={design}
@@ -336,9 +318,18 @@ export default function ConfiguratorClient({
                     <span className="w-1.5 h-1.5 bg-cyan2 rounded-full live-dot" />
                     LIVE PREVIEW
                   </div>
-                  <div className="absolute bottom-4 right-4 left-4 flex items-end justify-between font-mono text-[10px] text-ink-400" dir="ltr">
+                  <div className="absolute bottom-4 right-4 left-4 flex items-end justify-between gap-3 font-mono text-[10px] text-ink-400" dir="ltr">
                     <span>{face[0]}×{face[1]}mm · ~{timeLabel}</span>
-                    <span>FILAMENT · {material.short}</span>
+                    {/* The real photograph of the model being designed, at the
+                        one place the eye already goes for the print facts. */}
+                    <span className="flex items-center gap-2" dir="rtl">
+                      <span dir="ltr">FILAMENT · {material.short}</span>
+                      {photo && (
+                        <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-ink-700 bg-ink-950 shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                          <Image src={photo} alt="" aria-hidden fill sizes="44px" className="object-cover" unoptimized />
+                        </span>
+                      )}
+                    </span>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 divide-x divide-ink-800 rtl:divide-x-reverse border-t border-ink-800 font-mono text-[11px]" dir="ltr">
@@ -383,18 +374,10 @@ export default function ConfiguratorClient({
                           config.product === p.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        {/* The drawing is the icon — every card the same size,
-                            the same style, readable at a glance. The real
-                            photo rides along in the corner as proof that the
-                            thing exists, it does not replace the drawing. */}
-                        <span className="relative h-11 w-11 shrink-0">
-                          <ProductArt art={p.art} hue={config.product === p.id ? 145 : 210} size={44} />
-                          {p.image && (
-                            <span className="absolute -bottom-1 -right-1 h-6 w-6 overflow-hidden rounded-md border border-ink-700 bg-ink-950 shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-                              <Image src={p.image} alt="" fill sizes="24px" className="object-cover" unoptimized />
-                            </span>
-                          )}
-                        </span>
+                        {/* One drawing per card, all the same size and style.
+                            The real photo lives in the preview, next to the
+                            filament line — not twelve times over in here. */}
+                        <ProductArt art={p.art} hue={config.product === p.id ? 145 : 210} size={44} className="shrink-0" />
                         <div className="min-w-0">
                           <div className="font-semibold text-sm leading-tight">{p.label}</div>
                           <div className="text-[11px] text-ink-400 leading-snug line-clamp-1">{p.desc}</div>

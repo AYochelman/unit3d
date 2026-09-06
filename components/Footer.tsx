@@ -9,6 +9,7 @@ const SHOP = [
   { href: "/pets", label: "תגים לחיות" },
   { href: "/statues", label: "פסלים" },
   { href: "/screen", label: "סרטים וסדרות" },
+  { href: "/smoke", label: "מוצרי עישון" },
   { href: "/home-office", label: "לבית ולמשרד" },
   { href: "/configurator", label: "מעצב אישי" },
   { href: "/upload", label: "העלאת קובץ" },
