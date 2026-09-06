@@ -20,6 +20,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(ROOT, "public", "img", "catalog");
@@ -27,12 +28,21 @@ const MANIFEST = path.join(ROOT, "lib", "localImages.generated.ts");
 const SCAN_DIRS = [path.join(ROOT, "lib")];
 
 const ALL = process.argv.includes("--all");
+/** Re-process what is already on disk (after changing the size or quality). */
+const REDO = process.argv.includes("--optimize");
+// Nothing on the site is shown wider than a product card. Designers upload
+// 4000px originals, and 230 of those is 137MB of repository nobody reads.
+const MAX_WIDTH = 900;
+const QUALITY = 80;
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const CONCURRENCY = 6;
 const TIMEOUT_MS = 30_000;
 
-const IMAGE_URL = /https:\/\/[^"'` )]+?\.(?:jpe?g|png|webp|gif)(?:\?[^"'` )]*)?/gi;
+// Stops at whitespace or a quote, not at a bracket: one of the Cults3D
+// thumbnails has `filters:no_upscale()` in the middle of its path, and cutting
+// there produced a URL that matched nothing and stayed hotlinked.
+const IMAGE_URL = /https:\/\/[^"'`\s]+?\.(?:jpe?g|png|webp|gif)(?:\?[^"'`\s]*)?/gi;
 
 function collectUrls() {
   const urls = new Set();
@@ -52,17 +62,24 @@ function collectUrls() {
 /** Stable, collision-free stem for a URL — query string and all. */
 const stemFor = (url) => crypto.createHash("sha1").update(url).digest("hex").slice(0, 16);
 
-const EXT_BY_TYPE = { "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png", "image/gif": "gif" };
-
 /**
- * The extension has to come from what the server actually sent, not from the
- * URL. MakerWorld's photo links end in `.png` but carry
- * `?x-oss-process=…/format,webp`, so the bytes are WebP — saving those as .png
- * would have the site serve a file whose Content-Type is a lie.
+ * One photo, at the size the site actually shows it.
+ *
+ * Everything becomes WebP: it is what MakerWorld already serves, every browser
+ * we care about reads it, and it is a third of the JPEG. An animated GIF is
+ * left alone — resizing one frame of it would throw the animation away.
  */
-const extFor = (contentType, url) =>
-  EXT_BY_TYPE[(contentType || "").split(";")[0].trim().toLowerCase()] ??
-  (url.split("?")[0].match(/\.(jpe?g|png|webp|gif)$/i)?.[1] ?? "jpg").toLowerCase().replace("jpeg", "jpg");
+async function optimise(buf) {
+  const img = sharp(buf, { animated: false });
+  const meta = await img.metadata();
+  if (meta.format === "gif") return { data: buf, ext: "gif" };
+  const out = await img
+    .resize({ width: Math.min(meta.width || MAX_WIDTH, MAX_WIDTH), withoutEnlargement: true })
+    .webp({ quality: QUALITY })
+    .toBuffer();
+  // A photo already smaller than our WebP is left as it came.
+  return out.length < buf.length ? { data: out, ext: "webp" } : { data: buf, ext: meta.format === "png" ? "png" : "jpg" };
+}
 
 /** The file already on disk for this URL, whatever extension it landed with. */
 function existingFile(stem) {
@@ -79,13 +96,11 @@ async function download(url, stem) {
   try {
     const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": UA, accept: "image/*,*/*" } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const buf = Buffer.from(await res.arrayBuffer());
+    const raw = Buffer.from(await res.arrayBuffer());
     // A 200 that hands back an error page is worse than a miss: it would sit
     // in the folder looking like the photo.
-    if (buf.length < 1024) throw new Error(`too small (${buf.length}b)`);
-    const file = `${stem}.${extFor(res.headers.get("content-type"), url)}`;
-    fs.writeFileSync(path.join(OUT_DIR, file), buf);
-    return file;
+    if (raw.length < 1024) throw new Error(`too small (${raw.length}b)`);
+    return write(stem, await optimise(raw));
   } catch (e) {
     throw new Error(e.name === "AbortError" ? "timeout" : e.message);
   } finally {
@@ -93,10 +108,34 @@ async function download(url, stem) {
   }
 }
 
+/** Writes the photo under its stem, clearing any older extension for it. */
+function write(stem, { data, ext }) {
+  for (const e of ["webp", "jpg", "png", "gif"]) {
+    const p = path.join(OUT_DIR, `${stem}.${e}`);
+    if (e !== ext && fs.existsSync(p)) fs.unlinkSync(p);
+  }
+  const file = `${stem}.${ext}`;
+  fs.writeFileSync(path.join(OUT_DIR, file), data);
+  return file;
+}
+
 async function main() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const urls = collectUrls();
   const jobs = urls.map((url) => ({ url, stem: stemFor(url), file: existingFile(stemFor(url)) }));
+
+  if (REDO) {
+    let saved = 0;
+    for (const j of jobs.filter((x) => x.file)) {
+      const p = path.join(OUT_DIR, j.file);
+      const before = fs.statSync(p).size;
+      try {
+        j.file = write(j.stem, await optimise(fs.readFileSync(p)));
+        saved += before - fs.statSync(path.join(OUT_DIR, j.file)).size;
+      } catch { /* leave the original alone */ }
+    }
+    console.log(`  נחסכו ${(saved / 1024 / 1024).toFixed(1)}MB`);
+  }
 
   const todo = jobs.filter((j) => ALL || !j.file);
   console.log(`  ${urls.length} תמונות בקטלוג · ${todo.length} להורדה`);
