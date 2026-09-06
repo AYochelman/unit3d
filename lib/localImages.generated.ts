@@ -2,10 +2,11 @@
 //
 // Remote photo URL → the copy of it stored in public/. Run
 // `npm run fetch:images` after adding models.
-// Images: 229
+// Images: 230
 
 export const LOCAL_IMAGES: Record<string, string> = {
   "https://dl2.myminifactory.com/object-assets/5992b909866ea/images/720X720-imgp5831.jpg": "img/catalog/f4da1d23d4d5c008.webp",
+  "https://images.cults3d.com/aLZQQzYVIF3AEIX3_h9bdUXOIVs=/516x516/filters:no_upscale()/https://fbi.cults3d.com/uploaders/14324891/illustration-file/ca58d121-9c0f-4ee2-b3a2-6ffc4970efc2/IMGP7387.jpg": "img/catalog/54fcad01d0ae0a14.webp",
   "https://makerworld.bblmw.com/makerworld/model/DSM00000001842643/design/2025-09-30_0ff9bd86d4523.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/2b249c0ea02d997a.webp",
   "https://makerworld.bblmw.com/makerworld/model/DSM00000002633270/design/5be29188b8ec20ba.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/c19cda445e64c8e1.webp",
   "https://makerworld.bblmw.com/makerworld/model/US100be4ddb1bfc7/design/2023-11-07_8bbc8e6fa24f9.png": "img/catalog/65965dd0268c0cca.webp",
