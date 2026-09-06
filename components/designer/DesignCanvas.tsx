@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Design, DesignElement, DesignShapeKind, DesignTextElement, DesignShapeElement } from "@/lib/types";
 import { DESIGN_FONTS, DESIGN_PALETTE, DESIGN_SHAPES, facePath as facePathFor, newShape, newText, shapePath } from "@/lib/design";
+import type { DesignPricePart } from "@/lib/design";
+import { fmtILS } from "@/lib/format";
 import type { FaceKind } from "@/lib/design";
 import DesignGroup from "./DesignGroup";
 import Icon from "@/components/ui/Icon";
@@ -16,6 +18,8 @@ type Props = {
   faceKind: FaceKind;
   /** Base filament colour of the product. */
   baseColor: string;
+  /** What the selected element adds to the price, and why. */
+  priceFor?: (id: string) => { parts: DesignPricePart[]; total: number } | null;
 };
 
 const MARGIN_RATIO = 0.08;
@@ -27,7 +31,7 @@ function textBox(el: DesignTextElement) {
   return { w, h };
 }
 
-export default function DesignCanvas({ design, onChange, faceKind, baseColor }: Props) {
+export default function DesignCanvas({ design, onChange, faceKind, baseColor, priceFor }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [past, setPast] = useState<Design[]>([]);
@@ -344,10 +348,15 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
             הוסף טקסט או צורה, גרור אותם על המוצר, משוך את הנקודה בפינה כדי לשנות גודל.
             חצים במקלדת מזיזים חצי מילימטר, Delete מוחק. הצבעים הם צבעי הפילמנט שיש במלאי.
           </div>
-        ) : selected.kind === "text" ? (
-          <TextProps el={selected} onPatch={(p) => patchEl(selected.id, p)} />
         ) : (
-          <ShapeProps el={selected} onPatch={(p) => patchEl(selected.id, p)} />
+          <>
+            <ElementPrice price={priceFor?.(selected.id) ?? null} />
+            {selected.kind === "text" ? (
+              <TextProps el={selected} onPatch={(p) => patchEl(selected.id, p)} />
+            ) : (
+              <ShapeProps el={selected} onPatch={(p) => patchEl(selected.id, p)} />
+            )}
+          </>
         )}
 
         {selected && (
@@ -385,6 +394,36 @@ export default function DesignCanvas({ design, onChange, faceKind, baseColor }: 
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/** The selected element's own line in the price, spelled out. */
+function ElementPrice({ price }: { price: { parts: DesignPricePart[]; total: number } | null }) {
+  if (!price) return null;
+  return (
+    <div className="mb-3 rounded-lg border border-ink-800 bg-ink-900 px-3 py-2">
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-[11px] font-bold text-ink-300">מה הפריט הזה מוסיף</span>
+        <span className={cn("font-mono text-sm font-bold", price.total > 0 ? "text-flame" : "text-good")} dir="ltr">
+          {price.total > 0 ? `+${fmtILS(price.total)}` : fmtILS(0)}
+        </span>
+      </div>
+      {/* One reason needs no breakdown — the number above already is it. */}
+      {price.parts.length === 0 && (
+        <div className="mt-1 text-[11px] text-ink-500">נכלל במחיר — אותו צבע, אותה הדפסה.</div>
+      )}
+      {price.parts.length === 1 && <div className="mt-1 text-[11px] text-ink-400">{price.parts[0].label}</div>}
+      {price.parts.length > 1 && (
+        <ul className="mt-1 space-y-0.5">
+          {price.parts.map((p) => (
+            <li key={p.label} className="flex items-baseline justify-between gap-2 text-[11px] text-ink-400">
+              <span>{p.label}</span>
+              <span className="font-mono text-ink-300" dir="ltr">+{fmtILS(p.amount)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

@@ -421,8 +421,11 @@ export const CONFIG_PRODUCTS: ConfigProduct[] = [
     hasText: true, hasDesigner: true, face: [40, 24],
   },
   {
+    // No photo: the only "dog tag" on the shelf is the one that hangs on a
+    // collar, and a bone next to "דיסקית צבאית" reads as the wrong product.
+    // The drawn silhouette is a military tag, so it stands on its own.
     id: "dog_tag", label: "דיסקית", desc: "דיסקית צבאית עם שרשרת.",
-    art: "dogtag", image: shelfPhoto("mw-59619"), basePrice: 60, hours: 1, grams: 10, material: "pla_plus",
+    art: "dogtag", basePrice: 60, hours: 1, grams: 10, material: "pla_plus",
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [50, 28],
   },
   {

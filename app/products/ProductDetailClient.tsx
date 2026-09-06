@@ -18,7 +18,7 @@ import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { estimateCost } from "@/lib/costing";
 import { suggestPrice } from "@/lib/imported";
-import { PERSONALIZE_PRICE, SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
+import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import { useLivePrice } from "@/lib/live-price";
 
 import { useOrderStore } from "@/lib/order-store";
@@ -504,14 +504,15 @@ export default function ProductDetailClient({ id }: { id: string }) {
           )}
 
           {/* Every product offers the same thing on the same terms: your text
-              on it for a flat +15 ₪, on one shared page that arrives already
-              knowing which product you came from. */}
+              on it, on one shared page that arrives already knowing which
+              product and colour you came from. The price of the addition is
+              shown there, once there is something to price. */}
           <Link
-            href={`/personalize?item=${encodeURIComponent(id)}`}
+            href={`/personalize?item=${encodeURIComponent(id)}&color=${colorId}`}
             className="w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors bg-cyan2/15 text-cyan2 border border-cyan2/50 hover:bg-cyan2 hover:text-ink-950"
           >
             <Icon name="sparkles" size={15} />
-            רוצה עליו טקסט משלך? <span className="font-mono">+{fmtILS(PERSONALIZE_PRICE)}</span>
+            רוצה עליו טקסט משלך?
           </Link>
 
           <RestockModal

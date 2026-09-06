@@ -313,3 +313,48 @@ export function designColors(d: Design): Set<string> {
 export function designColorCount(d: Design): number {
   return designColors(d).size;
 }
+
+export type DesignPricePart = { label: string; amount: number };
+
+/**
+ * What one element in the design is costing, and why.
+ *
+ * The design surcharge is a one-off and the colour surcharge is per FILAMENT,
+ * not per element — so "how much does this circle cost" only has an answer if
+ * you decide who carries each charge. The rule here is first-come: the first
+ * element carries the design fee, and a colour is charged to the first element
+ * that introduces it. Summed over every element it comes to exactly the same
+ * total the price box shows, and selecting an item explains its own line.
+ */
+export function designElementPrice(
+  d: Design,
+  id: string,
+  fee: { design: number; extraColor: number },
+): { parts: DesignPricePart[]; total: number } | null {
+  const i = d.elements.findIndex((e) => e.id === id);
+  if (i < 0) return null;
+
+  const seen = new Set<string>();
+  for (const e of d.elements.slice(0, i)) {
+    seen.add(e.fill.toLowerCase());
+    if (e.kind === "shape" && e.stroke) seen.add(e.stroke.toLowerCase());
+  }
+  const el = d.elements[i];
+  const mine: string[] = [];
+  const add = (c?: string | null) => {
+    if (!c) return;
+    const k = c.toLowerCase();
+    if (!seen.has(k) && !mine.includes(k)) mine.push(k);
+  };
+  add(el.fill);
+  if (el.kind === "shape") add(el.stroke);
+
+  const parts: DesignPricePart[] = [];
+  if (i === 0) parts.push({ label: "פתיחת עיצוב חופשי · פעם אחת", amount: fee.design });
+  // The design's first colour is the print itself; every one after it is another spool.
+  const billable = Math.max(0, mine.length - (seen.size === 0 ? 1 : 0));
+  if (billable > 0) {
+    parts.push({ label: billable > 1 ? `${billable} צבעים נוספים ב-AMS` : "צבע נוסף ב-AMS", amount: billable * fee.extraColor });
+  }
+  return { parts, total: parts.reduce((s, p) => s + p.amount, 0) };
+}

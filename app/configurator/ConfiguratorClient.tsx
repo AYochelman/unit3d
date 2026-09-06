@@ -13,7 +13,8 @@ import DesignCanvas from "@/components/designer/DesignCanvas";
 import { SHAPES, FONTS, FILAMENTS, SIZES, FIDGETS } from "@/lib/data";
 import { CONFIG_PRODUCTS, CONFIG_PRODUCT_BY_ID, PRODUCT_BY_ID } from "@/lib/products";
 import { MATERIAL_BY_ID, materialFromFilamentDesc } from "@/lib/materials";
-import { designColorCount, designSummary, designToSvg, emptyDesign, facePath } from "@/lib/design";
+import { designColorCount, designElementPrice, designSummary, designToSvg, emptyDesign, facePath } from "@/lib/design";
+import { EXTRA_COLOR_PRICE, PERSONALIZE_PRICE } from "@/lib/personalize";
 import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { estimateCost, parseHours } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
@@ -51,8 +52,10 @@ const STEP_LABEL: Record<StepId, string> = {
   qty: "כמות",
 };
 
-const DESIGN_SURCHARGE = 15;
-const DESIGN_EXTRA_COLOR = 10;
+// Same two numbers the rest of the shop quotes: putting your own thing on a
+// product, and a second filament for it.
+const DESIGN_SURCHARGE = PERSONALIZE_PRICE;
+const DESIGN_EXTRA_COLOR = EXTRA_COLOR_PRICE;
 const TPU_COLORS = new Set(["black", "white", "red", "blue", "orange", "green"]);
 
 /** "50×35mm" / "Ø90mm" / "Ø90mm ×4" → [w, h] in mm. */
@@ -311,6 +314,9 @@ export default function ConfiguratorClient({
                 onChange={(d) => update("design", d)}
                 faceKind={faceKindFor(product, shape)}
                 baseColor={colorObj.hex}
+                priceFor={(elId) =>
+                  designElementPrice(design, elId, { design: DESIGN_SURCHARGE, extraColor: DESIGN_EXTRA_COLOR })
+                }
               />
             ) : (
               <div className="rounded-2xl border border-ink-800 bg-ink-900 overflow-hidden">
@@ -377,13 +383,18 @@ export default function ConfiguratorClient({
                           config.product === p.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        {p.image ? (
-                          <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-ink-900">
-                            <Image src={p.image} alt={p.label} fill sizes="44px" className="object-cover" unoptimized />
-                          </span>
-                        ) : (
-                          <ProductArt art={p.art} hue={config.product === p.id ? 145 : 210} size={44} className="shrink-0" />
-                        )}
+                        {/* The drawing is the icon — every card the same size,
+                            the same style, readable at a glance. The real
+                            photo rides along in the corner as proof that the
+                            thing exists, it does not replace the drawing. */}
+                        <span className="relative h-11 w-11 shrink-0">
+                          <ProductArt art={p.art} hue={config.product === p.id ? 145 : 210} size={44} />
+                          {p.image && (
+                            <span className="absolute -bottom-1 -right-1 h-6 w-6 overflow-hidden rounded-md border border-ink-700 bg-ink-950 shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+                              <Image src={p.image} alt="" fill sizes="24px" className="object-cover" unoptimized />
+                            </span>
+                          )}
+                        </span>
                         <div className="min-w-0">
                           <div className="font-semibold text-sm leading-tight">{p.label}</div>
                           <div className="text-[11px] text-ink-400 leading-snug line-clamp-1">{p.desc}</div>

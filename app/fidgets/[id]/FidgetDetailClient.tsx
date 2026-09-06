@@ -21,7 +21,7 @@ import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { useLivePrice } from "@/lib/live-price";
-import { PERSONALIZE_PRICE, SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
+import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
@@ -630,11 +630,11 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           )}
 
           <Link
-            href={`/personalize?item=${encodeURIComponent(id)}`}
+            href={`/personalize?item=${encodeURIComponent(id)}&color=${colorId}`}
             className="w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors bg-cyan2/15 text-cyan2 border border-cyan2/50 hover:bg-cyan2 hover:text-ink-950"
           >
             <Icon name="sparkles" size={15} />
-            רוצה עליו טקסט משלך? <span className="font-mono">+{fmtILS(PERSONALIZE_PRICE)}</span>
+            רוצה עליו טקסט משלך?
           </Link>
 
           <RestockModal

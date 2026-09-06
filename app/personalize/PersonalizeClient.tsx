@@ -10,7 +10,7 @@ import { Field, Input } from "@/components/ui/Field";
 import ProductArt from "@/components/ProductArt";
 import { FILAMENTS, FIDGETS } from "@/lib/data";
 import { PRODUCT_BY_ID } from "@/lib/products";
-import { PERSONALIZE_PRICE } from "@/lib/personalize";
+import { EXTRA_COLOR_PRICE, PERSONALIZE_PRICE } from "@/lib/personalize";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -20,8 +20,9 @@ import { cn } from "@/lib/cn";
  *
  * The full configurator designs ten generic bases from scratch; this is the
  * other half of the job and the one most customers actually want: take the
- * thing they are already looking at and write on it. The product arrives in
- * ?item= and is filled in for them, so the only thing to type is the text.
+ * thing they are already looking at and write on it. The product and the
+ * colour arrive in the query string and are filled in for them, so the only
+ * thing to type is the text.
  */
 export default function PersonalizeClient() {
   const params = useSearchParams();
@@ -37,10 +38,14 @@ export default function PersonalizeClient() {
     return null;
   }, [id]);
 
-  const [line1, setLine1] = useState("");
-  const [line2, setLine2] = useState("");
-  const [colorId, setColorId] = useState(FILAMENTS[2].id);
-  const color = FILAMENTS.find((c) => c.id === colorId) ?? FILAMENTS[0];
+  // The colour the product is already being printed in. Keeping it costs
+  // nothing; anything else is a second filament.
+  const baseColorId = params?.get("color") ?? FILAMENTS[2].id;
+  const baseColor = FILAMENTS.find((c) => c.id === baseColorId) ?? FILAMENTS[2];
+
+  const [line, setLine] = useState("");
+  const [colorId, setColorId] = useState(baseColor.id);
+  const color = FILAMENTS.find((c) => c.id === colorId) ?? baseColor;
 
   if (!item) {
     return (
@@ -51,20 +56,24 @@ export default function PersonalizeClient() {
     );
   }
 
-  const total = item.price + PERSONALIZE_PRICE;
+  const written = line.trim().length > 0;
+  const colorExtra = color.id === baseColor.id ? 0 : EXTRA_COLOR_PRICE;
+  // Nothing is charged until there is actually something to print.
+  const addOn = written ? PERSONALIZE_PRICE + colorExtra : 0;
+  const total = item.price + addOn;
 
   const proceed = () => {
     setOrder({
       title: `${item.name} עם טקסט אישי`,
       summary: [
         `מוצר: ${item.name}`,
-        `טקסט: "${line1}"${line2 ? ` · "${line2}"` : ""}`,
-        `צבע: ${color.name}`,
+        `טקסט: "${line.trim()}"`,
+        `צבע הטקסט: ${color.name}${colorExtra ? ` (צבע שני · ${fmtILS(colorExtra)})` : " (כמו המוצר)"}`,
         `תוספת טקסט אישי: ${fmtILS(PERSONALIZE_PRICE)}`,
       ],
       price: total,
       source: "configurator",
-      meta: { item: id, line1, line2, color: colorId },
+      meta: { item: id, line1: line.trim(), color: colorId, baseColor: baseColor.id },
     });
     router.push("/contact");
   };
@@ -76,7 +85,7 @@ export default function PersonalizeClient() {
         מה לכתוב על זה?
       </h1>
       <p className="text-ink-300 mb-8">
-        שם, תאריך, מספר אישי או משפט. תוספת אחידה של {fmtILS(PERSONALIZE_PRICE)} על כל מוצר בחנות,
+        שם, תאריך, מספר אישי או משפט. כותבים, בוחרים צבע, והמחיר המעודכן מופיע למטה —
         ואני חוזר אליך עם תצוגה לפני שמתחילים להדפיס.
       </p>
 
@@ -99,18 +108,20 @@ export default function PersonalizeClient() {
         </Link>
       </div>
 
-      <div className="grid gap-4 mb-6">
+      <div className="mb-6">
         <Field label="הטקסט על המוצר">
-          <Input value={line1} onChange={(e) => setLine1(e.target.value.slice(0, 24))} placeholder="יואב" maxLength={24} />
-        </Field>
-        <Field label="שורה שנייה (לא חובה)">
-          <Input value={line2} onChange={(e) => setLine2(e.target.value.slice(0, 24))} placeholder="050-0000000" maxLength={24} />
+          <Input value={line} onChange={(e) => setLine(e.target.value.slice(0, 24))} placeholder="יואב" maxLength={24} />
         </Field>
       </div>
 
       <div className="mb-8">
-        <div className="text-xs font-bold text-ink-300 mb-2.5">
-          צבע: <span className="text-ink-100 font-normal">{color.name}</span>
+        <div className="text-xs font-bold text-ink-300 mb-1">
+          צבע הטקסט: <span className="text-ink-100 font-normal">{color.name}</span>
+          {colorExtra > 0 && <span className="font-mono text-flame"> +{fmtILS(colorExtra)}</span>}
+        </div>
+        <div className="text-[11px] text-ink-500 mb-2.5">
+          ב<b className="text-ink-300">{baseColor.name}</b> — הצבע שכבר בחרת — זה כלול, הכל יוצא מסליל אחד.
+          כל צבע אחר הוא פילמנט שני והחלפה ב-AMS, {fmtILS(EXTRA_COLOR_PRICE)} תוספת.
         </div>
         <div className="flex flex-wrap gap-2.5">
           {FILAMENTS.map((c) => (
@@ -118,15 +129,21 @@ export default function PersonalizeClient() {
               key={c.id}
               type="button"
               onClick={() => setColorId(c.id)}
-              title={c.name}
+              title={c.id === baseColor.id ? `${c.name} — כלול` : `${c.name} — +${fmtILS(EXTRA_COLOR_PRICE)}`}
               aria-label={c.name}
               aria-pressed={colorId === c.id}
               className={cn(
-                "h-9 w-9 rounded-full border-2 transition-all hover:scale-110 active:scale-95",
+                "relative h-9 w-9 rounded-full border-2 transition-all hover:scale-110 active:scale-95",
                 colorId === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50",
               )}
               style={{ backgroundColor: c.hex }}
-            />
+            >
+              {c.id === baseColor.id && (
+                <span className="absolute -top-1 -left-1 h-3.5 w-3.5 rounded-full bg-good text-ink-950 flex items-center justify-center">
+                  <Icon name="check" size={9} strokeWidth={3} />
+                </span>
+              )}
+            </button>
           ))}
         </div>
       </div>
@@ -135,15 +152,20 @@ export default function PersonalizeClient() {
         <div>
           <div className="text-[11px] text-ink-400">מחיר סופי</div>
           <div className="font-mono text-2xl text-flame" dir="ltr">{fmtILS(total)}</div>
-          <div className="text-[11px] text-ink-500 mt-0.5">
-            <bdi dir="ltr">{fmtILS(item.price)}</bdi> + <bdi dir="ltr">{fmtILS(PERSONALIZE_PRICE)}</bdi> טקסט אישי
-          </div>
+          {written ? (
+            <div className="text-[11px] text-ink-500 mt-0.5">
+              <bdi dir="ltr">{fmtILS(item.price)}</bdi> + <bdi dir="ltr">{fmtILS(PERSONALIZE_PRICE)}</bdi> טקסט אישי
+              {colorExtra > 0 && <> + <bdi dir="ltr">{fmtILS(colorExtra)}</bdi> צבע שני</>}
+            </div>
+          ) : (
+            <div className="text-[11px] text-ink-500 mt-0.5">מחיר המוצר. התוספת תופיע כאן ברגע שתכתוב משהו.</div>
+          )}
         </div>
-        <Btn size="lg" icon="sparkles" onClick={proceed} disabled={!line1.trim()}>
+        <Btn size="lg" icon="sparkles" onClick={proceed} disabled={!written}>
           המשך להזמנה
         </Btn>
       </div>
-      {!line1.trim() && <p className="text-xs text-ink-500">כתוב לפחות שורה אחת כדי להמשיך.</p>}
+      {!written && <p className="text-xs text-ink-500">כתוב מה שיודפס כדי להמשיך.</p>}
 
       <Link href="/configurator" className="mt-8 block p-5 rounded-2xl border border-cyan2/30 bg-gradient-to-bl from-cyan2/10 to-flame/5 hover:border-cyan2/60 transition-colors">
         <div className="flex flex-wrap items-center gap-4">

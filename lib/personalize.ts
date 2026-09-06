@@ -33,3 +33,13 @@ export function scaleExtra(grams: number, hours: number, add: number): number {
   const ratio = (grams + add) / grams;
   return Math.max(0, suggestPrice(grams + add, hours * ratio, 1) - suggestPrice(grams, hours, 1));
 }
+
+/**
+ * A second filament on the same print.
+ *
+ * The text can be printed in the colour the product is already being printed
+ * in for nothing — it is one plate, one spool. Asking for it in another colour
+ * means loading a second filament and an AMS swap, so it is priced like the
+ * extra colours in the full designer.
+ */
+export const EXTRA_COLOR_PRICE = 10;
