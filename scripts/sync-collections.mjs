@@ -64,6 +64,37 @@ async function browser() {
   });
 }
 
+/**
+ * A signed-in session, when one has been provided.
+ *
+ * Anonymous requests from a server are challenged by Cloudflare most of the
+ * time, and a private collection is invisible to them in any case. Putting the
+ * owner's MakerWorld cookie in the MAKERWORLD_COOKIE secret fixes both: the
+ * session is trusted, and his private collections are readable. The job works
+ * without it, just less reliably — so this is an upgrade, never a requirement,
+ * and nothing here logs the cookie's value.
+ */
+async function context(b) {
+  const ctx = await b.newContext({
+    userAgent: UA,
+    locale: "en-US",
+    timezoneId: "Asia/Jerusalem",
+    viewport: { width: 1440, height: 900 },
+  });
+  const raw = (process.env.MAKERWORLD_COOKIE || "").trim();
+  if (raw) {
+    const cookies = raw.split(";").map((p) => p.trim()).filter(Boolean).map((p) => {
+      const i = p.indexOf("=");
+      return { name: p.slice(0, i).trim(), value: p.slice(i + 1).trim(), domain: ".makerworld.com", path: "/" };
+    }).filter((ck) => ck.name && ck.value);
+    if (cookies.length) {
+      await ctx.addCookies(cookies);
+      log(c.d(`  משתמש בהתחברות שמורה (${cookies.length} עוגיות)`));
+    }
+  }
+  return ctx;
+}
+
 const CHALLENGE = /just a moment|security verification|checking your browser|verify you are (not a bot|human)/i;
 
 /**
@@ -258,7 +289,8 @@ function summary(rows, skipped) {
 async function main() {
   log(c.b(`\n  קורא את הקולקציות של @${PROFILE}\n`));
   const b = await browser();
-  const page = await b.newPage({ userAgent: UA });
+  const ctx = await context(b);
+  const page = await ctx.newPage();
 
   let collections;
   const wanted = [];
@@ -282,6 +314,12 @@ async function main() {
     }
   } finally {
     await b.close();
+  }
+
+  if (skipped.some((x) => x.includes("חסומה"))) {
+    log(c.y("\n  חלק מהקולקציות נחסמו על ידי Cloudflare. אפשר לתקן את זה לתמיד:"));
+    log(c.d("  Settings → Secrets → Actions → New secret בשם MAKERWORLD_COOKIE,"));
+    log(c.d("  והערך: העוגיות של makerworld.com מהדפדפן שלך אחרי התחברות."));
   }
 
   const known = knownIds();

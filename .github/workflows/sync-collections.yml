@@ -46,7 +46,12 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
+      # Optional. Without it the job reads only the public collections, and
+      # Cloudflare turns a server away more often than not; with it the session
+      # is trusted and the private collections are readable too.
       - name: Read the collections
+        env:
+          MAKERWORLD_COOKIE: ${{ secrets.MAKERWORLD_COOKIE }}
         run: npm run sync:collections
 
       - name: Fetch the new photos
