@@ -111,7 +111,11 @@ export default function AdminSaveToSite({
     // that survives every attempt is worth telling the owner about.
     const readSha = async (): Promise<{ sha?: string; error?: Msg }> => {
       const url = `${api}?ref=${encodeURIComponent(branch.trim())}&t=${Date.now()}`;
-      const r = await fetch(url, { headers: { ...headers, "Cache-Control": "no-cache" }, cache: "no-store" });
+      // No Cache-Control header here on purpose: GitHub's CORS policy does not
+      // allow it, and a rejected preflight surfaces as a bare network failure.
+      // The timestamp above plus `cache: "no-store"` are enough to bypass the
+      // browser's copy without adding a header the server will not accept.
+      const r = await fetch(url, { headers, cache: "no-store" });
       if (r.ok) return { sha: ((await r.json()) as { sha?: string }).sha };
       if (r.status === 404) return {};                       // a file that does not exist yet
       if (r.status === 401) return { error: { ok: false, text: "הטוקן לא תקין או פג תוקף." } };
@@ -152,8 +156,9 @@ export default function AdminSaveToSite({
         return setMsg({ ok: false, text: `שמירה נכשלה (${put.status}): ${err?.message ?? "שגיאה לא ידועה"}` });
       }
       setMsg({ ok: false, text: "GitHub עדיין מחזיק את הגרסה הקודמת. חכה כחצי דקה ולחץ שוב." });
-    } catch {
-      setMsg({ ok: false, text: "אין חיבור ל-GitHub. בדוק את האינטרנט ונסה שוב." });
+    } catch (e) {
+      const why = e instanceof Error && e.message ? ` (${e.message})` : "";
+      setMsg({ ok: false, text: `הבקשה ל-GitHub נכשלה${why}. בדוק את האינטרנט ונסה שוב.` });
     } finally {
       setBusy(false);
     }
