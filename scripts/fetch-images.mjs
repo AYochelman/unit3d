@@ -45,7 +45,7 @@ const TIMEOUT_MS = 30_000;
 // Stops at whitespace or a quote, not at a bracket: one of the Cults3D
 // thumbnails has `filters:no_upscale()` in the middle of its path, and cutting
 // there produced a URL that matched nothing and stayed hotlinked.
-const IMAGE_URL = /https:\/\/[^"'`\s]+?\.(?:jpe?g|png|webp|gif)(?:\?[^"'`\s]*)?/gi;
+const IMAGE_URL = /https:\/\/[^"'`\s]+?\.(?:jpe?g|jfif|png|webp|avif|gif)(?:\?[^"'`\s]*)?/gi;
 
 function collectUrls() {
   const urls = new Set();
@@ -87,7 +87,7 @@ async function optimise(buf, url) {
 
 /** The file already on disk for this URL, whatever extension it landed with. */
 function existingFile(stem) {
-  for (const ext of ["webp", "jpg", "png", "gif"]) {
+  for (const ext of ["webp", "jpg", "png", "gif", "avif"]) {
     if (fs.existsSync(path.join(OUT_DIR, `${stem}.${ext}`))) return `${stem}.${ext}`;
   }
   return null;
@@ -114,7 +114,7 @@ async function download(url, stem) {
 
 /** Writes the photo under its stem, clearing any older extension for it. */
 function write(stem, { data, ext }) {
-  for (const e of ["webp", "jpg", "png", "gif"]) {
+  for (const e of ["webp", "jpg", "png", "gif", "avif"]) {
     const p = path.join(OUT_DIR, `${stem}.${e}`);
     if (e !== ext && fs.existsSync(p)) fs.unlinkSync(p);
   }
