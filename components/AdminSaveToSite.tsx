@@ -104,47 +104,54 @@ export default function AdminSaveToSite({
       "X-GitHub-Api-Version": "2022-11-28",
     };
 
+    // Right after a write, the contents API keeps serving the previous sha
+    // from its cache for a few seconds — so the second save of a sitting
+    // arrives with a stale sha and GitHub answers 409. Nobody else edited
+    // anything; the fix is to ask again, uncached, and retry. Only a conflict
+    // that survives every attempt is worth telling the owner about.
+    const readSha = async (): Promise<{ sha?: string; error?: Msg }> => {
+      const url = `${api}?ref=${encodeURIComponent(branch.trim())}&t=${Date.now()}`;
+      const r = await fetch(url, { headers: { ...headers, "Cache-Control": "no-cache" }, cache: "no-store" });
+      if (r.ok) return { sha: ((await r.json()) as { sha?: string }).sha };
+      if (r.status === 404) return {};                       // a file that does not exist yet
+      if (r.status === 401) return { error: { ok: false, text: "הטוקן לא תקין או פג תוקף." } };
+      if (r.status === 403) return { error: { ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) } };
+      return { error: { ok: false, text: `GitHub החזיר שגיאה ${r.status}.` } };
+    };
+
     try {
-      // The API needs the current sha to replace a file; 404 just means it is new.
-      let sha: string | undefined;
-      const head = await fetch(`${api}?ref=${encodeURIComponent(branch.trim())}`, { headers });
-      if (head.ok) {
-        sha = ((await head.json()) as { sha?: string }).sha;
-      } else if (head.status === 401) {
-        setMsg({ ok: false, text: "הטוקן לא תקין או פג תוקף." });
-        return;
-      } else if (head.status === 403) {
-        setMsg({ ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) });
-        return;
-      } else if (head.status !== 404) {
-        setMsg({ ok: false, text: `GitHub החזיר שגיאה ${head.status}.` });
-        return;
-      }
+      const body = toBase64(json());
+      for (let attempt = 0; attempt < 4; attempt++) {
+        if (attempt) await new Promise((r) => setTimeout(r, 700 * attempt));
 
-      const put = await fetch(api, {
-        method: "PUT",
-        headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: "Update shop settings from /admin",
-          content: toBase64(json()),
-          branch: branch.trim(),
-          ...(sha ? { sha } : {}),
-        }),
-      });
+        const { sha, error } = await readSha();
+        if (error) return setMsg(error);
 
-      if (put.ok) {
-        setMsg({
-          ok: true,
-          text: "נשמר. האתר נבנה מחדש עכשיו — תוך כדקה ההגדרות יחולו על כל מי שנכנס.",
+        const put = await fetch(api, {
+          method: "PUT",
+          headers: { ...headers, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: "Update shop settings from /admin",
+            content: body,
+            branch: branch.trim(),
+            ...(sha ? { sha } : {}),
+          }),
         });
-      } else if (put.status === 409) {
-        setMsg({ ok: false, text: "מישהו עדכן את הקובץ בינתיים. רענן ונסה שוב." });
-      } else if (put.status === 403 || put.status === 404) {
-        setMsg({ ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) });
-      } else {
-        const body = (await put.json().catch(() => null)) as { message?: string } | null;
-        setMsg({ ok: false, text: `שמירה נכשלה (${put.status}): ${body?.message ?? "שגיאה לא ידועה"}` });
+
+        if (put.ok) {
+          return setMsg({
+            ok: true,
+            text: "נשמר. האתר נבנה מחדש עכשיו — תוך כדקה ההגדרות יחולו על כל מי שנכנס.",
+          });
+        }
+        if (put.status === 409 || put.status === 422) continue;   // stale sha — read it again
+        if (put.status === 403 || put.status === 404) {
+          return setMsg({ ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) });
+        }
+        const err = (await put.json().catch(() => null)) as { message?: string } | null;
+        return setMsg({ ok: false, text: `שמירה נכשלה (${put.status}): ${err?.message ?? "שגיאה לא ידועה"}` });
       }
+      setMsg({ ok: false, text: "GitHub עדיין מחזיק את הגרסה הקודמת. חכה כחצי דקה ולחץ שוב." });
     } catch {
       setMsg({ ok: false, text: "אין חיבור ל-GitHub. בדוק את האינטרנט ונסה שוב." });
     } finally {
