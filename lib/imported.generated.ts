@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-07T17:01:27.261Z
-// Items: 318
+// Items: 360
 
 import type { ImportedModel } from "./imported";
 
@@ -7500,6 +7500,1323 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       {
         "g": 208,
         "h": 5.18
+      }
+    ]
+  },
+  {
+    "id": "mw-65426",
+    "name": "Fidget Cube Toy: Angled",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 1.39,
+    "grams": 32,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US9a6f7ab9cda059/design/2025-09-11_7ae60a50cbf4a8.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Austin Vojta",
+    "sourceUrl": "https://makerworld.com/en/models/65426-fidget-cube-toy-angled",
+    "license": "Standard Digital File License",
+    "downloads": 179528,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 1.77,
+    "gramsAms": 35,
+    "plates": [
+      {
+        "g": 32,
+        "h": 1.39
+      },
+      {
+        "g": 66,
+        "h": 4.02
+      },
+      {
+        "g": 151,
+        "h": 7.72
+      },
+      {
+        "g": 278,
+        "h": 8.17
+      },
+      {
+        "g": 652,
+        "h": 25.7
+      }
+    ]
+  },
+  {
+    "id": "mw-74959",
+    "name": "Flexi Toothless Dragon (3MF Multi-color)",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 2.84,
+    "grams": 56,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US105481a9e00df5/design/2024-01-05_b7f4dd8a264ce.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Saber3D",
+    "sourceUrl": "https://makerworld.com/en/models/74959-flexi-toothless-dragon-3mf-multi-color",
+    "license": "Standard Digital File License",
+    "downloads": 91268,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "flexi"
+    ],
+    "hoursAms": 5.99,
+    "gramsAms": 108
+  },
+  {
+    "id": "mw-103266",
+    "name": "Organizer Box",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 3.46,
+    "grams": 84,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US55bd02f8fba1a7/design/ddf824deba804336.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Benjamin Kott",
+    "sourceUrl": "https://makerworld.com/en/models/103266-organizer-box",
+    "license": "Standard Digital File License",
+    "downloads": 67733,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "hoursAms": 4.12,
+    "gramsAms": 126,
+    "plates": [
+      {
+        "g": 84,
+        "h": 3.46
+      },
+      {
+        "g": 116,
+        "h": 6.69
+      },
+      {
+        "g": 221,
+        "h": 9.24
+      }
+    ]
+  },
+  {
+    "id": "mw-119995",
+    "name": "Loud Whistle",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 0.44,
+    "grams": 8,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US208abf1d1f1a36/design/2024-01-09_42430df1b0709.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Federico",
+    "sourceUrl": "https://makerworld.com/en/models/119995-loud-whistle",
+    "license": "Standard Digital File License",
+    "downloads": 92723,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.54,
+    "gramsAms": 10,
+    "plates": [
+      {
+        "g": 8,
+        "h": 0.44
+      },
+      {
+        "g": 155,
+        "h": 6.88
+      }
+    ]
+  },
+  {
+    "id": "mw-154218",
+    "name": "IKEA Skadis",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 21.18,
+    "grams": 938,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5cb7477880a86e/design/2025-04-06_2d7dabe5003bf.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AU3D",
+    "sourceUrl": "https://makerworld.com/en/models/154218-ikea-skadis",
+    "license": "Standard Digital File License",
+    "downloads": 89188,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "plates": [
+      {
+        "g": 938,
+        "h": 21.18
+      },
+      {
+        "g": 1921,
+        "h": 49.07
+      }
+    ]
+  },
+  {
+    "id": "mw-253687",
+    "name": "Airless Tennis Ball 2.0 Pickleball Wiffle",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 5.43,
+    "grams": 36,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US155eacf013e2d7/design/2024-03-14_7683c1db6b2db.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "filete3d",
+    "sourceUrl": "https://makerworld.com/en/models/253687-airless-tennis-ball-2-0-pickleball-wiffle",
+    "license": "Standard Digital File License",
+    "downloads": 92873,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 5.33,
+    "gramsAms": 41
+  },
+  {
+    "id": "mw-463778",
+    "name": "Articulated Shark",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 1.25,
+    "grams": 21,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfcc6aeeb01981c/design/2024-05-14_8e9198ba4f3ce.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "mcgybeer",
+    "sourceUrl": "https://makerworld.com/en/models/463778-articulated-shark",
+    "license": "Standard Digital File License",
+    "downloads": 108760,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 1.23,
+    "gramsAms": 17,
+    "plates": [
+      {
+        "g": 21,
+        "h": 1.25
+      },
+      {
+        "g": 30,
+        "h": 1.49
+      },
+      {
+        "g": 41,
+        "h": 2.32
+      },
+      {
+        "g": 131,
+        "h": 5.16
+      }
+    ]
+  },
+  {
+    "id": "mw-476243",
+    "name": "Parametric Sorting Tray",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.2,
+    "grams": 93,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2020feec3f542c/design/d1dd013c76bc2231.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Benjamin Kott",
+    "sourceUrl": "https://makerworld.com/en/models/476243-parametric-sorting-tray",
+    "license": "Standard Digital File License",
+    "downloads": 50293,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "hoursAms": 1.45,
+    "gramsAms": 69,
+    "plates": [
+      {
+        "g": 93,
+        "h": 2.2
+      },
+      {
+        "g": 142,
+        "h": 4.74
+      }
+    ]
+  },
+  {
+    "id": "mw-520956",
+    "name": "Eternity Labs Stacking Storage Basket 140x200mm",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 5.6,
+    "grams": 213,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US34f8dab9baf916/design/2024-07-02_bbfc10bcb3193.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Eternity Labs",
+    "sourceUrl": "https://makerworld.com/en/models/520956-eternity-labs-stacking-storage-basket-140x200mm",
+    "license": "Standard Digital File License",
+    "downloads": 66642,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "hoursAms": 0.32,
+    "gramsAms": 4
+  },
+  {
+    "id": "mw-521944",
+    "name": "Fidget Hexagon Twist",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.59,
+    "grams": 61,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2dfd77924d2c78/design/2024-07-02_525aa8812178d.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Zammer 3D",
+    "sourceUrl": "https://makerworld.com/en/models/521944-fidget-hexagon-twist",
+    "license": "Standard Digital File License",
+    "downloads": 98204,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 2.04,
+    "gramsAms": 29
+  },
+  {
+    "id": "mw-541722",
+    "name": "Dinosaur T-REX Pencil Holder",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 5.27,
+    "grams": 182,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US8779fef0a2305/design/2024-07-15_05bc33c09ed44.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Arthalino 3D",
+    "sourceUrl": "https://makerworld.com/en/models/541722-dinosaur-t-rex-pencil-holder",
+    "license": "Standard Digital File License",
+    "downloads": 61338,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 25.31,
+    "gramsAms": 396
+  },
+  {
+    "id": "mw-585144",
+    "name": "Articulated Dragon toothless Night Fury Cute Flexi",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 0.62,
+    "grams": 10,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USa0d3c5a9da1535/design/2024-08-14_c67722a1c39b3.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "PinkyWings",
+    "sourceUrl": "https://makerworld.com/en/models/585144-articulated-dragon-toothless-night-fury-cute-flexi",
+    "license": "Standard Digital File License",
+    "downloads": 93267,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "screen"
+    ],
+    "hoursAms": 1.41,
+    "gramsAms": 23,
+    "plates": [
+      {
+        "g": 10,
+        "h": 0.62
+      },
+      {
+        "g": 99,
+        "h": 4.57
+      }
+    ]
+  },
+  {
+    "id": "mw-620207",
+    "name": "Spiral fidget cone",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.1,
+    "grams": 30,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US1b9ba8276c8608/design/2024-09-02_a24ad4e88302e.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Zabois29",
+    "sourceUrl": "https://makerworld.com/en/models/620207-spiral-fidget-cone",
+    "license": "Standard Digital File License",
+    "downloads": 160002,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 1.92,
+    "gramsAms": 25
+  },
+  {
+    "id": "mw-638587",
+    "name": "Dummy 13 - version 1.0!",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 2.23,
+    "grams": 29,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US4496be8d5eb7bc/design/2024-09-09_e6fac794a0dd3.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Lucky 13 Toys",
+    "sourceUrl": "https://makerworld.com/en/models/638587-dummy-13-version-1-0",
+    "license": "BY",
+    "downloads": 136604,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 15.49,
+    "gramsAms": 268,
+    "plates": [
+      {
+        "g": 29,
+        "h": 2.23
+      },
+      {
+        "g": 52,
+        "h": 3.65
+      },
+      {
+        "g": 74,
+        "h": 6.18
+      },
+      {
+        "g": 192,
+        "h": 10.83
+      }
+    ]
+  },
+  {
+    "id": "mw-679352",
+    "name": "Optimized Little White Dragon",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 3.96,
+    "grams": 21,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USccf2ae3472211b/design/2024-10-07_6b65dee2424b2.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "SOFUN_ART",
+    "sourceUrl": "https://makerworld.com/en/models/679352-optimized-little-white-dragon",
+    "license": "Standard Digital File License",
+    "downloads": 107962,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 4.09,
+    "gramsAms": 58,
+    "plates": [
+      {
+        "g": 21,
+        "h": 3.96
+      },
+      {
+        "g": 61,
+        "h": 4.99
+      },
+      {
+        "g": 87,
+        "h": 7.49
+      }
+    ]
+  },
+  {
+    "id": "mw-762990",
+    "name": "Musical Fidget",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 1.89,
+    "grams": 31,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USac6ed357da41c4/design/2025-01-25_fe7b2cc92ae8b.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "kida",
+    "sourceUrl": "https://makerworld.com/en/models/762990-musical-fidget",
+    "license": "Standard Digital File License",
+    "downloads": 91494,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.47,
+    "gramsAms": 42,
+    "plates": [
+      {
+        "g": 31,
+        "h": 1.89
+      },
+      {
+        "g": 50,
+        "h": 3.15
+      },
+      {
+        "g": 172,
+        "h": 10.13
+      }
+    ]
+  },
+  {
+    "id": "mw-799571",
+    "name": "IKEA SKADIS Add-Ons: Parametric Bins and Shelves",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 0.83,
+    "grams": 22,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2e3af8dd464b41/design/2024-11-18_2106275962454.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Kino",
+    "sourceUrl": "https://makerworld.com/en/models/799571-ikea-skadis-add-ons-parametric-bins-and-shelves",
+    "license": "Standard Digital File License",
+    "downloads": 50662,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 22,
+        "h": 0.83
+      },
+      {
+        "g": 42,
+        "h": 1.11
+      },
+      {
+        "g": 57,
+        "h": 8.41
+      }
+    ]
+  },
+  {
+    "id": "mw-856029",
+    "name": "十二合一解压玩具  TWELVE IN ONE stress relieving EDC",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.72,
+    "grams": 54,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US3344854c831fef/design/a3830e94-6cbc-421e-8acf-72bbf8697ff5.webp?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "YEZAO",
+    "sourceUrl": "https://makerworld.com/en/models/856029-twelve-in-one-fidget-toy-collection",
+    "license": "Standard Digital File License",
+    "downloads": 94714,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.64,
+    "gramsAms": 61,
+    "plates": [
+      {
+        "g": 54,
+        "h": 2.72
+      },
+      {
+        "g": 108,
+        "h": 4.52
+      }
+    ]
+  },
+  {
+    "id": "mw-899478",
+    "name": "iPad / Tablet Stand Riser",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 8.05,
+    "grams": 279,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USed8466018779e1/design/2024-12-22_f5db8e93c19e4.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Meyui",
+    "sourceUrl": "https://makerworld.com/en/models/899478-ipad-tablet-stand-riser",
+    "license": "Standard Digital File License",
+    "downloads": 43527,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ]
+  },
+  {
+    "id": "mw-927520",
+    "name": "4 Ring Gyro Fidget",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.41,
+    "grams": 10,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US246d8dbb7d06e7/design/2025-08-27_e42fed215dab28.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "CRASH_3D",
+    "sourceUrl": "https://makerworld.com/en/models/927520-4-ring-gyro-fidget",
+    "license": "Standard Digital File License",
+    "downloads": 109598,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 0.43,
+    "gramsAms": 11,
+    "plates": [
+      {
+        "g": 10,
+        "h": 0.41
+      },
+      {
+        "g": 23,
+        "h": 0.78
+      },
+      {
+        "g": 64,
+        "h": 1.97
+      }
+    ]
+  },
+  {
+    "id": "mw-978372",
+    "name": "Auto-Locked Hanger (print-in-place)",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.92,
+    "grams": 57,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7ea63c10a0d61/design/2025-01-11_a131787f8425f.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Birz",
+    "sourceUrl": "https://makerworld.com/en/models/978372-auto-locked-hanger-print-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 65351,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "hoursAms": 5.44,
+    "gramsAms": 185
+  },
+  {
+    "id": "mw-1002706",
+    "name": "Lightweight Plane Glider - Flies Really Well!",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 0.51,
+    "grams": 5,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7aa188fc4e28af/design/2025-01-17_44ed9b28a26e8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Tieq",
+    "sourceUrl": "https://makerworld.com/en/models/1002706-lightweight-plane-glider-flies-really-well",
+    "license": "Standard Digital File License",
+    "downloads": 141293,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.6,
+    "gramsAms": 10,
+    "plates": [
+      {
+        "g": 5,
+        "h": 0.51
+      },
+      {
+        "g": 10,
+        "h": 0.79
+      }
+    ]
+  },
+  {
+    "id": "mw-1029890",
+    "name": "Flexi Funny Octopus",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 1.27,
+    "grams": 9,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USea5cf9cb2d0057/design/2025-01-23_9d59945f3212d8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "ilya91",
+    "sourceUrl": "https://makerworld.com/en/models/1029890-flexi-funny-octopus",
+    "license": "Standard Digital File License",
+    "downloads": 92428,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.05,
+    "gramsAms": 13
+  },
+  {
+    "id": "mw-1037541",
+    "name": "Stamp Maker - Customizable Stamps",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 0.35,
+    "grams": 6,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US620f9e1ecf1691/design/2025-01-25_84eb028529254.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Koolm",
+    "sourceUrl": "https://makerworld.com/en/models/1037541-stamp-maker-customizable-stamps",
+    "license": "Standard Digital File License",
+    "downloads": 35885,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 6.61,
+    "gramsAms": 117,
+    "plates": [
+      {
+        "g": 6,
+        "h": 0.35
+      },
+      {
+        "g": 13,
+        "h": 0.83
+      },
+      {
+        "g": 35,
+        "h": 1.66
+      },
+      {
+        "g": 60,
+        "h": 2.02
+      }
+    ]
+  },
+  {
+    "id": "mw-1090887",
+    "name": "Flexi Pangolin",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 7.81,
+    "grams": 91,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USda323a231d2319/design/2025-02-09_5dab6dd8028c.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "FilliFuu",
+    "sourceUrl": "https://makerworld.com/en/models/1090887-flexi-pangolin",
+    "license": "Standard Digital File License",
+    "downloads": 63597,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 9.06,
+    "gramsAms": 122
+  },
+  {
+    "id": "mw-1099461",
+    "name": "Sturdy Modular Filament Spool Rack Fully Printable",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 6.92,
+    "grams": 320,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US256094eabc5162/design/2025-02-12_a2d1229447019.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Antiphrasis",
+    "sourceUrl": "https://makerworld.com/en/models/1099461-sturdy-modular-filament-spool-rack-fully-printable",
+    "license": "Standard Digital File License",
+    "downloads": 67401,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.96,
+    "gramsAms": 24,
+    "plates": [
+      {
+        "g": 320,
+        "h": 6.92
+      },
+      {
+        "g": 484,
+        "h": 9.93
+      },
+      {
+        "g": 703,
+        "h": 21.31
+      },
+      {
+        "g": 967,
+        "h": 29.66
+      },
+      {
+        "g": 2341,
+        "h": 64.42
+      }
+    ]
+  },
+  {
+    "id": "mw-1101226",
+    "name": "Mini Bag Clip",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 0.22,
+    "grams": 4,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US554734a18c1446/design/2025-02-12_0d6396be8318c.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "fifindr",
+    "sourceUrl": "https://makerworld.com/en/models/1101226-mini-bag-clip",
+    "license": "Standard Digital File License",
+    "downloads": 132958,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.5,
+    "gramsAms": 9,
+    "plates": [
+      {
+        "g": 4,
+        "h": 0.22
+      },
+      {
+        "g": 7,
+        "h": 0.52
+      },
+      {
+        "g": 15,
+        "h": 0.67
+      },
+      {
+        "g": 27,
+        "h": 1.15
+      },
+      {
+        "g": 110,
+        "h": 4.71
+      }
+    ]
+  },
+  {
+    "id": "mw-1125088",
+    "name": "Stackable Bottle Drying Rack",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.55,
+    "grams": 55,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US55688a7511b0a5/design/2025-02-18_a44d0de31fb908.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "item4me",
+    "sourceUrl": "https://makerworld.com/en/models/1125088-stackable-bottle-drying-rack",
+    "license": "Standard Digital File License",
+    "downloads": 60742,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 3.71,
+    "gramsAms": 100,
+    "plates": [
+      {
+        "g": 55,
+        "h": 1.55
+      },
+      {
+        "g": 92,
+        "h": 3.44
+      },
+      {
+        "g": 530,
+        "h": 19.84
+      }
+    ]
+  },
+  {
+    "id": "mw-1163767",
+    "name": "Shadowcoil - Articulated Dragon",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 6.41,
+    "grams": 123,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USf0764dc7070e2c/design/2025-03-01_a443aa6c1fd3a.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AbyssalCactus",
+    "sourceUrl": "https://makerworld.com/en/models/1163767-shadowcoil-articulated-dragon",
+    "license": "Standard Digital File License",
+    "downloads": 88220,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 7.42,
+    "gramsAms": 128
+  },
+  {
+    "id": "mw-1507073",
+    "name": "HydroBowl – Smart Fruit & Veggie Washer",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 15.38,
+    "grams": 468,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5d826ff8eb029d/design/2025-06-10_9d9a809064185.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "kennyklak",
+    "sourceUrl": "https://makerworld.com/en/models/1507073-hydrobowl-smart-fruit-veggie-washer",
+    "license": "Standard Digital File License",
+    "downloads": 86548,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-1515698",
+    "name": "Air Slides – Lightweight, Breathable, Summer-Ready",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 2.08,
+    "grams": 78,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US47f35a73638a49/design/2025-06-13_b46ea2f00a593.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "DjangoCashflow",
+    "sourceUrl": "https://makerworld.com/en/models/1515698-air-slides-lightweight-breathable-summer-ready",
+    "license": "Standard Digital File License",
+    "downloads": 47451,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 78,
+        "h": 2.08
+      },
+      {
+        "g": 488,
+        "h": 52.52
+      },
+      {
+        "g": 698,
+        "h": 73.66
+      }
+    ]
+  },
+  {
+    "id": "mw-1634871",
+    "name": "Flexi Skeleton T-Rex Dinosaur",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 3.57,
+    "grams": 75,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/UScad4f84b36c974/design/2025-07-24_dd8326393ae9b8.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "PinkyWings",
+    "sourceUrl": "https://makerworld.com/en/models/1634871-flexi-skeleton-t-rex-dinosaur",
+    "license": "Standard Digital File License",
+    "downloads": 99854,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 5.45,
+    "gramsAms": 105,
+    "plates": [
+      {
+        "g": 75,
+        "h": 3.57
+      },
+      {
+        "g": 261,
+        "h": 23.54
+      }
+    ]
+  },
+  {
+    "id": "mw-1755208",
+    "name": "My 10 star fidget design",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 1.63,
+    "grams": 85,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6a3e0154a93134/design/2025-09-01_3af3607d28c8b.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "BigDeX",
+    "sourceUrl": "https://makerworld.com/en/models/1755208-my-10-star-fidget-design",
+    "license": "Standard Digital File License",
+    "downloads": 131105,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 1.77,
+    "gramsAms": 88,
+    "plates": [
+      {
+        "g": 85,
+        "h": 1.63
+      },
+      {
+        "g": 174,
+        "h": 5.05
+      }
+    ]
+  },
+  {
+    "id": "mw-2112117",
+    "name": "Twisty Fidget Ball",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 4.18,
+    "grams": 87,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USa1e9fc9d46e57e/design/2025-12-13_3050419153acd8.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Coffey Manufactury",
+    "sourceUrl": "https://makerworld.com/en/models/2112117-twisty-fidget-ball",
+    "license": "Standard Digital File License",
+    "downloads": 99122,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 5.68,
+    "gramsAms": 128
+  },
+  {
+    "id": "mw-2409022",
+    "name": "Clicker Maestro: El Corazón del Fidget.",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.31,
+    "grams": 3,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USe0ee8f812a943/design/c9b91c9b90bebd87.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Jos MA",
+    "sourceUrl": "https://makerworld.com/en/models/2409022-clicker-master-the-heart-of-the-fidget",
+    "license": "Standard Digital File License",
+    "downloads": 66909,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "plates": [
+      {
+        "g": 3,
+        "h": 0.31
+      },
+      {
+        "g": 6,
+        "h": 0.46
+      },
+      {
+        "g": 22,
+        "h": 1.09
+      },
+      {
+        "g": 553,
+        "h": 15.84
+      }
+    ]
+  },
+  {
+    "id": "mw-2506630",
+    "name": "Twisty Mini Dragon Egg Fidget",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.67,
+    "grams": 43,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USa8ddd63d49f6d6/design/08d1971d134f553e.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "NUKDDD",
+    "sourceUrl": "https://makerworld.com/en/models/2506630-twisty-mini-dragon-egg-fidget",
+    "license": "Standard Digital File License",
+    "downloads": 94509,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "plates": [
+      {
+        "g": 43,
+        "h": 2.67
+      },
+      {
+        "g": 65,
+        "h": 3.5
+      }
+    ]
+  },
+  {
+    "id": "mw-3229032",
+    "name": "Witch Hat Can Topper -12oz slim, 12 std, 16oz, 8.4",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 10.45,
+    "grams": 317,
+    "size": "~250mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USb8463859c6980/design/952117eee704bf31.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "The Makers Edit",
+    "sourceUrl": "https://makerworld.com/en/models/3229032-witch-hat-can-topper-12oz-slim-12-std-16oz-8-4",
+    "license": "Standard Digital File License",
+    "downloads": 1553,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3239344",
+    "name": "Cute Mini Articulated Xenomorph",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 4.28,
+    "grams": 40,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US517d4ffaedc1d1/design/8f3f7c4a48ec511d.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "gobotoru",
+    "sourceUrl": "https://makerworld.com/en/models/3239344-cute-mini-articulated-xenomorph",
+    "license": "Standard Digital File License",
+    "downloads": 681,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "flexi"
+    ]
+  },
+  {
+    "id": "mw-3242912",
+    "name": "Venom Voronoi Ultra Dettagliato | Dark Symbiote",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 5.26,
+    "grams": 56,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US51b1e31228ab2b/design/56c770e8adaa016d.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Clean Studio",
+    "sourceUrl": "https://makerworld.com/en/models/3242912-venom-ultra-detailed-voronoi-dark-symbiote",
+    "license": "Standard Digital File License",
+    "downloads": 527,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ]
+  },
+  {
+    "id": "mw-3243522",
+    "name": "Casper – Ghost Through the Window",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 5.71,
+    "grams": 126,
+    "size": "~160mm",
+    "colors": 3,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2ce03c62a6dc6f/design/952ee5cf7effbea1.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Stag 3D",
+    "sourceUrl": "https://makerworld.com/en/models/3243522-casper-ghost-through-the-window",
+    "license": "Standard Digital File License",
+    "downloads": 831,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ],
+    "hoursAms": 4.27,
+    "gramsAms": 128
+  },
+  {
+    "id": "mw-3245583",
+    "name": "SILENT 4 in 1 Fidget Toy - For Work / School",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.43,
+    "grams": 8,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USf8ad0b65aa8220/design/9fbed6adc79dd9ff.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "DeciPrint",
+    "sourceUrl": "https://makerworld.com/en/models/3245583-silent-4-in-1-fidget-toy-for-work-school",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 494,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.26,
+    "gramsAms": 37
+  },
+  {
+    "id": "mw-3245667",
+    "name": "Flexi Alligator Snapping Turtle & Keychain",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 1.7,
+    "grams": 21,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6ff88e168e3555/design/8dc0ec44df14e1ad.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Flexi JIMGA",
+    "sourceUrl": "https://makerworld.com/en/models/3245667-flexi-alligator-snapping-turtle-keychain",
+    "license": "Standard Digital File License",
+    "downloads": 459,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 9.61,
+    "gramsAms": 123,
+    "plates": [
+      {
+        "g": 21,
+        "h": 1.7
+      },
+      {
+        "g": 46,
+        "h": 3.79
       }
     ]
   }
