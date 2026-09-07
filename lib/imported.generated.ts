@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-07T17:01:27.261Z
-// Items: 317
+// Items: 318
 
 import type { ImportedModel } from "./imported";
 
@@ -7461,6 +7461,45 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       {
         "g": 579,
         "h": 12.36
+      }
+    ]
+  },
+  {
+    "id": "mw-40146",
+    "name": "Benchy Bambu Pla Basic",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 0.53,
+    "grams": 12,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2262720d55a8f6/design/2023-10-14_994ac3c06d028.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Bambu Lab",
+    "sourceUrl": "https://makerworld.com/en/models/40146-benchy-bambu-pla-basic",
+    "license": "BY-ND",
+    "downloads": 399613,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "hoursAms": 1.09,
+    "gramsAms": 21,
+    "plates": [
+      {
+        "g": 12,
+        "h": 0.53
+      },
+      {
+        "g": 18,
+        "h": 4.13
+      },
+      {
+        "g": 208,
+        "h": 5.18
       }
     ]
   }
