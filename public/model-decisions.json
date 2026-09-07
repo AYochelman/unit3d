@@ -1,4 +1,10 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "451897",
+      "decision": "rejected",
+      "at": "2026-09-07T23:20:34.564Z"
+    }
+  ]
 }
