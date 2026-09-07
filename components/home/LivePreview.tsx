@@ -16,8 +16,11 @@ import { cn } from "@/lib/cn";
  * the whole set costs less than one product photograph used to.
  */
 const CLIPS = [
+  { file: "motion-20260829", label: "מגש מלא, סדרה שלמה", date: "29.08" },
+  { file: "motion-20260805", label: "שתי דיסקיות לבנות", date: "05.08" },
   { file: "motion-20260716", label: "הדפסה מלאה מ-0", date: "16.07" },
   { file: "motion-20260613", label: "שכבה ראשונה על הפלטה", date: "13.06" },
+  { file: "motion-20260903", label: "סדרה קטנה על הפלטה", date: "03.09" },
   { file: "motion-20260704", label: "מגש חלקים בלבן", date: "04.07" },
   { file: "motion-20260723", label: "חלק כחול יורד מהפלטה", date: "23.07" },
   { file: "motion-20260707", label: "כוכב בהדפסה שטוחה", date: "07.07" },
@@ -88,7 +91,7 @@ export default function LivePreview() {
             </div>
 
             {/* The rest of the set — a still each, so nothing downloads until asked. */}
-            <div className="mt-3 grid grid-cols-5 gap-2">
+            <div className="mt-3 grid grid-cols-4 gap-2">
               {CLIPS.map((c, i) => (
                 <button
                   key={c.file}
