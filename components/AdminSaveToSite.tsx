@@ -30,6 +30,44 @@ function toBase64(text: string): string {
   return btoa(bin);
 }
 
+/**
+ * Why GitHub said no.
+ *
+ * A 403/404 from the contents API is the same answer for four different
+ * mistakes, and "no write permission" sent the owner back to a settings page
+ * he had already filled in once. So when a write is refused we ask GitHub two
+ * cheap questions — who is this token, and can it see the repository — and
+ * name the one box that is actually wrong.
+ */
+async function diagnose(token: string, repo: string, branch: string): Promise<string> {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  try {
+    const who = await fetch("https://api.github.com/user", { headers });
+    if (who.status === 401) return "הטוקן לא תקין או פג תוקף. צור אחד חדש והדבק שוב.";
+
+    const r = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+    if (r.status === 404) {
+      return `הטוקן לא רואה את המאגר ${repo}. בדף יצירת הטוקן: Repository access ← Only select repositories ← לבחור את unit3d. בלי זה הטוקן לא מגיע לשם.`;
+    }
+    if (!r.ok) return `GitHub החזיר ${r.status} על המאגר ${repo}.`;
+
+    const info = (await r.json()) as { permissions?: { push?: boolean }; default_branch?: string };
+    if (!info.permissions?.push) {
+      return "לטוקן יש קריאה בלבד. בדף יצירת הטוקן: Permissions ← Repository permissions ← Contents ← לשנות ל-Read and write (לא Read-only).";
+    }
+    if (info.default_branch && info.default_branch !== branch) {
+      return `הענף ${branch} לא קיים. הענף של האתר הוא ${info.default_branch}.`;
+    }
+    return "GitHub סירב לכתיבה למרות שההרשאות נראות תקינות. אם יצרת טוקן fine-grained, נסה טוקן קלאסי: github.com/settings/tokens/new עם הסימון repo.";
+  } catch {
+    return "אין חיבור ל-GitHub.";
+  }
+}
+
 type Msg = { ok: boolean; text: string };
 
 export default function AdminSaveToSite({
@@ -76,7 +114,7 @@ export default function AdminSaveToSite({
         setMsg({ ok: false, text: "הטוקן לא תקין או פג תוקף." });
         return;
       } else if (head.status === 403) {
-        setMsg({ ok: false, text: "לטוקן אין הרשאת כתיבה למאגר הזה." });
+        setMsg({ ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) });
         return;
       } else if (head.status !== 404) {
         setMsg({ ok: false, text: `GitHub החזיר שגיאה ${head.status}.` });
@@ -95,7 +133,6 @@ export default function AdminSaveToSite({
       });
 
       if (put.ok) {
-        setToken("");
         setMsg({
           ok: true,
           text: "נשמר. האתר נבנה מחדש עכשיו — תוך כדקה ההגדרות יחולו על כל מי שנכנס.",
@@ -103,7 +140,7 @@ export default function AdminSaveToSite({
       } else if (put.status === 409) {
         setMsg({ ok: false, text: "מישהו עדכן את הקובץ בינתיים. רענן ונסה שוב." });
       } else if (put.status === 403 || put.status === 404) {
-        setMsg({ ok: false, text: "לטוקן אין הרשאת כתיבה למאגר הזה." });
+        setMsg({ ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) });
       } else {
         const body = (await put.json().catch(() => null)) as { message?: string } | null;
         setMsg({ ok: false, text: `שמירה נכשלה (${put.status}): ${body?.message ?? "שגיאה לא ידועה"}` });
