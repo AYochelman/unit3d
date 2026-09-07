@@ -21,36 +21,52 @@ import { cn } from "@/lib/cn";
  * answers are saved to the repository exactly like the prices are, and the next
  * build turns the approved ones into real products.
  */
-/** `shelves[0]` is the product's home; the rest list it in more places too. */
-type Choice = { decision: Decision; shelves: ImportedShelf[] };
+/**
+ * What the owner has said about one candidate so far.
+ *
+ * `decision` stays undefined while he is still picking shelves — a card must
+ * not vanish from the list the moment he touches it, or he cannot pick a second
+ * shelf, or see what he just chose. `shelves[0]` is the product's home.
+ * `touched` remembers that the shelves are his choice and not the suggestion,
+ * so his first pick REPLACES the suggested shelf instead of joining it.
+ */
+type Choice = { decision?: Decision; shelves: ImportedShelf[]; touched?: boolean };
 
 export default function ApprovalsTab() {
   const [choices, setChoices] = useState<Record<string, Choice>>({});
   const [onlyOpen, setOnlyOpen] = useState(true);
 
-  const decided = Object.keys(choices).length;
+  const decided = Object.values(choices).filter((c) => c.decision).length;
   const list = useMemo(
-    () => (onlyOpen ? CANDIDATES.filter((c) => !choices[c.id]) : CANDIDATES),
+    () => (onlyOpen ? CANDIDATES.filter((c) => !choices[c.id]?.decision) : CANDIDATES),
     [choices, onlyOpen],
   );
 
   const set = (id: string, decision: Decision, shelves: ImportedShelf[]) =>
-    setChoices((c) => ({ ...c, [id]: { decision, shelves } }));
+    setChoices((c) => ({ ...c, [id]: { ...c[id], decision, shelves } }));
 
-  /** Clicking a shelf adds it; clicking it again takes it off, unless it is the last one. */
-  const toggle = (id: string, shelf: ImportedShelf, current: ImportedShelf[]) =>
+  /**
+   * Clicking a shelf adds it, clicking it again removes it, and the last one
+   * cannot be removed — something has to be its home. The FIRST click replaces
+   * the suggestion: he meant "put it there", not "and there as well".
+   */
+  const toggle = (id: string, shelf: ImportedShelf) =>
     setChoices((prev) => {
-      const on = current.includes(shelf);
-      const shelves = on ? current.filter((s2) => s2 !== shelf) : [...current, shelf];
-      return { ...prev, [id]: { decision: prev[id]?.decision ?? "approved", shelves: shelves.length ? shelves : current } };
+      const cur = prev[id];
+      if (!cur?.touched) return { ...prev, [id]: { ...cur, shelves: [shelf], touched: true } };
+      const on = cur.shelves.includes(shelf);
+      const shelves = on ? cur.shelves.filter((s2) => s2 !== shelf) : [...cur.shelves, shelf];
+      return { ...prev, [id]: { ...cur, shelves: shelves.length ? shelves : cur.shelves } };
     });
 
   const json = () => {
     const file: DecisionsFile = {
       version: 1,
-      decisions: Object.entries(choices).map(([id, c]) => ({
+      decisions: Object.entries(choices)
+        .filter(([, c]) => c.decision)
+        .map(([id, c]) => ({
         id,
-        decision: c.decision,
+        decision: c.decision as Decision,
         ...(c.decision === "approved"
           ? { shelf: c.shelves[0], ...(c.shelves.length > 1 ? { also: c.shelves.slice(1) } : {}) }
           : {}),
@@ -146,7 +162,7 @@ export default function ApprovalsTab() {
                     <button
                       key={sh}
                       type="button"
-                      onClick={() => toggle(c.id, sh, shelves)}
+                      onClick={() => toggle(c.id, sh)}
                       className={cn(
                         "px-2 py-1 rounded-lg text-[11px] font-semibold border transition-colors",
                         shelves[0] === sh ? "border-flame text-flame bg-flame/15"

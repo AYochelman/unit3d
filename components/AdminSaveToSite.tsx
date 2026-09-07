@@ -13,11 +13,10 @@ import { useAdminStore } from "@/lib/admin-store";
 // the GitHub contents API with a token the owner types here; the push starts
 // the normal Pages build, and a minute later every visitor gets the new prices.
 //
-// The token is typed once per visit and kept in the admin store for as long as
-// the tab is open, so every later save is a single click. It is never written
-// to localStorage, to the export file, or to a log — the project forbids
-// browser storage anyway, and a credential is the last thing that should live
-// in it. Locking the admin forgets it.
+// The token is pasted once, ever, and remembered on this device (see
+// lib/admin-token.ts). From then on saving is a single click — which is the
+// point: an approvals page that asks for a credential before every batch is a
+// page nobody uses. It never goes into the export file or a log.
 
 const DEFAULT_REPO = "AYochelman/unit3d";
 const DEFAULT_FILE = "public/admin-settings.json";
@@ -120,18 +119,19 @@ export default function AdminSaveToSite({
     <div className="p-4 rounded-2xl border border-flame/40 bg-flame/5">
       <h2 className="font-black text-lg mb-1">{title}</h2>
       <p className="text-sm text-ink-300 leading-relaxed mb-3">
-        עובד גם מהטלפון, בלי מחשב. הכפתור כותב ל-GitHub, האתר נבנה מחדש לבד,
-        ותוך כדקה {what} באוויר. המיילים של רשימת ההמתנה לא נכללים בקובץ.
+        {token
+          ? <>לחיצה אחת. האתר נבנה מחדש לבד, ותוך כדקה {what} באוויר.</>
+          : <>עובד גם מהטלפון, בלי מחשב. אחרי הדבקה אחת של הטוקן, כל שמירה מכאן היא לחיצה אחת.</>}
       </p>
 
       {token && (
         <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-good/10 text-good border border-good/30 font-semibold">
             <Icon name="check" size={12} strokeWidth={3} />
-            הטוקן זכור לסשן הזה
+            מחובר · לחיצה אחת ושמור
           </span>
           <button type="button" onClick={() => setToken("")} className="text-ink-500 hover:text-ink-300 underline underline-offset-2">
-            שכח אותו
+            שכח את הטוקן
           </button>
         </div>
       )}
@@ -160,7 +160,7 @@ export default function AdminSaveToSite({
             className="mt-1"
           />
           <span className="block mt-1 text-[11px] text-ink-500 leading-relaxed">
-            מדביקים פעם אחת — הוא נזכר עד שסוגרים את הלשונית, וכל שמירה אחריה היא לחיצה אחת. לא נשמר בדפדפן ולא בקובץ הגיבוי.{" "}
+            מדביקים <b>פעם אחת בלבד</b>. הוא נשמר במכשיר הזה, וכל שמירה מכאן והלאה היא לחיצה אחת. לא נכנס לקובץ הגיבוי.{" "}
             <a href={TOKEN_URL} target="_blank" rel="noreferrer" className="text-flame underline">
               ליצירת טוקן
             </a>

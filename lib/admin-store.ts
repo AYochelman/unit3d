@@ -3,6 +3,7 @@ import { create } from "zustand";
 import type { MaterialId } from "./types";
 import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
 import { stockKey, type Interest, type StockMap } from "./inventory";
+import { readToken, writeToken } from "./admin-token";
 
 // The admin area is a client-side tool. Per the project rules there is no
 // localStorage, so settings live for the session and can be exported /
@@ -48,12 +49,11 @@ type AdminState = {
   interest: Interest[];
   pricing: PricingMode;
   /**
-   * The GitHub token, for as long as this tab is open.
+   * The GitHub token that lets the admin publish.
    *
-   * Saving to the site needs a credential — the shop is a static build with no
-   * server of its own — but there is no reason to retype it on every save. It
-   * lives in memory for the session and in nothing else: not localStorage, not
-   * the export file, not a log. Closing the tab forgets it.
+   * Held here for the session and remembered on the device (see
+   * lib/admin-token.ts), so saving is one click rather than a paste. It never
+   * goes into the export file or a log.
    */
   ghToken: string;
 
@@ -81,17 +81,22 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   stock: {},
   interest: [],
   pricing: DEFAULT_PRICING,
-  ghToken: "",
+  ghToken: "",   // hydrated from the device on first render, see AdminUnlock
 
   unlock: (pin) => {
     const ok = pin.trim() === ADMIN_PIN;
-    if (ok) set({ unlocked: true });
+    // Reading the device only on unlock keeps it out of the server render and
+    // out of every page that is not the admin.
+    if (ok) set({ unlocked: true, ghToken: get().ghToken || readToken() });
     return ok;
   },
-  // Locking clears the token too: leaving the admin should not leave a
-  // credential behind that the next click could use.
-  lock: () => set({ unlocked: false, ghToken: "" }),
-  setGhToken: (t) => set({ ghToken: t }),
+  // Locking hides the admin but keeps the remembered token: the whole point is
+  // that he does not paste it again. "שכח את הטוקן" is what erases it.
+  lock: () => set({ unlocked: false }),
+  setGhToken: (t) => {
+    set({ ghToken: t });
+    writeToken(t);
+  },
 
   setSpoolPrice: (id, ils) =>
     set((s) => ({
