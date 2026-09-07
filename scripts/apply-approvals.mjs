@@ -33,11 +33,11 @@ function loadRejected() {
   try { return JSON.parse(fs.readFileSync(SEEN, "utf8")); } catch { return { version: 1, rejected: [] }; }
 }
 
-function buildRow(id, d, shelf) {
+function buildRow(id, d, shelf, also = []) {
   const name = readableTitle((d.title || "").trim(), d.slug);
   if (!name) return null;
   const est = ESTIMATE[shelf] ?? ESTIMATE.trendy;
-  const p = platesFrom(d.instances);
+  const p = platesFrom(d.instances, d.defaultInstanceId);
   const grams = Math.max(1, p?.base.g ?? d.grams ?? est.grams);
   const hours = Math.max(0.2, p?.base.h ?? (d.seconds ? d.seconds / 3600 : est.hours));
   const holds = holdsFor(`${name} ${d.tags.join(" ")} ${d.cats.join(" ")}`, d.license);
@@ -62,6 +62,7 @@ function buildRow(id, d, shelf) {
     holds,
     licenseChecked: !!d.license,
   };
+  if (also.length) row.also = also.filter((sh) => sh !== shelf);
   if (p?.ams) { row.hoursAms = p.ams.h; row.gramsAms = p.ams.g; }
   if (p?.plates) row.plates = p.plates;
   return row;
@@ -112,8 +113,8 @@ async function main() {
     const details = await fetchDetails(String(d.id));
     await sleep(200);
     if (!details) { log(c.y(`  ${d.id}: ה-API לא ענה, מדולג`)); continue; }
-    const row = buildRow(String(d.id), details, d.shelf || "trendy");
-    if (row) { rows.push(row); log(c.g(`  ✓ ${row.name} → ${row.shelf}`)); }
+    const row = buildRow(String(d.id), details, d.shelf || "trendy", d.also ?? []);
+    if (row) { rows.push(row); log(c.g(`  ✓ ${row.name} → ${[row.shelf, ...(row.also ?? [])].join(" + ")}`)); }
   }
 
   if (rows.length) append(rows);

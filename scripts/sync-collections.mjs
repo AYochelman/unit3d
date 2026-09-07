@@ -257,7 +257,7 @@ function buildRow(id, d, shelfHint) {
 
   const shelf = SHELF_OVERRIDES[id] ?? shelfHint ?? classify(name, d.tags, d.cats);
   const est = ESTIMATE[shelf] ?? ESTIMATE.trendy;
-  const p = platesFrom(d.instances);
+  const p = platesFrom(d.instances, d.defaultInstanceId);
   const grams = Math.max(1, p?.base.g ?? d.grams ?? est.grams);
   const hours = Math.max(0.2, p?.base.h ?? (d.seconds ? d.seconds / 3600 : est.hours));
   const holds = holdsFor(`${name} ${d.tags.join(" ")} ${d.cats.join(" ")}`, d.license);

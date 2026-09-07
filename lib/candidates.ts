@@ -38,8 +38,10 @@ export type Decision = "approved" | "rejected";
 export type ModelDecision = {
   id: string;
   decision: Decision;
-  /** Which shelf it goes on. Only meaningful when approved. */
+  /** The shelf the product page treats as home. Only meaningful when approved. */
   shelf?: ImportedShelf;
+  /** Any further shelves it is also listed on — a bust from a film is both. */
+  also?: ImportedShelf[];
   at: string;
 };
 

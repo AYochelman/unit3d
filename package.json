@@ -13,7 +13,8 @@
     "fetch:images": "node scripts/fetch-images.mjs",
     "sync:collections": "node scripts/sync-collections.mjs",
     "collect:candidates": "node scripts/collect-candidates.mjs",
-    "apply:approvals": "node scripts/apply-approvals.mjs"
+    "apply:approvals": "node scripts/apply-approvals.mjs",
+    "recheck:figures": "node scripts/recheck-figures.mjs"
   },
   "dependencies": {
     "next": "^16.2.6",

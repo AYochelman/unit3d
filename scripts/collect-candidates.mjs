@@ -95,7 +95,7 @@ async function main() {
     // Not shown at all: they could not be sold whatever the answer was.
     if (WEAPON.test(text) || /(^|-)NC(-|$)/i.test(d.license)) { dropped++; continue; }
 
-    const p = platesFrom(d.instances);
+    const p = platesFrom(d.instances, d.defaultInstanceId);
     const grams = Math.max(1, p?.base.g ?? d.grams ?? 40);
     const hours = Math.max(0.2, p?.base.h ?? (d.seconds ? d.seconds / 3600 : 2));
     const warnings = [];

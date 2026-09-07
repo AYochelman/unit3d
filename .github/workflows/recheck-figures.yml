@@ -1,0 +1,55 @@
+# Re-reads every model's weight and print time from MakerWorld.
+#
+# Those two numbers ARE the price — the whole cost model is
+# suggestPrice(grams, hours) — so a wrong one is a wrong price on the shelf
+# every day, and silently. Designers also re-slice their models after
+# publishing, which moves the figure under us. Monthly, and on demand.
+name: Recheck weights and times
+
+on:
+  schedule:
+    - cron: "40 3 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: recheck-figures
+  cancel-in-progress: false
+
+jobs:
+  recheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Recheck
+        run: npm run recheck:figures
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/imported.generated.ts
+          if git diff --cached --quiet; then
+            echo "nothing to fix"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Correct the weights and print times that had drifted"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Publish the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main

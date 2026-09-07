@@ -154,39 +154,59 @@ export const fmtSize = (grams) =>
   grams >= 300 ? "~250mm" : grams >= 120 ? "~160mm" : grams >= 40 ? "~100mm" : "~60mm";
 
 /**
- * The plates a design was published with, read the way the shop quotes them.
+ * The profiles a design was published with, read the way the shop quotes them.
  *
- * A model's headline time must be the SINGLE-COLOUR plate: the AMS plate of the
- * same model can be three times slower, and quoting that makes every price look
- * wrong. So the base is the lightest one-colour plate, `hoursAms`/`gramsAms`
- * carry the multi-colour one when there is one, and `plates` lists the sizes the
- * designer actually published — a step only counts when it is at least 35%
- * heavier AND slower than the one before it, so six near-identical uploads do
- * not become six "sizes".
+ * The base has to be the profile the DESIGNER points at — `defaultInstanceId`,
+ * or the one people actually print. It cannot be the lightest: a designer will
+ * happily upload a 23g "just the pins" profile beside the 433g shelf, and
+ * quoting the pins prices a whole wall unit at 22 ₪. (That is not theoretical;
+ * it is what "Shoe Rack / Wall Shelf" was selling for.)
+ *
+ * The headline still avoids the AMS profile — that one can be three times
+ * slower and makes every price look wrong — so when the default needs AMS and a
+ * single-colour profile exists, the closest single-colour profile stands in.
+ * `hoursAms`/`gramsAms` carry the multi-colour figures, and `plates` offers the
+ * genuinely BIGGER profiles as sizes: only what is at least 35% heavier and
+ * slower than the base, never something lighter, which would be a part.
  */
-export function platesFrom(instances = []) {
+export function platesFrom(instances = [], defaultInstanceId = null) {
   const every = instances
-    .map((x) => ({ g: x.weight || 0, h: Math.round(((x.prediction || 0) / 3600) * 100) / 100, mc: x.materialColorCnt || x.materialCnt || 1, ams: !!x.needAms }))
+    .map((x) => ({
+      id: x.id,
+      g: x.weight || 0,
+      h: Math.round(((x.prediction || 0) / 3600) * 100) / 100,
+      mc: x.materialColorCnt || x.materialCnt || 1,
+      ams: !!x.needAms,
+      dl: x.downloadCount || 0,
+      def: !!x.isDefault || (defaultInstanceId != null && x.id === defaultInstanceId),
+    }))
     .filter((x) => x.g > 0 && x.h > 0);
   if (!every.length) return null;
 
-  // A 1g plate next to a 20g one is the designer's test print, not a size.
-  const big = every.filter((x) => x.g >= 3);
-  const all = big.length ? big : every;
-  const single = all.filter((x) => x.mc === 1 && !x.ams);
-  const pool = single.length ? single : all;
+  // What the designer published as THE profile, else what people print most.
+  const chosen =
+    every.find((x) => x.def) ?? [...every].sort((a, b) => b.dl - a.dl)[0];
 
-  const sorted = [...pool].sort((a, b) => a.g - b.g);
-  const base = sorted[0];
-  const ams = all.find((x) => x.ams && x.g !== base.g) ?? null;
+  // Keep the headline on one colour, but stay near the chosen size: the
+  // stand-in is the single-colour profile closest in weight, not the smallest.
+  const single = every.filter((x) => x.mc === 1 && !x.ams);
+  const base =
+    chosen.mc === 1 && !chosen.ams
+      ? chosen
+      : single.length
+        ? [...single].sort((a, b) => Math.abs(a.g - chosen.g) - Math.abs(b.g - chosen.g))[0]
+        : chosen;
 
-  const plates = [];
-  for (const p of sorted) {
+  const ams = every.find((x) => x.ams && x.g !== base.g) ?? null;
+
+  const bigger = [...every.filter((x) => x.mc === 1 && !x.ams)].sort((a, b) => a.g - b.g);
+  const plates = [{ g: base.g, h: base.h }];
+  for (const p of bigger) {
     const last = plates[plates.length - 1];
-    if (!last || (p.g > last.g * 1.35 && p.h > last.h)) plates.push(p);
+    if (p.g > last.g * 1.35 && p.h > last.h) plates.push({ g: p.g, h: p.h });
   }
 
-  return { base, ams, plates: plates.length > 1 ? plates.map((p) => ({ g: p.g, h: p.h })) : null };
+  return { base, ams, plates: plates.length > 1 ? plates : null };
 }
 
 /** One model's details, straight from MakerWorld's API. */
@@ -218,6 +238,7 @@ export async function fetchDetails(id) {
     tags: (d.tags || []).slice(0, 6),
     cats: (d.categories || []).map((x) => x.name || "").slice(0, 3),
     instances,
+    defaultInstanceId: d.defaultInstanceId ?? null,
     nsfw: !!d.nsfw,
   };
 }

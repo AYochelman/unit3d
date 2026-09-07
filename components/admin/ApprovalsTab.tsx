@@ -21,7 +21,8 @@ import { cn } from "@/lib/cn";
  * answers are saved to the repository exactly like the prices are, and the next
  * build turns the approved ones into real products.
  */
-type Choice = { decision: Decision; shelf: ImportedShelf };
+/** `shelves[0]` is the product's home; the rest list it in more places too. */
+type Choice = { decision: Decision; shelves: ImportedShelf[] };
 
 export default function ApprovalsTab() {
   const [choices, setChoices] = useState<Record<string, Choice>>({});
@@ -33,8 +34,16 @@ export default function ApprovalsTab() {
     [choices, onlyOpen],
   );
 
-  const set = (id: string, decision: Decision, shelf: ImportedShelf) =>
-    setChoices((c) => ({ ...c, [id]: { decision, shelf } }));
+  const set = (id: string, decision: Decision, shelves: ImportedShelf[]) =>
+    setChoices((c) => ({ ...c, [id]: { decision, shelves } }));
+
+  /** Clicking a shelf adds it; clicking it again takes it off, unless it is the last one. */
+  const toggle = (id: string, shelf: ImportedShelf, current: ImportedShelf[]) =>
+    setChoices((prev) => {
+      const on = current.includes(shelf);
+      const shelves = on ? current.filter((s2) => s2 !== shelf) : [...current, shelf];
+      return { ...prev, [id]: { decision: prev[id]?.decision ?? "approved", shelves: shelves.length ? shelves : current } };
+    });
 
   const json = () => {
     const file: DecisionsFile = {
@@ -42,7 +51,9 @@ export default function ApprovalsTab() {
       decisions: Object.entries(choices).map(([id, c]) => ({
         id,
         decision: c.decision,
-        ...(c.decision === "approved" ? { shelf: c.shelf } : {}),
+        ...(c.decision === "approved"
+          ? { shelf: c.shelves[0], ...(c.shelves.length > 1 ? { also: c.shelves.slice(1) } : {}) }
+          : {}),
         at: new Date().toISOString(),
       })),
     };
@@ -91,7 +102,7 @@ export default function ApprovalsTab() {
       <div className="grid gap-3 md:grid-cols-2">
         {list.map((c) => {
           const chosen = choices[c.id];
-          const shelf = chosen?.shelf ?? c.suggested;
+          const shelves = chosen?.shelves ?? [c.suggested];
           const price = suggestPrice(c.grams, c.hours, 1);
           return (
             <div
@@ -127,22 +138,23 @@ export default function ApprovalsTab() {
               </div>
 
               <div className="px-3 pb-3">
-                <div className="text-[11px] text-ink-400 mb-1">לאיזו עמודה?</div>
+                <div className="text-[11px] text-ink-400 mb-1">
+                  לאילו עמודות? <span className="text-ink-600">אפשר לבחור כמה. הראשונה היא הבית.</span>
+                </div>
                 <div className="flex flex-wrap gap-1 mb-2.5">
                   {SHELVES.map((sh) => (
                     <button
                       key={sh}
                       type="button"
-                      onClick={() => setChoices((prev) => ({
-                        ...prev,
-                        [c.id]: { decision: prev[c.id]?.decision ?? "approved", shelf: sh },
-                      }))}
+                      onClick={() => toggle(c.id, sh, shelves)}
                       className={cn(
                         "px-2 py-1 rounded-lg text-[11px] font-semibold border transition-colors",
-                        shelf === sh ? "border-flame text-flame bg-flame/10" : "border-ink-800 text-ink-400 hover:border-ink-600",
+                        shelves[0] === sh ? "border-flame text-flame bg-flame/15"
+                          : shelves.includes(sh) ? "border-flame/50 text-flame/80 bg-flame/5"
+                          : "border-ink-800 text-ink-400 hover:border-ink-600",
                       )}
                     >
-                      {SHELF_LABEL[sh]}
+                      {shelves[0] === sh && "★ "}{SHELF_LABEL[sh]}
                     </button>
                   ))}
                 </div>
@@ -152,15 +164,17 @@ export default function ApprovalsTab() {
                     variant={chosen?.decision === "approved" ? "primary" : "ghost"}
                     icon="check"
                     className="flex-1"
-                    onClick={() => set(c.id, "approved", shelf)}
+                    onClick={() => set(c.id, "approved", shelves)}
                   >
-                    {chosen?.decision === "approved" ? `אושר · ${SHELF_LABEL[shelf]}` : "אשר"}
+                    {chosen?.decision === "approved"
+                      ? `אושר · ${shelves.map((sh) => SHELF_LABEL[sh]).join(" + ")}`
+                      : "אשר"}
                   </Btn>
                   <Btn
                     size="sm"
                     variant={chosen?.decision === "rejected" ? "danger" : "ghost"}
                     icon="x"
-                    onClick={() => set(c.id, "rejected", shelf)}
+                    onClick={() => set(c.id, "rejected", shelves)}
                   >
                     דחה
                   </Btn>
