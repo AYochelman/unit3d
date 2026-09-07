@@ -11,6 +11,8 @@ import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
+import ShelfMover from "@/components/admin/ShelfMover";
+import { CATEGORY_TO_SHELF } from "@/lib/imported";
 import ShippingEstimate from "@/components/ShippingEstimate";
 import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
@@ -518,6 +520,11 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <Icon name="sparkles" size={15} />
             רוצה עליו טקסט משלך?
           </Link>
+
+          <ShelfMover
+            productId={id}
+            current={(p.categories ?? [p.category]).map((c) => CATEGORY_TO_SHELF[c]).filter(Boolean)}
+          />
 
           <RestockModal
             open={askRestock}

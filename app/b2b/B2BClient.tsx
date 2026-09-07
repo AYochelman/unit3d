@@ -6,7 +6,7 @@ import Icon, { type IconName } from "@/components/ui/Icon";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { fmtILS } from "@/lib/format";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
-import { productsByCategory } from "@/lib/products";
+import { useProductsByCategory } from "@/lib/use-shelves";
 import { photoMix } from "@/lib/photos";
 import Image from "next/image";
 import Link from "next/link";
@@ -68,7 +68,7 @@ const CLIENTS = ["▲ MoonTech", "◆ Pixie", "● Orca Labs", "■ Halo HR", "�
 export default function B2BClient() {
   // Real, brandable products with real photographs, instead of a page that only
   // describes what a corporate order could be.
-  const b2bCards = productsByCategory("b2b").map(productToCard);
+  const b2bCards = useProductsByCategory("b2b").map(productToCard);
   const ideaPhotos = photoMix(["office", "home", "statues"], 5);
 
   const [submitted, setSubmitted] = useState(false);

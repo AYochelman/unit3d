@@ -162,7 +162,7 @@ export function suggestPrice(grams: number, hours: number, colors = 1): number {
   return Math.max(25, Math.ceil(c.recommendedPrice / 5) * 5);
 }
 
-const SHELF_TO_CATEGORY: Record<Exclude<ImportedShelf, "flexi" | "fidget">, ProductCategory> = {
+export const SHELF_TO_CATEGORY: Record<Exclude<ImportedShelf, "flexi" | "fidget">, ProductCategory> = {
   statues: "statues",
   screen: "screen",
   smoke: "smoke",
@@ -172,6 +172,11 @@ const SHELF_TO_CATEGORY: Record<Exclude<ImportedShelf, "flexi" | "fidget">, Prod
   trendy: "trendy",
   b2b: "b2b",
 };
+
+/** The way back: a listing knows its category, the mover speaks in shelves. */
+export const CATEGORY_TO_SHELF = Object.fromEntries(
+  Object.entries(SHELF_TO_CATEGORY).map(([shelf, cat]) => [cat, shelf]),
+) as Record<ProductCategory, ImportedShelf>;
 
 /** Imported rows that belong on the fidgets tab. */
 export function importedFidgets(): Fidget[] {

@@ -5,12 +5,13 @@ import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import ProductToolbar from "@/components/ProductToolbar";
-import { productsByCategory } from "@/lib/products";
+import { useProductsByCategory } from "@/lib/use-shelves";
 import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 
 export default function StatuesClient() {
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
-  const all = useMemo(() => productsByCategory("statues").map(productToCard), []);
+  const shelved = useProductsByCategory("statues");
+  const all = useMemo(() => shelved.map(productToCard), [shelved]);
   const items = useMemo(() => applyListing(all, state), [all, state]);
 
   return (

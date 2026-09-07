@@ -5,7 +5,8 @@ import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import ProductToolbar from "@/components/ProductToolbar";
-import { productsByCategory } from "@/lib/products";
+import { shelvesOf, useProductsByCategory } from "@/lib/use-shelves";
+import { useAdminStore } from "@/lib/admin-store";
 import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 import { cn } from "@/lib/cn";
 
@@ -19,10 +20,13 @@ const FILTERS: { id: Filter; label: string }[] = [
 
 export default function HomeOfficeClient() {
   const [filter, setFilter] = useState<Filter>("all");
+  const moves = useAdminStore((st) => st.shelves);
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
+  const both = useProductsByCategory("home", "office");
   const scoped = useMemo(
-    () => (filter === "all" ? productsByCategory("home", "office") : productsByCategory(filter)).map(productToCard),
-    [filter],
+    () =>
+      (filter === "all" ? both : both.filter((p) => shelvesOf(p, moves).includes(filter))).map(productToCard),
+    [filter, both, moves],
   );
   const items = useMemo(() => applyListing(scoped, state), [scoped, state]);
 

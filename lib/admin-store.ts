@@ -3,6 +3,7 @@ import { create } from "zustand";
 import type { MaterialId } from "./types";
 import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
 import { stockKey, type Interest, type StockMap } from "./inventory";
+import type { ImportedShelf } from "./imported";
 import { readToken, writeToken } from "./admin-token";
 
 // The admin area is a client-side tool. Per the project rules there is no
@@ -38,6 +39,14 @@ export type AdminExport = {
   /** Filament that is OUT of stock, plus who asked to be told when it returns. */
   stock?: StockMap;
   interest?: Interest[];
+  /**
+   * Shelves the owner moved a product to, from the shop itself.
+   *
+   * `["statues", "screen"]` means the first is its home and it is listed on
+   * both. Present only for products he actually moved; everything else keeps
+   * the shelf it was imported onto.
+   */
+  shelves?: Record<string, ImportedShelf[]>;
 };
 
 type AdminState = {
@@ -48,6 +57,8 @@ type AdminState = {
   stock: StockMap;
   interest: Interest[];
   pricing: PricingMode;
+  /** Live shelf moves, applied to every listing the moment they are made. */
+  shelves: Record<string, ImportedShelf[]>;
   /**
    * The GitHub token that lets the admin publish.
    *
@@ -63,6 +74,8 @@ type AdminState = {
   setSetting<K extends Exclude<keyof CostSettings, "spoolPrices">>(k: K, v: CostSettings[K]): void;
   setPricing(patch: Partial<PricingMode>): void;
   setGhToken(t: string): void;
+  setShelves(productId: string, shelves: ImportedShelf[]): void;
+  clearShelves(productId: string): void;
   setStock(material: MaterialId, color: string, available: boolean): void;
   setMaterialStock(material: MaterialId, colors: string[], available: boolean): void;
   addInterest(i: Omit<Interest, "id" | "at">): void;
@@ -81,6 +94,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   stock: {},
   interest: [],
   pricing: DEFAULT_PRICING,
+  shelves: {},
   ghToken: "",   // hydrated from the device on first render, see AdminUnlock
 
   unlock: (pin) => {
@@ -97,6 +111,22 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     set({ ghToken: t });
     writeToken(t);
   },
+
+  // A move with nothing left in it would hide the product everywhere, so an
+  // empty list means "put it back where it was".
+  setShelves: (productId, shelves) =>
+    set((st) => {
+      const next = { ...st.shelves };
+      if (shelves.length) next[productId] = shelves;
+      else delete next[productId];
+      return { shelves: next };
+    }),
+  clearShelves: (productId) =>
+    set((st) => {
+      const next = { ...st.shelves };
+      delete next[productId];
+      return { shelves: next };
+    }),
 
   setSpoolPrice: (id, ils) =>
     set((s) => ({
@@ -150,8 +180,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     set({ settings: DEFAULT_COST_SETTINGS, overrides: {}, stock: {}, interest: [], pricing: DEFAULT_PRICING }),
 
   exportJson: () => {
-    const { settings, overrides, stock, interest, pricing } = get();
-    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, interest };
+    const { settings, overrides, stock, interest, pricing, shelves } = get();
+    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, interest, shelves };
     return JSON.stringify(payload, null, 2);
   },
 
@@ -165,6 +195,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         pricing: { ...DEFAULT_PRICING, ...parsed.pricing },
         stock: parsed.stock ?? {},
         interest: parsed.interest ?? [],
+        shelves: parsed.shelves ?? {},
       });
       return true;
     } catch {
