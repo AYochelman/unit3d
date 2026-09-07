@@ -47,12 +47,22 @@ type AdminState = {
   stock: StockMap;
   interest: Interest[];
   pricing: PricingMode;
+  /**
+   * The GitHub token, for as long as this tab is open.
+   *
+   * Saving to the site needs a credential — the shop is a static build with no
+   * server of its own — but there is no reason to retype it on every save. It
+   * lives in memory for the session and in nothing else: not localStorage, not
+   * the export file, not a log. Closing the tab forgets it.
+   */
+  ghToken: string;
 
   unlock(pin: string): boolean;
   lock(): void;
   setSpoolPrice(id: MaterialId, ils: number): void;
   setSetting<K extends Exclude<keyof CostSettings, "spoolPrices">>(k: K, v: CostSettings[K]): void;
   setPricing(patch: Partial<PricingMode>): void;
+  setGhToken(t: string): void;
   setStock(material: MaterialId, color: string, available: boolean): void;
   setMaterialStock(material: MaterialId, colors: string[], available: boolean): void;
   addInterest(i: Omit<Interest, "id" | "at">): void;
@@ -71,13 +81,17 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   stock: {},
   interest: [],
   pricing: DEFAULT_PRICING,
+  ghToken: "",
 
   unlock: (pin) => {
     const ok = pin.trim() === ADMIN_PIN;
     if (ok) set({ unlocked: true });
     return ok;
   },
-  lock: () => set({ unlocked: false }),
+  // Locking clears the token too: leaving the admin should not leave a
+  // credential behind that the next click could use.
+  lock: () => set({ unlocked: false, ghToken: "" }),
+  setGhToken: (t) => set({ ghToken: t }),
 
   setSpoolPrice: (id, ils) =>
     set((s) => ({

@@ -4,6 +4,7 @@ import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
+import { useAdminStore } from "@/lib/admin-store";
 
 // Saving from the phone, without a computer and without a server.
 //
@@ -12,9 +13,11 @@ import { cn } from "@/lib/cn";
 // the GitHub contents API with a token the owner types here; the push starts
 // the normal Pages build, and a minute later every visitor gets the new prices.
 //
-// The token is held in component state for the length of the save and is never
-// stored, exported or logged — the project forbids browser storage anyway, and
-// a credential is the last thing that should live in it.
+// The token is typed once per visit and kept in the admin store for as long as
+// the tab is open, so every later save is a single click. It is never written
+// to localStorage, to the export file, or to a log — the project forbids
+// browser storage anyway, and a credential is the last thing that should live
+// in it. Locking the admin forgets it.
 
 const DEFAULT_REPO = "AYochelman/unit3d";
 const DEFAULT_FILE = "public/admin-settings.json";
@@ -45,7 +48,8 @@ export default function AdminSaveToSite({
 }) {
   const [repo, setRepo] = useState(DEFAULT_REPO);
   const [branch, setBranch] = useState("main");
-  const [token, setToken] = useState("");
+  const token = useAdminStore((s) => s.ghToken);
+  const setToken = useAdminStore((s) => s.setGhToken);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<Msg | null>(null);
 
@@ -120,7 +124,19 @@ export default function AdminSaveToSite({
         ותוך כדקה {what} באוויר. המיילים של רשימת ההמתנה לא נכללים בקובץ.
       </p>
 
-      <div className="grid gap-2 sm:grid-cols-2 mb-2">
+      {token && (
+        <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-good/10 text-good border border-good/30 font-semibold">
+            <Icon name="check" size={12} strokeWidth={3} />
+            הטוקן זכור לסשן הזה
+          </span>
+          <button type="button" onClick={() => setToken("")} className="text-ink-500 hover:text-ink-300 underline underline-offset-2">
+            שכח אותו
+          </button>
+        </div>
+      )}
+
+      <div className={cn("grid gap-2 sm:grid-cols-2 mb-2", token && "hidden")}>
         <label className="text-xs text-ink-400">
           מאגר
           <Input value={repo} onChange={(e) => setRepo(e.target.value)} dir="ltr" className="mt-1" />
@@ -131,29 +147,32 @@ export default function AdminSaveToSite({
         </label>
       </div>
 
-      <label className="block text-xs text-ink-400 mb-3">
-        טוקן GitHub
-        <Input
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="github_pat_..."
-          dir="ltr"
-          autoComplete="off"
-          className="mt-1"
-        />
-        <span className="block mt-1 text-[11px] text-ink-500 leading-relaxed">
-          הטוקן משמש לשמירה אחת ולא נשמר בשום מקום — צריך להדביק אותו שוב בכל שמירה.{" "}
-          <a href={TOKEN_URL} target="_blank" rel="noreferrer" className="text-flame underline">
-            ליצירת טוקן
-          </a>
-          {" — בחר "}
-          <bdi dir="ltr">Fine-grained</bdi>
-          {", רק את המאגר הזה, והרשאה "}
-          <bdi dir="ltr">Contents: Read and write</bdi>
-          {"."}
-        </span>
-      </label>
+      <div className={cn(token && "hidden")}>
+        <label className="block text-xs text-ink-400 mb-3">
+          טוקן GitHub
+          <Input
+            type="password"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="github_pat_..."
+            dir="ltr"
+            autoComplete="off"
+            className="mt-1"
+          />
+          <span className="block mt-1 text-[11px] text-ink-500 leading-relaxed">
+            מדביקים פעם אחת — הוא נזכר עד שסוגרים את הלשונית, וכל שמירה אחריה היא לחיצה אחת. לא נשמר בדפדפן ולא בקובץ הגיבוי.{" "}
+            <a href={TOKEN_URL} target="_blank" rel="noreferrer" className="text-flame underline">
+              ליצירת טוקן
+            </a>
+            {" — בחר "}
+            <bdi dir="ltr">Fine-grained</bdi>
+            {", רק את המאגר הזה, והרשאה "}
+            <bdi dir="ltr">Contents: Read and write</bdi>
+            {"."}
+          </span>
+        </label>
+      </div>
+
 
       <Btn variant="primary" size="sm" icon={busy ? "rotate" : "check"} onClick={save} disabled={busy}>
         {busy ? "שומר…" : "שמור לאתר עכשיו"}
