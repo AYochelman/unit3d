@@ -119,9 +119,6 @@ export default function ProductPreview({ product, shape, text, number, colorObj,
             <circle cx="6" cy="-4" r="10" fill="none" stroke="#C0C0C5" strokeWidth="4" />
           </g>
         )}
-        {product.id === "dog_tag" && (
-          <path d={`M${ox + 10} ${oy} C${ox - 30} ${oy - 40} ${ox + fw * scale + 30} ${oy - 40} ${ox + fw * scale - 10} ${oy}`} fill="none" stroke="#9A9A9F" strokeWidth="2.5" strokeDasharray="3 2" />
-        )}
         {product.id === "name_plate" && (
           <rect x={ox - 6} y={oy + fh * scale} width={fw * scale + 12} height={10} rx="3" fill="#2A2A2E" />
         )}
@@ -176,6 +173,22 @@ export default function ProductPreview({ product, shape, text, number, colorObj,
           </g>
           <path d={path} fill="url(#pp-shade)" />
         </g>
+
+        {/* The chain belongs in the hole — that is the whole point of the hole.
+            Drawn after the tag, so the split ring reads as threaded through it
+            rather than passing behind the plate. */}
+        {product.id === "dog_tag" && (() => {
+          const hx = ox + fw * 0.12 * scale;
+          const hy = oy + fh * 0.5 * scale;
+          const ring = Math.max(4, fh * 0.08 * scale * 1.7);
+          const top = hy - ring;
+          return (
+            <g fill="none" stroke="#B8B8BE" strokeLinecap="round">
+              <path d={`M${hx - 2} ${top} C${hx - 30} ${top - 46} ${hx + 34} ${top - 58} ${hx + 2} ${top}`} strokeWidth="2.5" strokeDasharray="3 2" />
+              <circle cx={hx} cy={hy} r={ring} strokeWidth="2.5" />
+            </g>
+          );
+        })()}
 
         {/* layer lines */}
         <g opacity="0.08">

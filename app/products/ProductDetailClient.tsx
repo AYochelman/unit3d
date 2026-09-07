@@ -175,11 +175,12 @@ export default function ProductDetailClient({ id }: { id: string }) {
       </Link>
 
       <div className="grid lg:grid-cols-[1fr_420px] gap-8 lg:gap-14 items-start">
-        {/* Illustration, tinted live by the chosen colour */}
+        {/* The photograph, on a neutral ground — the chosen colour is named by
+            the swatch, never painted over the picture. */}
         <div className="lg:sticky lg:top-24">
           <div
             className="relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
-            style={{ background: `radial-gradient(circle at 50% 40%, ${color.hex}33, #111114 65%)` }}
+            style={{ background: "#111114" }}
           >
             {p.image ? (
               // A photograph of the actual model beats a drawing of it. The

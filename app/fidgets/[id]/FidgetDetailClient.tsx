@@ -31,9 +31,6 @@ const AMS_OPTIONS = [
   { colors: 4, label: "4 צבעים", surcharge: 50 },
 ] as const;
 
-// Filaments that look better without multiply blend
-const LIGHT_FILAMENTS = new Set(["white", "silver", "glow"]);
-
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function FidgetDetailClient({ id }: { id: string }) {
   const addItem = useOrderStore((s) => s.addItem);
@@ -115,8 +112,6 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const sellable     = matInStock && colorInStock;
   const tintHex          = selectedFilament?.hex ?? "#888";
   // Multiply blend: white/silver/glow look odd — use "color" blend instead
-  const blendMode    = LIGHT_FILAMENTS.has(colorId) ? "color" : "multiply";
-  const tintOpacity  = colorId === "black" ? 0 : LIGHT_FILAMENTS.has(colorId) ? 0.18 : 0.30;
 
   // The AMS plate is its own print: heavier and much slower than the
   // single-colour one, so costing has to switch to it when AMS is on.
@@ -199,15 +194,11 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   />
                 ))}
 
-                {/* ── Color tint overlay ── */}
-                <div
-                  className="absolute inset-0 pointer-events-none transition-all duration-500 rounded-2xl"
-                  style={{
-                    backgroundColor: tintHex,
-                    opacity: tintOpacity,
-                    mixBlendMode: blendMode as React.CSSProperties["mixBlendMode"],
-                  }}
-                />
+                {/* No tint over the photo. Washing a real print in the chosen
+                    filament's colour made every model look like it was lit
+                    through coloured glass; the swatch below already says which
+                    colour was picked, and it says it without lying about the
+                    photograph. */}
 
                 {/* Nav buttons */}
                 {images.length > 1 && (

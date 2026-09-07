@@ -132,7 +132,7 @@ export default function ApprovalsTab() {
             >
               <div className="flex gap-3 p-3">
                 <span className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-ink-950">
-                  <Image src={photoSrc(c.image)} alt="" aria-hidden fill sizes="96px" className="object-contain p-1" unoptimized />
+                  <Image src={photoSrc(c.image)} alt="" aria-hidden fill sizes="96px" className="object-cover" unoptimized />
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="font-bold text-sm leading-tight mb-0.5 line-clamp-2" dir="auto">{c.title}</div>

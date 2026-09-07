@@ -79,6 +79,10 @@ export function productToCard(p: Product): ListingCard {
 export function ListingCardView({ c }: { c: ListingCard }) {
   const stock = useAdminStore((s) => s.stock);
   const [askRestock, setAskRestock] = useState(false);
+  // A click on a card picks it; a second, deliberate click on the button opens
+  // it. Tapping a thumbnail and being thrown onto another page is how you lose
+  // your place in a grid you were still reading.
+  const [picked, setPicked] = useState(false);
   const material = c.material ?? DEFAULT_MATERIAL;
   const inStock = isMaterialInStock(stock, material);
   // The shelf price follows /admin, so a margin change moves every card at once.
@@ -86,6 +90,13 @@ export function ListingCardView({ c }: { c: ListingCard }) {
 
   const shell =
     "group flex flex-col rounded-2xl bg-ink-900 border border-ink-800 hover:border-ink-700 hover:-translate-y-1 transition-all duration-300 ease-smooth overflow-hidden text-right";
+
+  /** Pick the card without leaving the page. */
+  const pick = { onClick: () => setPicked(true), role: "button", tabIndex: 0,
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setPicked(true); }
+    } } as const;
+  const ring = picked ? "border-flame/60 ring-1 ring-flame/40" : "";
 
   const body = (
     <>
@@ -96,10 +107,11 @@ export function ListingCardView({ c }: { c: ListingCard }) {
         }}
       >
         {c.image ? (
-          /* contain, not cover: these are photographs of a whole object, and
-             cropping one to a square cuts the head off a bust and shows a
-             customer the middle of a dog tag. */
-          <Image src={c.image} alt={c.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-contain object-center p-3 transition-transform duration-500 group-hover:scale-105" unoptimized />
+          /* Full bleed. Letterboxed photos left the shop looking like a row of
+             stamps on a striped board — the owner wants the picture and not
+             its edges, so the image fills the square and is cropped from the
+             centre, where the model sits in a product shot. */
+          <Image src={c.image} alt={c.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover object-center transition-transform duration-500 group-hover:scale-105" unoptimized />
         ) : (
           <ProductArt art={c.art ?? "keychain"} hue={c.hue} size={150} className="transition-transform duration-500 group-hover:scale-105" />
         )}
@@ -194,10 +206,10 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   // it can't be nested inside the card link, so the footer sits outside it.
   if (c.personalizable && c.designHref) {
     return (
-      <div className={cn(shell, "h-full")}>
-        <Link href={c.designHref} className="flex flex-col flex-1">
+      <div className={cn(shell, "h-full", ring)}>
+        <div className="flex flex-col flex-1 cursor-pointer" {...pick}>
           {body}
-        </Link>
+        </div>
         <div className="px-3 pb-3 flex items-center justify-between gap-1.5">
           {priceRow}
           <div className="flex items-center gap-1">
@@ -222,28 +234,91 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   }
 
   return (
-    <Link href={c.href} className={cn(shell, "h-full")}>
+    <div className={cn(shell, "h-full cursor-pointer", ring)} {...pick}>
       {body}
       <div className="px-3 pb-3 flex items-center justify-between">
         {priceRow}
-        <span className="inline-flex items-center gap-1 text-xs font-semibold text-ink-300 group-hover:text-flame transition-colors">
-          לפרטים
+        <Link
+          href={c.href}
+          onClick={(e) => e.stopPropagation()}
+          className={cn(
+            "inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-semibold transition-colors",
+            picked
+              ? "bg-flame text-white"
+              : "text-ink-300 border border-ink-800 hover:border-ink-600 hover:text-flame",
+          )}
+        >
+          {picked ? "המשך לפרטים" : "לפרטים"}
           <Icon name="arrowLeft" size={12} />
-        </span>
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }
 
+/** Six full rows on a wide screen — enough to browse, few enough to load. */
+const PER_PAGE = 24;
+
 export default function ProductGrid({ cards }: { cards: ListingCard[] }) {
+  const [page, setPage] = useState(0);
+
   if (!cards.length) {
     return <div className="text-center py-16 text-ink-400">אין מוצרים שמתאימים לסינון הזה.</div>;
   }
+
+  // Clamped rather than reset in an effect: narrowing a filter must not leave
+  // the grid parked on a page that no longer exists.
+  const pages = Math.ceil(cards.length / PER_PAGE);
+  const at = Math.min(page, pages - 1);
+  const shown = cards.slice(at * PER_PAGE, at * PER_PAGE + PER_PAGE);
+
+  const go = (to: number) => {
+    setPage(to);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      {cards.map((c) => (
-        <ListingCardView key={c.id} c={c} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {shown.map((c) => (
+          <ListingCardView key={c.id} c={c} />
+        ))}
+      </div>
+
+      {pages > 1 && (
+        <nav className="mt-8 flex items-center justify-center gap-2" aria-label="דפדוף">
+          <button
+            type="button"
+            onClick={() => go(at - 1)}
+            disabled={at === 0}
+            className="px-3 py-1.5 rounded-lg text-sm font-semibold border border-ink-800 text-ink-300 hover:border-ink-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-ink-800 transition-colors"
+          >
+            הקודם
+          </button>
+          {Array.from({ length: pages }, (_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => go(i)}
+              aria-current={i === at ? "page" : undefined}
+              className={cn(
+                "w-8 h-8 rounded-lg text-sm font-bold transition-colors",
+                i === at ? "bg-flame text-white" : "text-ink-400 border border-ink-800 hover:border-ink-600 hover:text-ink-100",
+              )}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => go(at + 1)}
+            disabled={at === pages - 1}
+            className="px-3 py-1.5 rounded-lg text-sm font-semibold border border-ink-800 text-ink-300 hover:border-ink-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-ink-800 transition-colors"
+          >
+            הבא
+          </button>
+        </nav>
+      )}
+    </>
   );
 }
