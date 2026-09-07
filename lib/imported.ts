@@ -2,6 +2,8 @@ import type { Fidget, Product, ProductArtId, ProductCategory } from "./types";
 import { DEFAULT_COST_SETTINGS, estimateCost, fmtHours } from "./costing";
 import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
 import { photoSrc } from "./assets";
+import { applyShelf } from "./shelves";
+import { HE_DESCS } from "./he-descs";
 import { heName } from "./he-names";
 
 // ─── Models imported from a maker site ───────────────────────────────────────
@@ -45,6 +47,14 @@ export type ImportedModel = {
   /** Hebrew one-liner for the card. */
   desc: string;
   shelf: ImportedShelf;
+  /**
+   * Extra shelves the model also belongs on.
+   *
+   * A Billy Butcher bust is a display piece AND something from the screen; a
+   * customer looking on either shelf should find it. `shelf` stays the one the
+   * product page treats as home, `also` widens where it is listed.
+   */
+  also?: ImportedShelf[];
   /**
    * Print time and filament for the SINGLE-COLOUR plate.
    *
@@ -119,6 +129,15 @@ export const REMOVED_IDS = new Set<string>([
   "mw-27048",    // כדור גמיש לחתול
   "mw-2863365",  // פיגורת אסטה
   "mw-115260",   // לוח שנה נצחי מתהפך
+  "mw-1292618",  // כיסא מתקפל
+  "mw-881870",   // פטיש שופט
+  // הרכב של מישהו אחר, לא מוצר לחנות
+  "mw-1491471",  // מגן לוח מחוונים BYD
+  "mw-133829",   // מכסי מזגן BYD
+  // כל מה שהגיע מקולקציית GAME — משחקי קופסה, לא הקו של החנות
+  "mw-128570", "mw-1400050", "mw-1506167", "mw-15784", "mw-226667",
+  "mw-2841172", "mw-421037", "mw-580825", "mw-583150", "mw-737254",
+  "mw-740269", "mw-761480",
 ]);
 
 /** Set to true to list everything, weapons included. Leave false. */
@@ -127,7 +146,7 @@ export const SHOW_HELD_MODELS = false;
 // Photos resolve to the copies in public/img/catalog (see lib/assets.ts), so
 // nothing on the shop is loaded from a designer's CDN at page view.
 export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED.map((m) =>
-  m.image ? { ...m, image: photoSrc(m.image) } : m,
+  applyShelf(m.image ? { ...m, image: photoSrc(m.image) } : m),
 );
 export const IMPORTED_DATE = IMPORTED_AT;
 
@@ -163,7 +182,7 @@ export function importedFidgets(): Fidget[] {
       kind: m.shelf === "flexi" ? "flexi" : "fidget",
       name: heName(m.id, m.name),
       nameEn: m.name,
-      desc: m.desc,
+      desc: HE_DESCS[m.id] ?? m.desc,
       price: suggestPrice(m.grams, m.hours, 1),
       size: m.size,
       time: fmtHours(m.hours),
@@ -189,9 +208,12 @@ export function importedProducts(): Product[] {
     .map((m) => ({
       id: m.id,
       category: SHELF_TO_CATEGORY[m.shelf as Exclude<ImportedShelf, "flexi" | "fidget">],
+      categories: [m.shelf, ...(m.also ?? [])]
+        .filter((sh) => sh !== "flexi" && sh !== "fidget")
+        .map((sh) => SHELF_TO_CATEGORY[sh as Exclude<ImportedShelf, "flexi" | "fidget">]),
       name: heName(m.id, m.name),
       nameEn: m.name,
-      desc: m.desc,
+      desc: HE_DESCS[m.id] ?? m.desc,
       price: suggestPrice(m.grams, m.hours, 1),
       size: m.size,
       time: fmtHours(m.hours),

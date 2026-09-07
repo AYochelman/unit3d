@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import { useAdminStore } from "@/lib/admin-store";
@@ -35,19 +34,17 @@ export default function AdminUnlock() {
   }
 
   if (!open) {
+    // No link to /admin here on purpose: clicking "admin" from a product page
+    // must leave you ON that product, with prices and costs now visible. The
+    // way to the admin page itself is the gear in the header.
     return (
-      <div className="flex items-center gap-2 shrink-0">
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="text-[10px] font-mono text-ink-600 hover:text-ink-300 transition-colors"
-        >
-          admin
-        </button>
-        <Link href="/admin" className="text-ink-700 hover:text-ink-400 transition-colors" title="עמוד הניהול">
-          <Icon name="settings" size={12} />
-        </Link>
-      </div>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="shrink-0 text-[10px] font-mono text-ink-600 hover:text-ink-300 transition-colors"
+      >
+        admin
+      </button>
     );
   }
 

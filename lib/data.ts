@@ -95,7 +95,7 @@ export const GALLERY_CATS = [
 const CURATED_FIDGETS: Fidget[] = [
   {
     id: "f1",
-    name: "Air Spinner",
+    name: "ספינר אוויר",
     desc: "ספינר אווירי קלאסי. הדפסה אחת. מסתובב כ-90 שניות.",
     price: 55,
     size: "60mm",
@@ -113,7 +113,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f2",
-    name: "Spiral Cone Fidget",
+    name: "חרוט ספירלה",
     desc: "ספירלה מחודדת שמתפתלת ביד. גרסת AMS דו-צבעית מדגישה את החריצים.",
     price: 65,
     size: "70mm",
@@ -152,7 +152,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f3",
-    name: "Infinity Cube",
+    name: "קוביית אינסוף",
     desc: "קוביית אינסוף קלאסית. מתקפלת ונפרשת ללא הרכבה.",
     price: 75,
     size: "60mm",
@@ -169,7 +169,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f4",
-    name: "Fidget Cube Remix",
+    name: "קוביית פידג'ט · ריבוי פעולות",
     desc: "קוביית 6 פאות עם 6 פונקציות לחיצה/סיבוב/החלקה.",
     price: 70,
     size: "75mm",
@@ -187,7 +187,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f5",
-    name: "Funny Flexi Octopus",
+    name: "תמנון גמיש",
     desc: "תמנון מפרקי 8 זרועות. מתפתל ומתקפל ביד.",
     price: 90,
     size: "150mm",
@@ -205,7 +205,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f6",
-    name: "Articulated Cute Mouse",
+    name: "עכבר מפרקי",
     desc: "עכבר מפרקי חמוד. זנב, רגליים, אוזניים — הכל זז.",
     price: 85,
     size: "120mm",
@@ -223,7 +223,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f7",
-    name: "Super Clicky Fidget Button",
+    name: "כפתור קליק חזק",
     desc: "כפתור גדול שמקליק חזק. תרפיה לאצבע.",
     price: 55,
     size: "40mm",
@@ -241,7 +241,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f8",
-    name: "Flexi Shark",
+    name: "כריש גמיש",
     desc: "כריש מפרקי 180mm. שובט בכל הכיוונים.",
     price: 95,
     size: "180mm",
@@ -259,7 +259,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f9",
-    name: "Dune Flexi Sandworm",
+    name: "תולעת חול גמישה",
     desc: "תולעת חול ענקית מ-Dune. 200mm של חוליות מפרקיות.",
     price: 110,
     size: "200mm",
@@ -278,7 +278,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f10",
-    name: "longboi articulated snake",
+    name: "נחש ארוך במיוחד",
     desc: "נחש מפרקי ענק. 1.5m במדפסת A1 mini, או 3m במדפסת גדולה. AMS לדוגמת עור.",
     price: 95,
     size: "1.5m / 3m",
@@ -317,7 +317,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f11",
-    name: "Infinity Cube - Flush",
+    name: "קוביית אינסוף · גימור חלק",
     desc: "קוביית אינסוף בעיצוב flush. גיאומטריה מינימליסטית, פאות מושלמות.",
     price: 75,
     size: "60mm",
@@ -336,7 +336,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f12",
-    name: "flexi dragon",
+    name: "דרקון גמיש",
     desc: "דרקון מפרקי 180mm. גרסת AMS מבליטה את הקשקשים בשני צבעים.",
     price: 105,
     size: "180mm",
@@ -375,7 +375,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f13",
-    name: "Articulated Jumping Spider",
+    name: "עכביש קופץ מפרקי",
     desc: "עכביש מקפץ מפרקי. רגליים זזות עצמאית. גרסת AMS מבליטה את העיניים.",
     price: 65,
     size: "90mm",
@@ -415,7 +415,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f14",
-    name: "Articulated crystal dragon",
+    name: "דרקון גביש מפרקי",
     desc: "דרקון קריסטל מפרקי 200mm. פירוט גבוה. גרסת AMS לקריסטלים.",
     price: 130,
     size: "200mm",
@@ -455,7 +455,7 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f15",
-    name: "Articulated Spider",
+    name: "עכביש מפרקי",
     desc: "עכביש מפרקי קלאסי. 8 רגליים שזזות עצמאית.",
     price: 70,
     size: "80mm",

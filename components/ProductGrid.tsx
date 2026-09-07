@@ -96,7 +96,10 @@ export function ListingCardView({ c }: { c: ListingCard }) {
         }}
       >
         {c.image ? (
-          <Image src={c.image} alt={c.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" unoptimized />
+          /* contain, not cover: these are photographs of a whole object, and
+             cropping one to a square cuts the head off a bust and shows a
+             customer the middle of a dog tag. */
+          <Image src={c.image} alt={c.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-contain object-center p-3 transition-transform duration-500 group-hover:scale-105" unoptimized />
         ) : (
           <ProductArt art={c.art ?? "keychain"} hue={c.hue} size={150} className="transition-transform duration-500 group-hover:scale-105" />
         )}

@@ -301,12 +301,16 @@ export const PRODUCTS: Product[] = [
  * PRODUCTS (its own page and the admin costing still work) — it is simply not
  * put on a shelf until there is a picture of it.
  */
+/** A product is on every shelf it claims, not only its primary one. */
+const onShelf = (p: Product, cats: ProductCategory[]) =>
+  (p.categories ?? [p.category]).some((c) => cats.includes(c));
+
 export const productsByCategory = (...cats: ProductCategory[]): Product[] =>
-  PRODUCTS.filter((p) => cats.includes(p.category) && !!p.image);
+  PRODUCTS.filter((p) => onShelf(p, cats) && !!p.image);
 
 /** Including the ones with no photograph — for /admin and internal tooling. */
 export const allProductsByCategory = (...cats: ProductCategory[]): Product[] =>
-  PRODUCTS.filter((p) => cats.includes(p.category));
+  PRODUCTS.filter((p) => onShelf(p, cats));
 export const PRODUCT_BY_ID: Record<string, Product> = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
 
 export const CATEGORY_LABEL: Record<Product["category"], string> = {

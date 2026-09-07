@@ -252,6 +252,8 @@ export type ProductOption = {
 export type Product = {
   id: string;
   category: ProductCategory;
+  /** Every shelf it is listed on; defaults to [category] when absent. */
+  categories?: ProductCategory[];
   name: string;
   desc: string;
   price: number;

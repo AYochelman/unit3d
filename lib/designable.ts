@@ -29,6 +29,22 @@ const PERSONAL_IDS = new Set<string>([
   "mw-26806",   // מעמד כרטיסי ביקור
   "mw-23274",   // מעמד כרטיסי ביקור · מוסך
   "mw-18356",   // גביע כוכב
+  // מוצרי עישון שנמכרים עם טקסט משלך
+  "mw-741443",  // ז'יטון פוקר
+  "mw-710726",  // תג לתיק
+  "mw-96585",   // שרוול מצית עם שם
+  "mw-1379807", // קייס למצית עם תא
+  "mw-1487479", // שרוול קליפר
+  "mw-1160355", // קופסת סיגריות
+  "mw-1045499", // קופסת סיגריות נפתחת
+  "mw-614282",  // קופסת סיגריות נשלפת
+  "mw-1338377", // קופסה ל-20
+  "mw-713529",  // מגן לחפיסה
+  "mw-657056",  // קופסה ל-9
+  "mw-80875",   // קופסת טבק עם רולר
+  "mw-697819",  // מאפרה קטנה
+  "mw-1227919", // מאפרת צנצנת
+  "mw-2335039", // דיסקית צבאית
 ]);
 
 /** Explicit choices for the hand-written catalogue. */
@@ -44,6 +60,20 @@ const BASE_BY_ID: Record<string, ConfigProductId> = {
   "home-key-rack": "name_plate",
   "st-trophy": "name_plate",
   "st-bust": "keychain",
+  // The catalogue rows the new designer bases were drawn for.
+  "mw-741443": "poker_chip",   // ז'יטון פוקר
+  "mw-710726": "bag_tag",      // תג לתיק
+  "mw-1298742": "brush_case",  // כיס מברשות
+  "mw-697819": "ashtray",      // מאפרה קטנה
+  "mw-1994754": "ashtray",
+  "mw-1041258": "ashtray",
+  "mw-1227919": "ashtray",
+  "mw-2467622": "ashtray",
+  "mw-935162": "ashtray",
+  "mw-96585": "lighter_case",  // שרוול מצית עם שם
+  "mw-1379807": "lighter_case",
+  "mw-1487479": "lighter_case",
+  "mw-2335039": "dog_tag",     // דיסקית צבאית
 };
 
 /** Otherwise the drawing tells us what shape it is. */
