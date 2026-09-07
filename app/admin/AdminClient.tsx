@@ -11,15 +11,17 @@ import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { estimateCost, parseHours, fmtHours, type CostSettings } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
+import ApprovalsTab from "@/components/admin/ApprovalsTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "products" | "stock" | "materials" | "params" | "emblems" | "backup";
+type Tab = "products" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "products", label: "מוצרים" },
+  { id: "approvals", label: "מודלים לאישור" },
   { id: "stock", label: "מלאי" },
   { id: "materials", label: "גלילים" },
   { id: "params", label: "פרמטרים" },
@@ -140,6 +142,7 @@ export default function AdminClient() {
       </div>
 
       {tab === "products" && <ProductsTab />}
+      {tab === "approvals" && <ApprovalsTab />}
       {tab === "stock" && <StockTab />}
       {tab === "materials" && <MaterialsTab />}
       {tab === "params" && <ParamsTab />}
@@ -791,7 +794,7 @@ function BackupTab() {
   return (
     <div className="max-w-3xl grid gap-5">
       {/* ── save straight from the browser (phone included) ─────────────── */}
-      <AdminSaveToSite json={siteFile} />
+      <AdminSaveToSite json={siteFile} title="שמירה ישירות לאתר" what="המחירים והמלאי שקבעת" />
 
       {/* ── save by hand: download, drop into public/, push ─────────────── */}
       <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900">

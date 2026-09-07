@@ -17,7 +17,7 @@ import { cn } from "@/lib/cn";
 // a credential is the last thing that should live in it.
 
 const DEFAULT_REPO = "AYochelman/unit3d";
-const FILE_PATH = "public/admin-settings.json";
+const DEFAULT_FILE = "public/admin-settings.json";
 const TOKEN_URL = "https://github.com/settings/personal-access-tokens/new";
 
 /** UTF-8 safe base64 — btoa alone throws on anything outside Latin-1. */
@@ -30,7 +30,19 @@ function toBase64(text: string): string {
 
 type Msg = { ok: boolean; text: string };
 
-export default function AdminSaveToSite({ json }: { json: () => string }) {
+export default function AdminSaveToSite({
+  json,
+  path = DEFAULT_FILE,
+  title = "שמירה לאתר (מהטלפון)",
+  what = "המחירים",
+}: {
+  json: () => string;
+  /** Which file in the repository this button writes. */
+  path?: string;
+  title?: string;
+  /** What the owner is saving, for the confirmation line. */
+  what?: string;
+}) {
   const [repo, setRepo] = useState(DEFAULT_REPO);
   const [branch, setBranch] = useState("main");
   const [token, setToken] = useState("");
@@ -44,7 +56,7 @@ export default function AdminSaveToSite({ json }: { json: () => string }) {
     }
     setBusy(true);
     setMsg(null);
-    const api = `https://api.github.com/repos/${repo.trim()}/contents/${FILE_PATH}`;
+    const api = `https://api.github.com/repos/${repo.trim()}/contents/${path}`;
     const headers: Record<string, string> = {
       Authorization: `Bearer ${token.trim()}`,
       Accept: "application/vnd.github+json",
@@ -102,10 +114,10 @@ export default function AdminSaveToSite({ json }: { json: () => string }) {
 
   return (
     <div className="p-4 rounded-2xl border border-flame/40 bg-flame/5">
-      <h2 className="font-black text-lg mb-1">שמירה ישירות לאתר</h2>
+      <h2 className="font-black text-lg mb-1">{title}</h2>
       <p className="text-sm text-ink-300 leading-relaxed mb-3">
-        עובד גם מהטלפון, בלי מחשב. הכפתור כותב את ההגדרות ל-GitHub, האתר נבנה מחדש לבד,
-        ותוך כדקה כל מי שנכנס רואה את המחירים והמלאי שקבעת. המיילים של רשימת ההמתנה לא נכללים בקובץ.
+        עובד גם מהטלפון, בלי מחשב. הכפתור כותב ל-GitHub, האתר נבנה מחדש לבד,
+        ותוך כדקה {what} באוויר. המיילים של רשימת ההמתנה לא נכללים בקובץ.
       </p>
 
       <div className="grid gap-2 sm:grid-cols-2 mb-2">

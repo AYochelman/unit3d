@@ -11,7 +11,9 @@
     "emblems": "node scripts/fetch-emblems.mjs",
     "import:makerworld": "node scripts/import-makerworld.mjs",
     "fetch:images": "node scripts/fetch-images.mjs",
-    "sync:collections": "node scripts/sync-collections.mjs"
+    "sync:collections": "node scripts/sync-collections.mjs",
+    "collect:candidates": "node scripts/collect-candidates.mjs",
+    "apply:approvals": "node scripts/apply-approvals.mjs"
   },
   "dependencies": {
     "next": "^16.2.6",
