@@ -34,6 +34,7 @@ import {
 
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 const RAW = path.join(ROOT, "data", "makerworld-raw.json");
+const PENDING = path.join(ROOT, "data", "pending-models.json");
 const PROFILE = process.env.MAKERWORLD_PROFILE || "Erez.yoch";
 
 const DRY = process.argv.includes("--dry");
@@ -47,7 +48,6 @@ const COLLECTION_SHELF = [
   [/pet/i, "pets"],
   [/smok|cigar|ashtray/i, "smoke"],
   [/movie|series|screen|film/i, "screen"],
-  [/b2b|business|buisness/i, "b2b"],
 ];
 const shelfForCollection = (name) => COLLECTION_SHELF.find(([re]) => re.test(name))?.[1] ?? null;
 
@@ -161,6 +161,34 @@ async function readCollections(page) {
     log(c.d(`  ${text}`));
   }
   return [...out.values()];
+}
+
+/**
+ * Models queued by hand, waiting to be imported.
+ *
+ * Reading the collection pages needs a browser MakerWorld will talk to, and
+ * some nights it will not talk to a server at all. The details API always
+ * answers, so a model whose id is known can be imported from anywhere — which
+ * makes this the escape hatch: drop ids in data/pending-models.json and the
+ * next run picks them up whether or not it could open a single collection.
+ */
+function pendingIds() {
+  if (!fs.existsSync(PENDING)) return [];
+  const out = [];
+  for (const group of JSON.parse(fs.readFileSync(PENDING, "utf8")).pending ?? []) {
+    for (const id of group.ids ?? []) out.push({ id: String(id), shelf: shelfForCollection(group.collection || "") });
+  }
+  return out;
+}
+
+/** Drops the ids that just landed, so the queue only ever holds real work. */
+function clearPending(done) {
+  if (!fs.existsSync(PENDING) || !done.size) return;
+  const doc = JSON.parse(fs.readFileSync(PENDING, "utf8"));
+  doc.pending = (doc.pending ?? [])
+    .map((g) => ({ ...g, ids: (g.ids ?? []).filter((id) => !done.has(String(id))) }))
+    .filter((g) => g.ids.length);
+  fs.writeFileSync(PENDING, JSON.stringify(doc, null, 2) + "\n", "utf8");
 }
 
 /**
@@ -322,9 +350,12 @@ async function main() {
     log(c.d("  והערך: העוגיות של makerworld.com מהדפדפן שלך אחרי התחברות."));
   }
 
+  const queued = pendingIds();
+  if (queued.length) log(c.d(`  ${queued.length} מודלים ממתינים ב-data/pending-models.json`));
+
   const known = knownIds();
   const seen = new Set();
-  const fresh = wanted.filter((x) => !known.has(x.id) && !seen.has(x.id) && seen.add(x.id));
+  const fresh = [...wanted, ...queued].filter((x) => !known.has(x.id) && !seen.has(x.id) && seen.add(x.id));
   log(c.b(`\n  ${wanted.length} בקולקציות · ${fresh.length} חדשים\n`));
   if (!fresh.length) { summary([], skipped); return; }
 
@@ -345,6 +376,7 @@ async function main() {
 
   if (DRY) { log(c.d("\n  --dry: לא נכתב קובץ.\n")); return; }
   append(rows);
+  clearPending(new Set(rows.map((r) => r.id.slice(3))));
   summary(rows, skipped);
   log(c.g(`\n  נוספו ${rows.length} מודלים ל-lib/imported.generated.ts\n`));
 }

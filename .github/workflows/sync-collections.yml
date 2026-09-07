@@ -67,7 +67,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/imported.generated.ts lib/localImages.generated.ts data/makerworld-raw.json public/img/catalog
+          git add lib/imported.generated.ts lib/localImages.generated.ts data/makerworld-raw.json data/pending-models.json public/img/catalog
           if git diff --cached --quiet; then
             echo "nothing new"
             echo "changed=false" >> "$GITHUB_OUTPUT"
