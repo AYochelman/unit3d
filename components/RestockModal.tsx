@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Icon from "@/components/ui/Icon";
+import { CONTACT } from "@/lib/contact";
 import Btn from "@/components/ui/Btn";
 import { Field, Input } from "@/components/ui/Field";
 import { MATERIAL_BY_ID } from "@/lib/materials";
@@ -9,8 +10,8 @@ import { useAdminStore } from "@/lib/admin-store";
 import { colorsInStock, DEFAULT_MATERIAL } from "@/lib/inventory";
 import type { MaterialId } from "@/lib/types";
 
-const WA = "https://wa.me/972500000000";
-const MAIL = "hello@unit3d.example.com";
+const WA = CONTACT.whatsapp;
+const MAIL = CONTACT.email;
 
 type Props = {
   open: boolean;

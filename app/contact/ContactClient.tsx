@@ -4,6 +4,7 @@ import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
+import { CONTACT } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
@@ -72,7 +73,7 @@ export default function ContactClient() {
           </Btn>
           <Btn
             as="a"
-            href="https://wa.me/972500000000"
+            href={CONTACT.whatsapp}
             variant="ghost"
             icon="whatsapp"
           >
@@ -346,7 +347,7 @@ export default function ContactClient() {
           </div>
 
           <a
-            href="https://wa.me/972500000000"
+            href={CONTACT.whatsapp}
             className="block p-5 rounded-2xl bg-good/10 border border-good/30 hover:bg-good/15 transition-colors"
           >
             <div className="flex items-center gap-3">
@@ -356,14 +357,14 @@ export default function ContactClient() {
               <div>
                 <div className="font-bold">וואטסאפ ישיר</div>
                 <div className="text-xs text-ink-300" dir="ltr">
-                  052-XXX-XXXX
+                  {CONTACT.phoneDisplay}
                 </div>
               </div>
             </div>
           </a>
 
           <a
-            href="https://instagram.com/unit3d.print"
+            href={CONTACT.instagram}
             className="block p-5 rounded-2xl bg-ink-900 border border-ink-800 hover:border-flame/40 transition-colors"
           >
             <div className="flex items-center gap-3">
@@ -373,7 +374,24 @@ export default function ContactClient() {
               <div>
                 <div className="font-bold">אינסטגרם</div>
                 <div className="text-xs text-ink-400" dir="ltr">
-                  @unit3d.print
+                  {CONTACT.instagramHandle}
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a
+            href={`mailto:${CONTACT.email}`}
+            className="block p-5 rounded-2xl bg-ink-900 border border-ink-800 hover:border-flame/40 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-ink-800 text-flame">
+                <Icon name="mail" size={20} />
+              </span>
+              <div>
+                <div className="font-bold">מייל</div>
+                <div className="text-xs text-ink-400" dir="ltr">
+                  {CONTACT.email}
                 </div>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import { FAQS } from "./data";
+import { CONTACT } from "./contact";
 
 // A small, honest help bot: it matches what you typed against a list of
 // intents and answers from the same facts the site states elsewhere. There is
@@ -175,7 +176,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
     keys: ["דחוף", "מחר", "היום", "אקספרס"],
     text:
       "יש דברים שאפשר לדחוף. תכתוב לי בוואטסאפ מה ומתי, ואני אומר לך ישר אם זה מציאותי — בלי להבטיח תאריך שלא אעמוד בו.",
-    links: [{ label: "וואטסאפ", href: "https://wa.me/972500000000" }],
+    links: [{ label: "וואטסאפ", href: CONTACT.whatsapp }],
     next: ["time", "contact"],
   },
   {
@@ -200,7 +201,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
     keys: ["בן אדם", "לדבר", "טלפון", "וואטסאפ", "whatsapp", "נציג", "אריאל"],
     text: "בשמחה. הכי מהר זה וואטסאפ, ואפשר גם דרך טופס יצירת הקשר.",
     links: [
-      { label: "וואטסאפ", href: "https://wa.me/972500000000" },
+      { label: "וואטסאפ", href: CONTACT.whatsapp },
       { label: "טופס יצירת קשר", href: "/contact" },
     ],
   },
@@ -265,7 +266,7 @@ export const BOT_FALLBACK: BotAnswer = {
   text:
     "על זה אני לא יודע לענות בוודאות, ואני מעדיף לא לנחש. אריאל יענה לך על זה בדיוק — הכי מהר בוואטסאפ.",
   links: [
-    { label: "וואטסאפ", href: "https://wa.me/972500000000" },
+    { label: "וואטסאפ", href: CONTACT.whatsapp },
     { label: "טופס יצירת קשר", href: "/contact" },
     { label: "שאלות נפוצות", href: "/faq" },
   ],

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
+import { CONTACT } from "@/lib/contact";
 
 const SHOP = [
   { href: "/trendy", label: "טרנדי כרגע" },
@@ -47,25 +48,25 @@ export default function Footer() {
             </p>
             <div className="mt-6 flex items-center gap-3">
               <a
-                href="https://wa.me/972500000000"
+                href={CONTACT.whatsapp}
                 aria-label="וואטסאפ"
                 className="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-ink-700 text-ink-300 hover:text-good hover:border-good transition-colors"
               >
                 <Icon name="whatsapp" size={18} />
               </a>
               <a
-                href="https://instagram.com/unit3d.print"
+                href={CONTACT.instagram}
                 aria-label="אינסטגרם"
                 className="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-ink-700 text-ink-300 hover:text-flame hover:border-flame transition-colors"
               >
                 <Icon name="instagram" size={18} />
               </a>
               <a
-                href="https://tiktok.com/@unit3d.print"
-                aria-label="טיקטוק"
+                href={`mailto:${CONTACT.email}`}
+                aria-label="מייל"
                 className="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-ink-700 text-ink-300 hover:text-flame hover:border-flame transition-colors"
               >
-                <Icon name="tiktok" size={18} />
+                <Icon name="mail" size={18} />
               </a>
             </div>
           </div>
