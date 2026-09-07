@@ -28,3 +28,10 @@ export function photoSrc(url?: string): string | undefined {
   }
   return url.startsWith("/") ? `${BASE}${url}` : url;
 }
+
+/**
+ * The same rule for anything else served out of public/ — a video, a poster,
+ * a PDF. `photoSrc` does the work; this name exists so a `<video src>` does
+ * not have to claim to be a photograph.
+ */
+export const assetSrc = photoSrc;
