@@ -224,12 +224,23 @@ async function readCollection(page, col) {
     ids = idsIn(await page.content());
     if (!ids.length) return { blocked: true };
   }
-  for (let i = 0; i < 25; i++) {
-    await page.mouse.wheel(0, 4000);
-    await page.waitForTimeout(900);
+
+  // The list loads twenty at a time. Nudging the mouse wheel does not move a
+  // page whose scroll container is the document, which is why every collection
+  // used to come back with exactly its first page — scroll the document, and
+  // give it several idle rounds before believing it has finished.
+  let stall = 0;
+  for (let i = 0; i < 60 && stall < 6; i++) {
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.keyboard.press("End").catch(() => {});
+    await page.waitForTimeout(1400);
+    for (const b of await page.$$("button")) {
+      const t = (await b.innerText().catch(() => "")).trim().toLowerCase();
+      if (/load more|show more|view more/.test(t)) { await b.click().catch(() => {}); await page.waitForTimeout(1500); }
+    }
     const next = idsIn(await page.content());
-    if (next.length === ids.length) break;
-    ids = next;
+    if (next.length === ids.length) stall++;
+    else { stall = 0; ids = next; }
   }
   return { ids };
 }
