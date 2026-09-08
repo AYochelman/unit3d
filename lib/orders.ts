@@ -97,7 +97,7 @@ export function siteOrigin(): string {
 
 // ─── The message that lands on the phone ─────────────────────────────────────
 /** Where Ariel reads his queue. Short, and the same on every phone. */
-export const ADMIN_URL = "https://ayochelman.github.io/unit3d/admin";
+export const ADMIN_URL = "https://unit-3d.com/admin";
 
 /** The first summary line that opens with this label, without the label. */
 const pick = (summary: string[], label: string): string | null => {

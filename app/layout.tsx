@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   title: "Unit 3D · הדפסות תלת מימד בהתאמה אישית",
   description:
     "מדפסת תלת מימד מקצועית שעובדת עבורך — סמלי יחידות, מתנות לעובדים, פידג'טים, או כל קובץ שתעלה. ישירות מהסטודיו אליך.",
-  metadataBase: new URL("https://unit3d.example.com"),
+  metadataBase: new URL("https://unit-3d.com"),
   openGraph: {
     title: "Unit 3D · הדפסות תלת מימד בהתאמה אישית",
     description: "סמלי יחידות · מתנות לעובדים · פידג'טים · כל רעיון, מודפס.",
