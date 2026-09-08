@@ -401,9 +401,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             <div className="text-xs font-bold text-ink-300 mb-2.5">
               בחירת צבע:{" "}
               <span className="text-ink-100 font-normal">{selectedFilament?.name}</span>
-              {selectedFilament && (
-                <span className="text-ink-500 font-normal"> · {selectedFilament.desc}</span>
-              )}
+              {/* Not the filament's own `desc`: it names the spool that colour
+                  usually comes on ("PLA Matte"), which contradicts the material
+                  actually selected above and read as a promise we were not
+                  making. */}
             </div>
             <div className="flex flex-wrap gap-2.5">
               {colorChoices.map((c) => (

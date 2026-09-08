@@ -1,4 +1,4 @@
-import type { Fidget, Product, ProductArtId, ProductCategory } from "./types";
+import type { Fidget, MaterialId, Product, ProductArtId, ProductCategory } from "./types";
 import { DEFAULT_COST_SETTINGS, estimateCost, fmtHours } from "./costing";
 import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
 import { photoSrc } from "./assets";
@@ -65,6 +65,15 @@ export type ImportedModel = {
    */
   hours: number;
   grams: number;
+  /**
+   * The filament the designer actually sliced with.
+   *
+   * MakerWorld carries it per plate and it is not decoration: an airless tennis
+   * ball is TPU, and listing it as PLA both prices it wrong and promises a
+   * rigid ball. Absent means MakerWorld named nothing we stock, and the shop
+   * falls back to PLA+.
+   */
+  material?: MaterialId;
   /** The AMS plate, when the designer published one. Much slower: colour
    *  changes and the purge tower can triple the time and the filament. */
   hoursAms?: number;
@@ -233,7 +242,9 @@ export function importedProducts(): Product[] {
       art: m.art ?? "lowpoly",
       image: m.image,
       hue: m.hue,
-      material: "pla_plus",
+      // The filament the designer sliced with, when MakerWorld named one we
+      // stock. PLA+ is the fallback, not the assumption.
+      material: m.material ?? "pla_plus",
       colors: m.colors,
       ams: m.colors > 1,
       rating: 4.8,

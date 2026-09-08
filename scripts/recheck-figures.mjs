@@ -19,7 +19,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, c, sleep, fetchDetails, platesFrom, fmtSize } from "./lib/makerworld.mjs";
+import { ROOT, c, sleep, fetchDetails, platesFrom, fmtSize, materialFor } from "./lib/makerworld.mjs";
 
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 const DRY = process.argv.includes("--dry");
@@ -37,6 +37,7 @@ async function main() {
   log(c.b(`\n  בודק ${rows.length} מודלים מול מייקרוורלד\n`));
 
   const changed = [];
+  const remat = [];
   let checked = 0;
   let unreachable = 0;
 
@@ -64,8 +65,24 @@ async function main() {
     if (p.plates) row.plates = p.plates;
     else delete row.plates;
 
+    // The filament the designer actually sliced with. Only set it when the API
+    // names one we stock: an unknown material is not a reason to guess PLA.
+    const mat = materialFor(p.base.filament);
+    if (mat && mat !== (row.material ?? "pla_plus")) {
+      remat.push({ name: row.name, was: row.material ?? "pla_plus", now: mat, type: p.base.filament });
+      row.material = mat;
+    } else if (mat) {
+      row.material = mat;
+    }
+
     if (moved) changed.push({ name: row.name, was, now, factor: now.grams / Math.max(1, was.grams) });
     if (checked % 25 === 0) log(c.d(`   ${checked}/${rows.length}`));
+  }
+
+  if (remat.length) {
+    log(c.b(`\n  ${remat.length} מודלים קיבלו את החומר האמיתי שלהם\n`));
+    for (const r of remat.slice(0, 30)) log(`  ${r.was} → ${c.g(r.now)}  (${r.type})  ${r.name.slice(0, 44)}`);
+    if (remat.length > 30) log(c.d(`  ועוד ${remat.length - 30}`));
   }
 
   changed.sort((a, b) => b.factor - a.factor);
@@ -87,7 +104,7 @@ async function main() {
   }
 
   if (DRY) { log(c.d("\n  --dry: לא נכתב קובץ.\n")); return; }
-  if (!changed.length) { log(c.g("  הכל כבר נכון.\n")); return; }
+  if (!changed.length && !remat.length) { log(c.g("  הכל כבר נכון.\n")); return; }
   // Rewrite the whole module rather than splicing the text: a slice that is one
   // character off produces a file that parses as nothing, which is exactly what
   // the first run of this script did.

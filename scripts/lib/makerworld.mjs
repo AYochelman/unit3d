@@ -177,6 +177,35 @@ export const fmtSize = (grams) =>
  * genuinely BIGGER profiles as sizes: only what is at least 35% heavier and
  * slower than the base, never something lighter, which would be a part.
  */
+/**
+ * What a profile is actually printed in.
+ *
+ * MakerWorld carries the sliced filament per plate — `TPU`, `PETG`, `PLA`,
+ * `PLA-CF` — and it matters: an airless tennis ball is TPU, and selling it as
+ * PLA both prices it wrong and promises a rigid ball that bounces off the wall.
+ * The importer used to stamp every model PLA+ because it never looked.
+ */
+export function filamentOf(instance) {
+  const plates = instance?.extention?.modelInfo?.plates ?? [];
+  const types = plates.flatMap((pl) => (pl.filaments ?? []).map((f) => String(f.type || "")));
+  return types.find(Boolean) ?? "";
+}
+
+/** MakerWorld's filament name → the family this shop sells. */
+export function materialFor(type) {
+  const t = String(type || "").toUpperCase();
+  if (!t) return null;
+  if (t.includes("TPU") || t.includes("TPE")) return "tpu";
+  if (t.includes("PETG") || t.includes("PET")) return "petg";
+  if (t.includes("ABS") || t.includes("ASA")) return "abs";
+  if (t.includes("SILK")) return "pla_silk";
+  if (t.includes("MATTE")) return "pla_matte";
+  if (t.includes("PLA")) return "pla";
+  // PC, PA, nylon, resin: real materials this shop does not stock. Saying so is
+  // better than quietly pricing them as PLA.
+  return null;
+}
+
 /** A profile whose own name says it is a trial piece, not the product. */
 const SAMPLE = /(size ?test|test ?print|\btest(er)?\b|sample|calibrat|\btrial\b|\bdemo\b|preview|fit ?check|sizer)/i;
 
@@ -190,6 +219,7 @@ export function platesFrom(instances = [], defaultInstanceId = null) {
       ams: !!x.needAms,
       dl: x.downloadCount || 0,
       name: x.name || x.title || "",
+      filament: filamentOf(x),
       def: !!x.isDefault || (defaultInstanceId != null && x.id === defaultInstanceId),
     }))
     .filter((x) => x.g > 0 && x.h > 0);

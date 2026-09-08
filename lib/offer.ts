@@ -33,12 +33,16 @@ export function offeredMaterials(
   palette: Filament[],
   want: MaterialId,
 ): Material[] {
-  const wantFamily = familyOf({ id: want, family: all.find((m) => m.id === want)?.family });
-  return all.filter((m) => {
-    if (m.id === want) return true;                                   // the recommendation
-    if (familyOf(m) !== wantFamily) return true;                      // a different job entirely
-    return isMaterialInStock(stock, m.id, filamentsFor(palette, m.id)); // same family: only if we have it
-  });
+  // Only what is on the shelf. An empty spool is not a choice — offering it
+  // asks the customer to pick something and then apologises for it.
+  const live = all.filter((m) => isMaterialInStock(stock, m.id, filamentsFor(palette, m.id)));
+  // Nothing at all: keep the model's own material on screen so the page can
+  // say what is missing rather than showing an empty row.
+  if (!live.length) {
+    const own = all.find((m) => m.id === want);
+    return own ? [own] : [];
+  }
+  return live;
 }
 
 /** The material to land on: the one the model asks for, or a sibling we have. */
