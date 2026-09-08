@@ -138,11 +138,24 @@ export type Fidget = {
 };
 
 // ─── Configurator options ─────────────────────────────────────────────────────
+/**
+ * One spool on the shelf.
+ *
+ * `kind` is what makes a swatch honest. A glow filament is not the pale green
+ * it looks like in daylight, a thermochromic one is two colours depending on
+ * temperature, and a dual-colour silk is two colours at once — painting any of
+ * them as a single flat circle tells the customer the wrong thing.
+ */
+export type FilamentKind = "solid" | "glow" | "shift" | "dual";
+
 export type Filament = {
   id: string;
   name: string;
   hex: string;
   desc: string;
+  kind?: FilamentKind;
+  /** The second colour: what a shift filament changes TO, or the silk's partner. */
+  hex2?: string;
 };
 
 export type FontOpt = {
@@ -207,6 +220,14 @@ export type OrderConfig = {
 };
 
 // ─── Materials (filament families) ───────────────────────────────────────────
+/**
+ * A filament family.
+ *
+ * The seven the shop started with are spelled out so they still autocomplete
+ * and still typo-check, but the owner can add his own from /admin — a spool of
+ * something the list never heard of is a normal Tuesday — so any string is
+ * allowed. `(string & {})` is the trick that keeps both.
+ */
 export type MaterialId =
   | "pla"
   | "pla_plus"
@@ -214,7 +235,8 @@ export type MaterialId =
   | "pla_silk"
   | "petg"
   | "tpu"
-  | "abs";
+  | "abs"
+  | (string & {});
 
 export type Material = {
   id: MaterialId;

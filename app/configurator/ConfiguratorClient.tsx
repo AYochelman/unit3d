@@ -10,7 +10,8 @@ import { Field, Input } from "@/components/ui/Field";
 import ProductArt from "@/components/ProductArt";
 import ProductPreview, { faceKindFor } from "@/components/ProductPreview";
 import DesignCanvas from "@/components/designer/DesignCanvas";
-import { SHAPES, FONTS, FILAMENTS, SIZES, FIDGETS } from "@/lib/data";
+import { SHAPES, FONTS, SIZES, FIDGETS } from "@/lib/data";
+import { useFilaments } from "@/lib/palette";
 import { CONFIG_PRODUCTS, CONFIG_PRODUCT_BY_ID, PRODUCT_BY_ID } from "@/lib/products";
 import { MATERIAL_BY_ID, materialFromFilamentDesc } from "@/lib/materials";
 import { designColorCount, designElementPrice, designSummary, designToSvg, emptyDesign, facePath } from "@/lib/design";
@@ -117,6 +118,8 @@ export default function ConfiguratorClient({
   initialProduct?: ConfigProductId;
   fromItem?: string;
 }) {
+  // The built-in palette plus any spool the owner added in /admin.
+  const FILAMENTS = useFilaments();
   // Dropped as soon as the customer picks a different base in the picker —
   // from that point on they are designing that base, not the product.
   const [itemId, setItemId] = useState(fromItem);

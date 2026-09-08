@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FIDGETS, FILAMENTS } from "@/lib/data";
+import { FIDGETS } from "@/lib/data";
+import { useFilaments } from "@/lib/palette";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -23,6 +24,7 @@ import { useAdminStore } from "@/lib/admin-store";
 import { useLivePrice } from "@/lib/live-price";
 import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
+import ColorSwatch from "@/components/ui/ColorSwatch";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
 const AMS_OPTIONS = [
@@ -33,6 +35,8 @@ const AMS_OPTIONS = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function FidgetDetailClient({ id }: { id: string }) {
+  // The built-in palette plus any spool the owner added in /admin.
+  const FILAMENTS = useFilaments();
   const addItem = useOrderStore((s) => s.addItem);
   const cartCount = useOrderStore((s) => s.items.length);
 
@@ -395,8 +399,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                       : "border-ink-700/50",
                     !isColorInStock(stock, material, c.id) && "opacity-35",
                   )}
-                  style={{ backgroundColor: c.hex }}
                 >
+                  <ColorSwatch filament={c} size={32} className="absolute inset-[2px] !w-auto !h-auto" />
                   {!isColorInStock(stock, material, c.id) && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />

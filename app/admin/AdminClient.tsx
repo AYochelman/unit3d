@@ -4,10 +4,13 @@ import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/Field";
-import { FIDGETS, FILAMENTS } from "@/lib/data";
+import { FIDGETS } from "@/lib/data";
+import { useFilaments, useMaterials } from "@/lib/palette";
+import ColorSwatch, { KIND_LABEL } from "@/components/ui/ColorSwatch";
+import type { Filament, FilamentKind, Material } from "@/lib/types";
+import { MATERIAL_BY_ID } from "@/lib/materials";
 import { PRODUCTS, CONFIG_PRODUCTS, fidgetGrams, CATEGORY_LABEL } from "@/lib/products";
 import { DEFAULT_MATERIAL, buyAdvice, colorsInStock, isColorInStock, isMaterialInStock, type Sellable } from "@/lib/inventory";
-import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { estimateCost, parseHours, fmtHours, type CostSettings } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
@@ -299,15 +302,82 @@ function Tile({ label, value, tone }: { label: string; value: string; tone?: "go
 }
 
 // ─── Materials ───────────────────────────────────────────────────────────────
+/**
+ * Add a filament family the built-in list never heard of.
+ *
+ * The shop is not a fixed menu of seven materials: a spool of something new
+ * turns up and it has to be sellable that evening, not after a deploy.
+ */
+function AddMaterialForm() {
+  const addMaterial = useAdminStore((s) => s.addMaterial);
+  const [name, setName] = useState("");
+  const [short, setShort] = useState("");
+  const [price, setPrice] = useState(120);
+  const [add, setAdd] = useState(0);
+  const [desc, setDesc] = useState("");
+
+  const submit = () => {
+    const clean = name.trim();
+    if (!clean) return;
+    const id = `custom_${clean.replace(/\s+/g, "_").toLowerCase()}`;
+    const m: Material = {
+      id,
+      name: clean,
+      short: (short.trim() || clean).slice(0, 10),
+      desc: desc.trim() || "חומר שהוספת.",
+      spoolPriceILS: Math.max(0, price),
+      spoolKg: 1,
+      priceAdd: Math.max(0, add),
+    };
+    addMaterial(m);
+    setName(""); setShort(""); setDesc(""); setPrice(120); setAdd(0);
+  };
+
+  return (
+    <div className="mt-4 p-4 rounded-2xl border border-flame/35 bg-flame/5">
+      <div className="font-bold mb-1">הוספת חומר חדש</div>
+      <p className="text-xs text-ink-400 mb-3">
+        כל מה שקנית ולא ברשימה — נילון, שרף, פילמנט מיוחד. מופיע מיד בכל האתר.
+      </p>
+      <div className="grid sm:grid-cols-2 gap-2">
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="שם החומר (למשל: PLA-CF סיבי פחמן)"
+          className="h-10 px-3 rounded-lg bg-ink-950 border border-ink-800 text-sm outline-none focus:border-flame" />
+        <input value={short} onChange={(e) => setShort(e.target.value)} placeholder="קיצור (PLA-CF)" dir="ltr"
+          className="h-10 px-3 rounded-lg bg-ink-950 border border-ink-800 text-sm font-mono outline-none focus:border-flame" />
+        <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="תיאור קצר ללקוח"
+          className="h-10 px-3 rounded-lg bg-ink-950 border border-ink-800 text-sm outline-none focus:border-flame sm:col-span-2" />
+        <label className="flex items-center gap-2 text-xs text-ink-400">
+          ₪ לגליל
+          <input type="number" min={0} value={price} onChange={(e) => setPrice(Number(e.target.value))} dir="ltr"
+            className="h-10 w-24 px-2 rounded-lg bg-ink-950 border border-ink-800 font-mono text-center outline-none focus:border-flame" />
+        </label>
+        <label className="flex items-center gap-2 text-xs text-ink-400">
+          תוספת למחיר המוצר ₪
+          <input type="number" min={0} value={add} onChange={(e) => setAdd(Number(e.target.value))} dir="ltr"
+            className="h-10 w-24 px-2 rounded-lg bg-ink-950 border border-ink-800 font-mono text-center outline-none focus:border-flame" />
+        </label>
+      </div>
+      <button type="button" onClick={submit} disabled={!name.trim()}
+        className="mt-3 px-4 h-10 rounded-lg font-bold text-sm bg-flame text-white disabled:opacity-40">
+        הוסף חומר
+      </button>
+    </div>
+  );
+}
+
 function MaterialsTab() {
   const settings = useAdminStore((s) => s.settings);
   const setSpoolPrice = useAdminStore((s) => s.setSpoolPrice);
+  const materials = useMaterials();
+  const custom = useAdminStore((s) => s.materials);
+  const removeMaterial = useAdminStore((s) => s.removeMaterial);
+  const isCustom = (id: string) => custom.some((m) => m.id === id);
   return (
     <div className="max-w-3xl">
       <p className="text-sm text-ink-400 mb-4">מחיר גליל 1 ק&quot;ג בשקלים כולל מע&quot;מ, לפי מה שאתה קונה בפועל. ברירת המחדל היא מחיר שוק ישראלי טיפוסי.</p>
       <div className="rounded-2xl border border-ink-800 divide-y divide-ink-800">
-        {MATERIALS.map((m) => {
-          const price = settings.spoolPrices[m.id];
+        {materials.map((m) => {
+          const price = settings.spoolPrices[m.id] ?? m.spoolPriceILS;
           return (
             <div key={m.id} className="flex flex-wrap items-center gap-3 p-4">
               <div className="min-w-[90px] font-mono font-bold text-ink-100" dir="ltr">{m.short}</div>
@@ -328,10 +398,17 @@ function MaterialsTab() {
                   dir="ltr"
                 />
               </label>
+              {isCustom(m.id) && (
+                <button type="button" onClick={() => removeMaterial(m.id)}
+                  className="text-[11px] text-ink-500 hover:text-flame underline underline-offset-2">
+                  הסר
+                </button>
+              )}
             </div>
           );
         })}
       </div>
+      <AddMaterialForm />
     </div>
   );
 }
@@ -350,6 +427,82 @@ function sellableItems(): Sellable[] {
   ];
 }
 
+/**
+ * Add a spool the palette never heard of, including the ones a flat circle
+ * cannot describe: glow in the dark, colour-changing, dual-colour silk.
+ */
+function AddColorForm() {
+  const addColor = useAdminStore((s) => s.addColor);
+  const [name, setName] = useState("");
+  const [hex, setHex] = useState("#7EE787");
+  const [hex2, setHex2] = useState("#F2F2EF");
+  const [kind, setKind] = useState<FilamentKind>("solid");
+  const [desc, setDesc] = useState("");
+
+  const preview: Filament = { id: "preview", name, hex, hex2, kind, desc };
+
+  const submit = () => {
+    const clean = name.trim();
+    if (!clean) return;
+    addColor({
+      id: `custom_${clean.replace(/\s+/g, "_").toLowerCase()}`,
+      name: clean,
+      hex,
+      ...(kind === "solid" ? {} : { hex2 }),
+      kind,
+      desc: desc.trim() || KIND_LABEL[kind],
+    });
+    setName(""); setDesc("");
+  };
+
+  return (
+    <div className="p-4 rounded-2xl border border-flame/35 bg-flame/5">
+      <div className="font-bold mb-1">הוספת צבע חדש</div>
+      <p className="text-xs text-ink-400 mb-3">
+        גם המיוחדים: זוהר בחושך, מחליף צבע בחום, ודו-גוני. הצבע נוסף לכל החומרים ומופיע מיד באתר.
+      </p>
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        {(["solid", "glow", "shift", "dual"] as FilamentKind[]).map((k) => (
+          <button key={k} type="button" onClick={() => setKind(k)}
+            className={cn("px-3 h-9 rounded-lg text-xs font-semibold border transition-colors",
+              kind === k ? "border-flame text-flame bg-flame/10" : "border-ink-800 text-ink-400 hover:border-ink-600")}>
+            {KIND_LABEL[k]}
+          </button>
+        ))}
+      </div>
+      <div className="grid sm:grid-cols-2 gap-2">
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="שם הצבע (למשל: ירוק זוהר)"
+          className="h-10 px-3 rounded-lg bg-ink-950 border border-ink-800 text-sm outline-none focus:border-flame" />
+        <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="הערה קצרה (אופציונלי)"
+          className="h-10 px-3 rounded-lg bg-ink-950 border border-ink-800 text-sm outline-none focus:border-flame" />
+      </div>
+      <div className="flex flex-wrap items-center gap-4 mt-3">
+        <label className="flex items-center gap-2 text-xs text-ink-400">
+          {kind === "shift" ? "צבע בקור" : kind === "dual" ? "צבע ראשון" : "צבע"}
+          <input type="color" value={hex} onChange={(e) => setHex(e.target.value)}
+            className="h-9 w-14 rounded-lg bg-ink-950 border border-ink-800 cursor-pointer" />
+        </label>
+        {kind !== "solid" && kind !== "glow" && (
+          <label className="flex items-center gap-2 text-xs text-ink-400">
+            {kind === "shift" ? "צבע בחום" : "צבע שני"}
+            <input type="color" value={hex2} onChange={(e) => setHex2(e.target.value)}
+              className="h-9 w-14 rounded-lg bg-ink-950 border border-ink-800 cursor-pointer" />
+          </label>
+        )}
+        <div className="flex items-center gap-2 text-xs text-ink-400">
+          תצוגה
+          <ColorSwatch filament={preview} size={36} />
+        </div>
+        <span className="flex-1" />
+        <button type="button" onClick={submit} disabled={!name.trim()}
+          className="px-4 h-10 rounded-lg font-bold text-sm bg-flame text-white disabled:opacity-40">
+          הוסף צבע
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function StockTab() {
   const stock = useAdminStore((s) => s.stock);
   const setStock = useAdminStore((s) => s.setStock);
@@ -363,7 +516,11 @@ function StockTab() {
     () => buyAdvice(stock, interest, items, settings.spoolPrices),
     [stock, interest, items, settings.spoolPrices],
   );
-  const allColorIds = useMemo(() => FILAMENTS.map((f) => f.id), []);
+  const materials = useMaterials();
+  const filaments = useFilaments();
+  const customColors = useAdminStore((s) => s.colors);
+  const removeColor = useAdminStore((s) => s.removeColor);
+  const allColorIds = useMemo(() => filaments.map((f) => f.id), [filaments]);
 
   const blockedCount = items.filter((i) => !isMaterialInStock(stock, i.material ?? DEFAULT_MATERIAL)).length;
 
@@ -381,8 +538,8 @@ function StockTab() {
 
       {/* ── material × colour grid ─────────────────────────────────────── */}
       <div className="rounded-2xl border border-ink-800 divide-y divide-ink-800">
-        {MATERIALS.map((m) => {
-          const live = colorsInStock(stock, m.id);
+        {materials.map((m) => {
+          const live = colorsInStock(stock, m.id, filaments);
           const out = allColorIds.length - live.length;
           const blocked = items.filter((i) => (i.material ?? DEFAULT_MATERIAL) === m.id).length;
           return (
@@ -414,22 +571,22 @@ function StockTab() {
                 </button>
               </div>
               <div className="flex flex-wrap gap-2.5">
-                {FILAMENTS.map((c) => {
+                {filaments.map((c) => {
                   const have = isColorInStock(stock, m.id, c.id);
                   return (
                     <button
                       key={c.id}
                       type="button"
-                      title={`${c.name} · ${have ? "במלאי" : "נגמר"}`}
+                      title={`${c.name}${c.kind && c.kind !== "solid" ? ` · ${KIND_LABEL[c.kind]}` : ""} · ${have ? "במלאי" : "נגמר"}`}
                       aria-label={`${m.short} ${c.name}`}
                       aria-pressed={have}
                       onClick={() => setStock(m.id, c.id, !have)}
                       className={cn(
-                        "h-9 w-9 rounded-full border-2 relative transition-all hover:scale-110 active:scale-95",
-                        have ? "border-good/70" : "border-ink-800 opacity-35",
+                        "rounded-full relative transition-all hover:scale-110 active:scale-95",
+                        have ? "text-good" : "opacity-35",
                       )}
-                      style={{ backgroundColor: c.hex }}
                     >
+                      <ColorSwatch filament={c} size={36} selected={have} />
                       {!have && (
                         <span className="absolute inset-0 flex items-center justify-center">
                           <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />
@@ -442,6 +599,26 @@ function StockTab() {
             </div>
           );
         })}
+      </div>
+
+      {/* ── spools the owner added ─────────────────────────────────────── */}
+      <div className="space-y-3">
+        <AddColorForm />
+        {customColors.length > 0 && (
+          <div className="flex flex-wrap gap-3 p-4 rounded-2xl border border-ink-800">
+            {customColors.map((c) => (
+              <div key={c.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-ink-800">
+                <ColorSwatch filament={c} size={24} />
+                <span className="text-sm">{c.name}</span>
+                <span className="text-[11px] text-ink-500">{KIND_LABEL[c.kind ?? "solid"]}</span>
+                <button type="button" onClick={() => removeColor(c.id)}
+                  className="text-[11px] text-ink-500 hover:text-flame underline underline-offset-2">
+                  הסר
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── what to buy next ───────────────────────────────────────────── */}
@@ -532,7 +709,7 @@ function StockTab() {
               </thead>
               <tbody className="divide-y divide-ink-800">
                 {[...interest].reverse().map((r) => {
-                  const f = FILAMENTS.find((x) => x.id === r.color);
+                  const f = filaments.find((x) => x.id === r.color);
                   return (
                     <tr key={r.id}>
                       <td className="p-2">{r.itemName}</td>

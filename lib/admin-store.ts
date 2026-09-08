@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import type { MaterialId } from "./types";
+import type { Filament, Material, MaterialId } from "./types";
 import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
 import { stockKey, type Interest, type StockMap } from "./inventory";
 import type { ImportedShelf } from "./imported";
@@ -47,6 +47,10 @@ export type AdminExport = {
    * the shelf it was imported onto.
    */
   shelves?: Record<string, ImportedShelf[]>;
+  /** Filament families the owner added himself, beyond the seven built in. */
+  materials?: Material[];
+  /** Colours he added — including glow, colour-changing and dual-colour spools. */
+  colors?: Filament[];
 };
 
 type AdminState = {
@@ -59,6 +63,16 @@ type AdminState = {
   pricing: PricingMode;
   /** Live shelf moves, applied to every listing the moment they are made. */
   shelves: Record<string, ImportedShelf[]>;
+  /**
+   * Spools the shop bought that the built-in lists never heard of.
+   *
+   * A filament shop is not a fixed menu — a glow-in-the-dark, a thermochromic
+   * that turns red in the hand, a dual-colour silk. These live beside the seven
+   * built-in families and the twelve built-in colours rather than replacing
+   * them, so an update to the code never wipes what the owner added.
+   */
+  materials: Material[];
+  colors: Filament[];
   /**
    * The GitHub token that lets the admin publish.
    *
@@ -76,6 +90,10 @@ type AdminState = {
   setGhToken(t: string): void;
   setShelves(productId: string, shelves: ImportedShelf[]): void;
   clearShelves(productId: string): void;
+  addMaterial(m: Material): void;
+  removeMaterial(id: MaterialId): void;
+  addColor(c: Filament): void;
+  removeColor(id: string): void;
   setStock(material: MaterialId, color: string, available: boolean): void;
   setMaterialStock(material: MaterialId, colors: string[], available: boolean): void;
   addInterest(i: Omit<Interest, "id" | "at">): void;
@@ -95,6 +113,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   interest: [],
   pricing: DEFAULT_PRICING,
   shelves: {},
+  materials: [],
+  colors: [],
   ghToken: "",   // hydrated from the device on first render, see AdminUnlock
 
   unlock: (pin) => {
@@ -137,6 +157,16 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
   setPricing: (patch) => set((s) => ({ pricing: { ...s.pricing, ...patch } })),
 
+  addMaterial: (m) =>
+    set((s) => ({
+      // Re-adding an id replaces it rather than duplicating the row.
+      materials: [...s.materials.filter((x) => x.id !== m.id), m],
+      settings: { ...s.settings, spoolPrices: { ...s.settings.spoolPrices, [m.id]: m.spoolPriceILS } },
+    })),
+  removeMaterial: (id) => set((s) => ({ materials: s.materials.filter((x) => x.id !== id) })),
+  addColor: (c) => set((s) => ({ colors: [...s.colors.filter((x) => x.id !== c.id), c] })),
+  removeColor: (id) => set((s) => ({ colors: s.colors.filter((x) => x.id !== id) })),
+
   setStock: (material, color, available) =>
     set((s) => {
       const next = { ...s.stock };
@@ -177,11 +207,11 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     }),
 
   resetAll: () =>
-    set({ settings: DEFAULT_COST_SETTINGS, overrides: {}, stock: {}, interest: [], pricing: DEFAULT_PRICING }),
+    set({ settings: DEFAULT_COST_SETTINGS, overrides: {}, stock: {}, interest: [], pricing: DEFAULT_PRICING, materials: [], colors: [] }),
 
   exportJson: () => {
-    const { settings, overrides, stock, interest, pricing, shelves } = get();
-    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, interest, shelves };
+    const { settings, overrides, stock, interest, pricing, shelves, materials, colors } = get();
+    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, interest, shelves, materials, colors };
     return JSON.stringify(payload, null, 2);
   },
 
@@ -196,6 +226,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         stock: parsed.stock ?? {},
         interest: parsed.interest ?? [],
         shelves: parsed.shelves ?? {},
+        materials: parsed.materials ?? [],
+        colors: parsed.colors ?? [],
       });
       return true;
     } catch {

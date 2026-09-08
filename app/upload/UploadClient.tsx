@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
-import { FILAMENTS } from "@/lib/data";
+import { useFilaments } from "@/lib/palette";
 import { useOrderStore } from "@/lib/order-store";
 import { cn } from "@/lib/cn";
 
@@ -23,6 +23,8 @@ function formatSize(b: number): string {
 }
 
 export default function UploadClient() {
+  // The built-in palette plus any spool the owner added in /admin.
+  const FILAMENTS = useFilaments();
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
   const inputRef = useRef<HTMLInputElement>(null);

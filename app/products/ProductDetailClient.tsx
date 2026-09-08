@@ -6,7 +6,7 @@ import Pill from "@/components/ui/Pill";
 import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
 import { Field, Input } from "@/components/ui/Field";
-import { FILAMENTS } from "@/lib/data";
+import { useFilaments } from "@/lib/palette";
 import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
@@ -28,6 +28,7 @@ import { fmtILS } from "@/lib/format";
 import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
+import ColorSwatch from "@/components/ui/ColorSwatch";
 
 /** MakerWorld plates have no names, so sizes are named by their order. */
 const PLATE_LABEL = ["קטן", "בינוני", "גדול", "ענק"];
@@ -39,6 +40,8 @@ const AMS_OPTIONS = [
 ] as const;
 
 export default function ProductDetailClient({ id }: { id: string }) {
+  // The built-in palette plus any spool the owner added in /admin.
+  const FILAMENTS = useFilaments();
   const p = PRODUCT_BY_ID[id];
   const addItem = useOrderStore((s) => s.addItem);
   const cartCount = useOrderStore((s) => s.items.length);
@@ -359,8 +362,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
                     colorId === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50",
                     !isColorInStock(stock, material, c.id) && "opacity-35",
                   )}
-                  style={{ backgroundColor: c.hex }}
                 >
+                  <ColorSwatch filament={c} size={32} className="absolute inset-[2px] !w-auto !h-auto" />
                   {!isColorInStock(stock, material, c.id) && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />

@@ -17,12 +17,24 @@ export const stockKey = (material: MaterialId, color: string): StockKey => `${ma
 export const isColorInStock = (stock: StockMap, material: MaterialId, color: string): boolean =>
   stock[stockKey(material, color)] !== false;
 
-/** A material is usable while at least one of its colours is on the shelf. */
-export const isMaterialInStock = (stock: StockMap, material: MaterialId): boolean =>
-  FILAMENTS.some((f) => isColorInStock(stock, material, f.id));
+/**
+ * A material is usable while at least one of its colours is on the shelf.
+ *
+ * The palette is passed in wherever the caller knows about the owner's own
+ * spools; the built-in list is the fallback for the places that do not, so a
+ * colour added in /admin is never the reason a material looks sold out.
+ */
+export const isMaterialInStock = (
+  stock: StockMap,
+  material: MaterialId,
+  palette: { id: string }[] = FILAMENTS,
+): boolean => palette.some((f) => isColorInStock(stock, material, f.id));
 
-export const colorsInStock = (stock: StockMap, material: MaterialId): string[] =>
-  FILAMENTS.filter((f) => isColorInStock(stock, material, f.id)).map((f) => f.id);
+export const colorsInStock = (
+  stock: StockMap,
+  material: MaterialId,
+  palette: { id: string }[] = FILAMENTS,
+): string[] => palette.filter((f) => isColorInStock(stock, material, f.id)).map((f) => f.id);
 
 /** Default material for anything that does not name one. */
 export const DEFAULT_MATERIAL: MaterialId = "pla_plus";

@@ -8,12 +8,14 @@ import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import { Field, Input } from "@/components/ui/Field";
 import ProductArt from "@/components/ProductArt";
-import { FILAMENTS, FIDGETS } from "@/lib/data";
+import { FIDGETS } from "@/lib/data";
+import { useFilaments } from "@/lib/palette";
 import { PRODUCT_BY_ID } from "@/lib/products";
 import { EXTRA_COLOR_PRICE, PERSONALIZE_PRICE } from "@/lib/personalize";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import ColorSwatch from "@/components/ui/ColorSwatch";
 
 /**
  * "Put my own text on it" — one page, the same for every product in the shop.
@@ -25,6 +27,8 @@ import { cn } from "@/lib/cn";
  * thing to type is the text.
  */
 export default function PersonalizeClient() {
+  // The built-in palette plus any spool the owner added in /admin.
+  const FILAMENTS = useFilaments();
   const params = useSearchParams();
   const router = useRouter();
   const setOrder = useOrderStore((s) => s.setOrder);
@@ -136,8 +140,8 @@ export default function PersonalizeClient() {
                 "relative h-9 w-9 rounded-full border-2 transition-all hover:scale-110 active:scale-95",
                 colorId === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50",
               )}
-              style={{ backgroundColor: c.hex }}
             >
+              <ColorSwatch filament={c} size={28} className="absolute inset-[2px] !w-auto !h-auto" />
               {c.id === baseColor.id && (
                 <span className="absolute -top-1 -left-1 h-3.5 w-3.5 rounded-full bg-good text-ink-950 flex items-center justify-center">
                   <Icon name="check" size={9} strokeWidth={3} />
