@@ -245,6 +245,48 @@ async function readCollection(page, col) {
   return { ids };
 }
 
+/**
+ * The models he liked.
+ *
+ * A like is weaker than a collection: a collection is "I want this", a like is
+ * "this is good". So likes do NOT go on a shelf — they land in /admin →
+ * "מודלים לאישור", where he decides per model, which is the standing rule for
+ * anything the shop did not choose itself.
+ *
+ * MakerWorld has moved this tab around, so the URL is tried rather than
+ * assumed, and the log says which one answered.
+ */
+async function readLikes(page) {
+  const urls = [
+    `https://makerworld.com/en/@${PROFILE}/likes`,
+    `https://makerworld.com/en/@${PROFILE}?tab=likes`,
+    `https://makerworld.com/en/@${PROFILE}/like`,
+    `https://makerworld.com/@${PROFILE}/likes`,
+  ];
+  for (const url of urls) {
+    if (!(await open(page, url))) continue;
+    await page.waitForTimeout(4000);
+    let ids = idsIn(await page.content());
+    if (!ids.length) { await page.waitForTimeout(5000); ids = idsIn(await page.content()); }
+    if (!ids.length) continue;
+
+    // Same twenty-at-a-time list as a collection.
+    let stall = 0;
+    for (let i = 0; i < 60 && stall < 6; i++) {
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await page.keyboard.press("End").catch(() => {});
+      await page.waitForTimeout(1400);
+      const next = idsIn(await page.content());
+      if (next.length === ids.length) stall++;
+      else { stall = 0; ids = next; }
+    }
+    log(c.g(`  לייקים: ${ids.length} מודלים`) + c.d(`  (${url})`));
+    return ids;
+  }
+  log(c.y("  לייקים: לא נקראו — הטאב לא נענה או שהוא מוסתר בלי התחברות"));
+  return [];
+}
+
 /** Ids the shop already knows about, whatever shelf or state they are in. */
 function knownIds() {
   const src = fs.readFileSync(OUT, "utf8");
@@ -351,6 +393,16 @@ async function main() {
       const shelf = shelfForCollection(col.name) ?? shelfForCollection(col.slug);
       for (const id of res.ids) wanted.push({ id, shelf });
     }
+    // Likes are read in the same session, while the cookie is warm.
+    const liked = await readLikes(page);
+    const knownNow = knownIds();
+    const fresh = liked.filter((id) => !knownNow.has(id));
+    fs.writeFileSync(
+      path.join(ROOT, "data", "liked-models.json"),
+      `${JSON.stringify({ readAt: new Date().toISOString(), all: liked, fresh }, null, 2)}\n`,
+      "utf8",
+    );
+    if (fresh.length) log(c.b(`  ${fresh.length} לייקים שעדיין לא בחנות — נכנסים לתור האישור`));
   } finally {
     await b.close();
   }

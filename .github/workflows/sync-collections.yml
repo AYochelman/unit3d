@@ -1,4 +1,5 @@
-# Adds to the shop whatever the owner saved on MakerWorld.
+# Adds to the shop whatever the owner saved on MakerWorld, and queues what he
+# liked.
 #
 # He curates from the Bambu Lab app on his phone: a model he wants goes into one
 # of his collections. This reads those collections every night, appends the ones
@@ -54,6 +55,19 @@ jobs:
           MAKERWORLD_COOKIE: ${{ secrets.MAKERWORLD_COOKIE }}
         run: npm run sync:collections
 
+      # A like is not a decision. What he liked and does not already own goes
+      # to /admin → "מודלים לאישור" so he picks per model, which is the rule
+      # for everything the shop did not choose itself.
+      - name: Queue what he liked
+        run: |
+          if [ -s data/liked-models.json ]; then
+            IDS=$(node -e "const j=require('./data/liked-models.json');process.stdout.write((j.fresh||[]).join(' '))")
+            if [ -n "$IDS" ]; then npm run add:candidates -- $IDS; else echo "no new likes"; fi
+          else
+            echo "no likes file"
+          fi
+        continue-on-error: true
+
       - name: Fetch the new photos
         run: npm run fetch:images
         continue-on-error: true
@@ -67,13 +81,18 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/imported.generated.ts lib/localImages.generated.ts data/makerworld-raw.json data/pending-models.json public/img/catalog
+          # One path a step did not produce must not throw away the rest.
+          for p in lib/imported.generated.ts lib/localImages.generated.ts \
+                   lib/candidates.generated.ts data/makerworld-raw.json \
+                   data/pending-models.json data/liked-models.json public/img/catalog; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
           if git diff --cached --quiet; then
             echo "nothing new"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "Add the models saved to the MakerWorld collections"
+          git commit -m "Add what was saved on MakerWorld, and queue what was liked"
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
