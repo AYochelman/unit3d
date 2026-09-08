@@ -161,12 +161,24 @@ function resolveViaFilePath(title) {
 }
 
 async function download(url, dest) {
-  const res = await get(url, { redirect: "follow" });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const buf = Buffer.from(await res.arrayBuffer());
-  if (buf.length < 500) throw new Error(`הקובץ שהתקבל קטן מדי (${buf.length} bytes)`);
-  await writeFile(dest, buf);
-  return buf.length;
+  // Commons throttles a run that asks for a hundred thumbnails in a row, and
+  // answers 429 or 5xx rather than refusing outright. Backing off gets the file;
+  // treating the first refusal as final loses it and, worse, used to trip the
+  // three-in-a-row guard and abandon everything after it.
+  let last;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const res = await get(url, { redirect: "follow" });
+    if (res.ok) {
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length < 500) throw new Error(`הקובץ שהתקבל קטן מדי (${buf.length} bytes)`);
+      await writeFile(dest, buf);
+      return buf.length;
+    }
+    last = res.status;
+    if (res.status !== 429 && res.status < 500) break;
+    await sleep(2000 * (attempt + 1));
+  }
+  throw new Error(`HTTP ${last}`);
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -246,10 +258,12 @@ async function main() {
       say(`  נכשל   ${e.slug.padEnd(28)} ${err.message}`);
       failed++;
       streak++;
-      // Three failures in a row is an environment problem, not 41 bad file
-      // names — stop and diagnose instead of grinding through the whole list.
-      if (streak >= 3) {
-        say(`\n  ✗ שלוש כשלונות ברצף — עוצר כדי לא להמשיך לריק.\n`);
+      // A long run of failures is an environment problem, not bad file names —
+      // stop and diagnose instead of grinding through the whole list. The bar is
+      // six rather than three: each download already retries a throttled
+      // response, so three unlucky files in a row must not abandon the rest.
+      if (streak >= 6) {
+        say(`\n  ✗ שש כשלונות ברצף — עוצר כדי לא להמשיך לריק.\n`);
         await doctor();
         break;
       }
