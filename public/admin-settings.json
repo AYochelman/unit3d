@@ -112,5 +112,49 @@
   },
   "shelves": {},
   "materials": [],
-  "colors": []
+  "colors": [
+    {
+      "id": "custom_ירוק_זוהר",
+      "name": "ירוק זוהר",
+      "hex": "#7EE787",
+      "hex2": "#F2F2EF",
+      "kind": "glow",
+      "materials": [
+        "pla"
+      ],
+      "desc": "סופג אור"
+    },
+    {
+      "id": "custom_חום",
+      "name": "חום",
+      "hex": "#6f2801",
+      "kind": "solid",
+      "materials": [
+        "pla"
+      ],
+      "desc": "רגיל"
+    },
+    {
+      "id": "custom_אדום-שחור",
+      "name": "אדום-שחור",
+      "hex": "#000000",
+      "hex2": "#c70000",
+      "kind": "dual",
+      "materials": [
+        "pla"
+      ],
+      "desc": "מחליף צבע עם פרספקטיבה"
+    },
+    {
+      "id": "custom_סגול-שחור",
+      "name": "סגול-שחור",
+      "hex": "#000000",
+      "hex2": "#6d00c7",
+      "kind": "dual",
+      "materials": [
+        "pla"
+      ],
+      "desc": "מחליף צבע עם פרספקטיבה"
+    }
+  ]
 }
