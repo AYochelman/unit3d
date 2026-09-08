@@ -20,6 +20,10 @@ on:
         description: "לחפש בקומונס מועמדים ליחידות שאין להן קובץ"
         type: boolean
         default: false
+      catalog:
+        description: "למשוך רשימת קבצי סמלים מקטגוריות צה\"ל בקומונס"
+        type: boolean
+        default: false
   # Commons files get replaced and re-licensed; a monthly pass catches that.
   schedule:
     - cron: "20 4 2 * *"
@@ -52,6 +56,13 @@ jobs:
         run: npm run emblems:find
         continue-on-error: true
 
+      # Lists what actually exists under the IDF categories, so the next pass
+      # picks from an inventory instead of guessing file names.
+      - name: List the Commons catalogue
+        if: inputs.catalog
+        run: npm run emblems:catalog
+        continue-on-error: true
+
       - name: Fetch emblems
         env:
           FORCE: ${{ inputs.force && '--force' || '' }}
@@ -62,7 +73,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for p in public/emblems data/emblem-candidates.json; do
+          for p in public/emblems data/emblem-candidates.json data/emblem-catalog.json; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
           if git diff --cached --quiet; then
