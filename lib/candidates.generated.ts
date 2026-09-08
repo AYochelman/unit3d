@@ -2,12 +2,29 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 26
-// Updated: 2026-09-08T00:08:14.121Z
+// Items: 27
+// Updated: 2026-09-08T00:09:27.053Z
 
 import type { Candidate } from "./candidates";
 
 export const CANDIDATES: Candidate[] = [
+  {
+    "id": "3237023",
+    "title": "Ultimate Tread Clicker Fidget (Print in Place)",
+    "slug": "ultimate-tread-clicker-fidget-print-in-place",
+    "license": "Standard Digital File License",
+    "creator": "AbyssalCactus",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US76aa60295eb832/design/6ff5b52503ecb700.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 860,
+    "likes": 390,
+    "grams": 36,
+    "hours": 2.11,
+    "colors": 1,
+    "suggested": "fidget",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "fidget · Fidget · fidget toy · tank · tread · treads"
+  },
   {
     "id": "2765603",
     "title": "Batman Sitting on Ledge Figure | Arkham Knight",
