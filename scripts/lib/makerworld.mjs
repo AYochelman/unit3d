@@ -318,6 +318,9 @@ export async function fetchDetails(id) {
     title: d.title || "",
     cover: (d.coverUrl || "").split("?")[0],
     pictures: picturesOf(d),
+    // Where the gallery lives has moved between redesigns and the guesses in
+    // picturesOf found nothing, so the run reports the shape it was handed.
+    shape: { top: Object.keys(d ?? {}), ext: Object.keys(d?.designExtension ?? {}) },
     slug: d.slug || "",
     license: d.license || "",
     creator: (d.designCreator || {}).name || "",

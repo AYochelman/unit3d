@@ -56,6 +56,11 @@ async function main() {
 
     // The colour came back empty for every model once, and the only way to
     // tell an absent field from a renamed one is to look at a real record.
+    if (!probed && d.shape) {
+      log(c.d(`   שדות ה-design: ${d.shape.top.join(", ")}`));
+      log(c.d(`   designExtension: ${d.shape.ext.join(", ") || "(ריק)"}`));
+      log(c.d(`   תמונות שנמצאו: ${d.pictures?.length ?? 0}`));
+    }
     if (!probed) {
       const f = (d.instances ?? [])
         .flatMap((x) => x?.extention?.modelInfo?.plates ?? [])
