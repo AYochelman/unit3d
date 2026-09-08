@@ -80,9 +80,10 @@ export function productToCard(p: Product): ListingCard {
 export function ListingCardView({ c }: { c: ListingCard }) {
   const stock = useAdminStore((s) => s.stock);
   const [askRestock, setAskRestock] = useState(false);
-  // A click on a card picks it; a second, deliberate click on the button opens
-  // it. Tapping a thumbnail and being thrown onto another page is how you lose
-  // your place in a grid you were still reading.
+  // Personalised products only: a click picks the card, and the footer button
+  // then opens the designer. Landing inside an editor because you tapped a
+  // photograph is a jump worth asking about first — an ordinary product page
+  // is not, and opens on the first click.
   const [picked, setPicked] = useState(false);
   // The designer's clip, where one exists. It plays while the pointer is on
   // the card and rewinds when it leaves — the way MakerWorld shows a fidget
@@ -259,9 +260,14 @@ export function ListingCardView({ c }: { c: ListingCard }) {
             </Link>
             <Link
               href={c.designHref}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold bg-flame/15 text-flame border border-flame/40 hover:bg-flame hover:text-white transition-colors"
+              className={cn(
+                "inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold border transition-colors",
+                picked
+                  ? "bg-flame text-white border-flame"
+                  : "bg-flame/15 text-flame border-flame/40 hover:bg-flame hover:text-white",
+              )}
             >
-              <span className="hidden sm:inline">עצב עכשיו</span>
+              <span className="hidden sm:inline">{picked ? "המשך לעיצוב" : "עצב עכשיו"}</span>
               <span className="sm:hidden">עצב</span>
               <Icon name="arrowLeft" size={11} />
             </Link>
@@ -271,26 +277,19 @@ export function ListingCardView({ c }: { c: ListingCard }) {
     );
   }
 
+  // An ordinary product opens on one click. Only the designer asks first —
+  // being dropped into an editor is a bigger jump than opening a page.
   return (
-    <div className={cn(shell, "h-full cursor-pointer", ring)} {...pick} {...hover}>
+    <Link href={c.href} className={cn(shell, "h-full")} {...hover}>
       {body}
       <div className="px-3 pb-3 flex items-center justify-between">
         {priceRow}
-        <Link
-          href={c.href}
-          onClick={(e) => e.stopPropagation()}
-          className={cn(
-            "inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-semibold transition-colors",
-            picked
-              ? "bg-flame text-white"
-              : "text-ink-300 border border-ink-800 hover:border-ink-600 hover:text-flame",
-          )}
-        >
-          {picked ? "המשך לפרטים" : "לפרטים"}
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-ink-300 group-hover:text-flame transition-colors">
+          לפרטים
           <Icon name="arrowLeft" size={12} />
-        </Link>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }
 
