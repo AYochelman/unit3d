@@ -72,6 +72,12 @@ jobs:
         run: npm run fetch:images
         continue-on-error: true
 
+      # The designers' own clips, for the hover preview on the shop cards.
+      # ffmpeg ships with the runner image; the script caps itself per run.
+      - name: Fetch any new clips
+        run: npm run fetch:videos
+        continue-on-error: true
+
       - name: Type check
         run: npx tsc --noEmit
 
@@ -81,7 +87,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add lib/candidates.generated.ts lib/imported.generated.ts lib/localImages.generated.ts \
-                  data/makerworld-raw.json data/rejected-models.json public/model-decisions.json public/img/catalog
+                  lib/localVideos.generated.ts data/model-videos.json \
+                  data/makerworld-raw.json data/rejected-models.json public/model-decisions.json \
+                  public/img/catalog public/img/catalog-video
           if git diff --cached --quiet; then
             echo "nothing new"
             echo "changed=false" >> "$GITHUB_OUTPUT"

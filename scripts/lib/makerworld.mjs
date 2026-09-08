@@ -239,6 +239,10 @@ export async function fetchDetails(id) {
     cats: (d.categories || []).map((x) => x.name || "").slice(0, 3),
     instances,
     defaultInstanceId: d.defaultInstanceId ?? null,
+    // The designer's own clip of the thing moving, when they filmed one. A
+    // fidget that clicks and a flexi that bends sell themselves in two seconds
+    // of video and not at all in a still photograph.
+    video: d.designExtension?.design_video?.[0]?.url || null,
     nsfw: !!d.nsfw,
   };
 }

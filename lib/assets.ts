@@ -1,4 +1,5 @@
 import { LOCAL_IMAGES } from "./localImages.generated";
+import { LOCAL_VIDEOS } from "./localVideos.generated";
 
 /**
  * Where an image on this site actually comes from.
@@ -35,3 +36,16 @@ export function photoSrc(url?: string): string | undefined {
  * not have to claim to be a photograph.
  */
 export const assetSrc = photoSrc;
+
+/**
+ * The designer's clip for a product, if we hold one.
+ *
+ * Only some models have one — a fidget that clicks, a flexi that bends. The
+ * card plays it on hover and falls back to the photograph when this returns
+ * nothing, so nothing has to know in advance which is which.
+ */
+export function clipSrc(productId?: string): string | undefined {
+  if (!productId) return undefined;
+  const local = LOCAL_VIDEOS[productId];
+  return local ? `${BASE}/${local}` : undefined;
+}

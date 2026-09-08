@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/cn";
 import { useAdminStore } from "@/lib/admin-store";
 import { DEFAULT_MATERIAL, isMaterialInStock } from "@/lib/inventory";
 import { useLivePrice } from "@/lib/live-price";
+import { clipSrc } from "@/lib/assets";
 import { designHref, isPersonalizable } from "@/lib/designable";
 import RestockModal from "@/components/RestockModal";
 import type { MaterialId, Product, ProductArtId } from "@/lib/types";
@@ -83,6 +84,22 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   // it. Tapping a thumbnail and being thrown onto another page is how you lose
   // your place in a grid you were still reading.
   const [picked, setPicked] = useState(false);
+  // The designer's clip, where one exists. It plays while the pointer is on
+  // the card and rewinds when it leaves — the way MakerWorld shows a fidget
+  // actually clicking, which no still photograph manages.
+  const clip = clipSrc(c.itemId ?? c.id);
+  const clipEl = useRef<HTMLVideoElement>(null);
+  const hover = clip
+    ? {
+        onMouseEnter: () => clipEl.current?.play().catch(() => {}),
+        onMouseLeave: () => {
+          const v = clipEl.current;
+          if (!v) return;
+          v.pause();
+          v.currentTime = 0;
+        },
+      }
+    : {};
   const material = c.material ?? DEFAULT_MATERIAL;
   const inStock = isMaterialInStock(stock, material);
   // The shelf price follows /admin, so a margin change moves every card at once.
@@ -111,7 +128,28 @@ export function ListingCardView({ c }: { c: ListingCard }) {
              stamps on a striped board — the owner wants the picture and not
              its edges, so the image fills the square and is cropped from the
              centre, where the model sits in a product shot. */
-          <Image src={c.image} alt={c.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover object-center transition-transform duration-500 group-hover:scale-105" unoptimized />
+          <>
+            <Image src={c.image} alt={c.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover object-center transition-transform duration-500 group-hover:scale-105" unoptimized />
+            {clip && (
+              <>
+                <video
+                  ref={clipEl}
+                  className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  src={clip}
+                  muted
+                  loop
+                  playsInline
+                  preload="none"
+                  aria-hidden
+                />
+                {/* Says there is something to hover over, on a touch screen too. */}
+                <span className="absolute bottom-2 left-2 z-[1] inline-flex items-center gap-1 rounded-md bg-ink-950/70 backdrop-blur px-1.5 py-0.5 text-[10px] font-semibold text-ink-100 group-hover:opacity-0 transition-opacity">
+                  <Icon name="play" size={9} />
+                  וידאו
+                </span>
+              </>
+            )}
+          </>
         ) : (
           <ProductArt art={c.art ?? "keychain"} hue={c.hue} size={150} className="transition-transform duration-500 group-hover:scale-105" />
         )}
@@ -206,7 +244,7 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   // it can't be nested inside the card link, so the footer sits outside it.
   if (c.personalizable && c.designHref) {
     return (
-      <div className={cn(shell, "h-full", ring)}>
+      <div className={cn(shell, "h-full", ring)} {...hover}>
         <div className="flex flex-col flex-1 cursor-pointer" {...pick}>
           {body}
         </div>
@@ -234,7 +272,7 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   }
 
   return (
-    <div className={cn(shell, "h-full cursor-pointer", ring)} {...pick}>
+    <div className={cn(shell, "h-full cursor-pointer", ring)} {...pick} {...hover}>
       {body}
       <div className="px-3 pb-3 flex items-center justify-between">
         {priceRow}

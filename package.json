@@ -11,6 +11,7 @@
     "emblems": "node scripts/fetch-emblems.mjs",
     "import:makerworld": "node scripts/import-makerworld.mjs",
     "fetch:images": "node scripts/fetch-images.mjs",
+    "fetch:videos": "node scripts/fetch-videos.mjs",
     "sync:collections": "node scripts/sync-collections.mjs",
     "collect:candidates": "node scripts/collect-candidates.mjs",
     "add:candidates": "node scripts/add-candidates.mjs",
