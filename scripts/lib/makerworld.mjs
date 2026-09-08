@@ -162,6 +162,14 @@ export const fmtSize = (grams) =>
  * quoting the pins prices a whole wall unit at 22 ₪. (That is not theoretical;
  * it is what "Shoe Rack / Wall Shelf" was selling for.)
  *
+ * It also cannot be the sample. Designers upload sizing testers beside the
+ * real thing — "InsoleSizeTest", 78g, 2 hours, next to a 698g pair of slides —
+ * and because everybody prints the tester first it wins on downloads by two to
+ * one. When the design's own default is missing from the profile list (which
+ * happens), download count is all that is left to go on, and it picks the
+ * tester: a pair of shoes priced as 78 grams. Profiles that name themselves a
+ * test are dropped before anything is chosen.
+ *
  * The headline still avoids the AMS profile — that one can be three times
  * slower and makes every price look wrong — so when the default needs AMS and a
  * single-colour profile exists, the closest single-colour profile stands in.
@@ -169,8 +177,11 @@ export const fmtSize = (grams) =>
  * genuinely BIGGER profiles as sizes: only what is at least 35% heavier and
  * slower than the base, never something lighter, which would be a part.
  */
+/** A profile whose own name says it is a trial piece, not the product. */
+const SAMPLE = /(size ?test|test ?print|\btest(er)?\b|sample|calibrat|\btrial\b|\bdemo\b|preview|fit ?check|sizer)/i;
+
 export function platesFrom(instances = [], defaultInstanceId = null) {
-  const every = instances
+  const all = instances
     .map((x) => ({
       id: x.id,
       g: x.weight || 0,
@@ -178,10 +189,16 @@ export function platesFrom(instances = [], defaultInstanceId = null) {
       mc: x.materialColorCnt || x.materialCnt || 1,
       ams: !!x.needAms,
       dl: x.downloadCount || 0,
+      name: x.name || x.title || "",
       def: !!x.isDefault || (defaultInstanceId != null && x.id === defaultInstanceId),
     }))
     .filter((x) => x.g > 0 && x.h > 0);
-  if (!every.length) return null;
+  if (!all.length) return null;
+
+  // Drop the testers — unless that is all there is, in which case they are the
+  // model and dropping them would leave nothing to price.
+  const real = all.filter((x) => !SAMPLE.test(x.name));
+  const every = real.length ? real : all;
 
   // What the designer published as THE profile, else what people print most.
   const chosen =
