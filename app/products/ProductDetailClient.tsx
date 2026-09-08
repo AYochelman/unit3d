@@ -29,6 +29,7 @@ import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
+import CheaperOptions from "@/components/CheaperOptions";
 
 /** MakerWorld plates have no names, so sizes are named by their order. */
 const PLATE_LABEL = ["קטן", "בינוני", "גדול", "ענק"];
@@ -474,6 +475,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
               מסתדר אני אומר לך לפני שמתחילים.
             </p>
           )}
+
+          <CheaperOptions productName={p.name} />
 
           <ShippingEstimate
             grams={grams}

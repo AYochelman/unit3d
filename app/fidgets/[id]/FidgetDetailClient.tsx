@@ -25,6 +25,7 @@ import { useLivePrice } from "@/lib/live-price";
 import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
+import CheaperOptions from "@/components/CheaperOptions";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
 const AMS_OPTIONS = [
@@ -564,6 +565,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             <span className="text-ink-300"> לא כל דגם אפשרי בכל צבע או חומר</span>, ואם משהו לא
             מסתדר אני אומר לך לפני שמתחילים.
           </p>
+
+          <CheaperOptions productName={f.name} />
 
           <ShippingEstimate grams={weightG} qty={qty} />
 

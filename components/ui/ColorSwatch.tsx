@@ -32,8 +32,19 @@ export default function ColorSwatch({
   const checker =
     "repeating-conic-gradient(rgba(255,255,255,.30) 0% 25%, rgba(0,0,0,.30) 0% 50%) 0 0 / 8px 8px";
 
+  // Marble is the veins, not the base: a stone-look spool sold as a flat grey
+  // circle looks like plain grey, which is the one thing it is not.
+  const marble =
+    `radial-gradient(ellipse at 28% 32%, ${second}88 0 11%, transparent 12%), ` +
+    `radial-gradient(ellipse at 72% 64%, ${second}77 0 8%, transparent 9%), ` +
+    `radial-gradient(ellipse at 55% 18%, ${second}55 0 6%, transparent 7%), ` +
+    `linear-gradient(118deg, transparent 38%, ${second}66 43%, transparent 47%), ` +
+    `linear-gradient(64deg, transparent 62%, ${second}44 66%, transparent 70%), ${hex}`;
+
   const background =
-    kind === "clear"
+    kind === "marble"
+      ? marble
+      : kind === "clear"
       ? `linear-gradient(${hex}88, ${hex}55), ${checker}`
       : kind === "dual"
       ? `linear-gradient(135deg, ${hex} 0 48%, ${second} 52% 100%)`
@@ -71,4 +82,5 @@ export const KIND_LABEL: Record<NonNullable<Filament["kind"]>, string> = {
   shift: "מחליף צבע",
   dual: "דו-גוני",
   clear: "שקוף",
+  marble: "שיש",
 };

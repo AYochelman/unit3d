@@ -459,7 +459,7 @@ function AddColorForm() {
       id: `custom_${clean.replace(/\s+/g, "_").toLowerCase()}`,
       name: clean,
       hex,
-      ...(kind === "solid" ? {} : { hex2 }),
+      ...(kind === "solid" || kind === "glow" || kind === "clear" ? {} : { hex2 }),
       kind,
       ...(families.length ? { materials: families } : {}),
       desc: desc.trim() || KIND_LABEL[kind],
@@ -471,10 +471,11 @@ function AddColorForm() {
     <div className="p-4 rounded-2xl border border-flame/35 bg-flame/5">
       <div className="font-bold mb-1">הוספת צבע חדש</div>
       <p className="text-xs text-ink-400 mb-3">
-        גם המיוחדים: זוהר בחושך, מחליף צבע בחום, ודו-גוני. הצבע נוסף לכל החומרים ומופיע מיד באתר.
+        גם המיוחדים: זוהר בחושך, שקוף, שיש, מחליף צבע בחום ודו-גוני. בוחרים סוג, מסמנים באיזה
+        חומרים יש לך אותו, והצבע מופיע מיד באתר.
       </p>
       <div className="flex flex-wrap items-center gap-2 mb-3">
-        {(["solid", "glow", "clear", "shift", "dual"] as FilamentKind[]).map((k) => (
+        {(["solid", "glow", "clear", "marble", "shift", "dual"] as FilamentKind[]).map((k) => (
           <button key={k} type="button" onClick={() => setKind(k)}
             className={cn("px-3 h-9 rounded-lg text-xs font-semibold border transition-colors",
               kind === k ? "border-flame text-flame bg-flame/10" : "border-ink-800 text-ink-400 hover:border-ink-600")}>
@@ -502,26 +503,26 @@ function AddColorForm() {
         <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="הערה קצרה (אופציונלי)"
           className="h-10 px-3 rounded-lg bg-ink-950 border border-ink-800 text-sm outline-none focus:border-flame" />
       </div>
-      <div className="flex flex-wrap items-center gap-4 mt-3">
-        <label className="flex items-center gap-2 text-xs text-ink-400">
-          {kind === "shift" ? "צבע בקור" : kind === "dual" ? "צבע ראשון" : "צבע"}
+      <div className="flex flex-wrap items-end gap-5 mt-4">
+        <label className="flex flex-col items-center gap-1.5 text-[11px] text-ink-400">
+          {kind === "shift" ? "בקור" : kind === "dual" ? "צבע ראשון" : kind === "marble" ? "רקע" : "צבע"}
           <input type="color" value={hex} onChange={(e) => setHex(e.target.value)}
-            className="h-9 w-14 rounded-lg bg-ink-950 border border-ink-800 cursor-pointer" />
+            className="swatch-input h-10 w-10" />
         </label>
-        {(kind === "shift" || kind === "dual") && (
-          <label className="flex items-center gap-2 text-xs text-ink-400">
-            {kind === "shift" ? "צבע בחום" : "צבע שני"}
+        {(kind === "shift" || kind === "dual" || kind === "marble") && (
+          <label className="flex flex-col items-center gap-1.5 text-[11px] text-ink-400">
+            {kind === "shift" ? "בחום" : kind === "marble" ? "גידים" : "צבע שני"}
             <input type="color" value={hex2} onChange={(e) => setHex2(e.target.value)}
-              className="h-9 w-14 rounded-lg bg-ink-950 border border-ink-800 cursor-pointer" />
+              className="swatch-input h-10 w-10" />
           </label>
         )}
-        <div className="flex items-center gap-2 text-xs text-ink-400">
-          תצוגה
-          <ColorSwatch filament={preview} size={36} />
+        <div className="flex flex-col items-center gap-1.5 text-[11px] text-ink-400">
+          כך זה ייראה
+          <ColorSwatch filament={preview} size={44} />
         </div>
         <span className="flex-1" />
         <button type="button" onClick={submit} disabled={!name.trim()}
-          className="px-4 h-10 rounded-lg font-bold text-sm bg-flame text-white disabled:opacity-40">
+          className="px-5 h-11 rounded-xl font-bold text-sm bg-flame text-white disabled:opacity-40 hover:bg-flame/90 transition-colors">
           הוסף צבע
         </button>
       </div>

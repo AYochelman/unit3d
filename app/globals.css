@@ -201,3 +201,20 @@
   }
   .u3d-three, .u3d-fil { stroke-dashoffset: 0; opacity: 1; }
 }
+
+/* A colour input that looks like a spool rather than a form control.
+   The browser's own swatch is a bevelled rectangle with padding it will not
+   give up any other way, and next to round filament swatches it reads as a
+   bug. */
+.swatch-input {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 9999px;
+}
+.swatch-input::-webkit-color-swatch-wrapper { padding: 0; }
+.swatch-input::-webkit-color-swatch { border: 1px solid rgba(255,255,255,0.22); border-radius: 9999px; }
+.swatch-input::-moz-color-swatch { border: 1px solid rgba(255,255,255,0.22); border-radius: 9999px; }

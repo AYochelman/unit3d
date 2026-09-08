@@ -144,10 +144,11 @@ export type Fidget = {
  * `kind` is what makes a swatch honest. A glow filament is not the pale green
  * it looks like in daylight, a thermochromic one is two colours depending on
  * temperature, a dual-colour silk is two colours at once, and a translucent
- * spool shows whatever is behind it — painting any of them as a single flat
- * circle tells the customer the wrong thing.
+ * spool shows whatever is behind it, and a marble spool is veined rather than
+ * one colour — painting any of them as a single flat circle tells the customer
+ * the wrong thing.
  */
-export type FilamentKind = "solid" | "glow" | "shift" | "dual" | "clear";
+export type FilamentKind = "solid" | "glow" | "shift" | "dual" | "clear" | "marble";
 
 export type Filament = {
   id: string;
