@@ -41,6 +41,7 @@ async function main() {
   const recolor = [];
   let checked = 0;
   let unreachable = 0;
+  let probed = false;
 
   for (const row of rows) {
     const id = row.id.replace(/^mw-/, "");
@@ -51,6 +52,15 @@ async function main() {
     if (!d) { unreachable++; continue; }
 
     const p = platesFrom(d.instances, d.defaultInstanceId);
+
+    // The colour came back empty for every model once, and the only way to
+    // tell an absent field from a renamed one is to look at a real record.
+    if (!probed) {
+      const f = (d.instances ?? [])
+        .flatMap((x) => x?.extention?.modelInfo?.plates ?? [])
+        .flatMap((pl) => pl.filaments ?? [])[0];
+      if (f) { probed = true; log(c.d(`   שדות הפילמנט: ${Object.keys(f).join(", ")}`)); }
+    }
     if (!p) continue;
 
     const was = { grams: row.grams, hours: row.hours };

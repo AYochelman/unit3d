@@ -201,8 +201,16 @@ export function filamentOf(instance) {
  */
 export function colorOf(instance) {
   const plates = instance?.extention?.modelInfo?.plates ?? [];
-  const hex = plates.flatMap((pl) => (pl.filaments ?? []).map((f) => String(f.color || ""))).find(Boolean);
-  return /^#[0-9a-f]{6}$/i.test(hex || "") ? hex.toUpperCase() : null;
+  // The key has moved between `color`, `colorHex` and `filamentColor`, and the
+  // value comes back with or without the leading #, sometimes with an alpha
+  // pair on the end. Take the first thing that reads as a colour.
+  const hex = plates
+    .flatMap((pl) => (pl.filaments ?? []))
+    .flatMap((f) => [f?.color, f?.colorHex, f?.filamentColor, f?.hex])
+    .map((v) => String(v || "").trim().replace(/^#/, ""))
+    .map((v) => (v.length === 8 ? v.slice(0, 6) : v))
+    .find((v) => /^[0-9a-f]{6}$/i.test(v));
+  return hex ? `#${hex.toUpperCase()}` : null;
 }
 
 /** MakerWorld's filament name → the family this shop sells. */
