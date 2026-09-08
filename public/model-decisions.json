@@ -1,4 +1,43 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "3253341",
+      "decision": "rejected",
+      "at": "2026-09-08T11:31:44.824Z"
+    },
+    {
+      "id": "3258780",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-09-08T11:31:44.824Z"
+    },
+    {
+      "id": "3259901",
+      "decision": "rejected",
+      "at": "2026-09-08T11:31:44.824Z"
+    },
+    {
+      "id": "3261749",
+      "decision": "rejected",
+      "at": "2026-09-08T11:31:44.824Z"
+    },
+    {
+      "id": "3268045",
+      "decision": "approved",
+      "shelf": "statues",
+      "at": "2026-09-08T11:31:44.824Z"
+    },
+    {
+      "id": "3269751",
+      "decision": "rejected",
+      "at": "2026-09-08T11:31:44.824Z"
+    },
+    {
+      "id": "3271358",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-09-08T11:31:44.824Z"
+    }
+  ]
 }
