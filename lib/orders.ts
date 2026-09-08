@@ -11,10 +11,10 @@ import { fmtILS } from "./format";
  * open.
  *
  * There is no server to post it to, and the shop stores nothing in the browser,
- * so an order travels the only two roads it has: a WhatsApp message to Ariel's
- * phone, and a link inside that message which carries the whole record into
- * /admin. Opening the link once files it; his decision on it is saved with the
- * same "סיים ועדכן" button as everything else here.
+ * so an order travels the only road it has: a WhatsApp message to Ariel's phone.
+ * The message is written to be read AND to be read back — he pastes it into
+ * /admin, `parseOrderMessage` turns it into this record again, and his decision
+ * on it is saved with the same "סיים ועדכן" button as everything else here.
  */
 export type DeliveryId = "pickup" | "post" | "courier";
 
@@ -96,44 +96,168 @@ export function siteOrigin(): string {
 }
 
 // ─── The message that lands on the phone ─────────────────────────────────────
+/** Where Ariel reads his queue. Short, and the same on every phone. */
+export const ADMIN_URL = "https://ayochelman.github.io/unit3d/admin";
+
+/** The first summary line that opens with this label, without the label. */
+const pick = (summary: string[], label: string): string | null => {
+  const hit = summary.find((s) => s.trim().startsWith(label + ":"));
+  return hit ? hit.slice(hit.indexOf(":") + 1).trim() : null;
+};
+
+/** "PLA · שחור" — the two facts that decide which spool comes off the shelf. */
+const materialColor = (l: OrderLine): string =>
+  [pick(l.summary, "חומר"), pick(l.summary, "צבע")].filter(Boolean).join(" · ") || "—";
+
 /**
- * The whole order, written so it reads on a phone screen without scrolling
- * sideways: what was ordered and in what, who ordered it, how it gets to them,
- * what it costs, and a link that files it in /admin.
+ * The product as it goes on the print bed: what it is, how big, and — when the
+ * customer asked for one — the text engraved on it. Everything else about the
+ * line has its own numbered field below it.
+ */
+const productTitle = (l: OrderLine): string => {
+  const parts = [l.title];
+  const size = pick(l.summary, "גודל") ?? pick(l.summary, "מוצר")?.split(" · ").slice(1).join(" · ");
+  if (size) parts.push(size);
+  const text = pick(l.summary, "כיתוב");
+  if (text && !text.startsWith("ללא")) parts.push(`כיתוב: ${text}`);
+  return parts.join(" · ");
+};
+
+const hoursOf = (l: OrderLine): string => pick(l.summary, "זמן הדפסה") ?? "—";
+
+/**
+ * The whole order, written so it reads on a phone screen in one glance: who
+ * ordered, then each product with the four things Ariel needs before he starts
+ * printing — name, filament, price, time — and a plain link to his own queue.
+ *
+ * The message is also the record: /admin reads it back with `parseOrderMessage`,
+ * which is why the labels below are fixed and not decorative.
  */
 export function orderMessage(o: PlacedOrder): string {
   const d = DELIVERY_BY_ID[o.delivery];
   const total = orderTotal(o);
-  const lines: string[] = [
-    `הזמנה חדשה · ${o.ref}`,
+  const out: string[] = [
+    "הזמנה חדשה",
     "",
-    `לקוח: ${o.customer.name}`,
+    `מספר הזמנה: ${o.ref}`,
     `טלפון: ${o.customer.phone}`,
-    o.customer.email ? `מייל: ${o.customer.email}` : null,
-    `סוג: ${o.customer.kind}${o.inquiry ? ` · ${o.inquiry}` : ""}`,
-    o.customer.unit ? `יחידה: ${o.customer.unit}` : null,
-    o.customer.company ? `חברה: ${o.customer.company}` : null,
+    `מייל: ${o.customer.email || "—"}`,
+    `סוג לקוח: ${o.customer.kind}`,
     "",
-    "— מה הוזמן —",
-  ].filter(Boolean) as string[];
+    "מה הוזמן",
+  ];
 
   o.lines.forEach((l, i) => {
-    lines.push(`${i + 1}. ${l.title}${l.qty > 1 ? ` × ${l.qty}` : ""}${l.price == null ? " · לפי הזמנה" : ` · ${fmtILS(l.price)}`}`);
-    for (const s of l.summary) lines.push(`   ${s}`);
+    out.push(
+      "",
+      `${i + 1}. ${productTitle(l)}`,
+      `חומר וצבע: ${materialColor(l)}`,
+      `כמות: ${l.qty}`,
+      `מחיר: ${l.price == null ? "לפי הזמנה" : fmtILS(l.price)}`,
+      `זמן הדפסה: ${hoursOf(l)}`,
+    );
   });
 
-  lines.push(
+  out.push(
     "",
-    `מסירה: ${d.label}${d.price ? ` · ${fmtILS(d.price)}` : " · חינם"} (${d.note})`,
-    o.note ? `הערות הלקוח: ${o.note}` : "הערות הלקוח: —",
+    `מסירה: ${d.label}${d.price ? ` · ${fmtILS(d.price)}` : " · חינם"}`,
+    `הערות: ${o.note?.trim() || "—"}`,
+    total == null ? "סה\"כ לתשלום: לפי הזמנה" : `סה"כ לתשלום: ${fmtILS(total)}`,
     "",
-    total == null ? "סה\"כ: לפי הזמנה" : `סה"כ לתשלום: ${fmtILS(total)}`,
-    "",
-    `לאישור/דחייה: ${siteOrigin()}/admin?order=${encodeOrder(o)}`,
+    ADMIN_URL,
   );
-  return lines.join("\n");
+  return out.join("\n");
 }
 
 /** wa.me link with the order already written into it. */
 export const orderWhatsapp = (o: PlacedOrder): string =>
   `${CONTACT.whatsapp}?text=${encodeURIComponent(orderMessage(o))}`;
+
+// ─── Reading the message back in /admin ──────────────────────────────────────
+const num = (s: string | null): number | null => {
+  if (!s) return null;
+  const m = s.replace(/[,\s]/g, "").match(/-?\d+(\.\d+)?/);
+  return m ? Number(m[0]) : null;
+};
+
+const field = (line: string, label: string): string | null =>
+  line.trim().startsWith(label + ":") ? line.slice(line.indexOf(":") + 1).trim() : null;
+
+/**
+ * The message, read back into an order.
+ *
+ * The link that used to carry the whole record was hundreds of characters long
+ * on a phone screen, so the message carries nothing but the order itself: Ariel
+ * pastes it into /admin and it files exactly as the link once did. It parses
+ * only what `orderMessage` writes — anything else pasted here returns null
+ * rather than a half-order.
+ */
+export function parseOrderMessage(text: string): PlacedOrder | null {
+  const rows = (text || "").split(/\r?\n/);
+  let ref = "", phone = "", email = "", kind = "", note = "";
+  let delivery: DeliveryId = "pickup";
+  const lines: OrderLine[] = [];
+  let cur: OrderLine | null = null;
+
+  const flush = () => { if (cur) lines.push(cur); cur = null; };
+
+  for (const row of rows) {
+    const t = row.trim();
+    if (!t) continue;
+
+    const start = t.match(/^(\d+)\.\s*(.+)$/);
+    if (start) {
+      flush();
+      let title = start[2].trim();
+      let qty = 1;
+      // Older messages carried the quantity in the title; newer ones give it a
+      // field of its own, which the loop below fills in.
+      const q = title.match(/\s*[×x]\s*(\d+)\s*$/);
+      if (q) { qty = Number(q[1]); title = title.replace(/\s*[×x]\s*\d+\s*$/, "").trim(); }
+      cur = { title, summary: [], qty, price: null };
+      continue;
+    }
+
+    const mc = field(t, "חומר וצבע");
+    if (mc && cur) {
+      const [material, ...rest] = mc.split(" · ");
+      if (material && material !== "—") cur.summary.push(`חומר: ${material}`);
+      if (rest.length) cur.summary.push(`צבע: ${rest.join(" · ")}`);
+      continue;
+    }
+    const qty = field(t, "כמות");
+    if (qty != null && cur) { cur.qty = Math.max(1, num(qty) ?? 1); continue; }
+    const price = field(t, "מחיר");
+    if (price != null && cur) { cur.price = price.includes("לפי הזמנה") ? null : num(price); continue; }
+    const hours = field(t, "זמן הדפסה");
+    if (hours != null && cur) { cur.summary.push(`זמן הדפסה: ${hours}`); continue; }
+
+    ref = field(t, "מספר הזמנה") ?? ref;
+    phone = field(t, "טלפון") ?? phone;
+    kind = field(t, "סוג לקוח") ?? kind;
+    const mail = field(t, "מייל");
+    if (mail) email = mail === "—" ? "" : mail;
+    const rem = field(t, "הערות");
+    if (rem) note = rem === "—" ? "" : rem;
+    const del = field(t, "מסירה");
+    if (del) {
+      const hit = DELIVERY.find((x) => del.startsWith(x.label));
+      if (hit) delivery = hit.id;
+    }
+  }
+  flush();
+
+  if (!ref || !lines.length) return null;
+
+  const priced = lines.every((l) => l.price != null);
+  return {
+    ref,
+    at: new Date().toISOString(),
+    customer: { name: "", phone, email, kind: kind || "לקוח" },
+    inquiry: "",
+    delivery,
+    note,
+    lines,
+    itemsTotal: priced ? lines.reduce((s, l) => s + (l.price ?? 0), 0) : null,
+  };
+}

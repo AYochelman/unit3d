@@ -7,7 +7,7 @@ import Pill from "@/components/ui/Pill";
 import { Textarea } from "@/components/ui/Field";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { useAdminStore } from "@/lib/admin-store";
-import { DELIVERY_BY_ID, decodeOrder, orderTotal, type OrderDecision, type PlacedOrder } from "@/lib/orders";
+import { DELIVERY_BY_ID, decodeOrder, orderTotal, parseOrderMessage, type OrderDecision, type PlacedOrder } from "@/lib/orders";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -50,6 +50,20 @@ export default function OrdersTab() {
   const filed = useRef<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [only, setOnly] = useState<"open" | "all">("open");
+  const [paste, setPaste] = useState("");
+  const [pasted, setPasted] = useState<string | null>(null);
+  const [pasteErr, setPasteErr] = useState(false);
+
+  // The message the customer sent, filed. It is the whole order — /admin reads
+  // back exactly what the shop wrote — so pasting it here is the intake.
+  const file = () => {
+    const order = parseOrderMessage(paste);
+    if (!order) { setPasteErr(true); setPasted(null); return; }
+    addOrder(order);
+    setPaste("");
+    setPasteErr(false);
+    setPasted(order.ref);
+  };
 
   // An order arrives as ?order=… on the link inside the WhatsApp message. The
   // banner is derived from the link rather than remembered, so filing it is the
@@ -75,8 +89,9 @@ export default function OrdersTab() {
       <div>
         <h2 className="text-lg font-black mb-1">הזמנות</h2>
         <p className="text-xs text-ink-500">
-          כל הזמנה מגיעה אליך בוואטסאפ עם קישור. פתיחת הקישור מתייקת אותה כאן — ומכאן אתה מאשר,
-          דוחה או מסמן החזר, עם הערה. &quot;סיים ועדכן&quot; שומר את ההחלטות לאתר.
+          כל הזמנה מגיעה אליך בוואטסאפ. מעתיקים את ההודעה, מדביקים אותה כאן ולוחצים
+          &quot;קליטת הזמנה&quot; — ומכאן אתה מאשר, דוחה או מסמן החזר, עם הערה.
+          &quot;סיים ועדכן&quot; שומר את ההחלטות לאתר.
         </p>
       </div>
 
@@ -86,6 +101,26 @@ export default function OrdersTab() {
           הזמנה <span className="font-mono" dir="ltr">{arrived.ref}</span> נקלטה.
         </div>
       )}
+
+      <div className="p-3 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-2">
+        <div className="text-xs font-bold text-ink-300">קליטת הזמנה מהוואטסאפ</div>
+        <Textarea
+          rows={5}
+          dir="rtl"
+          value={paste}
+          onChange={(e) => { setPaste(e.target.value); setPasteErr(false); }}
+          placeholder="הדבק כאן את ההודעה שקיבלת"
+        />
+        <div className="flex items-center gap-2">
+          <Btn size="sm" onClick={file} disabled={!paste.trim()}>קליטת הזמנה</Btn>
+          {pasteErr && <span className="text-xs text-bad">לא זוהתה הזמנה בהודעה הזו.</span>}
+          {pasted && !pasteErr && (
+            <span className="text-xs text-good">
+              הזמנה <span className="font-mono" dir="ltr">{pasted}</span> נקלטה.
+            </span>
+          )}
+        </div>
+      </div>
 
       <div className="flex gap-1">
         {([["open", `ממתינות (${open})`], ["all", `הכל (${orders.length})`]] as const).map(([id, label]) => (
@@ -105,7 +140,7 @@ export default function OrdersTab() {
 
       {shown.length === 0 ? (
         <div className="p-8 text-center text-sm text-ink-500 rounded-2xl border border-ink-800">
-          {orders.length ? "אין הזמנות ממתינות." : "עדיין לא נקלטה הזמנה. היא תופיע כאן ברגע שתפתח את הקישור מההודעה."}
+          {orders.length ? "אין הזמנות ממתינות." : "עדיין לא נקלטה הזמנה. הדבק למעלה את ההודעה שקיבלת בוואטסאפ."}
         </div>
       ) : (
         <div className="space-y-3">
@@ -162,7 +197,7 @@ function OrderCard({
       <div className="p-4 grid md:grid-cols-2 gap-4 text-sm">
         <div className="space-y-1">
           <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500 mb-1.5">הלקוח</div>
-          <div className="font-bold text-ink-50">{o.customer.name || "—"}</div>
+          <div className="font-bold text-ink-50">{o.customer.name || o.customer.phone || "—"}</div>
           <a href={`tel:${o.customer.phone}`} className="block text-cyan2 hover:underline" dir="ltr">{o.customer.phone}</a>
           {o.customer.email && <a href={`mailto:${o.customer.email}`} className="block text-ink-300 hover:underline" dir="ltr">{o.customer.email}</a>}
           <div className="text-ink-400">{o.customer.kind}{o.inquiry ? ` · ${o.inquiry}` : ""}</div>

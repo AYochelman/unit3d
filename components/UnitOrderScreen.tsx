@@ -132,6 +132,7 @@ export default function UnitOrderScreen({
       `חיל: ${unit.corps}`,
       `זרוע: ${unit.branch}`,
       `מוצר: ${form.label} · ${form.dim}`,
+      `חומר: ${MATERIAL_BY_ID[form.material].name}`,
       `צבע: ${colorName}${twoTone ? ` + יותר מצבע אחד (${fmtILS(EXTRA_COLOR_PRICE)})` : ""}`,
       text.trim() ? `כיתוב: ${text.trim()} (${fmtILS(PERSONALIZE_PRICE)})` : "ללא כיתוב",
       form.recommends ? `החומר המומלץ: ${MATERIAL_BY_ID[form.recommends.material].name} (${form.recommends.why}) - לא במלאי` : null,
