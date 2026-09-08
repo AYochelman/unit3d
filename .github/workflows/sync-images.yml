@@ -56,7 +56,13 @@ jobs:
             exit 0
           fi
           git commit -m "Store the catalogue photos the shop is missing"
-          git push
+          # Another job (or a person) can land a commit while this one runs;
+          # rebase onto it rather than losing the work to a rejected push.
+          for i in 1 2 3 4 5; do
+            if git push; then break; fi
+            git pull --rebase origin main || exit 1
+            sleep $((i * 3))
+          done
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       # A push made with GITHUB_TOKEN does not start another workflow, so the
