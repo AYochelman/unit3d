@@ -222,6 +222,8 @@ export function importedFidgets(): Fidget[] {
       price: suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus"),
       defaultColor: m.colorHex,
       size: m.size,
+      grams: m.grams,
+      hours: m.hours,
       time: fmtHours(m.hours),
       hue: m.hue,
       shape: "hex",

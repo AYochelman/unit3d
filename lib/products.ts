@@ -1,3 +1,4 @@
+import { parseHours } from "./costing";
 import type { ConfigProduct, Product, ProductCategory, Shape, Size } from "./types";
 import { IMPORTED, importedProducts } from "./imported";
 
@@ -518,8 +519,17 @@ export const FIDGET_WEIGHTS: Record<string, number> = {
   f1: 22, f2: 35, f3: 48, f4: 40, f5: 70, f6: 45,
 };
 
-export function fidgetGrams(f: { id: string; time: string }): number {
+/**
+ * What a fidget weighs.
+ *
+ * Imported rows carry the figure the designer sliced, so use it. The estimate
+ * below is only for the handful of hand-written rows that have no source, and
+ * it reads the print time through parseHours: the old version matched the first
+ * number in the string, so "31min" was taken as 31 HOURS and priced a 6g lizard
+ * as 372g of plastic. 82 of the 115 fidgets were being sold off that number.
+ */
+export function fidgetGrams(f: { id: string; time: string; grams?: number }): number {
+  if (typeof f.grams === "number" && f.grams > 0) return f.grams;
   if (FIDGET_WEIGHTS[f.id]) return FIDGET_WEIGHTS[f.id];
-  const m = f.time.match(/([\d.]+)/);
-  return Math.round((m ? parseFloat(m[1]) : 1) * 12);
+  return Math.max(1, Math.round(parseHours(f.time) * 12));
 }

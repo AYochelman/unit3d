@@ -109,6 +109,15 @@ export type Fidget = {
   name: string;
   desc: string;
   price: number;
+  /**
+   * What the model really weighs and how long it really takes.
+   *
+   * Present on everything imported from a maker site, which is where the
+   * figures come from. Absent only on the handful of hand-written rows, which
+   * are covered by FIDGET_WEIGHTS instead.
+   */
+  grams?: number;
+  hours?: number;
   size: string;
   time: string;
   tag?: string;
