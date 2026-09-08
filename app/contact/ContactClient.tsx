@@ -6,7 +6,10 @@ import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { CONTACT } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
-import { useOrderStore } from "@/lib/order-store";
+import { useOrderStore, type CartItem } from "@/lib/order-store";
+import { PRODUCTS } from "@/lib/products";
+import ProductGrid, { productToCard } from "@/components/ProductGrid";
+import { makeCoupon, NEXT_ORDER_DISCOUNT } from "@/lib/coupon";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -52,35 +55,106 @@ export default function ContactClient() {
 
   const inquiries = useMemo(() => INQUIRY_FOR[cust], [cust]);
   const [refCode, setRefCode] = useState("");
+  // What was actually ordered, kept after the cart is emptied — the thank-you
+  // screen needs it to say "similar to what you chose", and an empty cart
+  // cannot say that.
+  const [ordered, setOrdered] = useState<CartItem[]>([]);
+  const [coupon, setCoupon] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  // Four more from the same shelves, minus what is already on its way.
+  const similar = useMemo(() => {
+    const bought = new Set(
+      ordered.map((it) => (typeof it.meta?.productId === "string" ? it.meta.productId : "")).filter(Boolean),
+    );
+    if (!bought.size) return [];
+    const shelves = new Set(
+      PRODUCTS.filter((p) => bought.has(p.id)).flatMap((p) => p.categories ?? [p.category]),
+    );
+    if (!shelves.size) return [];
+    return PRODUCTS.filter(
+      (p) => !bought.has(p.id) && !!p.image && (p.categories ?? [p.category]).some((c) => shelves.has(c)),
+    )
+      .slice(0, 4)
+      .map(productToCard);
+  }, [ordered]);
 
   if (submitted) {
+    // An order and a question are not the same moment. Someone who just bought
+    // is told the work has started, handed their discount for next time, and
+    // shown where to keep looking; someone who asked a question is not sold to.
+    const bought = ordered.length > 0;
     return (
-      <div className="max-w-3xl mx-auto px-6 md:px-10 py-16 md:py-24 text-center">
-        <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good mb-6">
-          <Icon name="check" size={40} strokeWidth={2.5} />
+      <div className="max-w-5xl mx-auto px-6 md:px-10 py-16 md:py-20">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good mb-6">
+            <Icon name="check" size={40} strokeWidth={2.5} />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
+            {bought ? "תודה על הקנייה!" : "תודה! קיבלתי את הפנייה."}
+          </h1>
+          <p className="text-ink-300 text-base md:text-lg max-w-xl mx-auto mb-8">
+            {bought
+              ? "אנחנו מיד מתחילים לעבוד על זה. אני מעדכן אותך בוואטסאפ ברגע שההדפסה עולה על הפלטה."
+              : cust === "b2b"
+                ? "אני חוזר אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי, ולוז ייצור."
+                : "אני חוזר אליך תוך 24 שעות בוואטסאפ. אם זה דחוף — אפשר לקפוץ ישר לשם."}
+          </p>
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
-          תודה! קיבלתי את הפנייה.
-        </h1>
-        <p className="text-ink-300 text-base md:text-lg max-w-xl mx-auto mb-8">
-          {cust === "b2b"
-            ? "אני חוזר אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי, ולוז ייצור."
-            : "אני חוזר אליך תוך 24 שעות בוואטסאפ. אם זה דחוף — אפשר לקפוץ ישר לשם."}
-        </p>
+
+        {bought && coupon && (
+          <div className="max-w-xl mx-auto mb-10 rounded-2xl border border-flame/40 bg-flame/5 p-5 text-center">
+            <div className="font-bold text-lg mb-1">
+              {Math.round(NEXT_ORDER_DISCOUNT * 100)}% הנחה על הקנייה הבאה שלך
+            </div>
+            <p className="text-sm text-ink-300 mb-4">
+              הקוד שלך שמור. תגיד אותו בוואטסאפ בהזמנה הבאה וההנחה תרד מהמחיר.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard?.writeText(coupon).then(
+                  () => { setCopied(true); setTimeout(() => setCopied(false), 2000); },
+                  () => {},
+                );
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-ink-950 border border-dashed border-flame/60 font-mono text-lg tracking-widest text-flame hover:bg-flame/10 transition-colors"
+              dir="ltr"
+            >
+              {coupon}
+              <Icon name={copied ? "check" : "file"} size={14} />
+            </button>
+            <div className="mt-2 text-[11px] text-ink-500">{copied ? "הועתק" : "לחיצה מעתיקה"}</div>
+          </div>
+        )}
+
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
-          <Btn as="a" href="/livestream" icon="play">
+          {bought && (
+            <Btn as="a" href="/trendy" icon="arrowLeft">
+              המשך לקנות
+            </Btn>
+          )}
+          <Btn as="a" href="/livestream" variant={bought ? "outline" : "primary"} icon="play">
             צפה בלייב
           </Btn>
-          <Btn
-            as="a"
-            href={CONTACT.whatsapp}
-            variant="ghost"
-            icon="whatsapp"
-          >
+          <Btn as="a" href={CONTACT.whatsapp} variant="ghost" icon="whatsapp">
             פתח וואטסאפ
           </Btn>
         </div>
-        <div className="font-mono text-[11px] tracking-widest text-ink-500" dir="ltr">
+
+        {bought && similar.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-xl md:text-2xl font-black tracking-tightest mb-1">
+              דומים למה שבחרת
+            </h2>
+            <p className="text-sm text-ink-400 mb-5">
+              מאותם מדפים. אם משהו מוצא חן — אפשר להוסיף אותו לאותה הדפסה.
+            </p>
+            <ProductGrid cards={similar} />
+          </section>
+        )}
+
+        <div className="font-mono text-[11px] tracking-widest text-ink-500 text-center" dir="ltr">
           REF · {refCode}
         </div>
       </div>
@@ -107,6 +181,11 @@ export default function ContactClient() {
           onSubmit={(e) => {
             e.preventDefault();
             setRefCode(`UNIT3D-${Math.floor(Math.random() * 90000 + 10000)}`);
+            if (items.length) {
+              setOrdered(items);
+              setCoupon(makeCoupon());
+              clearCart();
+            }
             setSubmitted(true);
           }}
           className="lg:col-span-2 space-y-8"
