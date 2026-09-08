@@ -15,7 +15,7 @@
     "kwhPriceILS": 0.5,
     "laborPerItem": 5,
     "amsWastePerColor": 0.1,
-    "targetMargin": 0.5
+    "targetMargin": 0.2
   },
   "overrides": {},
   "pricing": {
