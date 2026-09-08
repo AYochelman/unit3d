@@ -16,14 +16,13 @@ import {
   type Battalion,
 } from "@/lib/units-hierarchy";
 import { useOrderStore } from "@/lib/order-store";
+import UnitOrderModal, { type UnitPick } from "@/components/UnitOrderModal";
+import { bulkDiscount } from "@/lib/pricing";
+import { UNIT_FORMS, unitFormItemId } from "@/lib/unitForms";
 import { fmtILS } from "@/lib/format";
-import { useLivePrice } from "@/lib/live-price";
-import { CONFIG_PRODUCT_BY_ID } from "@/lib/products";
+import { useLivePricer } from "@/lib/live-price";
 import { cn } from "@/lib/cn";
 
-const DEFAULT_PRICE = 65;
-const DEFAULT_TIME = "2.5h";
-const DEFAULT_SIZE = "47×40mm";
 
 // Battalion slugs that have a ready-to-download STL sample at /stl-samples/<slug>.stl
 const STL_AVAILABLE = new Set<string>([
@@ -57,15 +56,15 @@ const FILTERS: { id: FilterId; label: string }[] = [
 ];
 
 export default function CatalogClient() {
-  // The emblem keychain is the configurator keychain, so it follows the same
-  // admin price as everything else on the site.
-  const emblemPrice = useLivePrice({
-    id: "cfg-keychain",
-    price: DEFAULT_PRICE,
-    grams: CONFIG_PRODUCT_BY_ID.keychain.grams,
-    hours: CONFIG_PRODUCT_BY_ID.keychain.hours,
-    material: CONFIG_PRODUCT_BY_ID.keychain.material,
-  });
+  // The card quotes the cheapest body the emblem comes on, because the customer
+  // chooses the body in the modal. One fixed number would be the keychain's, and
+  // wrong for the other four.
+  const priceOf = useLivePricer();
+  const fromPrice = Math.min(
+    ...UNIT_FORMS.map((f) =>
+      priceOf({ id: unitFormItemId(f.id), price: f.price, grams: f.grams, hours: f.hours, material: f.material }),
+    ),
+  );
   const [branchFilter, setBranchFilter] = useState<FilterId>("all");
   const [query, setQuery] = useState("");
   const [openBranches, setOpenBranches] = useState<Set<string>>(new Set());
@@ -152,30 +151,25 @@ export default function CatalogClient() {
     }
   };
 
+  // Which battalion was tapped. The order is NOT built here: where the emblem
+  // goes and how it is finished are the customer's to answer, and the modal asks
+  // before anything reaches the contact form.
+  const [picked, setPicked] = useState<(UnitPick & { brigadeSlug: string }) | null>(null);
+
   const addToOrder = (
     battalion: Battalion,
     brigade: Brigade,
     corps: Corps,
     branch: BranchNode,
   ) => {
-    const title = battalion.nickname
-      ? `${battalion.name} - ${battalion.nickname}`
-      : battalion.name;
-    setOrder({
-      title,
-      summary: [
-        `סמל יחידה: ${title}`,
-        `חטיבה: ${brigade.name}`,
-        `חיל: ${corps.name}`,
-        `זרוע: ${branch.name}`,
-        `גודל: ${DEFAULT_SIZE}`,
-        `זמן הדפסה: ${DEFAULT_TIME}`,
-      ],
-      price: emblemPrice,
-      source: "catalog",
-      meta: { unitSlug: battalion.slug, brigadeSlug: brigade.slug },
+    setPicked({
+      slug: battalion.slug,
+      title: battalion.nickname ? `${battalion.name} - ${battalion.nickname}` : battalion.name,
+      brigade: brigade.name,
+      corps: corps.name,
+      branch: branch.name,
+      brigadeSlug: brigade.slug,
     });
-    router.push("/contact");
   };
 
   // Count totals
@@ -329,6 +323,7 @@ export default function CatalogClient() {
                 brigade={brigade}
                 corps={corps}
                 branch={branch}
+                fromPrice={fromPrice}
                 onAdd={() => addToOrder(battalion, brigade, corps, branch)}
               />
             ))}
@@ -506,6 +501,7 @@ export default function CatalogClient() {
                                             brigade={brigade}
                                             corps={corps}
                                             branch={branch}
+                                            fromPrice={fromPrice}
                                             onAdd={() =>
                                               addToOrder(
                                                 battalion,
@@ -533,6 +529,30 @@ export default function CatalogClient() {
           })}
         </div>
       )}
+
+      <UnitOrderModal
+        key={picked?.slug ?? "none"}
+        unit={picked}
+        onClose={() => setPicked(null)}
+        onConfirm={({ form, summary, price, qty }) => {
+          if (!picked) return;
+          setOrder({
+            title: `${picked.title} · ${form.label}`,
+            summary,
+            price,
+            source: "catalog",
+            meta: {
+              unitSlug: picked.slug,
+              brigadeSlug: picked.brigadeSlug,
+              form: form.id,
+              qty,
+              baseUnitPrice: price == null ? undefined : price / (qty * (1 - bulkDiscount(qty))),
+            },
+          });
+          setPicked(null);
+          router.push("/contact");
+        }}
+      />
     </div>
   );
 }
@@ -542,12 +562,15 @@ function BattalionCard({
   brigade,
   corps,
   branch,
+  fromPrice,
   onAdd,
 }: {
   battalion: Battalion;
   brigade: Brigade;
   corps: Corps;
   branch: BranchNode;
+  /** Cheapest body the emblem is offered on — the card says "from". */
+  fromPrice: number;
   onAdd: () => void;
 }) {
   const hue = battalion.fallbackHue ?? brigade.fallbackHue ?? branch.fallbackHue;
@@ -600,8 +623,9 @@ function BattalionCard({
           {brigade.name} · {corps.name}
         </div>
         <div className="flex items-center justify-between mt-auto gap-2">
-          <span className="font-mono text-flame text-sm" dir="ltr">
-            {fmtILS(DEFAULT_PRICE)}
+          <span className="font-mono text-flame text-sm">
+            <span className="text-ink-500 text-xs">מ־</span>
+            <span dir="ltr">{fmtILS(fromPrice)}</span>
           </span>
           <Btn
             size="sm"
