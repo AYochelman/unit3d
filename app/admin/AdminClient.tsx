@@ -102,7 +102,7 @@ export default function AdminClient() {
         <Pill tone="neutral" className="mb-4 font-mono">ADMIN</Pill>
         <h1 className="text-3xl font-black tracking-tightest mb-2">אזור ניהול</h1>
         <p className="text-ink-400 text-sm mb-6">
-          עלויות ייצור, מחירי גלילים ומרווחים. הקוד מוגדר בקובץ <span className="font-mono text-ink-200" dir="ltr">lib/admin-store.ts</span>.
+          עלויות ייצור, מחירי גלילים ומרווחים.
         </p>
         <form
           onSubmit={(e) => {
@@ -114,16 +114,15 @@ export default function AdminClient() {
         >
           <Input
             type="password"
-            inputMode="numeric"
             value={pin}
             onChange={(e) => setPin(e.target.value)}
-            placeholder="קוד"
+            placeholder="סיסמה"
             dir="ltr"
             autoFocus
           />
           <Btn type="submit" variant="primary">כניסה</Btn>
         </form>
-        {pinErr && <p className="mt-2 text-xs text-bad">קוד שגוי.</p>}
+        {pinErr && <p className="mt-2 text-xs text-bad">סיסמה שגויה.</p>}
       </div>
     );
   }

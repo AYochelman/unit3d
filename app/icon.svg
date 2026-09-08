@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The tab icon.
+       The whole wordmark turns to mush at 16px, so the icon is the one glyph
+       that carries the brand on its own: the green 3 from the logo's mark,
+       the same path as in Logo.tsx, scaled to fill a dark tile. Drawn rather
+       than typeset, so no font substitution can change it. -->
+  <rect width="64" height="64" rx="14" fill="#0A0A0B"/>
+  <g transform="translate(8 8) scale(0.363) translate(-211 -133)">
+    <path d="M228 150 H318 A24 24 0 0 1 318 198 H284 H322 A25 25 0 0 1 322 248 H236"
+          fill="none" stroke="#3FB872" stroke-width="34" stroke-linejoin="round"/>
+  </g>
+</svg>

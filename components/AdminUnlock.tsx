@@ -9,7 +9,7 @@ import { useAdminStore } from "@/lib/admin-store";
  *
  * The admin session lives in memory only (the project forbids storing it), so
  * a hard refresh on a product page logs you out. Rather than send you back to
- * /admin every time, this unlocks in place: click "admin", type the PIN, and
+ * /admin every time, this unlocks in place: click "admin", type the password, and
  * the cost panel appears on the page you were already looking at.
  */
 export default function AdminUnlock() {
@@ -64,17 +64,16 @@ export default function AdminUnlock() {
     >
       <input
         type="password"
-        inputMode="numeric"
         autoFocus
         value={pin}
         onChange={(e) => {
           setPin(e.target.value);
           setBad(false);
         }}
-        placeholder="קוד"
-        aria-label="קוד מנהל"
+        placeholder="סיסמה"
+        aria-label="סיסמת מנהל"
         aria-invalid={bad}
-        className={`h-8 w-20 px-2 rounded-lg bg-ink-950 border text-xs font-mono text-ink-100 focus:outline-none ${
+        className={`h-8 w-28 px-2 rounded-lg bg-ink-950 border text-xs font-mono text-ink-100 focus:outline-none ${
           bad ? "border-bad" : "border-ink-700 focus:border-amber-500/60"
         }`}
         dir="ltr"

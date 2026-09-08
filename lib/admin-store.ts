@@ -13,8 +13,16 @@ import { readToken, writeToken } from "./admin-token";
 // imported as JSON (see /admin → "ייצוא / ייבוא"). Persisting them for real
 // needs a backend — see HANDOFF.md.
 
-/** Change this to your own PIN. It only gates the UI (no server). */
-export const ADMIN_PIN = "1234";
+/**
+ * The owner's password for the admin area.
+ *
+ * It gates the UI and nothing else: the shop is a static site, so this string
+ * ships inside the published bundle and anyone who reads it can open /admin.
+ * That is fine for what lives here — costs, margins and shelf order — but it is
+ * NOT what protects customer details: the orders table opens only to a signed-in
+ * Supabase user, and the GitHub token is never written into the code at all.
+ */
+export const ADMIN_PASSWORD = "Erez!987654";
 
 export type ItemOverride = {
   grams?: number;
@@ -145,7 +153,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   ghToken: "",   // hydrated from the device on first render, see AdminUnlock
 
   unlock: (pin) => {
-    const ok = pin.trim() === ADMIN_PIN;
+    const ok = pin.trim() === ADMIN_PASSWORD;
     // Reading the device only on unlock keeps it out of the server render and
     // out of every page that is not the admin.
     if (ok) set({ unlocked: true, ghToken: get().ghToken || readToken() });
