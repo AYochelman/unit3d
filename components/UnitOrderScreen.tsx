@@ -97,6 +97,10 @@ export default function UnitOrderScreen({
 
   const form = UNIT_FORMS.find((f) => f.id === formId) ?? UNIT_FORMS[0];
 
+  /** Is any colour of this body's filament actually on the shelf? */
+  const onShelf = (material: UnitForm["material"]) =>
+    filamentsFor(palette, material).some((c) => isColorInStock(stock, material, c.id));
+
   // A product page offers only what can be printed today, and says so when the
   // shelf is empty. This is an enquiry, not a checkout — it ends in a message to
   // Ariel — so when nothing in the family is in stock the customer still gets to
@@ -236,6 +240,9 @@ export default function UnitOrderScreen({
                       <span className="block p-3 border-t border-ink-800/70">
                         <span className="block font-bold text-sm text-ink-50 truncate">{f.label}</span>
                         <span className="block text-[11px] text-ink-400 leading-snug h-8 overflow-hidden">{f.desc}</span>
+                        {!onShelf(f.material) && (
+                          <span className="block text-[10px] text-amber-400/90 mt-1">בהזמנה · הגליל אינו במלאי</span>
+                        )}
                         <span className="flex items-baseline justify-between mt-1.5">
                           <span className="font-bold text-sm text-flame">
                             {p >= MADE_TO_ORDER_FROM ? "לפי הזמנה" : fmtILS(p)}
@@ -257,20 +264,27 @@ export default function UnitOrderScreen({
             <div>
               <div className="text-sm font-bold text-ink-200 mb-1">
                 צבע: <span className="text-ink-50 font-normal">{colorName}</span>
-                {noneInStock && (
-                  <span className="text-ink-500 font-normal"> · הגליל לא על המדף כרגע, נזמין אותו</span>
-                )}
               </div>
               {/* The list changes between products and that looks like a bug
                   until you know why: a colour belongs to a filament, and the
                   ashtray is printed in another one. Say which, rather than
                   leaving the customer to notice swatches appearing and
                   disappearing as they tap. */}
-              <div className="text-[11px] text-ink-500 mb-2.5">
-                {form.label} מודפס ב-{MATERIAL_BY_ID[form.material].name}
-                {form.material !== "pla" && " — ולכן הגוונים שונים משאר המוצרים"}
-                {` · ${colors.length} גוונים על המדף`}
-              </div>
+              {noneInStock ? (
+                // Striking out every swatch marks nothing — the exception has
+                // become the rule. One sentence carries it, and the colours stay
+                // ordinary so the customer can still say which one they want.
+                <div className="text-[11px] text-amber-400/90 mb-2.5">
+                  {MATERIAL_BY_ID[form.material].name} לא על המדף כרגע. נזמין גליל בצבע שתבחר —
+                  זמן האספקה מתארך בכמה ימים.
+                </div>
+              ) : (
+                <div className="text-[11px] text-ink-500 mb-2.5">
+                  {form.label} מודפס ב-{MATERIAL_BY_ID[form.material].name}
+                  {form.material !== "pla" && " — ולכן הגוונים שונים משאר המוצרים"}
+                  {` · ${colors.length} גוונים על המדף`}
+                </div>
+              )}
               <div className="flex flex-wrap gap-2.5">
                 {colors.map((c) => (
                   <button
@@ -283,11 +297,11 @@ export default function UnitOrderScreen({
                     className={cn(
                       "h-10 w-10 rounded-full border-2 transition-all hover:scale-110 active:scale-95 relative",
                       color === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50",
-                      !isColorInStock(stock, form.material, c.id) && "opacity-35",
+                      !noneInStock && !isColorInStock(stock, form.material, c.id) && "opacity-35",
                     )}
                   >
                     <ColorSwatch filament={c} fill />
-                    {!isColorInStock(stock, form.material, c.id) && (
+                    {!noneInStock && !isColorInStock(stock, form.material, c.id) && (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <span className="block w-8 h-[2px] bg-white/80 rotate-45 rounded-full" />
                       </span>
