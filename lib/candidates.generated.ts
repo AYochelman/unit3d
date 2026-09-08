@@ -2,12 +2,150 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 18
-// Updated: 2026-09-08T00:07:12.345Z
+// Items: 26
+// Updated: 2026-09-08T00:08:14.121Z
 
 import type { Candidate } from "./candidates";
 
 export const CANDIDATES: Candidate[] = [
+  {
+    "id": "2765603",
+    "title": "Batman Sitting on Ledge Figure | Arkham Knight",
+    "slug": "batman-sitting-on-ledge-figure-arkham-knight",
+    "license": "Standard Digital File License",
+    "creator": "shredderrich",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US12d3b130c42cd5/design/a04e14494bccc589.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 8070,
+    "likes": 3211,
+    "grams": 31,
+    "hours": 2.9,
+    "colors": 1,
+    "suggested": "statues",
+    "warnings": [
+      "מותג"
+    ],
+    "via": "נשלח על ידך",
+    "tags": "batman · arkham · arkham knight · gotham · mini · figurine"
+  },
+  {
+    "id": "3267559",
+    "title": "Hexagon Screw Fidget Toy (Print in Place)",
+    "slug": "hexagon-screw-fidget-toy-print-in-place",
+    "license": "Standard Digital File License",
+    "creator": "AbyssalCactus",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2cd53788ff806d/design/f33b7c5c2004cad2.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 58,
+    "likes": 35,
+    "grams": 13,
+    "hours": 0.6,
+    "colors": 1,
+    "suggested": "fidget",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "fidget · fidget toy · toy · fun · satisfying · spin"
+  },
+  {
+    "id": "1087329",
+    "title": "Porsche 911 GT3 RS Wall Art",
+    "slug": "porsche-911-gt3-rs-wall-art",
+    "license": "BY-SA",
+    "creator": "Recticle",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US8151594e204afa/design/2025-02-08_a3d16bc4f143e8.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 29280,
+    "likes": 10621,
+    "grams": 20,
+    "hours": 1.43,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "porsche · 911 · 992 · car · wall · art"
+  },
+  {
+    "id": "1454252",
+    "title": "Tree wall art decor",
+    "slug": "tree-wall-art-decor",
+    "license": "Standard Digital File License",
+    "creator": "LumiArte",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US17849a50be9178/design/2025-05-30_73f8fd35bd3c08.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 3426,
+    "likes": 2125,
+    "grams": 109,
+    "hours": 4.21,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "wall dcor · wall art · tree · design · designer · 2dart"
+  },
+  {
+    "id": "2211015",
+    "title": "Melting Wall Shelf – Dripping Modern Shelf",
+    "slug": "melting-wall-shelf-dripping-modern-shelf",
+    "license": "Standard Digital File License",
+    "creator": "Fierro 3D",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5104514e08055d/design/2026-01-06_a45a2ecbdbd2c8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 8050,
+    "likes": 6046,
+    "grams": 189,
+    "hours": 5.5,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "wall shelf · shelf · melting · dripping · modern · aesthetic"
+  },
+  {
+    "id": "2205355",
+    "title": "Skull Wall Decor",
+    "slug": "skull-wall-decor",
+    "license": "Standard Digital File License",
+    "creator": "HypoRift",
+    "image": "https://makerworld.bblmw.com/makerworld/model/USaa0aa4413d46c2/design/2026-01-05_a8403883173a98.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 2146,
+    "likes": 1444,
+    "grams": 82,
+    "hours": 2.78,
+    "colors": 1,
+    "suggested": "statues",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "skull · art · wall art · skull decor · in wall · sculpted"
+  },
+  {
+    "id": "1602658",
+    "title": "Suspended & Layered 911 Porsche",
+    "slug": "suspended-layered-911-porsche",
+    "license": "Standard Digital File License",
+    "creator": "theStonefox",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US72ef77a6966bf3/design/2025-07-13_281b115644e6f8.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 1267,
+    "likes": 533,
+    "grams": 96,
+    "hours": 3.61,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "porsche · layered · wave · suspended · string · art"
+  },
+  {
+    "id": "2783407",
+    "title": "Modern Minimalistic - Foldable Wall Hook",
+    "slug": "modern-minimalistic-foldable-wall-hook",
+    "license": "Standard Digital File License",
+    "creator": "Kien Designs",
+    "image": "https://makerworld.bblmw.com/makerworld/model/USec6375825d6c86/design/cab4fa9093b52641.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 6922,
+    "likes": 7807,
+    "grams": 33,
+    "hours": 1.44,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "hook · decor · Hook · wall hook · space saving · nordic design"
+  },
   {
     "id": "2608825",
     "title": "Flexi Dog - Articulated Keychain",
