@@ -320,6 +320,32 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               {f.name}
             </h1>
             <p className="mt-2 text-ink-300 text-sm leading-relaxed">{f.desc}</p>
+
+            {/* Credit for an imported design, in the same place the shelf
+                products carry it. CC-BY asks for the designer's name next to
+                the work, and the link is also how a customer checks what they
+                are buying a print of — buried at the foot of the page in
+                English, nobody found it. */}
+            {f.sourceUrl && (
+              <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-ink-500">
+                <span>
+                  {f.nameEn && f.nameEn !== f.name && (
+                    <><bdi dir="ltr" className="text-ink-400">{f.nameEn}</bdi>{" · "}</>
+                  )}
+                  עיצוב מקורי: <span className="text-ink-300">{f.creator ?? "MakerWorld"}</span>
+                  {f.license && <span className="text-ink-400"> · {f.license}</span>}
+                </span>
+                <a
+                  href={f.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-cyan2 hover:underline"
+                >
+                  לדף המקור
+                  <Icon name="arrowLeft" size={10} />
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Specs strip */}
@@ -680,22 +706,6 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           <p className="text-center text-[11px] text-ink-500">
             לחץ &quot;לסל הקנייה&quot; כדי לסיים את ההזמנה ·  24H response
           </p>
-
-          {/* Source attribution (CC-BY) — discreet, under the fold */}
-          {f.creator && (
-            <p className="text-[11px] text-ink-400 text-center" dir="ltr">
-              {f.nameEn && f.nameEn !== f.name ? `${f.nameEn} · ` : ""}Model by {f.creator}
-              {f.license ? ` · ${f.license}` : ""}
-              {f.sourceUrl && (
-                <>
-                  {" · "}
-                  <a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-100">
-                    source file
-                  </a>
-                </>
-              )}
-            </p>
-          )}
 
           {/* Trust strip */}
           <div className="grid grid-cols-3 gap-2 pt-2 border-t border-ink-800">
