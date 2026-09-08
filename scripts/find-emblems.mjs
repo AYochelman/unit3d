@@ -12,7 +12,7 @@
  * unit, one request a second with a real User-Agent (Commons rate-limits a
  * datacentre that asks faster — silently, as an empty result, which is how the
  * first attempt at this looked like "nothing exists"), and a score that prefers
- * a unit TAG over a flag, a photograph or a battalion's own badge.
+ * a unit TAG over a flag or a photograph.
  *
  * It proposes; it does not decide. The candidates land in
  * data/emblem-candidates.json with their URLs so a person can look before any
@@ -50,7 +50,8 @@ async function search(query, limit = 8) {
 /** Distinctive words from a unit's name — a number, or a transliterated name. */
 function tokens(entry) {
   const out = new Set();
-  for (const src of [entry.name, entry.englishName ?? ""]) {
+  if (entry.number) out.add(String(entry.number));
+  for (const src of [entry.name, entry.englishName ?? "", entry.nickname ?? ""]) {
     for (const m of String(src).matchAll(/\d{2,4}/g)) out.add(m[0]);
     for (const w of String(src).split(/[\s,()/'"־-]+/)) {
       if (w.length >= 4 && /^[A-Za-z]+$/.test(w) && !/brigade|israeli|israel|force|corps|unit|units|command|squadron|squadrons/i.test(w)) out.add(w.toLowerCase());
@@ -83,12 +84,22 @@ async function main() {
   for (const e of todo) {
     const toks = tokens(e);
     const en = (e.englishName || "").split("(")[0].trim();
-    const queries = [
-      `${e.name} תג יחידה`,
-      `${e.name} סמל`,
-      en && `${en} insignia`,
-      en && `${en} emblem`,
-    ].filter(Boolean);
+    // A battalion is found by its number and its nickname, not by "גדוד 12" —
+    // that phrase matches every battalion in the army.
+    const queries = e.level === "גדוד"
+      ? [
+          e.number && `גדוד ${e.number} סמל`,
+          e.number && `gdud ${e.number}`,
+          e.nickname && `${e.nickname} גדוד תג`,
+          e.nickname && `${e.nickname} סמל`,
+          e.number && `battalion ${e.number} Israel insignia`,
+        ].filter(Boolean)
+      : [
+          `${e.name} תג יחידה`,
+          `${e.name} סמל`,
+          en && `${en} insignia`,
+          en && `${en} emblem`,
+        ].filter(Boolean);
 
     const seen = new Map();
     for (const q of queries) {

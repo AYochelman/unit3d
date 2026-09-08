@@ -17,6 +17,10 @@ const SEEDS = [
   "Category:Israeli Air Defense Command",
   "Category:Military units and formations of Israel",
   "Category:SVG military shoulder tags of Israel",
+  "Category:Military shoulder tags of Israel",
+  "Category:Battalions of Israel",
+  "Category:Insignia of the Ground forces of the IDF",
+  "Category:Israel Defense Forces insignia",
 ];
 
 const MAX_CATEGORIES = 400;
