@@ -1,1190 +1,2263 @@
 {
-  "searchedAt": "2026-09-08T14:01:12.002Z",
+  "searchedAt": "2026-09-08T14:51:53.399Z",
   "found": [
     {
-      "slug": "corps-reserve-brigades",
-      "name": "חטיבות מילואים",
-      "englishName": "IDF reserve brigades (Ground Forces reserve infantry/armored brigades)",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-res-yiftach",
-      "name": "חטיבת יפתח",
-      "englishName": "Yiftach Formation / 679th (later 434th) Reserve Armored Brigade",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-art-meteor",
-      "name": "אגד מטאור",
-      "englishName": "Meteor Artillery Brigade (Agad Meteor)",
-      "candidates": []
-    },
-    {
-      "slug": "corps-engineering",
-      "name": "חיל הנדסה קרבית",
-      "englishName": "Combat Engineering Corps",
+      "slug": "golani-12-barak",
+      "name": "גדוד 12",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:IDF Combat Engineering Corps at Southern Command.svg",
-          "score": 11,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Combat_Engineering_Corps_at_Southern_Command.svg"
-        },
-        {
-          "title": "File:IDF 8170 Combat Engineering Battalion.svg",
-          "score": 11,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_8170_Combat_Engineering_Battalion.svg"
-        },
-        {
-          "title": "File:Combat-Engineering-Main-Flag.png",
-          "score": 8,
-          "page": "https://commons.wikimedia.org/wiki/File%3ACombat-Engineering-Main-Flag.png"
-        },
-        {
-          "title": "File:IDF-Combat-Engineering-Semel.jpg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF-Combat-Engineering-Semel.jpg"
-        },
-        {
-          "title": "File:US Army Information Systems Engineering Command SSI 2026-05-15.svg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3AUS_Army_Information_Systems_Engineering_Command_SSI_2026-05-15.svg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-eng-yahalom",
-      "name": "יחידת יהל\"ם",
-      "englishName": "Yahalom Unit (Special Operations Engineering Unit)",
-      "candidates": [
-        {
-          "title": "File:Yahalom.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AYahalom.png"
-        },
-        {
-          "title": "File:YahalomPin01.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AYahalomPin01.png"
-        },
-        {
-          "title": "File:IEOD.gif",
-          "score": 1,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIEOD.gif"
-        },
-        {
-          "title": "File:Ibex.gif",
-          "score": 1,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIbex.gif"
-        },
-        {
-          "title": "File:Sayeret Yael pin.jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3ASayeret_Yael_pin.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-res-brigade-551",
-      "name": "חטיבה 551 (חצי האש)",
-      "englishName": "551st Paratroopers Brigade (Hetzei HaEsh / \"Arrows of Fire\" Formation)",
-      "candidates": [
-        {
-          "title": "File:Logo hativa 551.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALogo_hativa_551.png"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-eng-sadir",
-      "name": "סדיר (גדודי הנדסה)",
-      "englishName": "Regular (conscript) combat engineering battalions – parent: Combat Engineering Corps (IDF)",
-      "candidates": [
-        {
-          "title": "File:Emblem of the Spanish Indigenous Regular Forces.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Spanish_Indigenous_Regular_Forces.svg"
-        },
-        {
-          "title": "File:Insignia of Šaulių sąjunga.svg",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AInsignia_of_%C5%A0auli%C5%B3_s%C4%85junga.svg"
-        },
-        {
-          "title": "File:Emblem of Kasukabe Boueitai.svg",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEmblem_of_Kasukabe_Boueitai.svg"
-        },
-        {
-          "title": "File:Emblem of the Ukrainian Special Operations Forces.svg",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Ukrainian_Special_Operations_Forces.svg"
-        },
-        {
-          "title": "File:Emblem of the Ukrainian Armed Forces.svg",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Ukrainian_Armed_Forces.svg"
-        }
-      ]
-    },
-    {
-      "slug": "corps-combat-intel",
-      "name": "חיל האיסוף הקרבי",
-      "englishName": "Combat Intelligence Collection Corps",
-      "candidates": [
-        {
-          "title": "File:Semel asaf.png",
+          "title": "File:IDF Ugda 96 Nevo logo.png",
           "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3ASemel_asaf.png"
+          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Ugda_96_Nevo_logo.png"
         },
         {
-          "title": "File:ONI JAN 1 Uniforms and Insignia Page 124 Turkish Navy WW2 Shoulder and sleeve insignia Combat officers August 1943 Field recognition. US public doc. No known copyright.jpg",
+          "title": "File:CivilDef Lahish District.svg",
           "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3AONI_JAN_1_Uniforms_and_Insignia_Page_124_Turkish_Navy_WW2_Shoulder_and_sleeve_insignia_Combat_officers_August_1943_Field_recognition._US_public_doc._No_known_copyright.jpg"
+          "page": "https://commons.wikimedia.org/wiki/File%3ACivilDef_Lahish_District.svg"
         },
         {
-          "title": "File:Mekamshar Tag till 2009.png",
+          "title": "File:Coat of arms of Bnei-Brak.svg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3ACoat_of_arms_of_Bnei-Brak.svg"
+        },
+        {
+          "title": "File:Idf-reg-reshef-71-new.svg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIdf-reg-reshef-71-new.svg"
+        },
+        {
+          "title": "File:Sinai signal.png",
           "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AMekamshar_Tag_till_2009.png"
+          "page": "https://commons.wikimedia.org/wiki/File%3ASinai_signal.png"
         }
       ]
     },
     {
-      "slug": "brigade-ci-recon",
-      "name": "גדודי סיור גזרתיים",
-      "englishName": "Sector (regional) reconnaissance battalions – parent: Combat Intelligence Collection Corps",
+      "slug": "golani-13-gideon",
+      "name": "גדוד 13",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:Insignia of the 15th Sotnya of the Right Sector Ukrainian Volunteer Corps.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AInsignia_of_the_15th_Sotnya_of_the_Right_Sector_Ukrainian_Volunteer_Corps.png"
-        },
-        {
-          "title": "File:Insignia of the 23th Sotnya of the Right Sector Ukrainian Volunteer Corps.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AInsignia_of_the_23th_Sotnya_of_the_Right_Sector_Ukrainian_Volunteer_Corps.png"
-        },
-        {
-          "title": "File:Insignia of the 16th Sotnya of the Right Sector Ukrainian Volunteer Corps.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AInsignia_of_the_16th_Sotnya_of_the_Right_Sector_Ukrainian_Volunteer_Corps.png"
-        },
-        {
-          "title": "File:Bangor Air Defense Sector - Emblem.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3ABangor_Air_Defense_Sector_-_Emblem.png"
-        },
-        {
-          "title": "File:Insignia of the 6th Sotnya of the Right Sector Ukrainian Volunteer Corps.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AInsignia_of_the_6th_Sotnya_of_the_Right_Sector_Ukrainian_Volunteer_Corps.png"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-ci-oketz",
-      "name": "יחידת עוקץ",
-      "englishName": "Oketz Unit (IDF canine special forces unit)",
-      "candidates": [
-        {
-          "title": "File:Oketz.png",
+          "title": "File:גדוד 13 גדעון.png",
           "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AOketz.png"
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%93%D7%95%D7%93_13_%D7%92%D7%93%D7%A2%D7%95%D7%9F.png"
         },
         {
-          "title": "File:Newoketz.jpg",
+          "title": "File:Battalion Sharon 1872 (IDF).png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABattalion_Sharon_1872_(IDF).png"
+        },
+        {
+          "title": "File:Battalion Yehuda 1875 (IDF).png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABattalion_Yehuda_1875_(IDF).png"
+        },
+        {
+          "title": "File:Battalion Grofit 1873 (IDF).png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABattalion_Grofit_1873_(IDF).png"
+        },
+        {
+          "title": "File:Battalion Hefer 1871 (IDF).png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABattalion_Hefer_1871_(IDF).png"
+        }
+      ]
+    },
+    {
+      "slug": "golani-51-habokim",
+      "name": "גדוד 51",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:גדוד 51 הבוקעים.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%93%D7%95%D7%93_51_%D7%94%D7%91%D7%95%D7%A7%D7%A2%D7%99%D7%9D.png"
+        },
+        {
+          "title": "File:Kilar Gdud Moriah.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AKilar_Gdud_Moriah.jpg"
+        },
+        {
+          "title": "File:HaGiborim Bridge.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AHaGiborim_Bridge.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "golani-egoz",
+      "name": "סיירת אגוז",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Egoz Unit 621 emblem.png",
+          "score": 9,
+          "page": "https://commons.wikimedia.org/wiki/File%3AEgoz_Unit_621_emblem.png"
+        },
+        {
+          "title": "File:621 unit seal.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A621_unit_seal.png"
+        },
+        {
+          "title": "File:Egoz Unit.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AEgoz_Unit.png"
+        }
+      ]
+    },
+    {
+      "slug": "golani-recon",
+      "name": "גדוד הסיור גולני",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "para-101-peten",
+      "name": "גדוד 101",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Iron swords- gdud 101 (10).jpg",
           "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3ANewoketz.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "corps-border-defense",
-      "name": "חי\"ר גבולות ופלח\"ץ",
-      "englishName": "Border Defense Corps (Israel Defense Forces)",
-      "candidates": [
-        {
-          "title": "File:IDF Border Defense Force Insignia.svg",
-          "score": 14,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Border_Defense_Force_Insignia.svg"
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(10).jpg"
         },
         {
-          "title": "File:IDF Border Defense Force Tag.svg",
-          "score": 11,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Border_Defense_Force_Tag.svg"
-        },
-        {
-          "title": "File:IDF Border Protection Corps Hat Badge.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Border_Protection_Corps_Hat_Badge.png"
-        },
-        {
-          "title": "File:Logo-hativat-417.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALogo-hativat-417.png"
-        },
-        {
-          "title": "File:USS Jason Dunham COA.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AUSS_Jason_Dunham_COA.png"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-bd-plahatz",
-      "name": "חטיבת החילוץ וההדרכה (פלח\"ץ)",
-      "englishName": "Search and Rescue Brigade (Palchatz)",
-      "candidates": [
-        {
-          "title": "File:01 04 2019 Brigada de Busca e Salvamento do Comando da Frente Interna de Israel (40548243483).jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3A01_04_2019_Brigada_de_Busca_e_Salvamento_do_Comando_da_Frente_Interna_de_Israel_(40548243483).jpg"
-        },
-        {
-          "title": "File:01 04 2019 Brigada de Busca e Salvamento do Comando da Frente Interna de Israel (47514216301).jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3A01_04_2019_Brigada_de_Busca_e_Salvamento_do_Comando_da_Frente_Interna_de_Israel_(47514216301).jpg"
-        },
-        {
-          "title": "File:01 04 2019 Brigada de Busca e Salvamento do Comando da Frente Interna de Israel (33637462618).jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3A01_04_2019_Brigada_de_Busca_e_Salvamento_do_Comando_da_Frente_Interna_de_Israel_(33637462618).jpg"
-        },
-        {
-          "title": "File:01 04 2019 Brigada de Busca e Salvamento do Comando da Frente Interna de Israel (33637465908).jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3A01_04_2019_Brigada_de_Busca_e_Salvamento_do_Comando_da_Frente_Interna_de_Israel_(33637465908).jpg"
-        },
-        {
-          "title": "File:01 04 2019 Brigada de Busca e Salvamento do Comando da Frente Interna de Israel (47461447692).jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3A01_04_2019_Brigada_de_Busca_e_Salvamento_do_Comando_da_Frente_Interna_de_Israel_(47461447692).jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-bd-borders",
-      "name": "מערך הגבולות",
-      "englishName": "Border Array (Ma'arach HaGvulot), Border Defense Corps",
-      "candidates": [
-        {
-          "title": "File:Logo hativa Faran.svg",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALogo_hativa_Faran.svg"
-        },
-        {
-          "title": "File:Logo-hativat-417.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALogo-hativat-417.png"
-        },
-        {
-          "title": "File:STS-115 patch.svg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3ASTS-115_patch.svg"
-        },
-        {
-          "title": "File:ISS Expedition 22 Patch.svg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3AISS_Expedition_22_Patch.svg"
-        },
-        {
-          "title": "File:Eilatnew.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEilatnew.png"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-bd-territorial",
-      "name": "חטיבות מרחביות",
-      "englishName": "Territorial brigades (generic category)",
-      "candidates": [
-        {
-          "title": "File:114th Territorial Brigade Badge.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3A114th_Territorial_Brigade_Badge.png"
-        },
-        {
-          "title": "File:117th Territorial Brigade Badge.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3A117th_Territorial_Brigade_Badge.png"
-        },
-        {
-          "title": "File:100th Territorial Defence Brigade Insignia - Subdued Variant.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3A100th_Territorial_Defence_Brigade_Insignia_-_Subdued_Variant.png"
-        },
-        {
-          "title": "File:249th Separate Territorial Defense Battalion Insignia.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3A249th_Separate_Territorial_Defense_Battalion_Insignia.png"
-        },
-        {
-          "title": "File:100th Territorial Defence Brigade Insignia.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3A100th_Territorial_Defence_Brigade_Insignia.png"
-        }
-      ]
-    },
-    {
-      "slug": "branch-commando",
-      "name": "חטיבת הקומנדו (89)",
-      "englishName": "89th Commando Brigade (\"Oz\" Brigade), Israel Defense Forces",
-      "candidates": [
-        {
-          "title": "File:89th Commando Brigade Oz Soldier Badge.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A89th_Commando_Brigade_Oz_Soldier_Badge.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "corps-commando-89",
-      "name": "חטיבה 89",
-      "englishName": "89th Brigade (89th Commando Brigade), Israel Defense Forces",
-      "candidates": [
-        {
-          "title": "File:89th Oz Brigade.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3A89th_Oz_Brigade.png"
-        },
-        {
-          "title": "File:89MPBdeSSI.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3A89MPBdeSSI.png"
-        },
-        {
-          "title": "File:89th Military Police Brigade distinctive unit insignia.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A89th_Military_Police_Brigade_distinctive_unit_insignia.jpg"
-        },
-        {
-          "title": "File:89th Commando Brigade Oz Soldier Badge.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A89th_Commando_Brigade_Oz_Soldier_Badge.jpg"
-        },
-        {
-          "title": "File:89th DUIC.jpg",
+          "title": "File:Iron swords- gdud 101 (8).jpg",
           "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3A89th_DUIC.jpg"
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(8).jpg"
+        },
+        {
+          "title": "File:Iron swords- gdud 101 (1).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(1).jpg"
+        },
+        {
+          "title": "File:Iron swords- gdud 101 (5).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(5).jpg"
+        },
+        {
+          "title": "File:Iron swords- gdud 101 (2).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(2).jpg"
         }
       ]
     },
     {
-      "slug": "brigade-commando-units",
-      "name": "יחידות הקומנדו",
-      "englishName": "Commando units of the 89th Commando Brigade (Maglan, Egoz, Duvdevan, Rimon)",
+      "slug": "para-202-cobra",
+      "name": "גדוד 202",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:89th Commando Brigade Oz Soldier Badge.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A89th_Commando_Brigade_Oz_Soldier_Badge.jpg"
+          "title": "File:Church of Scotland property 0819 (508209416).jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AChurch_of_Scotland_property_0819_(508209416).jpg"
         },
         {
-          "title": "File:סמל דובדבן.jpg",
+          "title": "File:Dani Mat.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ADani_Mat.jpg"
+        },
+        {
+          "title": "File:IDF Paratroopers UNIT. VII.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Paratroopers_UNIT._VII.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "para-890-efe",
+      "name": "גדוד 890",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Dani Mat.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ADani_Mat.jpg"
+        },
+        {
+          "title": "File:IDF Paratroopers UNIT. VII.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Paratroopers_UNIT._VII.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "para-5135-james",
+      "name": "גדוד 5135 (מיל')",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "para-pelsar",
+      "name": "פלס\"ר צנחנים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "givati-432-tzabar",
+      "name": "גדוד 432",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:גדוד צבר.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%93%D7%95%D7%93_%D7%A6%D7%91%D7%A8.png"
+        },
+        {
+          "title": "File:Shachbag.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AShachbag.png"
+        },
+        {
+          "title": "File:Gdud tzabar.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_tzabar.png"
+        },
+        {
+          "title": "File:שבט צבר.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A9%D7%91%D7%98_%D7%A6%D7%91%D7%A8.jpg"
+        },
+        {
+          "title": "File:84169 prickly pear PikiWiki Israel.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A84169_prickly_pear_PikiWiki_Israel.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "givati-433-shaked",
+      "name": "גדוד 433",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud shaked.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_shaked.png"
+        },
+        {
+          "title": "File:Shaked 424 badge.JPG",
           "score": -1,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%93%D7%95%D7%91%D7%93%D7%91%D7%9F.jpg"
+          "page": "https://commons.wikimedia.org/wiki/File%3AShaked_424_badge.JPG"
         }
       ]
     },
     {
-      "slug": "branch-air",
-      "name": "זרוע האוויר והחלל",
-      "englishName": "Israeli Air Force (Israeli Air and Space Force / Air and Space Arm)",
+      "slug": "givati-435-rotem",
+      "name": "גדוד 435",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:Air Force Ensign of Israel.svg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3AAir_Force_Ensign_of_Israel.svg"
-        },
-        {
-          "title": "File:Israeli Air Force - Coat of arms.svg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Force_-_Coat_of_arms.svg"
-        },
-        {
-          "title": "File:IDF (Air Force) insignia of ranks 1950-1951.png",
+          "title": "File:Gdud rotem.png",
           "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_(Air_Force)_insignia_of_ranks_1950-1951.png"
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_rotem.png"
         },
         {
-          "title": "File:Israeli Air Force Technical Military Boarding school.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Force_Technical_Military_Boarding_school.png"
+          "title": "File:סמל פלוגת תומר (גבעתי).jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A4%D7%9C%D7%95%D7%92%D7%AA_%D7%AA%D7%95%D7%9E%D7%A8_(%D7%92%D7%91%D7%A2%D7%AA%D7%99).jpg"
         },
         {
-          "title": "File:IAF Squadron 193 new symbol 2026.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_193_new_symbol_2026.png"
+          "title": "File:סמל המחתרת של האצ\"ל בקישלה.JPG",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%94%D7%9E%D7%97%D7%AA%D7%A8%D7%AA_%D7%A9%D7%9C_%D7%94%D7%90%D7%A6%22%D7%9C_%D7%91%D7%A7%D7%99%D7%A9%D7%9C%D7%94.JPG"
         }
       ]
     },
     {
-      "slug": "brigade-training-squadrons",
-      "name": "טייסות הדרכה ואימון",
-      "englishName": "Israeli Air Force Flight Academy training squadrons (IAF Flight School, בית הספר לטיסה)",
+      "slug": "givati-424-shualey-shimshon",
+      "name": "גדוד 424",
+      "englishName": "",
       "candidates": []
     },
     {
-      "slug": "corps-helicopter-squadrons",
-      "name": "טייסות מסוקים",
-      "englishName": "Israeli Air Force helicopter squadrons",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-attack-helicopters",
-      "name": "מסוקי תקיפה (AH-64 'פטן')",
-      "englishName": "Israeli Air Force attack helicopter squadrons (AH-64 Apache 'Peten' — 113 'Hornet' and 190 'Magic Touch' Squadrons)",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-transport-helicopters",
-      "name": "מסוקי הובלה (CH-53/UH-60)",
-      "englishName": "Israeli Air Force transport helicopter squadrons (CH-53 Yas'ur / UH-60 Yanshuf — 114, 118, 123, 124 Squadrons)",
-      "candidates": []
-    },
-    {
-      "slug": "corps-fighter-squadrons",
-      "name": "טייסות קרב",
-      "englishName": "Israeli Air Force fighter squadrons (parent branch: Israeli Air Force)",
+      "slug": "givati-605-engineering",
+      "name": "גדוד 605",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:IAF Squadron Fighter aircraft Simulator.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_Fighter_aircraft_Simulator.png"
+          "title": "File:Gdud605logo.png",
+          "score": 9,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud605logo.png"
         },
         {
-          "title": "File:Royal Air Force- Operations in Malta, Gibraltar and the Mediterranean, 1940-1945. CM3658.jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3ARoyal_Air_Force-_Operations_in_Malta%2C_Gibraltar_and_the_Mediterranean%2C_1940-1945._CM3658.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-f35-squadrons",
-      "name": "טייסות F-35 (אדיר)",
-      "englishName": "F-35I Adir squadrons (140 Squadron 'Golden Eagle', 116 Squadron 'Lions of the South')",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-f15-squadrons",
-      "name": "טייסות F-15 (בז/רעם)",
-      "englishName": "F-15 Baz / F-15I Ra'am squadrons (106 Squadron 'Spearhead', 133 Squadron 'Knights of the Twin Tail', 69 Squadron 'Hammers')",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-f16-squadrons",
-      "name": "טייסות F-16 (סופה/ברק)",
-      "englishName": "F-16I Sufa / F-16C-D Barak squadrons (101 'First Fighter', 105 'Scorpion', 107 'Knights of the Orange Tail', 109 'Valley', 110 'Knights of the North', 117 'First Jet', 119 'Bat', 201 'The One', 253 'Negev')",
-      "candidates": []
-    },
-    {
-      "slug": "corps-uav-squadrons",
-      "name": "טייסות מל\"ט",
-      "englishName": "Israeli Air Force UAV squadrons (corps level)",
-      "candidates": [
-        {
-          "title": "File:IAF Squadron UAV Chopper Sim.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_UAV_Chopper_Sim.png"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-uav-units",
-      "name": "טייסות מל\"ט",
-      "englishName": "Israeli Air Force UAV squadrons (brigade level)",
-      "candidates": [
-        {
-          "title": "File:IAF Squadron UAV Chopper Sim.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_UAV_Chopper_Sim.png"
-        }
-      ]
-    },
-    {
-      "slug": "corps-transport-squadrons",
-      "name": "טייסות תובלה",
-      "englishName": "Israeli Air Force transport squadrons (corps level)",
-      "candidates": [
-        {
-          "title": "File:Hatzerim 310313 Nord.jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3AHatzerim_310313_Nord.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-transport-units",
-      "name": "טייסות תובלה",
-      "englishName": "Israeli Air Force transport squadrons (brigade level)",
-      "candidates": [
-        {
-          "title": "File:Hatzerim 310313 Nord.jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3AHatzerim_310313_Nord.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "corps-air-special",
-      "name": "יחידות מיוחדות באוויר",
-      "englishName": "Israeli Air Force special units (Shaldag / Unit 669 / Unit 5700 – IAF special forces wing)",
-      "candidates": [
-        {
-          "title": "File:Shaldag.svg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3AShaldag.svg"
-        },
-        {
-          "title": "File:The new shoulder tag of IAF Special Force Wing 7. V.jpg",
-          "score": 4,
-          "page": "https://commons.wikimedia.org/wiki/File%3AThe_new_shoulder_tag_of_IAF_Special_Force_Wing_7._V.jpg"
-        },
-        {
-          "title": "File:Kanaf 7 Tag.svg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3AKanaf_7_Tag.svg"
-        },
-        {
-          "title": "File:IAF Wing 7 nes hayehida.jpg",
+          "title": "File:Bulldozers-Gdud-605-Engineering-2021-I.jpg",
           "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Wing_7_nes_hayehida.jpg"
+          "page": "https://commons.wikimedia.org/wiki/File%3ABulldozers-Gdud-605-Engineering-2021-I.jpg"
         },
         {
-          "title": "File:IAF Wing 7 school open ceremony 1 (cropped).jpg",
-          "score": -6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Wing_7_school_open_ceremony_1_(cropped).jpg"
+          "title": "File:Bulldozers-Gdud-605-Engineering-2021-II.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABulldozers-Gdud-605-Engineering-2021-II.jpg"
+        },
+        {
+          "title": "File:Bulldozer-Gdud-605-Engineering-2021-III.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABulldozer-Gdud-605-Engineering-2021-III.jpg"
         }
       ]
     },
     {
-      "slug": "brigade-air-elite-units",
-      "name": "יחידות עילית של חיל האוויר",
-      "englishName": "Israeli Air Force elite units",
-      "candidates": []
-    },
-    {
-      "slug": "branch-sea",
-      "name": "זרוע הים",
-      "englishName": "Israeli Navy (Sea Arm)",
+      "slug": "nahal-50-haharel",
+      "name": "גדוד 50",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:Israel Navy emblem.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsrael_Navy_emblem.png"
+          "title": "File:סמל גדוד 50 צבעוני copy.gif",
+          "score": 8,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_50_%D7%A6%D7%91%D7%A2%D7%95%D7%A0%D7%99_copy.gif"
         },
         {
-          "title": "File:Israel-Navy-OF-6.svg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsrael-Navy-OF-6.svg"
+          "title": "File:סמל גדוד 50.jpg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_50.jpg"
         },
         {
-          "title": "File:03.Israeli Navy-PO3.svg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3A03.Israeli_Navy-PO3.svg"
+          "title": "File:סמל גדוד 50 בזלת.jpg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_50_%D7%91%D7%96%D7%9C%D7%AA.jpg"
         },
         {
-          "title": "File:01.Israeli Navy-ASM.svg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3A01.Israeli_Navy-ASM.svg"
+          "title": "File:פלחוד 50.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A4%D7%9C%D7%97%D7%95%D7%93_50.jpg"
         },
         {
-          "title": "File:02.Israeli Navy-LSM.svg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3A02.Israeli_Navy-LSM.svg"
+          "title": "File:Talbiya Gdud Yerushalmi Etzel.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ATalbiya_Gdud_Yerushalmi_Etzel.jpg"
         }
       ]
     },
     {
-      "slug": "corps-fleet",
-      "name": "מערך הספינות",
-      "englishName": "Israeli Navy ships array / surface fleet (missile boats Shayetet 3, patrol flotillas)",
+      "slug": "nahal-931",
+      "name": "גדוד 931",
+      "englishName": "",
       "candidates": []
     },
     {
-      "slug": "corps-air-defense",
-      "name": "מערך ההגנה האווירית",
-      "englishName": "Israeli Air Defense Command (Israel Air Defense Forces / Air Defense Array)",
+      "slug": "nahal-932-granite",
+      "name": "גדוד 932",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:Israeli Air Defense batalion 139 new logo 2024.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_batalion_139_new_logo_2024.png"
+          "title": "File:גדוד גרניט 932.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%93%D7%95%D7%93_%D7%92%D7%A8%D7%A0%D7%99%D7%98_932.png"
         },
         {
-          "title": "File:Israeli Air Defense batalion 139 logo.png",
-          "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_batalion_139_logo.png"
+          "title": "File:סמל סוללה גרניט 402 Battery C 402 symbol.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A1%D7%95%D7%9C%D7%9C%D7%94_%D7%92%D7%A8%D7%A0%D7%99%D7%98_402_Battery_C_402_symbol.png"
         },
+        {
+          "title": "File:Iron Swords-gdud 932 (2).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_Swords-gdud_932_(2).jpg"
+        },
+        {
+          "title": "File:Iron Swords-gdud 932 (1).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_Swords-gdud_932_(1).jpg"
+        },
+        {
+          "title": "File:Gdud 932, october 2024 (2).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_932%2C_october_2024_(2).jpg"
+        }
+      ]
+    },
+    {
+      "slug": "nahal-pelsar",
+      "name": "פלס\"ר נח\"ל",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "kfir-90-nachshon",
+      "name": "גדוד 90",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סמל גדוד נחשון (90).svg",
+          "score": 10,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%A0%D7%97%D7%A9%D7%95%D7%9F_(90).svg"
+        },
+        {
+          "title": "File:סמל גדוד נחשון 90.svg",
+          "score": 10,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%A0%D7%97%D7%A9%D7%95%D7%9F_90.svg"
+        },
+        {
+          "title": "File:סמל פלחוד נחשון.svg",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A4%D7%9C%D7%97%D7%95%D7%93_%D7%A0%D7%97%D7%A9%D7%95%D7%9F.svg"
+        },
+        {
+          "title": "File:Semelgdud3.gif",
+          "score": 4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASemelgdud3.gif"
+        },
+        {
+          "title": "File:סמל גדוד 90 נחשון.jpg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_90_%D7%A0%D7%97%D7%A9%D7%95%D7%9F.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "kfir-92-shimshon",
+      "name": "גדוד 92",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סמל גדוד איתנים.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%90%D7%99%D7%AA%D7%A0%D7%99%D7%9D.png"
+        },
+        {
+          "title": "File:סמל גדוד 92 שמשון.jpg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_92_%D7%A9%D7%9E%D7%A9%D7%95%D7%9F.jpg"
+        },
+        {
+          "title": "File:Shimshon.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AShimshon.png"
+        },
+        {
+          "title": "File:PikiWiki Israel 84925 a monument to the fallen.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84925_a_monument_to_the_fallen.jpg"
+        },
+        {
+          "title": "File:Gdud 92 Nov 2024.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_92_Nov_2024.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "kfir-93-haruv",
+      "name": "גדוד 93",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סמל סיירת חרוב 93.jpg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A1%D7%99%D7%99%D7%A8%D7%AA_%D7%97%D7%A8%D7%95%D7%91_93.jpg"
+        },
+        {
+          "title": "File:סמל נצח יהודה.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A0%D7%A6%D7%97_%D7%99%D7%94%D7%95%D7%93%D7%94.jpg"
+        },
+        {
+          "title": "File:סמל הגדוד 138.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%94%D7%92%D7%93%D7%95%D7%93_138.jpg"
+        },
+        {
+          "title": "File:סמל סיירת חרוב.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A1%D7%99%D7%99%D7%A8%D7%AA_%D7%97%D7%A8%D7%95%D7%91.jpg"
+        },
+        {
+          "title": "File:Fingaz in Bnei Brak and HaGdud HaIvri street corner, Tel Aviv 02.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AFingaz_in_Bnei_Brak_and_HaGdud_HaIvri_street_corner%2C_Tel_Aviv_02.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "kfir-94-duchifat",
+      "name": "גדוד 94",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סמל גדוד איתנים.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%90%D7%99%D7%AA%D7%A0%D7%99%D7%9D.png"
+        },
+        {
+          "title": "File:Duhifat.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ADuhifat.png"
+        },
+        {
+          "title": "File:סמל גדוד דוכיפת.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%93%D7%95%D7%9B%D7%99%D7%A4%D7%AA.jpg"
+        },
+        {
+          "title": "File:The unfinished hotel 0820 (508209504).jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AThe_unfinished_hotel_0820_(508209504).jpg"
+        }
+      ]
+    },
+    {
+      "slug": "kfir-97-netzah-yehuda",
+      "name": "גדוד 97",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סמל פלגת הנגב.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A4%D7%9C%D7%92%D7%AA_%D7%94%D7%A0%D7%92%D7%91.png"
+        },
+        {
+          "title": "File:Nezah yehuda2.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ANezah_yehuda2.png"
+        },
+        {
+          "title": "File:Nezah yehuda1.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ANezah_yehuda1.png"
+        },
+        {
+          "title": "File:Swords of iron gdud 97 (12).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_iron_gdud_97_(12).jpg"
+        },
+        {
+          "title": "File:Gdud 97, July 2025 (2).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_97%2C_July_2025_(2).jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-7-75-romach",
+      "name": "גדוד 75",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud75.gif",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud75.gif"
+        },
+        {
+          "title": "File:PikiWiki Israel 84926 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84926_a_monument_to_the_fallen.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 84927 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84927_a_monument_to_the_fallen.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 84929 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84929_a_monument_to_the_fallen.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 84930 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84930_a_monument_to_the_fallen.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-7-77-oz",
+      "name": "גדוד 77",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud77.gif",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud77.gif"
+        },
+        {
+          "title": "File:אנשי גדוד העבודה עם בהמות עבודה על רקע מבנה חרב Members of the Work Battalion, B-77.jpeg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%90%D7%A0%D7%A9%D7%99_%D7%92%D7%93%D7%95%D7%93_%D7%94%D7%A2%D7%91%D7%95%D7%93%D7%94_%D7%A2%D7%9D_%D7%91%D7%94%D7%9E%D7%95%D7%AA_%D7%A2%D7%91%D7%95%D7%93%D7%94_%D7%A2%D7%9C_%D7%A8%D7%A7%D7%A2_%D7%9E%D7%91%D7%A0%D7%94_%D7%97%D7%A8%D7%91_Members_of_the_Work_Battalion%2C_B-77.jpeg"
+        },
+        {
+          "title": "File:129 סמל גדוד עוז הקלע.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A129_%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%A2%D7%95%D7%96_%D7%94%D7%A7%D7%9C%D7%A2.jpg"
+        },
+        {
+          "title": "File:INSOzEmblem.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3AINSOzEmblem.jpg"
+        },
+        {
+          "title": "File:מיגונית מוות מוצב נחל עוז (1).jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%9E%D7%99%D7%92%D7%95%D7%A0%D7%99%D7%AA_%D7%9E%D7%95%D7%95%D7%AA_%D7%9E%D7%95%D7%A6%D7%91_%D7%A0%D7%97%D7%9C_%D7%A2%D7%95%D7%96_(1).jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-7-82-bnei-itshar",
+      "name": "גדוד 82",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud82.gif",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud82.gif"
+        },
+        {
+          "title": "File:Symbol of gdud 82 gaash 3.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASymbol_of_gdud_82_gaash_3.jpg"
+        },
+        {
+          "title": "File:Symbol of gdud 82 gaash 5.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASymbol_of_gdud_82_gaash_5.jpg"
+        },
+        {
+          "title": "File:Symbol of gdud 82 gaash 4.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASymbol_of_gdud_82_gaash_4.jpg"
+        },
+        {
+          "title": "File:Symbol of gdud 82 gaash 1.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASymbol_of_gdud_82_gaash_1.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-7-recon-75",
+      "name": "גדוד הסיור 75",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud75.gif",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud75.gif"
+        },
+        {
+          "title": "File:PikiWiki Israel 84926 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84926_a_monument_to_the_fallen.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 84927 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84927_a_monument_to_the_fallen.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 84930 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84930_a_monument_to_the_fallen.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 84929 a monument to the fallen.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_84929_a_monument_to_the_fallen.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-188-53-shualey-habashan",
+      "name": "גדוד 53",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Idf-reg-sufa-53.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIdf-reg-sufa-53.svg"
+        },
+        {
+          "title": "File:Sufa-53.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASufa-53.png"
+        },
+        {
+          "title": "File:Talbiya Gdud Yerushalmi Etzel.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ATalbiya_Gdud_Yerushalmi_Etzel.jpg"
+        },
+        {
+          "title": "File:Fingaz in Bnei Brak and HaGdud HaIvri street corner, Tel Aviv 02.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AFingaz_in_Bnei_Brak_and_HaGdud_HaIvri_street_corner%2C_Tel_Aviv_02.jpg"
+        },
+        {
+          "title": "File:Fingaz in Bnei Brak and HaGdud HaIvri street corner, Tel Aviv 03.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AFingaz_in_Bnei_Brak_and_HaGdud_HaIvri_street_corner%2C_Tel_Aviv_03.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-188-71-ahihoud",
+      "name": "גדוד 71",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Idf-reg-reshef-71-new.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIdf-reg-reshef-71-new.svg"
+        },
+        {
+          "title": "File:מדרגות הפונות לכנרת.JPG",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%9E%D7%93%D7%A8%D7%92%D7%95%D7%AA_%D7%94%D7%A4%D7%95%D7%A0%D7%95%D7%AA_%D7%9C%D7%9B%D7%A0%D7%A8%D7%AA.JPG"
+        }
+      ]
+    },
+    {
+      "slug": "armor-188-74-habokim",
+      "name": "גדוד 74",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Idf-reg-saar-74.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIdf-reg-saar-74.svg"
+        },
+        {
+          "title": "File:גדוד 51 הבוקעים.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%93%D7%95%D7%93_51_%D7%94%D7%91%D7%95%D7%A7%D7%A2%D7%99%D7%9D.png"
+        },
+        {
+          "title": "File:Gdud-74-Saar-2021-10-11-pic01.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud-74-Saar-2021-10-11-pic01.jpg"
+        },
+        {
+          "title": "File:Gdud-74-Saar-2021-10-11-pic05. IV.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud-74-Saar-2021-10-11-pic05._IV.jpg"
+        },
+        {
+          "title": "File:Gdud-74-Saar-2021-10-11-pic05. VII.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud-74-Saar-2021-10-11-pic05._VII.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-401-9-eshet",
+      "name": "גדוד 9",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud-magen 195.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud-magen_195.svg"
+        },
+        {
+          "title": "File:IDF Technology and Maintenance Corps TransportBattalion 690.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Technology_and_Maintenance_Corps_TransportBattalion_690.png"
+        },
+        {
+          "title": "File:PakarTikshuvLogo.svg",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3APakarTikshuvLogo.svg"
+        },
+        {
+          "title": "File:סמל גדוד 50 צבעוני copy.gif",
+          "score": 4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_50_%D7%A6%D7%91%D7%A2%D7%95%D7%A0%D7%99_copy.gif"
+        },
+        {
+          "title": "File:Gdud-710-lq.svg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud-710-lq.svg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-401-46-shelah",
+      "name": "גדוד 46",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:GdudShelah-532.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdudShelah-532.png"
+        },
+        {
+          "title": "File:Chan arnabe- where have all the flowers gone.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AChan_arnabe-_where_have_all_the_flowers_gone.jpg"
+        },
+        {
+          "title": "File:Gdud Ha'avoda hut in Rehavia - Jerusalem 2.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Ha'avoda_hut_in_Rehavia_-_Jerusalem_2.jpg"
+        },
+        {
+          "title": "File:Gdud Ha'avoda hut in Rehavia - Jerusalem 1.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Ha'avoda_hut_in_Rehavia_-_Jerusalem_1.jpg"
+        },
+        {
+          "title": "File:Kilar Gdud Moriah.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AKilar_Gdud_Moriah.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-401-52-habokim",
+      "name": "גדוד 52",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud Ha'avoda hut in Rehavia 01.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Ha'avoda_hut_in_Rehavia_01.jpg"
+        },
+        {
+          "title": "File:Memorial to Gdud Ha'avoda in Tel Aviv.JPG",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AMemorial_to_Gdud_Ha'avoda_in_Tel_Aviv.JPG"
+        },
+        {
+          "title": "File:Fingaz in Bnei Brak and HaGdud HaIvri street corner, Tel Aviv 03.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AFingaz_in_Bnei_Brak_and_HaGdud_HaIvri_street_corner%2C_Tel_Aviv_03.jpg"
+        },
+        {
+          "title": "File:מדרגות הפונות לכנרת.JPG",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%9E%D7%93%D7%A8%D7%92%D7%95%D7%AA_%D7%94%D7%A4%D7%95%D7%A0%D7%95%D7%AA_%D7%9C%D7%9B%D7%A0%D7%A8%D7%AA.JPG"
+        }
+      ]
+    },
+    {
+      "slug": "armor-401-recon-601",
+      "name": "גדוד הסיור 601",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud601logo.png",
+          "score": 9,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud601logo.png"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (3).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(3).jpg"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (4).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(4).jpg"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (1).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(1).jpg"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (2).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(2).jpg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-460-195",
+      "name": "גדוד 195",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud-magen 195.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud-magen_195.svg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-460-198",
+      "name": "גדוד 198",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud 198 Azuz.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_198_Azuz.svg"
+        }
+      ]
+    },
+    {
+      "slug": "armor-460-9203",
+      "name": "גדוד 9203",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "res-jerusalem-bn",
+      "name": "חטיבת ירושלים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "res-alexandroni-bn",
+      "name": "חטיבת אלכסנדרוני",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:תג חטיבה 500.svg",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%97%D7%98%D7%99%D7%91%D7%94_500.svg"
+        },
+        {
+          "title": "File:Logo hativa 228.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3ALogo_hativa_228.png"
+        },
+        {
+          "title": "File:Logo-hativat-300 Old.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3ALogo-hativat-300_Old.png"
+        },
+        {
+          "title": "File:Semelgdud3.gif",
+          "score": 4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASemelgdud3.gif"
+        },
+        {
+          "title": "File:IDF Brigade 266.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Brigade_266.png"
+        }
+      ]
+    },
+    {
+      "slug": "res-harel-bn",
+      "name": "חטיבת הראל",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:תג חטיבה 500.svg",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%97%D7%98%D7%99%D7%91%D7%94_500.svg"
+        }
+      ]
+    },
+    {
+      "slug": "res-yiftach-bn",
+      "name": "חטיבת יפתח",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "res-brigade-5-bn",
+      "name": "חטיבה 5",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "res-brigade-14-bn",
+      "name": "חטיבה 14",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "res-brigade-55-bn",
+      "name": "חטיבה 55",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "res-brigade-551-bn",
+      "name": "חטיבה 551",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "res-menashe-bn",
+      "name": "חטיבת מנשה",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "art-215-334-marav",
+      "name": "גדוד 334",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:GdudRaam.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdudRaam.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "art-215-405-cheetz-shahor",
+      "name": "גדוד 405",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Israeli 405 \"Tiger\" Artillery Battalion lapel pin.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_405_%22Tiger%22_Artillery_Battalion_lapel_pin.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "art-215-411-yuri",
+      "name": "גדוד 411",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "art-282-403",
+      "name": "גדוד 403",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud 403 Eyal Amud aEsh.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_403_Eyal_Amud_aEsh.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "art-282-454",
+      "name": "גדוד 454",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "art-282-55",
+      "name": "גדוד 55",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Operation Guardian of the Walls, May 2021. LII.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AOperation_Guardian_of_the_Walls%2C_May_2021._LII.jpg"
+        },
+        {
+          "title": "File:Gdud Ha'avoda hut in Rehavia - Jerusalem 2.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Ha'avoda_hut_in_Rehavia_-_Jerusalem_2.jpg"
+        },
+        {
+          "title": "File:Gdud Ha'avoda hut in Rehavia - Jerusalem 1.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Ha'avoda_hut_in_Rehavia_-_Jerusalem_1.jpg"
+        },
+        {
+          "title": "File:Israeli 405 \"Tiger\" Artillery Battalion lapel pin.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_405_%22Tiger%22_Artillery_Battalion_lapel_pin.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "art-meteor-rocket",
+      "name": "גדוד טילים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "art-meteor-uav",
+      "name": "גדוד מל\"טים תוקפניים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "yahalom-sayfan",
+      "name": "סייפן",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "yahalom-yael",
+      "name": "יע\"ל",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "yahalom-samur",
+      "name": "סמור (תת-קרקע)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "yahalom-maavarim",
+      "name": "מעברים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "eng-601-asaf",
+      "name": "גדוד 601",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud601logo.png",
+          "score": 9,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud601logo.png"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (3).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(3).jpg"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (4).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(4).jpg"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (1).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(1).jpg"
+        },
+        {
+          "title": "File:Swords of Iron-gdud 601 asaf (2).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASwords_of_Iron-gdud_601_asaf_(2).jpg"
+        }
+      ]
+    },
+    {
+      "slug": "eng-603-machatz",
+      "name": "גדוד 603",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "eng-605-machatz",
+      "name": "גדוד 605",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud605logo.png",
+          "score": 9,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud605logo.png"
+        },
+        {
+          "title": "File:Bulldozers-Gdud-605-Engineering-2021-I.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABulldozers-Gdud-605-Engineering-2021-I.jpg"
+        },
+        {
+          "title": "File:Bulldozers-Gdud-605-Engineering-2021-II.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABulldozers-Gdud-605-Engineering-2021-II.jpg"
+        },
+        {
+          "title": "File:Bulldozer-Gdud-605-Engineering-2021-III.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3ABulldozer-Gdud-605-Engineering-2021-III.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "ci-595-nesher",
+      "name": "גדוד 595",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud Nesher 414 New Tag.svg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Nesher_414_New_Tag.svg"
+        },
+        {
+          "title": "File:Coat of arms of Nesher.svg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3ACoat_of_arms_of_Nesher.svg"
+        },
+        {
+          "title": "File:Gdud Ait.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Ait.png"
+        },
+        {
+          "title": "File:Gdud Nesher 414 new tag.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Nesher_414_new_tag.png"
+        },
+        {
+          "title": "File:Double-Headed Eagle of Catherine II.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ADouble-Headed_Eagle_of_Catherine_II.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "ci-636-rotem",
+      "name": "גדוד 636",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud rotem.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_rotem.png"
+        },
+        {
+          "title": "File:סמל פלוגת תומר (גבעתי).jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A4%D7%9C%D7%95%D7%92%D7%AA_%D7%AA%D7%95%D7%9E%D7%A8_(%D7%92%D7%91%D7%A2%D7%AA%D7%99).jpg"
+        },
+        {
+          "title": "File:סמל המחתרת של האצ\"ל בקישלה.JPG",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%94%D7%9E%D7%97%D7%AA%D7%A8%D7%AA_%D7%A9%D7%9C_%D7%94%D7%90%D7%A6%22%D7%9C_%D7%91%D7%A7%D7%99%D7%A9%D7%9C%D7%94.JPG"
+        }
+      ]
+    },
+    {
+      "slug": "ci-727-eitam",
+      "name": "גדוד 727",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Eitam.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3AEitam.png"
+        },
+        {
+          "title": "File:Gdod Eitam.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdod_Eitam.jpg"
+        },
+        {
+          "title": "File:חולצת תלבושת.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%97%D7%95%D7%9C%D7%A6%D7%AA_%D7%AA%D7%9C%D7%91%D7%95%D7%A9%D7%AA.jpg"
+        },
+        {
+          "title": "File:137673 beer sheva municipality building PikiWiki Israel.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A137673_beer_sheva_municipality_building_PikiWiki_Israel.jpg"
+        },
+        {
+          "title": "File:137674 beer sheva municipality building PikiWiki Israel.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A137674_beer_sheva_municipality_building_PikiWiki_Israel.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "ci-869-nitzan",
+      "name": "גדוד 869",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "ci-oketz-bn",
+      "name": "יחידת עוקץ",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "plahatz-669",
+      "name": "יחידה 669",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "plahatz-search-rescue",
+      "name": "גדוד חיפוש והצלה",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "borders-bardelas",
+      "name": "גדוד ברדלס",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "borders-caracal",
+      "name": "גדוד קרקל",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "borders-lions-of-jordan",
+      "name": "גדוד אריות הירדן",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "borders-cheetah",
+      "name": "גדוד צ'יטה",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "bd-ephraim",
+      "name": "חטיבת אפרים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "bd-etzion",
+      "name": "חטיבת עציון",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "bd-judea",
+      "name": "חטיבת יהודה",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "bd-arava",
+      "name": "חטיבת הערבה",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "commando-maglan",
+      "name": "מגלן",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "commando-egoz-89",
+      "name": "אגוז (תחת קומנדו)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "commando-duvdevan",
+      "name": "דובדבן",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "commando-rimon",
+      "name": "רימון",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "commando-shaldag-link",
+      "name": "שלדג (תיאום)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-140-golden-eagle",
+      "name": "טייסת 140",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-116-flying-wing",
+      "name": "טייסת 116",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-133-knights-of-twin-tail",
+      "name": "טייסת 133",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:IAF Squadron 133.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_133.png"
+        }
+      ]
+    },
+    {
+      "slug": "sq-106-spear-tip",
+      "name": "טייסת 106",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-69-hammers",
+      "name": "טייסת 69",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-101-first",
+      "name": "טייסת 101",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Iron swords- gdud 101 (10).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(10).jpg"
+        },
+        {
+          "title": "File:Iron swords- gdud 101 (8).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(8).jpg"
+        },
+        {
+          "title": "File:Iron swords- gdud 101 (1).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(1).jpg"
+        },
+        {
+          "title": "File:Iron swords- gdud 101 (5).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(5).jpg"
+        },
+        {
+          "title": "File:Iron swords- gdud 101 (3).jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIron_swords-_gdud_101_(3).jpg"
+        }
+      ]
+    },
+    {
+      "slug": "sq-102-flying-tiger",
+      "name": "טייסת 102",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Hermon סמל הנמר.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3AHermon_%D7%A1%D7%9E%D7%9C_%D7%94%D7%A0%D7%9E%D7%A8.jpg"
+        },
+        {
+          "title": "File:פקק תנועה ברחוב הגדוד העברי באשדוד, רובע הקריה (\"הסיטי\"), אוקטובר 2024.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A4%D7%A7%D7%A7_%D7%AA%D7%A0%D7%95%D7%A2%D7%94_%D7%91%D7%A8%D7%97%D7%95%D7%91_%D7%94%D7%92%D7%93%D7%95%D7%93_%D7%94%D7%A2%D7%91%D7%A8%D7%99_%D7%91%D7%90%D7%A9%D7%93%D7%95%D7%93%2C_%D7%A8%D7%95%D7%91%D7%A2_%D7%94%D7%A7%D7%A8%D7%99%D7%94_(%22%D7%94%D7%A1%D7%99%D7%98%D7%99%22)%2C_%D7%90%D7%95%D7%A7%D7%98%D7%95%D7%91%D7%A8_2024.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "sq-105-scorpion",
+      "name": "טייסת 105",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:IAF Squadron 105.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_105.png"
+        },
+        {
+          "title": "File:סיכת עקרב.gif",
+          "score": 1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%99%D7%9B%D7%AA_%D7%A2%D7%A7%D7%A8%D7%91.gif"
+        }
+      ]
+    },
+    {
+      "slug": "sq-107-knights-of-orange-tail",
+      "name": "טייסת 107",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-109-valley",
+      "name": "טייסת 109",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Coat of arms of Migdal Haemek.svg",
+          "score": 3,
+          "page": "https://commons.wikimedia.org/wiki/File%3ACoat_of_arms_of_Migdal_Haemek.svg"
+        },
+        {
+          "title": "File:109387 kfar vitkin the water tower PikiWiki Israel.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3A109387_kfar_vitkin_the_water_tower_PikiWiki_Israel.jpg"
+        },
+        {
+          "title": "File:109385 kfar vitkin the water tower PikiWiki Israel.jpg",
+          "score": 0,
+          "page": "https://commons.wikimedia.org/wiki/File%3A109385_kfar_vitkin_the_water_tower_PikiWiki_Israel.jpg"
+        },
+        {
+          "title": "File:גרעין תורני אורות יהודה.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%A8%D7%A2%D7%99%D7%9F_%D7%AA%D7%95%D7%A8%D7%A0%D7%99_%D7%90%D7%95%D7%A8%D7%95%D7%AA_%D7%99%D7%94%D7%95%D7%93%D7%94.jpg"
+        },
+        {
+          "title": "File:SamalMashiach1955.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASamalMashiach1955.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "sq-110-knights-of-north",
+      "name": "טייסת 110",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-117-first-jet",
+      "name": "טייסת 117",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-119-bat",
+      "name": "טייסת 119",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סיכת לוחם בשייטת 13.gif",
+          "score": 1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%99%D7%9B%D7%AA_%D7%9C%D7%95%D7%97%D7%9D_%D7%91%D7%A9%D7%99%D7%99%D7%98%D7%AA_13.gif"
+        },
+        {
+          "title": "File:David Fromer (cropped).gif",
+          "score": 1,
+          "page": "https://commons.wikimedia.org/wiki/File%3ADavid_Fromer_(cropped).gif"
+        },
+        {
+          "title": "File:David Fromer (cropped2).gif",
+          "score": 1,
+          "page": "https://commons.wikimedia.org/wiki/File%3ADavid_Fromer_(cropped2).gif"
+        },
+        {
+          "title": "File:YochayLavonShafirFromerTekesAtalef21959.gif",
+          "score": 1,
+          "page": "https://commons.wikimedia.org/wiki/File%3AYochayLavonShafirFromerTekesAtalef21959.gif"
+        },
+        {
+          "title": "File:AtalefRedBackVardi.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AAtalefRedBackVardi.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "sq-149-smashing-parrot",
+      "name": "טייסת 149",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:IAF Squadron 149.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_149.png"
+        }
+      ]
+    },
+    {
+      "slug": "sq-201-one",
+      "name": "טייסת 201",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:PikiWiki Israel 77156 a monument to the fallen in tivon.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_77156_a_monument_to_the_fallen_in_tivon.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 77157 a monument to the fallen in tivon.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_77157_a_monument_to_the_fallen_in_tivon.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 77158 a monument to the fallen in tivon.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_77158_a_monument_to_the_fallen_in_tivon.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 77154 a monument to the fallen in tivon.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_77154_a_monument_to_the_fallen_in_tivon.jpg"
+        },
+        {
+          "title": "File:PikiWiki Israel 77155 a monument to the fallen in tivon.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3APikiWiki_Israel_77155_a_monument_to_the_fallen_in_tivon.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "sq-253-negev",
+      "name": "טייסת 253",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סמל פלגת הנגב.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A4%D7%9C%D7%92%D7%AA_%D7%94%D7%A0%D7%92%D7%91.png"
+        },
+        {
+          "title": "File:סמל גדוד הר הנגב 1893.png",
+          "score": 5,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%94%D7%A8_%D7%94%D7%A0%D7%92%D7%91_1893.png"
+        },
+        {
+          "title": "File:127316 red star of david PikiWiki Israel.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3A127316_red_star_of_david_PikiWiki_Israel.png"
+        },
+        {
+          "title": "File:149813 beer sheva negev brigade monument PikiWiki Israel.jpg",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3A149813_beer_sheva_negev_brigade_monument_PikiWiki_Israel.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "sq-254-eaglets",
+      "name": "טייסת 254",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-115-red-dragon",
+      "name": "טייסת 115",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-red-baron",
+      "name": "טייסת הברון האדום",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-113-hornet",
+      "name": "טייסת 113",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:IAF Hornet Squadron 113 Logo.png",
+          "score": 9,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Hornet_Squadron_113_Logo.png"
+        }
+      ]
+    },
+    {
+      "slug": "sq-190-southern-magen",
+      "name": "טייסת 190",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-114-night-leaders",
+      "name": "טייסת 114",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-118-night-riders",
+      "name": "טייסת 118",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-123-desert-birds",
+      "name": "טייסת 123",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:IAF Squadron 123.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_123.png"
+        }
+      ]
+    },
+    {
+      "slug": "sq-124-rolling-sword",
+      "name": "טייסת 124",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-125-rescue",
+      "name": "טייסת 125",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-193-defenders-west",
+      "name": "טייסת 193",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:IAF Squadron 193.png",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIAF_Squadron_193.png"
+        }
+      ]
+    },
+    {
+      "slug": "sq-100-flying-camel",
+      "name": "טייסת 100",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:Gdud Barak street, Tiberias P1010853.JPG",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_Barak_street%2C_Tiberias_P1010853.JPG"
+        },
+        {
+          "title": "File:The Scots Hotel (45).JPG",
+          "score": -4,
+          "page": "https://commons.wikimedia.org/wiki/File%3AThe_Scots_Hotel_(45).JPG"
+        }
+      ]
+    },
+    {
+      "slug": "sq-144-asam",
+      "name": "טייסת 144",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-147-hammers",
+      "name": "טייסת 147",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-160-falcons",
+      "name": "טייסת 160",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-161-eagles-of-jordan",
+      "name": "טייסת 161",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-166-training-uav",
+      "name": "טייסת 166",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-200-first-uav",
+      "name": "טייסת 200",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-210-white-eagle",
+      "name": "טייסת 210",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-103-elephants",
+      "name": "טייסת 103",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-120-international",
+      "name": "טייסת 120",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-122-nahshon",
+      "name": "טייסת 122",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:סמל פלחוד נחשון.svg",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%A4%D7%9C%D7%97%D7%95%D7%93_%D7%A0%D7%97%D7%A9%D7%95%D7%9F.svg"
+        },
+        {
+          "title": "File:סמל גדוד נחשון (90).svg",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%A0%D7%97%D7%A9%D7%95%D7%9F_(90).svg"
+        },
+        {
+          "title": "File:סמל גדוד נחשון 90.svg",
+          "score": 6,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%A0%D7%97%D7%A9%D7%95%D7%9F_90.svg"
+        },
+        {
+          "title": "File:Semelgdud3.gif",
+          "score": 4,
+          "page": "https://commons.wikimedia.org/wiki/File%3ASemelgdud3.gif"
+        },
+        {
+          "title": "File:Nahshontag.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3ANahshontag.png"
+        }
+      ]
+    },
+    {
+      "slug": "sq-131-knights-of-yellow-bird",
+      "name": "טייסת 131",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-135-light-transport",
+      "name": "טייסת 135",
+      "englishName": "",
+      "candidates": [
+        {
+          "title": "File:IDF Armored Corps Recognition Unit 135. From 1954 symbol.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Armored_Corps_Recognition_Unit_135._From_1954_symbol.svg"
+        },
+        {
+          "title": "File:IDF Armored Corps Recognition Unit 135. 1948-1954 symbol.svg",
+          "score": 7,
+          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Armored_Corps_Recognition_Unit_135._1948-1954_symbol.svg"
+        },
+        {
+          "title": "File:Flickr - Government Press Office (GPO) - Aerial View of Tiberias Hotel Strip.jpg",
+          "score": -10,
+          "page": "https://commons.wikimedia.org/wiki/File%3AFlickr_-_Government_Press_Office_(GPO)_-_Aerial_View_of_Tiberias_Hotel_Strip.jpg"
+        }
+      ]
+    },
+    {
+      "slug": "sq-192-jet-trainers",
+      "name": "טייסת 192",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sq-249-airwork",
+      "name": "טייסת 249",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "ad-138-iron-dome",
+      "name": "גדוד 138 - כיפת ברזל",
+      "englishName": "",
+      "candidates": [
         {
           "title": "File:Israeli Air Defense Command batalion 138 logo.png",
           "score": 9,
           "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_Command_batalion_138_logo.png"
         },
         {
-          "title": "File:Israeli Air Defense Command Maintenance Squadron.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_Command_Maintenance_Squadron.png"
-        },
-        {
-          "title": "File:Tag Hagana Avirit 2011.svg",
+          "title": "File:סמל הגדוד 138.jpg",
           "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3ATag_Hagana_Avirit_2011.svg"
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%94%D7%92%D7%93%D7%95%D7%93_138.jpg"
         }
       ]
     },
     {
-      "slug": "brigade-iron-dome",
-      "name": "כיפת ברזל",
-      "englishName": "Iron Dome",
+      "slug": "ad-947-iron-dome",
+      "name": "גדוד 947 - כיפת ברזל",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:Israeli Air Defense batalion 137 logo.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_batalion_137_logo.png"
-        },
-        {
-          "title": "File:Israeli Air Defense batalion 139 new logo 2024.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_batalion_139_new_logo_2024.png"
-        },
-        {
           "title": "File:Israeli Air Defense batalion 947 logo.png",
-          "score": 5,
+          "score": 9,
           "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_batalion_947_logo.png"
         },
         {
-          "title": "File:Port Elizabeth Pier St mosque with original dome South End 2.JPG",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3APort_Elizabeth_Pier_St_mosque_with_original_dome_South_End_2.JPG"
-        },
-        {
-          "title": "File:Port Elizabeth St Marys Cemetary headstones and cast iron railings.JPG",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3APort_Elizabeth_St_Marys_Cemetary_headstones_and_cast_iron_railings.JPG"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-arrow",
-      "name": "מערך החץ",
-      "englishName": "Arrow (Israeli missile defense array)",
-      "candidates": [
-        {
-          "title": "File:Emblem of the Arrow Cross Party.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Arrow_Cross_Party.svg"
-        },
-        {
-          "title": "File:Ambox emblem arrow.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AAmbox_emblem_arrow.svg"
-        },
-        {
-          "title": "File:Emblem of the Arrow Cross Party alternative.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Arrow_Cross_Party_alternative.svg"
-        },
-        {
-          "title": "File:WikiProject Scouting BSA Order of the Arrow DSA knot.svg",
-          "score": 7,
-          "page": "https://commons.wikimedia.org/wiki/File%3AWikiProject_Scouting_BSA_Order_of_the_Arrow_DSA_knot.svg"
-        },
-        {
-          "title": "File:Directorate of Military Intelligence Corps Insignia (India).svg",
+          "title": "File:Gdud NunMem Golan 947 Stinger Mahbet.png",
           "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3ADirectorate_of_Military_Intelligence_Corps_Insignia_(India).svg"
+          "page": "https://commons.wikimedia.org/wiki/File%3AGdud_NunMem_Golan_947_Stinger_Mahbet.png"
+        },
+        {
+          "title": "File:סמל גדוד ישן.jpg",
+          "score": -1,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%92%D7%93%D7%95%D7%93_%D7%99%D7%A9%D7%9F.jpg"
         }
       ]
     },
     {
-      "slug": "brigade-patriot-davids",
-      "name": "פטריוט ושרביט קסמים",
-      "englishName": "Patriot and David's Sling (IDF air defense)",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-shayetet-13",
-      "name": "שייטת 13",
-      "englishName": "Shayetet 13 (Flotilla 13, Israeli Navy naval commandos)",
+      "slug": "ad-arrow-136",
+      "name": "גדוד 136 - חץ",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:Flotilla 13.png",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AFlotilla_13.png"
-        },
-        {
-          "title": "File:שייטת-13.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A9%D7%99%D7%99%D7%98%D7%AA-13.png"
-        },
-        {
-          "title": "File:Shayetet-13-pin.jpg",
-          "score": 4,
-          "page": "https://commons.wikimedia.org/wiki/File%3AShayetet-13-pin.jpg"
-        },
-        {
-          "title": "File:Isnavsht13.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsnavsht13.jpg"
-        },
-        {
-          "title": "File:S'13insig.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AS'13insig.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "corps-sea-coastal",
-      "name": "מערך החוף וההגנה",
-      "englishName": "Israeli Navy Coast and Defense Array (coastal defense / patrol-boat array)",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-coastal-units",
-      "name": "פלוגות הגנת חוף",
-      "englishName": "Coastal Defense Companies (Israeli Navy)",
-      "candidates": [
-        {
-          "title": "File:Tank logo.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3ATank_logo.png"
-        },
-        {
-          "title": "File:FSC 1BBO 39th OBrBO.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AFSC_1BBO_39th_OBrBO.png"
-        },
-        {
-          "title": "File:RDZ 34 ObrBO.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3ARDZ_34_ObrBO.png"
-        },
-        {
-          "title": "File:HIZ “Karlson” ISR 34th OBrBO (Ukraine).png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AHIZ_%E2%80%9CKarlson%E2%80%9D_ISR_34th_OBrBO_(Ukraine).png"
-        },
-        {
-          "title": "File:RUBpAK \"Flying Shark\" 3 BBO 40 OBrBO.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3ARUBpAK_%22Flying_Shark%22_3_BBO_40_OBrBO.png"
-        }
-      ]
-    },
-    {
-      "slug": "branch-intel",
-      "name": "אגף המודיעין (אמ\"ן)",
-      "englishName": "Military Intelligence Directorate (Aman)",
-      "candidates": [
-        {
-          "title": "File:Directorate of Military Intelligence Corps Insignia (India).svg",
-          "score": 18,
-          "page": "https://commons.wikimedia.org/wiki/File%3ADirectorate_of_Military_Intelligence_Corps_Insignia_(India).svg"
-        },
-        {
-          "title": "File:Directorate of Military Intelligence Corps Logo (India).svg",
-          "score": 18,
-          "page": "https://commons.wikimedia.org/wiki/File%3ADirectorate_of_Military_Intelligence_Corps_Logo_(India).svg"
-        },
-        {
-          "title": "File:Directorate General of Forces Intelligence Insignia.svg",
-          "score": 14,
-          "page": "https://commons.wikimedia.org/wiki/File%3ADirectorate_General_of_Forces_Intelligence_Insignia.svg"
-        },
-        {
-          "title": "File:Flag of IDF Military Intelligence Directorate.svg",
-          "score": 13,
-          "page": "https://commons.wikimedia.org/wiki/File%3AFlag_of_IDF_Military_Intelligence_Directorate.svg"
-        },
-        {
-          "title": "File:Emblem of the Main Directorate of Intelligence of the Ministry of Defense of Ukraine.png",
-          "score": 13,
-          "page": "https://commons.wikimedia.org/wiki/File%3AEmblem_of_the_Main_Directorate_of_Intelligence_of_the_Ministry_of_Defense_of_Ukraine.png"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-fleet-3",
-      "name": "שייטת 3 - שייטת הטילים",
-      "englishName": "Shayetet 3 (3rd Flotilla) - Israeli Navy Missile Boat Flotilla",
-      "candidates": [
-        {
-          "title": "File:800px-Missile Boat insignia.png",
-          "score": 13,
-          "page": "https://commons.wikimedia.org/wiki/File%3A800px-Missile_Boat_insignia.png"
-        },
-        {
-          "title": "File:Israel Missile Boats Flotilla change of command ceremony, August 2019. III.jpg",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsrael_Missile_Boats_Flotilla_change_of_command_ceremony%2C_August_2019._III.jpg"
-        },
-        {
-          "title": "File:Israel Missile Boats Flotilla change of command ceremony, August 2019. II.jpg",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsrael_Missile_Boats_Flotilla_change_of_command_ceremony%2C_August_2019._II.jpg"
-        },
-        {
-          "title": "File:Isnavsht3.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsnavsht3.png"
-        },
-        {
-          "title": "File:Israel Missile Boats Flotilla change of command ceremony, August 2019. IV.jpg",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsrael_Missile_Boats_Flotilla_change_of_command_ceremony%2C_August_2019._IV.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-fleet-7",
-      "name": "שייטת 7 - הצוללות",
-      "englishName": "Shayetet 7 (7th Flotilla) - Israeli Navy Submarine Flotilla",
-      "candidates": [
-        {
-          "title": "File:Isnavsht7.jpg",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsnavsht7.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-fleet-9",
-      "name": "שייטת ספינות פטרול",
-      "englishName": "Shayetet 9 (9th Flotilla) - Israeli Navy Patrol Boat Flotilla",
-      "candidates": []
-    },
-    {
-      "slug": "corps-sea-special",
-      "name": "שייטת 13 - הקומנדו הימי",
-      "englishName": "Shayetet 13 (13th Flotilla) - Israeli Naval Commando",
-      "candidates": [
-        {
-          "title": "File:Flotilla 13.png",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AFlotilla_13.png"
-        },
-        {
-          "title": "File:Shayetet-13-pin.jpg",
-          "score": 4,
-          "page": "https://commons.wikimedia.org/wiki/File%3AShayetet-13-pin.jpg"
-        },
-        {
-          "title": "File:Isnavsht13.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsnavsht13.jpg"
-        },
-        {
-          "title": "File:S'13insig.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AS'13insig.jpg"
-        },
-        {
-          "title": "File:Redtalef.JPG",
-          "score": -4,
-          "page": "https://commons.wikimedia.org/wiki/File%3ARedtalef.JPG"
-        }
-      ]
-    },
-    {
-      "slug": "corps-humint",
-      "name": "מודיעין אנושי (חומינט)",
-      "englishName": "IDF Human Intelligence (HUMINT) / Intelligence Corps",
-      "candidates": []
-    },
-    {
-      "slug": "brigade-intel-504",
-      "name": "יחידה 504",
-      "englishName": "Unit 504 (IDF HUMINT unit)",
-      "candidates": [
-        {
-          "title": "File:504 unit logo.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3A504_unit_logo.svg"
-        },
-        {
-          "title": "File:504 PIRDUI.PNG",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3A504_PIRDUI.PNG"
-        },
-        {
-          "title": "File:סמל יחידה 504 וסיכת קת\"מ.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_%D7%99%D7%97%D7%99%D7%93%D7%94_504_%D7%95%D7%A1%D7%99%D7%9B%D7%AA_%D7%A7%D7%AA%22%D7%9E.jpg"
-        },
-        {
-          "title": "File:Logo Unit 504.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALogo_Unit_504.jpg"
-        },
-        {
-          "title": "File:Insigne du groupe de transport 504.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AInsigne_du_groupe_de_transport_504.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "branch-comm",
-      "name": "אגף התקשוב וההגנה בסייבר (ת\"ק)",
-      "englishName": "C4I and Cyber Defense Directorate",
-      "candidates": []
-    },
-    {
-      "slug": "corps-comm-lotem",
-      "name": "לוט\"ם",
-      "englishName": "Lotem (IDF C4I technological unit)",
-      "candidates": [
-        {
-          "title": "File:LotemEmblem.png",
+          "title": "File:Israeli Air Defense batalion 136 logo.png",
           "score": 9,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALotemEmblem.png"
+          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_batalion_136_logo.png"
         },
         {
-          "title": "File:Lotem MaMKA.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALotem_MaMKA.png"
-        },
-        {
-          "title": "File:Lotem MaM.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALotem_MaM.png"
-        },
-        {
-          "title": "File:Lotem.png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3ALotem.png"
-        },
-        {
-          "title": "File:Maoflogo.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3AMaoflogo.png"
-        }
-      ]
-    },
-    {
-      "slug": "corps-sigint",
-      "name": "מודיעין אותות (סיגינט)",
-      "englishName": "IDF Signals Intelligence (SIGINT) branch / Intelligence Corps",
-      "candidates": [
-        {
-          "title": "File:Kheshet.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AKheshet.png"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-intel-8200",
-      "name": "יחידה 8200",
-      "englishName": "Unit 8200",
-      "candidates": [
-        {
-          "title": "File:8200 unit logo.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3A8200_unit_logo.svg"
-        },
-        {
-          "title": "File:סמל 8200 מעודכן.jpg",
+          "title": "File:Israeli Air Defense batalion 136 logo.jpg",
           "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_8200_%D7%9E%D7%A2%D7%95%D7%93%D7%9B%D7%9F.jpg"
-        },
-        {
-          "title": "File:ISS029-E-8200 - View of Earth.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AISS029-E-8200_-_View_of_Earth.jpg"
-        },
-        {
-          "title": "File:ISS037-E-8200 - View of Earth.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AISS037-E-8200_-_View_of_Earth.jpg"
-        },
-        {
-          "title": "File:ISS035-E-8200 - View of Earth.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AISS035-E-8200_-_View_of_Earth.jpg"
+          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Air_Defense_batalion_136_logo.jpg"
         }
       ]
     },
     {
-      "slug": "corps-visint",
-      "name": "מודיעין ויזואלי (ויזינט)",
-      "englishName": "IDF Visual Intelligence (VISINT) branch / Intelligence Corps",
-      "candidates": [
-        {
-          "title": "File:9900 unit logo.svg",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3A9900_unit_logo.svg"
-        },
-        {
-          "title": "File:סמל 9900.jpg",
-          "score": -1,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_9900.jpg"
-        },
-        {
-          "title": "File:סמל 9900 תמונה (cropped).jpg",
-          "score": -1,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_9900_%D7%AA%D7%9E%D7%95%D7%A0%D7%94_(cropped).jpg"
-        },
-        {
-          "title": "File:סמל 9900 תמונה.jpg",
-          "score": -1,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_9900_%D7%AA%D7%9E%D7%95%D7%A0%D7%94.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-intel-9900",
-      "name": "יחידה 9900",
-      "englishName": "Unit 9900",
-      "candidates": [
-        {
-          "title": "File:9900 unit logo.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3A9900_unit_logo.svg"
-        },
-        {
-          "title": "File:סמל 9900.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_9900.jpg"
-        },
-        {
-          "title": "File:סמל 9900 תמונה.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_9900_%D7%AA%D7%9E%D7%95%D7%A0%D7%94.jpg"
-        },
-        {
-          "title": "File:סמל 9900 תמונה (cropped).jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%A1%D7%9E%D7%9C_9900_%D7%AA%D7%9E%D7%95%D7%A0%D7%94_(cropped).jpg"
-        },
-        {
-          "title": "File:ISS047-E-9900 - View of Earth.jpg",
-          "score": 0,
-          "page": "https://commons.wikimedia.org/wiki/File%3AISS047-E-9900_-_View_of_Earth.jpg"
-        }
-      ]
-    },
-    {
-      "slug": "brigade-comm-field-units",
-      "name": "גדודי תקשוב",
-      "englishName": "IDF Signal / C4I battalions (C4I and Cyber Defense Directorate, formerly Teleprocessing Corps)",
+      "slug": "ad-879-patriot",
+      "name": "גדוד 879 - פטריוט",
+      "englishName": "",
       "candidates": []
     },
     {
-      "slug": "branch-tech",
-      "name": "חיל הטכנולוגיה והאחזקה",
-      "englishName": "Technology and Maintenance Corps (Israel)",
+      "slug": "ad-davids-sling",
+      "name": "סוללת שרביט קסמים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "shaldag-5101",
+      "name": "יחידת שלדג",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "669-rescue",
+      "name": "יחידה 669",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "5707-lotem",
+      "name": "ל\"מ - לוחמה מודיעינית אווירית",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-3-saar-5",
+      "name": "סער 5 (אילת)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-3-saar-6",
+      "name": "סער 6 (מגן)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-3-flotilla",
+      "name": "מטה שייטת 3",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-7-dolphin",
+      "name": "צוללות דולפין",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-7-tanin",
+      "name": "צוללות תנין",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-7-flotilla",
+      "name": "מטה שייטת 7",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-9-dvora",
+      "name": "ספינות דבורה/שלדג",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-9-tzofit",
+      "name": "ספינות צופית",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-13-strike",
+      "name": "מחלקת תקיפה",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-13-recon",
+      "name": "מחלקת איסוף ימי",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-13-engineering",
+      "name": "מחלקת חבלה ימית",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-coast-north",
+      "name": "פלוגת הגנה צפון",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-coast-center",
+      "name": "פלוגת הגנה מרכז",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "sea-coast-south",
+      "name": "פלוגת הגנה דרום (אשדוד/אילת)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "8200-hatsav",
+      "name": "חצב - איסוף גלוי",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "8200-cyber",
+      "name": "סייבר התקפי",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "8200-dev",
+      "name": "פיתוח טכנולוגי",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "9900-roim",
+      "name": "פלוגת רואים רחוק",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "9900-mapping",
+      "name": "מחלקת מיפוי",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "504-north",
+      "name": "פלוגת צפון",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "504-south",
+      "name": "פלוגת דרום",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "504-judea-samaria",
+      "name": "פלוגת מרכז (איו\"ש)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "lotem-mamram",
+      "name": "ממר\"ם - מרכז מחשבים ומידע",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "lotem-matzov",
+      "name": "מצו\"ב - מערכות שו\"ב",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "lotem-hoshen",
+      "name": "חוש\"ן - חטיבת השרתים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "cyber-c4i",
+      "name": "מטה ההגנה בסייבר",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "cyber-soc",
+      "name": "מרכז שליטה והגנה (SOC)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "comm-fld-yiftah",
+      "name": "גדוד יפתח (אוגדה 162)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "comm-fld-shaked",
+      "name": "גדוד שקד (אוגדה 36)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "comm-fld-southern",
+      "name": "גדוד תקשוב פיקוד דרום",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "ordnance-7100",
+      "name": "גדוד תחזוקה 7100",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "ordnance-7150",
+      "name": "גדוד 7150 - מרכז שיקום מסוקים",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "ordnance-650",
+      "name": "גדוד 650 - מרכז שיקום שריון",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "log-trans-6320",
+      "name": "גדוד הובלה 6320",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "log-trans-6356",
+      "name": "גדוד הובלה 6356",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "log-supply-3530",
+      "name": "גדוד אספקה 3530",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "med-7008",
+      "name": "גדוד רפואה 7008 (גולני)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "med-7058",
+      "name": "גדוד רפואה 7058 (גבעתי)",
+      "englishName": "",
       "candidates": [
         {
-          "title": "File:IDF Technology and Maintenance Corps Hat badge from 2015.png",
-          "score": 13,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Technology_and_Maintenance_Corps_Hat_badge_from_2015.png"
+          "title": "File:תג גדוד 7058.png",
+          "score": 9,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%AA%D7%92_%D7%92%D7%93%D7%95%D7%93_7058.png"
         },
         {
-          "title": "File:IDF Technology and Maintenance Corps TransportBattalion 690.png",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Technology_and_Maintenance_Corps_TransportBattalion_690.png"
+          "title": "File:גדוד-ציוד-מכני-הנדסי-פיקוד-מרכז-1.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%93%D7%95%D7%93-%D7%A6%D7%99%D7%95%D7%93-%D7%9E%D7%9B%D7%A0%D7%99-%D7%94%D7%A0%D7%93%D7%A1%D7%99-%D7%A4%D7%99%D7%A7%D7%95%D7%93-%D7%9E%D7%A8%D7%9B%D7%96-1.png"
         },
         {
-          "title": "File:IDF Technology and Maintenance Corps haAmakimBattalion 651.png",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Technology_and_Maintenance_Corps_haAmakimBattalion_651.png"
-        },
-        {
-          "title": "File:IDF Technology and Maintenance Corps haMerkazBattalion 638.png",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Technology_and_Maintenance_Corps_haMerkazBattalion_638.png"
-        },
-        {
-          "title": "File:IDF Technology and Maintenance Corps haAravaBattalion 674.png",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIDF_Technology_and_Maintenance_Corps_haAravaBattalion_674.png"
+          "title": "File:גדוד-ציוד-מכני-הנדסי-פיקוד-מרכז.png",
+          "score": 2,
+          "page": "https://commons.wikimedia.org/wiki/File%3A%D7%92%D7%93%D7%95%D7%93-%D7%A6%D7%99%D7%95%D7%93-%D7%9E%D7%9B%D7%A0%D7%99-%D7%94%D7%A0%D7%93%D7%A1%D7%99-%D7%A4%D7%99%D7%A7%D7%95%D7%93-%D7%9E%D7%A8%D7%9B%D7%96.png"
         }
       ]
     },
     {
-      "slug": "corps-tech-corps",
-      "name": "החיל הטכנולוגי",
-      "englishName": "Technological Corps (IDF)",
-      "candidates": [
-        {
-          "title": "File:Israeli Ordnance Corps Technical Military Boarding school logo.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Ordnance_Corps_Technical_Military_Boarding_school_logo.png"
-        },
-        {
-          "title": "File:Israeli Ordnance Corps BaHaD 20 logo.png",
-          "score": 5,
-          "page": "https://commons.wikimedia.org/wiki/File%3AIsraeli_Ordnance_Corps_BaHaD_20_logo.png"
-        },
-        {
-          "title": "File:Merkaz leom.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AMerkaz_leom.png"
-        },
-        {
-          "title": "File:MartahAleAdom.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AMartahAleAdom.png"
-        },
-        {
-          "title": "File:Mazlah.png",
-          "score": 2,
-          "page": "https://commons.wikimedia.org/wiki/File%3AMazlah.png"
-        }
-      ]
+      "slug": "med-7159",
+      "name": "גדוד רפואה 7159 (צנחנים)",
+      "englishName": "",
+      "candidates": []
     },
     {
-      "slug": "brigade-ordnance",
-      "name": "חיל החימוש",
-      "englishName": "Ordnance Corps (Israel)",
-      "candidates": [
-        {
-          "title": "File:Ordnance Corps Insignia 2026-05-15.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AOrdnance_Corps_Insignia_2026-05-15.svg"
-        },
-        {
-          "title": "File:Shoulder Sleeve Insignia of the Myanmar Army Ordnance Corps.svg",
-          "score": 10,
-          "page": "https://commons.wikimedia.org/wiki/File%3AShoulder_Sleeve_Insignia_of_the_Myanmar_Army_Ordnance_Corps.svg"
-        },
-        {
-          "title": "File:U.S. Ordnance Corps Insignia Crest Black White.gif",
-          "score": 8,
-          "page": "https://commons.wikimedia.org/wiki/File%3AU.S._Ordnance_Corps_Insignia_Crest_Black_White.gif"
-        },
-        {
-          "title": "File:Ordnance Corps Regimental Insignia.gif",
-          "score": 8,
-          "page": "https://commons.wikimedia.org/wiki/File%3AOrdnance_Corps_Regimental_Insignia.gif"
-        },
-        {
-          "title": "File:Army Ordnance Corps (India).png",
-          "score": 6,
-          "page": "https://commons.wikimedia.org/wiki/File%3AArmy_Ordnance_Corps_(India).png"
-        }
-      ]
+      "slug": "med-7261",
+      "name": "גדוד רפואה 7261 (נחל)",
+      "englishName": "",
+      "candidates": []
     },
     {
-      "slug": "branch-elite",
-      "name": "יחידות מובחרות ועילית",
-      "englishName": "Elite and special-forces units (IDF)",
-      "candidates": [
-        {
-          "title": "File:ONI JAN 1 Uniforms and Insignia Page 042 German Armed Elite Guard Waffen-SS WW2 Field, service dress uniforms NCOs, EM. Caps, helmet, buckle, emblem, Death's head Totenkopf, etc. Jan 1944 Field recognition.No copyright.jpg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3AONI_JAN_1_Uniforms_and_Insignia_Page_042_German_Armed_Elite_Guard_Waffen-SS_WW2_Field%2C_service_dress_uniforms_NCOs%2C_EM._Caps%2C_helmet%2C_buckle%2C_emblem%2C_Death's_head_Totenkopf%2C_etc._Jan_1944_Field_recognition.No_copyright.jpg"
-        },
-        {
-          "title": "File:Former US Army 159th Combat Aviation Brigade Pathfinder Platoon Beret Flash.svg",
-          "score": 3,
-          "page": "https://commons.wikimedia.org/wiki/File%3AFormer_US_Army_159th_Combat_Aviation_Brigade_Pathfinder_Platoon_Beret_Flash.svg"
-        }
-      ]
+      "slug": "med-7308",
+      "name": "גדוד רפואה 7308 (כפיר)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-yatzbam-mercaz",
+      "name": "יצב\"ם מרכז",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-yatzbam-north",
+      "name": "יצב\"ם צפון",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-yatzbam-south",
+      "name": "יצב\"ם דרום",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-mtzh-mercaz",
+      "name": "מצ\"ח מרכז",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-mtzh-north",
+      "name": "מצ\"ח צפון",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-mtzh-south",
+      "name": "מצ\"ח דרום",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-prison-6",
+      "name": "כלא 6",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-prison-10-tzrifin",
+      "name": "כלא 4 - צריפין",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "mp-prison-394-neve-tzedek",
+      "name": "כלא 394 - נווה צדק",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "matkal-269",
+      "name": "סיירת מטכ\"ל (269)",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "shaldag-5101-bn",
+      "name": "יחידת שלדג",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "shayetet-13-elite-bn",
+      "name": "שייטת 13",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "yahalom-elite-bn",
+      "name": "יהל\"ם",
+      "englishName": "",
+      "candidates": []
+    },
+    {
+      "slug": "lotar-eilat-bn",
+      "name": "יחידת לוט\"ר",
+      "englishName": "",
+      "candidates": []
     }
   ]
 }
