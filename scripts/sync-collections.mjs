@@ -257,34 +257,81 @@ async function readCollection(page, col) {
  * assumed, and the log says which one answered.
  */
 async function readLikes(page) {
-  const urls = [
+  // The tab is rendered by a client-side call, so the honest way to find it is
+  // to watch what the profile asks for. Anything under /api/v1 that mentions a
+  // like is remembered, and then replayed page by page.
+  const seen = new Set();
+  const watch = (req) => {
+    const u = req.url();
+    if (/\/api\/v\d\//.test(u) && /like|favorit|collect/i.test(u)) seen.add(u.split("#")[0]);
+  };
+  page.on("request", watch);
+
+  const tabs = [
     `https://makerworld.com/en/@${PROFILE}/likes`,
     `https://makerworld.com/en/@${PROFILE}?tab=likes`,
+    `https://makerworld.com/en/@${PROFILE}?tab=liked`,
     `https://makerworld.com/en/@${PROFILE}/like`,
     `https://makerworld.com/@${PROFILE}/likes`,
+    `https://makerworld.com/en/@${PROFILE}`,
   ];
-  for (const url of urls) {
+
+  let ids = [];
+  for (const url of tabs) {
     if (!(await open(page, url))) continue;
     await page.waitForTimeout(4000);
-    let ids = idsIn(await page.content());
-    if (!ids.length) { await page.waitForTimeout(5000); ids = idsIn(await page.content()); }
-    if (!ids.length) continue;
 
-    // Same twenty-at-a-time list as a collection.
+    // On the bare profile, the tab is a control rather than a link.
+    if (url.endsWith(`@${PROFILE}`)) {
+      const hit = page.locator('a,button,[role="tab"]').filter({ hasText: /^\s*(likes?|liked|לייקים|אהבתי)\s*$/i }).first();
+      if (await hit.count()) {
+        await hit.click({ timeout: 5000 }).catch(() => {});
+        await page.waitForTimeout(4000);
+      }
+    }
+
+    let found = idsIn(await page.content());
+    if (!found.length) { await page.waitForTimeout(5000); found = idsIn(await page.content()); }
+    if (!found.length) continue;
+
     let stall = 0;
     for (let i = 0; i < 60 && stall < 6; i++) {
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.keyboard.press("End").catch(() => {});
       await page.waitForTimeout(1400);
       const next = idsIn(await page.content());
-      if (next.length === ids.length) stall++;
-      else { stall = 0; ids = next; }
+      if (next.length === found.length) stall++;
+      else { stall = 0; found = next; }
     }
+    ids = found;
     log(c.g(`  לייקים: ${ids.length} מודלים`) + c.d(`  (${url})`));
-    return ids;
+    break;
   }
-  log(c.y("  לייקים: לא נקראו — הטאב לא נענה או שהוא מוסתר בלי התחברות"));
-  return [];
+
+  // Whatever the page itself called is the reliable list — the HTML only ever
+  // holds the cards that were scrolled into view.
+  for (const base of seen) {
+    try {
+      const url = base.replace(/([?&])(offset|limit)=\d+/g, "$1$2=0").replace(/limit=0/, "limit=100");
+      const res = await page.request.get(url, { headers: { accept: "application/json" } });
+      if (!res.ok()) continue;
+      const body = await res.text();
+      const apiIds = [...body.matchAll(/"(?:design|model)?[Ii]d"\s*:\s*"?(\d{4,9})"?/g)].map((m) => m[1]);
+      if (apiIds.length > ids.length) {
+        ids = [...new Set(apiIds)];
+        log(c.g(`  לייקים דרך ה-API: ${ids.length} מודלים`) + c.d(`  (${url})`));
+      }
+    } catch {
+      /* a probe that fails tells us nothing worth stopping for */
+    }
+  }
+
+  page.off("request", watch);
+  if (!ids.length) {
+    log(c.y("  לייקים: לא נקראו — הטאב לא נענה או שהוא מוסתר בלי התחברות"));
+    if (seen.size) log(c.d(`  קריאות שנצפו: ${[...seen].slice(0, 6).join(", ")}`));
+  }
+  return ids;
 }
 
 /** Ids the shop already knows about, whatever shelf or state they are in. */
