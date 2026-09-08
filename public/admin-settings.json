@@ -82,7 +82,6 @@
     "petg:pink": false,
     "petg:glow": false,
     "petg:custom_ירוק_זוהר": false,
-    "tpu:black": false,
     "tpu:white": false,
     "tpu:orange": false,
     "tpu:red": false,
@@ -107,7 +106,8 @@
     "abs:pink": false,
     "abs:glow": false,
     "abs:custom_ירוק_זוהר": false,
-    "pla:glow": false
+    "pla:glow": false,
+    "abs:black": false
   },
   "shelves": {},
   "materials": [],
