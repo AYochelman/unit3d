@@ -18,6 +18,7 @@ import {
 import { useOrderStore } from "@/lib/order-store";
 import UnitOrderScreen, { type UnitPick } from "@/components/UnitOrderScreen";
 import { bulkDiscount } from "@/lib/pricing";
+import { orderHref } from "@/lib/order-link";
 import { UNIT_FORMS, unitFormItemId } from "@/lib/unitForms";
 import { fmtILS } from "@/lib/format";
 import { useLivePricer } from "@/lib/live-price";
@@ -536,11 +537,11 @@ export default function CatalogClient() {
         onClose={() => setPicked(null)}
         onConfirm={({ form, summary, price, qty }) => {
           if (!picked) return;
-          setOrder({
+          const order = {
             title: `${picked.title} · ${form.label}`,
             summary,
             price,
-            source: "catalog",
+            source: "catalog" as const,
             meta: {
               unitSlug: picked.slug,
               brigadeSlug: picked.brigadeSlug,
@@ -548,9 +549,12 @@ export default function CatalogClient() {
               qty,
               baseUnitPrice: price == null ? undefined : price / (qty * (1 - bulkDiscount(qty))),
             },
-          });
+          };
+          setOrder(order);
           setPicked(null);
-          router.push("/contact");
+          // The cart is in memory only; the link carries the same order so a
+          // refresh on the form does not lose what was just chosen.
+          router.push(orderHref("/contact", order));
         }}
       />
     </div>

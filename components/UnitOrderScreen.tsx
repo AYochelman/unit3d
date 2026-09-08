@@ -4,7 +4,9 @@ import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
 import ColorSwatch from "@/components/ui/ColorSwatch";
+import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
+import { photoSrc } from "@/lib/assets";
 import EmblemImage from "@/components/EmblemImage";
 import { Field, Input } from "@/components/ui/Field";
 import { useAdminStore } from "@/lib/admin-store";
@@ -126,7 +128,7 @@ export default function UnitOrderScreen({
       `חיל: ${unit.corps}`,
       `זרוע: ${unit.branch}`,
       `מוצר: ${form.label} · ${form.dim}`,
-      `צבע: ${colorName}${twoTone ? ` + צבע שני (${fmtILS(EXTRA_COLOR_PRICE)})` : ""}`,
+      `צבע: ${colorName}${twoTone ? ` + יותר מצבע אחד (${fmtILS(EXTRA_COLOR_PRICE)})` : ""}`,
       text.trim() ? `כיתוב: ${text.trim()} (${fmtILS(PERSONALIZE_PRICE)})` : "ללא כיתוב",
       `זמן הדפסה: ${form.hours}h`,
       qty > 1 ? `כמות: ${qty}${bulkDiscount(qty) ? ` · ${BULK_NOTE}` : ""}` : null,
@@ -160,8 +162,12 @@ export default function UnitOrderScreen({
               pushes every choice below the fold, which is the one thing this
               screen exists to show. */}
           <div className="rounded-2xl border border-ink-800 bg-ink-900 overflow-hidden flex lg:block items-center gap-4 p-3 lg:p-0">
-            <div className="relative h-24 w-24 shrink-0 rounded-xl lg:rounded-none lg:h-auto lg:w-auto lg:aspect-square stripes overflow-hidden">
-              <EmblemImage slug={unit.slug} label={unit.title} paddingRatio={0.12} />
+            {/* No inset: several insignia are scans with a white ground of their
+                own, and a margin around them reads as a picture of a badge
+                pinned to a wall rather than as the badge. Filling the frame lets
+                the emblem BE the frame; contain still keeps it uncropped. */}
+            <div className="relative h-24 w-24 shrink-0 rounded-xl lg:rounded-none lg:h-auto lg:w-auto lg:aspect-square bg-ink-950 overflow-hidden">
+              <EmblemImage slug={unit.slug} label={unit.title} paddingRatio={0} />
             </div>
             <div className="min-w-0 lg:p-5 lg:border-t lg:border-ink-800">
               <Pill tone="flame" className="mb-2">הגדוד שבחרת</Pill>
@@ -208,8 +214,19 @@ export default function UnitOrderScreen({
                           : "border-ink-800 bg-ink-900 hover:border-ink-700 hover:-translate-y-0.5",
                       )}
                     >
-                      <span className="block relative aspect-[4/3] bg-ink-950/60 flex items-center justify-center">
-                        <ProductArt art={f.art} color={artColor(filament?.hex)} size={86} />
+                      <span className="block relative aspect-[4/3] bg-ink-950/60 flex items-center justify-center overflow-hidden">
+                        {f.photo ? (
+                          <Image
+                            src={photoSrc(f.photo)}
+                            alt={f.label}
+                            fill
+                            sizes="(max-width: 640px) 50vw, 200px"
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <ProductArt art={f.art} color={artColor(filament?.hex)} size={86} />
+                        )}
                         {picked && (
                           <span className="absolute top-2 left-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-flame text-white">
                             <Icon name="check" size={12} strokeWidth={3} />
@@ -278,8 +295,8 @@ export default function UnitOrderScreen({
                 className="h-4 w-4 accent-flame"
               />
               <span className="flex-1 min-w-0">
-                <span className="block font-bold text-sm text-ink-50">הסמל בשני צבעים</span>
-                <span className="block text-xs text-ink-400">גליל שני על אותה הדפסה — הרקע והסמל בגוונים שונים.</span>
+                <span className="block font-bold text-sm text-ink-50">יותר מצבע אחד</span>
+                <span className="block text-xs text-ink-400">גליל נוסף על אותה הדפסה — הרקע והסמל בגוונים שונים.</span>
               </span>
               <span className="shrink-0 text-sm font-bold">+{fmtILS(EXTRA_COLOR_PRICE)}</span>
             </label>

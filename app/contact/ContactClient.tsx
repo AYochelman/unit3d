@@ -1,5 +1,6 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
@@ -7,6 +8,7 @@ import Icon from "@/components/ui/Icon";
 import { CONTACT } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
+import { readOrder } from "@/lib/order-link";
 import { PRODUCTS } from "@/lib/products";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import { makeCoupon, NEXT_ORDER_DISCOUNT } from "@/lib/coupon";
@@ -44,7 +46,21 @@ const INQUIRY_FOR: Record<CustType, { id: Inquiry; label: string }[]> = {
 };
 
 export default function ContactClient() {
-  const { items, removeItem, clearCart, setQty } = useOrderStore();
+  const { items, removeItem, clearCart, setQty, addItem } = useOrderStore();
+
+  // The cart is in memory, so a reload of this page — or opening the link in a
+  // new tab — used to lose the order and greet the customer with an empty
+  // "what do you need?". The catalogue puts the same order in the link; take it
+  // from there when the cart has nothing, and once only.
+  const params = useSearchParams();
+  const restored = useRef(false);
+  useEffect(() => {
+    if (restored.current || items.length) return;
+    const fromLink = readOrder(params?.get("o"));
+    if (!fromLink) return;
+    restored.current = true;
+    addItem(fromLink);
+  }, [params, items.length, addItem]);
 
   const [cust, setCust] = useState<CustType>(
     items.length > 0 ? "private" : "private",

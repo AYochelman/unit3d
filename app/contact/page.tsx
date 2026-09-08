@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ContactClient from "./ContactClient";
 
 export const metadata = {
@@ -7,5 +8,11 @@ export const metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactClient />;
+  // ContactClient reads ?o= to restore an order after a reload, and a static
+  // export needs that behind a boundary.
+  return (
+    <Suspense fallback={null}>
+      <ContactClient />
+    </Suspense>
+  );
 }

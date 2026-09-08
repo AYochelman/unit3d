@@ -1,3 +1,5 @@
+import { IMPORTED } from "./imported";
+import { CONFIG_PRODUCT_BY_ID } from "./products";
 import type { MaterialId, ProductArtId } from "./types";
 
 /**
@@ -41,9 +43,21 @@ export type UnitForm = {
   group: UnitFormGroup;
   /** The line drawing on the row — recoloured live with the chosen filament. */
   art: ProductArtId;
+  /**
+   * A photograph of the real thing, when the shop already has one.
+   *
+   * A drawing says what the body IS; a photograph says what it looks like
+   * printed, which is the question someone choosing between five of them is
+   * actually asking. Only the bodies that exist elsewhere in the shop have one,
+   * and the drawing stays as the fallback for the rest.
+   */
+  photo?: string;
   /** Catalogue price — the fallback when automatic pricing is off. */
   price: number;
 };
+
+/** The catalogue photo of a shelf model, when it has one. */
+const shelfPhoto = (id: string): string | undefined => IMPORTED.find((m) => m.id === id)?.image;
 
 export const UNIT_FORMS: UnitForm[] = [
   {
@@ -56,6 +70,7 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "emblem",
     art: "keychain",
+    photo: CONFIG_PRODUCT_BY_ID.keychain.image,
     price: 65,
   },
   {
@@ -68,6 +83,7 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "emblem",
     art: "dogtag",
+    photo: CONFIG_PRODUCT_BY_ID.dog_tag.image,
     price: 55,
   },
   {
@@ -116,6 +132,7 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "everyday",
     art: "lighter",
+    photo: CONFIG_PRODUCT_BY_ID.lighter_case.image,
     price: 45,
   },
   {
@@ -128,6 +145,7 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "petg",
     group: "everyday",
     art: "ashtray",
+    photo: CONFIG_PRODUCT_BY_ID.ashtray.image,
     price: 40,
   },
   {
@@ -140,6 +158,7 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "everyday",
     art: "round",
+    photo: shelfPhoto("mw-2019559"),
     price: 55,
   },
 ];
