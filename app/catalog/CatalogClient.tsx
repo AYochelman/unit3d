@@ -16,7 +16,7 @@ import {
   type Battalion,
 } from "@/lib/units-hierarchy";
 import { useOrderStore } from "@/lib/order-store";
-import UnitOrderModal, { type UnitPick } from "@/components/UnitOrderModal";
+import UnitOrderScreen, { type UnitPick } from "@/components/UnitOrderScreen";
 import { bulkDiscount } from "@/lib/pricing";
 import { UNIT_FORMS, unitFormItemId } from "@/lib/unitForms";
 import { fmtILS } from "@/lib/format";
@@ -530,7 +530,7 @@ export default function CatalogClient() {
         </div>
       )}
 
-      <UnitOrderModal
+      <UnitOrderScreen
         key={picked?.slug ?? "none"}
         unit={picked}
         onClose={() => setPicked(null)}
