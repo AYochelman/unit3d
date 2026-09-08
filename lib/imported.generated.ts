@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-08T10:34:45.402Z
-// Items: 396
+// Items: 399
 
 import type { ImportedModel } from "./imported";
 
@@ -9654,6 +9654,66 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "screen",
       "home"
     ]
+  },
+  {
+    "id": "mw-3258780",
+    "name": "The Twisty Flex Ring",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 1.22,
+    "grams": 51,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US4321d004b32a94/design/ac171f3e54746964.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Delphir",
+    "sourceUrl": "https://makerworld.com/en/models/3258780-the-twisty-flex-ring",
+    "license": "Standard Digital File License",
+    "downloads": 185,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3268045",
+    "name": "Bone Queen",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 53.66,
+    "grams": 904,
+    "size": "~250mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US9d871c1d175f9a/design/4bccab2ec8c692f1.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "3DXAV",
+    "sourceUrl": "https://makerworld.com/en/models/3268045-bone-queen",
+    "license": "Standard Digital File License",
+    "downloads": 46,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3271358",
+    "name": "Fitted Sheet Corner Clamp–Keep Your Sheet in Place",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.78,
+    "grams": 77,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USebd2a4da587ef5/design/3e44b9e5bcd7a6cc.webp?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "HackMan3D",
+    "sourceUrl": "https://makerworld.com/en/models/3271358-fitted-sheet-corner-clamp-keep-your-sheet-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 77,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
   }
 ];
 
