@@ -26,23 +26,30 @@ import type { StockMap } from "./inventory";
  * "that one is a few days out" rather than never see it.
  */
 
-/** Materials worth showing for a model that was designed in `want`. */
+/**
+ * Materials worth showing for a model that was designed in `want`.
+ *
+ * Only its own family. A TPU model is TPU — the flex is the product, and a
+ * rigid copy of it is a different object that happens to share a shape. Inside
+ * a family the finish is interchangeable (PLA, PLA+, matte, silk are one
+ * plastic), so those stand in for each other and nothing else does.
+ */
 export function offeredMaterials(
   all: Material[],
   stock: StockMap,
   palette: Filament[],
   want: MaterialId,
 ): Material[] {
-  // Only what is on the shelf. An empty spool is not a choice — offering it
-  // asks the customer to pick something and then apologises for it.
-  const live = all.filter((m) => isMaterialInStock(stock, m.id, filamentsFor(palette, m.id)));
-  // Nothing at all: keep the model's own material on screen so the page can
-  // say what is missing rather than showing an empty row.
-  if (!live.length) {
-    const own = all.find((m) => m.id === want);
-    return own ? [own] : [];
-  }
-  return live;
+  const wantFamily = familyOf({ id: want, family: all.find((m) => m.id === want)?.family });
+  const family = all.filter((m) => familyOf(m) === wantFamily);
+  // An empty spool is not a choice: offering it asks the customer to pick
+  // something and then apologises for it.
+  const live = family.filter((m) => isMaterialInStock(stock, m.id, filamentsFor(palette, m.id)));
+  if (live.length) return live;
+  // Nothing in the family: keep the model's own on screen so the page can say
+  // what is missing rather than showing an empty row.
+  const own = family.find((m) => m.id === want) ?? all.find((m) => m.id === want);
+  return own ? [own] : [];
 }
 
 /** The material to land on: the one the model asks for, or a sibling we have. */

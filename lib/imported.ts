@@ -168,9 +168,20 @@ const sellable = (m: ImportedModel) =>
 /** Rows kept out of the shop, for the admin page and the import report. */
 export const heldModels = (): ImportedModel[] => IMPORTED.filter((m) => !sellable(m));
 
-/** Retail price from the shared cost model, rounded up to the nearest ₪5. */
-export function suggestPrice(grams: number, hours: number, colors = 1): number {
-  const c = estimateCost({ grams, hours, material: "pla_plus", colors }, DEFAULT_COST_SETTINGS);
+/**
+ * Retail price from the shared cost model, rounded up to the nearest ₪5.
+ *
+ * Priced in the filament the model is actually printed in. A TPU spool costs
+ * half again what PLA does, so quoting a TPU ball off the PLA price is a
+ * discount nobody decided to give.
+ */
+export function suggestPrice(
+  grams: number,
+  hours: number,
+  colors = 1,
+  material: MaterialId = "pla_plus",
+): number {
+  const c = estimateCost({ grams, hours, material, colors }, DEFAULT_COST_SETTINGS);
   return Math.max(25, Math.ceil(c.recommendedPrice / 5) * 5);
 }
 
@@ -200,7 +211,7 @@ export function importedFidgets(): Fidget[] {
       name: heName(m.id, m.name),
       nameEn: m.name,
       desc: HE_DESCS[m.id] ?? m.desc,
-      price: suggestPrice(m.grams, m.hours, 1),
+      price: suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus"),
       size: m.size,
       time: fmtHours(m.hours),
       hue: m.hue,
@@ -231,7 +242,7 @@ export function importedProducts(): Product[] {
       name: heName(m.id, m.name),
       nameEn: m.name,
       desc: HE_DESCS[m.id] ?? m.desc,
-      price: suggestPrice(m.grams, m.hours, 1),
+      price: suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus"),
       size: m.size,
       time: fmtHours(m.hours),
       hours: m.hours,
