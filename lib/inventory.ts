@@ -36,8 +36,15 @@ export const colorsInStock = (
   palette: { id: string }[] = FILAMENTS,
 ): string[] => palette.filter((f) => isColorInStock(stock, material, f.id)).map((f) => f.id);
 
-/** Default material for anything that does not name one. */
-export const DEFAULT_MATERIAL: MaterialId = "pla_plus";
+/**
+ * Default material for anything that does not name one.
+ *
+ * Plain PLA, because that is what is on the printer: it is the spool the shop
+ * actually runs, the cheapest of the family, and the finish every other PLA
+ * stands in for. PLA+ was the default from before there were four PLAs to
+ * choose between, and it quietly added five shekels to every unnamed item.
+ */
+export const DEFAULT_MATERIAL: MaterialId = "pla";
 
 export type Sellable = { id: string; name: string; material?: MaterialId };
 
