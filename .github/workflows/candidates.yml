@@ -73,7 +73,12 @@ jobs:
         continue-on-error: true
 
       # The designers' own clips, for the hover preview on the shop cards.
-      # ffmpeg ships with the runner image; the script caps itself per run.
+      # ffmpeg is NOT on the runner image any more, so install it first; the
+      # script caps how many it transcodes per run.
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends ffmpeg
+        continue-on-error: true
+
       - name: Fetch any new clips
         run: npm run fetch:videos
         continue-on-error: true
@@ -86,10 +91,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/candidates.generated.ts lib/imported.generated.ts lib/localImages.generated.ts \
-                  lib/localVideos.generated.ts data/model-videos.json \
-                  data/makerworld-raw.json data/rejected-models.json public/model-decisions.json \
-                  public/img/catalog public/img/catalog-video
+          # One path that a step did not produce must not throw away the work
+          # of every step that did — `git add` treats a missing pathspec as
+          # fatal, and that lost a whole queued model once.
+          for p in lib/candidates.generated.ts lib/imported.generated.ts \
+                   lib/localImages.generated.ts lib/localVideos.generated.ts \
+                   data/model-videos.json data/makerworld-raw.json \
+                   data/rejected-models.json public/model-decisions.json \
+                   public/img/catalog public/img/catalog-video; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
           if git diff --cached --quiet; then
             echo "nothing new"
             echo "changed=false" >> "$GITHUB_OUTPUT"
