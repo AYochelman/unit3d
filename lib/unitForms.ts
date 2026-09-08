@@ -143,11 +143,15 @@ export const UNIT_FORMS: UnitForm[] = [
   {
     id: "ashtray",
     label: "מאפרה",
-    desc: "מאפרה שולחנית, הסמל בתחתית. PETG - עומד בחום.",
+    desc: "מאפרה שולחנית, הסמל בתחתית.",
     dim: "70×70mm",
     grams: 20,
     hours: 0.6,
-    material: "petg",
+    // PLA at the owner's decision: PETG is the heat-resistant choice and is what
+    // this started as, but there is no PETG on the shelf and every other body
+    // prints in PLA — one filament means one colour list across the whole
+    // screen, which is the thing a customer notices.
+    material: "pla",
     group: "everyday",
     art: "ashtray",
     photo: CONFIG_PRODUCT_BY_ID.ashtray.image,
