@@ -20,7 +20,7 @@ import ShippingEstimate from "@/components/ShippingEstimate";
 import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import { filamentsFor, useMaterials } from "@/lib/palette";
-import { offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
+import { nearestColor, offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { useLivePrice } from "@/lib/live-price";
@@ -46,9 +46,9 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const f = FIDGETS.find((x) => x.id === id);
 
   const [imgIdx, setImgIdx]       = useState(0);
-  // The colour the fidget is shown in. It survives an empty spool; everything
-  // else on the row is something we can print today.
-  const recommendedColor = FILAMENTS[0].id;
+  // No invented default: a fidget's row is what is on the shelf, unless the
+  // source named the colour it was printed in.
+  const recommendedColor = nearestColor(FILAMENTS, f?.defaultColor);
   const [pickedColor, setPickedColor] = useState<string | null>(null);
   const [amsOn, setAmsOn]         = useState(false);
   const [amsColors, setAmsColors] = useState<2 | 3 | 4>(2);

@@ -135,6 +135,8 @@ export type Fidget = {
   orders?: number;
   /** Original (usually English) title of an imported model. */
   nameEn?: string;
+  /** The colour it is photographed in, as a hex, when the source names one. */
+  defaultColor?: string;
 };
 
 // ─── Configurator options ─────────────────────────────────────────────────────
@@ -316,6 +318,8 @@ export type Product = {
   ams?: boolean;
   /** Default material family. */
   material?: MaterialId;
+  /** The colour the model is photographed in, as a hex, when the source names one. */
+  defaultColor?: string;
   /** Listing stats (demo counters until there is a backend). */
   rating?: number;
   orders?: number;

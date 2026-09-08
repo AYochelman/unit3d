@@ -52,9 +52,12 @@ export default function ColorSwatch({
       : kind === "clear"
       ? `linear-gradient(${hex}88, ${hex}55), ${checker}`
       : kind === "dual"
-      ? `linear-gradient(135deg, ${hex} 0 48%, ${second} 52% 100%)`
+      // A dual-colour silk blends along the print; a hard edge looks like two
+      // half-circles glued together, which is not a spool anyone sells.
+      ? `linear-gradient(135deg, ${hex} 0 34%, ${second} 66% 100%)`
       : kind === "shift"
-        ? `conic-gradient(from 210deg, ${hex} 0 50%, ${second} 50% 100%)`
+        // Thermochromic goes THROUGH the change, so the swatch does too.
+        ? `linear-gradient(120deg, ${hex} 0 28%, ${second} 72% 100%)`
         : hex;
 
   return (
@@ -72,6 +75,18 @@ export default function ColorSwatch({
       }}
       aria-hidden
     >
+      {/* Every spool gets the same soft top-left sheen: without it a flat disc
+          reads as a colour chip, and the gradients look like flags. */}
+      {kind !== "glow" && (
+        <span
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.10) 34%, rgba(255,255,255,0) 58%)," +
+              "radial-gradient(circle at 70% 82%, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 55%)",
+          }}
+        />
+      )}
       {kind === "glow" && (
         <span
           className="absolute inset-[22%] rounded-full opacity-70"

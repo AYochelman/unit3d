@@ -9,7 +9,7 @@ import { Field, Input } from "@/components/ui/Field";
 import { useFilaments } from "@/lib/palette";
 import { MATERIAL_BY_ID } from "@/lib/materials";
 import { useMaterials } from "@/lib/palette";
-import { offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
+import { nearestColor, offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import { filamentsFor } from "@/lib/palette";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
@@ -53,9 +53,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const adminUnlocked = useAdminStore((s) => s.unlocked);
   const override = useAdminStore((s) => s.overrides[id]);
 
-  // The colour the model is presented in — what the photograph and the
-  // designer intended. It stays on the list even when the spool is empty.
-  const recommendedColor = FILAMENTS[2].id;
+  // The colour the model's own photograph was printed in, matched to the
+  // nearest spool we sell. A model whose source names no colour gets no
+  // recommendation — the row is simply what is on the shelf.
+  const recommendedColor = nearestColor(FILAMENTS, p?.defaultColor);
   // Until the customer picks for himself the page lands on something we can
   // actually print today; once he has chosen, his choice stands even if the
   // spool is empty — he may well want to wait for it.

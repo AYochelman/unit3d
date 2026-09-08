@@ -74,6 +74,14 @@ export type ImportedModel = {
    * falls back to PLA+.
    */
   material?: MaterialId;
+  /**
+   * The colour the designer printed it in, as a hex.
+   *
+   * The shop used to open every model on the same orange, which was an index
+   * into a list and meant nothing. This is the colour of the photograph the
+   * customer is looking at.
+   */
+  colorHex?: string;
   /** The AMS plate, when the designer published one. Much slower: colour
    *  changes and the purge tower can triple the time and the filament. */
   hoursAms?: number;
@@ -212,6 +220,7 @@ export function importedFidgets(): Fidget[] {
       nameEn: m.name,
       desc: HE_DESCS[m.id] ?? m.desc,
       price: suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus"),
+      defaultColor: m.colorHex,
       size: m.size,
       time: fmtHours(m.hours),
       hue: m.hue,
@@ -243,6 +252,7 @@ export function importedProducts(): Product[] {
       nameEn: m.name,
       desc: HE_DESCS[m.id] ?? m.desc,
       price: suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus"),
+      defaultColor: m.colorHex,
       size: m.size,
       time: fmtHours(m.hours),
       hours: m.hours,

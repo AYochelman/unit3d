@@ -52,6 +52,30 @@ export function offeredMaterials(
   return own ? [own] : [];
 }
 
+/**
+ * The palette colour closest to the one the model was printed in.
+ *
+ * The shop used to open every model on the same orange, which was index 2 of a
+ * list and meant nothing. MakerWorld gives the hex of the plate the photograph
+ * was printed from; the nearest spool we sell is the honest answer to "the
+ * colour in the picture". No source colour means no recommendation at all —
+ * better silence than an invention.
+ */
+export function nearestColor(palette: Filament[], hex?: string): string | undefined {
+  if (!hex || !/^#[0-9a-f]{6}$/i.test(hex)) return undefined;
+  const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [r, g, b] = rgb(hex);
+  let best: { id: string; d: number } | null = null;
+  for (const f of palette) {
+    if (!/^#[0-9a-f]{6}$/i.test(f.hex)) continue;
+    const [fr, fg, fb] = rgb(f.hex);
+    // Weighted so the match follows what the eye calls "the same colour".
+    const d = 2 * (r - fr) ** 2 + 4 * (g - fg) ** 2 + 3 * (b - fb) ** 2;
+    if (!best || d < best.d) best = { id: f.id, d };
+  }
+  return best?.id;
+}
+
 /** The material to land on: the one the model asks for, or a sibling we have. */
 export function startingMaterial(
   all: Material[],
@@ -91,11 +115,12 @@ export function offeredColors(
 ): Filament[] {
   const mine = filamentsFor(palette, material);
   const live = mine.filter((c) => isColorInStock(stock, material, c.id));
-  const rec = mine.find((c) => c.id === recommendedId) ?? mine[0];
+  // No source colour means no recommendation: the row is simply what we have.
+  const rec = recommendedId ? mine.find((c) => c.id === recommendedId) : undefined;
   // Everything we have, and exactly ONE thing we do not: the colour the model
   // is shown in. A row of struck-through circles is a list of apologies; one
   // is a note that the model's own colour is on its way back.
-  if (!rec || live.some((c) => c.id === rec.id)) return live.length ? live : rec ? [rec] : [];
+  if (!rec || live.some((c) => c.id === rec.id)) return live.length ? live : mine.slice(0, 1);
   return [rec, ...live];
 }
 
@@ -104,9 +129,9 @@ export function startingColor(
   palette: Filament[],
   stock: StockMap,
   material: MaterialId,
-  recommendedId: string,
+  recommendedId?: string,
 ): string {
   const offered = offeredColors(palette, stock, material, recommendedId);
-  if (isColorInStock(stock, material, recommendedId)) return recommendedId;
-  return offered.find((c) => isColorInStock(stock, material, c.id))?.id ?? recommendedId;
+  if (recommendedId && isColorInStock(stock, material, recommendedId)) return recommendedId;
+  return offered.find((c) => isColorInStock(stock, material, c.id))?.id ?? offered[0]?.id ?? palette[0]?.id ?? "";
 }

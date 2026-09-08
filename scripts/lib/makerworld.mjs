@@ -191,6 +191,20 @@ export function filamentOf(instance) {
   return types.find(Boolean) ?? "";
 }
 
+/**
+ * The colour the designer printed it in.
+ *
+ * The same plate record carries a hex. It is the colour of the photograph on
+ * the model's page — the one a customer means by "like the picture" — which is
+ * the only honest answer to "what is this model's colour". Everything else the
+ * shop could pick is an invention.
+ */
+export function colorOf(instance) {
+  const plates = instance?.extention?.modelInfo?.plates ?? [];
+  const hex = plates.flatMap((pl) => (pl.filaments ?? []).map((f) => String(f.color || ""))).find(Boolean);
+  return /^#[0-9a-f]{6}$/i.test(hex || "") ? hex.toUpperCase() : null;
+}
+
 /** MakerWorld's filament name → the family this shop sells. */
 export function materialFor(type) {
   const t = String(type || "").toUpperCase();
@@ -220,6 +234,7 @@ export function platesFrom(instances = [], defaultInstanceId = null) {
       dl: x.downloadCount || 0,
       name: x.name || x.title || "",
       filament: filamentOf(x),
+      color: colorOf(x),
       def: !!x.isDefault || (defaultInstanceId != null && x.id === defaultInstanceId),
     }))
     .filter((x) => x.g > 0 && x.h > 0);

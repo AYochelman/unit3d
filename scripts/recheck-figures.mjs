@@ -75,6 +75,9 @@ async function main() {
       row.material = mat;
     }
 
+    // The colour of the model's own photograph, when the plate names one.
+    if (p.base.color) row.colorHex = p.base.color;
+
     if (moved) changed.push({ name: row.name, was, now, factor: now.grams / Math.max(1, was.grams) });
     if (checked % 25 === 0) log(c.d(`   ${checked}/${rows.length}`));
   }
