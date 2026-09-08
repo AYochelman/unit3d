@@ -569,7 +569,6 @@ function BattalionCard({
           fallbackHue={hue}
           label={battalion.name}
           paddingRatio={0.08}
-          className="spin-y"
         />
         {battalion.number && (
           <span
