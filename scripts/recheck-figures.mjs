@@ -138,7 +138,7 @@ async function main() {
   if (DRY) { log(c.d("\n  --dry: לא נכתב קובץ.\n")); return; }
   // A colour-only pass is still a pass: the guard used to skip the write when
   // nothing but colours had moved, so a whole run found them and threw them away.
-  if (!changed.length && !remat.length && !recolor.length) { log(c.g("  הכל כבר נכון.\n")); return; }
+  if (!changed.length && !remat.length && !recolor.length && !repic) { log(c.g("  הכל כבר נכון.\n")); return; }
   // Rewrite the whole module rather than splicing the text: a slice that is one
   // character off produces a file that parses as nothing, which is exactly what
   // the first run of this script did.
