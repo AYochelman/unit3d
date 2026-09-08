@@ -134,6 +134,7 @@ export default function UnitOrderScreen({
       `מוצר: ${form.label} · ${form.dim}`,
       `צבע: ${colorName}${twoTone ? ` + יותר מצבע אחד (${fmtILS(EXTRA_COLOR_PRICE)})` : ""}`,
       text.trim() ? `כיתוב: ${text.trim()} (${fmtILS(PERSONALIZE_PRICE)})` : "ללא כיתוב",
+      form.recommends ? `החומר המומלץ: ${MATERIAL_BY_ID[form.recommends.material].name} (${form.recommends.why}) - לא במלאי` : null,
       `זמן הדפסה: ${form.hours}h`,
       qty > 1 ? `כמות: ${qty}${bulkDiscount(qty) ? ` · ${BULK_NOTE}` : ""}` : null,
       quoteOnly ? "מחיר: לפי הזמנה" : null,
@@ -240,6 +241,11 @@ export default function UnitOrderScreen({
                       <span className="block p-3 border-t border-ink-800/70">
                         <span className="block font-bold text-sm text-ink-50 truncate">{f.label}</span>
                         <span className="block text-[11px] text-ink-400 leading-snug h-8 overflow-hidden">{f.desc}</span>
+                        {f.recommends && (
+                          <span className="block text-[10px] text-cyan2/90 mt-1">
+                            מומלץ: {MATERIAL_BY_ID[f.recommends.material].name} · {f.recommends.why}
+                          </span>
+                        )}
                         {!onShelf(f.material) && (
                           <span className="block text-[10px] text-amber-400/90 mt-1">בהזמנה · הגליל אינו במלאי</span>
                         )}
@@ -283,6 +289,12 @@ export default function UnitOrderScreen({
                   {form.label} מודפס ב-{MATERIAL_BY_ID[form.material].name}
                   {form.material !== "pla" && " — ולכן הגוונים שונים משאר המוצרים"}
                   {` · ${colors.length} גוונים על המדף`}
+                  {form.recommends && (
+                    <span className="block text-cyan2/90 mt-0.5">
+                      החומר המומלץ ל{form.label} הוא {MATERIAL_BY_ID[form.recommends.material].name} ({form.recommends.why}).
+                      אינו במלאי כרגע — כתוב לנו בשורת הטקסט או בהודעה ונזמין גליל.
+                    </span>
+                  )}
                 </div>
               )}
               <div className="flex flex-wrap gap-2.5">

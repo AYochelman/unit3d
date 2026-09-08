@@ -57,6 +57,15 @@ export type UnitForm = {
    * and the drawing stays as the fallback for the rest.
    */
   photo?: string;
+  /**
+   * A filament that suits this body better than the one it prints in.
+   *
+   * The ashtray is the case: it holds a lit cigarette, so PETG is the right
+   * plastic for it, and PLA is what is on the shelf. Saying so is better than
+   * either silently printing the weaker one or refusing the order — the
+   * customer decides, and can ask for the other.
+   */
+  recommends?: { material: MaterialId; why: string };
   /** Catalogue price — the fallback when automatic pricing is off. */
   price: number;
 };
@@ -147,11 +156,11 @@ export const UNIT_FORMS: UnitForm[] = [
     dim: "70×70mm",
     grams: 20,
     hours: 0.6,
-    // PLA at the owner's decision: PETG is the heat-resistant choice and is what
-    // this started as, but there is no PETG on the shelf and every other body
-    // prints in PLA — one filament means one colour list across the whole
-    // screen, which is the thing a customer notices.
+    // PLA at the owner's decision: it is what is on the shelf, and one filament
+    // across every body means one colour list on the screen. The better plastic
+    // for the job is named rather than dropped — see `recommends`.
     material: "pla",
+    recommends: { material: "petg", why: "עומד בחום" },
     group: "everyday",
     art: "ashtray",
     photo: CONFIG_PRODUCT_BY_ID.ashtray.image,
