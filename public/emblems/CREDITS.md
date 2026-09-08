@@ -81,3 +81,33 @@ derivative work: User:Zscout370 (Return fire) | CC BY-SA 3.0 |
 | corps-tech-corps.png | החיל הטכנולוגי | [File:IDF Technology and Maintenance Corps Hat badge from 2015.png](https://commons.wikimedia.org/wiki/File:IDF_Technology_and_Maintenance_Corps_Hat_badge_from_2015.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | branch-elite.png | יחידות מובחרות ועילית | [File:Badge of the Israel Defense Forces.svg](https://commons.wikimedia.org/wiki/File:Badge_of_the_Israel_Defense_Forces.svg) | Flag_of_the_Israel_Defence_Forces.svg: רונאלדיניו המלך
 derivative work: User:Zscout370 (Return fire) | CC BY-SA 3.0 |
+| brigade-art-meteor.png | אגד מטאור | [File:Flag of the Israeli Artillery Corps.svg](https://commons.wikimedia.org/wiki/File:Flag_of_the_Israeli_Artillery_Corps.svg) | Meronim | Public domain |
+| brigade-res-menashe.png | חטיבת מנשה | [File:Badge of the Israel Defense Forces.svg](https://commons.wikimedia.org/wiki/File:Badge_of_the_Israel_Defense_Forces.svg) | Flag_of_the_Israel_Defence_Forces.svg: רונאלדיניו המלך
+derivative work: User:Zscout370 (Return fire) | CC BY-SA 3.0 |
+| brigade-ci-recon.png | גדודי סיור גזרתיים | [File:Semel asaf.png](https://commons.wikimedia.org/wiki/File:Semel_asaf.png) | אמציה כץ / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-bd-plahatz.png | חטיבת החילוץ וההדרכה (פלח"ץ) | [File:IDF Border Defense Force Insignia.svg](https://commons.wikimedia.org/wiki/File:IDF_Border_Defense_Force_Insignia.svg) | Matankic | CC BY-SA 4.0 |
+| brigade-training-squadrons.png | טייסות הדרכה ואימון | [File:IAF Squadron 100 logo Since 2019.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_100_logo_Since_2019.png) | ירונש / Israel Defense Forces | CC BY-SA 3.0 |
+| corps-helicopter-squadrons.png | טייסות מסוקים | [File:IAF Squadron 124.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_124.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| brigade-attack-helicopters.png | מסוקי תקיפה (AH-64 'פטן') | [File:IAF Hornet Squadron 113 Logo.png](https://commons.wikimedia.org/wiki/File:IAF_Hornet_Squadron_113_Logo.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| brigade-transport-helicopters.png | מסוקי הובלה (CH-53/UH-60) | [File:IAF 114th Squadron Insignia.svg](https://commons.wikimedia.org/wiki/File:IAF_114th_Squadron_Insignia.svg) | Matankic | CC BY-SA 4.0 |
+| corps-fighter-squadrons.png | טייסות קרב | [File:253 squadron IAF.png](https://commons.wikimedia.org/wiki/File:253_squadron_IAF.png) | McKaby, אורי ברקת, KariEllien / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-f35-squadrons.png | טייסות F-35 (אדיר) | [File:IAF Squadron 116 Adir.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_116_Adir.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-f15-squadrons.png | טייסות F-15 (בז/רעם) | [File:IAF Squadron 133.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_133.png) | IDF Spokesperson's Unit he:User:yar | CC BY-SA 3.0 |
+| brigade-f16-squadrons.png | טייסות F-16 (סופה/ברק) | [File:IAF Squadron 105.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_105.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| corps-uav-squadrons.png | טייסות מל"ט | [File:IAF Squadron 200.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_200.png) | עיצוב מקורי: לא ידועשיפוץ קל והתאמה לויקיפדיה: ירונש - ירון ש. | CC BY-SA 3.0 |
+| brigade-uav-units.png | טייסות מל"ט | [File:IAF Squadron 210.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_210.png) | IDF Spokesperson's Unit photographer
+
+ירונש | CC BY-SA 3.0 |
+| corps-transport-squadrons.png | טייסות תובלה | [File:IAF Squadron 122 2.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_122_2.png) | ירונש / IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| brigade-transport-units.png | טייסות תובלה | [File:סמל טייסת חדש - טייסת 131.jpg](https://commons.wikimedia.org/wiki/File:%D7%A1%D7%9E%D7%9C_%D7%98%D7%99%D7%99%D7%A1%D7%AA_%D7%97%D7%93%D7%A9_-_%D7%98%D7%99%D7%99%D7%A1%D7%AA_131.jpg) | טייסת 131 | CC BY-SA 4.0 |
+| brigade-air-elite-units.png | יחידות עילית של חיל האוויר | [File:Emblème de l'Unité 669 (יחידת החילוץ והפינוי בהיטס).svg](https://commons.wikimedia.org/wiki/File:Embl%C3%A8me_de_l%27Unit%C3%A9_669_(%D7%99%D7%97%D7%99%D7%93%D7%AA_%D7%94%D7%97%D7%99%D7%9C%D7%95%D7%A5_%D7%95%D7%94%D7%A4%D7%99%D7%A0%D7%95%D7%99_%D7%91%D7%94%D7%99%D7%98%D7%A1).svg) | Futurhit12 / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| corps-fleet.png | מערך הספינות | [File:Israel Navy emblem.png](https://commons.wikimedia.org/wiki/File:Israel_Navy_emblem.png) | User:Kwasura | Public domain |
+| brigade-iron-dome.png | כיפת ברזל | [File:Tag Hagana Avirit 2011.svg](https://commons.wikimedia.org/wiki/File:Tag_Hagana_Avirit_2011.svg) | Igal Gabay / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-arrow.png | מערך החץ | [File:Tag Hagana Avirit 2011.svg](https://commons.wikimedia.org/wiki/File:Tag_Hagana_Avirit_2011.svg) | Igal Gabay / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-patriot-davids.png | פטריוט ושרביט קסמים | [File:Israeli Air Defense Command batalion 66 Ram new logo David's Sling.jpg](https://commons.wikimedia.org/wiki/File:Israeli_Air_Defense_Command_batalion_66_Ram_new_logo_David%27s_Sling.jpg) | Israel Defense Forces | CC BY-SA 3.0 |
+| corps-sea-coastal.png | מערך החוף וההגנה | [File:Israel Navy emblem.png](https://commons.wikimedia.org/wiki/File:Israel_Navy_emblem.png) | User:Kwasura | Public domain |
+| brigade-coastal-units.png | פלוגות הגנת חוף | [File:Israel Navy emblem.png](https://commons.wikimedia.org/wiki/File:Israel_Navy_emblem.png) | User:Kwasura | Public domain |
+| brigade-fleet-9.png | שייטת ספינות פטרול | [File:Israel Navy emblem.png](https://commons.wikimedia.org/wiki/File:Israel_Navy_emblem.png) | User:Kwasura | Public domain |
+| branch-comm.png | אגף התקשוב וההגנה בסייבר (ת"ק) | [File:C4I.png](https://commons.wikimedia.org/wiki/File:C4I.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-comm-field-units.png | גדודי תקשוב | [File:PakarTikshuvLogo.svg](https://commons.wikimedia.org/wiki/File:PakarTikshuvLogo.svg) | Matankic, רונאלדיניו המלך / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-ordnance.png | חיל החימוש | [File:Logo himush from 2015.png](https://commons.wikimedia.org/wiki/File:Logo_himush_from_2015.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
