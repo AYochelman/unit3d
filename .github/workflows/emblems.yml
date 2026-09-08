@@ -16,6 +16,10 @@ on:
         description: "להוריד מחדש גם קבצים שכבר קיימים"
         type: boolean
         default: false
+      find:
+        description: "לחפש בקומונס מועמדים ליחידות שאין להן קובץ"
+        type: boolean
+        default: false
   # Commons files get replaced and re-licensed; a monthly pass catches that.
   schedule:
     - cron: "20 4 2 * *"
@@ -40,6 +44,14 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Two thirds of the units have no Commons file mapped at all — the manual
+      # pass ran out of search budget. This proposes candidates for them; it
+      # never wires one in by itself.
+      - name: Look for the missing ones
+        if: inputs.find
+        run: npm run emblems:find
+        continue-on-error: true
+
       - name: Fetch emblems
         env:
           FORCE: ${{ inputs.force && '--force' || '' }}
@@ -50,7 +62,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for p in public/emblems; do
+          for p in public/emblems data/emblem-candidates.json; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
           if git diff --cached --quiet; then
