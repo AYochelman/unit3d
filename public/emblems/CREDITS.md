@@ -45,3 +45,39 @@ derivative work: User:Zscout370 (Return fire) | CC BY-SA 3.0 |
 | brigade-shayetet-13-elite.png | שייטת 13 (עילית) | [File:Shayetet-13-pin.jpg](https://commons.wikimedia.org/wiki/File:Shayetet-13-pin.jpg) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | brigade-yahalom-elite.png | יהל"ם | [File:YahalomPin01.png](https://commons.wikimedia.org/wiki/File:YahalomPin01.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | brigade-lotar-eilat.png | לוט"ר | [File:Lotar eilat.png](https://commons.wikimedia.org/wiki/File:Lotar_eilat.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+
+| corps-reserve-brigades.png | חטיבות מילואים | [File:Badge of the Israel Defense Forces.svg](https://commons.wikimedia.org/wiki/File:Badge_of_the_Israel_Defense_Forces.svg) | Flag_of_the_Israel_Defence_Forces.svg: רונאלדיניו המלך
+derivative work: User:Zscout370 (Return fire) | CC BY-SA 3.0 |
+| brigade-res-yiftach.png | חטיבת יפתח | [File:YiftachBrigade.svg](https://commons.wikimedia.org/wiki/File:YiftachBrigade.svg) | Ynhockey / Palmach | CC BY-SA 3.0 |
+| corps-engineering.png | חיל הנדסה קרבית | [File:IDF-Combat-Engineering-Semel.jpg](https://commons.wikimedia.org/wiki/File:IDF-Combat-Engineering-Semel.jpg) | MathKnight / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-eng-yahalom.png | יחידת יהל"ם | [File:Yahalom.png](https://commons.wikimedia.org/wiki/File:Yahalom.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-res-brigade-551.png | חטיבה 551 (חצי האש) | [File:Logo hativa 551.png](https://commons.wikimedia.org/wiki/File:Logo_hativa_551.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-eng-sadir.png | סדיר (גדודי הנדסה) | [File:IDF 8170 Combat Engineering Battalion.svg](https://commons.wikimedia.org/wiki/File:IDF_8170_Combat_Engineering_Battalion.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| corps-combat-intel.png | חיל האיסוף הקרבי | [File:Semel asaf.png](https://commons.wikimedia.org/wiki/File:Semel_asaf.png) | אמציה כץ / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| brigade-ci-oketz.png | יחידת עוקץ | [File:Oketz.png](https://commons.wikimedia.org/wiki/File:Oketz.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| corps-border-defense.png | חי"ר גבולות ופלח"ץ | [File:IDF Border Defense Force Insignia.svg](https://commons.wikimedia.org/wiki/File:IDF_Border_Defense_Force_Insignia.svg) | Matankic | CC BY-SA 4.0 |
+| brigade-bd-borders.png | מערך הגבולות | [File:Logo hativa Faran.svg](https://commons.wikimedia.org/wiki/File:Logo_hativa_Faran.svg) | Matankic / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-bd-territorial.png | חטיבות מרחביות | [File:Logo-hativat-417.png](https://commons.wikimedia.org/wiki/File:Logo-hativat-417.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| branch-commando.png | חטיבת הקומנדו (89) | [File:89th Oz Brigade.png](https://commons.wikimedia.org/wiki/File:89th_Oz_Brigade.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| corps-commando-89.png | חטיבה 89 | [File:89th Oz Brigade.png](https://commons.wikimedia.org/wiki/File:89th_Oz_Brigade.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-commando-units.png | יחידות הקומנדו | [File:סמל דובדבן.jpg](https://commons.wikimedia.org/wiki/File:%D7%A1%D7%9E%D7%9C_%D7%93%D7%95%D7%91%D7%93%D7%91%D7%9F.jpg) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| branch-air.png | זרוע האוויר והחלל | [File:Israeli Air Force - Coat of arms.svg](https://commons.wikimedia.org/wiki/File:Israeli_Air_Force_-_Coat_of_arms.svg) | Original: Fry1989 Vector:  Mintz l | Public domain |
+| corps-air-special.png | יחידות מיוחדות באוויר | [File:Shaldag.svg](https://commons.wikimedia.org/wiki/File:Shaldag.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| branch-sea.png | זרוע הים | [File:Israel Navy emblem.png](https://commons.wikimedia.org/wiki/File:Israel_Navy_emblem.png) | User:Kwasura | Public domain |
+| corps-air-defense.png | מערך ההגנה האווירית | [File:Tag Hagana Avirit 2011.svg](https://commons.wikimedia.org/wiki/File:Tag_Hagana_Avirit_2011.svg) | Igal Gabay / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-shayetet-13.png | שייטת 13 | [File:Flotilla 13.png](https://commons.wikimedia.org/wiki/File:Flotilla_13.png) | Kwasura | Public domain |
+| branch-intel.png | אגף המודיעין (אמ"ן) | [File:Flag of IDF Military Intelligence Directorate.svg](https://commons.wikimedia.org/wiki/File:Flag_of_IDF_Military_Intelligence_Directorate.svg) | רונאלדיניו המלך | CC BY-SA 4.0 |
+| brigade-fleet-3.png | שייטת 3 - שייטת הטילים | [File:Isnavsht3.png](https://commons.wikimedia.org/wiki/File:Isnavsht3.png) | ניר מאור מוזיאון ההעפלה וחיל הים | CC BY-SA 3.0 |
+| brigade-fleet-7.png | שייטת 7 - הצוללות | [File:Isnavsht7.jpg](https://commons.wikimedia.org/wiki/File:Isnavsht7.jpg) | ניר מאור מוזיאון ההעפלה וחיל הים | CC BY-SA 3.0 |
+| corps-sea-special.png | שייטת 13 - הקומנדו הימי | [File:Flotilla 13.png](https://commons.wikimedia.org/wiki/File:Flotilla_13.png) | Kwasura | Public domain |
+| corps-humint.png | מודיעין אנושי (חומינט) | [File:504 unit logo.svg](https://commons.wikimedia.org/wiki/File:504_unit_logo.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-intel-504.png | יחידה 504 | [File:504 unit logo.svg](https://commons.wikimedia.org/wiki/File:504_unit_logo.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| corps-comm-lotem.png | לוט"ם | [File:LotemEmblem.png](https://commons.wikimedia.org/wiki/File:LotemEmblem.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| corps-sigint.png | מודיעין אותות (סיגינט) | [File:8200 unit logo.svg](https://commons.wikimedia.org/wiki/File:8200_unit_logo.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-intel-8200.png | יחידה 8200 | [File:8200 unit logo.svg](https://commons.wikimedia.org/wiki/File:8200_unit_logo.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| corps-visint.png | מודיעין ויזואלי (ויזינט) | [File:9900 unit logo.svg](https://commons.wikimedia.org/wiki/File:9900_unit_logo.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| brigade-intel-9900.png | יחידה 9900 | [File:9900 unit logo.svg](https://commons.wikimedia.org/wiki/File:9900_unit_logo.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| branch-tech.png | חיל הטכנולוגיה והאחזקה | [File:IDF Technology and Maintenance Corps Hat badge from 2015.png](https://commons.wikimedia.org/wiki/File:IDF_Technology_and_Maintenance_Corps_Hat_badge_from_2015.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| corps-tech-corps.png | החיל הטכנולוגי | [File:IDF Technology and Maintenance Corps Hat badge from 2015.png](https://commons.wikimedia.org/wiki/File:IDF_Technology_and_Maintenance_Corps_Hat_badge_from_2015.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| branch-elite.png | יחידות מובחרות ועילית | [File:Badge of the Israel Defense Forces.svg](https://commons.wikimedia.org/wiki/File:Badge_of_the_Israel_Defense_Forces.svg) | Flag_of_the_Israel_Defence_Forces.svg: רונאלדיניו המלך
+derivative work: User:Zscout370 (Return fire) | CC BY-SA 3.0 |
