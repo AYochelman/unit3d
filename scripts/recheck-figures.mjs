@@ -38,6 +38,7 @@ async function main() {
 
   const changed = [];
   const remat = [];
+  const recolor = [];
   let checked = 0;
   let unreachable = 0;
 
@@ -76,7 +77,10 @@ async function main() {
     }
 
     // The colour of the model's own photograph, when the plate names one.
-    if (p.base.color) row.colorHex = p.base.color;
+    if (p.base.color && p.base.color !== row.colorHex) {
+      recolor.push({ name: row.name, was: row.colorHex ?? "—", now: p.base.color });
+      row.colorHex = p.base.color;
+    }
 
     if (moved) changed.push({ name: row.name, was, now, factor: now.grams / Math.max(1, was.grams) });
     if (checked % 25 === 0) log(c.d(`   ${checked}/${rows.length}`));
@@ -87,6 +91,8 @@ async function main() {
     for (const r of remat.slice(0, 30)) log(`  ${r.was} → ${c.g(r.now)}  (${r.type})  ${r.name.slice(0, 44)}`);
     if (remat.length > 30) log(c.d(`  ועוד ${remat.length - 30}`));
   }
+
+  if (recolor.length) log(c.b(`\n  ${recolor.length} מודלים קיבלו את הצבע שהם מצולמים בו\n`));
 
   changed.sort((a, b) => b.factor - a.factor);
   log(c.b(`\n  ${changed.length} מתוך ${checked} תוקנו${unreachable ? c.y(` · ${unreachable} לא נענו`) : ""}\n`));
@@ -107,7 +113,9 @@ async function main() {
   }
 
   if (DRY) { log(c.d("\n  --dry: לא נכתב קובץ.\n")); return; }
-  if (!changed.length && !remat.length) { log(c.g("  הכל כבר נכון.\n")); return; }
+  // A colour-only pass is still a pass: the guard used to skip the write when
+  // nothing but colours had moved, so a whole run found them and threw them away.
+  if (!changed.length && !remat.length && !recolor.length) { log(c.g("  הכל כבר נכון.\n")); return; }
   // Rewrite the whole module rather than splicing the text: a slice that is one
   // character off produces a file that parses as nothing, which is exactly what
   // the first run of this script did.
