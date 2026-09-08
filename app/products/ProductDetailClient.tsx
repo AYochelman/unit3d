@@ -60,6 +60,17 @@ export default function ProductDetailClient({ id }: { id: string }) {
   // Until the customer picks for himself the page lands on something we can
   // actually print today; once he has chosen, his choice stands even if the
   // spool is empty — he may well want to wait for it.
+  /**
+   * Every photograph the model has, cover first.
+   *
+   * A single picture undersells most of these — the designer publishes the
+   * thing held, printed in three colours and next to a coin for scale, and the
+   * shop was showing one of them.
+   */
+  const shots = p?.images?.length ? p.images : p?.image ? [p.image] : [];
+  const [shot, setShot] = useState(0);
+  const hero = shots[Math.min(shot, Math.max(0, shots.length - 1))];
+
   const [pickedColor, setPickedColor] = useState<string | null>(null);
   const [pickedMaterial, setPickedMaterial] = useState<MaterialId | null>(null);
   const [amsOn, setAmsOn] = useState(false);
@@ -213,12 +224,12 @@ export default function ProductDetailClient({ id }: { id: string }) {
             className="relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
             style={{ background: "#111114" }}
           >
-            {p.image ? (
+            {hero ? (
               // A photograph of the actual model beats a drawing of it. The
               // colour swatch below still says which filament it prints in.
               <Image
-                src={p.image}
-                alt={p.name}
+                src={hero}
+                alt={`${p.name}${shots.length > 1 ? ` — תמונה ${shot + 1}` : ""}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
@@ -241,7 +252,32 @@ export default function ProductDetailClient({ id }: { id: string }) {
               </div>
             )}
           </div>
-          <p className="mt-2 text-[11px] text-ink-500 text-center">איור סכמטי. תמונות של הדפסות אמיתיות יתווספו לכל מוצר.</p>
+
+          {/* Thumbnails — the rest of what the designer photographed. Scrolls
+              sideways rather than wrapping, so the frame above never moves. */}
+          {shots.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-0.5 mt-3">
+              {shots.map((src, i) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setShot(i)}
+                  aria-label={`תמונה ${i + 1}`}
+                  aria-pressed={i === shot}
+                  className={cn(
+                    "relative shrink-0 h-16 w-16 rounded-xl overflow-hidden border-2 transition-all",
+                    i === shot ? "border-flame" : "border-ink-800 hover:border-ink-700 opacity-70 hover:opacity-100",
+                  )}
+                >
+                  <Image src={src} alt="" fill sizes="64px" className="object-cover" unoptimized />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {!hero && (
+            <p className="mt-2 text-[11px] text-ink-500 text-center">איור סכמטי. תמונות של הדפסות אמיתיות יתווספו לכל מוצר.</p>
+          )}
         </div>
 
         {/* Config panel */}

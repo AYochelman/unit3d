@@ -101,6 +101,13 @@ export type ImportedModel = {
   /** Colours the model is designed for (AMS). */
   colors: number;
   image?: string;
+  /**
+   * Every photograph the designer published, cover first.
+   *
+   * The cover alone sells a keychain badly: a flexi dragon has six pictures of
+   * it curled, held and printed in three colours, and the shop was showing one.
+   */
+  images?: string[];
   creator?: string;
   sourceUrl?: string;
   license?: string;
@@ -166,7 +173,11 @@ export const SHOW_HELD_MODELS = false;
 // Photos resolve to the copies in public/img/catalog (see lib/assets.ts), so
 // nothing on the shop is loaded from a designer's CDN at page view.
 export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED.map((m) =>
-  applyShelf(m.image ? { ...m, image: photoSrc(m.image) } : m),
+  applyShelf(
+    m.image || m.images?.length
+      ? { ...m, ...(m.image ? { image: photoSrc(m.image) } : {}), ...(m.images?.length ? { images: m.images.map((u) => photoSrc(u)) } : {}) }
+      : m,
+  ),
 );
 export const IMPORTED_DATE = IMPORTED_AT;
 
@@ -228,6 +239,7 @@ export function importedFidgets(): Fidget[] {
       hue: m.hue,
       shape: "hex",
       thumbnail: m.image,
+      images: m.images,
       creator: m.creator,
       source: "makerworld",
       sourceUrl: m.sourceUrl,
@@ -264,6 +276,7 @@ export function importedProducts(): Product[] {
       plates: m.plates,
       art: m.art ?? "lowpoly",
       image: m.image,
+      images: m.images,
       hue: m.hue,
       // The filament the designer sliced with, when MakerWorld named one we
       // stock. PLA+ is the fallback, not the assumption.

@@ -325,6 +325,8 @@ export type Product = {
   hue: number;
   tag?: string;
   ams?: boolean;
+  /** Every photograph of it, cover first. One picture undersells most models. */
+  images?: string[];
   /** Default material family. */
   material?: MaterialId;
   /** The colour the model is photographed in, as a hex, when the source names one. */

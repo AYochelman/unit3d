@@ -279,6 +279,30 @@ export function platesFrom(instances = [], defaultInstanceId = null) {
   return { base, ams, plates: plates.length > 1 ? plates : null };
 }
 
+/**
+ * Every photograph the designer published for this model.
+ *
+ * The shop stored the cover and nothing else, so a product page showed one
+ * picture of a thing that has six. MakerWorld has moved this list around
+ * between redesigns, so rather than name one path this reads all of them and
+ * keeps whatever looks like an image: the cover, the design's own gallery, and
+ * each print profile's photo. Order matters — the cover is what the card shows,
+ * so it stays first.
+ */
+export function picturesOf(d) {
+  const out = [];
+  const add = (u) => {
+    const s = String(u?.url ?? u?.picture ?? u ?? "").split("?")[0];
+    if (/^https?:\/\/[^\s]+\.(png|jpe?g|webp)$/i.test(s)) out.push(s);
+  };
+  add(d?.coverUrl);
+  for (const key of ["design_pictures", "designPictures", "pictures", "images", "gallery"]) {
+    for (const x of d?.designExtension?.[key] ?? d?.[key] ?? []) add(x);
+  }
+  for (const inst of d?.instances ?? []) add(inst?.coverUrl);
+  return [...new Set(out)].slice(0, 8);
+}
+
 /** One model's details, straight from MakerWorld's API. */
 export async function fetchDetails(id) {
   const res = await getJson(API(id));
@@ -293,6 +317,7 @@ export async function fetchDetails(id) {
     id: String(d.id ?? id),
     title: d.title || "",
     cover: (d.coverUrl || "").split("?")[0],
+    pictures: picturesOf(d),
     slug: d.slug || "",
     license: d.license || "",
     creator: (d.designCreator || {}).name || "",

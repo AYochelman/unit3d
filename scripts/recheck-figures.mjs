@@ -42,6 +42,7 @@ async function main() {
   let checked = 0;
   let unreachable = 0;
   let probed = false;
+  let repic = 0;
 
   for (const row of rows) {
     const id = row.id.replace(/^mw-/, "");
@@ -86,6 +87,12 @@ async function main() {
       row.material = mat;
     }
 
+    // Every photograph the designer published, not just the cover.
+    if (d.pictures?.length > 1) {
+      const was = (row.images ?? []).join("|");
+      if (was !== d.pictures.join("|")) { repic++; row.images = d.pictures; }
+    }
+
     // The colour of the model's own photograph, when the plate names one.
     if (p.base.color && p.base.color !== row.colorHex) {
       recolor.push({ name: row.name, was: row.colorHex ?? "—", now: p.base.color });
@@ -103,6 +110,7 @@ async function main() {
   }
 
   if (recolor.length) log(c.b(`\n  ${recolor.length} מודלים קיבלו את הצבע שהם מצולמים בו\n`));
+  if (repic) log(c.b(`  ${repic} מודלים קיבלו את כל התמונות שלהם\n`));
 
   changed.sort((a, b) => b.factor - a.factor);
   log(c.b(`\n  ${changed.length} מתוך ${checked} תוקנו${unreachable ? c.y(` · ${unreachable} לא נענו`) : ""}\n`));
