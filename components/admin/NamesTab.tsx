@@ -7,7 +7,6 @@ import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { useAdminStore } from "@/lib/admin-store";
 import { IMPORTED } from "@/lib/imported";
 import { HE_NAMES } from "@/lib/he-names";
-import { photoSrc } from "@/lib/assets";
 import { cn } from "@/lib/cn";
 
 const FILE = "lib/he-names.overrides.ts";
@@ -102,7 +101,10 @@ export default function NamesTab() {
           return (
             <div key={r.id} className="flex items-center gap-3 p-2.5 hover:bg-ink-900/50">
               <span className="relative h-11 w-11 shrink-0 rounded-lg bg-ink-950 border border-ink-800 overflow-hidden">
-                {r.image && <Image src={photoSrc(r.image)} alt="" fill sizes="44px" className="object-cover" unoptimized />}
+                {/* IMPORTED rows arrive with their image already resolved by
+                    lib/imported.ts — running it through photoSrc a second time
+                    prepends the base path twice. */}
+                {r.image && <Image src={r.image} alt="" fill sizes="44px" className="object-cover" unoptimized />}
               </span>
               <span className="min-w-0 flex-1">
                 <Input

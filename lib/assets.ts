@@ -27,6 +27,11 @@ export function photoSrc(url?: string): string | undefined {
     const local = LOCAL_IMAGES[url];
     return local ? `${BASE}/${local}` : url;
   }
+  // Idempotent on purpose. Some rows are resolved once when a module is built
+  // (lib/imported.ts, lib/data.ts) and then handed to a component that resolves
+  // again; prepending the base path twice asks for /unit3d/unit3d/... , which
+  // is a 404 on the published site and invisible in dev, where BASE is empty.
+  if (BASE && url.startsWith(`${BASE}/`)) return url;
   return url.startsWith("/") ? `${BASE}${url}` : url;
 }
 
