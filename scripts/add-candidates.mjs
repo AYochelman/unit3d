@@ -28,6 +28,9 @@ const SOURCES = path.join(ROOT, "scripts", "makerworld-sources.json");
 
 const WEAPON =
   /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|airsoft|pistol|shotgun|rifle|\bgun\b|ammo|bullet|nunchaku|taser|crossbow|spear)/i;
+// A knife block, a knife holder, a sharpener stand: kitchen storage that the
+// word "knife" alone would have thrown away. The blade is not what is printed.
+const NOT_A_WEAPON = /(block|holder|stand|rack|organi[sz]|storage|sharpen|dock|drawer|magnet)/i;
 const BRAND =
   /(kaws|bearbrick|smiski|hello kitty|spider[- ]?man|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|nintendo|star wars|mandalorian|jujutsu|demon slayer|one piece|naruto|dragon ball|warhammer|lego|ferrari|nike|adidas|panda by bambu)/i;
 
@@ -109,7 +112,7 @@ async function main() {
 
     const title = readableTitle((d.title || "").trim(), d.slug);
     const text = `${title} ${d.tags.join(" ")}`;
-    if (WEAPON.test(text) || /(^|-)NC(-|$)/i.test(d.license)) {
+    if ((WEAPON.test(text) && !NOT_A_WEAPON.test(text)) || /(^|-)NC(-|$)/i.test(d.license)) {
       log(c.y(`  ${title} — לא ניתן למכירה (נשק / רישיון NC), לא נוסף`));
       continue;
     }

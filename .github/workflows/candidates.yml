@@ -24,6 +24,10 @@ on:
         description: "לסרוק מודלים חדשים"
         type: boolean
         default: true
+      add:
+        description: "קישורים או מספרי מודל להוספה לתור (מופרדים ברווח)"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -49,6 +53,16 @@ jobs:
       # by the sweep that runs a second later.
       - name: Apply the owner's decisions
         run: npm run apply:approvals
+
+      # Anything the owner pasted. The runner can reach the MakerWorld API, so
+      # this is the path that works even when the machine asking cannot.
+      - name: Queue what the owner sent
+        if: inputs.add != ''
+        # Through the environment, not interpolated into the command line —
+        # the value is typed by a person and must not be able to become shell.
+        env:
+          ADD: ${{ inputs.add }}
+        run: npm run add:candidates -- $ADD
 
       - name: Collect what is trending
         if: github.event_name != 'workflow_dispatch' || inputs.collect
