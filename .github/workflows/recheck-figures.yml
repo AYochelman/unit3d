@@ -32,6 +32,11 @@ jobs:
         run: npm ci
       - name: Recheck
         run: npm run recheck:figures
+      # The recheck can bring in new photographs (a model's whole gallery, not
+      # just its cover). They arrive as URLs on the designer's CDN; store our
+      # own copies, or the shop hotlinks pictures it does not control.
+      - name: Fetch the new photos
+        run: npm run fetch:images
       - name: Type check
         run: npx tsc --noEmit
       - name: Commit
@@ -39,13 +44,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/imported.generated.ts
+          for p in lib/imported.generated.ts lib/localImages.generated.ts public/img/catalog; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
           if git diff --cached --quiet; then
             echo "nothing to fix"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "Correct the weights and print times that had drifted"
+          git commit -m "Correct the figures, and store the photos that came with them"
           # Another job (or a person) can land a commit while this one runs;
           # rebase onto it rather than losing the work to a rejected push.
           for i in 1 2 3 4 5; do
