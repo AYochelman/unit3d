@@ -512,9 +512,13 @@ export const AUDIENCES: Audience[] = [
   { id: "b2b", label: "אני מזמין לחברה", desc: "מתנות לעובדים, פרסים פנימיים, ערכות קליטה. מ-10 יחידות ומעלה.", iconKey: "building" },
 ];
 
+// A colour names a COLOUR. The finish is the material the customer chose one
+// row above, so "שחור מאט" under plain PLA promised a finish nobody selected —
+// `desc` still carries the spool these usually come on, because the
+// configurator reads it to pick a material, but nothing shows it to a customer.
 export const FILAMENTS: Filament[] = [
-  { id: "black", name: "שחור מאט", hex: "#1a1a1d", desc: "PLA Matte" },
-  { id: "white", name: "לבן שיש", hex: "#f2f2ef", desc: "PLA Marble" },
+  { id: "black", name: "שחור", hex: "#1a1a1d", desc: "PLA Matte" },
+  { id: "white", name: "לבן", hex: "#f2f2ef", desc: "PLA Marble" },
   { id: "orange", name: "כתום לוהט", hex: "#FF6B1A", desc: "PLA+" },
   { id: "red", name: "אדום דם", hex: "#C2261C", desc: "PLA+" },
   { id: "blue", name: "כחול כהה", hex: "#1E40AF", desc: "PLA" },
@@ -524,7 +528,7 @@ export const FILAMENTS: Filament[] = [
   { id: "silver", name: "כסף", hex: "#A8A9AD", desc: "PLA Silk" },
   { id: "purple", name: "סגול חצות", hex: "#4C1D95", desc: "PLA" },
   { id: "pink", name: "ורוד פלמינגו", hex: "#EC4899", desc: "PLA" },
-  { id: "glow", name: "זוהר בחושך", hex: "#7EE787", desc: "Glow PLA" },
+  { id: "glow", name: "זוהר בחושך", hex: "#7EE787", desc: "Glow PLA", kind: "glow" },
 ];
 
 export const FONTS: FontOpt[] = [

@@ -362,7 +362,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   dir="ltr"
                 >
                   {m.short}{Math.max(0, m.priceAdd - baseMatAdd) > 0 ? ` +${Math.max(0, m.priceAdd - baseMatAdd)}` : ""}
-                  {m.id === (p.material ?? "pla_plus") && <span className="text-[9px] text-ink-500"> ★</span>}
+                  {materialChoices.length > 1 && m.id === wantMaterial && (
+                    <span className="text-[9px] text-ink-500"> ★</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -389,7 +391,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   )}
                 >
                   <ColorSwatch filament={c} fill />
-                  {c.id === recommendedColor && (
+                  {/* The star answers "why is this one here when it is out?".
+                      When the colour is on the shelf like the rest, there is no
+                      question to answer and the mark is noise. */}
+                  {c.id === recommendedColor && !isColorInStock(stock, material, c.id) && (
                     <span className="absolute -top-1 -right-1 z-[1] text-[9px] leading-none text-flame" title="הצבע שהדגם מוצג בו">★</span>
                   )}
                   {!isColorInStock(stock, material, c.id) && (

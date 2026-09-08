@@ -390,7 +390,9 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   dir="ltr"
                 >
                   {m.short}{Math.max(0, m.priceAdd - baseMatAdd) > 0 ? ` +${Math.max(0, m.priceAdd - baseMatAdd)}` : ""}
-                  {m.id === wantMaterial && <span className="text-[9px] text-ink-500"> ★</span>}
+                  {materialChoices.length > 1 && m.id === wantMaterial && (
+                    <span className="text-[9px] text-ink-500"> ★</span>
+                  )}
                 </button>
               ))}
             </div>
