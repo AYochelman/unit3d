@@ -12,8 +12,13 @@ import { cn } from "@/lib/cn";
  *
  * This block used to be a play button over a CSS gradient — an invitation to
  * watch a workshop that was never shown. These are the machine's own timelapses
- * off the build plate: silent, so they loop muted without asking, and short, so
+ * off the build plate: silent, so they play muted without asking, and short, so
  * the whole set costs less than one product photograph used to.
+ *
+ * They run as a reel — each clip hands over to the next and the set starts
+ * again — so a visitor who stays on the page sees the whole workshop rather
+ * than one loop of the same fifteen seconds. Clicking a still jumps to it and
+ * the rotation carries on from there.
  */
 const CLIPS = [
   { file: "motion-20260829", label: "מגש מלא, סדרה שלמה", date: "29.08" },
@@ -69,9 +74,9 @@ export default function LivePreview() {
                 className="absolute inset-0 h-full w-full object-cover"
                 src={assetSrc(`/videos/${clip.file}.mp4`)}
                 poster={assetSrc(`/videos/posters/${clip.file}.jpg`)}
+                onEnded={() => play((at + 1) % CLIPS.length)}
                 autoPlay
                 muted
-                loop
                 playsInline
                 preload="metadata"
                 controls

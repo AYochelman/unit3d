@@ -13,14 +13,16 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      {/* Social proof before anything else — it is the first question a new
-          visitor has, and it used to sit at the bottom of the page. */}
-      <ReviewsRow />
+      {/* The printer itself, straight after the hero. Eight timelapses off the
+          real build plate answer "are these people actually printing?" before
+          a visitor has to take anyone's word for it — the reviews then land on
+          someone already half convinced. */}
+      <LivePreview />
       <AudienceSwitcher />
       <Categories />
       <ProductShowcase />
       <HowItWorks />
-      <LivePreview />
+      <ReviewsRow />
       <Marquee />
       <B2BBlock />
       <FinalCTA />
