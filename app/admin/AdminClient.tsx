@@ -17,15 +17,17 @@ import { estimateCost, parseHours, fmtHours, type CostSettings } from "@/lib/cos
 import { useAdminStore } from "@/lib/admin-store";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
 import ApprovalsTab from "@/components/admin/ApprovalsTab";
+import NamesTab from "@/components/admin/NamesTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "products" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
+type Tab = "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "products", label: "מוצרים" },
+  { id: "names", label: "שמות" },
   { id: "approvals", label: "מודלים לאישור" },
   { id: "stock", label: "מלאי" },
   { id: "materials", label: "גלילים" },
@@ -147,6 +149,7 @@ export default function AdminClient() {
       </div>
 
       {tab === "products" && <ProductsTab />}
+      {tab === "names" && <NamesTab />}
       {tab === "approvals" && <ApprovalsTab />}
       {tab === "stock" && <StockTab />}
       {tab === "materials" && <MaterialsTab />}

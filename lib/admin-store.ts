@@ -3,6 +3,7 @@ import { create } from "zustand";
 import type { Filament, Material, MaterialId } from "./types";
 import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
 import { stockKey, type Interest, type StockMap } from "./inventory";
+import { HE_NAME_OVERRIDES } from "./he-names.overrides";
 import type { ImportedShelf } from "./imported";
 import { readToken, writeToken } from "./admin-token";
 
@@ -59,6 +60,14 @@ type AdminState = {
   overrides: Record<string, ItemOverride>;
   /** Only records what is OUT — a missing key means the filament is on the shelf. */
   stock: StockMap;
+  /**
+   * Product names the owner rewrote from the shop.
+   *
+   * Not part of the settings export: names live in their own module
+   * (lib/he-names.overrides.ts) so a name change ships as code and reads the
+   * same way as the hand-written list. This is the working copy of that file.
+   */
+  names: Record<string, string>;
   interest: Interest[];
   pricing: PricingMode;
   /** Live shelf moves, applied to every listing the moment they are made. */
@@ -99,6 +108,8 @@ type AdminState = {
   addInterest(i: Omit<Interest, "id" | "at">): void;
   clearInterest(): void;
   setOverride(itemId: string, patch: ItemOverride): void;
+  /** Rename a product. An empty name removes the override. */
+  setName(id: string, name: string): void;
   clearOverride(itemId: string): void;
   resetAll(): void;
   exportJson(): string;
@@ -110,6 +121,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   settings: DEFAULT_COST_SETTINGS,
   overrides: {},
   stock: {},
+  names: { ...HE_NAME_OVERRIDES },
   interest: [],
   pricing: DEFAULT_PRICING,
   shelves: {},
@@ -195,6 +207,15 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     })),
 
   clearInterest: () => set({ interest: [] }),
+
+  setName: (id, name) =>
+    set((s) => {
+      const next = { ...s.names };
+      const clean = name.trim();
+      if (clean) next[id] = clean;
+      else delete next[id];
+      return { names: next };
+    }),
 
   setOverride: (itemId, patch) =>
     set((s) => ({ overrides: { ...s.overrides, [itemId]: { ...s.overrides[itemId], ...patch } } })),
