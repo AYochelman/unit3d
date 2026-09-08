@@ -442,6 +442,22 @@ function AddColorForm() {
   const [hex, setHex] = useState("#7EE787");
   const [hex2, setHex2] = useState("#F2F2EF");
   const [kind, setKind] = useState<FilamentKind>("solid");
+  // Each kind starts on colours that look like the real spool, so the preview
+  // is right before anyone touches a picker — a marble that opens bright green
+  // just looks broken.
+  const KIND_DEFAULTS: Record<FilamentKind, [string, string]> = {
+    solid: ["#EC4899", "#F2F2EF"],
+    glow: ["#7EE787", "#F2F2EF"],
+    clear: ["#FF6B1A", "#F2F2EF"],
+    marble: ["#E8E6E1", "#6E6E73"],
+    shift: ["#2563EB", "#EF4444"],
+    dual: ["#C9A227", "#4C1D95"],
+  };
+  const pickKind = (k: FilamentKind) => {
+    setKind(k);
+    setHex(KIND_DEFAULTS[k][0]);
+    setHex2(KIND_DEFAULTS[k][1]);
+  };
   const [desc, setDesc] = useState("");
   // Which families this spool exists in. Empty = all of them, which is the
   // right answer for a plain colour and the wrong one for a glow PLA.
@@ -476,7 +492,7 @@ function AddColorForm() {
       </p>
       <div className="flex flex-wrap items-center gap-2 mb-3">
         {(["solid", "glow", "clear", "marble", "shift", "dual"] as FilamentKind[]).map((k) => (
-          <button key={k} type="button" onClick={() => setKind(k)}
+          <button key={k} type="button" onClick={() => pickKind(k)}
             className={cn("px-3 h-9 rounded-lg text-xs font-semibold border transition-colors",
               kind === k ? "border-flame text-flame bg-flame/10" : "border-ink-800 text-ink-400 hover:border-ink-600")}>
             {KIND_LABEL[k]}

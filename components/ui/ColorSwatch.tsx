@@ -35,14 +35,16 @@ export default function ColorSwatch({
   const checker =
     "repeating-conic-gradient(rgba(255,255,255,.30) 0% 25%, rgba(0,0,0,.30) 0% 50%) 0 0 / 8px 8px";
 
-  // Marble is the veins, not the base: a stone-look spool sold as a flat grey
-  // circle looks like plain grey, which is the one thing it is not.
+  // Marble filament is FLECKED, not splattered: a pale stone with fine dark
+  // grains through it and one soft vein. Big soft blobs read as paint spilled
+  // on a circle, which is what the first attempt looked like next to a photo
+  // of the real print.
   const marble =
-    `radial-gradient(ellipse at 28% 32%, ${second}88 0 11%, transparent 12%), ` +
-    `radial-gradient(ellipse at 72% 64%, ${second}77 0 8%, transparent 9%), ` +
-    `radial-gradient(ellipse at 55% 18%, ${second}55 0 6%, transparent 7%), ` +
-    `linear-gradient(118deg, transparent 38%, ${second}66 43%, transparent 47%), ` +
-    `linear-gradient(64deg, transparent 62%, ${second}44 66%, transparent 70%), ${hex}`;
+    `radial-gradient(circle at 30% 40%, ${second}cc 0 0.9px, transparent 1.1px) 0 0 / 5px 5px, ` +
+    `radial-gradient(circle at 70% 75%, ${second}99 0 0.8px, transparent 1px) 2px 3px / 7px 7px, ` +
+    `radial-gradient(circle at 45% 20%, ${second}77 0 1.1px, transparent 1.3px) 1px 4px / 9px 9px, ` +
+    `linear-gradient(115deg, transparent 44%, ${second}55 48%, transparent 53%), ` +
+    `linear-gradient(200deg, transparent 60%, ${second}33 64%, transparent 68%), ${hex}`;
 
   const background =
     kind === "marble"
