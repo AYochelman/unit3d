@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-08T10:34:45.402Z
-// Items: 395
+// Items: 396
 
 import type { ImportedModel } from "./imported";
 
@@ -9628,6 +9628,32 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "hoursAms": 1.09,
     "gramsAms": 17
+  },
+  {
+    "id": "mw-1764712",
+    "name": "Cartera, billetera  Batman – Porta DNI y Tarjeta",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 1.08,
+    "grams": 19,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US64c0b98ef22015/design/2025-09-04_bcb50edb7efd98.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "cositas con alma",
+    "sourceUrl": "https://makerworld.com/en/models/1764712-batman-wallet-id-and-card-holder",
+    "license": "Standard Digital File License",
+    "downloads": 14788,
+    "hue": 145,
+    "art": "keychain",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "screen",
+      "home"
+    ]
   }
 ];
 
