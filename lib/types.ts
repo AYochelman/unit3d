@@ -143,10 +143,11 @@ export type Fidget = {
  *
  * `kind` is what makes a swatch honest. A glow filament is not the pale green
  * it looks like in daylight, a thermochromic one is two colours depending on
- * temperature, and a dual-colour silk is two colours at once — painting any of
- * them as a single flat circle tells the customer the wrong thing.
+ * temperature, a dual-colour silk is two colours at once, and a translucent
+ * spool shows whatever is behind it — painting any of them as a single flat
+ * circle tells the customer the wrong thing.
  */
-export type FilamentKind = "solid" | "glow" | "shift" | "dual";
+export type FilamentKind = "solid" | "glow" | "shift" | "dual" | "clear";
 
 export type Filament = {
   id: string;
@@ -156,6 +157,14 @@ export type Filament = {
   kind?: FilamentKind;
   /** The second colour: what a shift filament changes TO, or the silk's partner. */
   hex2?: string;
+  /**
+   * The families this spool actually exists in.
+   *
+   * A glow spool is a PLA spool; offering it under TPU promises something the
+   * shop cannot print. Empty or absent means "every family", which is right for
+   * the twelve basic colours and wrong for almost everything special.
+   */
+  materials?: MaterialId[];
 };
 
 export type FontOpt = {

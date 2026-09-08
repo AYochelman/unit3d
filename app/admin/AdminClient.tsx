@@ -5,7 +5,8 @@ import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/Field";
 import { FIDGETS } from "@/lib/data";
-import { useFilaments, useMaterials } from "@/lib/palette";
+import { filamentsFor, useFilaments, useMaterials } from "@/lib/palette";
+import { useSiteFile } from "@/lib/site-file";
 import ColorSwatch, { KIND_LABEL } from "@/components/ui/ColorSwatch";
 import type { Filament, FilamentKind, Material } from "@/lib/types";
 import { MATERIAL_BY_ID } from "@/lib/materials";
@@ -366,6 +367,7 @@ function AddMaterialForm() {
 }
 
 function MaterialsTab() {
+  const siteFile = useSiteFile();
   const settings = useAdminStore((s) => s.settings);
   const setSpoolPrice = useAdminStore((s) => s.setSpoolPrice);
   const materials = useMaterials();
@@ -409,6 +411,9 @@ function MaterialsTab() {
         })}
       </div>
       <AddMaterialForm />
+      <div className="mt-5">
+        <AdminSaveToSite json={siteFile} title="סיים ועדכן" what="החומרים והמחירים" />
+      </div>
     </div>
   );
 }
@@ -438,6 +443,12 @@ function AddColorForm() {
   const [hex2, setHex2] = useState("#F2F2EF");
   const [kind, setKind] = useState<FilamentKind>("solid");
   const [desc, setDesc] = useState("");
+  // Which families this spool exists in. Empty = all of them, which is the
+  // right answer for a plain colour and the wrong one for a glow PLA.
+  const materials = useMaterials();
+  const [families, setFamilies] = useState<string[]>([]);
+  const toggleFamily = (id: string) =>
+    setFamilies((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]));
 
   const preview: Filament = { id: "preview", name, hex, hex2, kind, desc };
 
@@ -450,9 +461,10 @@ function AddColorForm() {
       hex,
       ...(kind === "solid" ? {} : { hex2 }),
       kind,
+      ...(families.length ? { materials: families } : {}),
       desc: desc.trim() || KIND_LABEL[kind],
     });
-    setName(""); setDesc("");
+    setName(""); setDesc(""); setFamilies([]);
   };
 
   return (
@@ -462,13 +474,27 @@ function AddColorForm() {
         גם המיוחדים: זוהר בחושך, מחליף צבע בחום, ודו-גוני. הצבע נוסף לכל החומרים ומופיע מיד באתר.
       </p>
       <div className="flex flex-wrap items-center gap-2 mb-3">
-        {(["solid", "glow", "shift", "dual"] as FilamentKind[]).map((k) => (
+        {(["solid", "glow", "clear", "shift", "dual"] as FilamentKind[]).map((k) => (
           <button key={k} type="button" onClick={() => setKind(k)}
             className={cn("px-3 h-9 rounded-lg text-xs font-semibold border transition-colors",
               kind === k ? "border-flame text-flame bg-flame/10" : "border-ink-800 text-ink-400 hover:border-ink-600")}>
             {KIND_LABEL[k]}
           </button>
         ))}
+      </div>
+      <div className="mb-3">
+        <div className="text-xs text-ink-400 mb-1.5">
+          באיזה חומר יש לך אותו? <span className="text-ink-600">(בלי בחירה — בכל החומרים)</span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {materials.map((m) => (
+            <button key={m.id} type="button" onClick={() => toggleFamily(m.id)}
+              className={cn("px-2.5 h-8 rounded-lg text-[11px] font-semibold border transition-colors",
+                families.includes(m.id) ? "border-flame text-flame bg-flame/10" : "border-ink-800 text-ink-400 hover:border-ink-600")}>
+              {m.short}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="grid sm:grid-cols-2 gap-2">
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="שם הצבע (למשל: ירוק זוהר)"
@@ -482,7 +508,7 @@ function AddColorForm() {
           <input type="color" value={hex} onChange={(e) => setHex(e.target.value)}
             className="h-9 w-14 rounded-lg bg-ink-950 border border-ink-800 cursor-pointer" />
         </label>
-        {kind !== "solid" && kind !== "glow" && (
+        {(kind === "shift" || kind === "dual") && (
           <label className="flex items-center gap-2 text-xs text-ink-400">
             {kind === "shift" ? "צבע בחום" : "צבע שני"}
             <input type="color" value={hex2} onChange={(e) => setHex2(e.target.value)}
@@ -504,6 +530,7 @@ function AddColorForm() {
 }
 
 function StockTab() {
+  const siteFile = useSiteFile();
   const stock = useAdminStore((s) => s.stock);
   const setStock = useAdminStore((s) => s.setStock);
   const setMaterialStock = useAdminStore((s) => s.setMaterialStock);
@@ -520,7 +547,6 @@ function StockTab() {
   const filaments = useFilaments();
   const customColors = useAdminStore((s) => s.colors);
   const removeColor = useAdminStore((s) => s.removeColor);
-  const allColorIds = useMemo(() => filaments.map((f) => f.id), [filaments]);
 
   const blockedCount = items.filter((i) => !isMaterialInStock(stock, i.material ?? DEFAULT_MATERIAL)).length;
 
@@ -539,8 +565,9 @@ function StockTab() {
       {/* ── material × colour grid ─────────────────────────────────────── */}
       <div className="rounded-2xl border border-ink-800 divide-y divide-ink-800">
         {materials.map((m) => {
-          const live = colorsInStock(stock, m.id, filaments);
-          const out = allColorIds.length - live.length;
+          const mine = filamentsFor(filaments, m.id);
+          const live = colorsInStock(stock, m.id, mine);
+          const out = mine.length - live.length;
           const blocked = items.filter((i) => (i.material ?? DEFAULT_MATERIAL) === m.id).length;
           return (
             <div key={m.id} className="p-4">
@@ -557,21 +584,21 @@ function StockTab() {
                 <span className="flex-1" />
                 <button
                   type="button"
-                  onClick={() => setMaterialStock(m.id, allColorIds, true)}
+                  onClick={() => setMaterialStock(m.id, mine.map((c) => c.id), true)}
                   className="px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-ink-700 text-ink-300 hover:border-ink-500"
                 >
                   הכל יש
                 </button>
                 <button
                   type="button"
-                  onClick={() => setMaterialStock(m.id, allColorIds, false)}
+                  onClick={() => setMaterialStock(m.id, mine.map((c) => c.id), false)}
                   className="px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-ink-700 text-ink-300 hover:border-flame hover:text-flame"
                 >
                   הכל נגמר
                 </button>
               </div>
               <div className="flex flex-wrap gap-2.5">
-                {filaments.map((c) => {
+                {mine.map((c) => {
                   const have = isColorInStock(stock, m.id, c.id);
                   return (
                     <button
@@ -610,7 +637,10 @@ function StockTab() {
               <div key={c.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-ink-800">
                 <ColorSwatch filament={c} size={24} />
                 <span className="text-sm">{c.name}</span>
-                <span className="text-[11px] text-ink-500">{KIND_LABEL[c.kind ?? "solid"]}</span>
+                <span className="text-[11px] text-ink-500">
+                  {KIND_LABEL[c.kind ?? "solid"]}
+                  {c.materials?.length ? ` · ${c.materials.map((id) => materials.find((m) => m.id === id)?.short ?? id).join(", ")}` : " · כל החומרים"}
+                </span>
                 <button type="button" onClick={() => removeColor(c.id)}
                   className="text-[11px] text-ink-500 hover:text-flame underline underline-offset-2">
                   הסר
@@ -620,6 +650,8 @@ function StockTab() {
           </div>
         )}
       </div>
+
+      <AdminSaveToSite json={siteFile} title="סיים ועדכן" what="המלאי והצבעים" />
 
       {/* ── what to buy next ───────────────────────────────────────────── */}
       <div>
@@ -646,7 +678,7 @@ function StockTab() {
                   {i === 0 && <Pill tone="flame" className="text-[10px]">קודם כל</Pill>}
                   <span className="font-bold">{a.materialName}</span>
                   <span className="font-mono text-xs text-ink-500" dir="ltr">
-                    {MATERIAL_BY_ID[a.material].short}
+                    {MATERIAL_BY_ID[a.material]?.short ?? a.material}
                   </span>
                 </div>
                 <p className="text-sm text-ink-300">

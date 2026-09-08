@@ -9,8 +9,9 @@ import type { Filament } from "@/lib/types";
  * a pale green in daylight and the point of it is what happens in the dark; a
  * thermochromic spool is two colours depending on the temperature of the thing
  * you are holding; a dual-colour silk is two colours at once, along the length
- * of the print. Each gets a drawing that says which it is before anyone reads
- * the name.
+ * of the print; a translucent spool is a colour you can see through, which is
+ * the reason anyone buys it. Each gets a drawing that says which it is before
+ * anyone reads the name.
  */
 export default function ColorSwatch({
   filament,
@@ -26,8 +27,15 @@ export default function ColorSwatch({
   const { hex, hex2, kind = "solid" } = filament;
   const second = hex2 || "#f2f2ef";
 
+  // The checker is what makes "see-through" read as see-through: a flat pale
+  // circle would just look like a washed-out colour.
+  const checker =
+    "repeating-conic-gradient(rgba(255,255,255,.30) 0% 25%, rgba(0,0,0,.30) 0% 50%) 0 0 / 8px 8px";
+
   const background =
-    kind === "dual"
+    kind === "clear"
+      ? `linear-gradient(${hex}88, ${hex}55), ${checker}`
+      : kind === "dual"
       ? `linear-gradient(135deg, ${hex} 0 48%, ${second} 52% 100%)`
       : kind === "shift"
         ? `conic-gradient(from 210deg, ${hex} 0 50%, ${second} 50% 100%)`
@@ -62,4 +70,5 @@ export const KIND_LABEL: Record<NonNullable<Filament["kind"]>, string> = {
   glow: "זוהר בחושך",
   shift: "מחליף צבע",
   dual: "דו-גוני",
+  clear: "שקוף",
 };

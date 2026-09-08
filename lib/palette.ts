@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { MATERIALS } from "./materials";
 import { FILAMENTS } from "./data";
 import { useAdminStore } from "./admin-store";
-import type { Filament, Material } from "./types";
+import type { Filament, Material, MaterialId } from "./types";
 
 /**
  * What the shop can print with, right now.
@@ -28,6 +28,17 @@ export function useMaterials(): Material[] {
 export function useFilaments(): Filament[] {
   const custom = useAdminStore((s) => s.colors);
   return useMemo(() => merge(FILAMENTS, custom), [custom]);
+}
+
+/**
+ * The spools that exist in this family.
+ *
+ * A colour with no family list belongs to all of them; one with a list is
+ * offered only there, so a glow PLA never appears under TPU.
+ */
+export function filamentsFor(all: Filament[], material?: MaterialId): Filament[] {
+  if (!material) return all;
+  return all.filter((f) => !f.materials?.length || f.materials.includes(material));
 }
 
 export function useMaterialById(): Record<string, Material> {
