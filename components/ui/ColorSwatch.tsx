@@ -69,24 +69,16 @@ export default function ColorSwatch({
       style={{
         ...(fill ? {} : { width: size, height: size }),
         background,
+        // Paint stops INSIDE the ring. The default clips to the border box, so
+        // a strong colour showed through the translucent border and read as red
+        // leaking out of the circle's wall.
+        backgroundClip: "padding-box",
         borderColor: selected ? "currentColor" : "rgba(255,255,255,0.18)",
         // Glow reads as glow only if it actually glows.
         boxShadow: kind === "glow" ? `0 0 ${Math.round(size / 2.4)}px ${hex}` : undefined,
       }}
       aria-hidden
     >
-      {/* Every spool gets the same soft top-left sheen: without it a flat disc
-          reads as a colour chip, and the gradients look like flags. */}
-      {kind !== "glow" && (
-        <span
-          className="absolute inset-0 rounded-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.10) 34%, rgba(255,255,255,0) 58%)," +
-              "radial-gradient(circle at 70% 82%, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 55%)",
-          }}
-        />
-      )}
       {kind === "glow" && (
         <span
           className="absolute inset-[22%] rounded-full opacity-70"
