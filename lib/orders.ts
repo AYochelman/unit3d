@@ -96,8 +96,11 @@ export function siteOrigin(): string {
 }
 
 // ─── The message that lands on the phone ─────────────────────────────────────
-/** Where Ariel reads his queue. Short, and the same on every phone. */
-export const ADMIN_URL = "https://unit-3d.com/admin";
+/** The shop itself. The message ends on it — the way back to the catalogue. */
+export const SITE_URL = "https://unit-3d.com";
+
+/** Where Ariel reads his queue. Not in the message: it is his door, not theirs. */
+export const ADMIN_URL = `${SITE_URL}/admin`;
 
 /** The first summary line that opens with this label, without the label. */
 const pick = (summary: string[], label: string): string | null => {
@@ -128,7 +131,7 @@ const hoursOf = (l: OrderLine): string => pick(l.summary, "זמן הדפסה") ?
 /**
  * The whole order, written so it reads on a phone screen in one glance: who
  * ordered, then each product with the four things Ariel needs before he starts
- * printing — name, filament, price, time — and a plain link to his own queue.
+ * printing — name, filament, price, time — and a plain link back to the shop.
  *
  * The message is also the record: /admin reads it back with `parseOrderMessage`,
  * which is why the labels below are fixed and not decorative.
@@ -164,7 +167,7 @@ export function orderMessage(o: PlacedOrder): string {
     `הערות: ${o.note?.trim() || "—"}`,
     total == null ? "סה\"כ לתשלום: לפי הזמנה" : `סה"כ לתשלום: ${fmtILS(total)}`,
     "",
-    ADMIN_URL,
+    SITE_URL,
   );
   return out.join("\n");
 }

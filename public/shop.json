@@ -1,4 +1,9 @@
 {
   "supabaseUrl": "",
-  "supabaseAnonKey": ""
+  "supabaseAnonKey": "",
+  "emailjs": {
+    "serviceId": "",
+    "templateId": "",
+    "publicKey": ""
+  }
 }

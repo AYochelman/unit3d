@@ -55,3 +55,30 @@ Project Settings → API → להעתיק **Project URL** ואת המפתח **an
 מפתח ה-anon נועד להיות פומבי — מה שמגן על הנתונים הוא ה-RLS למעלה,
 לא סודיות המפתח. כל עוד הקובץ ריק, הזמנה מגיעה רק בוואטסאפ ואפשר
 לקלוט אותה ידנית בלשונית ההזמנות.
+
+---
+
+# מייל אישור ללקוח (EmailJS)
+
+האתר סטטי, אז אין לנו איפה להחזיק סיסמת SMTP. EmailJS מחזיק את
+החשבון; הדף מחזיק רק מפתח פומבי, והמייל עצמו נבנה אצלנו בקוד
+(`lib/order-email.ts`) בעיצוב של החנות.
+
+1. נרשמים ב-emailjs.com (חינם, 200 מיילים בחודש).
+2. **Email Services** → Add New Service → Gmail (או כל ספק) → מאשרים.
+   שומרים את ה-**Service ID**.
+3. **Email Templates** → Create New Template:
+   - To: `{{to_email}}`
+   - Subject: `{{subject}}`
+   - Content: לעבור ל-Code / HTML ולהשאיר **שורה אחת בלבד**: `{{{message_html}}}`
+     (שלושה סוגריים — כך ה-HTML לא נמלט)
+   שומרים את ה-**Template ID**.
+4. **Account** → **General** → ה-**Public Key**.
+   באותו מסך, Security → להוסיף את `unit-3d.com` ל-allowlist.
+5. את שלושת הערכים ל-`public/shop.json`:
+
+```json
+"emailjs": { "serviceId": "service_xxx", "templateId": "template_xxx", "publicKey": "xxxx" }
+```
+
+כל עוד הם ריקים, לא נשלח מייל ושום דבר אחר לא נשבר.

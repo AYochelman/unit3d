@@ -10,7 +10,7 @@ import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
 import { DELIVERY, makeRef, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
-import { placeOrder } from "@/lib/orders-remote";
+import { placeOrder, sendOrderEmail } from "@/lib/orders-remote";
 import { PRODUCTS } from "@/lib/products";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import { makeCoupon, NEXT_ORDER_DISCOUNT } from "@/lib/coupon";
@@ -91,6 +91,9 @@ export default function ContactClient() {
   const [coupon, setCoupon] = useState("");
   // Whether the order reached the shop's own queue, or only Ariel's phone.
   const [filed, setFiled] = useState<"pending" | "saved" | "failed">("pending");
+  // And whether the customer got their own copy.
+  const [mailed, setMailed] = useState<"pending" | "sent" | "no-address" | "not-configured" | "failed">("pending");
+  const [mailTo, setMailTo] = useState("");
   const [copied, setCopied] = useState(false);
 
   // Four more from the same shelves, minus what is already on its way.
@@ -189,7 +192,12 @@ export default function ContactClient() {
           <div className="font-mono text-[11px] tracking-widest text-ink-500" dir="ltr">
             REF · {refCode}
           </div>
-          {filed === "failed" && (
+          {mailed === "sent" && (
+            <div className="text-[11px] text-ink-400">
+              אישור הזמנה עם כל הפירוט נשלח אליך למייל <span dir="ltr">{mailTo}</span>.
+            </div>
+          )}
+          {(filed === "failed" || mailed === "failed") && (
             <div className="text-[11px] text-ink-500">
               ההזמנה נשלחה בוואטסאפ. שמור את מספר ההזמנה — הוא כל מה שצריך כדי לאתר אותה.
             </div>
@@ -259,6 +267,11 @@ export default function ContactClient() {
             // by hand. If that write fails the message still holds everything.
             setFiled("pending");
             void placeOrder(order).then((r) => setFiled(r === "saved" ? "saved" : "failed"));
+
+            // And the customer's own copy of what they just ordered.
+            setMailed("pending");
+            setMailTo(order.customer.email ?? "");
+            void sendOrderEmail(order).then(setMailed);
 
             if (items.length) {
               setOrdered(items);

@@ -1,5 +1,6 @@
 "use client";
 import type { OrderDecision, PlacedOrder } from "./orders";
+import { orderEmailHtml, orderEmailSubject } from "./order-email";
 
 /**
  * Where an order lives between the customer's phone and Ariel's screen.
@@ -21,7 +22,12 @@ import type { OrderDecision, PlacedOrder } from "./orders";
  * so plainly and the shop falls back to the WhatsApp message, which still
  * carries the whole order.
  */
-export type ShopConfig = { supabaseUrl: string; supabaseAnonKey: string };
+export type EmailJsConfig = { serviceId: string; templateId: string; publicKey: string };
+export type ShopConfig = {
+  supabaseUrl: string;
+  supabaseAnonKey: string;
+  emailjs?: EmailJsConfig;
+};
 
 let cached: ShopConfig | null = null;
 let pending: Promise<ShopConfig> | null = null;
@@ -33,7 +39,11 @@ export async function shopConfig(): Promise<ShopConfig> {
     pending = fetch(`${base}/shop.json`, { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : { supabaseUrl: "", supabaseAnonKey: "" }))
       .then((c: ShopConfig) => {
-        cached = { supabaseUrl: (c.supabaseUrl || "").replace(/\/$/, ""), supabaseAnonKey: c.supabaseAnonKey || "" };
+        cached = {
+          supabaseUrl: (c.supabaseUrl || "").replace(/\/$/, ""),
+          supabaseAnonKey: c.supabaseAnonKey || "",
+          emailjs: c.emailjs,
+        };
         return cached;
       })
       .catch(() => ({ supabaseUrl: "", supabaseAnonKey: "" }));
@@ -161,5 +171,47 @@ export async function adminDecide(
     return res.ok;
   } catch {
     return false;
+  }
+}
+
+// ─── The customer's confirmation ─────────────────────────────────────────────
+/**
+ * The confirmation email, sent from the customer's own browser through EmailJS.
+ *
+ * A static site cannot send mail: there is nothing of ours running anywhere to
+ * hold an SMTP password. EmailJS exists for exactly this — the account holds
+ * the mail credentials, the page holds only a public key, and the template on
+ * their side is a single `{{{message_html}}}` because the whole letter is built
+ * here (lib/order-email.ts) where the shop's own palette lives.
+ *
+ * No address, no send. A failure is never fatal: the order is already on its
+ * way to Ariel by WhatsApp, and the thank-you screen says what happened.
+ */
+export async function sendOrderEmail(o: PlacedOrder): Promise<"sent" | "no-address" | "not-configured" | "failed"> {
+  const to = o.customer.email?.trim();
+  if (!to) return "no-address";
+  const c = await shopConfig();
+  const e = c.emailjs;
+  if (!e?.serviceId || !e?.templateId || !e?.publicKey) return "not-configured";
+  try {
+    const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: e.serviceId,
+        template_id: e.templateId,
+        user_id: e.publicKey,
+        template_params: {
+          to_email: to,
+          to_name: o.customer.name || to,
+          subject: orderEmailSubject(o),
+          order_ref: o.ref,
+          message_html: orderEmailHtml(o),
+        },
+      }),
+    });
+    return res.ok ? "sent" : "failed";
+  } catch {
+    return "failed";
   }
 }
