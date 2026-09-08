@@ -142,3 +142,45 @@ derivative work: User:Zscout370 (Return fire) | CC BY-SA 3.0 |
 | plahatz-669.png | יחידה 669 | [File:Emblème de l'Unité 669 (יחידת החילוץ והפינוי בהיטס).svg](https://commons.wikimedia.org/wiki/File:Embl%C3%A8me_de_l%27Unit%C3%A9_669_(%D7%99%D7%97%D7%99%D7%93%D7%AA_%D7%94%D7%97%D7%99%D7%9C%D7%95%D7%A5_%D7%95%D7%94%D7%A4%D7%99%D7%A0%D7%95%D7%99_%D7%91%D7%94%D7%99%D7%98%D7%A1).svg) | Futurhit12 / IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | commando-maglan.png | מגלן | [File:212 unit maglan seal.png](https://commons.wikimedia.org/wiki/File:212_unit_maglan_seal.png) | ירון ש. – ירונש / IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | commando-egoz-89.png | אגוז (תחת קומנדו) | [File:621 unit seal.png](https://commons.wikimedia.org/wiki/File:621_unit_seal.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| eng-603-machatz.png | גדוד 603 | [File:Gdud603logo.png](https://commons.wikimedia.org/wiki/File:Gdud603logo.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| commando-duvdevan.png | דובדבן | [File:Logo-hativa-217.png](https://commons.wikimedia.org/wiki/File:Logo-hativa-217.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-140-golden-eagle.png | טייסת 140 | [File:IAF Squadron 140 from 2016.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_140_from_2016.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| sq-116-flying-wing.png | טייסת 116 | [File:IAF Squadron 116 Adir.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_116_Adir.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-133-knights-of-twin-tail.png | טייסת 133 | [File:IAF Squadron 133.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_133.png) | IDF Spokesperson's Unit he:User:yar | CC BY-SA 3.0 |
+| sq-106-spear-tip.png | טייסת 106 | [File:IAF Squadron 106.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_106.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| sq-105-scorpion.png | טייסת 105 | [File:IAF Squadron 105.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_105.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| sq-107-knights-of-orange-tail.png | טייסת 107 | [File:107squadron1.png](https://commons.wikimedia.org/wiki/File:107squadron1.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-119-bat.png | טייסת 119 | [File:119 Squadron IAF symbol.jpg](https://commons.wikimedia.org/wiki/File:119_Squadron_IAF_symbol.jpg) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| sq-149-smashing-parrot.png | טייסת 149 | [File:IAF Squadron 149.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_149.png) | ירונש / IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| sq-201-one.png | טייסת 201 | [File:IAF Squadron 201.jpg](https://commons.wikimedia.org/wiki/File:IAF_Squadron_201.jpg) | McKaby / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-253-negev.png | טייסת 253 | [File:253 squadron IAF.png](https://commons.wikimedia.org/wiki/File:253_squadron_IAF.png) | McKaby, אורי ברקת, KariEllien / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-254-eaglets.png | טייסת 254 | [File:IAF Squadron 254.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_254.png) | ירונש / IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| sq-115-red-dragon.png | טייסת 115 | [File:IAF Squadron 115.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_115.png) | Yaronash / Israel Defense Forces | CC BY-SA 3.0 |
+| sq-113-hornet.png | טייסת 113 | [File:IAF Hornet Squadron 113 Logo.png](https://commons.wikimedia.org/wiki/File:IAF_Hornet_Squadron_113_Logo.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| sq-190-southern-magen.png | טייסת 190 | [File:IAF Squadron 190.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_190.png) | ירונש / IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| sq-114-night-leaders.png | טייסת 114 | [File:IAF 114th Squadron Insignia.svg](https://commons.wikimedia.org/wiki/File:IAF_114th_Squadron_Insignia.svg) | Matankic | CC BY-SA 4.0 |
+| sq-118-night-riders.png | טייסת 118 | [File:Squadron 118 IAF.jpg](https://commons.wikimedia.org/wiki/File:Squadron_118_IAF.jpg) | McKaby / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-123-desert-birds.png | טייסת 123 | [File:IAF Squadron 123.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_123.png) | ירונש / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-124-rolling-sword.png | טייסת 124 | [File:IAF Squadron 124.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_124.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| sq-125-rescue.png | טייסת 125 | [File:IAF Squadron 125.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_125.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| sq-193-defenders-west.png | טייסת 193 | [File:IAF Squadron 193 new symbol 2026.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_193_new_symbol_2026.png) | IDF Spokesperson's Unit / ITAYBANIT | CC BY-SA 3.0 |
+| sq-100-flying-camel.png | טייסת 100 | [File:IAF Squadron 100 logo Since 2019.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_100_logo_Since_2019.png) | ירונש / Israel Defense Forces | CC BY-SA 3.0 |
+| sq-144-asam.png | טייסת 144 | [File:IAF Squadron 144 from 2022 symbol.svg](https://commons.wikimedia.org/wiki/File:IAF_Squadron_144_from_2022_symbol.svg) | Own work
+
+IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-147-hammers.png | טייסת 147 | [File:IAF Squadron 147 Insignia since 2024.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_147_Insignia_since_2024.png) | IDF Spokesperson's Unit / ירונש - ירון ש. | CC BY-SA 3.0 |
+| sq-160-falcons.png | טייסת 160 | [File:IAF Squadron 160 NEW Emblem Medal.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_160_NEW_Emblem_Medal.png) | ירונש - ירון ש. – Yaron S. | CC BY-SA 3.0 |
+| sq-166-training-uav.png | טייסת 166 | [File:IAF Squadron 166 New Logo.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_166_New_Logo.png) | Matankic | CC BY-SA 3.0 |
+| sq-200-first-uav.png | טייסת 200 | [File:IAF Squadron 200.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_200.png) | עיצוב מקורי: לא ידועשיפוץ קל והתאמה לויקיפדיה: ירונש - ירון ש. | CC BY-SA 3.0 |
+| sq-210-white-eagle.png | טייסת 210 | [File:IAF Squadron 210.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_210.png) | IDF Spokesperson's Unit photographer
+
+ירונש | CC BY-SA 3.0 |
+| sq-122-nahshon.png | טייסת 122 | [File:IAF Squadron 122 2.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_122_2.png) | ירונש / IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| sq-131-knights-of-yellow-bird.png | טייסת 131 | [File:סמל טייסת חדש - טייסת 131.jpg](https://commons.wikimedia.org/wiki/File:%D7%A1%D7%9E%D7%9C_%D7%98%D7%99%D7%99%D7%A1%D7%AA_%D7%97%D7%93%D7%A9_-_%D7%98%D7%99%D7%99%D7%A1%D7%AA_131.jpg) | טייסת 131 | CC BY-SA 4.0 |
+| sq-135-light-transport.png | טייסת 135 | [File:IAF Squadron 135 Badge.svg](https://commons.wikimedia.org/wiki/File:IAF_Squadron_135_Badge.svg) | Matankic / Israel Defense Forces | CC BY-SA 3.0 |
+| sq-249-airwork.png | טייסת 249 | [File:IAF Squadron 249.png](https://commons.wikimedia.org/wiki/File:IAF_Squadron_249.png) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| ad-138-iron-dome.png | גדוד 138 - כיפת ברזל | [File:Israeli Air Defense Command batalion 138 logo.png](https://commons.wikimedia.org/wiki/File:Israeli_Air_Defense_Command_batalion_138_logo.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| ad-947-iron-dome.png | גדוד 947 - כיפת ברזל | [File:Israeli Air Defense batalion 947 logo.png](https://commons.wikimedia.org/wiki/File:Israeli_Air_Defense_batalion_947_logo.png) | Unknown authorUnknown author | CC BY 3.0 |
+| ad-arrow-136.png | גדוד 136 - חץ | [File:Israeli Air Defense batalion 136 logo.png](https://commons.wikimedia.org/wiki/File:Israeli_Air_Defense_batalion_136_logo.png) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| 669-rescue.png | יחידה 669 | [File:Emblème de l'Unité 669 (יחידת החילוץ והפינוי בהיטס).svg](https://commons.wikimedia.org/wiki/File:Embl%C3%A8me_de_l%27Unit%C3%A9_669_(%D7%99%D7%97%D7%99%D7%93%D7%AA_%D7%94%D7%97%D7%99%D7%9C%D7%95%D7%A5_%D7%95%D7%94%D7%A4%D7%99%D7%A0%D7%95%D7%99_%D7%91%D7%94%D7%99%D7%98%D7%A1).svg) | Futurhit12 / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| med-7058.png | גדוד רפואה 7058 (גבעתי) | [File:תג גדוד 7058.png](https://commons.wikimedia.org/wiki/File:%D7%AA%D7%92_%D7%92%D7%93%D7%95%D7%93_7058.png) | Israel Defense Forces | CC BY-SA 3.0 |
