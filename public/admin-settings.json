@@ -107,7 +107,8 @@
     "abs:glow": false,
     "abs:custom_ירוק_זוהר": false,
     "pla:glow": false,
-    "abs:black": false
+    "abs:black": false,
+    "pla:silver": false
   },
   "shelves": {},
   "materials": [],
@@ -165,6 +166,16 @@
         "pla"
       ],
       "desc": "מומלץ לפסלים"
+    },
+    {
+      "id": "custom_אפור",
+      "name": "אפור",
+      "hex": "#818381",
+      "kind": "solid",
+      "materials": [
+        "pla"
+      ],
+      "desc": "רגיל"
     }
   ]
 }
