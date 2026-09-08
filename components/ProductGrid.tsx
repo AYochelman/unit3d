@@ -12,7 +12,7 @@ import { CATEGORY_LABEL } from "@/lib/products";
 import { cn } from "@/lib/cn";
 import { useAdminStore } from "@/lib/admin-store";
 import { DEFAULT_MATERIAL, isMaterialInStock } from "@/lib/inventory";
-import { useLivePrice } from "@/lib/live-price";
+import { useLivePrice, useQuoteOnly } from "@/lib/live-price";
 import { clipSrc } from "@/lib/assets";
 import { designHref, isPersonalizable } from "@/lib/designable";
 import RestockModal from "@/components/RestockModal";
@@ -104,7 +104,10 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   const material = c.material ?? DEFAULT_MATERIAL;
   const inStock = isMaterialInStock(stock, material);
   // The shelf price follows /admin, so a margin change moves every card at once.
-  const price = useLivePrice({ id: c.itemId ?? c.id, price: c.price, grams: c.grams, hours: c.hours, material, colors: c.colors });
+  const priceable = { id: c.itemId ?? c.id, price: c.price, grams: c.grams, hours: c.hours, material, colors: c.colors };
+  const price = useLivePrice(priceable);
+  // Heavy pieces are quoted, not priced — see MADE_TO_ORDER_FROM.
+  const quoteOnly = useQuoteOnly(priceable);
 
   const shell =
     "group flex flex-col rounded-2xl bg-ink-900 border border-ink-800 hover:border-ink-700 hover:-translate-y-1 transition-all duration-300 ease-smooth overflow-hidden text-right";
@@ -201,7 +204,9 @@ export function ListingCardView({ c }: { c: ListingCard }) {
     </>
   );
 
-  const priceRow = (
+  const priceRow = quoteOnly ? (
+    <span className="text-flame text-sm font-bold">לפי הזמנה</span>
+  ) : (
     <span className="font-mono text-flame text-sm" dir="ltr">{fmtILS(price)}</span>
   );
 
@@ -285,7 +290,7 @@ export function ListingCardView({ c }: { c: ListingCard }) {
       <div className="px-3 pb-3 flex items-center justify-between">
         {priceRow}
         <span className="inline-flex items-center gap-1 text-xs font-semibold text-ink-300 group-hover:text-flame transition-colors">
-          לפרטים
+          {quoteOnly ? "בקש הצעה" : "לפרטים"}
           <Icon name="arrowLeft" size={12} />
         </span>
       </div>

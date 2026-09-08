@@ -49,6 +49,27 @@ export function resolvePrice(
   return Math.ceil(recommendedPrice / step) * step;
 }
 
+/**
+ * Above this, a shelf price stops being useful.
+ *
+ * A 1.2kg hydroponic tower is thirty-five hours of machine time; the cost
+ * model prices it honestly at several hundred shekels, and a number like that
+ * on a card reads as a mistake rather than as a quote. These are real products
+ * and worth showing — they are just not products you buy by tapping a price.
+ * So they show "לפי הזמנה" and lead to a conversation instead.
+ *
+ * A price the owner typed himself always wins: if he decided a heavy piece
+ * sells for a number, that number is the answer and this rule steps aside.
+ */
+export const MADE_TO_ORDER_FROM = 300;
+
+/** Is this item quoted rather than priced? */
+export function useQuoteOnly(item: Priceable): boolean {
+  const overrides = useAdminStore((s) => s.overrides);
+  const price = useLivePrice(item);
+  return overrides[item.id]?.price == null && price >= MADE_TO_ORDER_FROM;
+}
+
 /** Live price for one item. Re-renders when the owner changes a setting. */
 export function useLivePrice(item: Priceable): number {
   const overrides = useAdminStore((s) => s.overrides);

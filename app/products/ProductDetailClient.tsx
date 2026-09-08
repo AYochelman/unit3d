@@ -21,7 +21,7 @@ import { useAdminStore } from "@/lib/admin-store";
 import { estimateCost } from "@/lib/costing";
 import { suggestPrice } from "@/lib/imported";
 import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
-import { useLivePrice } from "@/lib/live-price";
+import { useLivePrice, useQuoteOnly } from "@/lib/live-price";
 
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
@@ -61,14 +61,17 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const stock = useAdminStore((s) => s.stock);
   const settings = useAdminStore((s) => s.settings);
   // Hooks run before the "not found" bail-out, so this uses safe fallbacks.
-  const basePrice = useLivePrice({
+  const priceable = {
     id,
     price: p?.price ?? 0,
     grams: p?.grams ?? 0,
     hours: p?.hours ?? 0,
     material,
     colors: amsOn ? amsColors : 1,
-  });
+  };
+  const basePrice = useLivePrice(priceable);
+  // A piece this heavy is quoted, not sold off a shelf — see MADE_TO_ORDER_FROM.
+  const quoteOnly = useQuoteOnly(priceable);
 
   if (!p) {
     return (
@@ -448,9 +451,15 @@ export default function ProductDetailClient({ id }: { id: string }) {
           {/* Price */}
           <div className="flex items-end justify-between pt-2 border-t border-ink-800">
             <div>
-              <div className="text-[11px] text-ink-500 mb-0.5">מחיר סופי</div>
-              <div className="text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
-              {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(unitPrice)} ליחידה</div>}
+              <div className="text-[11px] text-ink-500 mb-0.5">{quoteOnly ? "תמחור" : "מחיר סופי"}</div>
+              {quoteOnly ? (
+                <div className="text-2xl md:text-3xl font-black text-flame">לפי הזמנה</div>
+              ) : (
+                <>
+                  <div className="text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
+                  {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(unitPrice)} ליחידה</div>}
+                </>
+              )}
             </div>
             <AdminUnlock />
           </div>
@@ -481,7 +490,21 @@ export default function ProductDetailClient({ id }: { id: string }) {
             />
           )}
 
-          {sellable ? (
+          {sellable && quoteOnly ? (
+            <div className="space-y-2">
+              <Link
+                href="/contact"
+                className="w-full h-12 rounded-xl font-black text-base flex items-center justify-center gap-2 bg-flame text-white hover:bg-flame/90 transition-colors shadow-lg"
+              >
+                <Icon name="whatsapp" size={18} />
+                בקש הצעת מחיר
+              </Link>
+              <p className="text-[11px] text-ink-500 leading-relaxed border-r-2 border-flame/40 pr-2.5">
+                הדפסה של {Math.round(grams)} גרם ו-{hours.toFixed(0)} שעות מכונה. בגודל הזה
+                אני מתמחר לפי מה שבאמת צריך — צבע, כמות, לוח זמנים — במקום להדביק מחיר מדף.
+              </p>
+            </div>
+          ) : sellable ? (
             <button
               type="button"
               onClick={handleAdd}
