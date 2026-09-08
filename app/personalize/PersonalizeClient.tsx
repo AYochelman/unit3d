@@ -141,7 +141,7 @@ export default function PersonalizeClient() {
                 colorId === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50",
               )}
             >
-              <ColorSwatch filament={c} size={28} className="absolute inset-[2px] !w-auto !h-auto" />
+              <ColorSwatch filament={c} fill />
               {c.id === baseColor.id && (
                 <span className="absolute -top-1 -left-1 h-3.5 w-3.5 rounded-full bg-good text-ink-950 flex items-center justify-center">
                   <Icon name="check" size={9} strokeWidth={3} />

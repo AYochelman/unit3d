@@ -250,6 +250,16 @@ export type MaterialId =
 
 export type Material = {
   id: MaterialId;
+  /**
+   * The materials this one can stand in for.
+   *
+   * PLA, PLA+, matte and silk are the same plastic with a different finish, so
+   * a model that asks for silk can be printed in plain PLA when the silk spool
+   * is empty. PETG, TPU and ABS are not interchangeable with anything: they are
+   * chosen for heat, flex or strength, and swapping one for PLA would sell the
+   * customer something that fails at the job. Absent means "stands alone".
+   */
+  family?: string;
   name: string;
   /** Short label for chips, e.g. "PLA+" */
   short: string;

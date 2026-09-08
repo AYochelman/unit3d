@@ -18,11 +18,14 @@ export default function ColorSwatch({
   size = 40,
   className,
   selected,
+  fill,
 }: {
   filament: Filament;
   size?: number;
   className?: string;
   selected?: boolean;
+  /** Cover the parent instead of taking a size of its own. */
+  fill?: boolean;
 }) {
   const { hex, hex2, kind = "solid" } = filament;
   const second = hex2 || "#f2f2ef";
@@ -54,10 +57,12 @@ export default function ColorSwatch({
 
   return (
     <span
-      className={cn("relative inline-block rounded-full border", className)}
+      // `fill` positions from here rather than from a caller's class: two
+      // position utilities on one element is a coin toss decided by the order
+      // Tailwind happens to emit them in, and it lost.
+      className={cn("rounded-full border", fill ? "absolute inset-0" : "relative inline-block", className)}
       style={{
-        width: size,
-        height: size,
+        ...(fill ? {} : { width: size, height: size }),
         background,
         borderColor: selected ? "currentColor" : "rgba(255,255,255,0.18)",
         // Glow reads as glow only if it actually glows.

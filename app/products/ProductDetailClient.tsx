@@ -7,7 +7,9 @@ import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
 import { Field, Input } from "@/components/ui/Field";
 import { useFilaments } from "@/lib/palette";
-import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
+import { MATERIAL_BY_ID } from "@/lib/materials";
+import { useMaterials } from "@/lib/palette";
+import { offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
@@ -43,14 +45,21 @@ const AMS_OPTIONS = [
 export default function ProductDetailClient({ id }: { id: string }) {
   // The built-in palette plus any spool the owner added in /admin.
   const FILAMENTS = useFilaments();
+  const ALL_MATERIALS = useMaterials();
   const p = PRODUCT_BY_ID[id];
   const addItem = useOrderStore((s) => s.addItem);
   const cartCount = useOrderStore((s) => s.items.length);
   const adminUnlocked = useAdminStore((s) => s.unlocked);
   const override = useAdminStore((s) => s.overrides[id]);
 
-  const [colorId, setColorId] = useState(FILAMENTS[2].id);
-  const [material, setMaterial] = useState<MaterialId>(p?.material ?? "pla_plus");
+  // The colour the model is presented in — what the photograph and the
+  // designer intended. It stays on the list even when the spool is empty.
+  const recommendedColor = FILAMENTS[2].id;
+  // Until the customer picks for himself the page lands on something we can
+  // actually print today; once he has chosen, his choice stands even if the
+  // spool is empty — he may well want to wait for it.
+  const [pickedColor, setPickedColor] = useState<string | null>(null);
+  const [pickedMaterial, setPickedMaterial] = useState<MaterialId | null>(null);
   const [amsOn, setAmsOn] = useState(false);
   const [amsColors, setAmsColors] = useState<2 | 3 | 4>(2);
   const [engrave1, setEngrave1] = useState("");
@@ -64,6 +73,19 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [askRestock, setAskRestock] = useState(false);
   const stock = useAdminStore((s) => s.stock);
   const settings = useAdminStore((s) => s.settings);
+
+  // What we can actually print, and what to land on. The model's own material
+  // and colour stay on the list as the recommendation; the rest of each list is
+  // what is on the shelf. Substitution never crosses a material family.
+  const wantMaterial: MaterialId = p?.material ?? "pla_plus";
+  const materialChoices = offeredMaterials(ALL_MATERIALS, stock, FILAMENTS, wantMaterial);
+  const material: MaterialId =
+    pickedMaterial ?? startingMaterial(ALL_MATERIALS, stock, FILAMENTS, wantMaterial);
+  const setMaterial = setPickedMaterial;
+  const colorChoices = offeredColors(FILAMENTS, stock, material, recommendedColor);
+  const colorId = pickedColor ?? startingColor(FILAMENTS, stock, material, recommendedColor);
+  const setColorId = setPickedColor;
+
   // Hooks run before the "not found" bail-out, so this uses safe fallbacks.
   const priceable = {
     id,
@@ -329,7 +351,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
               <span className="text-ink-500 font-normal"> · {mat.desc}</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {MATERIALS.map((m) => (
+              {materialChoices.map((m) => (
                 <button
                   key={m.id}
                   type="button"
@@ -339,6 +361,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   dir="ltr"
                 >
                   {m.short}{Math.max(0, m.priceAdd - baseMatAdd) > 0 ? ` +${Math.max(0, m.priceAdd - baseMatAdd)}` : ""}
+                  {m.id === (p.material ?? "pla_plus") && <span className="text-[9px] text-ink-500"> ★</span>}
                 </button>
               ))}
             </div>
@@ -350,7 +373,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
               צבע: <span className="text-ink-100 font-normal">{color.name}</span>
             </div>
             <div className="flex flex-wrap gap-2.5">
-              {FILAMENTS.map((c) => (
+              {colorChoices.map((c) => (
                 <button
                   key={c.id}
                   type="button"
@@ -364,7 +387,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
                     !isColorInStock(stock, material, c.id) && "opacity-35",
                   )}
                 >
-                  <ColorSwatch filament={c} size={32} className="absolute inset-[2px] !w-auto !h-auto" />
+                  <ColorSwatch filament={c} fill />
+                  {c.id === recommendedColor && (
+                    <span className="absolute -top-1 -right-1 z-[1] text-[9px] leading-none text-flame" title="הצבע שהדגם מוצג בו">★</span>
+                  )}
                   {!isColorInStock(stock, material, c.id) && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />

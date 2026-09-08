@@ -401,7 +401,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                     !isColorInStock(stock, material, c.id) && "opacity-35",
                   )}
                 >
-                  <ColorSwatch filament={c} size={32} className="absolute inset-[2px] !w-auto !h-auto" />
+                  <ColorSwatch filament={c} fill />
                   {!isColorInStock(stock, material, c.id) && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />
