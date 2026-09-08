@@ -4566,5 +4566,22 @@
     "status": "pending",
     "statusNote": "",
     "note": ""
+  },
+  {
+    "slug": "intel-8153",
+    "name": "יחידה 8153",
+    "level": "גדוד",
+    "number": "8153",
+    "nickname": "טכנולוגיה מבצעית",
+    "parent": "intel-8200",
+    "parentName": "יחידה 8200",
+    "englishName": "",
+    "file": null,
+    "altFiles": [],
+    "license": null,
+    "confidence": "low",
+    "status": "pending",
+    "statusNote": "אין סמל חופשי בוויקישיתוף - מוצג סמל היחידה שמעליה",
+    "note": ""
   }
 ]

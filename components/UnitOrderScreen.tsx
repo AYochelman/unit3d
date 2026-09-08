@@ -6,13 +6,13 @@ import Pill from "@/components/ui/Pill";
 import ColorSwatch from "@/components/ui/ColorSwatch";
 import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
-import { photoSrc } from "@/lib/assets";
 import EmblemImage from "@/components/EmblemImage";
 import { Field, Input } from "@/components/ui/Field";
 import { useAdminStore } from "@/lib/admin-store";
 import { isColorInStock } from "@/lib/inventory";
 import { offeredColors, startingColor } from "@/lib/offer";
 import { filamentsFor, useFilaments } from "@/lib/palette";
+import { MATERIAL_BY_ID } from "@/lib/materials";
 import { EXTRA_COLOR_PRICE, PERSONALIZE_PRICE } from "@/lib/personalize";
 import { useLivePricer, MADE_TO_ORDER_FROM } from "@/lib/live-price";
 import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
@@ -217,7 +217,7 @@ export default function UnitOrderScreen({
                       <span className="block relative aspect-[4/3] bg-ink-950/60 flex items-center justify-center overflow-hidden">
                         {f.photo ? (
                           <Image
-                            src={photoSrc(f.photo)}
+                            src={f.photo}
                             alt={f.label}
                             fill
                             sizes="(max-width: 640px) 50vw, 200px"
@@ -255,11 +255,21 @@ export default function UnitOrderScreen({
             <div className="text-[11px] font-mono tracking-widest text-ink-500 uppercase">העיצוב</div>
 
             <div>
-              <div className="text-sm font-bold text-ink-200 mb-2.5">
+              <div className="text-sm font-bold text-ink-200 mb-1">
                 צבע: <span className="text-ink-50 font-normal">{colorName}</span>
                 {noneInStock && (
                   <span className="text-ink-500 font-normal"> · הגליל לא על המדף כרגע, נזמין אותו</span>
                 )}
+              </div>
+              {/* The list changes between products and that looks like a bug
+                  until you know why: a colour belongs to a filament, and the
+                  ashtray is printed in another one. Say which, rather than
+                  leaving the customer to notice swatches appearing and
+                  disappearing as they tap. */}
+              <div className="text-[11px] text-ink-500 mb-2.5">
+                {form.label} מודפס ב-{MATERIAL_BY_ID[form.material].name}
+                {form.material !== "pla" && " — ולכן הגוונים שונים משאר המוצרים"}
+                {` · ${colors.length} גוונים על המדף`}
               </div>
               <div className="flex flex-wrap gap-2.5">
                 {colors.map((c) => (

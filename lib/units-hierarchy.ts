@@ -872,6 +872,7 @@ export const BRANCH_TREE: BranchNode[] = [
             fallbackHue: 295,
             fallbackShape: "hex",
             battalions: [
+              { slug: "intel-8153", name: "יחידה 8153", number: "8153", nickname: "טכנולוגיה מבצעית" },
               { slug: "8200-hatsav", name: "חצב - איסוף גלוי" },
               { slug: "8200-cyber", name: "סייבר התקפי" },
               { slug: "8200-dev", name: "פיתוח טכנולוגי" },

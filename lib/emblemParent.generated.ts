@@ -152,6 +152,7 @@ export const EMBLEM_PARENT: Record<string, string> = {
   "sea-coast-north": "brigade-coastal-units",
   "sea-coast-center": "brigade-coastal-units",
   "sea-coast-south": "brigade-coastal-units",
+  "intel-8153": "brigade-intel-8200",
   "8200-hatsav": "brigade-intel-8200",
   "8200-cyber": "brigade-intel-8200",
   "8200-dev": "brigade-intel-8200",

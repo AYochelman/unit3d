@@ -46,6 +46,11 @@ export type UnitForm = {
   /**
    * A photograph of the real thing, when the shop already has one.
    *
+   * Already resolved to a local copy: lib/imported.ts runs every row's image
+   * through photoSrc when it builds IMPORTED. Passing it through a second time
+   * prepends the /unit3d base path twice, which is a 404 on the published site
+   * and invisible in dev, where the base path is empty.
+   *
    * A drawing says what the body IS; a photograph says what it looks like
    * printed, which is the question someone choosing between five of them is
    * actually asking. Only the bodies that exist elsewhere in the shop have one,
