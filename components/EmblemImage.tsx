@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { photoSrc } from "@/lib/assets";
+import { EMBLEM_PARENT } from "@/lib/emblemParent.generated";
 import Emblem from "./Emblem";
 import type { EmblemShape } from "@/lib/types";
 import { cn } from "@/lib/cn";
@@ -21,7 +22,12 @@ type Props = {
 };
 
 /**
- * Tries to load /emblems/<slug>.png. Falls back to generative Emblem SVG if missing.
+ * Tries to load /emblems/<slug>.png.
+ *
+ * A battalion whose own insignia is not on Commons falls back to its brigade's
+ * emblem before the drawn placeholder — a real badge from one level up says
+ * more than a generated shield, and it costs no extra file.
+ *
  * When `size` is omitted, fills the parent container (parent must be position:relative).
  */
 export default function EmblemImage({
@@ -34,8 +40,12 @@ export default function EmblemImage({
   circular,
   paddingRatio = 0.05,
 }: Props) {
-  const [failed, setFailed] = useState(false);
-  const src = photoSrc(`/emblems/${slug}.png`);
+  const parent = EMBLEM_PARENT[slug];
+  // 0 = the unit's own file, 1 = its brigade's, 2 = the drawn placeholder.
+  const [step, setStep] = useState(0);
+  const shown = step === 0 ? slug : parent;
+  const failed = step === 2 || !shown;
+  const src = photoSrc(`/emblems/${shown ?? slug}.png`);
   const fillMode = size === undefined;
 
   if (failed) {
@@ -82,7 +92,8 @@ export default function EmblemImage({
             "object-contain",
             circular && "object-cover",
           )}
-          onError={() => setFailed(true)}
+          key={src}
+          onError={() => setStep((s) => (s === 0 && parent ? 1 : 2))}
           unoptimized
         />
       </div>

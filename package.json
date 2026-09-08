@@ -11,6 +11,7 @@
     "emblems": "node scripts/fetch-emblems.mjs",
     "emblems:find": "node scripts/find-emblems.mjs",
     "emblems:catalog": "node scripts/list-emblem-catalog.mjs",
+    "emblems:parents": "node scripts/gen-emblem-parents.mjs",
     "import:makerworld": "node scripts/import-makerworld.mjs",
     "fetch:images": "node scripts/fetch-images.mjs",
     "fetch:videos": "node scripts/fetch-videos.mjs",
