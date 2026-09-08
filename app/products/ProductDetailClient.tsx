@@ -10,6 +10,7 @@ import { useFilaments } from "@/lib/palette";
 import { MATERIAL_BY_ID } from "@/lib/materials";
 import { useMaterials } from "@/lib/palette";
 import { offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
+import { filamentsFor } from "@/lib/palette";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
@@ -152,7 +153,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const timeLabel = amsOn && p.hoursAms ? fmtHours(p.hoursAms) : plate ? fmtHours(plate.h) : p.time;
 
   // Availability follows the filament we actually have on the shelf.
-  const matInStock = isMaterialInStock(stock, material);
+  const matInStock = isMaterialInStock(stock, material, filamentsFor(FILAMENTS, material));
   const colorInStock = isColorInStock(stock, material, colorId);
   const sellable = matInStock && colorInStock;
 

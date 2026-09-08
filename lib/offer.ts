@@ -54,6 +54,23 @@ export function startingMaterial(
   return all.find((m) => familyOf(m) === wantFamily && have(m.id))?.id ?? want;
 }
 
+/**
+ * Can we print this model at all today?
+ *
+ * Not "is its own spool loaded" — a model designed in silk is printable while
+ * any PLA is on the shelf. Outside a family the answer is still the strict
+ * one: no ABS means no ABS.
+ */
+export function canPrint(
+  all: Material[],
+  stock: StockMap,
+  palette: Filament[],
+  want: MaterialId,
+): boolean {
+  const use = startingMaterial(all, stock, palette, want);
+  return isMaterialInStock(stock, use, filamentsFor(palette, use));
+}
+
 /** Colours worth showing for this material, recommendation first. */
 export function offeredColors(
   palette: Filament[],
@@ -63,11 +80,11 @@ export function offeredColors(
 ): Filament[] {
   const mine = filamentsFor(palette, material);
   const live = mine.filter((c) => isColorInStock(stock, material, c.id));
-  const rec = recommendedId ? mine.find((c) => c.id === recommendedId) : undefined;
-  // Nothing on the shelf at all: show the full range rather than an empty row,
-  // and let the out-of-stock marks say what the situation is.
-  if (!live.length) return mine;
-  if (!rec || live.some((c) => c.id === rec.id)) return live;
+  const rec = mine.find((c) => c.id === recommendedId) ?? mine[0];
+  // Everything we have, and exactly ONE thing we do not: the colour the model
+  // is shown in. A row of struck-through circles is a list of apologies; one
+  // is a note that the model's own colour is on its way back.
+  if (!rec || live.some((c) => c.id === rec.id)) return live.length ? live : rec ? [rec] : [];
   return [rec, ...live];
 }
 

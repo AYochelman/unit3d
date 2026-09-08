@@ -6,12 +6,13 @@ import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/Field";
 import { FIDGETS } from "@/lib/data";
 import { filamentsFor, useFilaments, useMaterials } from "@/lib/palette";
+import { canPrint } from "@/lib/offer";
 import { useSiteFile } from "@/lib/site-file";
 import ColorSwatch, { KIND_LABEL } from "@/components/ui/ColorSwatch";
 import type { Filament, FilamentKind, Material } from "@/lib/types";
 import { MATERIAL_BY_ID } from "@/lib/materials";
 import { PRODUCTS, CONFIG_PRODUCTS, fidgetGrams, CATEGORY_LABEL } from "@/lib/products";
-import { DEFAULT_MATERIAL, buyAdvice, colorsInStock, isColorInStock, isMaterialInStock, type Sellable } from "@/lib/inventory";
+import { DEFAULT_MATERIAL, buyAdvice, colorsInStock, isColorInStock, type Sellable } from "@/lib/inventory";
 import { estimateCost, parseHours, fmtHours, type CostSettings } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
@@ -565,7 +566,9 @@ function StockTab() {
   const customColors = useAdminStore((s) => s.colors);
   const removeColor = useAdminStore((s) => s.removeColor);
 
-  const blockedCount = items.filter((i) => !isMaterialInStock(stock, i.material ?? DEFAULT_MATERIAL)).length;
+  // Counted the same way the shop counts it: a silk model is not blocked
+  // while plain PLA is on the shelf.
+  const blockedCount = items.filter((i) => !canPrint(materials, stock, filaments, i.material ?? DEFAULT_MATERIAL)).length;
 
   return (
     <div className="space-y-8">

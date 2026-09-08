@@ -11,7 +11,9 @@ import { MATERIAL_BY_ID } from "@/lib/materials";
 import { CATEGORY_LABEL } from "@/lib/products";
 import { cn } from "@/lib/cn";
 import { useAdminStore } from "@/lib/admin-store";
-import { DEFAULT_MATERIAL, isMaterialInStock } from "@/lib/inventory";
+import { DEFAULT_MATERIAL } from "@/lib/inventory";
+import { canPrint, startingMaterial } from "@/lib/offer";
+import { useFilaments, useMaterials } from "@/lib/palette";
 import { useLivePrice, useQuoteOnly } from "@/lib/live-price";
 import { clipSrc } from "@/lib/assets";
 import { designHref, isPersonalizable } from "@/lib/designable";
@@ -101,8 +103,13 @@ export function ListingCardView({ c }: { c: ListingCard }) {
         },
       }
     : {};
+  const materials = useMaterials();
+  const palette = useFilaments();
   const material = c.material ?? DEFAULT_MATERIAL;
-  const inStock = isMaterialInStock(stock, material);
+  // A silk model is not out of stock while plain PLA is on the shelf.
+  const inStock = canPrint(materials, stock, palette, material);
+  // What the waiting list should actually name if it IS out.
+  const wouldUse = startingMaterial(materials, stock, palette, material);
   // The shelf price follows /admin, so a margin change moves every card at once.
   const priceable = { id: c.itemId ?? c.id, price: c.price, grams: c.grams, hours: c.hours, material, colors: c.colors };
   const price = useLivePrice(priceable);
@@ -239,7 +246,7 @@ export function ListingCardView({ c }: { c: ListingCard }) {
           onClose={() => setAskRestock(false)}
           itemId={c.itemId ?? c.id}
           itemName={c.name}
-          material={material}
+          material={wouldUse}
         />
       </>
     );

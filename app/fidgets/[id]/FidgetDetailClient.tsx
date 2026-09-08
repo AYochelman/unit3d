@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
 import Emblem from "@/components/Emblem";
-import { MATERIALS, MATERIAL_BY_ID } from "@/lib/materials";
+import { MATERIAL_BY_ID } from "@/lib/materials";
 import { fidgetGrams } from "@/lib/products";
 import { estimateCost, parseHours } from "@/lib/costing";
 import AdminCostPanel from "@/components/AdminCostPanel";
@@ -19,6 +19,8 @@ import AdminUnlock from "@/components/AdminUnlock";
 import ShippingEstimate from "@/components/ShippingEstimate";
 import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
+import { filamentsFor, useMaterials } from "@/lib/palette";
+import { offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import { useLivePrice } from "@/lib/live-price";
@@ -44,11 +46,15 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const f = FIDGETS.find((x) => x.id === id);
 
   const [imgIdx, setImgIdx]       = useState(0);
-  const [colorId, setColorId]     = useState(FILAMENTS[0].id);
+  // The colour the fidget is shown in. It survives an empty spool; everything
+  // else on the row is something we can print today.
+  const recommendedColor = FILAMENTS[0].id;
+  const [pickedColor, setPickedColor] = useState<string | null>(null);
   const [amsOn, setAmsOn]         = useState(false);
   const [amsColors, setAmsColors] = useState<2 | 3 | 4>(2);
   const [qty, setQty]             = useState(1);
-  const [material, setMaterial] = useState<MaterialId>("pla_plus");
+  // Same rule as the shop: substitute inside the PLA family, never across one.
+  const [pickedMaterial, setPickedMaterial] = useState<MaterialId | null>(null);
   const adminUnlocked = useAdminStore((s) => s.unlocked);
   const stock = useAdminStore((s) => s.stock);
   const settings = useAdminStore((s) => s.settings);
@@ -57,6 +63,17 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const [added, setAdded]         = useState(false);
   const [askRestock, setAskRestock] = useState(false);
   const [scale, setScale] = useState<number>(0);
+
+  const ALL_MATERIALS = useMaterials();
+  // Fidgets are a PLA product; a fidget in ABS is not the same fidget. So the
+  // list substitutes inside the family and stops there — TPU is filtered out
+  // for this page on purpose, it is a different feel in the hand.
+  const wantMaterial: MaterialId = "pla_plus";
+  const materialChoices = offeredMaterials(ALL_MATERIALS, stock, FILAMENTS, wantMaterial)
+    .filter((m) => m.id !== "tpu");
+  const material: MaterialId =
+    pickedMaterial ?? startingMaterial(ALL_MATERIALS, stock, FILAMENTS, wantMaterial);
+  const setMaterial = setPickedMaterial;
 
   // Hooks must run before the "not found" bail-out below, so the price is
   // resolved here with safe fallbacks rather than next to the other derived state.
@@ -111,8 +128,11 @@ export default function FidgetDetailClient({ id }: { id: string }) {
     : f.thumbnail ? [f.thumbnail]
     : [];
 
+  const colorChoices = offeredColors(FILAMENTS, stock, material, recommendedColor);
+  const colorId = pickedColor ?? startingColor(FILAMENTS, stock, material, recommendedColor);
+  const setColorId = setPickedColor;
   const selectedFilament = FILAMENTS.find((c) => c.id === colorId);
-  const matInStock   = isMaterialInStock(stock, material);
+  const matInStock   = isMaterialInStock(stock, material, filamentsFor(FILAMENTS, material));
   const colorInStock = isColorInStock(stock, material, colorId);
   const sellable     = matInStock && colorInStock;
   const tintHex          = selectedFilament?.hex ?? "#888";
@@ -357,7 +377,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               <span className="text-ink-500 font-normal"> · {mat.desc}</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {MATERIALS.filter((m) => m.id !== "tpu").map((m) => (
+              {materialChoices.map((m) => (
                 <button
                   key={m.id}
                   type="button"
@@ -370,6 +390,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   dir="ltr"
                 >
                   {m.short}{Math.max(0, m.priceAdd - baseMatAdd) > 0 ? ` +${Math.max(0, m.priceAdd - baseMatAdd)}` : ""}
+                  {m.id === wantMaterial && <span className="text-[9px] text-ink-500"> ★</span>}
                 </button>
               ))}
             </div>
@@ -385,7 +406,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               )}
             </div>
             <div className="flex flex-wrap gap-2.5">
-              {FILAMENTS.map((c) => (
+              {colorChoices.map((c) => (
                 <button
                   key={c.id}
                   type="button"
