@@ -278,7 +278,9 @@ async function readLikes(page) {
 
   let ids = [];
   for (const url of tabs) {
-    if (!(await open(page, url))) continue;
+    // One try each: these are guesses, and six guesses at three Cloudflare
+    // retries apiece cost more than half an hour of the job.
+    if (!(await open(page, url, 1))) continue;
     await page.waitForTimeout(4000);
 
     // On the bare profile, the tab is a control rather than a link.
