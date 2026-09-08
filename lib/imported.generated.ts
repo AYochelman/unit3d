@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-07T17:01:27.261Z
-// Items: 375
+// Items: 395
 
 import type { ImportedModel } from "./imported";
 
@@ -9158,6 +9158,510 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "home"
     ]
+  },
+  {
+    "id": "mw-825671",
+    "name": "Knife block",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 25.17,
+    "grams": 530,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US90c53f86b5ac2/design/2024-11-26_7e3a48e2e84598.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "kilinccagatay",
+    "sourceUrl": "https://makerworld.com/en/models/825671-knife-block",
+    "license": "Standard Digital File License",
+    "downloads": 3993,
+    "hue": 260,
+    "art": "planter",
+    "status": "hold",
+    "holds": [
+      "weapon"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-844154",
+    "name": "Drill Dust Collector",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.1,
+    "grams": 37,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US552ca6f3f9cde4/design/2024-12-02_3adf60a4a6432.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "YelTrik Designs",
+    "sourceUrl": "https://makerworld.com/en/models/844154-drill-dust-collector",
+    "license": "Standard Digital File License",
+    "downloads": 51234,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ]
+  },
+  {
+    "id": "mw-878180",
+    "name": "Table side data cable clamp",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 1.4,
+    "grams": 31,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7c2432417fd573/design/2024-12-14_5e494a5ed501f8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "CatMaster Lab",
+    "sourceUrl": "https://makerworld.com/en/models/878180-table-side-data-cable-clamp",
+    "license": "Standard Digital File License",
+    "downloads": 57764,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 1.5,
+    "gramsAms": 30,
+    "plates": [
+      {
+        "g": 31,
+        "h": 1.4
+      },
+      {
+        "g": 45,
+        "h": 1.58
+      }
+    ]
+  },
+  {
+    "id": "mw-964016",
+    "name": "Japandi Vases",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 8.92,
+    "grams": 296,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US1f1c7b7bde3192/design/2025-01-07_7ebd52132579.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "SabreDesign",
+    "sourceUrl": "https://makerworld.com/en/models/964016-japandi-vases",
+    "license": "Standard Digital File License",
+    "downloads": 55865,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 8.92,
+    "gramsAms": 239
+  },
+  {
+    "id": "mw-1087329",
+    "name": "Porsche 911 GT3 RS Wall Art",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.43,
+    "grams": 20,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US8151594e204afa/design/2025-02-08_a3d16bc4f143e8.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Recticle",
+    "sourceUrl": "https://makerworld.com/en/models/1087329-porsche-911-gt3-rs-wall-art",
+    "license": "BY-SA",
+    "downloads": 29286,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.59,
+    "gramsAms": 36,
+    "plates": [
+      {
+        "g": 20,
+        "h": 1.43
+      },
+      {
+        "g": 38,
+        "h": 2.71
+      },
+      {
+        "g": 59,
+        "h": 4.74
+      },
+      {
+        "g": 367,
+        "h": 14.1
+      }
+    ]
+  },
+  {
+    "id": "mw-1454252",
+    "name": "Tree wall art decor",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 4.21,
+    "grams": 109,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US17849a50be9178/design/2025-05-30_73f8fd35bd3c08.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "LumiArte",
+    "sourceUrl": "https://makerworld.com/en/models/1454252-tree-wall-art-decor",
+    "license": "Standard Digital File License",
+    "downloads": 3426,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-1520536",
+    "name": "AquaVortex Veggie & Berry Washer & Strainer",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 3.71,
+    "grams": 126,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/UScc579e9368877f/design/2025-12-18_ceb2a04084d11.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Giskard Reventlov",
+    "sourceUrl": "https://makerworld.com/en/models/1520536-aquavortex-vegetable-and-berry-washer-and-strainer",
+    "license": "Standard Digital File License",
+    "downloads": 58289,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 4.42,
+    "gramsAms": 137
+  },
+  {
+    "id": "mw-1545342",
+    "name": "Funny Dog Teeth",
+    "desc": "אביזר לחיה, מודפס ב-PETG שעמיד במים ובשמש.",
+    "shelf": "pets",
+    "hours": 0.31,
+    "grams": 3,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USeabdf1d6122d4/design/2025-06-23_d0b72672245e9.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Little Mac Designs",
+    "sourceUrl": "https://makerworld.com/en/models/1545342-funny-dog-teeth",
+    "license": "Standard Digital File License",
+    "downloads": 925,
+    "hue": 30,
+    "art": "round",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.29,
+    "gramsAms": 4
+  },
+  {
+    "id": "mw-1602658",
+    "name": "Suspended & Layered 911 Porsche",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 3.61,
+    "grams": 96,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US72ef77a6966bf3/design/2025-07-13_281b115644e6f8.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "theStonefox",
+    "sourceUrl": "https://makerworld.com/en/models/1602658-suspended-layered-911-porsche",
+    "license": "Standard Digital File License",
+    "downloads": 1268,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office",
+      "statues"
+    ]
+  },
+  {
+    "id": "mw-2205355",
+    "name": "Skull Wall Decor",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.78,
+    "grams": 82,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USaa0aa4413d46c2/design/2026-01-05_a8403883173a98.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "HypoRift",
+    "sourceUrl": "https://makerworld.com/en/models/2205355-skull-wall-decor",
+    "license": "Standard Digital File License",
+    "downloads": 2150,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ]
+  },
+  {
+    "id": "mw-2211015",
+    "name": "Melting Wall Shelf – Dripping Modern Shelf",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 5.5,
+    "grams": 189,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5104514e08055d/design/2026-01-06_a45a2ecbdbd2c8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Fierro 3D",
+    "sourceUrl": "https://makerworld.com/en/models/2211015-melting-wall-shelf-dripping-modern-shelf",
+    "license": "Standard Digital File License",
+    "downloads": 8061,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2217842",
+    "name": "Flexi Dachshund Slinky Articulated Sausage Dog Toy",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 4.37,
+    "grams": 70,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US66cff69fc233d6/design/2026-01-08_8d8e771565882.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "FlowDesigned",
+    "sourceUrl": "https://makerworld.com/en/models/2217842-flexi-dachshund-slinky-articulated-sausage-dog-toy",
+    "license": "Standard Digital File License",
+    "downloads": 4130,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2268549",
+    "name": "USB cable organizer Box tray IPhone Samsung",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 7.53,
+    "grams": 336,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US308523116a62c2/design/05bde317d1901863.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Gorilla Labs",
+    "sourceUrl": "https://makerworld.com/en/models/2268549-usb-cable-organizer-box-tray-iphone-samsung",
+    "license": "Standard Digital File License",
+    "downloads": 34737,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "plates": [
+      {
+        "g": 336,
+        "h": 7.53
+      },
+      {
+        "g": 529,
+        "h": 12.17
+      }
+    ]
+  },
+  {
+    "id": "mw-2544759",
+    "name": "Balancing Cat Sculpture",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 1.91,
+    "grams": 44,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2873e27712f8ae/design/b97531e806926466.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AtlasLab",
+    "sourceUrl": "https://makerworld.com/en/models/2544759-balancing-cat-sculpture",
+    "license": "Standard Digital File License",
+    "downloads": 7413,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 3.45,
+    "gramsAms": 78
+  },
+  {
+    "id": "mw-2608825",
+    "name": "Flexi Dog - Articulated Keychain",
+    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 0.53,
+    "grams": 7,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfb4c41c92cd9b8/design/d1d161d4a0dafaa7.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Wiggle3D",
+    "sourceUrl": "https://makerworld.com/en/models/2608825-flexi-dog-articulated-keychain",
+    "license": "Standard Digital File License",
+    "downloads": 14044,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.54,
+    "gramsAms": 22
+  },
+  {
+    "id": "mw-2765603",
+    "name": "Batman Sitting on Ledge Figure | Arkham Knight",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 2.9,
+    "grams": 31,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US12d3b130c42cd5/design/a04e14494bccc589.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "shredderrich",
+    "sourceUrl": "https://makerworld.com/en/models/2765603-batman-sitting-on-ledge-figure-arkham-knight",
+    "license": "Standard Digital File License",
+    "downloads": 8093,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ],
+    "hoursAms": 5.28,
+    "gramsAms": 71
+  },
+  {
+    "id": "mw-2783407",
+    "name": "Modern Minimalistic - Foldable Wall Hook",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.44,
+    "grams": 33,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USec6375825d6c86/design/cab4fa9093b52641.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Kien Designs",
+    "sourceUrl": "https://makerworld.com/en/models/2783407-modern-minimalistic-foldable-wall-hook",
+    "license": "Standard Digital File License",
+    "downloads": 6942,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "hoursAms": 1.15,
+    "gramsAms": 34
+  },
+  {
+    "id": "mw-2944726",
+    "name": "Porsche 992 GT3 Voronoi da Collezione",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 5.75,
+    "grams": 69,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USf8c1ce87c4ae92/design/df091f2f2990bd9c.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Clean Studio",
+    "sourceUrl": "https://makerworld.com/en/models/2944726-collectible-porsche-992-gt3-voronoi",
+    "license": "Standard Digital File License",
+    "downloads": 10037,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 10.33,
+    "gramsAms": 112,
+    "plates": [
+      {
+        "g": 69,
+        "h": 5.75
+      },
+      {
+        "g": 168,
+        "h": 17.32
+      }
+    ]
+  },
+  {
+    "id": "mw-3237023",
+    "name": "Ultimate Tread Clicker Fidget (Print in Place)",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.11,
+    "grams": 36,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US76aa60295eb832/design/6ff5b52503ecb700.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AbyssalCactus",
+    "sourceUrl": "https://makerworld.com/en/models/3237023-ultimate-tread-clicker-fidget-print-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 877,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.31,
+    "gramsAms": 37
+  },
+  {
+    "id": "mw-3267559",
+    "name": "Hexagon Screw Fidget Toy (Print in Place)",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.6,
+    "grams": 13,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2cd53788ff806d/design/f33b7c5c2004cad2.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AbyssalCactus",
+    "sourceUrl": "https://makerworld.com/en/models/3267559-hexagon-screw-fidget-toy-print-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 71,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.09,
+    "gramsAms": 17
   }
 ];
 

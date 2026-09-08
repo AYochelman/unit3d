@@ -2,12 +2,31 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 27
-// Updated: 2026-09-08T00:09:27.053Z
+// Items: 28
+// Updated: 2026-09-08T10:24:43.560Z
 
 import type { Candidate } from "./candidates";
 
 export const CANDIDATES: Candidate[] = [
+  {
+    "id": "1764712",
+    "title": "Cartera, billetera  Batman – Porta DNI y Tarjeta",
+    "slug": "batman-wallet-id-and-card-holder",
+    "license": "Standard Digital File License",
+    "creator": "cositas con alma",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US64c0b98ef22015/design/2025-09-04_bcb50edb7efd98.gif?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 14787,
+    "likes": 8919,
+    "grams": 19,
+    "hours": 1.08,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [
+      "מותג"
+    ],
+    "via": "נשלח על ידך",
+    "tags": "cartera · billetera · dni · documentorganizer · documentacion · superheroes"
+  },
   {
     "id": "3237023",
     "title": "Ultimate Tread Clicker Fidget (Print in Place)",
