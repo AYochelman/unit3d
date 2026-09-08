@@ -1,0 +1,69 @@
+# Fetches the unit insignia the catalogue asks for.
+#
+# public/emblems/ is empty, so every unit on /catalog falls back to a generated
+# SVG placeholder — a shop selling unit emblems that shows none of them. The
+# files come from Wikimedia Commons, which this machine can reach and the
+# session's proxy cannot, so the download lives here.
+#
+# CC BY-SA needs the author and licence named wherever the image is shown; the
+# script writes public/emblems/CREDITS.md and this commits it with the images.
+name: Unit emblems
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "להוריד מחדש גם קבצים שכבר קיימים"
+        type: boolean
+        default: false
+  # Commons files get replaced and re-licensed; a monthly pass catches that.
+  schedule:
+    - cron: "20 4 2 * *"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: emblems
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+
+      - name: Fetch emblems
+        env:
+          FORCE: ${{ inputs.force && '--force' || '' }}
+        run: npm run emblems -- $FORCE
+
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for p in public/emblems; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "nothing new"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Fetch the unit insignia from Wikimedia Commons"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Publish the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main
