@@ -10,6 +10,7 @@ import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
 import { DELIVERY, makeRef, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
+import { placeOrder } from "@/lib/orders-remote";
 import { PRODUCTS } from "@/lib/products";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import { makeCoupon, NEXT_ORDER_DISCOUNT } from "@/lib/coupon";
@@ -88,6 +89,8 @@ export default function ContactClient() {
   // cannot say that.
   const [ordered, setOrdered] = useState<CartItem[]>([]);
   const [coupon, setCoupon] = useState("");
+  // Whether the order reached the shop's own queue, or only Ariel's phone.
+  const [filed, setFiled] = useState<"pending" | "saved" | "failed">("pending");
   const [copied, setCopied] = useState(false);
 
   // Four more from the same shelves, minus what is already on its way.
@@ -182,8 +185,15 @@ export default function ContactClient() {
           </section>
         )}
 
-        <div className="font-mono text-[11px] tracking-widest text-ink-500 text-center" dir="ltr">
-          REF · {refCode}
+        <div className="text-center space-y-1">
+          <div className="font-mono text-[11px] tracking-widest text-ink-500" dir="ltr">
+            REF · {refCode}
+          </div>
+          {filed === "failed" && (
+            <div className="text-[11px] text-ink-500">
+              ההזמנה נשלחה בוואטסאפ. שמור את מספר ההזמנה — הוא כל מה שצריך כדי לאתר אותה.
+            </div>
+          )}
         </div>
       </div>
     );
@@ -239,9 +249,16 @@ export default function ContactClient() {
               decision: "pending",
             };
 
-            // The only two roads an order has on a site with no server: his
-            // phone, and a link inside that message which files it in /admin.
+            // The message goes first: opening a window is only allowed while
+            // the click is still the browser's own event, and an await here
+            // would hand it to a popup blocker instead of to WhatsApp.
             window.open(orderWhatsapp(order), "_blank", "noopener,noreferrer");
+
+            // And the same order is written to the shop's queue, so it is
+            // already waiting on Ariel's screen instead of being carried there
+            // by hand. If that write fails the message still holds everything.
+            setFiled("pending");
+            void placeOrder(order).then((r) => setFiled(r === "saved" ? "saved" : "failed"));
 
             if (items.length) {
               setOrdered(items);

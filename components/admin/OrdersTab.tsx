@@ -1,13 +1,17 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
-import { Textarea } from "@/components/ui/Field";
+import { Input, Textarea } from "@/components/ui/Field";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { useAdminStore } from "@/lib/admin-store";
-import { DELIVERY_BY_ID, decodeOrder, orderTotal, parseOrderMessage, type OrderDecision, type PlacedOrder } from "@/lib/orders";
+import {
+  DELIVERY_BY_ID, decodeOrder, orderTotal, parseOrderMessage,
+  type OrderDecision, type PlacedOrder,
+} from "@/lib/orders";
+import { adminDecide, adminOrders, adminSignIn, isConfigured, shopConfig, type ShopConfig } from "@/lib/orders-remote";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -34,47 +38,76 @@ const when = (iso: string) => {
 /**
  * The orders customers placed.
  *
- * There is no server, so an order reaches this page the way it reaches Ariel:
- * the customer's message carries a link, and opening it once files the whole
- * record here. From then on it is his — approve, reject, or mark refunded, with
- * a note — and "סיים ועדכן" writes the list to the repository like every other
- * tab, so a decision survives the session and the next device.
+ * They arrive here on their own: the customer's browser writes the order to the
+ * shop's table as it sends the WhatsApp message, so by the time Ariel sits down
+ * the queue is already waiting. He answers the customer from his phone and
+ * decides here — open an order by its number, read what it actually is, and
+ * approve, reject or mark refunded with a note. The decision goes back to the
+ * same row, so it holds on every device and outlives the tab.
+ *
+ * Reading an order means reading someone's name, phone and mail, so the table
+ * only opens to a signed-in user: hence the sign-in below. The two older roads
+ * — a link in the message, or the message pasted by hand — still work, and are
+ * what the shop falls back to if the queue is unreachable.
  */
 export default function OrdersTab() {
-  const orders = useAdminStore((s) => s.orders);
+  const localOrders = useAdminStore((s) => s.orders);
   const addOrder = useAdminStore((s) => s.addOrder);
-  const decideOrder = useAdminStore((s) => s.decideOrder);
-  const removeOrder = useAdminStore((s) => s.removeOrder);
+  const decideLocal = useAdminStore((s) => s.decideOrder);
+  const removeLocal = useAdminStore((s) => s.removeOrder);
 
   const params = useSearchParams();
-  const filed = useRef<string | null>(null);
+
+  const [cfg, setCfg] = useState<ShopConfig | null>(null);
+  const [email, setEmail] = useState("");
+  const [pw, setPw] = useState("");
+  const [token, setToken] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [authErr, setAuthErr] = useState("");
+  const [remote, setRemote] = useState<PlacedOrder[]>([]);
+  const [loadErr, setLoadErr] = useState("");
+
+  const [openRef, setOpenRef] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [only, setOnly] = useState<"open" | "all">("open");
+
+  const [manual, setManual] = useState(false);
   const [paste, setPaste] = useState("");
-  const [pasted, setPasted] = useState<string | null>(null);
   const [pasteErr, setPasteErr] = useState(false);
 
-  // The message the customer sent, filed. It is the whole order — /admin reads
-  // back exactly what the shop wrote — so pasting it here is the intake.
-  const file = () => {
-    const order = parseOrderMessage(paste);
-    if (!order) { setPasteErr(true); setPasted(null); return; }
-    addOrder(order);
-    setPaste("");
-    setPasteErr(false);
-    setPasted(order.ref);
+  useEffect(() => { void shopConfig().then(setCfg); }, []);
+
+  // An order that still travels inside a link files itself, once.
+  const arrived = useMemo(() => decodeOrder(params?.get("order")), [params]);
+  useEffect(() => { if (arrived) addOrder(arrived); }, [arrived, addOrder]);
+
+  const load = useCallback(async (t: string) => {
+    setLoadErr("");
+    try {
+      setRemote(await adminOrders(t));
+    } catch {
+      setLoadErr("לא הצלחתי למשוך את ההזמנות. נסה להתחבר שוב.");
+    }
+  }, []);
+
+  const signIn = async () => {
+    setBusy(true);
+    setAuthErr("");
+    const t = await adminSignIn(email.trim(), pw);
+    setBusy(false);
+    if (!t) { setAuthErr("המייל או הסיסמה לא נכונים."); return; }
+    setToken(t);
+    setPw("");
+    await load(t);
   };
 
-  // An order arrives as ?order=… on the link inside the WhatsApp message. The
-  // banner is derived from the link rather than remembered, so filing it is the
-  // only thing the effect does.
-  const arrived = useMemo(() => decodeOrder(params?.get("order")), [params]);
-  useEffect(() => {
-    const raw = params?.get("order");
-    if (!raw || filed.current === raw || !arrived) return;
-    filed.current = raw;
-    addOrder(arrived);
-  }, [params, arrived, addOrder]);
+  // The queue, plus anything that came in by link or by hand and is not in it.
+  const orders = useMemo(() => {
+    const seen = new Set(remote.map((o) => o.ref));
+    return [...remote, ...localOrders.filter((o) => !seen.has(o.ref))];
+  }, [remote, localOrders]);
+
+  const isRemote = useCallback((ref: string) => remote.some((o) => o.ref === ref), [remote]);
 
   const shown = useMemo(
     () => (only === "open" ? orders.filter((o) => (o.decision ?? "pending") === "pending") : orders),
@@ -82,47 +115,75 @@ export default function OrdersTab() {
   );
   const open = orders.filter((o) => (o.decision ?? "pending") === "pending").length;
 
-  const siteFile = () => `${JSON.stringify(orders, null, 2)}\n`;
+  const decide = async (o: PlacedOrder, d: OrderDecision) => {
+    const note = notes[o.ref] ?? o.decisionNote ?? "";
+    if (isRemote(o.ref) && token) {
+      setRemote((rows) =>
+        rows.map((r) =>
+          r.ref === o.ref
+            ? { ...r, decision: d, decisionNote: note, decidedAt: d === "pending" ? undefined : new Date().toISOString() }
+            : r,
+        ),
+      );
+      const ok = await adminDecide(token, o.ref, d, note);
+      if (!ok) { setLoadErr("ההחלטה לא נשמרה. נסה שוב."); await load(token); }
+      return;
+    }
+    decideLocal(o.ref, d, note);
+  };
+
+  const file = () => {
+    const order = parseOrderMessage(paste);
+    if (!order) { setPasteErr(true); return; }
+    addOrder(order);
+    setPaste("");
+    setPasteErr(false);
+  };
+
+  const needsSetup = cfg !== null && !isConfigured(cfg);
+  const siteFile = () => `${JSON.stringify(localOrders, null, 2)}\n`;
 
   return (
     <div className="space-y-4">
       <div>
         <h2 className="text-lg font-black mb-1">הזמנות</h2>
         <p className="text-xs text-ink-500">
-          כל הזמנה מגיעה אליך בוואטסאפ. מעתיקים את ההודעה, מדביקים אותה כאן ולוחצים
-          &quot;קליטת הזמנה&quot; — ומכאן אתה מאשר, דוחה או מסמן החזר, עם הערה.
-          &quot;סיים ועדכן&quot; שומר את ההחלטות לאתר.
+          כל הזמנה נכנסת לכאן לבד ברגע שהלקוח שולח אותה. פותחים לפי מספר הזמנה, רואים את כל
+          הפירוט — ומאשרים, דוחים או מסמנים החזר, עם הערה.
         </p>
       </div>
 
-      {arrived && (
-        <div className="flex items-center gap-2 p-3 rounded-xl border border-good/40 bg-good/10 text-sm">
-          <Icon name="check" size={16} className="text-good" />
-          הזמנה <span className="font-mono" dir="ltr">{arrived.ref}</span> נקלטה.
+      {needsSetup && (
+        <div className="p-3 rounded-xl border border-amber-400/40 bg-amber-400/10 text-xs text-amber-200">
+          מאגר ההזמנות עוד לא חובר. עד אז הזמנה מגיעה רק בוואטסאפ, ואפשר לקלוט אותה ידנית למטה.
         </div>
       )}
 
-      <div className="p-3 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-2">
-        <div className="text-xs font-bold text-ink-300">קליטת הזמנה מהוואטסאפ</div>
-        <Textarea
-          rows={5}
-          dir="rtl"
-          value={paste}
-          onChange={(e) => { setPaste(e.target.value); setPasteErr(false); }}
-          placeholder="הדבק כאן את ההודעה שקיבלת"
-        />
-        <div className="flex items-center gap-2">
-          <Btn size="sm" onClick={file} disabled={!paste.trim()}>קליטת הזמנה</Btn>
-          {pasteErr && <span className="text-xs text-bad">לא זוהתה הזמנה בהודעה הזו.</span>}
-          {pasted && !pasteErr && (
-            <span className="text-xs text-good">
-              הזמנה <span className="font-mono" dir="ltr">{pasted}</span> נקלטה.
-            </span>
-          )}
+      {!needsSetup && !token && (
+        <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-3 max-w-sm">
+          <div className="text-sm font-bold">כניסה להזמנות</div>
+          <p className="text-[11px] text-ink-500">
+            בהזמנות יש שם, טלפון ומייל של לקוחות — לכן הן נפתחות רק אחרי כניסה.
+          </p>
+          <Input
+            type="email" dir="ltr" placeholder="מייל" value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type="password" dir="ltr" placeholder="סיסמה" value={pw}
+            onChange={(e) => setPw(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") void signIn(); }}
+          />
+          <div className="flex items-center gap-2">
+            <Btn size="sm" onClick={() => void signIn()} disabled={busy || !email.trim() || !pw}>
+              {busy ? "רגע…" : "כניסה"}
+            </Btn>
+            {authErr && <span className="text-xs text-bad">{authErr}</span>}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="flex gap-1">
+      <div className="flex flex-wrap items-center gap-1">
         {([["open", `ממתינות (${open})`], ["all", `הכל (${orders.length})`]] as const).map(([id, label]) => (
           <button
             key={id}
@@ -136,131 +197,178 @@ export default function OrdersTab() {
             {label}
           </button>
         ))}
+        <span className="flex-1" />
+        {token && (
+          <Btn size="sm" variant="ghost" icon="rotate" onClick={() => void load(token)}>רענון</Btn>
+        )}
       </div>
+
+      {loadErr && <div className="text-xs text-bad">{loadErr}</div>}
 
       {shown.length === 0 ? (
         <div className="p-8 text-center text-sm text-ink-500 rounded-2xl border border-ink-800">
-          {orders.length ? "אין הזמנות ממתינות." : "עדיין לא נקלטה הזמנה. הדבק למעלה את ההודעה שקיבלת בוואטסאפ."}
+          {orders.length ? "אין הזמנות ממתינות." : token || needsSetup ? "עדיין לא נכנסה הזמנה." : "התחבר כדי לראות את ההזמנות."}
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {shown.map((o) => (
-            <OrderCard
+            <OrderRow
               key={o.ref}
               order={o}
+              open={openRef === o.ref}
+              onToggle={() => setOpenRef(openRef === o.ref ? null : o.ref)}
               note={notes[o.ref] ?? o.decisionNote ?? ""}
               onNote={(v) => setNotes((n) => ({ ...n, [o.ref]: v }))}
-              onDecide={(d) => decideOrder(o.ref, d, notes[o.ref] ?? o.decisionNote ?? "")}
-              onRemove={() => removeOrder(o.ref)}
+              onDecide={(d) => void decide(o, d)}
+              onRemove={isRemote(o.ref) ? null : () => removeLocal(o.ref)}
             />
           ))}
         </div>
       )}
 
-      <AdminSaveToSite json={siteFile} path={FILE} title="סיים ועדכן" what="ההזמנות וההחלטות" />
+      <div className="pt-2">
+        <button
+          type="button"
+          onClick={() => setManual(!manual)}
+          className="text-[11px] text-ink-500 hover:text-ink-300 underline"
+        >
+          קליטה ידנית מהודעת וואטסאפ {manual ? "▲" : "▼"}
+        </button>
+        {manual && (
+          <div className="mt-2 p-3 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-2">
+            <p className="text-[11px] text-ink-500">
+              גיבוי בלבד — אם הזמנה לא נכנסה לבד, הדבק כאן את ההודעה שקיבלת.
+            </p>
+            <Textarea
+              rows={4} dir="rtl" value={paste}
+              onChange={(e) => { setPaste(e.target.value); setPasteErr(false); }}
+              placeholder="הדבק כאן את ההודעה"
+            />
+            <div className="flex items-center gap-2">
+              <Btn size="sm" variant="ghost" onClick={file} disabled={!paste.trim()}>קליטת הזמנה</Btn>
+              {pasteErr && <span className="text-xs text-bad">לא זוהתה הזמנה בהודעה הזו.</span>}
+            </div>
+            {localOrders.length > 0 && (
+              <AdminSaveToSite json={siteFile} path={FILE} title="שמירת הזמנות ידניות" what="ההזמנות שנקלטו ידנית" />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-function OrderCard({
-  order: o,
-  note,
-  onNote,
-  onDecide,
-  onRemove,
+function OrderRow({
+  order: o, open, onToggle, note, onNote, onDecide, onRemove,
 }: {
   order: PlacedOrder;
+  open: boolean;
+  onToggle: () => void;
   note: string;
   onNote: (v: string) => void;
   onDecide: (d: OrderDecision) => void;
-  onRemove: () => void;
+  onRemove: (() => void) | null;
 }) {
   const d = DELIVERY_BY_ID[o.delivery];
   const total = orderTotal(o);
   const state = o.decision ?? "pending";
 
   return (
-    <div className="rounded-2xl border border-ink-800 bg-ink-900 overflow-hidden">
-      <header className="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-ink-800">
+    <div className={cn("rounded-2xl border bg-ink-900 overflow-hidden", open ? "border-flame/50" : "border-ink-800")}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex flex-wrap items-center gap-2 px-4 py-3 text-right hover:bg-ink-800/40 transition-colors"
+      >
+        <Icon name={open ? "minus" : "chevDown"} size={14} className="text-ink-500" />
         <span className="font-mono text-sm text-flame" dir="ltr">{o.ref}</span>
         <Pill tone={state === "approved" ? "good" : state === "pending" ? "flame" : "neutral"} className="text-[10px]">
           {LABEL[state]}
         </Pill>
+        <span className="text-sm text-ink-200">{o.customer.name || o.customer.phone || "—"}</span>
         <span className="text-[11px] text-ink-500">{when(o.at)}</span>
         <span className="flex-1" />
+        <span className="text-[11px] text-ink-500">{o.lines.length} פריטים</span>
         <span className="font-black">{total == null ? "לפי הזמנה" : fmtILS(total)}</span>
-        <button type="button" onClick={onRemove} title="מחיקה" className="text-ink-600 hover:text-bad">
-          <Icon name="x" size={14} />
-        </button>
-      </header>
+      </button>
 
-      <div className="p-4 grid md:grid-cols-2 gap-4 text-sm">
-        <div className="space-y-1">
-          <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500 mb-1.5">הלקוח</div>
-          <div className="font-bold text-ink-50">{o.customer.name || o.customer.phone || "—"}</div>
-          <a href={`tel:${o.customer.phone}`} className="block text-cyan2 hover:underline" dir="ltr">{o.customer.phone}</a>
-          {o.customer.email && <a href={`mailto:${o.customer.email}`} className="block text-ink-300 hover:underline" dir="ltr">{o.customer.email}</a>}
-          <div className="text-ink-400">{o.customer.kind}{o.inquiry ? ` · ${o.inquiry}` : ""}</div>
-          {o.customer.unit && <div className="text-ink-400">יחידה: {o.customer.unit}</div>}
-          {o.customer.company && <div className="text-ink-400">{o.customer.company}</div>}
-          <div className="pt-1">
-            מסירה: <span className="text-ink-100">{d.label}</span>
-            <span className="text-ink-500"> · {d.price ? fmtILS(d.price) : "חינם"} · {d.note}</span>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500">ההזמנה</div>
-          {o.lines.length === 0 && <div className="text-ink-400">פנייה בלי פריטים — ראה הערות.</div>}
-          {o.lines.map((l, i) => (
-            <div key={`${l.title}-${i}`} className="rounded-lg border border-ink-800 p-2.5">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="font-semibold text-ink-50">{l.title}{l.qty > 1 ? ` × ${l.qty}` : ""}</span>
-                <span className="font-mono text-xs">{l.price == null ? "לפי הזמנה" : fmtILS(l.price)}</span>
+      {open && (
+        <>
+          <div className="p-4 grid md:grid-cols-2 gap-4 text-sm border-t border-ink-800">
+            <div className="space-y-1">
+              <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500 mb-1.5">הלקוח</div>
+              <div className="font-bold text-ink-50">{o.customer.name || o.customer.phone || "—"}</div>
+              <a href={`tel:${o.customer.phone}`} className="block text-cyan2 hover:underline" dir="ltr">{o.customer.phone}</a>
+              {o.customer.email && <a href={`mailto:${o.customer.email}`} className="block text-ink-300 hover:underline" dir="ltr">{o.customer.email}</a>}
+              <div className="text-ink-400">{o.customer.kind}{o.inquiry ? ` · ${o.inquiry}` : ""}</div>
+              {o.customer.unit && <div className="text-ink-400">יחידה: {o.customer.unit}</div>}
+              {o.customer.company && <div className="text-ink-400">{o.customer.company}</div>}
+              <div className="pt-1">
+                מסירה: <span className="text-ink-100">{d.label}</span>
+                <span className="text-ink-500"> · {d.price ? fmtILS(d.price) : "חינם"} · {d.note}</span>
               </div>
-              <ul className="mt-1 space-y-0.5 text-[11px] text-ink-400">
-                {l.summary.map((x) => <li key={x}>{x}</li>)}
-              </ul>
             </div>
-          ))}
-          {o.note && (
-            <div className="rounded-lg border border-ink-800 p-2.5">
-              <div className="text-[11px] text-ink-500 mb-0.5">הערות הלקוח</div>
-              <div className="text-ink-200 whitespace-pre-wrap">{o.note}</div>
-            </div>
-          )}
-        </div>
-      </div>
 
-      <div className="px-4 pb-4 space-y-2">
-        <Textarea
-          value={note}
-          onChange={(e) => onNote(e.target.value)}
-          rows={2}
-          placeholder="הערה להחלטה — למה אושר, למה נדחה, על מה ההחזר…"
-        />
-        <div className="flex flex-wrap gap-2">
-          {DECISION.map((x) => (
-            <Btn
-              key={x.id}
-              size="sm"
-              variant="ghost"
-              onClick={() => onDecide(x.id)}
-              className={cn(state === x.id && x.tone)}
-            >
-              {x.label}
-            </Btn>
-          ))}
-          {state !== "pending" && (
-            <Btn size="sm" variant="ghost" onClick={() => onDecide("pending")}>החזרה לממתין</Btn>
-          )}
-        </div>
-        {o.decidedAt && (
-          <div className="text-[11px] text-ink-500">
-            {LABEL[state]} · {when(o.decidedAt)}{o.decisionNote ? ` · ${o.decisionNote}` : ""}
+            <div className="space-y-2">
+              <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500">ההזמנה</div>
+              {o.lines.length === 0 && <div className="text-ink-400">פנייה בלי פריטים — ראה הערות.</div>}
+              {o.lines.map((l, i) => (
+                <div key={`${l.title}-${i}`} className="rounded-lg border border-ink-800 p-2.5">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="font-semibold text-ink-50">{l.title}{l.qty > 1 ? ` × ${l.qty}` : ""}</span>
+                    <span className="font-mono text-xs">{l.price == null ? "לפי הזמנה" : fmtILS(l.price)}</span>
+                  </div>
+                  <ul className="mt-1 space-y-0.5 text-[11px] text-ink-400">
+                    {l.summary.map((x) => <li key={x}>{x}</li>)}
+                  </ul>
+                </div>
+              ))}
+              {o.note && (
+                <div className="rounded-lg border border-ink-800 p-2.5">
+                  <div className="text-[11px] text-ink-500 mb-0.5">הערות הלקוח</div>
+                  <div className="text-ink-200 whitespace-pre-wrap">{o.note}</div>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+
+          <div className="px-4 pb-4 space-y-2">
+            <Textarea
+              value={note}
+              onChange={(e) => onNote(e.target.value)}
+              rows={2}
+              placeholder="הערה להחלטה — למה אושר, למה נדחה, על מה ההחזר…"
+            />
+            <div className="flex flex-wrap gap-2">
+              {DECISION.map((x) => (
+                <Btn
+                  key={x.id}
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onDecide(x.id)}
+                  className={cn(state === x.id && x.tone)}
+                >
+                  {x.label}
+                </Btn>
+              ))}
+              {state !== "pending" && (
+                <Btn size="sm" variant="ghost" onClick={() => onDecide("pending")}>החזרה לממתין</Btn>
+              )}
+              <span className="flex-1" />
+              {onRemove && (
+                <button type="button" onClick={onRemove} title="מחיקה" className="text-ink-600 hover:text-bad">
+                  <Icon name="x" size={14} />
+                </button>
+              )}
+            </div>
+            {o.decidedAt && (
+              <div className="text-[11px] text-ink-500">
+                {LABEL[state]} · {when(o.decidedAt)}{o.decisionNote ? ` · ${o.decisionNote}` : ""}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

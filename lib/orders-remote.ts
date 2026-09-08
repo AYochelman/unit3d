@@ -1,0 +1,165 @@
+"use client";
+import type { OrderDecision, PlacedOrder } from "./orders";
+
+/**
+ * Where an order lives between the customer's phone and Ariel's screen.
+ *
+ * The shop is a static site: it has no server of its own, and it stores nothing
+ * in the browser. So an order used to travel inside the message itself — first
+ * as an 860-character link, then as text to paste back — and both asked Ariel
+ * to carry the data by hand. He shouldn't: he wants to answer on his phone and
+ * decide on his computer, and the order should already be waiting there.
+ *
+ * A Supabase table is that waiting room. The customer's browser writes one row
+ * with the anon key (the only thing it is allowed to do); reading those rows —
+ * they carry a name, a phone and a mail — needs Ariel to sign in, so the table's
+ * row-level security lets `anon` insert and only a signed-in user select and
+ * update. Nothing here is a secret: the anon key is meant to be public, and the
+ * data behind it is not.
+ *
+ * Until the two values in public/shop.json are filled in, every call here says
+ * so plainly and the shop falls back to the WhatsApp message, which still
+ * carries the whole order.
+ */
+export type ShopConfig = { supabaseUrl: string; supabaseAnonKey: string };
+
+let cached: ShopConfig | null = null;
+let pending: Promise<ShopConfig> | null = null;
+
+export async function shopConfig(): Promise<ShopConfig> {
+  if (cached) return cached;
+  if (!pending) {
+    const base = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+    pending = fetch(`${base}/shop.json`, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : { supabaseUrl: "", supabaseAnonKey: "" }))
+      .then((c: ShopConfig) => {
+        cached = { supabaseUrl: (c.supabaseUrl || "").replace(/\/$/, ""), supabaseAnonKey: c.supabaseAnonKey || "" };
+        return cached;
+      })
+      .catch(() => ({ supabaseUrl: "", supabaseAnonKey: "" }));
+  }
+  return pending;
+}
+
+export const isConfigured = (c: ShopConfig) => Boolean(c.supabaseUrl && c.supabaseAnonKey);
+
+const headers = (c: ShopConfig, token?: string) => ({
+  apikey: c.supabaseAnonKey,
+  Authorization: `Bearer ${token || c.supabaseAnonKey}`,
+  "Content-Type": "application/json",
+});
+
+// ─── The customer's side ─────────────────────────────────────────────────────
+export type PlaceResult = "saved" | "not-configured" | "failed";
+
+/** One row, written by the customer's own browser as they press send. */
+export async function placeOrder(o: PlacedOrder): Promise<PlaceResult> {
+  const c = await shopConfig();
+  if (!isConfigured(c)) return "not-configured";
+  try {
+    const res = await fetch(`${c.supabaseUrl}/rest/v1/orders`, {
+      method: "POST",
+      headers: { ...headers(c), Prefer: "return=minimal" },
+      body: JSON.stringify({
+        ref: o.ref,
+        placed_at: o.at,
+        customer: o.customer,
+        inquiry: o.inquiry,
+        delivery: o.delivery,
+        note: o.note ?? "",
+        lines: o.lines,
+        items_total: o.itemsTotal,
+        decision: "pending",
+      }),
+    });
+    return res.ok ? "saved" : "failed";
+  } catch {
+    return "failed";
+  }
+}
+
+// ─── Ariel's side ────────────────────────────────────────────────────────────
+/** His Supabase user. The token stays in memory for as long as the tab is open. */
+export async function adminSignIn(email: string, password: string): Promise<string | null> {
+  const c = await shopConfig();
+  if (!isConfigured(c)) return null;
+  try {
+    const res = await fetch(`${c.supabaseUrl}/auth/v1/token?grant_type=password`, {
+      method: "POST",
+      headers: { apikey: c.supabaseAnonKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) return null;
+    const j = (await res.json()) as { access_token?: string };
+    return j.access_token ?? null;
+  } catch {
+    return null;
+  }
+}
+
+type Row = {
+  ref: string;
+  placed_at: string | null;
+  created_at: string | null;
+  customer: PlacedOrder["customer"] | null;
+  inquiry: string | null;
+  delivery: PlacedOrder["delivery"] | null;
+  note: string | null;
+  lines: PlacedOrder["lines"] | null;
+  items_total: number | null;
+  decision: OrderDecision | null;
+  decision_note: string | null;
+  decided_at: string | null;
+};
+
+const toOrder = (r: Row): PlacedOrder => ({
+  ref: r.ref,
+  at: r.placed_at || r.created_at || new Date().toISOString(),
+  customer: r.customer ?? { name: "", phone: "", kind: "" },
+  inquiry: r.inquiry ?? "",
+  delivery: r.delivery ?? "pickup",
+  note: r.note ?? "",
+  lines: Array.isArray(r.lines) ? r.lines : [],
+  itemsTotal: r.items_total,
+  decision: r.decision ?? "pending",
+  decisionNote: r.decision_note ?? "",
+  ...(r.decided_at ? { decidedAt: r.decided_at } : {}),
+});
+
+/** Everything that came in, newest first. */
+export async function adminOrders(token: string): Promise<PlacedOrder[]> {
+  const c = await shopConfig();
+  if (!isConfigured(c)) return [];
+  const res = await fetch(`${c.supabaseUrl}/rest/v1/orders?select=*&order=placed_at.desc`, {
+    headers: headers(c, token),
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(String(res.status));
+  const rows = (await res.json()) as Row[];
+  return rows.map(toOrder);
+}
+
+/** His decision, written back to the same row. */
+export async function adminDecide(
+  token: string,
+  ref: string,
+  decision: OrderDecision,
+  note: string,
+): Promise<boolean> {
+  const c = await shopConfig();
+  if (!isConfigured(c)) return false;
+  try {
+    const res = await fetch(`${c.supabaseUrl}/rest/v1/orders?ref=eq.${encodeURIComponent(ref)}`, {
+      method: "PATCH",
+      headers: { ...headers(c, token), Prefer: "return=minimal" },
+      body: JSON.stringify({
+        decision,
+        decision_note: note,
+        decided_at: decision === "pending" ? null : new Date().toISOString(),
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
