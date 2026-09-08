@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
@@ -18,14 +19,16 @@ import { useAdminStore } from "@/lib/admin-store";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
 import ApprovalsTab from "@/components/admin/ApprovalsTab";
 import NamesTab from "@/components/admin/NamesTab";
+import OrdersTab from "@/components/admin/OrdersTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
+type Tab = "orders" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
 
 const TABS: { id: Tab; label: string }[] = [
+  { id: "orders", label: "הזמנות" },
   { id: "products", label: "מוצרים" },
   { id: "names", label: "שמות" },
   { id: "approvals", label: "מודלים לאישור" },
@@ -87,7 +90,11 @@ export default function AdminClient() {
   const lock = useAdminStore((s) => s.lock);
   const [pin, setPin] = useState("");
   const [pinErr, setPinErr] = useState(false);
-  const [tab, setTab] = useState<Tab>("products");
+  // An order arrives as a link in the customer's WhatsApp message. Landing on
+  // the costing table and leaving the order unfiled is the one thing that link
+  // must not do, so it opens where it belongs.
+  const params = useSearchParams();
+  const [tab, setTab] = useState<Tab>(params?.get("order") ? "orders" : "products");
 
   if (!unlocked) {
     return (
@@ -149,6 +156,7 @@ export default function AdminClient() {
       </div>
 
       {tab === "products" && <ProductsTab />}
+      {tab === "orders" && <OrdersTab />}
       {tab === "names" && <NamesTab />}
       {tab === "approvals" && <ApprovalsTab />}
       {tab === "stock" && <StockTab />}

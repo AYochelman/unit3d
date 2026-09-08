@@ -4,6 +4,7 @@ import type { Filament, Material, MaterialId } from "./types";
 import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
 import { stockKey, type Interest, type StockMap } from "./inventory";
 import { HE_NAME_OVERRIDES } from "./he-names.overrides";
+import type { OrderDecision, PlacedOrder } from "./orders";
 import type { ImportedShelf } from "./imported";
 import { readToken, writeToken } from "./admin-token";
 
@@ -68,6 +69,12 @@ type AdminState = {
    * same way as the hand-written list. This is the working copy of that file.
    */
   names: Record<string, string>;
+  /**
+   * Orders customers placed, filed by opening the link in their WhatsApp
+   * message. Kept in their own file rather than the settings export: a price
+   * list is configuration, an order is a record of something that happened.
+   */
+  orders: PlacedOrder[];
   interest: Interest[];
   pricing: PricingMode;
   /** Live shelf moves, applied to every listing the moment they are made. */
@@ -110,6 +117,13 @@ type AdminState = {
   setOverride(itemId: string, patch: ItemOverride): void;
   /** Rename a product. An empty name removes the override. */
   setName(id: string, name: string): void;
+  /** File an order that arrived through a link. Re-opening it changes nothing. */
+  addOrder(order: PlacedOrder): void;
+  /** Approve, reject or refund, with a note. */
+  decideOrder(ref: string, decision: OrderDecision, note: string): void;
+  removeOrder(ref: string): void;
+  /** Replace the whole list — used when the saved file loads at boot. */
+  setOrders(orders: PlacedOrder[]): void;
   clearOverride(itemId: string): void;
   resetAll(): void;
   exportJson(): string;
@@ -122,6 +136,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   overrides: {},
   stock: {},
   names: { ...HE_NAME_OVERRIDES },
+  orders: [],
   interest: [],
   pricing: DEFAULT_PRICING,
   shelves: {},
@@ -207,6 +222,20 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     })),
 
   clearInterest: () => set({ interest: [] }),
+
+  addOrder: (order) =>
+    set((s) => (s.orders.some((o) => o.ref === order.ref) ? s : { orders: [order, ...s.orders] })),
+
+  decideOrder: (ref, decision, note) =>
+    set((s) => ({
+      orders: s.orders.map((o) =>
+        o.ref === ref ? { ...o, decision, decisionNote: note.trim() || undefined, decidedAt: new Date().toISOString() } : o,
+      ),
+    })),
+
+  removeOrder: (ref) => set((s) => ({ orders: s.orders.filter((o) => o.ref !== ref) })),
+
+  setOrders: (orders) => set({ orders }),
 
   setName: (id, name) =>
     set((s) => {

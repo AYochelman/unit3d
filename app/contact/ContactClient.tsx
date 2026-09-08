@@ -9,6 +9,7 @@ import { CONTACT } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
+import { DELIVERY, makeRef, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
 import { PRODUCTS } from "@/lib/products";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import { makeCoupon, NEXT_ORDER_DISCOUNT } from "@/lib/coupon";
@@ -68,6 +69,17 @@ export default function ContactClient() {
   const initialInquiry: Inquiry = items.length > 0 ? (cust === "b2b" ? "bulk" : "new") : "question";
   const [inquiry, setInquiry] = useState<Inquiry>(initialInquiry);
   const [submitted, setSubmitted] = useState(false);
+  // The fields were uncontrolled, so nothing the customer typed ever left the
+  // page — the form showed a thank-you and told nobody. They are read now.
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [unitName, setUnitName] = useState("");
+  const [company, setCompany] = useState("");
+  const [vat, setVat] = useState("");
+  const [bulkQty, setBulkQty] = useState("");
+  const [delivery, setDelivery] = useState<DeliveryId>("pickup");
 
   const inquiries = useMemo(() => INQUIRY_FOR[cust], [cust]);
   const [refCode, setRefCode] = useState("");
@@ -196,7 +208,41 @@ export default function ContactClient() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            setRefCode(`UNIT3D-${Math.floor(Math.random() * 90000 + 10000)}`);
+            const ref = makeRef();
+            setRefCode(ref);
+
+            // An order with nothing in the cart is still an enquiry worth
+            // sending; the message just carries the free text instead of lines.
+            const order: PlacedOrder = {
+              ref,
+              at: new Date().toISOString(),
+              customer: {
+                name: name.trim(),
+                phone: phone.trim(),
+                ...(email.trim() ? { email: email.trim() } : {}),
+                kind: CUST_OPTIONS.find((o) => o.id === cust)?.label ?? "",
+                ...(unitName.trim() ? { unit: unitName.trim() } : {}),
+                ...(company.trim() ? { company: `${company.trim()}${vat.trim() ? ` · ח.פ. ${vat.trim()}` : ""}${bulkQty.trim() ? ` · ${bulkQty.trim()} יח׳` : ""}` } : {}),
+              },
+              inquiry: inquiries.find((q) => q.id === inquiry)?.label ?? "",
+              delivery,
+              ...(message.trim() ? { note: message.trim() } : {}),
+              lines: items.map((it) => ({
+                title: it.baseTitle,
+                summary: it.summary,
+                qty: it.qty,
+                price: it.price ?? null,
+              })),
+              itemsTotal: items.some((it) => it.price == null)
+                ? null
+                : items.reduce((sum, it) => sum + (it.price ?? 0), 0),
+              decision: "pending",
+            };
+
+            // The only two roads an order has on a site with no server: his
+            // phone, and a link inside that message which files it in /admin.
+            window.open(orderWhatsapp(order), "_blank", "noopener,noreferrer");
+
             if (items.length) {
               setOrdered(items);
               setCoupon(makeCoupon());
@@ -368,14 +414,14 @@ export default function ContactClient() {
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <Field label="שם החברה" required>
-                  <Input required placeholder="Acme Industries" />
+                  <Input required placeholder="Acme Industries" value={company} onChange={(e) => setCompany(e.target.value)} />
                 </Field>
                 <Field label="ח.פ. / ע.מ." required>
-                  <Input required placeholder="514123456" dir="ltr" />
+                  <Input required placeholder="514123456" dir="ltr" value={vat} onChange={(e) => setVat(e.target.value)} />
                 </Field>
               </div>
               <Field label="כמות משוערת" required>
-                <Input type="number" min={10} placeholder="25" required dir="ltr" />
+                <Input type="number" min={10} placeholder="25" required dir="ltr" value={bulkQty} onChange={(e) => setBulkQty(e.target.value)} />
               </Field>
             </section>
           )}
@@ -384,18 +430,18 @@ export default function ContactClient() {
           <section className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <Field label="שם מלא" required>
-                <Input required placeholder="שם פרטי ושם משפחה" />
+                <Input required placeholder="שם פרטי ושם משפחה" value={name} onChange={(e) => setName(e.target.value)} />
               </Field>
               <Field label="טלפון" required>
-                <Input type="tel" required placeholder="050-0000000" dir="ltr" />
+                <Input type="tel" required placeholder="050-0000000" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} />
               </Field>
             </div>
             <Field label="מייל" optional>
-              <Input type="email" placeholder="you@example.com" dir="ltr" />
+              <Input type="email" placeholder="you@example.com" dir="ltr" value={email} onChange={(e) => setEmail(e.target.value)} />
             </Field>
             {cust === "soldier" && inquiry === "bulk" && (
               <Field label="יחידה / פלוגה" required>
-                <Input required placeholder="חטיבת אריות הסלע · פלוגה ב׳" />
+                <Input required placeholder="חטיבת אריות הסלע · פלוגה ב׳" value={unitName} onChange={(e) => setUnitName(e.target.value)} />
               </Field>
             )}
             <Field
@@ -404,6 +450,8 @@ export default function ContactClient() {
               hint={items.length > 0 ? "פרטים נוספים, אם יש" : ""}
             >
               <Textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 required={items.length === 0}
                 placeholder={
                   items.length > 0
@@ -415,6 +463,38 @@ export default function ContactClient() {
             <Field label="העלאת קובץ" hint="STL/OBJ/3MF/PNG · עד 50MB" optional>
               <Input type="file" accept=".stl,.obj,.3mf,.png,.jpg,.svg,.pdf" />
             </Field>
+          </section>
+
+          {/* Delivery — asked here because the answer changes the price and
+              nobody wants to discover the courier fee in a WhatsApp reply. */}
+          <section>
+            <div className="text-sm font-semibold text-ink-100 mb-3">
+              איך להעביר לך? <span className="text-flame">*</span>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-2">
+              {DELIVERY.map((d) => (
+                <button
+                  key={d.id}
+                  type="button"
+                  onClick={() => setDelivery(d.id)}
+                  aria-pressed={delivery === d.id}
+                  className={cn(
+                    "p-3 rounded-xl border-2 text-right transition-all",
+                    delivery === d.id
+                      ? "border-flame bg-flame/5"
+                      : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                  )}
+                >
+                  <span className="flex items-baseline justify-between gap-2">
+                    <span className="font-semibold text-sm text-ink-50">{d.label}</span>
+                    <span className={cn("text-sm font-bold", d.price ? "text-ink-200" : "text-good")}>
+                      {d.price ? fmtILS(d.price) : "חינם"}
+                    </span>
+                  </span>
+                  <span className="block text-[11px] text-ink-400 mt-0.5">{d.note}</span>
+                </button>
+              ))}
+            </div>
           </section>
 
           {/* Submit row */}
