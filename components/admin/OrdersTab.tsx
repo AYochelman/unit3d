@@ -8,10 +8,10 @@ import { Input, Textarea } from "@/components/ui/Field";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { useAdminStore } from "@/lib/admin-store";
 import {
-  DELIVERY_BY_ID, decodeOrder, orderTotal, parseOrderMessage,
-  type OrderDecision, type PlacedOrder,
+  DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
+  type Fulfilment, type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
-import { adminDecide, adminOrders, adminSignIn, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
+import { adminDecide, adminOrders, adminProgress, adminSignIn, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -55,6 +55,7 @@ export default function OrdersTab() {
   const addOrder = useAdminStore((s) => s.addOrder);
   const decideLocal = useAdminStore((s) => s.decideOrder);
   const removeLocal = useAdminStore((s) => s.removeOrder);
+  const setOrderProgress = useAdminStore((s) => s.setOrderProgress);
 
   const params = useSearchParams();
 
@@ -69,7 +70,7 @@ export default function OrdersTab() {
 
   const [openRef, setOpenRef] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
-  const [only, setOnly] = useState<"open" | "all">("open");
+  const [only, setOnly] = useState<Fulfilment | "all">("waiting");
 
   // A way to prove the confirmation mail works without inventing an order.
   const [testTo, setTestTo] = useState("");
@@ -135,10 +136,10 @@ export default function OrdersTab() {
   const isRemote = useCallback((ref: string) => remote.some((o) => o.ref === ref), [remote]);
 
   const shown = useMemo(
-    () => (only === "open" ? orders.filter((o) => (o.decision ?? "pending") === "pending") : orders),
+    () => (only === "all" ? orders : orders.filter((o) => fulfilment(o) === only)),
     [orders, only],
   );
-  const open = orders.filter((o) => (o.decision ?? "pending") === "pending").length;
+  const count = (f: Fulfilment) => orders.filter((o) => fulfilment(o) === f).length;
 
   const decide = async (o: PlacedOrder, d: OrderDecision) => {
     const note = notes[o.ref] ?? o.decisionNote ?? "";
@@ -155,6 +156,20 @@ export default function OrdersTab() {
       return;
     }
     decideLocal(o.ref, d, note);
+  };
+
+  // Marking one item ready. An approved order stays on the bench until every
+  // line on it is ticked — that is what makes "בעבודה" a real list and not a
+  // second name for "approved".
+  const markLine = async (o: PlacedOrder, index: number, done: boolean) => {
+    const next = o.lines.map((_l, i) => (i === index ? done : lineDone(o, i)));
+    if (isRemote(o.ref) && token) {
+      setRemote((rows) => rows.map((r) => (r.ref === o.ref ? { ...r, progress: next } : r)));
+      const ok = await adminProgress(token, o.ref, next);
+      if (!ok) { setLoadErr("הסימון לא נשמר. נסה שוב."); await load(token); }
+      return;
+    }
+    setOrderProgress(o.ref, next);
   };
 
   const file = () => {
@@ -209,7 +224,12 @@ export default function OrdersTab() {
       )}
 
       <div className="flex flex-wrap items-center gap-1">
-        {([["open", `ממתינות (${open})`], ["all", `הכל (${orders.length})`]] as const).map(([id, label]) => (
+        {([
+          ["waiting", `ממתינות (${count("waiting")})`],
+          ["active", `בעבודה (${count("active")})`],
+          ["ready", `מוכנות (${count("ready")})`],
+          ["all", `הכל (${orders.length})`],
+        ] as const).map(([id, label]) => (
           <button
             key={id}
             type="button"
@@ -232,7 +252,7 @@ export default function OrdersTab() {
 
       {shown.length === 0 ? (
         <div className="p-8 text-center text-sm text-ink-500 rounded-2xl border border-ink-800">
-          {orders.length ? "אין הזמנות ממתינות." : token || needsSetup ? "עדיין לא נכנסה הזמנה." : "התחבר כדי לראות את ההזמנות."}
+          {orders.length ? "אין הזמנות בקטגוריה הזו." : token || needsSetup ? "עדיין לא נכנסה הזמנה." : "התחבר כדי לראות את ההזמנות."}
         </div>
       ) : (
         <div className="space-y-2">
@@ -245,6 +265,7 @@ export default function OrdersTab() {
               note={notes[o.ref] ?? o.decisionNote ?? ""}
               onNote={(v) => setNotes((n) => ({ ...n, [o.ref]: v }))}
               onDecide={(d) => void decide(o, d)}
+              onMarkLine={(i, done) => void markLine(o, i, done)}
               onRemove={isRemote(o.ref) ? null : () => removeLocal(o.ref)}
             />
           ))}
@@ -303,8 +324,15 @@ export default function OrdersTab() {
   );
 }
 
+const FULFIL: Record<Fulfilment, { label: string; tone: "good" | "flame" | "neutral" | "bad" }> = {
+  waiting: { label: "ממתינה לאישור", tone: "flame" },
+  active: { label: "בעבודה", tone: "bad" },
+  ready: { label: "מוכנה", tone: "good" },
+  closed: { label: "סגורה", tone: "neutral" },
+};
+
 function OrderRow({
-  order: o, open, onToggle, note, onNote, onDecide, onRemove,
+  order: o, open, onToggle, note, onNote, onDecide, onMarkLine, onRemove,
 }: {
   order: PlacedOrder;
   open: boolean;
@@ -312,11 +340,14 @@ function OrderRow({
   note: string;
   onNote: (v: string) => void;
   onDecide: (d: OrderDecision) => void;
+  onMarkLine: (index: number, done: boolean) => void;
   onRemove: (() => void) | null;
 }) {
   const d = DELIVERY_BY_ID[o.delivery];
   const total = orderTotal(o);
   const state = o.decision ?? "pending";
+  const stage = fulfilment(o);
+  const ready = doneCount(o);
 
   return (
     <div className={cn("rounded-2xl border bg-ink-900 overflow-hidden", open ? "border-flame/50" : "border-ink-800")}>
@@ -327,9 +358,10 @@ function OrderRow({
       >
         <Icon name={open ? "minus" : "chevDown"} size={14} className="text-ink-500" />
         <span className="font-mono text-sm text-flame" dir="ltr">{o.ref}</span>
-        <Pill tone={state === "approved" ? "good" : state === "pending" ? "flame" : "neutral"} className="text-[10px]">
-          {LABEL[state]}
-        </Pill>
+        <Pill tone={FULFIL[stage].tone} className="text-[10px]">{FULFIL[stage].label}</Pill>
+        {stage === "active" && (
+          <span className="font-mono text-[11px] text-ink-400" dir="ltr">{ready}/{o.lines.length}</span>
+        )}
         <span className="text-sm text-ink-200">{o.customer.name || o.customer.phone || "—"}</span>
         <span className="text-[11px] text-ink-500">{when(o.at)}</span>
         <span className="flex-1" />
@@ -364,11 +396,34 @@ function OrderRow({
               <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500">ההזמנה</div>
               {o.lines.length === 0 && <div className="text-ink-400">פנייה בלי פריטים — ראה הערות.</div>}
               {o.lines.map((l, i) => (
-                <div key={`${l.title}-${i}`} className="rounded-lg border border-ink-800 p-2.5">
+                <div
+                  key={`${l.title}-${i}`}
+                  className={cn(
+                    "rounded-lg border p-2.5",
+                    lineDone(o, i) ? "border-good/40 bg-good/5" : "border-ink-800",
+                  )}
+                >
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-semibold text-ink-50">{l.title}{l.qty > 1 ? ` × ${l.qty}` : ""}</span>
+                    <span className={cn("font-semibold", lineDone(o, i) ? "text-ink-400 line-through" : "text-ink-50")}>
+                      {l.title}{l.qty > 1 ? ` × ${l.qty}` : ""}
+                    </span>
                     <span className="font-mono text-xs">{l.price == null ? "לפי הזמנה" : fmtILS(l.price)}</span>
                   </div>
+                  {state === "approved" && (
+                    <button
+                      type="button"
+                      onClick={() => onMarkLine(i, !lineDone(o, i))}
+                      className={cn(
+                        "mt-2 inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg text-[11px] border transition-colors",
+                        lineDone(o, i)
+                          ? "border-good text-good bg-good/10"
+                          : "border-ink-700 text-ink-300 hover:border-ink-600",
+                      )}
+                    >
+                      <Icon name="check" size={11} strokeWidth={3} />
+                      {lineDone(o, i) ? "מוכן" : "סמן כמוכן"}
+                    </button>
+                  )}
                   <ul className="mt-1 space-y-0.5 text-[11px] text-ink-400">
                     {l.summary.map((x) => <li key={x}>{x}</li>)}
                   </ul>

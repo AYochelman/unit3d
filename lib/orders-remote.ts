@@ -130,6 +130,7 @@ type Row = {
   decision: OrderDecision | null;
   decision_note: string | null;
   decided_at: string | null;
+  progress: boolean[] | null;
 };
 
 const toOrder = (r: Row): PlacedOrder => ({
@@ -143,6 +144,7 @@ const toOrder = (r: Row): PlacedOrder => ({
   itemsTotal: r.items_total,
   decision: r.decision ?? "pending",
   decisionNote: r.decision_note ?? "",
+  ...(Array.isArray(r.progress) ? { progress: r.progress } : {}),
   ...(r.decided_at ? { decidedAt: r.decided_at } : {}),
 });
 
@@ -157,6 +159,22 @@ export async function adminOrders(token: string): Promise<PlacedOrder[]> {
   if (!res.ok) throw new Error(String(res.status));
   const rows = (await res.json()) as Row[];
   return rows.map(toOrder);
+}
+
+/** Which items came off the plate, written back to the same row. */
+export async function adminProgress(token: string, ref: string, progress: boolean[]): Promise<boolean> {
+  const c = await shopConfig();
+  if (!isConfigured(c)) return false;
+  try {
+    const res = await fetch(`${c.supabaseUrl}/rest/v1/orders?ref=eq.${encodeURIComponent(ref)}`, {
+      method: "PATCH",
+      headers: { ...headers(c, token), Prefer: "return=minimal" },
+      body: JSON.stringify({ progress }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 /** His decision, written back to the same row. */

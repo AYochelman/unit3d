@@ -49,10 +49,42 @@ export type PlacedOrder = {
   itemsTotal: number | null;
   /** The code the customer used, and what it took off. */
   discount?: AppliedDiscount;
+  /**
+   * Which lines are already printed and ready, aligned to `lines`.
+   *
+   * An approved order is not a finished one: it sits on the bench until every
+   * item on it has actually come off the plate. Missing or short means the rest
+   * are still to do.
+   */
+  progress?: boolean[];
   decision?: OrderDecision;
   /** Ariel's own note on the decision. */
   decisionNote?: string;
   decidedAt?: string;
+};
+
+/** Is this line printed and ready? */
+export const lineDone = (o: PlacedOrder, i: number): boolean => o.progress?.[i] === true;
+
+/** How many of the order's items are ready. */
+export const doneCount = (o: PlacedOrder): number =>
+  o.lines.reduce((n, _l, i) => n + (lineDone(o, i) ? 1 : 0), 0);
+
+export const allDone = (o: PlacedOrder): boolean =>
+  o.lines.length > 0 && doneCount(o) === o.lines.length;
+
+/**
+ * Where the order stands on the bench, which is a different question from
+ * whether it was approved: "approved" is a decision, "ready" is a fact about
+ * physical objects.
+ */
+export type Fulfilment = "waiting" | "active" | "ready" | "closed";
+
+export const fulfilment = (o: PlacedOrder): Fulfilment => {
+  const d = o.decision ?? "pending";
+  if (d === "rejected" || d === "refunded") return "closed";
+  if (d !== "approved") return "waiting";
+  return allDone(o) ? "ready" : "active";
 };
 
 export const orderTotal = (o: PlacedOrder): number | null =>

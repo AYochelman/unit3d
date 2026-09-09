@@ -142,6 +142,8 @@ type AdminState = {
   /** Approve, reject or refund, with a note. */
   decideOrder(ref: string, decision: OrderDecision, note: string): void;
   removeOrder(ref: string): void;
+  /** Which of the order's items are printed and ready. */
+  setOrderProgress(ref: string, progress: boolean[]): void;
   /** Replace the whole list — used when the saved file loads at boot. */
   setOrders(orders: PlacedOrder[]): void;
   /** Write a code. An existing code with the same name is replaced. */
@@ -268,6 +270,9 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     })),
 
   removeOrder: (ref) => set((s) => ({ orders: s.orders.filter((o) => o.ref !== ref) })),
+
+  setOrderProgress: (ref, progress) =>
+    set((s) => ({ orders: s.orders.map((o) => (o.ref === ref ? { ...o, progress } : o)) })),
 
   setOrders: (orders) => set({ orders }),
 
