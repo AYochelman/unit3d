@@ -39,7 +39,14 @@ function toBase64(text: string): string {
  * cheap questions — who is this token, and can it see the repository — and
  * name the one box that is actually wrong.
  */
-async function diagnose(token: string, repo: string, branch: string): Promise<string> {
+async function diagnose(token: string, repo: string, branch: string, failed?: Response): Promise<string> {
+  // GitHub's own words about the refusal, when it sent any. They name the case
+  // the checks below cannot see — most often a token that may read the
+  // repository but was never granted Contents: Read and write.
+  const said = failed
+    ? ((await failed.json().catch(() => null)) as { message?: string } | null)?.message ?? ""
+    : "";
+  const quote = said ? ` (GitHub: "${said}")` : "";
   const headers = {
     Authorization: `Bearer ${token}`,
     Accept: "application/vnd.github+json",
@@ -56,13 +63,14 @@ async function diagnose(token: string, repo: string, branch: string): Promise<st
     if (!r.ok) return `GitHub החזיר ${r.status} על המאגר ${repo}.`;
 
     const info = (await r.json()) as { permissions?: { push?: boolean }; default_branch?: string };
-    if (!info.permissions?.push) {
-      return "לטוקן יש קריאה בלבד. בדף יצירת הטוקן: Permissions ← Repository permissions ← Contents ← לשנות ל-Read and write (לא Read-only).";
-    }
     if (info.default_branch && info.default_branch !== branch) {
       return `הענף ${branch} לא קיים. הענף של האתר הוא ${info.default_branch}.`;
     }
-    return "GitHub סירב לכתיבה למרות שההרשאות נראות תקינות. אם יצרת טוקן fine-grained, נסה טוקן קלאסי: github.com/settings/tokens/new עם הסימון repo.";
+    // `permissions.push` describes the ACCOUNT's rights on the repository, not
+    // the token's. A fine-grained token with Contents left on Read-only still
+    // reports push:true and then refuses the write — so a refusal that gets
+    // this far is that box, until GitHub says otherwise.
+    return `לטוקן אין הרשאת כתיבה לקבצים${quote}. בדף הטוקן: Permissions ← Repository permissions ← Contents ← Read and write, ולוודא ש-unit3d נבחר תחת Repository access. אם זה עדיין נכשל — טוקן קלאסי מ-github.com/settings/tokens/new עם הסימון repo עובד תמיד.`;
   } catch {
     return "אין חיבור ל-GitHub.";
   }
@@ -119,7 +127,7 @@ export default function AdminSaveToSite({
       if (r.ok) return { sha: ((await r.json()) as { sha?: string }).sha };
       if (r.status === 404) return {};                       // a file that does not exist yet
       if (r.status === 401) return { error: { ok: false, text: "הטוקן לא תקין או פג תוקף." } };
-      if (r.status === 403) return { error: { ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) } };
+      if (r.status === 403) return { error: { ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim(), r) } };
       return { error: { ok: false, text: `GitHub החזיר שגיאה ${r.status}.` } };
     };
 
@@ -150,7 +158,7 @@ export default function AdminSaveToSite({
         }
         if (put.status === 409 || put.status === 422) continue;   // stale sha — read it again
         if (put.status === 403 || put.status === 404) {
-          return setMsg({ ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim()) });
+          return setMsg({ ok: false, text: await diagnose(token.trim(), repo.trim(), branch.trim(), put) });
         }
         const err = (await put.json().catch(() => null)) as { message?: string } | null;
         return setMsg({ ok: false, text: `שמירה נכשלה (${put.status}): ${err?.message ?? "שגיאה לא ידועה"}` });
