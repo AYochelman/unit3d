@@ -2,9 +2,18 @@
   "usdRate": 3.7,
   "expenses": [
     {
-      "id": "xmtuacsksok",
+      "id": "xmtuadxjdly",
       "name": "גליל PLA עשרה",
       "amount": 1000,
+      "currency": "ILS",
+      "cycle": "once",
+      "date": "2026-09-09",
+      "active": true
+    },
+    {
+      "id": "xmtuacsksok",
+      "name": "גליל PLA זוג",
+      "amount": 200,
       "currency": "ILS",
       "cycle": "once",
       "date": "2026-09-09",
