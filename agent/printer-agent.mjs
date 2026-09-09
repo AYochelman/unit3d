@@ -243,11 +243,16 @@ async function pushCamera() {
 }
 
 // ─── Timelapses ───────────────────────────────────────────────────────────────
-// The printer writes them to its own card; FTPS over the LAN is how they come
-// off it. Only new files are uploaded, and only when they have stopped growing.
+// The printer writes them to its own card, and FTPS over the LAN is how they
+// would come off it — except that Bambu's file transfer expects the data
+// connection to resume the control connection's TLS session, which this client
+// cannot do. The printer answers by closing the socket. So this is best-effort:
+// it tries once, and if the printer refuses that way it says so plainly and
+// stops asking, rather than printing the same red line every half hour.
 const seen = new Set();
+let timelapseOff = false;
 async function pushTimelapses() {
-  if (cfg.timelapse?.enabled === false) return;
+  if (cfg.timelapse?.enabled === false || timelapseOff) return;
   let ftp;
   try {
     ({ Client: ftp } = await import("basic-ftp"));
@@ -281,7 +286,14 @@ async function pushTimelapses() {
       }
     }
   } catch (e) {
-    log("timelapse failed:", e.message);
+    const msg = e instanceof Error ? e.message : String(e);
+    if (/FIN|ECONNRESET|EPROTO|closed/i.test(msg)) {
+      timelapseOff = true;
+      log("timelapse: this printer does not allow third-party file transfer - skipping.");
+      log("  (everything else keeps working: status, camera, finished prints.)");
+    } else {
+      log("timelapse failed:", msg);
+    }
   } finally {
     c.close();
   }

@@ -9,7 +9,13 @@
     "url": "https://xxxxxxxx.supabase.co",
     "serviceKey": "PASTE-THE-service_role-KEY-HERE"
   },
-  "camera": { "enabled": true, "everySeconds": 15 },
-  "timelapse": { "enabled": true, "everyMinutes": 30 },
+  "camera": {
+    "enabled": true,
+    "everySeconds": 15
+  },
+  "timelapse": {
+    "enabled": false,
+    "everyMinutes": 30
+  },
   "statusEverySeconds": 5
 }

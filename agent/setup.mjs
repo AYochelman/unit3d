@@ -153,7 +153,8 @@ const config = {
   printer: { host, serial, accessCode, model },
   supabase: { url: url.replace(/\/$/, ""), serviceKey },
   camera: { enabled: old?.camera?.enabled !== false, everySeconds: old?.camera?.everySeconds ?? 15 },
-  timelapse: { enabled: old?.timelapse?.enabled !== false, everyMinutes: old?.timelapse?.everyMinutes ?? 30 },
+  // Off by default: the printer refuses third-party file transfer (see the agent).
+  timelapse: { enabled: old?.timelapse?.enabled === true, everyMinutes: old?.timelapse?.everyMinutes ?? 30 },
   statusEverySeconds: old?.statusEverySeconds ?? 5,
 };
 
