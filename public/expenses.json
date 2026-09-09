@@ -10,6 +10,16 @@
       "date": "2026-09-09",
       "note": "מייל אישור הזמנה ללקוחות",
       "active": true
+    },
+    {
+      "id": "x-domain",
+      "name": "דומיין unit-3d.com",
+      "amount": 10.44,
+      "currency": "USD",
+      "cycle": "yearly",
+      "date": "2026-09-08",
+      "note": "Cloudflare Registrar · חידוש שנתי · לתקן לפי החשבונית בפועל",
+      "active": true
     }
   ]
 }
