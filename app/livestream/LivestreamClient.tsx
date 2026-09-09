@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Btn from "@/components/ui/Btn";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import { fmtLeft, jobStats, usePrinterJobs, usePrinterLive, useTimelapses, type PrinterState } from "@/lib/printer";
@@ -121,6 +122,27 @@ export default function LivestreamClient() {
               <div>CAM · {(live?.model || "PRINTER").toUpperCase()}</div>
               <div className="text-flame">{clock}</div>
             </div>
+
+            {/* A printer standing idle is not a dead page — it is an opening. The
+                same strip that carries the job while one is running says what
+                the empty plate means, and gives it somewhere to go. */}
+            {online && !printing && (
+              <div className="absolute inset-x-0 bottom-0 z-10">
+                <div className="bg-gradient-to-t from-ink-950 via-ink-950/85 to-transparent p-4 pt-14">
+                  <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="font-mono text-[10px] tracking-widest uppercase text-ink-500" dir="ltr">READY</div>
+                      <h2 className="font-extrabold text-lg md:text-xl mt-0.5">
+                        הפלטה פנויה — מחכים רק <span className="text-flame">להזמנה שלך</span>.
+                      </h2>
+                    </div>
+                    <Btn as="a" href="/contact" size="sm" icon="arrowLeft" className="shrink-0">
+                      להזמנה
+                    </Btn>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {printing && (
               <div className="absolute inset-x-0 bottom-0 z-10">
