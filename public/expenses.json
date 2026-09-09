@@ -2,6 +2,15 @@
   "usdRate": 3.7,
   "expenses": [
     {
+      "id": "xmtuab5fkr6",
+      "name": "מוצרי אריזה",
+      "amount": 200,
+      "currency": "ILS",
+      "cycle": "once",
+      "date": "2026-09-09",
+      "active": true
+    },
+    {
       "id": "xmtuaai5zcg",
       "name": "P2S Printer",
       "amount": 3000,
