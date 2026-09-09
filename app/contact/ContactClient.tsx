@@ -466,8 +466,11 @@ export default function ContactClient() {
                 <Input type="tel" required placeholder="050-0000000" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} />
               </Field>
             </div>
-            <Field label="מייל" optional>
-              <Input type="email" placeholder="you@example.com" dir="ltr" value={email} onChange={(e) => setEmail(e.target.value)} />
+            {/* Not optional any more: the confirmation with the whole order is
+                sent here, and an order with no address leaves the customer
+                holding nothing. */}
+            <Field label="מייל" required>
+              <Input type="email" required placeholder="you@example.com" dir="ltr" value={email} onChange={(e) => setEmail(e.target.value)} />
             </Field>
             {cust === "soldier" && inquiry === "bulk" && (
               <Field label="יחידה / פלוגה" required>
