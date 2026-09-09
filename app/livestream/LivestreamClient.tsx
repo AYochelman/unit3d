@@ -57,7 +57,7 @@ export default function LivestreamClient() {
           {printing ? "המדפסת רצה עכשיו." : online ? "המדפסת דלוקה." : "המדפסת כבויה כרגע."}
         </h1>
         <p className="text-ink-300">
-          שקוף, חי, ובלי פילטרים. הסטודיו בפתח תקווה — {live?.model || "Bambu Lab P2S"}.
+          שקוף, חי, ובלי פילטרים. הסטודיו בגבעתיים — {live?.model || "Bambu Lab P2S"}.
           {!online && " כשהיא נדלקת, כל מה שקורה בה מופיע כאן מעצמו."}
         </p>
       </header>
@@ -127,7 +127,7 @@ export default function LivestreamClient() {
           </div>
 
           <p className="mt-3 text-[11px] text-ink-500">
-            התמונה והנתונים נמשכים מהמדפסת עצמה ומתרעננים כל עשר שניות.
+            התמונה והנתונים נמשכים מהמדפסת עצמה ומתעדכנים מעצמם כל שתי שניות — בלי לרענן את הדף.
             {live?.updated_at && ` עדכון אחרון: ${when(live.updated_at)}.`}
           </p>
         </div>

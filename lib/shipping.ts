@@ -252,7 +252,7 @@ export function quote(input: QuoteInput): QuoteOption[] {
   out.push({
     id: "pickup",
     service: "איסוף עצמי",
-    detail: "מפתח תקווה, בתיאום",
+    detail: "מגבעתיים, בתיאום",
     shipping: 0,
     packaging: round(packaging - CONSUMABLES.labelPerShipment),
     packagingLabel: pack ? `${pack.label} (לא חובה)` : "ללא אריזה",

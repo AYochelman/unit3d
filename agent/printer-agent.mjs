@@ -40,8 +40,8 @@ if (!host || !serial || !accessCode || !SB || !KEY) {
   process.exit(1);
 }
 
-const STATUS_EVERY = (cfg.statusEverySeconds ?? 5) * 1000;
-const CAM_EVERY = (cfg.camera?.everySeconds ?? 15) * 1000;
+const STATUS_EVERY = (cfg.statusEverySeconds ?? 2) * 1000;
+const CAM_EVERY = (cfg.camera?.everySeconds ?? 6) * 1000;
 const TL_EVERY = (cfg.timelapse?.everyMinutes ?? 30) * 60 * 1000;
 
 const log = (...a) => console.log(new Date().toLocaleTimeString("he-IL"), ...a);

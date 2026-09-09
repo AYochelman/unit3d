@@ -45,7 +45,7 @@ export default function Footer() {
             <Logo size={40} />
             <p className="mt-4 text-ink-300 text-sm leading-relaxed max-w-xs">
               סטודיו הדפסת תלת מימד אחד-על-אחד. סמלי יחידה, פידג&apos;טים, מתנות
-              לחברות וכל קובץ STL — מפתח תקווה לכל הארץ.
+              לחברות וכל קובץ STL — מגבעתיים לכל הארץ.
             </p>
             <div className="mt-6 flex items-center gap-3">
               <a
@@ -129,7 +129,7 @@ export default function Footer() {
       <div className="border-t border-ink-800">
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
-            © 2026 Unit3D · MADE IN PETACH TIKVA · NOZZLE 0.4mm · v2.6
+            © 2026 Unit3D · MADE IN GIVATAYIM · NOZZLE 0.4mm · v2.6
           </div>
           <PrinterDot />
         </div>

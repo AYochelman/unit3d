@@ -8,7 +8,7 @@ import { usePrinterLive } from "@/lib/printer";
  * Now it says what the printer is actually doing, and goes grey when it is off.
  */
 export default function PrinterDot() {
-  const { live, online } = usePrinterLive(30_000);
+  const { live, online } = usePrinterLive(30_000, 600_000);
   const printing = live?.state === "printing";
   return (
     <div className="flex items-center gap-2 font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">

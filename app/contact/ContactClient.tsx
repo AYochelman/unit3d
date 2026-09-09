@@ -692,7 +692,7 @@ export default function ContactClient() {
               </span>
               <div>
                 <div className="font-bold">איסוף עצמי</div>
-                <div className="text-xs text-ink-400">פתח תקווה · בתיאום מראש</div>
+                <div className="text-xs text-ink-400">גבעתיים · בתיאום מראש</div>
               </div>
             </div>
             <div className="text-sm text-ink-300">

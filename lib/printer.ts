@@ -65,32 +65,66 @@ const rest = async <T,>(pathAndQuery: string): Promise<T[]> => {
 const fresh = (row: PrinterLive | null): PrinterLive | null => {
   if (!row) return null;
   const t = row.updated_at ? new Date(row.updated_at).getTime() : 0;
-  if (!t || Date.now() - t > 90_000) return { ...row, state: "offline" };
+  if (!t || Date.now() - t > 60_000) return { ...row, state: "offline" };
   return row;
 };
 
-export function usePrinterLive(everyMs = 10_000) {
+/**
+ * The machine's state, kept current on its own.
+ *
+ * The agent writes a new row every couple of seconds, so this reads at the same
+ * pace: the numbers on screen move while you watch them, without a refresh. The
+ * chamber still is heavier than a row of numbers, so it has its own, slower
+ * beat. Both pause while the tab is in the background — a page nobody is
+ * looking at has no reason to keep asking.
+ */
+export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
   const [live, setLive] = useState<PrinterLive | null>(null);
   const [camera, setCamera] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let alive = true;
-    const pull = async () => {
+    let statusId: ReturnType<typeof setInterval> | null = null;
+    let cameraId: ReturnType<typeof setInterval> | null = null;
+
+    const pullStatus = async () => {
       const rows = await rest<PrinterLive>("printer_status?id=eq.live&select=*");
       if (!alive) return;
       setLive(fresh(rows[0] ?? null));
       setReady(true);
-      const c = await shopConfig();
-      if (alive && isConfigured(c)) {
-        // The still is overwritten in place, so the URL needs a new tail each time.
-        setCamera(`${c.supabaseUrl}/storage/v1/object/public/printer/live.jpg?t=${Date.now()}`);
-      }
     };
-    void pull();
-    const id = setInterval(pull, everyMs);
-    return () => { alive = false; clearInterval(id); };
-  }, [everyMs]);
+
+    const pullCamera = async () => {
+      const c = await shopConfig();
+      if (!alive || !isConfigured(c)) return;
+      // The still is overwritten in place, so the URL needs a new tail each time.
+      setCamera(`${c.supabaseUrl}/storage/v1/object/public/printer/live.jpg?t=${Date.now()}`);
+    };
+
+    const stop = () => {
+      if (statusId) clearInterval(statusId);
+      if (cameraId) clearInterval(cameraId);
+      statusId = cameraId = null;
+    };
+
+    const start = () => {
+      stop();
+      void pullStatus();
+      void pullCamera();
+      statusId = setInterval(() => void pullStatus(), everyMs);
+      cameraId = setInterval(() => void pullCamera(), cameraEveryMs);
+    };
+
+    const onVisibility = () => (document.hidden ? stop() : start());
+    start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      alive = false;
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [everyMs, cameraEveryMs]);
 
   return { live, camera, ready, online: !!live && live.state !== "offline" };
 }

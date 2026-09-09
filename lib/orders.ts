@@ -20,7 +20,7 @@ import { fmtILS } from "./format";
 export type DeliveryId = "pickup" | "post" | "courier";
 
 export const DELIVERY: { id: DeliveryId; label: string; price: number; note: string }[] = [
-  { id: "pickup", label: "איסוף עצמי", price: 0, note: "פתח תקווה · בתיאום מראש" },
+  { id: "pickup", label: "איסוף עצמי", price: 0, note: "גבעתיים · בתיאום מראש" },
   { id: "post", label: "דואר רשום", price: 25, note: "3-5 ימי עסקים" },
   { id: "courier", label: "שליח עד הבית", price: 45, note: "יום-יומיים" },
 ];
