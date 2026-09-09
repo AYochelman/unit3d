@@ -1,6 +1,6 @@
 {
-  "supabaseUrl": "",
-  "supabaseAnonKey": "",
+  "supabaseUrl": "https://cdofuziwdmerbfivivpl.supabase.co",
+  "supabaseAnonKey": "sb_publishable_cBFI-BB4t3ERdVGKbKx9BQ_zKDC1KSG",
   "emailjs": {
     "serviceId": "service_xngw4or",
     "templateId": "template_550bis6",
