@@ -99,19 +99,37 @@ export async function placeOrder(o: PlacedOrder): Promise<PlaceResult> {
 }
 
 // ─── Ariel's side ────────────────────────────────────────────────────────────
-/** His Supabase user. The token stays in memory for as long as the tab is open. */
-export async function adminSignIn(email: string, password: string): Promise<string | null> {
+export type Session = { access: string; refresh: string };
+
+/**
+ * His Supabase user.
+ *
+ * The access token is short-lived and stays in memory; the refresh token is
+ * what lets the next visit skip the form (lib/admin-session.ts). Supabase
+ * rotates the refresh token on every use, so whatever comes back here replaces
+ * what was stored.
+ */
+export async function adminSignIn(email: string, password: string): Promise<Session | null> {
+  return authRequest("password", { email, password });
+}
+
+/** Trade a stored refresh token for a fresh access token. */
+export async function adminRefresh(refresh: string): Promise<Session | null> {
+  return authRequest("refresh_token", { refresh_token: refresh });
+}
+
+async function authRequest(grant: string, body: Record<string, string>): Promise<Session | null> {
   const c = await shopConfig();
   if (!isConfigured(c)) return null;
   try {
-    const res = await fetch(`${c.supabaseUrl}/auth/v1/token?grant_type=password`, {
+    const res = await fetch(`${c.supabaseUrl}/auth/v1/token?grant_type=${grant}`, {
       method: "POST",
       headers: { apikey: c.supabaseAnonKey, "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(body),
     });
     if (!res.ok) return null;
-    const j = (await res.json()) as { access_token?: string };
-    return j.access_token ?? null;
+    const j = (await res.json()) as { access_token?: string; refresh_token?: string };
+    return j.access_token ? { access: j.access_token, refresh: j.refresh_token ?? "" } : null;
   } catch {
     return null;
   }

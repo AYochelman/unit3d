@@ -11,7 +11,8 @@ import {
   DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
   type Fulfilment, type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
-import { adminDecide, adminOrders, adminProgress, adminSignIn, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
+import { adminDecide, adminOrders, adminProgress, adminRefresh, adminSignIn, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
+import { forgetSession, readSession, writeSession } from "@/lib/admin-session";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -67,6 +68,9 @@ export default function OrdersTab() {
   const [authErr, setAuthErr] = useState("");
   const [remote, setRemote] = useState<PlacedOrder[]>([]);
   const [loadErr, setLoadErr] = useState("");
+  // Whether the remembered sign-in has been tried yet, so the form does not
+  // flash on top of a session that is about to open by itself.
+  const [tried, setTried] = useState(false);
 
   const [openRef, setOpenRef] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
@@ -119,13 +123,44 @@ export default function OrdersTab() {
   const signIn = async () => {
     setBusy(true);
     setAuthErr("");
-    const t = await adminSignIn(email.trim(), pw);
+    const s = await adminSignIn(email.trim(), pw);
     setBusy(false);
-    if (!t) { setAuthErr("המייל או הסיסמה לא נכונים."); return; }
-    setToken(t);
+    if (!s) { setAuthErr("המייל או הסיסמה לא נכונים."); return; }
+    // Remembered on this device so the next visit opens straight into the queue.
+    writeSession(email.trim(), s.refresh);
+    setToken(s.access);
     setPw("");
-    await load(t);
+    await load(s.access);
   };
+
+  const signOut = () => {
+    forgetSession();
+    setToken("");
+    setRemote([]);
+    setPw("");
+  };
+
+  // A sign-in already made on this machine. The stored refresh token is traded
+  // for a fresh access token, and replaced by the new one Supabase hands back.
+  // Everything lands in the callback, so the form never flashes over a session
+  // that is about to open by itself.
+  useEffect(() => {
+    let alive = true;
+    const saved = readSession();
+    const opening = saved ? adminRefresh(saved.refresh) : Promise.resolve(null);
+    void opening.then(async (s) => {
+      if (!alive) return;
+      if (saved) setEmail(saved.email);
+      if (saved && !s) forgetSession();
+      if (saved && s) {
+        writeSession(saved.email, s.refresh || saved.refresh);
+        setToken(s.access);
+      }
+      setTried(true);
+      if (s) await load(s.access);
+    });
+    return () => { alive = false; };
+  }, [load]);
 
   // The queue, plus anything that came in by link or by hand and is not in it.
   const orders = useMemo(() => {
@@ -199,11 +234,12 @@ export default function OrdersTab() {
         </div>
       )}
 
-      {!needsSetup && !token && (
+      {!needsSetup && !token && tried && (
         <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-3 max-w-sm">
           <div className="text-sm font-bold">כניסה להזמנות</div>
           <p className="text-[11px] text-ink-500">
             בהזמנות יש שם, טלפון ומייל של לקוחות — לכן הן נפתחות רק אחרי כניסה.
+            אחרי כניסה אחת המחשב הזה זוכר אותך, עד שתלחץ &quot;יציאה&quot;.
           </p>
           <Input
             type="email" dir="ltr" placeholder="מייל" value={email}
@@ -244,7 +280,17 @@ export default function OrdersTab() {
         ))}
         <span className="flex-1" />
         {token && (
-          <Btn size="sm" variant="ghost" icon="rotate" onClick={() => void load(token)}>רענון</Btn>
+          <>
+            <Btn size="sm" variant="ghost" icon="rotate" onClick={() => void load(token)}>רענון</Btn>
+            <button
+              type="button"
+              onClick={signOut}
+              title="שכח את הכניסה במחשב הזה"
+              className="text-[11px] text-ink-500 hover:text-bad underline px-1"
+            >
+              יציאה
+            </button>
+          </>
         )}
       </div>
 
