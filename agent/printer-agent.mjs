@@ -713,6 +713,21 @@ every(1000, () => liveTick().catch((e) => log("live error:", e.message)));
 every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
 
 log(`agent running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
+
+// Live video only starts when a print does, which means an unconfigured setup
+// looks exactly like a configured one until the next print - and then fails
+// with nobody watching. So say where it stands now, while someone is reading.
+if (cfg.live?.enabled === false) {
+  log("live video: switched off in the settings.");
+} else if (!R2) {
+  log("live video: not set up - run settings.bat and answer the Cloudflare questions.");
+  log("  (stills keep working either way.)");
+} else if (!findFfmpeg()) {
+  log("live video: ffmpeg is missing - double-click ffmpeg-install.bat.");
+} else {
+  log(`live video: ready (bucket ${r2cfg.bucket}) - it starts by itself when a print starts.`);
+  log("  to check it now without printing: double-click live-check.bat");
+}
 process.on("SIGINT", () => {
   stopStream();
   stopLive();
