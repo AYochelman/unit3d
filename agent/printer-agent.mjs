@@ -310,6 +310,8 @@ function findFfmpeg() {
 
 let ff = null;          // the running ffmpeg, if any
 let ffLastStart = 0;
+let lastNewShot = Date.now();   // when a genuinely new still last appeared
+let stallWarned = false;
 let ffStartedFor = "";  // the URL it was started for
 let ffWarned = false;
 
@@ -329,6 +331,7 @@ function startStream() {
   if (Date.now() - ffLastStart < 30_000) return; // do not spin on a stream that refuses
   stopStream();
   ffLastStart = Date.now();
+  lastNewShot = Date.now();
   ffStartedFor = url;
   // The credentials go in the URL, which is how RTSP carries them. They are
   // never logged: the printer's access code is not something to leave in a file
@@ -421,6 +424,27 @@ async function grabFrame() {
 let camFailures = 0;
 let camWarned = false;
 let lastShotAt = 0;
+/**
+ * A stream can stop delivering without the process that reads it ever exiting —
+ * the connection stalls, ffmpeg sits there, and the last still it wrote stays
+ * on the website looking current. That is the worst kind of failure this page
+ * can have: an old picture presented as live. So if no new still has appeared
+ * for several intervals, the reader is killed and started again.
+ */
+function watchStream() {
+  const stallAfter = Math.max(30_000, CAM_EVERY * 5);
+  if (Date.now() - lastNewShot < stallAfter) return;
+  if (!stallWarned) {
+    stallWarned = true;
+    log("camera: the stream stopped sending - reconnecting");
+  }
+  ffLastStart = 0; // a stall is worth reconnecting immediately
+  stopStream();
+  lastNewShot = Date.now(); // give the new reader its own grace period
+}
+
+/** A file still being written is not a picture yet. JPEG ends with FFD9. */
+const wholeJpeg = (b) => b.length > 1000 && b[b.length - 2] === 0xff && b[b.length - 1] === 0xd9;
 
 async function pushCamera() {
   if (cfg.camera?.enabled === false) return;
@@ -429,12 +453,17 @@ async function pushCamera() {
   let jpeg = null;
   if (rtspUrl()) {
     startStream();
+    watchStream();
     // ffmpeg overwrites one file in place; a newer timestamp means a new still.
     try {
       const st = fs.statSync(CAM_FILE);
       if (st.mtimeMs > lastShotAt && st.size > 1000) {
+        const body = fs.readFileSync(CAM_FILE);
+        if (!wholeJpeg(body)) return; // caught mid-write; the next tick gets it
         lastShotAt = st.mtimeMs;
-        jpeg = fs.readFileSync(CAM_FILE);
+        lastNewShot = Date.now();
+        if (stallWarned) { stallWarned = false; log("camera: the stream is sending again"); }
+        jpeg = body;
       } else {
         return; // nothing new yet; not a failure
       }
