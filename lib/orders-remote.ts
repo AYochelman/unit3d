@@ -27,6 +27,8 @@ export type ShopConfig = {
   supabaseUrl: string;
   supabaseAnonKey: string;
   emailjs?: EmailJsConfig;
+  /** Where the printer's live video is served from, when the shop streams. */
+  liveUrl?: string;
 };
 
 let cached: ShopConfig | null = null;
@@ -43,6 +45,7 @@ export async function shopConfig(): Promise<ShopConfig> {
           supabaseUrl: (c.supabaseUrl || "").replace(/\/$/, ""),
           supabaseAnonKey: c.supabaseAnonKey || "",
           emailjs: c.emailjs,
+          liveUrl: (c.liveUrl || "").replace(/\/$/, "") || undefined,
         };
         return cached;
       })

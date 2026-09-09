@@ -149,8 +149,48 @@ const serviceKey = await ask(
   "Supabase > Settings > API Keys > Secret keys > the eye icon. not the publishable one.",
 );
 
+// ─── The live stream (optional) ──────────────────────────────────────────────
+// Cloudflare R2 is where the video pieces go while a print is running. It is
+// asked for last and every question may be skipped, because the agent is fully
+// useful without it — a shop that never turns this on still gets state, stills
+// and finished prints.
+console.log("\n  Live video (optional). Press Enter on the first question to skip it all.");
+console.log("  These come from Cloudflare > R2. Nothing here is sent anywhere except Cloudflare.\n");
+
+const oldR2 = old?.live?.r2 ?? {};
+const r2Account = await ask(
+  "Cloudflare Account ID (Enter to skip live video)", oldR2.accountId || "",
+  (v) => v === "" || /^[a-f0-9]{20,40}$/i.test(v),
+  "the long hex id on the R2 page. Enter alone skips live video.",
+);
+
+let live = old?.live;
+if (r2Account) {
+  const r2Key = await ask(
+    "R2 Access Key ID", oldR2.accessKeyId,
+    (v) => v.length > 10, "from the API token you created for the bucket.",
+  );
+  const r2Secret = await ask(
+    "R2 Secret Access Key", oldR2.secretAccessKey,
+    (v) => v.length > 20, "the long one, shown only once when the token was made.",
+  );
+  const r2Bucket = await ask(
+    "R2 bucket name", oldR2.bucket || "unit3d-live",
+    (v) => /^[a-z0-9][a-z0-9.-]{1,62}$/.test(v), "lowercase letters, digits and dashes.",
+  );
+  live = {
+    enabled: true,
+    mode: old?.live?.mode || "encode",       // "copy" on a small machine like a Pi
+    segmentSeconds: old?.live?.segmentSeconds ?? 4,
+    r2: { accountId: r2Account, accessKeyId: r2Key, secretAccessKey: r2Secret, bucket: r2Bucket },
+  };
+} else if (live) {
+  live = { ...live, enabled: false };
+}
+
 const config = {
   printer: { host, serial, accessCode, model },
+  ...(live ? { live } : {}),
   supabase: { url: url.replace(/\/$/, ""), serviceKey },
   camera: {
     enabled: old?.camera?.enabled !== false,

@@ -3,3 +3,4 @@ camera-test.jpg
 ffmpeg.exe
 ffmpeg
 .ffmpeg-tmp/
+.hls/

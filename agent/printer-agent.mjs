@@ -25,6 +25,7 @@ import { spawn, spawnSync } from "node:child_process";
 import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
+import { makeR2 } from "./r2.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(HERE, "config.json");
@@ -488,6 +489,159 @@ async function pushCamera() {
   await upload("printer", "live.jpg", jpeg, "image/jpeg");
 }
 
+// ─── The live stream ─────────────────────────────────────────────────────────
+// A still every few seconds is a readout, not a view. While a print is running
+// the interesting thing is the motion, so ffmpeg cuts the printer's stream into
+// short video segments and those go to Cloudflare R2, where serving them costs
+// nothing. The page stitches them back into continuous video.
+//
+// It runs only while the printer is printing. Nobody needs a live broadcast of
+// an empty plate, and an idle stream would burn bandwidth and write operations
+// for no one.
+const HLS_DIR = path.join(HERE, ".hls");
+const HLS_KEY = "live";                 // where it lands in the bucket
+const SEG_SECONDS = cfg.live?.segmentSeconds ?? 4;
+
+const r2cfg = cfg.live?.r2;
+const R2 = r2cfg?.accountId && r2cfg?.accessKeyId && r2cfg?.secretAccessKey && r2cfg?.bucket
+  ? makeR2(r2cfg)
+  : null;
+
+let hls = null;              // the running ffmpeg
+let hlsStartedFor = "";
+let hlsLastStart = 0;
+let sentSegments = new Set();  // what R2 already has
+let hlsWarned = false;
+
+function startLive() {
+  if (!R2 || cfg.live?.enabled === false) return;
+  const url = rtspUrl();
+  if (!url) return;
+  if (hls && hlsStartedFor === url) return;
+  if (Date.now() - hlsLastStart < 20_000) return;
+
+  const bin = findFfmpeg();
+  if (!bin) {
+    if (!hlsWarned) { hlsWarned = true; log("live: ffmpeg is missing, so there is no video stream."); }
+    return;
+  }
+
+  fs.mkdirSync(HLS_DIR, { recursive: true });
+  for (const f of fs.readdirSync(HLS_DIR)) { try { fs.unlinkSync(path.join(HLS_DIR, f)); } catch {} }
+  sentSegments = new Set();
+  hlsLastStart = Date.now();
+  hlsStartedFor = url;
+
+  const authed = url.replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
+  // Re-encoding rather than copying the printer's video: it forces a keyframe
+  // at the top of every segment, which is what keeps the delay short and the
+  // player from stalling. A printer's picture barely moves, so 480p at this
+  // bitrate looks the same as the original and costs a fraction to send.
+  const copy = cfg.live?.mode === "copy";
+  const args = [
+    ...RTSP_IN(authed),
+    ...(copy
+      ? ["-c:v", "copy"]
+      : ["-c:v", "libx264", "-preset", "veryfast", "-tune", "zerolatency",
+         "-vf", "scale=-2:480", "-b:v", "900k", "-maxrate", "1000k", "-bufsize", "1600k",
+         "-g", String(SEG_SECONDS * 25), "-keyint_min", String(SEG_SECONDS * 25), "-sc_threshold", "0"]),
+    "-an",
+    "-f", "hls",
+    "-hls_time", String(SEG_SECONDS),
+    "-hls_list_size", "6",
+    "-hls_flags", "delete_segments+independent_segments+temp_file",
+    "-hls_segment_filename", path.join(HLS_DIR, "seg_%05d.ts"),
+    path.join(HLS_DIR, "stream.m3u8"),
+  ];
+
+  hls = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"] });
+  let said = false;
+  hls.stderr?.on("data", (d) => {
+    if (said) return;
+    said = true;
+    log("live:", String(d).replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim().slice(0, 180));
+  });
+  hls.on("exit", () => { hls = null; hlsStartedFor = ""; });
+  log(`live: streaming to the site in ${SEG_SECONDS}s pieces`);
+}
+
+function stopLive() {
+  if (hls) { try { hls.kill(); } catch {} hls = null; }
+  hlsStartedFor = "";
+}
+
+/**
+ * Move whatever ffmpeg has written since last time up to R2.
+ *
+ * Segments go first and the playlist last: a playlist that names a piece which
+ * has not arrived yet is what makes a player stall, and the order is the whole
+ * fix. Pieces ffmpeg has dropped locally are dropped from the bucket too, so
+ * the stored stream stays a handful of files rather than an ever-growing pile.
+ */
+async function pushLive() {
+  if (!R2 || !hls) return;
+  let files;
+  try { files = fs.readdirSync(HLS_DIR); } catch { return; }
+
+  const playlistPath = path.join(HLS_DIR, "stream.m3u8");
+  if (!fs.existsSync(playlistPath)) return;
+  const playlist = fs.readFileSync(playlistPath, "utf8");
+
+  // Only send segments the playlist actually references — ffmpeg writes a
+  // segment before it lists it, and sending one early wastes an upload.
+  const named = new Set(playlist.split("\n").map((l) => l.trim()).filter((l) => l.endsWith(".ts")));
+
+  for (const name of files) {
+    if (!name.endsWith(".ts") || sentSegments.has(name) || !named.has(name)) continue;
+    let body;
+    try { body = fs.readFileSync(path.join(HLS_DIR, name)); } catch { continue; }
+    if (body.length < 1000) continue;
+    const r = await R2.put(`${HLS_KEY}/${name}`, body, "video/mp2t", "public, max-age=31536000, immutable");
+    if (!r.ok) { log(`live: upload refused (${r.status})`, r.text); return; }
+    sentSegments.add(name);
+  }
+
+  // The playlist changes every few seconds, so it must never be cached.
+  await R2.put(`${HLS_KEY}/stream.m3u8`, Buffer.from(playlist), "application/vnd.apple.mpegurl", "no-cache, max-age=0");
+
+  // Anything ffmpeg has rolled off is no longer playable; take it out of the
+  // bucket so a print does not leave a trail behind it.
+  for (const name of [...sentSegments]) {
+    if (named.has(name)) continue;
+    sentSegments.delete(name);
+    void R2.remove(`${HLS_KEY}/${name}`);
+  }
+}
+
+/** Tell the page whether video is worth asking for, without a database column. */
+async function pushLiveFlag(live) {
+  if (!R2) return;
+  const body = Buffer.from(JSON.stringify({
+    live,
+    segment_seconds: SEG_SECONDS,
+    updated_at: new Date().toISOString(),
+  }));
+  await R2.put(`${HLS_KEY}/status.json`, body, "application/json", "no-cache, max-age=0");
+}
+
+let wasLive = false;
+async function liveTick() {
+  if (!R2 || cfg.live?.enabled === false) return;
+  const shouldStream = state() === "printing" && !!rtspUrl();
+  if (shouldStream) {
+    startLive();
+    await pushLive();
+  } else if (hls) {
+    stopLive();
+  }
+  const nowLive = shouldStream && !!hls;
+  if (nowLive !== wasLive) {
+    wasLive = nowLive;
+    await pushLiveFlag(nowLive);
+    log(nowLive ? "live: the stream is on the site" : "live: stream stopped - back to stills");
+  }
+}
+
 // ─── Timelapses ───────────────────────────────────────────────────────────────
 // The printer writes them to its own card, and FTPS over the LAN is how they
 // would come off it — except that Bambu's file transfer expects the data
@@ -555,11 +709,14 @@ every(STATUS_EVERY, async () => {
   } catch (e) { log("status error:", e.message); }
 });
 every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)));
+every(1000, () => liveTick().catch((e) => log("live error:", e.message)));
 every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
 
 log(`agent running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
 process.on("SIGINT", () => {
   stopStream();
+  stopLive();
+  if (R2) void pushLiveFlag(false);
   if (litByUs) setChamberLight(false);
   upsertStatus({ state: "offline" }).finally(() => process.exit(0));
 });

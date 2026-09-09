@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Btn from "@/components/ui/Btn";
+import LiveVideo from "@/components/LiveVideo";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import { fmtLeft, jobStats, usePrinterJobs, usePrinterLive, useTimelapses, type PrinterState } from "@/lib/printer";
@@ -29,7 +30,7 @@ const when = (iso: string) =>
  * truth, and the truth is checkable against the photo.
  */
 export default function LivestreamClient() {
-  const { live, camera, ready, online } = usePrinterLive();
+  const { live, camera, stream, ready, online } = usePrinterLive();
   const jobs = usePrinterJobs();
   const clips = useTimelapses();
   const stats = jobStats(jobs);
@@ -38,6 +39,13 @@ export default function LivestreamClient() {
   // not a picture was ever uploaded. Only the browser can say whether one really
   // came back, so the page waits to be told rather than assuming.
   const [shot, setShot] = useState<"waiting" | "ok" | "missing">("waiting");
+  // Video is preferred while a print runs, but it is not promised: if the
+  // stream will not play, the page drops back to the still rather than showing
+  // a dead player. A new stream address clears the refusal, so the next print
+  // gets a fresh chance.
+  const [videoFailed, setVideoFailed] = useState<string | null>(null);
+  const [videoOn, setVideoOn] = useState(false);
+  const showVideo = !!stream && videoFailed !== stream;
 
   const [clock, setClock] = useState("00:00:00");
   useEffect(() => {
@@ -72,6 +80,16 @@ export default function LivestreamClient() {
         {/* The chamber */}
         <div className="lg:col-span-2">
           <div className="relative aspect-video rounded-2xl overflow-hidden border border-ink-800 bg-ink-950">
+            {showVideo && (
+              <LiveVideo
+                key={stream}
+                src={stream}
+                className="absolute inset-0 h-full w-full object-cover z-[2] bg-ink-950"
+                onPlaying={() => setVideoOn(true)}
+                onFail={() => { setVideoOn(false); setVideoFailed(stream); }}
+              />
+            )}
+
             {camera && online && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -79,12 +97,12 @@ export default function LivestreamClient() {
                 src={camera}
                 alt="המדפסת עכשיו"
                 className="absolute inset-0 h-full w-full object-cover z-[1] transition-opacity duration-300"
-                style={{ opacity: shot === "ok" ? 1 : 0 }}
+                style={{ opacity: shot === "ok" && !videoOn ? 1 : 0 }}
                 onLoad={() => setShot("ok")}
                 onError={() => setShot("missing")}
               />
             )}
-            {shot !== "ok" && (
+            {shot !== "ok" && !videoOn && (
               <>
                 <div className="absolute inset-0 printer-grid opacity-40" />
                 <svg viewBox="0 0 600 360" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
@@ -119,7 +137,7 @@ export default function LivestreamClient() {
             </div>
 
             <div className="absolute top-4 left-4 z-10 font-mono text-[11px] text-ink-200 bg-ink-950/60 backdrop-blur px-2 py-1.5 rounded" dir="ltr">
-              <div>CAM · {(live?.model || "PRINTER").toUpperCase()}</div>
+              <div>{videoOn ? "LIVE" : "CAM"} · {(live?.model || "PRINTER").toUpperCase()}</div>
               <div className="text-flame">{clock}</div>
             </div>
 
@@ -162,7 +180,9 @@ export default function LivestreamClient() {
           </div>
 
           <p className="mt-3 text-[11px] text-ink-500">
-            התמונה והנתונים נמשכים מהמדפסת עצמה ומתעדכנים מעצמם כל שתי שניות — בלי לרענן את הדף.
+            {videoOn
+              ? "וידאו חי מהמדפסת עצמה, בזמן אמת. הנתונים מתעדכנים כל שתי שניות."
+              : "התמונה והנתונים נמשכים מהמדפסת עצמה ומתעדכנים מעצמם כל שתי שניות — בלי לרענן את הדף."}
             {live?.updated_at && ` עדכון אחרון: ${when(live.updated_at)}.`}
           </p>
         </div>

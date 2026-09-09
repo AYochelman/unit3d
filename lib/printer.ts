@@ -81,6 +81,7 @@ const fresh = (row: PrinterLive | null): PrinterLive | null => {
 export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
   const [live, setLive] = useState<PrinterLive | null>(null);
   const [camera, setCamera] = useState<string | null>(null);
+  const [stream, setStream] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -100,6 +101,15 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
       if (!alive || !isConfigured(c)) return;
       // The still is overwritten in place, so the URL needs a new tail each time.
       setCamera(`${c.supabaseUrl}/storage/v1/object/public/printer/live.jpg?t=${Date.now()}`);
+      // The video only exists while a print is running, and the agent says so
+      // in a small file beside it — cheaper and simpler than a database column,
+      // and it costs nothing to read from where the video already lives.
+      if (!c.liveUrl) return;
+      const res = await fetch(`${c.liveUrl}/live/status.json?t=${Date.now()}`, { cache: "no-store" })
+        .catch(() => null);
+      if (!alive) return;
+      const on = res?.ok ? (await res.json().catch(() => null))?.live === true : false;
+      setStream(on ? `${c.liveUrl}/live/stream.m3u8` : null);
     };
 
     const stop = () => {
@@ -126,7 +136,7 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
     };
   }, [everyMs, cameraEveryMs]);
 
-  return { live, camera, ready, online: !!live && live.state !== "offline" };
+  return { live, camera, stream, ready, online: !!live && live.state !== "offline" };
 }
 
 export function usePrinterJobs(limit = 60) {
