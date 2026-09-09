@@ -5,22 +5,24 @@
 ## מה צריך פעם אחת
 
 1. **Node.js** מותקן על המחשב (nodejs.org, גרסה 20 ומעלה).
-2. **מצב LAN במדפסת**: במסך המדפסת → Settings → Network →
-   להפעיל **LAN Mode / LAN Only** ולרשום את ה-**Access Code** ואת ה-**IP**.
-   את המספר הסידורי (Serial) רואים באותו מסך או במדבקה מאחור.
+2. **פרטי המדפסת**: במסך המגע של המדפסת → הגדרות → Network. משם רושמים
+   **IP** ו-**Access Code**; המספר הסידורי באותו תפריט (About) או על המדבקה מאחור.
+   *אין צורך להדליק LAN Only בשביל הנתונים* — רק בשביל התמונה מהמצלמה בדגמי P,
+   והוא מנתק את הענן של Bambu. אפשר להתחיל בלעדיו.
 3. **Supabase**: הטבלאות מ-`docs/printer-live.md` והבאקט `printer` (ציבורי).
 
-## הרצה
+## הרצה — בלי טרמינל
 
-```bash
-cd agent
-cp config.example.json config.json      # ולמלא את הפרטים
-npm install
-npm start
-```
+1. מתקינים **Node.js** מ-<https://nodejs.org> (הכפתור הגדול, LTS). Next-Next-Finish.
+2. מורידים את הקוד: בעמוד המאגר ב-GitHub ← כפתור ירוק **Code** ← **Download ZIP**,
+   ומחלצים לתיקייה קבועה (למשל `C:\unit3d`).
+3. נכנסים לתיקייה `agent` ולוחצים פעמיים על **`start.bat`** (ב-Mac: `start-mac.command`).
 
-בהרצה תקינה יופיע "מחובר למדפסת" ואז שורות עדכון. באתר, בעמוד
-`/livestream`, המצב יתחלף תוך עשר שניות.
+בהרצה הראשונה הוא יתקין מה שצריך וישאל חמש שאלות — IP, מספר סידורי, קוד גישה,
+כתובת Supabase והמפתח הסודי. אחר כך הוא פשוט רץ. חלון שחור שנשאר פתוח = הסוכן עובד;
+סוגרים אותו כדי לעצור.
+
+לשנות משהו אחר כך: למחוק את `config.json` ולהריץ שוב, או להריץ `node setup.mjs`.
 
 ## מה הוא שולח
 
@@ -31,14 +33,10 @@ npm start
 | 30 דקות | טיימלפסים חדשים מהכרטיס של המדפסת |
 | בסוף הדפסה | שורה ביומן: שם, כמה זמן לקח, הצליחה או נעצרה |
 
-## שיישאר דלוק אחרי אתחול (Windows)
+## שיעלה לבד עם המחשב (Windows)
 
-```powershell
-# מריצים פעם אחת בטרמינל רגיל, מחליפים את הנתיב:
-$action  = New-ScheduledTaskAction -Execute "node" -Argument "printer-agent.mjs" -WorkingDirectory "C:\unit3d\agent"
-$trigger = New-ScheduledTaskTrigger -AtLogOn
-Register-ScheduledTask -TaskName "Unit3D Printer Agent" -Action $action -Trigger $trigger
-```
+לחיצה ימנית על `start.bat` ← **צור קיצור דרך**. את הקיצור גוררים לתיקיית ההפעלה:
+מקישים `Win+R`, כותבים `shell:startup`, ומדביקים שם. מעכשיו הסוכן עולה עם המחשב.
 
 ## אבטחה
 
