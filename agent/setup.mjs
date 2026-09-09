@@ -180,7 +180,10 @@ if (r2Account) {
   );
   live = {
     enabled: true,
-    mode: old?.live?.mode || "encode",       // "copy" on a small machine like a Pi
+    // Re-encoding needs a desktop's worth of CPU. On a small ARM board — a
+    // Raspberry Pi — the only setting that keeps up is passing the printer's
+    // own video through untouched, so that is what it starts as there.
+    mode: old?.live?.mode || (process.arch.startsWith("arm") ? "copy" : "encode"),
     segmentSeconds: old?.live?.segmentSeconds ?? 4,
     r2: { accountId: r2Account, accessKeyId: r2Key, secretAccessKey: r2Secret, bucket: r2Bucket },
   };

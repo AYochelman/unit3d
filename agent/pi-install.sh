@@ -37,6 +37,16 @@ fi
 [ "$(node_major)" -lt 18 ] && die "Could not install Node.js 18 or newer. Install it manually and run this again."
 say "Node.js $(node -v) — ok"
 
+# ─── ffmpeg ──────────────────────────────────────────────────────────────────
+# The camera on newer printers is a video stream, and reading video needs
+# ffmpeg. Debian has a build for the Pi, so unlike on Windows there is nothing
+# to download by hand.
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  say "Installing ffmpeg (for the printer's camera)..."
+  sudo apt-get install -y -qq ffmpeg >/dev/null 2>&1 ||     echo "  could not install ffmpeg - the camera will not work, everything else will."
+fi
+command -v ffmpeg >/dev/null 2>&1 && say "ffmpeg $(ffmpeg -version | head -1 | cut -d' ' -f3) — ok"
+
 # ─── The agent's own packages ────────────────────────────────────────────────
 say "Installing the agent's packages..."
 npm install --no-audit --no-fund --silent
@@ -76,7 +86,8 @@ WantedBy=multi-user.target
 UNIT
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now $SERVICE >/dev/null 2>&1
+sudo systemctl enable $SERVICE >/dev/null 2>&1
+sudo systemctl restart $SERVICE
 sleep 3
 
 say "Done. The agent is running and will come back on its own after a reboot."
