@@ -11,7 +11,6 @@
 import fs from "node:fs";
 import net from "node:net";
 import path from "node:path";
-import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
 
@@ -50,18 +49,43 @@ const mqttOpen = await port(8883);
 if (mqttOpen) ok("printer answers on the network", `(${host}:8883)`);
 else bad("no answer from the printer", "wrong IP, printer asleep, or a different network. check the LAN screen.");
 
-/** Does it accept our user and code, or hang up? */
+/**
+ * Does it accept our user and code, or hang up?
+ *
+ * It also keeps the printer's own report on the way past: the camera check
+ * below needs to know whether this machine hands out frames or streams video,
+ * and the printer is the only one who can say.
+ */
+let lastReport = null;
+
 function mqttCheck() {
   return new Promise((resolve) => {
     const c = mqtt.connect(`mqtts://${host}:8883`, {
       username: "bblp", password: accessCode,
       rejectUnauthorized: false, reconnectPeriod: 0, connectTimeout: 8000,
     });
-    const end = (v) => { try { c.end(true); } catch { /* gone */ } resolve(v); };
-    c.on("connect", () => end("ok"));
+    let settled = false;
+    const end = (v) => {
+      if (settled) return;
+      settled = true;
+      try { c.end(true); } catch { /* gone */ }
+      resolve(v);
+    };
+    c.on("connect", () => {
+      c.subscribe(`device/${serial}/report`);
+      c.publish(`device/${serial}/request`, JSON.stringify({ pushing: { sequence_id: "0", command: "pushall" } }));
+      // Give the report a moment to arrive; the answer is "ok" either way.
+      setTimeout(() => end("ok"), 3500);
+    });
+    c.on("message", (_t, buf) => {
+      try {
+        const m = JSON.parse(buf.toString());
+        if (m.print) lastReport = { ...(lastReport ?? {}), ...m.print };
+      } catch { /* a malformed frame proves nothing */ }
+    });
     c.on("error", (e) => end(e.message || "error"));
     c.on("close", () => end("closed"));
-    setTimeout(() => end("timeout"), 10000);
+    setTimeout(() => end("timeout"), 12000);
   });
 }
 
@@ -77,11 +101,22 @@ if (mqttOpen) {
   }
 }
 
-/** The camera port is separate, and only opens in LAN Liveview. */
+// The camera is checked, not guessed at. An open port 6000 used to be reported
+// as "the camera works", which on a printer that streams video is meaningless -
+// that port answers with something else entirely and the picture stays black.
+// This says only what it knows, and points at the one thing that actually
+// proves the camera end to end.
 if (cfg.camera?.enabled !== false) {
   const camOpen = await port(6000, 3000);
-  if (camOpen) ok("the camera port is open", "(6000)");
-  else bad("the camera port is closed", "Settings > LAN Only: turn ON 'LAN Only Liveview'. data still works without it.");
+  const streams = typeof lastReport?.ipcam?.rtsp_url === "string";
+  if (streams) {
+    ok("the printer offers a video stream", "(needs ffmpeg - camera.bat proves it)");
+  } else if (camOpen) {
+    ok("the camera port answers", "(6000 - camera.bat proves a picture really arrives)");
+  } else {
+    bad("the camera port is closed and no stream is offered",
+        "Settings > LAN Only: turn ON 'LAN Only Liveview'. data still works without it.");
+  }
 }
 
 // ─── The database side ───────────────────────────────────────────────────────
