@@ -20,15 +20,17 @@ import AdminSaveToSite from "@/components/AdminSaveToSite";
 import ApprovalsTab from "@/components/admin/ApprovalsTab";
 import NamesTab from "@/components/admin/NamesTab";
 import OrdersTab from "@/components/admin/OrdersTab";
+import CouponsTab from "@/components/admin/CouponsTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "orders" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
+type Tab = "orders" | "coupons" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "orders", label: "הזמנות" },
+  { id: "coupons", label: "קודי הנחה" },
   { id: "products", label: "מוצרים" },
   { id: "names", label: "שמות" },
   { id: "approvals", label: "מודלים לאישור" },
@@ -156,6 +158,7 @@ export default function AdminClient() {
 
       {tab === "products" && <ProductsTab />}
       {tab === "orders" && <OrdersTab />}
+      {tab === "coupons" && <CouponsTab />}
       {tab === "names" && <NamesTab />}
       {tab === "approvals" && <ApprovalsTab />}
       {tab === "stock" && <StockTab />}

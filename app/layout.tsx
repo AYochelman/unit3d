@@ -7,6 +7,7 @@ import FloatingWA from "@/components/FloatingWA";
 import HelpBot from "@/components/HelpBot";
 import AdminSettingsBoot from "@/components/AdminSettingsBoot";
 import OrdersBoot from "@/components/OrdersBoot";
+import CouponsBoot from "@/components/CouponsBoot";
 
 const heebo = Heebo({
   subsets: ["latin", "hebrew"],
@@ -68,6 +69,7 @@ export default function RootLayout({
         <Footer />
         <AdminSettingsBoot />
         <OrdersBoot />
+        <CouponsBoot />
         <FloatingWA />
         <HelpBot />
       </body>

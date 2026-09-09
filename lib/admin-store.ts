@@ -5,6 +5,7 @@ import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
 import { stockKey, type Interest, type StockMap } from "./inventory";
 import { HE_NAME_OVERRIDES } from "./he-names.overrides";
 import type { OrderDecision, PlacedOrder } from "./orders";
+import { normalizeCode, type Coupon } from "./coupons";
 import type { ImportedShelf } from "./imported";
 import { readToken, writeToken } from "./admin-token";
 
@@ -83,6 +84,12 @@ type AdminState = {
    * list is configuration, an order is a record of something that happened.
    */
   orders: PlacedOrder[];
+  /**
+   * Discount codes he wrote. Public by nature — every visitor's browser reads
+   * them to check what a customer typed — so they live in their own file next
+   * to the orders, not in the settings export.
+   */
+  coupons: Coupon[];
   interest: Interest[];
   pricing: PricingMode;
   /** Live shelf moves, applied to every listing the moment they are made. */
@@ -132,6 +139,12 @@ type AdminState = {
   removeOrder(ref: string): void;
   /** Replace the whole list — used when the saved file loads at boot. */
   setOrders(orders: PlacedOrder[]): void;
+  /** Write a code. An existing code with the same name is replaced. */
+  saveCoupon(coupon: Coupon): void;
+  /** Turn one on or off without losing it. */
+  toggleCoupon(code: string): void;
+  removeCoupon(code: string): void;
+  setCoupons(coupons: Coupon[]): void;
   clearOverride(itemId: string): void;
   resetAll(): void;
   exportJson(): string;
@@ -145,6 +158,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   stock: {},
   names: { ...HE_NAME_OVERRIDES },
   orders: [],
+  coupons: [],
   interest: [],
   pricing: DEFAULT_PRICING,
   shelves: {},
@@ -244,6 +258,26 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   removeOrder: (ref) => set((s) => ({ orders: s.orders.filter((o) => o.ref !== ref) })),
 
   setOrders: (orders) => set({ orders }),
+
+  saveCoupon: (coupon) =>
+    set((s) => {
+      const code = normalizeCode(coupon.code);
+      const next = { ...coupon, code };
+      const rest = s.coupons.filter((c) => normalizeCode(c.code) !== code);
+      return { coupons: [next, ...rest] };
+    }),
+
+  toggleCoupon: (code) =>
+    set((s) => ({
+      coupons: s.coupons.map((c) =>
+        normalizeCode(c.code) === normalizeCode(code) ? { ...c, active: !c.active } : c,
+      ),
+    })),
+
+  removeCoupon: (code) =>
+    set((s) => ({ coupons: s.coupons.filter((c) => normalizeCode(c.code) !== normalizeCode(code)) })),
+
+  setCoupons: (coupons) => set({ coupons }),
 
   setName: (id, name) =>
     set((s) => {

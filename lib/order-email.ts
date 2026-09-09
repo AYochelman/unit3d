@@ -115,6 +115,7 @@ export function orderEmailHtml(o: PlacedOrder): string {
   <tr><td style="padding:20px 24px 0;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       ${items != null ? infoRow("פריטים", esc(fmtILS(items))) : ""}
+      ${o.discount ? infoRow("הנחה", `<span style="color:${GREEN};font-weight:700;">-${esc(fmtILS(o.discount.off))}</span> <span style="color:${MUTED};">(${esc(o.discount.code)} · ${esc(o.discount.label)})</span>`) : ""}
       ${infoRow("מסירה", `${esc(d.label)} · ${d.price ? esc(fmtILS(d.price)) : "חינם"}<div style="font:400 12px/1.6 ${FONT};color:${MUTED};">${esc(d.note)}</div>`)}
       ${o.note ? infoRow("הערות שלך", esc(o.note)) : ""}
     </table>

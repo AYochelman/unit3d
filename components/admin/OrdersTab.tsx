@@ -303,6 +303,12 @@ function OrderRow({
               <div className="text-ink-400">{o.customer.kind}{o.inquiry ? ` · ${o.inquiry}` : ""}</div>
               {o.customer.unit && <div className="text-ink-400">יחידה: {o.customer.unit}</div>}
               {o.customer.company && <div className="text-ink-400">{o.customer.company}</div>}
+              {o.discount && (
+                <div className="pt-1">
+                  הנחה: <span className="text-good font-mono" dir="ltr">{o.discount.code}</span>
+                  <span className="text-ink-500"> · {o.discount.label} · -{fmtILS(o.discount.off)}</span>
+                </div>
+              )}
               <div className="pt-1">
                 מסירה: <span className="text-ink-100">{d.label}</span>
                 <span className="text-ink-500"> · {d.price ? fmtILS(d.price) : "חינם"} · {d.note}</span>

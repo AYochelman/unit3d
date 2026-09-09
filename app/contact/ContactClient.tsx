@@ -15,6 +15,8 @@ import { PRODUCTS } from "@/lib/products";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import { makeCoupon, NEXT_ORDER_DISCOUNT } from "@/lib/coupon";
 import { fmtILS } from "@/lib/format";
+import { discountFor, type AppliedDiscount } from "@/lib/coupons";
+import { useAdminStore } from "@/lib/admin-store";
 import { cn } from "@/lib/cn";
 
 type CustType = "private" | "soldier" | "b2b";
@@ -81,6 +83,24 @@ export default function ContactClient() {
   const [vat, setVat] = useState("");
   const [bulkQty, setBulkQty] = useState("");
   const [delivery, setDelivery] = useState<DeliveryId>("pickup");
+
+  // A discount code is checked against the list Ariel wrote in /admin, which
+  // every browser loads at boot (CouponsBoot) — so the customer sees the money
+  // come off here, not in a WhatsApp negotiation afterwards.
+  const codes = useAdminStore((s) => s.coupons);
+  const [codeInput, setCodeInput] = useState("");
+  const [applied, setApplied] = useState<AppliedDiscount | null>(null);
+  const [codeErr, setCodeErr] = useState("");
+
+  const priced = items.every((it) => it.price != null);
+  const itemsTotal = priced ? items.reduce((sum, x) => sum + (x.price ?? 0), 0) : null;
+
+  const tryCode = () => {
+    const { applied: hit, error } = discountFor(codes, codeInput, itemsTotal);
+    setApplied(hit ?? null);
+    setCodeErr(hit ? "" : error ?? "");
+  };
+  const dropCode = () => { setApplied(null); setCodeInput(""); setCodeErr(""); };
 
   const inquiries = useMemo(() => INQUIRY_FOR[cust], [cust]);
   const [refCode, setRefCode] = useState("");
@@ -251,9 +271,15 @@ export default function ContactClient() {
                 qty: it.qty,
                 price: it.price ?? null,
               })),
-              itemsTotal: items.some((it) => it.price == null)
-                ? null
-                : items.reduce((sum, it) => sum + (it.price ?? 0), 0),
+              itemsTotal,
+              // Re-checked at the moment of sending: a code that expired while
+              // the page sat open must not travel with the order.
+              ...(applied
+                ? (() => {
+                    const fresh = discountFor(codes, applied.code, itemsTotal).applied;
+                    return fresh ? { discount: fresh } : {};
+                  })()
+                : {}),
               decision: "pending",
             };
 
@@ -397,18 +423,60 @@ export default function ContactClient() {
                 ))}
               </div>
 
+              {/* Discount code */}
+              <div className="px-5 py-3 border-t border-flame/20">
+                {applied ? (
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm text-good font-semibold">
+                      <span className="font-mono" dir="ltr">{applied.code}</span> · {applied.label}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={dropCode}
+                      className="text-[11px] text-ink-500 hover:text-bad underline"
+                    >
+                      הסרה
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <input
+                      value={codeInput}
+                      onChange={(e) => { setCodeInput(e.target.value); setCodeErr(""); }}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); tryCode(); } }}
+                      placeholder="קוד הנחה"
+                      dir="ltr"
+                      className="h-9 flex-1 min-w-0 px-3 rounded-lg bg-ink-950 border border-ink-800 text-sm font-mono text-ink-100 focus:outline-none focus:border-flame/60"
+                    />
+                    <Btn size="sm" variant="ghost" onClick={tryCode} disabled={!codeInput.trim()}>הפעלה</Btn>
+                  </div>
+                )}
+                {codeErr && <div className="text-[11px] text-bad mt-1.5">{codeErr}</div>}
+              </div>
+
               {/* Cart total */}
-              {items.length > 1 && (
-                <div className="px-5 py-3 border-t border-flame/20 flex items-baseline justify-between bg-flame/5">
+              <div className="px-5 py-3 border-t border-flame/20 bg-flame/5 space-y-1">
+                {applied && itemsTotal != null && (
+                  <>
+                    <div className="flex items-baseline justify-between text-xs text-ink-400">
+                      <span>פריטים</span>
+                      <span className="font-mono" dir="ltr">{fmtILS(itemsTotal)}</span>
+                    </div>
+                    <div className="flex items-baseline justify-between text-xs text-good">
+                      <span>הנחה</span>
+                      <span className="font-mono" dir="ltr">-{fmtILS(applied.off)}</span>
+                    </div>
+                  </>
+                )}
+                <div className="flex items-baseline justify-between">
                   <span className="text-sm text-ink-300 font-semibold">סה&quot;כ משוער</span>
                   <span className="font-mono text-2xl font-black text-flame" dir="ltr">
-                    {fmtILS(items.reduce((sum, x) => sum + (x.price ?? 0), 0))}
-                    {items.some((x) => x.price == null) && (
-                      <span className="text-xs font-normal text-ink-400"> + פריטים לתמחור</span>
-                    )}
+                    {fmtILS(Math.max(0, (itemsTotal ?? items.reduce((sum, x) => sum + (x.price ?? 0), 0)) - (applied?.off ?? 0)))}
+                    {!priced && <span className="text-xs font-normal text-ink-400"> + פריטים לתמחור</span>}
                   </span>
                 </div>
-              )}
+                <div className="text-[11px] text-ink-500">לפני דמי משלוח, שנבחרים למטה.</div>
+              </div>
             </section>
           )}
 

@@ -1,5 +1,6 @@
 "use client";
 import { CONTACT } from "./contact";
+import type { AppliedDiscount } from "./coupons";
 import { fmtILS } from "./format";
 
 /**
@@ -44,8 +45,10 @@ export type PlacedOrder = {
   delivery: DeliveryId;
   note?: string;
   lines: OrderLine[];
-  /** Items total, before delivery. Null when anything is quote-only. */
+  /** Items total, before delivery and before any discount. Null when anything is quote-only. */
   itemsTotal: number | null;
+  /** The code the customer used, and what it took off. */
+  discount?: AppliedDiscount;
   decision?: OrderDecision;
   /** Ariel's own note on the decision. */
   decisionNote?: string;
@@ -53,7 +56,9 @@ export type PlacedOrder = {
 };
 
 export const orderTotal = (o: PlacedOrder): number | null =>
-  o.itemsTotal == null ? null : o.itemsTotal + DELIVERY_BY_ID[o.delivery].price;
+  o.itemsTotal == null
+    ? null
+    : Math.max(0, o.itemsTotal - (o.discount?.off ?? 0)) + DELIVERY_BY_ID[o.delivery].price;
 
 /** UNIT3D-48213 — short enough to read down a phone. */
 export const makeRef = (): string => `UNIT3D-${Math.floor(Math.random() * 90000 + 10000)}`;
@@ -163,6 +168,7 @@ export function orderMessage(o: PlacedOrder): string {
 
   out.push(
     "",
+    ...(o.discount ? [`הנחה: ${o.discount.code} · ${o.discount.label} · -${fmtILS(o.discount.off)}`] : []),
     `מסירה: ${d.label}${d.price ? ` · ${fmtILS(d.price)}` : " · חינם"}`,
     `הערות: ${o.note?.trim() || "—"}`,
     total == null ? "סה\"כ לתשלום: לפי הזמנה" : `סה"כ לתשלום: ${fmtILS(total)}`,
@@ -199,6 +205,7 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
   const rows = (text || "").split(/\r?\n/);
   let ref = "", phone = "", email = "", kind = "", note = "";
   let delivery: DeliveryId = "pickup";
+  let discount: AppliedDiscount | undefined;
   const lines: OrderLine[] = [];
   let cur: OrderLine | null = null;
 
@@ -242,6 +249,12 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
     if (mail) email = mail === "—" ? "" : mail;
     const rem = field(t, "הערות");
     if (rem) note = rem === "—" ? "" : rem;
+    const disc = field(t, "הנחה");
+    if (disc) {
+      const [dcode, dlabel, doff] = disc.split(" · ");
+      const off = num(doff ?? "");
+      if (dcode && off != null) discount = { code: dcode, label: dlabel ?? "", off: Math.abs(off) };
+    }
     const del = field(t, "מסירה");
     if (del) {
       const hit = DELIVERY.find((x) => del.startsWith(x.label));
@@ -262,5 +275,6 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
     note,
     lines,
     itemsTotal: priced ? lines.reduce((s, l) => s + (l.price ?? 0), 0) : null,
+    ...(discount ? { discount } : {}),
   };
 }
