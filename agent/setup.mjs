@@ -35,13 +35,21 @@ function shopUrl() {
   }
 }
 
-/** Ask, keeping the previous answer when the line is left empty. */
-async function ask(label, current, check) {
+/**
+ * Ask, keeping the previous answer when the line is left empty.
+ *
+ * `fix` gets a chance to repair a reasonable-but-wrong answer (the dashboard
+ * URL instead of the project URL, say) before it is judged, and `why` explains
+ * the refusal — "looks wrong" on its own tells nobody what to type instead.
+ */
+async function ask(label, current, check, why = "", fix = (v) => v) {
   for (;;) {
     const shown = current ? ` [${current.length > 22 ? current.slice(0, 19) + "..." : current}]` : "";
-    const v = (await rl.question(`${label}${shown}: `)).trim() || current || "";
+    const typed = (await rl.question(`${label}${shown}: `)).trim();
+    const v = fix(typed || current || "");
     if (!check || check(v)) return v;
-    console.log("  ^ looks wrong, try again");
+    console.log(`  ^ ${why || "looks wrong, try again"}`);
+    if (current) console.log(`    (press Enter alone to keep ${current.slice(0, 40)})`);
   }
 }
 
@@ -91,7 +99,11 @@ function discover(seconds = 9) {
 console.log("\n  Unit 3D · printer agent setup");
 console.log("  press Enter to keep a value in [brackets]\n");
 
-const host = await ask("Printer IP (e.g. 192.168.1.42)", old?.printer?.host, (v) => /^\d{1,3}(\.\d{1,3}){3}$/.test(v));
+const host = await ask(
+  "Printer IP (e.g. 192.168.1.42)", old?.printer?.host,
+  (v) => /^\d{1,3}(\.\d{1,3}){3}$/.test(v),
+  "that is not an IP address. it looks like 192.168.1.55, from the printer's LAN screen.",
+);
 let serial = old?.printer?.serial ?? "";
 if (!serial) {
   console.log("  looking for the printer on this network... (about 9 seconds)");
@@ -108,11 +120,34 @@ if (!serial) {
     console.log("  no printer answered. type the serial by hand (printer screen: Settings > Device).");
   }
 }
-serial = await ask("Printer serial", serial, (v) => v.length >= 8);
-const accessCode = await ask("Access code (8 digits)", old?.printer?.accessCode, (v) => v.length >= 6);
+serial = await ask(
+  "Printer serial", serial,
+  (v) => v.length >= 8,
+  "a serial is about 15 characters, e.g. 01P00A3B0500123. printer screen: Settings > Device.",
+);
+const accessCode = await ask(
+  "Access code", old?.printer?.accessCode,
+  (v) => v.length >= 6,
+  "the 8-character code on the printer's LAN screen, next to the IP.",
+);
 const model = await ask("Printer model", old?.printer?.model || "Bambu Lab P2S", (v) => v.length > 1);
-const url = await ask("Supabase URL", old?.supabase?.url || shopUrl(), (v) => /^https:\/\/.+\.supabase\.co$/.test(v.replace(/\/$/, "")));
-const serviceKey = await ask("Supabase SECRET key (sb_secret_… or eyJ…)", old?.supabase?.serviceKey, (v) => v.length > 20);
+const url = await ask(
+  "Supabase URL", old?.supabase?.url || shopUrl(),
+  (v) => /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(v),
+  "expected https://<project>.supabase.co — the value in [brackets] is already correct, so Enter is enough.",
+  // A dashboard link carries the project id, so take it rather than refuse it.
+  (v) => {
+    const ref = /supabase\.com\/dashboard\/project\/([a-z0-9-]+)/i.exec(v)?.[1];
+    if (ref) return `https://${ref}.supabase.co`;
+    if (/^sb_(secret|publishable)_/.test(v)) return "";   // that is a key, not a URL
+    return v.replace(/\/+$/, "");
+  },
+);
+const serviceKey = await ask(
+  "Supabase SECRET key (sb_secret_… or eyJ…)", old?.supabase?.serviceKey,
+  (v) => v.length > 20 && !/^sb_publishable_/.test(v),
+  "Supabase > Settings > API Keys > Secret keys > the eye icon. not the publishable one.",
+);
 
 const config = {
   printer: { host, serial, accessCode, model },
