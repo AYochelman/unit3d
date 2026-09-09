@@ -279,6 +279,22 @@ function keepChamberLit() {
 // neither is told so, once, rather than failing silently.
 const CAM_FILE = path.join(HERE, ".cam.jpg");
 
+// The printer's stream is served with its own self-signed certificate — the
+// same one MQTT presents, and the same reason that connection passes
+// rejectUnauthorized: false. Recent ffmpeg verifies TLS by default and refuses,
+// which reads as "Peer certificate failed verification". There is no
+// certificate authority to satisfy here: the printer is on the LAN, addressed
+// by IP, and its identity is proved by the access code the stream carries.
+// Older ffmpeg builds do not verify by default and do not know the option at
+// all, so it is dropped the moment one of them says so.
+let tlsFlag = true;
+const RTSP_IN = (url) => [
+  "-nostdin", "-loglevel", "error",
+  "-rtsp_transport", "tcp",
+  ...(tlsFlag ? ["-tls_verify", "0"] : []),
+  "-i", url,
+];
+
 const rtspUrl = () => {
   const u = last.print?.ipcam?.rtsp_url;
   return typeof u === "string" && /^rtsps?:\/\//i.test(u) ? u : "";
@@ -293,6 +309,7 @@ function findFfmpeg() {
 }
 
 let ff = null;          // the running ffmpeg, if any
+let ffLastStart = 0;
 let ffStartedFor = "";  // the URL it was started for
 let ffWarned = false;
 
@@ -309,27 +326,32 @@ function startStream() {
     }
     return;
   }
+  if (Date.now() - ffLastStart < 30_000) return; // do not spin on a stream that refuses
   stopStream();
+  ffLastStart = Date.now();
   ffStartedFor = url;
   // The credentials go in the URL, which is how RTSP carries them. They are
   // never logged: the printer's access code is not something to leave in a file
   // anyone might paste into a chat.
   const authed = url.replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
   const seconds = Math.max(2, Math.round(CAM_EVERY / 1000));
-  ff = spawn(bin, [
-    "-nostdin", "-loglevel", "error",
-    "-rtsp_transport", "tcp",
-    "-i", authed,
-    "-vf", `fps=1/${seconds}`,
-    "-q:v", "5", "-update", "1", "-y", CAM_FILE,
-  ], { stdio: ["ignore", "ignore", "pipe"] });
+  ff = spawn(bin, [...RTSP_IN(authed), "-vf", `fps=1/${seconds}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE],
+    { stdio: ["ignore", "ignore", "pipe"] });
 
   let said = false;
   ff.stderr?.on("data", (d) => {
+    const text = String(d);
+    if (tlsFlag && /tls_verify|Unrecognized option|Option not found/i.test(text)) {
+      tlsFlag = false;
+      ffLastStart = 0; // this one is worth retrying straight away
+      stopStream();
+      log("camera: this ffmpeg does not know -tls_verify; retrying without it");
+      return;
+    }
     if (said) return;
     said = true;
     // Strip the URL before printing: it carries the access code.
-    log("camera stream:", String(d).replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim().slice(0, 180));
+    log("camera stream:", text.replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim().slice(0, 180));
   });
   ff.on("exit", () => {
     ff = null;

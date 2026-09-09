@@ -142,10 +142,19 @@ if (!jpeg && ipcam?.rtsp_url) {
   } else {
     const out = path.join(HERE, "camera-test.jpg");
     const authed = String(ipcam.rtsp_url).replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
-    const r = spawnSync(bin, [
+    // The printer serves the stream with a self-signed certificate; recent
+    // ffmpeg verifies by default and refuses. Skipping that check is correct
+    // here and nowhere else: this is a machine on the LAN, addressed by IP,
+    // whose identity is proved by the access code in the address.
+    const attempt = (withFlag) => spawnSync(bin, [
       "-nostdin", "-loglevel", "error", "-rtsp_transport", "tcp",
+      ...(withFlag ? ["-tls_verify", "0"] : []),
       "-i", authed, "-frames:v", "1", "-q:v", "5", "-y", out,
     ], { encoding: "utf8", timeout: 30_000 });
+
+    let r = attempt(true);
+    // Older builds do not know the option and do not need it.
+    if (r.status !== 0 && /tls_verify|Unrecognized option|Option not found/i.test(String(r.stderr))) r = attempt(false);
 
     if (r.status === 0 && fs.existsSync(out) && fs.statSync(out).size > 1000) {
       jpeg = fs.readFileSync(out);
