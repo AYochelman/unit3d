@@ -28,7 +28,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(HERE, "config.json");
 
 if (!fs.existsSync(CONFIG_PATH)) {
-  console.error("חסר config.json — העתק את config.example.json ומלא את הפרטים.");
+  console.error("config.json is missing. Run settings.bat (or: node setup.mjs).");
   process.exit(1);
 }
 const cfg = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
@@ -36,7 +36,7 @@ const { host, serial, accessCode, model = "Bambu Lab" } = cfg.printer ?? {};
 const SB = (cfg.supabase?.url ?? "").replace(/\/$/, "");
 const KEY = cfg.supabase?.serviceKey ?? "";
 if (!host || !serial || !accessCode || !SB || !KEY) {
-  console.error("config.json חסר שדות: printer.host / serial / accessCode או supabase.url / serviceKey.");
+  console.error("config.json is incomplete: printer.host / serial / accessCode, or supabase.url / serviceKey.");
   process.exit(1);
 }
 
@@ -62,7 +62,7 @@ async function upsertStatus(row) {
     headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
     body: JSON.stringify({ id: "live", ...row, updated_at: new Date().toISOString() }),
   });
-  if (!res.ok) log("status ✗", res.status, (await res.text()).slice(0, 200));
+  if (!res.ok) log("status write failed:", res.status, (await res.text()).slice(0, 200));
 }
 
 async function insertJob(row) {
@@ -71,7 +71,7 @@ async function insertJob(row) {
     headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
     body: JSON.stringify(row),
   });
-  if (!res.ok) log("job ✗", res.status, (await res.text()).slice(0, 200));
+  if (!res.ok) log("job write failed:", res.status, (await res.text()).slice(0, 200));
 }
 
 async function upload(bucket, name, body, contentType) {
@@ -80,7 +80,7 @@ async function upload(bucket, name, body, contentType) {
     headers: { apikey: KEY, ...(legacyKey ? { Authorization: `Bearer ${KEY}` } : {}), "Content-Type": contentType, "x-upsert": "true" },
     body,
   });
-  if (!res.ok) log("upload ✗", name, res.status, (await res.text()).slice(0, 200));
+  if (!res.ok) log("upload failed:", name, res.status, (await res.text()).slice(0, 200));
   return res.ok;
 }
 
@@ -149,14 +149,23 @@ const client = mqtt.connect(`mqtts://${host}:8883`, {
 });
 
 client.on("connect", () => {
-  log("מחובר למדפסת", host);
+  log("connected to the printer at", host);
   client.subscribe(`device/${serial}/report`);
   // Bambu only sends deltas until asked for everything once.
   client.publish(`device/${serial}/request`, JSON.stringify({ pushing: { sequence_id: "0", command: "pushall" } }));
 });
 
-client.on("error", (e) => log("MQTT ✗", e.message));
-client.on("reconnect", () => log("מנסה להתחבר מחדש…"));
+client.on("error", (e) => {
+  log("MQTT error:", e.message);
+  // The printer accepting the socket and closing it immediately is what its
+  // authorisation gate looks like from here, not a network fault.
+  if (/FIN|ECONNRESET|closed|EPROTO/i.test(e.message)) {
+    log("  the printer closed the connection.");
+    log("  on the printer screen: Settings > LAN Only > turn ON 'Developer Mode',");
+    log("  then close this window and run start.bat again.");
+  }
+});
+client.on("reconnect", () => log("reconnecting..."));
 
 client.on("message", (_topic, buf) => {
   try {
@@ -190,7 +199,7 @@ async function watchFinish() {
       minutes: num(last.print?.mc_print_time) ?? null,
       layers: num(last.print?.total_layer_num),
     });
-    log(s === "finished" ? "הדפסה הסתיימה — נרשמה" : "הדפסה נכשלה — נרשמה", name);
+    log(s === "finished" ? "print finished - logged:" : "print stopped - logged:", name);
     wasPrinting = false;
     currentKey = "";
   }
@@ -268,11 +277,11 @@ async function pushTimelapses() {
             recorded_at: (f.modifiedAt ?? new Date()).toISOString(),
           }),
         });
-        log("טיימלפס הועלה", f.name);
+        log("timelapse uploaded:", f.name);
       }
     }
   } catch (e) {
-    log("טיימלפס ✗", e.message);
+    log("timelapse failed:", e.message);
   } finally {
     c.close();
   }
@@ -285,10 +294,10 @@ every(STATUS_EVERY, async () => {
   try {
     await upsertStatus(statusRow());
     await watchFinish();
-  } catch (e) { log("status ✗", e.message); }
+  } catch (e) { log("status error:", e.message); }
 });
-every(CAM_EVERY, () => pushCamera().catch((e) => log("camera ✗", e.message)));
-every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse ✗", e.message)));
+every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)));
+every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
 
-log(`הסוכן רץ · מדפסת ${host} · מעדכן כל ${STATUS_EVERY / 1000} שניות`);
+log(`agent running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
 process.on("SIGINT", () => { upsertStatus({ state: "offline" }).finally(() => process.exit(0)); });
