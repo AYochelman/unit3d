@@ -5,7 +5,7 @@ import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
-import { CONTACT } from "@/lib/contact";
+import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
@@ -246,6 +246,8 @@ export default function ContactClient() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            // The field says why; sending a half-number helps nobody.
+            if (!phoneLooksReal(phone)) return;
             const ref = makeRef();
             setRefCode(ref);
 
@@ -530,8 +532,18 @@ export default function ContactClient() {
               <Field label="שם מלא" required>
                 <Input required placeholder="שם פרטי ושם משפחה" value={name} onChange={(e) => setName(e.target.value)} />
               </Field>
-              <Field label="טלפון" required>
-                <Input type="tel" required placeholder="050-0000000" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} />
+              {/* Letters never reach the value, so the browser never refuses a
+                  field the customer believes they filled. */}
+              <Field label="טלפון" required error={phone && !phoneLooksReal(phone) ? "מספר קצר מדי — 05X-0000000" : undefined}>
+                <Input
+                  type="tel"
+                  inputMode="tel"
+                  required
+                  placeholder="050-0000000"
+                  dir="ltr"
+                  value={phone}
+                  onChange={(e) => setPhone(cleanPhone(e.target.value))}
+                />
               </Field>
             </div>
             {/* Not optional any more: the confirmation with the whole order is

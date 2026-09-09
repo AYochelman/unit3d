@@ -23,3 +23,19 @@ export function mailto(subject: string, body = ""): string {
   const q = new URLSearchParams({ subject, ...(body ? { body } : {}) });
   return `mailto:${CONTACT.email}?${q.toString()}`;
 }
+
+/**
+ * A phone number as it is typed.
+ *
+ * The field used to accept anything and then let the browser refuse the whole
+ * form with a bubble the customer cannot act on ("הזנת מספר תקין חובה" over a
+ * field they filled). Letters simply cannot be typed now, and what is left is
+ * checked for length before the order goes anywhere.
+ */
+export const cleanPhone = (v: string): string => v.replace(/[^\d+\-() ]/g, "").slice(0, 20);
+
+/** Israeli numbers are 9 or 10 digits; an international one may be longer. */
+export const phoneLooksReal = (v: string): boolean => {
+  const digits = v.replace(/\D/g, "");
+  return digits.length >= 9 && digits.length <= 15;
+};

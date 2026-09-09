@@ -95,6 +95,12 @@ type AdminState = {
   expenses: Expense[];
   /** The rate the owner set for converting dollar bills to shekels. */
   usdRate: number;
+  /**
+   * The Supabase access token for this tab, shared by every admin view that
+   * reads private data. It is never written to the device — only the refresh
+   * token is (lib/admin-session.ts).
+   */
+  sbToken: string;
   interest: Interest[];
   pricing: PricingMode;
   /** Live shelf moves, applied to every listing the moment they are made. */
@@ -157,6 +163,7 @@ type AdminState = {
   removeExpense(id: string): void;
   setExpenses(expenses: Expense[], usdRate?: number): void;
   setUsdRate(rate: number): void;
+  setSbToken(token: string): void;
   clearOverride(itemId: string): void;
   resetAll(): void;
   exportJson(): string;
@@ -173,6 +180,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   coupons: [],
   expenses: [],
   usdRate: DEFAULT_USD_RATE,
+  sbToken: "",
   interest: [],
   pricing: DEFAULT_PRICING,
   shelves: {},
@@ -308,6 +316,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     set((s) => ({ expenses, usdRate: usdRate && usdRate > 0 ? usdRate : s.usdRate })),
 
   setUsdRate: (rate) => set({ usdRate: rate > 0 ? rate : DEFAULT_USD_RATE }),
+
+  setSbToken: (token) => set({ sbToken: token }),
 
   setName: (id, name) =>
     set((s) => {

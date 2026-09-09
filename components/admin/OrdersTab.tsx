@@ -11,8 +11,8 @@ import {
   DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
   type Fulfilment, type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
-import { adminDecide, adminOrders, adminProgress, adminRefresh, adminSignIn, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
-import { forgetSession, readSession, writeSession } from "@/lib/admin-session";
+import { adminDecide, adminOrders, adminProgress, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
+import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -61,16 +61,11 @@ export default function OrdersTab() {
   const params = useSearchParams();
 
   const [cfg, setCfg] = useState<ShopConfig | null>(null);
-  const [email, setEmail] = useState("");
+  // The one sign-in the admin has, shared with the expenses tab.
+  const { token, email, setEmail, busy, error: authErr, setError: setAuthErr, tried, signIn: doSignIn, signOut: doSignOut } = useSupabaseSession();
   const [pw, setPw] = useState("");
-  const [token, setToken] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [authErr, setAuthErr] = useState("");
   const [remote, setRemote] = useState<PlacedOrder[]>([]);
   const [loadErr, setLoadErr] = useState("");
-  // Whether the remembered sign-in has been tried yet, so the form does not
-  // flash on top of a session that is about to open by itself.
-  const [tried, setTried] = useState(false);
 
   const [openRef, setOpenRef] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
@@ -111,56 +106,43 @@ export default function OrdersTab() {
   const arrived = useMemo(() => decodeOrder(params?.get("order")), [params]);
   useEffect(() => { if (arrived) addOrder(arrived); }, [arrived, addOrder]);
 
+  // Nothing is set before the first await: a fetch that starts inside an effect
+  // must not write state on the same tick that scheduled it.
   const load = useCallback(async (t: string) => {
-    setLoadErr("");
     try {
-      setRemote(await adminOrders(t));
+      const rows = await adminOrders(t);
+      setRemote(rows);
+      setLoadErr("");
     } catch {
       setLoadErr("לא הצלחתי למשוך את ההזמנות. נסה להתחבר שוב.");
     }
   }, []);
 
   const signIn = async () => {
-    setBusy(true);
-    setAuthErr("");
-    const s = await adminSignIn(email.trim(), pw);
-    setBusy(false);
-    if (!s) { setAuthErr("המייל או הסיסמה לא נכונים."); return; }
-    // Remembered on this device so the next visit opens straight into the queue.
-    writeSession(email.trim(), s.refresh);
-    setToken(s.access);
-    setPw("");
-    await load(s.access);
+    if (await doSignIn(email, pw)) {
+      setPw("");
+      // The hook holds the token; the list is fetched by the effect below.
+    }
   };
 
   const signOut = () => {
-    forgetSession();
-    setToken("");
+    doSignOut();
     setRemote([]);
     setPw("");
   };
 
-  // A sign-in already made on this machine. The stored refresh token is traded
-  // for a fresh access token, and replaced by the new one Supabase hands back.
-  // Everything lands in the callback, so the form never flashes over a session
-  // that is about to open by itself.
+  // Whenever a session exists — freshly typed or restored on this device — the
+  // queue is fetched. One place, so the two paths cannot drift, and every state
+  // change lands in a callback rather than on the tick that scheduled it.
   useEffect(() => {
+    if (!token) return;
     let alive = true;
-    const saved = readSession();
-    const opening = saved ? adminRefresh(saved.refresh) : Promise.resolve(null);
-    void opening.then(async (s) => {
-      if (!alive) return;
-      if (saved) setEmail(saved.email);
-      if (saved && !s) forgetSession();
-      if (saved && s) {
-        writeSession(saved.email, s.refresh || saved.refresh);
-        setToken(s.access);
-      }
-      setTried(true);
-      if (s) await load(s.access);
-    });
+    void adminOrders(token).then(
+      (rows) => { if (alive) { setRemote(rows); setLoadErr(""); } },
+      () => { if (alive) setLoadErr("לא הצלחתי למשוך את ההזמנות. נסה להתחבר שוב."); },
+    );
     return () => { alive = false; };
-  }, [load]);
+  }, [token]);
 
   // The queue, plus anything that came in by link or by hand and is not in it.
   const orders = useMemo(() => {
@@ -243,11 +225,11 @@ export default function OrdersTab() {
           </p>
           <Input
             type="email" dir="ltr" placeholder="מייל" value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setAuthErr(""); }}
           />
           <Input
             type="password" dir="ltr" placeholder="סיסמה" value={pw}
-            onChange={(e) => setPw(e.target.value)}
+            onChange={(e) => { setPw(e.target.value); setAuthErr(""); }}
             onKeyDown={(e) => { if (e.key === "Enter") void signIn(); }}
           />
           <div className="flex items-center gap-2">

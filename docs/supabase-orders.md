@@ -96,3 +96,54 @@ alter table public.orders
 ```
 
 מערך של true/false לפי סדר הפריטים. כשכולם true ההזמנה עוברת ל"מוכנות".
+
+---
+
+# הוצאות (פרטי — רק אחרי כניסה)
+
+הוצאות העסק לא יושבות בקובץ ציבורי אלא בטבלה שנפתחת רק למי שמחובר.
+
+```sql
+create table if not exists public.expenses (
+  id         text primary key,
+  name       text not null,
+  amount     numeric not null,
+  currency   text not null default 'ILS',
+  cycle      text not null default 'monthly',
+  date       date,
+  note       text,
+  active     boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.shop_settings (
+  key   text primary key,
+  value jsonb
+);
+
+alter table public.expenses      enable row level security;
+alter table public.shop_settings enable row level security;
+
+-- אין ל-anon שום גישה כאן, גם לא קריאה.
+create policy "owner reads expenses"   on public.expenses for select to authenticated using (true);
+create policy "owner adds expenses"    on public.expenses for insert to authenticated with check (true);
+create policy "owner edits expenses"   on public.expenses for update to authenticated using (true) with check (true);
+create policy "owner deletes expenses" on public.expenses for delete to authenticated using (true);
+
+create policy "owner reads settings"  on public.shop_settings for select to authenticated using (true);
+create policy "owner writes settings" on public.shop_settings for insert to authenticated with check (true);
+create policy "owner edits settings"  on public.shop_settings for update to authenticated using (true) with check (true);
+
+-- כל מה שהיה בקובץ עד עכשיו, כדי ששום שורה לא תאבד:
+insert into public.expenses (id, name, amount, currency, cycle, date, note) values
+  ('x-emailjs',   'EmailJS',             11,    'USD', 'monthly', '2026-09-09', 'מייל אישור הזמנה ללקוחות'),
+  ('x-domain',    'דומיין unit-3d.com',  10.44, 'USD', 'yearly',  '2026-09-08', 'Cloudflare Registrar · חידוש שנתי'),
+  ('xmtuaai5zcg', 'P2S Printer',         3000,  'ILS', 'once',    '2026-09-09', null),
+  ('xmtuadxjdly', 'גליל PLA עשרה',       1000,  'ILS', 'once',    '2026-09-09', null),
+  ('xmtuacsksok', 'גליל PLA זוג',        200,   'ILS', 'once',    '2026-09-09', null),
+  ('xmtuab5fkr6', 'מוצרי אריזה',         200,   'ILS', 'once',    '2026-09-09', null)
+on conflict (id) do nothing;
+```
+
+`public/expenses.json` נשאר ריק בכוונה: הוא רק ברירת המחדל של שער הדולר
+לפני הכניסה, ואין בו שום נתון עסקי.
