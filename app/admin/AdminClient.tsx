@@ -22,12 +22,13 @@ import NamesTab from "@/components/admin/NamesTab";
 import OrdersTab from "@/components/admin/OrdersTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import ExpensesTab from "@/components/admin/ExpensesTab";
+import ChangelogTab from "@/components/admin/ChangelogTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "orders" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup";
+type Tab = "orders" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "orders", label: "הזמנות" },
@@ -41,6 +42,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "params", label: "פרמטרים" },
   { id: "emblems", label: "סמלי יחידות" },
   { id: "backup", label: "גיבוי" },
+  { id: "changelog", label: "עדכונים" },
 ];
 
 type Row = {
@@ -169,6 +171,7 @@ export default function AdminClient() {
       {tab === "params" && <ParamsTab />}
       {tab === "emblems" && <EmblemsTab />}
       {tab === "backup" && <BackupTab />}
+      {tab === "changelog" && <ChangelogTab />}
     </div>
   );
 }
