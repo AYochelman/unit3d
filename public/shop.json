@@ -2,8 +2,8 @@
   "supabaseUrl": "",
   "supabaseAnonKey": "",
   "emailjs": {
-    "serviceId": "",
-    "templateId": "",
-    "publicKey": ""
+    "serviceId": "service_xngw4or",
+    "templateId": "template_550bis6",
+    "publicKey": "6xriHYgtPJMIx2orb"
   }
 }
