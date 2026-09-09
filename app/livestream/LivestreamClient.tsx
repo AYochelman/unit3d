@@ -33,6 +33,11 @@ export default function LivestreamClient() {
   const clips = useTimelapses();
   const stats = jobStats(jobs);
 
+  // The camera URL is assembled from the shop's config, so it exists whether or
+  // not a picture was ever uploaded. Only the browser can say whether one really
+  // came back, so the page waits to be told rather than assuming.
+  const [shot, setShot] = useState<"waiting" | "ok" | "missing">("waiting");
+
   const [clock, setClock] = useState("00:00:00");
   useEffect(() => {
     const id = setInterval(() => {
@@ -66,15 +71,19 @@ export default function LivestreamClient() {
         {/* The chamber */}
         <div className="lg:col-span-2">
           <div className="relative aspect-video rounded-2xl overflow-hidden border border-ink-800 bg-ink-950">
-            {camera && online ? (
+            {camera && online && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
+                key={camera}
                 src={camera}
                 alt="המדפסת עכשיו"
-                className="absolute inset-0 h-full w-full object-cover"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                className="absolute inset-0 h-full w-full object-cover z-[1] transition-opacity duration-300"
+                style={{ opacity: shot === "ok" ? 1 : 0 }}
+                onLoad={() => setShot("ok")}
+                onError={() => setShot("missing")}
               />
-            ) : (
+            )}
+            {shot !== "ok" && (
               <>
                 <div className="absolute inset-0 printer-grid opacity-40" />
                 <svg viewBox="0 0 600 360" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
@@ -90,8 +99,12 @@ export default function LivestreamClient() {
                 </svg>
                 <div className="absolute inset-0 flex items-end justify-center pb-10">
                   <div className="text-center">
-                    <div className="text-ink-400 text-sm">{ready ? "אין תמונה כרגע" : "טוען…"}</div>
-                    <div className="text-ink-600 text-xs mt-1">המצלמה משדרת כשהמדפסת דולקת</div>
+                    <div className="text-ink-400 text-sm">
+                      {!ready ? "טוען…" : shot === "missing" ? "אין תמונה מהמצלמה" : "אין תמונה כרגע"}
+                    </div>
+                    <div className="text-ink-600 text-xs mt-1">
+                      {shot === "missing" ? "המצלמה לא שולחת כרגע. הנתונים למטה עדיין חיים." : "המצלמה משדרת כשהמדפסת דולקת"}
+                    </div>
                   </div>
                 </div>
               </>

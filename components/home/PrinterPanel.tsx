@@ -42,6 +42,11 @@ const num = (v: number | null | undefined, suffix = "") =>
 export default function PrinterPanel() {
   const { live, camera, ready, online } = usePrinterLive();
   const [hasVideo, setHasVideo] = useState(false);
+  // Same as the livestream page: a URL is not a picture. Remembering WHICH url
+  // failed rather than a bare flag means the next poll is a fresh attempt, so
+  // the still reappears by itself once the agent starts uploading again.
+  const [failedShot, setFailedShot] = useState<string | null>(null);
+  const hasShot = !!camera && failedShot !== camera;
   const [tick, setTick] = useState(0);
   const reduced = useRef(false);
 
@@ -134,17 +139,18 @@ export default function PrinterPanel() {
         {/* ── The chamber, or a diagram of the real layer count ───────── */}
         <div className="relative rounded-xl border border-ink-50/10 bg-ink-950/50 p-3 overflow-hidden">
           <div className="flex items-center justify-between font-mono text-[9px] tracking-widest text-ink-500 uppercase mb-2" dir="ltr">
-            <span>{online && camera ? "CHAMBER · LIVE" : "BUILD PLATE"}</span>
+            <span>{online && hasShot ? "CHAMBER · LIVE" : "BUILD PLATE"}</span>
             <span className="text-ink-400 truncate max-w-[55%]">{live?.filament || live?.model || "BAMBU LAB P2S"}</span>
           </div>
 
-          {online && camera ? (
+          {online && hasShot ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
+              key={camera}
               src={camera}
               alt="המדפסת עכשיו"
               className="w-full h-[86px] md:h-[104px] object-cover rounded-lg bg-ink-950"
-              onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden"; }}
+              onError={() => setFailedShot(camera)}
             />
           ) : (
             <svg
