@@ -48,8 +48,13 @@ export type Timelapse = { file: string; url: string; size_mb: number | null; rec
 const rest = async <T,>(pathAndQuery: string): Promise<T[]> => {
   const c = await shopConfig();
   if (!isConfigured(c)) return [];
+  // The new publishable keys are not JWTs, so they go in `apikey` only.
+  const legacy = c.supabaseAnonKey.startsWith("ey");
   const res = await fetch(`${c.supabaseUrl}/rest/v1/${pathAndQuery}`, {
-    headers: { apikey: c.supabaseAnonKey, Authorization: `Bearer ${c.supabaseAnonKey}` },
+    headers: {
+      apikey: c.supabaseAnonKey,
+      ...(legacy ? { Authorization: `Bearer ${c.supabaseAnonKey}` } : {}),
+    },
     cache: "no-store",
   });
   if (!res.ok) return [];

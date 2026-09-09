@@ -53,11 +53,21 @@ export async function shopConfig(): Promise<ShopConfig> {
 
 export const isConfigured = (c: ShopConfig) => Boolean(c.supabaseUrl && c.supabaseAnonKey);
 
-const headers = (c: ShopConfig, token?: string) => ({
-  apikey: c.supabaseAnonKey,
-  Authorization: `Bearer ${token || c.supabaseAnonKey}`,
-  "Content-Type": "application/json",
-});
+/**
+ * Supabase has two generations of keys. The old ones are JWTs, and the API
+ * expects them in BOTH headers; the new ones (`sb_publishable_…`) are not JWTs
+ * and belong in `apikey` alone — sending one as a Bearer token is asking the
+ * gateway to parse it as a JWT, which it is not. A signed-in user's token is
+ * always a JWT and always goes in Authorization.
+ */
+const headers = (c: ShopConfig, token?: string) => {
+  const legacy = c.supabaseAnonKey.startsWith("ey");
+  return {
+    apikey: c.supabaseAnonKey,
+    ...(token || legacy ? { Authorization: `Bearer ${token || c.supabaseAnonKey}` } : {}),
+    "Content-Type": "application/json",
+  };
+};
 
 // ─── The customer's side ─────────────────────────────────────────────────────
 export type PlaceResult = "saved" | "not-configured" | "failed";

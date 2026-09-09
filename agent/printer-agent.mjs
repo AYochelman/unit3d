@@ -47,9 +47,12 @@ const TL_EVERY = (cfg.timelapse?.everyMinutes ?? 30) * 60 * 1000;
 const log = (...a) => console.log(new Date().toLocaleTimeString("he-IL"), ...a);
 
 // ─── Supabase, over plain HTTP so the agent needs no SDK ──────────────────────
+// Supabase's newer keys (`sb_secret_…`) are not JWTs, so they belong in the
+// apikey header alone; the older service_role key is a JWT and wants both.
+const legacyKey = KEY.startsWith("ey");
 const sbHeaders = {
   apikey: KEY,
-  Authorization: `Bearer ${KEY}`,
+  ...(legacyKey ? { Authorization: `Bearer ${KEY}` } : {}),
   "Content-Type": "application/json",
 };
 
@@ -74,7 +77,7 @@ async function insertJob(row) {
 async function upload(bucket, name, body, contentType) {
   const res = await fetch(`${SB}/storage/v1/object/${bucket}/${name}`, {
     method: "POST",
-    headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, "Content-Type": contentType, "x-upsert": "true" },
+    headers: { apikey: KEY, ...(legacyKey ? { Authorization: `Bearer ${KEY}` } : {}), "Content-Type": contentType, "x-upsert": "true" },
     body,
   });
   if (!res.ok) log("upload ✗", name, res.status, (await res.text()).slice(0, 200));
