@@ -20,6 +20,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import net from "node:net";
 import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
@@ -216,7 +217,12 @@ async function watchFinish() {
 // P-series printers hand out single JPEG frames over a TLS socket on port 6000
 // after an 80-byte login. One frame every few seconds is all a web page needs,
 // and it costs the printer nothing to give.
-function grabFrame() {
+// Whether port 6000 speaks TLS or plain TCP has differed between models and
+// firmware revisions, and a wrong guess is indistinguishable from "this printer
+// has no camera". So try both, and remember whichever answered.
+let camMode = cfg.camera?.mode || "";
+
+function grabOnce(mode) {
   return new Promise((resolve) => {
     const auth = Buffer.alloc(80);
     auth.writeUInt32LE(0x40, 0);
@@ -226,85 +232,62 @@ function grabFrame() {
 
     let chunks = Buffer.alloc(0);
     let expect = 0;
+    let sock;
     const done = (v) => { try { sock.destroy(); } catch {} resolve(v); };
 
-    const sock = tls.connect({ host, port: 6000, rejectUnauthorized: false, timeout: 8000 }, () => sock.write(auth));
-    sock.on("data", (d) => {
+    const onData = (d) => {
       chunks = Buffer.concat([chunks, d]);
       if (!expect && chunks.length >= 16) {
         expect = chunks.readUInt32LE(0);
+        if (expect < 1000 || expect > 20_000_000) return done(null);
         chunks = chunks.subarray(16);
       }
       if (expect && chunks.length >= expect) done(chunks.subarray(0, expect));
-    });
+    };
+
+    if (mode === "plain") sock = net.connect({ host, port: 6000, timeout: 12_000 }, () => sock.write(auth));
+    else sock = tls.connect({ host, port: 6000, rejectUnauthorized: false, timeout: 12_000 }, () => sock.write(auth));
+    sock.on("data", onData);
     sock.on("error", () => done(null));
     sock.on("timeout", () => done(null));
+    sock.on("close", () => done(null));
   });
 }
 
-// The chamber is pitch dark unless its LED is on, and the printer switches that
-// LED off by itself when it is not printing — which is exactly when the camera
-// was sending a black rectangle. So before each frame, if the printer reports
-// the light off, ask for it on. It is asked only when it is actually off, so
-// this is one message every few minutes, not one every frame; and the light is
-// put back the way it was found when the agent stops.
-//
-// config.json: camera.light — "auto" (default) keeps it on while the agent runs,
-// "never" leaves the printer alone and accepts a dark picture at night.
-let litByUs = false;
-
-const lightIsOn = () => {
-  const report = last.print?.lights_report;
-  if (!Array.isArray(report)) return null; // the printer has not said yet
-  const chamber = report.find((l) => String(l.node) === "chamber_light");
-  return chamber ? String(chamber.mode).toLowerCase() === "on" : null;
-};
-
-function setChamberLight(on) {
-  if (!client.connected) return;
-  client.publish(
-    `device/${serial}/request`,
-    JSON.stringify({
-      system: {
-        sequence_id: String(Date.now() % 100000),
-        command: "ledctrl",
-        led_node: "chamber_light",
-        led_mode: on ? "on" : "off",
-        led_on_time: 500,
-        led_off_time: 500,
-        loop_times: 0,
-        interval_time: 0,
-      },
-    }),
-  );
+async function grabFrame() {
+  for (const mode of camMode ? [camMode] : ["tls", "plain"]) {
+    const jpeg = await grabOnce(mode);
+    if (jpeg && jpeg.length > 1000) {
+      if (camMode !== mode) log(`camera: the ${mode === "tls" ? "encrypted" : "plain"} connection works - using it from now on`);
+      camMode = mode;
+      return jpeg;
+    }
+  }
+  camMode = ""; // it failed either way; try both again next time
+  return null;
 }
 
-// Not every firmware reports lights_report, and a printer that never reports it
-// would otherwise never be asked — which is how a dark chamber survives a fix
-// that "should" have worked. So: switch it on when the printer says it is off,
-// and also when the printer says nothing at all, retried on a slow beat rather
-// than trusting a single message to arrive.
-let lastLightAsk = 0;
-function keepChamberLit() {
-  if ((cfg.camera?.light ?? "auto") === "never") return;
-  const on = lightIsOn();
-  if (on === true) return;
-  if (Date.now() - lastLightAsk < 60_000) return;
-  lastLightAsk = Date.now();
-  setChamberLight(true);
-  litByUs = true;
-  log(
-    on === false
-      ? "chamber light was off - turned it on so the camera has something to show"
-      : "printer does not report its light - asking for it on anyway",
-  );
-}
+// A camera that never answers should be said out loud once, not swallowed on a
+// six-second loop: silence here is what made a missing picture look like a dark
+// room for days.
+let camFailures = 0;
+let camWarned = false;
 
 async function pushCamera() {
   if (cfg.camera?.enabled === false) return;
   keepChamberLit();
   const jpeg = await grabFrame();
-  if (!jpeg || jpeg.length < 1000) return;
+  if (!jpeg || jpeg.length < 1000) {
+    if (++camFailures === 5 && !camWarned) {
+      camWarned = true;
+      log("camera: the printer is not sending pictures. everything else still works.");
+      log("  double-click camera.bat to find out why.");
+    }
+    return;
+  }
+  if (camWarned) log("camera: pictures are coming through again");
+  camFailures = 0;
+  camWarned = false;
   await upload("printer", "live.jpg", jpeg, "image/jpeg");
 }
 

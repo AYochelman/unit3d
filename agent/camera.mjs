@@ -11,6 +11,7 @@
 // Run it by double-clicking camera.bat (Windows) or camera-mac.command (Mac).
 import fs from "node:fs";
 import path from "node:path";
+import net from "node:net";
 import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
@@ -29,6 +30,7 @@ const step = (m) => console.log(`\n  ${m}`);
 console.log("\n  Checking why the camera picture is black.\n  This takes about 20 seconds.");
 
 // ─── 1. The chamber light ────────────────────────────────────────────────────
+let ipcam = null;
 step("1. asking the printer to turn its chamber light on");
 await new Promise((resolve) => {
   const c = mqtt.connect(`mqtts://${host}:8883`, {
@@ -39,45 +41,102 @@ await new Promise((resolve) => {
   c.on("error", (e) => done(() => bad(`could not reach the printer: ${e.message}`,
     "check the IP and access code, and that Developer Mode is on in Settings > LAN Only.")));
   c.on("connect", () => {
+    c.subscribe(`device/${serial}/report`);
+    c.publish(`device/${serial}/request`, JSON.stringify({ pushing: { sequence_id: "0", command: "pushall" } }));
     c.publish(`device/${serial}/request`, JSON.stringify({
       system: { sequence_id: "1", command: "ledctrl", led_node: "chamber_light",
         led_mode: "on", led_on_time: 500, led_off_time: 500, loop_times: 0, interval_time: 0 },
     }));
-    setTimeout(() => done(() => ok("asked for the light", "(look at the printer - is it lit inside?)")), 1500);
+    setTimeout(() => done(() => {
+      ok("asked for the light", "(look at the printer - is it lit inside?)");
+      // The printer describes its own camera in the report. When the frame grab
+      // below fails, this is the line that says what it offers instead.
+      if (ipcam) console.log(`        the printer describes its camera as: ${JSON.stringify(ipcam)}`);
+      else console.log("        the printer said nothing about its camera.");
+    }), 4000);
+  });
+  c.on("message", (_t, buf) => {
+    try {
+      const m = JSON.parse(buf.toString());
+      if (m.print?.ipcam) ipcam = { ...(ipcam ?? {}), ...m.print.ipcam };
+    } catch {}
   });
 });
 
 // ─── 2. A real frame off the printer ─────────────────────────────────────────
 step("2. asking the printer for a picture");
-const jpeg = await new Promise((resolve) => {
-  const auth = Buffer.alloc(80);
-  auth.writeUInt32LE(0x40, 0);
-  auth.writeUInt32LE(0x3000, 4);
-  auth.write("bblp", 16, 32, "ascii");
-  auth.write(accessCode, 48, 32, "ascii");
 
-  let chunks = Buffer.alloc(0);
-  let expect = 0;
-  const done = (v) => { try { sock.destroy(); } catch {} resolve(v); };
-  const sock = tls.connect({ host, port: 6000, rejectUnauthorized: false, timeout: 10_000 }, () => sock.write(auth));
-  sock.on("data", (d) => {
-    chunks = Buffer.concat([chunks, d]);
-    if (!expect && chunks.length >= 16) { expect = chunks.readUInt32LE(0); chunks = chunks.subarray(16); }
-    if (expect && chunks.length >= expect) done(chunks.subarray(0, expect));
+// P-series printers hand out JPEG frames on port 6000 after an 80-byte login.
+// Whether that port speaks TLS or plain TCP has differed between models and
+// firmware, and a wrong guess looks exactly like "no camera" - so try both and
+// say which one answered.
+function grab(mode) {
+  return new Promise((resolve) => {
+    const auth = Buffer.alloc(80);
+    auth.writeUInt32LE(0x40, 0);
+    auth.writeUInt32LE(0x3000, 4);
+    auth.write("bblp", 16, 32, "ascii");
+    auth.write(accessCode, 48, 32, "ascii");
+
+    let chunks = Buffer.alloc(0);
+    let expect = 0;
+    let sock;
+    const done = (v, why) => { try { sock.destroy(); } catch {} resolve({ jpeg: v, why, seen: chunks.length }); };
+
+    const onData = (d) => {
+      chunks = Buffer.concat([chunks, d]);
+      if (!expect && chunks.length >= 16) {
+        expect = chunks.readUInt32LE(0);
+        // A sane frame is a few KB to a few MB. Anything else means these bytes
+        // are not the header this code expects.
+        if (expect < 1000 || expect > 20_000_000) {
+          return done(null, `answered, but not in the expected format (first bytes: ${chunks.subarray(0, 8).toString("hex")})`);
+        }
+        chunks = chunks.subarray(16);
+      }
+      if (expect && chunks.length >= expect) done(chunks.subarray(0, expect), "");
+    };
+
+    if (mode === "tls") {
+      sock = tls.connect({ host, port: 6000, rejectUnauthorized: false, timeout: 15_000 }, () => sock.write(auth));
+    } else {
+      sock = net.connect({ host, port: 6000, timeout: 15_000 }, () => sock.write(auth));
+    }
+    sock.on("data", onData);
+    sock.on("error", (e) => done(null, e.message));
+    sock.on("timeout", () => done(null, chunks.length ? "sent some bytes then stopped" : "connected but sent nothing"));
+    sock.on("close", () => done(null, chunks.length ? "closed early" : "closed without sending anything"));
   });
-  sock.on("error", () => done(null));
-  sock.on("timeout", () => done(null));
-});
+}
+
+let jpeg = null;
+let worked = "";
+for (const mode of ["tls", "plain"]) {
+  const r = await grab(mode);
+  if (r.jpeg && r.jpeg.length > 1000) {
+    jpeg = r.jpeg;
+    worked = mode;
+    ok(`the ${mode === "tls" ? "encrypted" : "plain"} connection worked`);
+    break;
+  }
+  console.log(`        ${mode === "tls" ? "encrypted" : "plain"} connection: ${r.why || "no picture"}${r.seen ? ` (${r.seen} bytes seen)` : ""}`);
+}
 
 if (!jpeg || jpeg.length < 1000) {
   bad("the printer did not send a picture",
-      "on the printer screen: Settings > LAN Only > turn ON 'LAN Only Liveview', then run this again.");
-  console.log("\n  Stopping here - nothing after this can work without a picture.\n");
+      "if 'LAN Only Liveview' is already ON, this printer speaks a camera protocol this agent does not know yet.");
+  console.log(`
+  Send this whole window as a screenshot - the lines above say exactly what the
+  printer did answer, which is what is needed to support it.
+
+  Everything else keeps working without the camera: state, progress, layers,
+  temperatures and finished prints all come over a different connection.
+`);
   process.exit(1);
 }
 const local = path.join(HERE, "camera-test.jpg");
 fs.writeFileSync(local, jpeg);
-ok(`got a picture (${Math.round(jpeg.length / 1024)} KB)`);
+ok(`got a picture (${Math.round(jpeg.length / 1024)} KB, over the ${worked === "tls" ? "encrypted" : "plain"} connection)`);
 console.log(`        saved here: ${local}`);
 console.log("        OPEN THAT FILE. if it is black, the printer's own camera sees darkness -");
 console.log("        the light is off or something is covering it. if you can see the plate, good.");
