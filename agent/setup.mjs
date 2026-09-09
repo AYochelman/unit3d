@@ -152,10 +152,17 @@ const serviceKey = await ask(
 const config = {
   printer: { host, serial, accessCode, model },
   supabase: { url: url.replace(/\/$/, ""), serviceKey },
-  camera: { enabled: old?.camera?.enabled !== false, everySeconds: old?.camera?.everySeconds ?? 15 },
+  camera: {
+    enabled: old?.camera?.enabled !== false,
+    everySeconds: old?.camera?.everySeconds ?? 6,
+    // "auto" turns the chamber LED on when the camera needs it — without it the
+    // picture is black whenever the printer is not printing. "never" leaves the
+    // printer's light alone.
+    light: old?.camera?.light ?? "auto",
+  },
   // Off by default: the printer refuses third-party file transfer (see the agent).
   timelapse: { enabled: old?.timelapse?.enabled === true, everyMinutes: old?.timelapse?.everyMinutes ?? 30 },
-  statusEverySeconds: old?.statusEverySeconds ?? 5,
+  statusEverySeconds: old?.statusEverySeconds ?? 2,
 };
 
 fs.writeFileSync(FILE, JSON.stringify(config, null, 2) + "\n", "utf8");

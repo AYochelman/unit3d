@@ -40,8 +40,12 @@ if (!host || !serial || !accessCode || !SB || !KEY) {
   process.exit(1);
 }
 
-const STATUS_EVERY = (cfg.statusEverySeconds ?? 2) * 1000;
-const CAM_EVERY = (cfg.camera?.everySeconds ?? 6) * 1000;
+// The wizard used to write 5s and 15s, back when the page only read every ten
+// seconds. Those exact numbers are the old defaults rather than a choice anyone
+// made, so an existing config is brought up to the live pace; any other value
+// is left as the person set it.
+const STATUS_EVERY = (cfg.statusEverySeconds == null || cfg.statusEverySeconds === 5 ? 2 : cfg.statusEverySeconds) * 1000;
+const CAM_EVERY = (cfg.camera?.everySeconds == null || cfg.camera?.everySeconds === 15 ? 6 : cfg.camera.everySeconds) * 1000;
 const TL_EVERY = (cfg.timelapse?.everyMinutes ?? 30) * 60 * 1000;
 
 const log = (...a) => console.log(new Date().toLocaleTimeString("he-IL"), ...a);
@@ -235,8 +239,55 @@ function grabFrame() {
   });
 }
 
+// The chamber is pitch dark unless its LED is on, and the printer switches that
+// LED off by itself when it is not printing — which is exactly when the camera
+// was sending a black rectangle. So before each frame, if the printer reports
+// the light off, ask for it on. It is asked only when it is actually off, so
+// this is one message every few minutes, not one every frame; and the light is
+// put back the way it was found when the agent stops.
+//
+// config.json: camera.light — "auto" (default) keeps it on while the agent runs,
+// "never" leaves the printer alone and accepts a dark picture at night.
+let litByUs = false;
+
+const lightIsOn = () => {
+  const report = last.print?.lights_report;
+  if (!Array.isArray(report)) return null; // the printer has not said yet
+  const chamber = report.find((l) => String(l.node) === "chamber_light");
+  return chamber ? String(chamber.mode).toLowerCase() === "on" : null;
+};
+
+function setChamberLight(on) {
+  if (!client.connected) return;
+  client.publish(
+    `device/${serial}/request`,
+    JSON.stringify({
+      system: {
+        sequence_id: String(Date.now() % 100000),
+        command: "ledctrl",
+        led_node: "chamber_light",
+        led_mode: on ? "on" : "off",
+        led_on_time: 500,
+        led_off_time: 500,
+        loop_times: 0,
+        interval_time: 0,
+      },
+    }),
+  );
+}
+
+function keepChamberLit() {
+  if ((cfg.camera?.light ?? "auto") === "never") return;
+  if (lightIsOn() === false) {
+    setChamberLight(true);
+    litByUs = true;
+    log("chamber light was off - turned it on so the camera has something to show");
+  }
+}
+
 async function pushCamera() {
   if (cfg.camera?.enabled === false) return;
+  keepChamberLit();
   const jpeg = await grabFrame();
   if (!jpeg || jpeg.length < 1000) return;
   await upload("printer", "live.jpg", jpeg, "image/jpeg");
@@ -312,4 +363,7 @@ every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)
 every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
 
 log(`agent running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
-process.on("SIGINT", () => { upsertStatus({ state: "offline" }).finally(() => process.exit(0)); });
+process.on("SIGINT", () => {
+  if (litByUs) setChamberLight(false);
+  upsertStatus({ state: "offline" }).finally(() => process.exit(0));
+});
