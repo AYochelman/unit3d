@@ -11,7 +11,7 @@ import {
   DELIVERY_BY_ID, decodeOrder, orderTotal, parseOrderMessage,
   type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
-import { adminDecide, adminOrders, adminSignIn, isConfigured, shopConfig, type ShopConfig } from "@/lib/orders-remote";
+import { adminDecide, adminOrders, adminSignIn, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -70,6 +70,31 @@ export default function OrdersTab() {
   const [openRef, setOpenRef] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [only, setOnly] = useState<"open" | "all">("open");
+
+  // A way to prove the confirmation mail works without inventing an order.
+  const [testTo, setTestTo] = useState("");
+  const [testState, setTestState] = useState<"" | "sending" | "sent" | "failed" | "not-configured" | "no-address">("");
+
+  const sendTest = async () => {
+    setTestState("sending");
+    const now = new Date();
+    const r = await sendOrderEmail({
+      ref: `UNIT3D-TEST${now.getMinutes()}${now.getSeconds()}`,
+      at: now.toISOString(),
+      customer: { name: "בדיקה", phone: "050-930-0990", email: testTo.trim(), kind: "לקוח פרטי" },
+      inquiry: "בדיקת מערכת",
+      delivery: "pickup",
+      note: "מייל בדיקה מהאדמין — אין כאן הזמנה אמיתית.",
+      lines: [{
+        title: "ספינר אוויר · 60mm",
+        summary: ["חומר: PLA רגיל", "צבע: שחור", "זמן הדפסה: 1h"],
+        qty: 1,
+        price: 15,
+      }],
+      itemsTotal: 15,
+    });
+    setTestState(r);
+  };
 
   const [manual, setManual] = useState(false);
   const [paste, setPaste] = useState("");
@@ -225,6 +250,26 @@ export default function OrdersTab() {
           ))}
         </div>
       )}
+
+      <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-2">
+        <div className="text-xs font-bold text-ink-300">בדיקת מייל האישור</div>
+        <p className="text-[11px] text-ink-500">
+          שולח לכתובת שתקליד את אותו מייל בדיוק שלקוח מקבל אחרי הזמנה — בלי ליצור הזמנה.
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Input
+            type="email" dir="ltr" placeholder="you@example.com" className="max-w-xs"
+            value={testTo}
+            onChange={(e) => { setTestTo(e.target.value); setTestState(""); }}
+          />
+          <Btn size="sm" variant="ghost" onClick={() => void sendTest()} disabled={!testTo.includes("@") || testState === "sending"}>
+            {testState === "sending" ? "שולח…" : "שליחת בדיקה"}
+          </Btn>
+          {testState === "sent" && <span className="text-xs text-good">נשלח. אם לא הגיע — לבדוק בספאם.</span>}
+          {testState === "failed" && <span className="text-xs text-bad">השליחה נכשלה. בדוק את הרשימה המורשית ב-EmailJS.</span>}
+          {testState === "not-configured" && <span className="text-xs text-bad">EmailJS עוד לא מחובר.</span>}
+        </div>
+      </div>
 
       <div className="pt-2">
         <button
