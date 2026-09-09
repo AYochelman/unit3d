@@ -21,6 +21,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import net from "node:net";
+import { spawn, spawnSync } from "node:child_process";
 import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
@@ -213,13 +214,138 @@ async function watchFinish() {
   }
 }
 
+// ─── The chamber light ───────────────────────────────────────────────────────
+// The chamber is dark unless its LED is on, and the printer switches that LED
+// off by itself when it is not printing — which is exactly when someone looking
+// at the website wants to see inside. Not every firmware reports lights_report,
+// so the light is asked for whenever it is not known to be on, on a slow beat,
+// and put back the way it was found when the agent stops.
+//
+// config.json: camera.light — "auto" (default) or "never".
+let litByUs = false;
+let lastLightAsk = 0;
+
+const lightIsOn = () => {
+  const report = last.print?.lights_report;
+  if (!Array.isArray(report)) return null;
+  const chamber = report.find((l) => String(l.node) === "chamber_light");
+  return chamber ? String(chamber.mode).toLowerCase() === "on" : null;
+};
+
+function setChamberLight(on) {
+  if (!client.connected) return;
+  client.publish(
+    `device/${serial}/request`,
+    JSON.stringify({
+      system: {
+        sequence_id: String(Date.now() % 100000),
+        command: "ledctrl",
+        led_node: "chamber_light",
+        led_mode: on ? "on" : "off",
+        led_on_time: 500,
+        led_off_time: 500,
+        loop_times: 0,
+        interval_time: 0,
+      },
+    }),
+  );
+}
+
+function keepChamberLit() {
+  if ((cfg.camera?.light ?? "auto") === "never") return;
+  const on = lightIsOn();
+  if (on === true) return;
+  if (Date.now() - lastLightAsk < 60_000) return;
+  lastLightAsk = Date.now();
+  setChamberLight(true);
+  litByUs = true;
+  log(on === false
+    ? "chamber light was off - turned it on so the camera has something to show"
+    : "printer does not report its light - asking for it on anyway");
+}
+
 // ─── The chamber camera ───────────────────────────────────────────────────────
-// P-series printers hand out single JPEG frames over a TLS socket on port 6000
-// after an 80-byte login. One frame every few seconds is all a web page needs,
-// and it costs the printer nothing to give.
-// Whether port 6000 speaks TLS or plain TCP has differed between models and
-// firmware revisions, and a wrong guess is indistinguishable from "this printer
-// has no camera". So try both, and remember whichever answered.
+// Two different printers live under one brand here.
+//
+// P1-series machines hand out single JPEG frames on port 6000 after an 80-byte
+// login. Newer ones — the P2S among them — do not: port 6000 answers with
+// something else entirely, and the real camera is an RTSPS video stream whose
+// address the printer publishes in its own report (`ipcam.rtsp_url`). Video is
+// not something this agent can decode by itself, so when a printer offers a
+// stream, ffmpeg is asked to sit on it and write one still every few seconds.
+//
+// The order is: use the stream if the printer advertises one and ffmpeg is
+// here, otherwise fall back to the port-6000 frames. A printer that offers
+// neither is told so, once, rather than failing silently.
+const CAM_FILE = path.join(HERE, ".cam.jpg");
+
+const rtspUrl = () => {
+  const u = last.print?.ipcam?.rtsp_url;
+  return typeof u === "string" && /^rtsps?:\/\//i.test(u) ? u : "";
+};
+
+/** ffmpeg, if this machine has one: beside the agent, or anywhere on PATH. */
+function findFfmpeg() {
+  const local = path.join(HERE, process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg");
+  if (fs.existsSync(local)) return local;
+  const probe = spawnSync(process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg", ["-version"], { stdio: "ignore" });
+  return probe.status === 0 ? "ffmpeg" : "";
+}
+
+let ff = null;          // the running ffmpeg, if any
+let ffStartedFor = "";  // the URL it was started for
+let ffWarned = false;
+
+function startStream() {
+  const url = rtspUrl();
+  if (!url || ffStartedFor === url) return;
+  const bin = findFfmpeg();
+  if (!bin) {
+    if (!ffWarned) {
+      ffWarned = true;
+      log("camera: this printer streams video, which needs ffmpeg - it is not installed.");
+      log("  double-click ffmpeg-install.bat once, then restart the agent.");
+      log("  (everything else keeps working without it.)");
+    }
+    return;
+  }
+  stopStream();
+  ffStartedFor = url;
+  // The credentials go in the URL, which is how RTSP carries them. They are
+  // never logged: the printer's access code is not something to leave in a file
+  // anyone might paste into a chat.
+  const authed = url.replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
+  const seconds = Math.max(2, Math.round(CAM_EVERY / 1000));
+  ff = spawn(bin, [
+    "-nostdin", "-loglevel", "error",
+    "-rtsp_transport", "tcp",
+    "-i", authed,
+    "-vf", `fps=1/${seconds}`,
+    "-q:v", "5", "-update", "1", "-y", CAM_FILE,
+  ], { stdio: ["ignore", "ignore", "pipe"] });
+
+  let said = false;
+  ff.stderr?.on("data", (d) => {
+    if (said) return;
+    said = true;
+    // Strip the URL before printing: it carries the access code.
+    log("camera stream:", String(d).replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim().slice(0, 180));
+  });
+  ff.on("exit", () => {
+    ff = null;
+    ffStartedFor = "";  // let the next tick start it again
+  });
+  log(`camera: reading the printer's video stream, one still every ${seconds}s`);
+}
+
+function stopStream() {
+  if (ff) { try { ff.kill(); } catch {} ff = null; }
+  ffStartedFor = "";
+}
+
+// ─── The older way: single JPEG frames on port 6000 ──────────────────────────
+// Whether that port speaks TLS or plain TCP has differed between firmwares, so
+// try both and remember whichever answered.
 let camMode = cfg.camera?.mode || "";
 
 function grabOnce(mode) {
@@ -263,7 +389,7 @@ async function grabFrame() {
       return jpeg;
     }
   }
-  camMode = ""; // it failed either way; try both again next time
+  camMode = "";
   return null;
 }
 
@@ -272,11 +398,31 @@ async function grabFrame() {
 // room for days.
 let camFailures = 0;
 let camWarned = false;
+let lastShotAt = 0;
 
 async function pushCamera() {
   if (cfg.camera?.enabled === false) return;
   keepChamberLit();
-  const jpeg = await grabFrame();
+
+  let jpeg = null;
+  if (rtspUrl()) {
+    startStream();
+    // ffmpeg overwrites one file in place; a newer timestamp means a new still.
+    try {
+      const st = fs.statSync(CAM_FILE);
+      if (st.mtimeMs > lastShotAt && st.size > 1000) {
+        lastShotAt = st.mtimeMs;
+        jpeg = fs.readFileSync(CAM_FILE);
+      } else {
+        return; // nothing new yet; not a failure
+      }
+    } catch {
+      jpeg = null; // ffmpeg has not written one yet
+    }
+  } else {
+    jpeg = await grabFrame();
+  }
+
   if (!jpeg || jpeg.length < 1000) {
     if (++camFailures === 5 && !camWarned) {
       camWarned = true;
@@ -362,6 +508,7 @@ every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.me
 
 log(`agent running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
 process.on("SIGINT", () => {
+  stopStream();
   if (litByUs) setChamberLight(false);
   upsertStatus({ state: "offline" }).finally(() => process.exit(0));
 });

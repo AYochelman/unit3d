@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import net from "node:net";
+import { spawnSync } from "node:child_process";
 import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
@@ -122,9 +123,48 @@ for (const mode of ["tls", "plain"]) {
   console.log(`        ${mode === "tls" ? "encrypted" : "plain"} connection: ${r.why || "no picture"}${r.seen ? ` (${r.seen} bytes seen)` : ""}`);
 }
 
+// ─── 2b. The video stream, when the printer advertises one ──────────────────
+// Newer printers (P2S among them) do not hand out single frames at all: they
+// publish an RTSPS address in their own report. Video needs ffmpeg to turn into
+// a picture, so this checks for it and takes one still.
+if (!jpeg && ipcam?.rtsp_url) {
+  step("2b. this printer streams video instead - taking one still from the stream");
+  const bin = (() => {
+    const local = path.join(HERE, process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg");
+    if (fs.existsSync(local)) return local;
+    return spawnSync(process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg", ["-version"], { stdio: "ignore" }).status === 0
+      ? "ffmpeg" : "";
+  })();
+
+  if (!bin) {
+    bad("ffmpeg is not installed, and video cannot be read without it",
+        "double-click ffmpeg-install.bat (Mac: ffmpeg-install-mac.command), then run this again.");
+  } else {
+    const out = path.join(HERE, "camera-test.jpg");
+    const authed = String(ipcam.rtsp_url).replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
+    const r = spawnSync(bin, [
+      "-nostdin", "-loglevel", "error", "-rtsp_transport", "tcp",
+      "-i", authed, "-frames:v", "1", "-q:v", "5", "-y", out,
+    ], { encoding: "utf8", timeout: 30_000 });
+
+    if (r.status === 0 && fs.existsSync(out) && fs.statSync(out).size > 1000) {
+      jpeg = fs.readFileSync(out);
+      worked = "stream";
+      ok(`took a still from the video stream (${Math.round(jpeg.length / 1024)} KB)`);
+    } else {
+      // Never print the command line - it carries the access code.
+      const why = String(r.stderr || r.error?.message || "no reason given")
+        .replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim().slice(0, 300);
+      bad("ffmpeg could not read the stream", why);
+    }
+  }
+}
+
 if (!jpeg || jpeg.length < 1000) {
-  bad("the printer did not send a picture",
-      "if 'LAN Only Liveview' is already ON, this printer speaks a camera protocol this agent does not know yet.");
+  bad("could not get a picture out of this printer",
+      ipcam?.rtsp_url
+        ? "the printer offers a video stream - the lines above say what stopped it."
+        : "if 'LAN Only Liveview' is already ON, this printer speaks a camera protocol this agent does not know yet.");
   console.log(`
   Send this whole window as a screenshot - the lines above say exactly what the
   printer did answer, which is what is needed to support it.
@@ -136,7 +176,7 @@ if (!jpeg || jpeg.length < 1000) {
 }
 const local = path.join(HERE, "camera-test.jpg");
 fs.writeFileSync(local, jpeg);
-ok(`got a picture (${Math.round(jpeg.length / 1024)} KB, over the ${worked === "tls" ? "encrypted" : "plain"} connection)`);
+if (worked !== "stream") ok(`got a picture (${Math.round(jpeg.length / 1024)} KB, over the ${worked === "tls" ? "encrypted" : "plain"} connection)`);
 console.log(`        saved here: ${local}`);
 console.log("        OPEN THAT FILE. if it is black, the printer's own camera sees darkness -");
 console.log("        the light is off or something is covering it. if you can see the plate, good.");
