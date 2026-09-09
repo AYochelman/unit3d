@@ -19,6 +19,21 @@ const rl = readline.createInterface({ input: process.stdin, output: process.stdo
 
 const old = fs.existsSync(FILE) ? JSON.parse(fs.readFileSync(FILE, "utf8")) : null;
 
+/**
+ * The shop already knows its own database, so the wizard should not ask twice.
+ * public/shop.json sits two folders up in the same download; if it is there,
+ * its URL becomes the suggested answer and Enter accepts it.
+ */
+function shopUrl() {
+  try {
+    const f = path.join(HERE, "..", "public", "shop.json");
+    const v = JSON.parse(fs.readFileSync(f, "utf8"));
+    return (v.supabaseUrl || "").replace(/\/$/, "");
+  } catch {
+    return "";
+  }
+}
+
 /** Ask, keeping the previous answer when the line is left empty. */
 async function ask(label, current, check) {
   for (;;) {
@@ -36,7 +51,7 @@ const host = await ask("Printer IP (e.g. 192.168.1.42)", old?.printer?.host, (v)
 const serial = await ask("Printer serial", old?.printer?.serial, (v) => v.length >= 8);
 const accessCode = await ask("Access code (8 digits)", old?.printer?.accessCode, (v) => v.length >= 6);
 const model = await ask("Printer model", old?.printer?.model || "Bambu Lab P2S", (v) => v.length > 1);
-const url = await ask("Supabase URL", old?.supabase?.url, (v) => /^https:\/\/.+\.supabase\.co$/.test(v.replace(/\/$/, "")));
+const url = await ask("Supabase URL", old?.supabase?.url || shopUrl(), (v) => /^https:\/\/.+\.supabase\.co$/.test(v.replace(/\/$/, "")));
 const serviceKey = await ask("Supabase SECRET key (sb_secret_… or eyJ…)", old?.supabase?.serviceKey, (v) => v.length > 20);
 
 const config = {
