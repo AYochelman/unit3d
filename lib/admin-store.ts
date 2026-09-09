@@ -6,6 +6,7 @@ import { stockKey, type Interest, type StockMap } from "./inventory";
 import { HE_NAME_OVERRIDES } from "./he-names.overrides";
 import type { OrderDecision, PlacedOrder } from "./orders";
 import { normalizeCode, type Coupon } from "./coupons";
+import { DEFAULT_USD_RATE, type Expense } from "./expenses";
 import type { ImportedShelf } from "./imported";
 import { readToken, writeToken } from "./admin-token";
 
@@ -90,6 +91,10 @@ type AdminState = {
    * to the orders, not in the settings export.
    */
   coupons: Coupon[];
+  /** What the shop pays out — subscriptions, one-offs, the domain. */
+  expenses: Expense[];
+  /** The rate the owner set for converting dollar bills to shekels. */
+  usdRate: number;
   interest: Interest[];
   pricing: PricingMode;
   /** Live shelf moves, applied to every listing the moment they are made. */
@@ -145,6 +150,11 @@ type AdminState = {
   toggleCoupon(code: string): void;
   removeCoupon(code: string): void;
   setCoupons(coupons: Coupon[]): void;
+  /** Add or replace one expense, by id. */
+  saveExpense(expense: Expense): void;
+  removeExpense(id: string): void;
+  setExpenses(expenses: Expense[], usdRate?: number): void;
+  setUsdRate(rate: number): void;
   clearOverride(itemId: string): void;
   resetAll(): void;
   exportJson(): string;
@@ -159,6 +169,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   names: { ...HE_NAME_OVERRIDES },
   orders: [],
   coupons: [],
+  expenses: [],
+  usdRate: DEFAULT_USD_RATE,
   interest: [],
   pricing: DEFAULT_PRICING,
   shelves: {},
@@ -278,6 +290,19 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     set((s) => ({ coupons: s.coupons.filter((c) => normalizeCode(c.code) !== normalizeCode(code)) })),
 
   setCoupons: (coupons) => set({ coupons }),
+
+  saveExpense: (expense) =>
+    set((s) => {
+      const rest = s.expenses.filter((e) => e.id !== expense.id);
+      return { expenses: [expense, ...rest] };
+    }),
+
+  removeExpense: (id) => set((s) => ({ expenses: s.expenses.filter((e) => e.id !== id) })),
+
+  setExpenses: (expenses, usdRate) =>
+    set((s) => ({ expenses, usdRate: usdRate && usdRate > 0 ? usdRate : s.usdRate })),
+
+  setUsdRate: (rate) => set({ usdRate: rate > 0 ? rate : DEFAULT_USD_RATE }),
 
   setName: (id, name) =>
     set((s) => {

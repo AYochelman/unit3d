@@ -1,0 +1,15 @@
+{
+  "usdRate": 3.7,
+  "expenses": [
+    {
+      "id": "x-emailjs",
+      "name": "EmailJS",
+      "amount": 11,
+      "currency": "USD",
+      "cycle": "monthly",
+      "date": "2026-09-09",
+      "note": "מייל אישור הזמנה ללקוחות",
+      "active": true
+    }
+  ]
+}
