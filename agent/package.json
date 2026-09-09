@@ -1,0 +1,14 @@
+{
+  "name": "unit3d-printer-agent",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Bridges the printer on the home network to the shop's live page.",
+  "scripts": {
+    "start": "node printer-agent.mjs"
+  },
+  "dependencies": {
+    "mqtt": "^5.10.1",
+    "basic-ftp": "^5.0.5"
+  }
+}

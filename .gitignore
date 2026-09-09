@@ -59,3 +59,8 @@ next-env.d.ts
 /shot-*.png
 /p-*.png
 /n-*.png
+
+# the agent holds the printer access code and a service key
+agent/config.json
+agent/node_modules/
+agent/.tmp.mp4

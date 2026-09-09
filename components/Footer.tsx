@@ -2,6 +2,7 @@ import Link from "next/link";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 import { CONTACT } from "@/lib/contact";
+import PrinterDot from "./PrinterDot";
 
 const SHOP = [
   { href: "/trendy", label: "טרנדי כרגע" },
@@ -130,10 +131,7 @@ export default function Footer() {
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             © 2026 Unit3D · MADE IN PETACH TIKVA · NOZZLE 0.4mm · v2.6
           </div>
-          <div className="flex items-center gap-2 font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
-            <span className="w-1.5 h-1.5 rounded-full bg-good live-dot" />
-            <span>PRINTER ONLINE</span>
-          </div>
+          <PrinterDot />
         </div>
       </div>
     </footer>

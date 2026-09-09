@@ -1,236 +1,244 @@
 "use client";
 import { useEffect, useState } from "react";
 import Pill from "@/components/ui/Pill";
-import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
-import { Input } from "@/components/ui/Field";
-import Emblem from "@/components/Emblem";
+import { fmtLeft, jobStats, usePrinterJobs, usePrinterLive, useTimelapses, type PrinterState } from "@/lib/printer";
 
-const QUEUE = [
-  { id: "#4782", name: "מחזיק · נטע", eta: "2h 40m", hue: 200, shape: "circle" as const },
-  { id: "#4783", name: "סמל פלוגה · ד׳", eta: "5h 10m", hue: 18, shape: "shield" as const },
-  { id: "#4784", name: "Dragon · אביב", eta: "9h", hue: 90, shape: "hex" as const },
-  { id: "#4785", name: "Welcome kit ×25", eta: "1d 12h", hue: 120, shape: "rect" as const },
-];
+const pad = (n: number) => n.toString().padStart(2, "0");
 
-function pad(n: number): string {
-  return n.toString().padStart(2, "0");
-}
+const STATE_HE: Record<PrinterState, string> = {
+  printing: "מדפיסה עכשיו",
+  paused: "מושהית",
+  idle: "דולקת, לא מדפיסה",
+  finished: "סיימה הדפסה",
+  failed: "ההדפסה נעצרה",
+  offline: "כבויה",
+};
 
+const when = (iso: string) =>
+  new Date(iso).toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" });
+
+/**
+ * The printer, as it actually is.
+ *
+ * Everything here comes from the machine itself: the agent beside it writes its
+ * state, a chamber still and every finished job to the shop's table, and this
+ * page reads them. When the printer is off, the page says so — a studio that
+ * pretends to print around the clock is worth less than one that tells the
+ * truth, and the truth is checkable against the photo.
+ */
 export default function LivestreamClient() {
-  const [tick, setTick] = useState(0);
-  const [clock, setClock] = useState("00:00:00");
-  const [orderQuery, setOrderQuery] = useState("");
+  const { live, camera, ready, online } = usePrinterLive();
+  const jobs = usePrinterJobs();
+  const clips = useTimelapses();
+  const stats = jobStats(jobs);
 
+  const [clock, setClock] = useState("00:00:00");
   useEffect(() => {
     const id = setInterval(() => {
-      setTick((t) => t + 1);
       const d = new Date();
       setClock(`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`);
     }, 1000);
     return () => clearInterval(id);
   }, []);
 
-  const headX = Math.sin(tick / 2) * 40;
-  const nozzleTemp = 209 + Math.round(Math.sin(tick / 3) * 2);
-  const bedTemp = 60 + Math.round(Math.sin(tick / 4));
-  const speed = 118 + Math.round(Math.sin(tick / 2) * 6);
+  const state: PrinterState = live?.state ?? "offline";
+  const printing = state === "printing" || state === "paused";
+  const progress = Math.max(0, Math.min(100, live?.progress ?? 0));
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
       <header className="mb-6 md:mb-8">
-        <Pill tone="bad" className="mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-bad live-dot" />
-          LIVE NOW
+        <Pill tone={online ? (printing ? "bad" : "good") : "neutral"} className="mb-3">
+          {online && <span className={`w-1.5 h-1.5 rounded-full ${printing ? "bg-bad live-dot" : "bg-good"}`} />}
+          {online ? (printing ? "LIVE NOW" : "ONLINE") : "OFFLINE"}
         </Pill>
         <h1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">
-          המדפסת רצה עכשיו.
+          {printing ? "המדפסת רצה עכשיו." : online ? "המדפסת דלוקה." : "המדפסת כבויה כרגע."}
         </h1>
         <p className="text-ink-300">
-          שקוף, חי, ובלי פילטרים. הסטודיו בפתח תקווה — Bambu Lab X1C — 24/7 כמעט.
+          שקוף, חי, ובלי פילטרים. הסטודיו בפתח תקווה — {live?.model || "Bambu Lab P2S"}.
+          {!online && " כשהיא נדלקת, כל מה שקורה בה מופיע כאן מעצמו."}
         </p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Stream */}
+        {/* The chamber */}
         <div className="lg:col-span-2">
-          <div className="relative aspect-video rounded-2xl overflow-hidden border border-ink-800 timelapse">
-            <div className="absolute inset-0 printer-grid opacity-40" />
-
-            {/* Printer schematic */}
-            <svg
-              viewBox="0 0 600 360"
-              className="absolute inset-0 w-full h-full"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              {/* Bed */}
-              <rect x="80" y="280" width="440" height="20" rx="2" fill="#1C1C1F" stroke="#3A3A3F" />
-              <rect x="80" y="280" width="440" height="6" fill="#089a47" opacity="0.3" />
-              {/* Gantry */}
-              <rect x="60" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
-              <rect x="520" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
-              <rect x="60" y="60" width="480" height="14" fill="#1C1C1F" stroke="#3A3A3F" />
-              {/* Print head */}
-              <g transform={`translate(${300 + headX}, 110)`}>
-                <rect x="-30" y="-12" width="60" height="40" rx="4" fill="#2A2A2E" stroke="#3A3A3F" />
-                <polygon points="-10,28 10,28 0,42" fill="#089a47" />
-                <line x1="0" y1="42" x2="0" y2="270" stroke="#089a47" strokeWidth="1" opacity="0.5" strokeDasharray="3 3" />
-              </g>
-              {/* Already-printed object */}
-              <g>
-                <rect x="200" y="240" width="200" height="40" rx="4" fill="#FF6B1A" opacity="0.85" />
-                <rect x="220" y="225" width="160" height="20" rx="3" fill="#FF6B1A" opacity="0.9" />
-                <rect x="240" y="212" width="120" height="16" rx="2" fill="#FF6B1A" />
-              </g>
-            </svg>
+          <div className="relative aspect-video rounded-2xl overflow-hidden border border-ink-800 bg-ink-950">
+            {camera && online ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={camera}
+                alt="המדפסת עכשיו"
+                className="absolute inset-0 h-full w-full object-cover"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
+            ) : (
+              <>
+                <div className="absolute inset-0 printer-grid opacity-40" />
+                <svg viewBox="0 0 600 360" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
+                  <rect x="80" y="280" width="440" height="20" rx="2" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <rect x="80" y="280" width="440" height="6" fill="#089a47" opacity="0.3" />
+                  <rect x="60" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <rect x="520" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <rect x="60" y="60" width="480" height="14" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <g transform="translate(300, 110)">
+                    <rect x="-30" y="-12" width="60" height="40" rx="4" fill="#2A2A2E" stroke="#3A3A3F" />
+                    <polygon points="-10,28 10,28 0,42" fill="#089a47" />
+                  </g>
+                </svg>
+                <div className="absolute inset-0 flex items-end justify-center pb-10">
+                  <div className="text-center">
+                    <div className="text-ink-400 text-sm">{ready ? "אין תמונה כרגע" : "טוען…"}</div>
+                    <div className="text-ink-600 text-xs mt-1">המצלמה משדרת כשהמדפסת דולקת</div>
+                  </div>
+                </div>
+              </>
+            )}
 
             <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-              <Pill tone="bad">
-                <span className="w-1.5 h-1.5 rounded-full bg-bad live-dot" />
-                LIVE
+              <Pill tone={printing ? "bad" : "neutral"}>
+                {printing && <span className="w-1.5 h-1.5 rounded-full bg-bad live-dot" />}
+                {STATE_HE[state]}
               </Pill>
-              <span className="font-mono text-[10px] tracking-wider text-ink-200 bg-ink-950/60 backdrop-blur px-2 py-1 rounded" dir="ltr">
-                1080p · 30fps
-              </span>
             </div>
 
-            <div
-              className="absolute top-4 left-4 z-10 font-mono text-[11px] text-ink-200 bg-ink-950/60 backdrop-blur px-2 py-1.5 rounded"
-              dir="ltr"
-            >
-              <div>CAM · BAMBU X1C</div>
+            <div className="absolute top-4 left-4 z-10 font-mono text-[11px] text-ink-200 bg-ink-950/60 backdrop-blur px-2 py-1.5 rounded" dir="ltr">
+              <div>CAM · {(live?.model || "PRINTER").toUpperCase()}</div>
               <div className="text-flame">{clock}</div>
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 z-10">
-              <div className="bg-gradient-to-t from-ink-950 via-ink-950/80 to-transparent p-4 pt-12">
-                <div className="font-mono text-[11px] text-ink-400 mb-1" dir="ltr">
-                  JOB #4781 · keychain_yoav_unit51.gcode
-                </div>
-                <div className="flex items-end justify-between gap-3">
-                  <h2 className="font-bold text-lg">מחזיק · יואב · חטיבה 51</h2>
-                  <div
-                    className="font-mono text-3xl font-extrabold text-flame tabular-nums"
-                    dir="ltr"
-                  >
-                    47%
+            {printing && (
+              <div className="absolute inset-x-0 bottom-0 z-10">
+                <div className="bg-gradient-to-t from-ink-950 via-ink-950/80 to-transparent p-4 pt-12">
+                  <div className="flex items-end justify-between gap-3">
+                    <h2 className="font-bold text-lg truncate">{live?.job_name || "הדפסה"}</h2>
+                    <div className="font-mono text-3xl font-extrabold text-flame tabular-nums" dir="ltr">
+                      {Math.round(progress)}%
+                    </div>
+                  </div>
+                  <div className="mt-3 h-1.5 bg-ink-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-flame transition-[width] duration-700" style={{ width: `${progress}%` }} />
                   </div>
                 </div>
-                <div className="mt-3 h-1.5 bg-ink-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-flame progress-fill" style={{ width: "47%" }} />
-                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Is this mine? */}
-          <form
-            className="mt-6 p-5 rounded-2xl bg-ink-900 border border-ink-800 flex flex-wrap items-center gap-3"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <div className="flex-1 min-w-[200px]">
-              <div className="font-bold text-sm mb-1">זאת ההזמנה שלי?</div>
-              <div className="text-ink-400 text-xs">
-                הזן מספר הזמנה כדי לבדוק.
-              </div>
-            </div>
-            <Input
-              placeholder="#4781"
-              value={orderQuery}
-              onChange={(e) => setOrderQuery(e.target.value)}
-              className="w-40 font-mono text-center"
-              dir="ltr"
-            />
-            <Btn type="submit" icon="search">
-              בדוק
-            </Btn>
-          </form>
+          <p className="mt-3 text-[11px] text-ink-500">
+            התמונה והנתונים נמשכים מהמדפסת עצמה ומתרעננים כל עשר שניות.
+            {live?.updated_at && ` עדכון אחרון: ${when(live.updated_at)}.`}
+          </p>
         </div>
 
-        {/* Dashboard */}
+        {/* Readout */}
         <aside className="grid grid-cols-2 gap-3 h-fit">
           <div className="col-span-2 p-5 rounded-2xl bg-ink-900 border border-ink-800">
             <div className="flex items-center justify-between mb-2">
-              <Pill tone="flame">#4781</Pill>
-              <span className="font-mono text-[10px] tracking-widest text-ink-500" dir="ltr">
-                CURRENT JOB
-              </span>
+              <Pill tone={printing ? "flame" : "neutral"}>{STATE_HE[state]}</Pill>
+              <span className="font-mono text-[10px] tracking-widest text-ink-500" dir="ltr">CURRENT JOB</span>
             </div>
-            <div className="font-bold text-base mb-3">מחזיק · יואב · חטיבה 51</div>
+            <div className="font-bold text-base mb-3 truncate">{live?.job_name || (online ? "אין הדפסה פעילה" : "—")}</div>
             <div className="grid grid-cols-2 divide-x divide-ink-800 rtl:divide-x-reverse" dir="ltr">
               <div className="text-center">
-                <div className="font-mono text-2xl font-bold tabular-nums">1:22</div>
+                <div className="font-mono text-2xl font-bold tabular-nums">{fmtLeft(live?.minutes_left ?? null)}</div>
                 <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">REMAINING</div>
               </div>
               <div className="text-center">
-                <div className="font-mono text-2xl font-bold tabular-nums">87 / 142</div>
+                <div className="font-mono text-2xl font-bold tabular-nums">
+                  {live?.layer != null && live?.layers_total ? `${live.layer} / ${live.layers_total}` : "—"}
+                </div>
                 <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">LAYER</div>
               </div>
             </div>
           </div>
 
           {[
-            { label: "NOZZLE TEMP", value: `${nozzleTemp}°C`, iconKey: "thermometer" as const, tone: "bad" as const },
-            { label: "BED TEMP", value: `${bedTemp}°C`, iconKey: "layers" as const, tone: "flame" as const },
-            { label: "PRINT SPEED", value: `${speed} mm/s`, iconKey: "zap" as const, tone: "cyan" as const },
-            { label: "LAYER HEIGHT", value: `0.16 mm`, iconKey: "layers" as const, tone: "neutral" as const },
-            { label: "FILAMENT USED", value: `14.2 / 23 g`, iconKey: "droplet" as const, tone: "neutral" as const },
-            { label: "CAMERA", value: `ONLINE`, iconKey: "camera" as const, tone: "good" as const },
+            { label: "NOZZLE", value: live?.nozzle_temp != null ? `${Math.round(live.nozzle_temp)}°C` : "—", iconKey: "thermometer" as const },
+            { label: "BED", value: live?.bed_temp != null ? `${Math.round(live.bed_temp)}°C` : "—", iconKey: "layers" as const },
+            { label: "FILAMENT", value: live?.filament || "—", iconKey: "droplet" as const },
+            { label: "FAN", value: live?.fan != null ? `${live.fan}` : "—", iconKey: "zap" as const },
           ].map((s) => (
             <div key={s.label} className="p-4 rounded-2xl bg-ink-900 border border-ink-800">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-ink-500" aria-hidden="true">
-                  <Icon name={s.iconKey} size={16} />
-                </span>
-              </div>
-              <div className="font-mono text-xl font-bold tabular-nums" dir="ltr">
-                {s.value}
-              </div>
-              <div className="font-mono text-[10px] text-ink-500 uppercase tracking-widest mt-1">
-                {s.label}
-              </div>
+              <span className="text-ink-500" aria-hidden="true"><Icon name={s.iconKey} size={16} /></span>
+              <div className="font-mono text-xl font-bold tabular-nums mt-2 truncate" dir="ltr">{s.value}</div>
+              <div className="font-mono text-[10px] text-ink-500 uppercase tracking-widest mt-1">{s.label}</div>
             </div>
           ))}
         </aside>
       </div>
 
-      {/* Queue */}
-      <section className="mt-12">
-        <div className="flex items-end justify-between mb-5">
-          <div>
-            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">
-              QUEUE · 4 NEXT
-            </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-              מה אחרי.
-            </h2>
+      {/* The numbers, openly */}
+      {jobs.length > 0 && (
+        <section className="mt-12">
+          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">THE NUMBERS</div>
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה יצא מהמדפסת הזאת.</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { label: "הדפסות שהסתיימו", value: String(stats.ok) },
+              { label: "שעות הדפסה", value: String(stats.hours) },
+              { label: "בחודש האחרון", value: String(stats.lastMonth) },
+              { label: "אחוז הצלחה", value: stats.successRate != null ? `${stats.successRate}%` : "—" },
+            ].map((s) => (
+              <div key={s.label} className="p-5 rounded-2xl bg-ink-900 border border-ink-800">
+                <div className="font-mono text-3xl font-black text-flame tabular-nums" dir="ltr">{s.value}</div>
+                <div className="text-xs text-ink-400 mt-1">{s.label}</div>
+              </div>
+            ))}
           </div>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {QUEUE.map((q) => (
-            <article
-              key={q.id}
-              className="p-4 rounded-2xl bg-ink-900 border border-ink-800 hover:border-ink-700 transition-colors"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-[11px] text-ink-400" dir="ltr">
-                  {q.id}
-                </span>
-                <Pill tone="neutral">בתור</Pill>
+          <p className="mt-3 text-[11px] text-ink-500">
+            נספר על ידי המדפסת, לא על ידי. כולל הדפסות שנכשלו — {stats.failed} מהן.
+          </p>
+        </section>
+      )}
+
+      {/* Timelapses */}
+      {clips.length > 0 && (
+        <section className="mt-12">
+          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">TIMELAPSE</div>
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">שעות בתוך חצי דקה.</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {clips.map((c) => (
+              <figure key={c.file} className="rounded-2xl overflow-hidden bg-ink-900 border border-ink-800">
+                <video src={c.url} controls preload="metadata" playsInline className="w-full aspect-video bg-ink-950" />
+                <figcaption className="p-3 text-[11px] text-ink-400 flex items-center justify-between gap-2">
+                  <span className="truncate" dir="ltr">{c.file}</span>
+                  <span className="shrink-0">{when(c.recorded_at)}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Last prints */}
+      {jobs.length > 0 && (
+        <section className="mt-12">
+          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">RECENT</div>
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה רץ כאן לאחרונה.</h2>
+          <div className="space-y-2">
+            {jobs.slice(0, 8).map((j) => (
+              <div key={j.key} className="flex flex-wrap items-center gap-3 px-4 py-3 rounded-xl bg-ink-900 border border-ink-800">
+                <Pill tone={j.ok ? "good" : "neutral"} className="text-[10px]">{j.ok ? "הושלמה" : "נעצרה"}</Pill>
+                <span className="font-semibold text-sm truncate">{j.name}</span>
+                <span className="flex-1" />
+                {j.minutes != null && <span className="font-mono text-[11px] text-ink-400" dir="ltr">{fmtLeft(j.minutes)}</span>}
+                <span className="text-[11px] text-ink-500">{when(j.finished_at)}</span>
               </div>
-              <div className="flex items-center justify-center my-3">
-                <Emblem shape={q.shape} hue={q.hue} size={70} />
-              </div>
-              <div className="font-bold text-sm leading-tight">{q.name}</div>
-              <div className="font-mono text-[11px] text-ink-400 mt-1.5" dir="ltr">
-                ETA · {q.eta}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {ready && !online && jobs.length === 0 && (
+        <section className="mt-12 p-8 rounded-2xl border border-ink-800 text-center">
+          <div className="font-bold mb-1">עוד אין נתונים מהמדפסת.</div>
+          <p className="text-sm text-ink-400">
+            ברגע שהמדפסת והמחשב שלידה דולקים, המצב, התמונה, ההדפסות והטיימלפסים מופיעים כאן מעצמם.
+          </p>
+        </section>
+      )}
     </div>
   );
 }
