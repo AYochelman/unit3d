@@ -157,6 +157,9 @@ client.on("connect", () => {
   client.subscribe(`device/${serial}/report`);
   // Bambu only sends deltas until asked for everything once.
   client.publish(`device/${serial}/request`, JSON.stringify({ pushing: { sequence_id: "0", command: "pushall" } }));
+  // The chamber is dark unless its LED is on; ask straight away so the first
+  // frame is not a black rectangle.
+  setTimeout(() => keepChamberLit(), 2500);
 });
 
 client.on("error", (e) => {
@@ -276,13 +279,25 @@ function setChamberLight(on) {
   );
 }
 
+// Not every firmware reports lights_report, and a printer that never reports it
+// would otherwise never be asked — which is how a dark chamber survives a fix
+// that "should" have worked. So: switch it on when the printer says it is off,
+// and also when the printer says nothing at all, retried on a slow beat rather
+// than trusting a single message to arrive.
+let lastLightAsk = 0;
 function keepChamberLit() {
   if ((cfg.camera?.light ?? "auto") === "never") return;
-  if (lightIsOn() === false) {
-    setChamberLight(true);
-    litByUs = true;
-    log("chamber light was off - turned it on so the camera has something to show");
-  }
+  const on = lightIsOn();
+  if (on === true) return;
+  if (Date.now() - lastLightAsk < 60_000) return;
+  lastLightAsk = Date.now();
+  setChamberLight(true);
+  litByUs = true;
+  log(
+    on === false
+      ? "chamber light was off - turned it on so the camera has something to show"
+      : "printer does not report its light - asking for it on anyway",
+  );
 }
 
 async function pushCamera() {

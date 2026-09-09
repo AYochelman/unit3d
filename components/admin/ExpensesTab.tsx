@@ -8,8 +8,8 @@ import { useAdminStore } from "@/lib/admin-store";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { deleteExpenseRow, loadExpenses, saveExpenseRow, saveUsdRate } from "@/lib/expenses-remote";
 import {
-  CYCLE_HE, expenseTotals, inILS, monthlyILS, newExpenseId,
-  type Currency, type Cycle, type Expense,
+  CYCLE_HE, EXPENSE_PRESETS, expenseTotals, inILS, monthlyILS, newExpenseId,
+  type Currency, type Cycle, type Expense, type ExpensePreset,
 } from "@/lib/expenses";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -89,6 +89,19 @@ export default function ExpensesTab() {
     saveExpense(row);
     void write(row);
     reset();
+  };
+
+  // A preset fills in everything except the amount — that is always typed,
+  // because it is the only part that differs from one invoice to the next.
+  const applyPreset = (p: ExpensePreset) => {
+    setEditing(null);
+    setName(p.name);
+    setAmount(p.amount != null ? String(p.amount) : "");
+    setCurrency(p.currency);
+    setCycle(p.cycle);
+    setDate(today());
+    setNote(p.note ?? "");
+    setErr("");
   };
 
   const edit = (e: Expense) => {
@@ -189,6 +202,24 @@ export default function ExpensesTab() {
       </div>
 
       <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-3">
+        {!editing && (
+          <div>
+            <div className="text-[11px] text-ink-500 mb-1.5">הוצאות נפוצות — לחיצה ממלאת את הטופס, נשאר רק להקליד סכום:</div>
+            <div className="flex flex-wrap gap-1.5">
+              {EXPENSE_PRESETS.map((p) => (
+                <button
+                  key={p.name}
+                  type="button"
+                  onClick={() => applyPreset(p)}
+                  className="px-2.5 py-1 rounded-full border border-ink-800 bg-ink-950 text-[12px] text-ink-300 hover:border-flame hover:text-ink-50 transition-colors"
+                >
+                  {p.name}
+                  <span className="text-ink-600 text-[10px]"> · {CYCLE_HE[p.cycle]}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="grid sm:grid-cols-2 gap-3">
           <Field label="על מה">
             <Input placeholder="EmailJS · דומיין · גליל PLA" value={name} onChange={(e) => { setName(e.target.value); setErr(""); }} />

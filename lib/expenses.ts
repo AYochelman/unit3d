@@ -63,3 +63,30 @@ export function expenseTotals(list: Expense[], usdRate: number) {
 
 export const newExpenseId = (): string =>
   `x${Date.now().toString(36)}${Math.floor(Math.random() * 1296).toString(36)}`;
+
+/**
+ * The costs a print shop actually has, as one-click starting points.
+ *
+ * Not a price list — the amount is always the owner's to type, because it is
+ * the one thing that differs per invoice. What these save is the part that is
+ * easy to get wrong from memory: whether a thing is billed once, monthly or
+ * yearly, and in which currency.
+ */
+export type ExpensePreset = {
+  name: string;
+  currency: Currency;
+  cycle: Cycle;
+  note?: string;
+  amount?: number;
+};
+
+export const EXPENSE_PRESETS: ExpensePreset[] = [
+  { name: "Raspberry Pi", currency: "ILS", cycle: "once", note: "מחשב קטן שמריץ את החיבור למדפסת" },
+  { name: "גליל פילמנט", currency: "ILS", cycle: "once" },
+  { name: "חלפי מדפסת", currency: "ILS", cycle: "once", note: "פיות, פלטה, רצועות" },
+  { name: "אריזות ומשלוח", currency: "ILS", cycle: "once" },
+  { name: "EmailJS", currency: "USD", cycle: "monthly", amount: 11 },
+  { name: "חשמל", currency: "ILS", cycle: "monthly" },
+  { name: "דומיין", currency: "ILS", cycle: "yearly" },
+  { name: "Supabase", currency: "USD", cycle: "monthly", amount: 25 },
+];
