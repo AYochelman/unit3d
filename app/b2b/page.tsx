@@ -1,6 +1,7 @@
 import B2BClient from "./B2BClient";
 
 export const metadata = {
+  alternates: { canonical: "/b2b/" },
   title: "B2B · Unit 3D",
   description:
     "מתנות לחברות, ערכות קליטה, פרסים רבעוניים. חשבונית מס, מחירון מדורג, ומשלוח מרוכז.",

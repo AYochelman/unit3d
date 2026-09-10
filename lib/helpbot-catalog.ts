@@ -69,6 +69,30 @@ const heName = (m: ImportedModel): string =>
 const priceOf = (m: ImportedModel): number =>
   suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus");
 
+/**
+ * Where a shelf actually lives.
+ *
+ * The shelf keys are not routes and four of them differ: flexi and fidget both
+ * list under /fidgets, home and office share /home-office. Linking to
+ * `/${shelf}` sends people to /flexi and /office, which are 404s.
+ */
+export const SHELF_ROUTE: Record<ImportedShelf, string> = {
+  flexi: "/fidgets",
+  fidget: "/fidgets",
+  statues: "/statues",
+  screen: "/screen",
+  pets: "/pets",
+  home: "/home-office",
+  office: "/home-office",
+  smoke: "/smoke",
+  trendy: "/trendy",
+  b2b: "/b2b",
+};
+
+/** Same split for a single model: the bendy things have their own detail page. */
+const modelHref = (m: ImportedModel): string =>
+  m.shelf === "flexi" || m.shelf === "fidget" ? `/fidgets/${m.id}` : `/products/${m.id}`;
+
 const toFound = (m: ImportedModel, nameHit = false): Found => ({
   id: m.id,
   name: heName(m),
@@ -76,7 +100,7 @@ const toFound = (m: ImportedModel, nameHit = false): Found => ({
   shelfLabel: SHELF_LABEL[m.shelf] ?? "",
   price: priceOf(m),
   hours: m.hours,
-  href: `/products/${m.id}`,
+  href: modelHref(m),
   nameHit,
 });
 

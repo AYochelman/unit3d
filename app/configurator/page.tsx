@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import ConfiguratorFromQuery from "./ConfiguratorFromQuery";
 
 export const metadata = {
+  alternates: { canonical: "/configurator/" },
   title: "מעצב אישי · Unit 3D",
   description:
     "מחזיק מפתחות, קייס לטלפון, קייס למצית, דיסקית, שלט שם ועוד: טקסט או עיצוב חופשי, צבע, גודל. תצוגה חיה בזמן אמת.",

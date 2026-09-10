@@ -8,10 +8,20 @@ import Marquee from "@/components/home/Marquee";
 import B2BBlock from "@/components/home/B2BBlock";
 import ReviewsRow from "@/components/home/ReviewsRow";
 import FinalCTA from "@/components/home/FinalCTA";
+import JsonLd from "@/components/seo/JsonLd";
+import { businessJsonLd, websiteJsonLd } from "@/lib/seo";
+
+// The root's own address. The layout cannot declare it — metadata is
+// inherited, and a canonical there would point all 408 pages here.
+export const metadata = { alternates: { canonical: "/" } };
 
 export default function HomePage() {
   return (
     <>
+      {/* Who this business is, where it is and how to reach it — the block
+          that lets a search for "הדפסת תלת מימד גבעתיים" find us at all. */}
+      <JsonLd data={businessJsonLd()} />
+      <JsonLd data={websiteJsonLd()} />
       <Hero />
       {/* The printer itself, straight after the hero. Eight timelapses off the
           real build plate answer "are these people actually printing?" before

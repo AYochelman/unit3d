@@ -1,14 +1,22 @@
 import FAQClient from "./FAQClient";
+import JsonLd from "@/components/seo/JsonLd";
+import { faqJsonLd } from "@/lib/seo";
+import { FAQS } from "@/lib/data";
 
 export const metadata = {
   title: "שאלות נפוצות · Unit 3D",
   description:
     "כל מה שצריך לדעת — זמני הדפסה, חומרים, אחריות, משלוחים, ביטולים, וקבצים.",
+  alternates: { canonical: "/faq/" },
 };
 
 export default function FAQPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 md:px-10 py-12 md:py-16">
+      {/* The same eight answers, in the form Google can expand under the
+          result. They come from the one FAQS list, so the page and the search
+          result can never drift apart. */}
+      <JsonLd data={faqJsonLd(FAQS)} />
       <header className="mb-10">
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           FAQ · 8 ANSWERS

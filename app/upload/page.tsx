@@ -1,6 +1,7 @@
 import UploadClient from "./UploadClient";
 
 export const metadata = {
+  alternates: { canonical: "/upload/" },
   title: "העלאת קובץ · Unit 3D",
   description:
     "יש לך STL, OBJ, או 3MF? תעלה — אני אסתכל, אצבע, ואקבע איתך הצעת מחיר.",

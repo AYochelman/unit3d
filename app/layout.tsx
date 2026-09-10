@@ -39,9 +39,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Unit 3D · הדפסות תלת מימד בהתאמה אישית",
     description: "סמלי יחידות · מתנות לעובדים · פידג'טים · כל רעיון, מודפס.",
+    url: "https://unit-3d.com/",
+    siteName: "Unit 3D",
     locale: "he_IL",
     type: "website",
   },
+  // Deliberately NOT a site-wide canonical: metadata is inherited, so a
+  // canonical here would make all 408 pages claim to be the homepage. Pages
+  // that need one declare it themselves.
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import PersonalizeClient from "./PersonalizeClient";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/personalize/" },
   title: "טקסט על המוצר · Unit 3D",
   description: "מוסיפים שם, תאריך או משפט על כל מוצר בחנות. תוספת אחידה של 15 ₪.",
 };

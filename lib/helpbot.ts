@@ -1,6 +1,7 @@
 import { FAQS } from "./data";
 import { CONTACT } from "./contact";
-import { catalogueSize, findProducts, findShelf, fold as foldHe, shelfCount, type Found } from "./helpbot-catalog";
+import { catalogueSize, findProducts, findShelf, fold as foldHe, shelfCount, SHELF_ROUTE, type Found } from "./helpbot-catalog";
+import type { ImportedShelf } from "./imported";
 
 // A small, honest help bot: it matches what you typed against a list of
 // intents and answers from the same facts the site states elsewhere. There is
@@ -243,7 +244,7 @@ function productAnswer(found: Found[], asked: string): BotAnswer {
     text,
     links: [
       ...found.map((f) => ({ label: f.name, href: f.href })),
-      { label: `כל ה${one.shelfLabel}`, href: `/${one.shelf}` },
+      { label: `כל ה${one.shelfLabel}`, href: SHELF_ROUTE[one.shelf] },
     ].slice(0, 4),
     next: ["price", "time", "materials"],
   };
@@ -253,8 +254,8 @@ function productAnswer(found: Found[], asked: string): BotAnswer {
  * A shelf was named rather than a product: say what is on it — and name a few,
  * because "יש 27 דגמים" is a fact and "יש 27, למשל אלה" is an answer.
  */
-function shelfAnswer(shelf: { shelf: string; label: string }, examples: Found[] = []): BotAnswer {
-  const n = shelfCount(shelf.shelf as Parameters<typeof shelfCount>[0]);
+function shelfAnswer(shelf: { shelf: ImportedShelf; label: string }, examples: Found[] = []): BotAnswer {
+  const n = shelfCount(shelf.shelf);
   const onShelf = examples.filter((f) => f.shelf === shelf.shelf).slice(0, 3);
   const sample = onShelf.length
     ? ` למשל: ${onShelf.map((f) => `${f.name} — ${ils(f.price)}`).join(" · ")}.`
@@ -264,7 +265,7 @@ function shelfAnswer(shelf: { shelf: string; label: string }, examples: Found[] 
     keys: [],
     text: `יש ${n} דגמים על מדף ${shelf.label}.${sample} כל אחד עם מחיר, חומר וזמן הדפסה — ואפשר לשנות צבע לפני ההזמנה.`,
     links: [
-      { label: `פתח ${shelf.label}`, href: `/${shelf.shelf}` },
+      { label: `פתח ${shelf.label}`, href: SHELF_ROUTE[shelf.shelf] },
       ...onShelf.map((f) => ({ label: f.name, href: f.href })),
     ].slice(0, 4),
     next: ["price", "materials", "shipping"],
