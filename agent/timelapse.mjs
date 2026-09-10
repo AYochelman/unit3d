@@ -59,8 +59,12 @@ if (files.length === 0) {
   // "no timelapses" about it is worse than saying nothing.
   let anyAnswered = false;
   console.log("\n  No videos matched. Asking the card what it does contain:\n");
-  for (const candidate of ["/", "/timelapse", "/video"]) {
+  for (const candidate of ["/", "/timelapse", "/video", "/sdcard", "/model"]) {
     try {
+      // A transfer that failed can leave the connection out of step, so each
+      // probe gets a fresh one rather than inheriting the last one's mess.
+      try { ftp.close(); } catch { /* already gone */ }
+      ftp = await connectPrinterFtps({ host, password: accessCode });
       const raw = await ftp.listRaw(candidate);
       anyAnswered = true;
       console.log(`  ${candidate}`);

@@ -115,3 +115,56 @@ export const RECOVERED_EXPENSES: Expense[] = [
     date: "2026-09-08", note: "Cloudflare Registrar \u00b7 \u05d7\u05d9\u05d3\u05d5\u05e9 \u05e9\u05e0\u05ea\u05d9", active: true,
   },
 ];
+
+/**
+ * The migration that was written but never run.
+ *
+ * The tab shows this when the table is missing, because the alternative — a
+ * page that loads forever — is what turned a missing migration into "you
+ * deleted my expenses". It creates the table, locks it to a signed-in owner,
+ * and restores every row that was in the public file before the move.
+ */
+export const EXPENSES_SQL = `create table if not exists public.expenses (
+  id         text primary key,
+  name       text not null,
+  amount     numeric not null,
+  currency   text not null default 'ILS',
+  cycle      text not null default 'monthly',
+  date       date,
+  note       text,
+  active     boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.shop_settings (
+  key   text primary key,
+  value jsonb
+);
+
+alter table public.expenses      enable row level security;
+alter table public.shop_settings enable row level security;
+
+drop policy if exists "owner reads expenses"   on public.expenses;
+drop policy if exists "owner adds expenses"    on public.expenses;
+drop policy if exists "owner edits expenses"   on public.expenses;
+drop policy if exists "owner deletes expenses" on public.expenses;
+create policy "owner reads expenses"   on public.expenses for select to authenticated using (true);
+create policy "owner adds expenses"    on public.expenses for insert to authenticated with check (true);
+create policy "owner edits expenses"   on public.expenses for update to authenticated using (true) with check (true);
+create policy "owner deletes expenses" on public.expenses for delete to authenticated using (true);
+
+drop policy if exists "owner reads settings"  on public.shop_settings;
+drop policy if exists "owner writes settings" on public.shop_settings;
+drop policy if exists "owner edits settings"  on public.shop_settings;
+create policy "owner reads settings"  on public.shop_settings for select to authenticated using (true);
+create policy "owner writes settings" on public.shop_settings for insert to authenticated with check (true);
+create policy "owner edits settings"  on public.shop_settings for update to authenticated using (true) with check (true);
+
+insert into public.expenses (id, name, amount, currency, cycle, date, note) values
+  ('x-emailjs',   'EmailJS',             11,    'USD', 'monthly', '2026-09-09', '\u05de\u05d9\u05d9\u05dc \u05d0\u05d9\u05e9\u05d5\u05e8 \u05d4\u05d6\u05de\u05e0\u05d4'),
+  ('x-domain',    '\u05d3\u05d5\u05de\u05d9\u05d9\u05df unit-3d.com', 10.44, 'USD', 'yearly', '2026-09-08', 'Cloudflare Registrar'),
+  ('xmtuaai5zcg', 'P2S Printer',         3000,  'ILS', 'once',    '2026-09-09', null),
+  ('xmtuadxjdly', '\u05d2\u05dc\u05d9\u05dc PLA \u05e2\u05e9\u05e8\u05d4', 1000, 'ILS', 'once', '2026-09-09', null),
+  ('xmtuacsksok', '\u05d2\u05dc\u05d9\u05dc PLA \u05d6\u05d5\u05d2',  200,  'ILS', 'once', '2026-09-09', null),
+  ('xmtuab5fkr6', '\u05de\u05d5\u05e6\u05e8\u05d9 \u05d0\u05e8\u05d9\u05d6\u05d4', 200, 'ILS', 'once', '2026-09-09', null)
+on conflict (id) do nothing;`;

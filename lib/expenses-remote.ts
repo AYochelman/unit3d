@@ -45,15 +45,38 @@ const auth = async (token: string) => {
   };
 };
 
-export async function loadExpenses(token: string): Promise<{ expenses: Expense[]; usdRate: number } | null> {
+/**
+ * The books, or the reason there are none.
+ *
+ * This used to answer `null` for every kind of failure, and the tab read that
+ * as "still loading" and said so forever. A table that was never created and a
+ * table that is empty look identical from there, which is how a missing
+ * migration became "my expenses were deleted". So a failure now comes back
+ * named, and the tab can say which one it is.
+ */
+export type ExpensesLoad =
+  | { ok: true; expenses: Expense[]; usdRate: number }
+  | { ok: false; reason: "no-table" | "denied" | "offline"; detail: string };
+
+export async function loadExpenses(token: string): Promise<ExpensesLoad> {
   const a = await auth(token);
-  if (!a) return null;
+  if (!a) return { ok: false, reason: "offline", detail: "אין חיבור למסד הנתונים" };
   try {
     const [rows, settings] = await Promise.all([
       fetch(`${a.url}/rest/v1/expenses?select=*&order=name.asc`, { headers: a.headers, cache: "no-store" }),
       fetch(`${a.url}/rest/v1/shop_settings?key=eq.usd_rate&select=value`, { headers: a.headers, cache: "no-store" }),
     ]);
-    if (!rows.ok) return null;
+    if (!rows.ok) {
+      const body = await rows.text().catch(() => "");
+      // PostgREST answers 404 with "relation ... does not exist" when the table
+      // was never created — the one failure the owner can actually fix.
+      const missing = rows.status === 404 || /does not exist|schema cache/i.test(body);
+      return {
+        ok: false,
+        reason: missing ? "no-table" : rows.status === 401 || rows.status === 403 ? "denied" : "offline",
+        detail: body.slice(0, 200) || `שגיאה ${rows.status}`,
+      };
+    }
     const list = ((await rows.json()) as Row[]).map(toExpense);
     let usdRate = DEFAULT_USD_RATE;
     if (settings.ok) {
@@ -61,9 +84,9 @@ export async function loadExpenses(token: string): Promise<{ expenses: Expense[]
       const v = Number(s[0]?.value);
       if (Number.isFinite(v) && v > 0) usdRate = v;
     }
-    return { expenses: list, usdRate };
-  } catch {
-    return null;
+    return { ok: true, expenses: list, usdRate };
+  } catch (e) {
+    return { ok: false, reason: "offline", detail: e instanceof Error ? e.message : "אין חיבור" };
   }
 }
 

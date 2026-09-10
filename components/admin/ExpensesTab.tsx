@@ -6,9 +6,9 @@ import Pill from "@/components/ui/Pill";
 import { Field, Input, Select } from "@/components/ui/Field";
 import { useAdminStore } from "@/lib/admin-store";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
-import { deleteExpenseRow, loadExpenses, saveExpenseRow, saveUsdRate } from "@/lib/expenses-remote";
+import { deleteExpenseRow, loadExpenses, saveExpenseRow, saveUsdRate, type ExpensesLoad } from "@/lib/expenses-remote";
 import {
-  CYCLE_HE, EXPENSE_PRESETS, RECOVERED_EXPENSES, expenseTotals, inILS, monthlyILS, newExpenseId,
+  CYCLE_HE, EXPENSES_SQL, EXPENSE_PRESETS, RECOVERED_EXPENSES, expenseTotals, inILS, monthlyILS, newExpenseId,
   type Currency, type Cycle, type Expense, type ExpensePreset,
 } from "@/lib/expenses";
 import { fmtILS } from "@/lib/format";
@@ -44,6 +44,7 @@ export default function ExpensesTab() {
   const [loaded, setLoaded] = useState(false);
   const [saveErr, setSaveErr] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
+  const [loadProblem, setLoadProblem] = useState<Exclude<ExpensesLoad, { ok: true }> | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [restored, setRestored] = useState(false);
 
@@ -59,9 +60,16 @@ export default function ExpensesTab() {
   useEffect(() => {
     if (!token) return;
     let alive = true;
-    void loadExpenses(token).then((data) => {
-      if (!alive || !data) return;
-      setExpenses(data.expenses, data.usdRate);
+    void loadExpenses(token).then((res) => {
+      if (!alive) return;
+      if (res.ok) {
+        setExpenses(res.expenses, res.usdRate);
+        setLoadProblem(null);
+      } else {
+        setLoadProblem(res);
+      }
+      // Loaded either way: a failure that leaves the page saying "loading" is
+      // how a missing table came to look like deleted data.
       setLoaded(true);
     });
     return () => { alive = false; };
@@ -223,7 +231,41 @@ export default function ExpensesTab() {
         ))}
       </div>
 
-      {loaded && expenses.length === 0 && !restored && (
+      {loadProblem && (
+        <div className="p-4 rounded-2xl border border-bad/40 bg-bad/5">
+          <div className="font-bold text-sm mb-1">
+            {loadProblem.reason === "no-table"
+              ? "טבלת ההוצאות עוד לא נוצרה במסד הנתונים"
+              : loadProblem.reason === "denied"
+                ? "אין הרשאה לקרוא את ההוצאות"
+                : "לא הצלחתי להגיע למסד הנתונים"}
+          </div>
+          {loadProblem.reason === "no-table" ? (
+            <>
+              <p className="text-[13px] text-ink-300 mb-2">
+                לכן העמוד נראה ריק — לא נמחק כלום, פשוט אין לאן לכתוב. פתח את Supabase ←
+                SQL Editor, הדבק את זה והרץ. זה יוצר את הטבלה <b>וגם מחזיר את כל ההוצאות</b>.
+              </p>
+              <pre
+                dir="ltr"
+                className="text-left overflow-x-auto text-[11px] leading-relaxed bg-ink-950 border border-ink-800 rounded-xl p-3 font-mono max-h-56"
+              >{EXPENSES_SQL}</pre>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <Btn size="sm" icon="file" onClick={() => void navigator.clipboard?.writeText(EXPENSES_SQL)}>
+                  העתקת ה-SQL
+                </Btn>
+                <Btn size="sm" variant="ghost" onClick={() => window.location.reload()}>
+                  הרצתי — רענן
+                </Btn>
+              </div>
+            </>
+          ) : (
+            <p className="text-[13px] text-ink-400" dir="ltr">{loadProblem.detail}</p>
+          )}
+        </div>
+      )}
+
+      {loaded && !loadProblem && expenses.length === 0 && !restored && (
         <div className="p-4 rounded-2xl border border-flame/40 bg-flame/5">
           <div className="font-bold text-sm mb-1">נמצאה היסטוריית הוצאות קודמת</div>
           <p className="text-[13px] text-ink-300 mb-3">

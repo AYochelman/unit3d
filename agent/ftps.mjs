@@ -80,6 +80,8 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
   });
   control.setTimeout(0);
   const readReply = makeReader(control);
+  // Remembered across transfers so only the first one pays for the guess.
+  let dataMode = "";
 
   const say = async (cmd, okCodes) => {
     control.write(cmd + CRLF);
@@ -118,7 +120,11 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     if (!m) throw new Error("could not read where to connect for the transfer");
     const dataPort = Number(m[5]) * 256 + Number(m[6]);
 
-    // 1. Plain socket, no handshake yet.
+    // Implicit FTPS puts the data channel in TLS from the first byte, the same
+    // as the control channel on 990. Handshake first, then ask — and if the
+    // printer will not handshake until it knows what is wanted, ask first and
+    // upgrade after. Which one a firmware wants is not worth guessing at, so
+    // both are tried and the one that answers is remembered.
     const raw = await new Promise((resolve, reject) => {
       const d = net.connect({ host, port: dataPort }, () => resolve(d));
       d.setTimeout(30_000);
@@ -126,7 +132,20 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       d.on("timeout", () => { d.destroy(); reject(new Error("the printer did not open the transfer")); });
     });
 
-    // 2. The command goes out over the control connection.
+    const handshake = () =>
+      new Promise((resolve, reject) => {
+        const t = tls.connect({ socket: raw, rejectUnauthorized: false, session: control.getSession() }, () => resolve(t));
+        t.once("error", reject);
+        setTimeout(() => reject(new Error("no handshake")), 6000);
+      });
+
+    let secure = null;
+    if (dataMode !== "command-first") {
+      secure = await handshake().catch(() => null);
+      if (secure) dataMode = "tls-first";
+    }
+
+    // The command goes out over the control connection.
     control.write(command + CRLF);
     const start = await readReply(20_000);
     if (![125, 150].includes(start.code)) {
@@ -134,8 +153,10 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       throw new Error(`${command.split(" ")[0]} refused (${start.code})`);
     }
 
-    // 3. Now upgrade, resuming the session the control connection established.
-    const secure = tls.connect({ socket: raw, rejectUnauthorized: false, session: control.getSession() });
+    if (!secure) {
+      secure = await handshake();
+      dataMode = "command-first";
+    }
 
     const body = await new Promise((resolve, reject) => {
       const chunks = [];
