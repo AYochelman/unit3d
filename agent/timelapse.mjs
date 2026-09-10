@@ -45,9 +45,13 @@ try {
 // Where the videos live has moved between firmware versions, so look rather
 // than assume — and when nothing is found, show what IS on the card instead of
 // declaring it empty.
+// Newer printers carry internal storage as well as the card, and FTP may be
+// showing either one. So the search covers the names both use.
 const CANDIDATES = cfg.timelapse?.folder
   ? [cfg.timelapse.folder]
-  : ["/timelapse", "timelapse", "/video", "/"];
+  : ["/timelapse", "timelapse", "/video", "/",
+     "/sdcard/timelapse", "/emmc/timelapse", "/internal/timelapse",
+     "/mnt/sdcard/timelapse", "/data/timelapse", "/cache", "/image", "/model"];
 
 let files = [];
 let dir = "";
@@ -87,6 +91,15 @@ if (files.length === 0) {
       console.log(`  ${candidate} - could not read (${e.message})\n`);
     }
   }
+
+  // Every folder empty is not an answer, it is the absence of one. Ask the
+  // server what it thinks it is showing before drawing any conclusion.
+  try {
+    const about = await ftp.about();
+    console.log("  what the printer says about its own file service:");
+    for (const [k, v] of Object.entries(about)) console.log(`    ${k.padEnd(9)} ${v}`);
+    console.log("");
+  } catch { /* the control connection is gone; the lines above already said so */ }
 
   if (!anyAnswered) {
     bad("could not read the card at all",

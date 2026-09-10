@@ -323,6 +323,26 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       return transfer(`RETR ${remotePath}`);
     },
 
+    /**
+     * What the server says about itself, over the control connection only.
+     *
+     * These need no data channel, so they answer even when every listing comes
+     * back empty — and an empty listing plus "where am I" is the difference
+     * between a card with nothing on it and a server showing a different disk
+     * than the one being asked about.
+     */
+    async about() {
+      const out = {};
+      for (const [key, cmd] of [["pwd", "PWD"], ["system", "SYST"], ["features", "FEAT"], ["status", "STAT"]]) {
+        try {
+          out[key] = (await say(cmd)).text.replace(/\r?\n/g, " | ").trim();
+        } catch (e) {
+          out[key] = `— ${e.message}`;
+        }
+      }
+      return out;
+    },
+
     /** Which way of opening a transfer this printer accepted. */
     get mode() {
       return dataPlan?.name ?? "";
