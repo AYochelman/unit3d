@@ -2,7 +2,7 @@ import Btn from "@/components/ui/Btn";
 
 export default function FinalCTA() {
   return (
-    <section className="py-24 md:py-32 text-center">
+    <section className="py-16 md:py-24 text-center">
       <div className="max-w-3xl mx-auto px-6 md:px-10">
         <h2 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05]">
           יש לך רעיון.

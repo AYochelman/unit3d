@@ -134,7 +134,7 @@ function Track({ items, reverse }: { items: Review[]; reverse?: boolean }) {
 export default function ReviewsRow() {
   const half = Math.ceil(REVIEWS.length / 2);
   return (
-    <section className="py-20 md:py-24 overflow-hidden">
+    <section className="py-12 md:py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
           <SectionHead eyebrow={`REVIEWS · ${AVG} / 5.0`} title="לקוחות אמיתיים. הזמנות אמיתיות." />

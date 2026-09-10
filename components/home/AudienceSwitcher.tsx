@@ -48,7 +48,7 @@ const CARDS: Card[] = [
 
 export default function AudienceSwitcher() {
   return (
-    <section className="py-20 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <SectionHead
           eyebrow="FOR YOU · FOR YOUR UNIT · FOR YOUR COMPANY"

@@ -74,13 +74,17 @@ export default function HeroLogo({ className }: { className?: string }) {
         filter="url(#u3d-glow)"
       />
 
-      {/* D */}
+      {/* D — the same weight as the U, which is what makes them read as a pair.
+          Both letters run 130 to 248, so an equal stroke also puts their top
+          and bottom edges on exactly the same lines; at 30 against the U's 34
+          the D sat two pixels short at each end and looked a size smaller. */}
       <path
         d="M362 130 V248 H392 A59 59 0 0 0 392 130 Z"
         fill="none"
         stroke="#F5F5F7"
-        strokeWidth="30"
+        strokeWidth="34"
         strokeLinejoin="round"
+        strokeLinecap="butt"
         className="u3d-letter"
       />
 

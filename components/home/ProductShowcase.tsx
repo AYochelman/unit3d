@@ -43,7 +43,7 @@ export default function ProductShowcase() {
   }));
 
   return (
-    <section className="py-20 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
           <SectionHead

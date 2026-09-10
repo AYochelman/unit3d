@@ -13,14 +13,22 @@ export default function Marquee() {
   const items = [...GALLERY, ...GALLERY, ...GALLERY].slice(0, 28);
 
   return (
-    <section className="py-20 md:py-24 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 mb-10">
+    <section className="py-12 md:py-16 relative overflow-hidden">
+      {/* This carried the same headline as ProductShowcase, word for word, and
+          without its subtitle — so scrolling down produced what looked like the
+          same section a second time, badly. Two blocks showing photographs need
+          two reasons to exist: that one is the catalogue, this one is the
+          stream of what has actually come off the plate lately. */}
+      <div className="max-w-7xl mx-auto px-6 md:px-10 mb-8">
         <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
           RECENT WORK
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05]">
-          ככה זה נראה כשזה יוצא מהמדפסת.
+          מה יצא מהמדפסת <span className="text-flame">החודש</span>.
         </h2>
+        <p className="text-ink-400 mt-3 max-w-2xl">
+          הזמנות אמיתיות שנשלחו ללקוחות. עובר מעצמו — אפשר לעצור עם העכבר.
+        </p>
       </div>
 
       <div className="relative">

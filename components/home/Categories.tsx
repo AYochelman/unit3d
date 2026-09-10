@@ -2,6 +2,7 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import CategoryArt, { type CategoryArtId } from "@/components/CategoryArt";
 import Pill from "@/components/ui/Pill";
+import SectionHead from "@/components/ui/SectionHead";
 
 type Cat = {
   index: string;
@@ -102,8 +103,20 @@ const CATS: Cat[] = [
 
 export default function Categories() {
   return (
-    <section id="categories" className="py-20 md:py-24">
+    <section id="categories" className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
+        {/* This block used to open straight onto a grid of cards. On a page
+            already carrying a lot, a section that begins without saying what
+            it is reads as the previous one continuing — the reader is left to
+            work out that something new started, and where. A heading is the
+            cheapest possible fix and the one a designer asked for first. */}
+        <div className="mb-8">
+          <SectionHead
+            eyebrow="THE SHELVES"
+            title="מה יש בחנות."
+            sub="שמונה מדפים. כל אחד נפתח לרשימה מלאה עם מחיר, חומר וזמן הדפסה."
+          />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {CATS.map((c) => (
             <Link

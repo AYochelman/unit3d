@@ -43,7 +43,7 @@ export default function LivePreview() {
   };
 
   return (
-    <section className="py-20 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="grid md:grid-cols-5 gap-10 items-center">
           <div className="md:col-span-2">

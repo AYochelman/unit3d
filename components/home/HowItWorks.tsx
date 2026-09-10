@@ -17,7 +17,7 @@ const STEPS: Step[] = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-20 md:py-24 bg-ink-900/40 border-y border-ink-800/60">
+    <section className="py-12 md:py-16 bg-ink-900/40 border-y border-ink-800/60">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <SectionHead
           eyebrow="HOW IT WORKS · 4 STEPS"

@@ -21,7 +21,7 @@ const PERKS = [
 
 export default function B2BBlock() {
   return (
-    <section className="relative py-20 md:py-24 overflow-hidden">
+    <section className="relative py-12 md:py-16 overflow-hidden">
       {/* Stripes + soft glow background */}
       <div
         className="absolute inset-0 -z-10 opacity-30 stripes"
