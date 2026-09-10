@@ -1,5 +1,6 @@
 import { FAQS } from "./data";
 import { CONTACT } from "./contact";
+import { catalogueSize, findProducts, findShelf, fold as foldHe, shelfCount, type Found } from "./helpbot-catalog";
 
 // A small, honest help bot: it matches what you typed against a list of
 // intents and answers from the same facts the site states elsewhere. There is
@@ -28,7 +29,7 @@ export type BotAnswer = {
 };
 
 export const BOT_GREETING =
-  "היי! אני העוזר של Unit 3D. אני יכול לענות על שאלות לגבי מחירים, זמני הדפסה, חומרים, משלוחים והמוצרים באתר. במה אפשר לעזור?";
+  `היי! אני העוזר של Unit 3D. אני מכיר את כל ${catalogueSize()} הדגמים בחנות — אפשר לשאול אותי על מוצר מסוים ("יש לכם דרקון?"), על מחיר, זמן הדפסה, חומרים או משלוחים.`;
 
 export const BOT_ANSWERS: BotAnswer[] = [
   {
@@ -152,21 +153,23 @@ export const BOT_ANSWERS: BotAnswer[] = [
   {
     id: "warranty",
     chip: "אחריות",
-    keys: ["אחריות", "נשבר", "פגם", "החזר", "תקול"],
+    keys: ["אחריות", "נשבר", "פגם", "החזר", "להחזיר", "מחזיר", "החזרה", "תקול", "שבור", "לא עובד"],
     text:
       "אם משהו נשבר תוך 30 יום משימוש סביר — אני מדפיס מחדש ושולח בחינם. אם זו הייתה תאונה, אני מדפיס שוב במחיר עלות.",
     next: ["cancel", "contact"],
   },
   {
     id: "cancel",
-    keys: ["לבטל", "ביטול", "התחרטתי"],
+    // The phrases are deliberate: "לבטל הזמנה" has to outweigh the plain
+    // "הזמנה" that routes to the how-to-order answer.
+    keys: ["לבטל", "ביטול", "התחרטתי", "לא רוצה יותר", "לבטל הזמנה", "לבטל את ההזמנה", "ביטול הזמנה"],
     text:
       "אפשר לבטל עד שההדפסה מתחילה (בדרך כלל 24-48 שעות אחרי אישור העיצוב). אחרי שהמדפסת רצה — ביטול עם החזר חלקי.",
     next: ["warranty", "contact"],
   },
   {
     id: "payment",
-    keys: ["תשלום", "לשלם", "אשראי", "ביט", "פייבוקס", "העברה"],
+    keys: ["תשלום", "לשלם", "משלמים", "משלם", "תשלומים", "אשראי", "ביט", "פייבוקס", "העברה", "חשבונית"],
     text:
       "התשלום נסגר מול אריאל אחרי שמאשרים את ההזמנה — ביט, פייבוקס, העברה או אשראי. באתר עצמו לא נשמרים פרטי תשלום.",
     next: ["shipping", "contact"],
@@ -182,7 +185,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
   {
     id: "order",
     chip: "איך מזמינים?",
-    keys: ["להזמין", "הזמנה", "סל", "עגלה", "לקנות", "רכישה"],
+    keys: ["להזמין", "מזמינים", "מזמין", "הזמנה", "סל", "עגלה", "לקנות", "רכישה", "איך קונים"],
     text:
       "בוחרים מוצר, מגדירים צבע/חומר/טקסט, ומוסיפים לסל. בסל אפשר לשנות כמות ולמחוק. בסוף שולחים את הסל דרך טופס יצירת הקשר, ואני חוזר אליך לאישור סופי ותשלום.",
     links: [{ label: "לסל / יצירת קשר", href: "/contact" }],
@@ -214,7 +217,59 @@ export const getAnswer = (id: string): BotAnswer | undefined => BOT_BY_ID[id];
 /** Chips shown when the conversation starts. */
 export const BOT_STARTERS = ["price", "time", "materials", "designer", "fidgets", "statues", "contact"];
 
-const fold = (s: string) => s.toLowerCase().replace(/["'׳״.,!?]/g, "").trim();
+// One folding for the whole bot: final letters normalised, niqqud and
+// punctuation dropped. "דרקונים" and "דרקון" have to be able to meet.
+const fold = foldHe;
+
+const ils = (n: number) => `\u20aa${Math.round(n)}`;
+
+/** Openings, already folded (final letters normalised) as `fold` leaves them. */
+const GREETINGS = [
+  "היי", "הי", "שלומ", "אהלנ", "מה נשמע", "מה קורה", "בוקר טוב", "צהריימ טוב", "ערב טוב",
+  "hi", "hello", "hey", "yo",
+];
+
+/** An answer built from the catalogue, in the shape the bot already speaks. */
+function productAnswer(found: Found[], asked: string): BotAnswer {
+  const one = found[0];
+  const priced = found.map((f) => `${f.name} — ${ils(f.price)}`).join(" · ");
+  const text =
+    found.length === 1
+      ? `כן — ${one.name}, ${ils(one.price)}, על מדף ${one.shelfLabel}. זמן הדפסה בערך ${one.hours < 1 ? "פחות משעה" : `${Math.round(one.hours)} שעות`}. אפשר לבחור צבע וחומר בעמוד המוצר.`
+      : `יש כמה שמתאימים: ${priced}. כולם על האתר עם צבע, חומר וזמן הדפסה.`;
+  return {
+    id: `catalog-${fold(asked).slice(0, 24)}`,
+    keys: [],
+    text,
+    links: [
+      ...found.map((f) => ({ label: f.name, href: f.href })),
+      { label: `כל ה${one.shelfLabel}`, href: `/${one.shelf}` },
+    ].slice(0, 4),
+    next: ["price", "time", "materials"],
+  };
+}
+
+/**
+ * A shelf was named rather than a product: say what is on it — and name a few,
+ * because "יש 27 דגמים" is a fact and "יש 27, למשל אלה" is an answer.
+ */
+function shelfAnswer(shelf: { shelf: string; label: string }, examples: Found[] = []): BotAnswer {
+  const n = shelfCount(shelf.shelf as Parameters<typeof shelfCount>[0]);
+  const onShelf = examples.filter((f) => f.shelf === shelf.shelf).slice(0, 3);
+  const sample = onShelf.length
+    ? ` למשל: ${onShelf.map((f) => `${f.name} — ${ils(f.price)}`).join(" · ")}.`
+    : "";
+  return {
+    id: `shelf-${shelf.shelf}`,
+    keys: [],
+    text: `יש ${n} דגמים על מדף ${shelf.label}.${sample} כל אחד עם מחיר, חומר וזמן הדפסה — ואפשר לשנות צבע לפני ההזמנה.`,
+    links: [
+      { label: `פתח ${shelf.label}`, href: `/${shelf.shelf}` },
+      ...onShelf.map((f) => ({ label: f.name, href: f.href })),
+    ].slice(0, 4),
+    next: ["price", "materials", "shipping"],
+  };
+}
 
 /**
  * Route free text to an intent: the answer whose keywords match the most
@@ -225,6 +280,13 @@ const fold = (s: string) => s.toLowerCase().replace(/["'׳״.,!?]/g, "").trim();
 export function matchAnswer(input: string): BotAnswer | null {
   const q = fold(input);
   if (!q) return null;
+
+  // A greeting is not a question, and handing "היי" to a human is a strange
+  // way to say hello back. Only a short sentence counts — "היי, יש לכם דרקון?"
+  // is a question with a greeting attached to it.
+  if (q.split(" ").length <= 3 && GREETINGS.some((g) => q.startsWith(g))) {
+    return { id: "hello", keys: [], text: BOT_GREETING, next: BOT_STARTERS.slice(0, 4) };
+  }
 
   const best = (pick: (a: BotAnswer) => string[]) => {
     let winner: BotAnswer | null = null;
@@ -245,7 +307,44 @@ export function matchAnswer(input: string): BotAnswer | null {
 
   // A topic word always beats a bare question wrapper.
   const topic = best((a) => a.keys);
+
+  /**
+   * A named product beats a prepared answer.
+   *
+   * "כמה עולה תג לכלב" used to return the general pricing paragraph, which is
+   * true and useless — the shop knows that exact product's exact price. When
+   * the question names something the shop actually sells, the specific answer
+   * wins; when it does not, the prepared one still does its job.
+   */
+  const found = findProducts(input);
+  const shelf = findShelf(input);
+
+  /**
+   * Which prepared answers a product cannot improve on.
+   *
+   * A concrete product beats the generic paragraph about price, colour or a
+   * category — it says the actual number. It must NOT beat an answer about how
+   * the shop works: "מתי יגיע הדרקון" is a shipping question that happens to
+   * name a dragon, and "מתנה לעובדים בכמות" is a B2B question that happens to
+   * contain the word gift.
+   */
+  const PRODUCT_BEATS = new Set(["price", "pets", "fidgets", "statues", "colors", "materials"]);
+  // And only when the product's own NAME was typed. "באיזה חומר אתם מדפיסים"
+  // is a question about materials, not about the one ashtray whose description
+  // happens to mention them.
+  const named = found.some((f) => f.nameHit);
+  const topicWins = topic !== null && (!PRODUCT_BEATS.has(topic.id) || !named);
+
+  // A browse question — the words typed name a shelf, not any product's name —
+  // is answered by the shelf, with those products as the examples.
+  const browsing = shelf !== null && !found.some((f) => f.nameHit);
+
+  if (found.length && !topicWins && !browsing) return productAnswer(found, input);
   if (topic) return topic;
+  // A shelf named on its own — "יש לכם משהו לחיות?" — is worth a real count
+  // rather than a shrug.
+  if (shelf) return shelfAnswer(shelf, found);
+
   const frame = best((a) => a.frames ?? []);
   if (frame) return frame;
 

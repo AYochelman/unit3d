@@ -205,6 +205,9 @@ const sellable = (m: ImportedModel) =>
 /** Rows kept out of the shop, for the admin page and the import report. */
 export const heldModels = (): ImportedModel[] => IMPORTED.filter((m) => !sellable(m));
 
+/** Everything actually offered for sale — what a visitor could be shown. */
+export const sellableModels = (): ImportedModel[] => IMPORTED.filter(sellable);
+
 /**
  * Retail price from the shared cost model, rounded up to the nearest ₪5.
  *
