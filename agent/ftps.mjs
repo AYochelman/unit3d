@@ -21,6 +21,35 @@ import tls from "node:tls";
 const CRLF = "\r\n";
 
 /**
+ * The printer's TLS, pinned to 1.2.
+ *
+ * Two reasons, and the second is the one that mattered. A printer's embedded
+ * stack is old, and Node offers 1.3 first — which is how a data connection came
+ * back "bad signature" while the control connection was fine. And session
+ * resumption, which this printer demands of its data channel, is a different
+ * mechanism in 1.3 (a ticket) than in 1.2 (a session id): what `getSession()`
+ * hands over only resumes reliably on 1.2.
+ *
+ * The certificate is the printer's own, self-signed, on a machine addressed by
+ * IP on the LAN — there is no authority that could vouch for it, and the access
+ * code is what proves identity here.
+ */
+const TLS_BASE = {
+  rejectUnauthorized: false,
+  minVersion: "TLSv1.2",
+  maxVersion: "TLSv1.2",
+};
+
+/** Tried in order until one completes. The winner is remembered. */
+const TLS_TRIES = [
+  { name: "resumed", opts: (session) => ({ ...TLS_BASE, session }) },
+  // Some firmware ships a key modern OpenSSL considers too weak to talk to.
+  { name: "resumed, relaxed", opts: (session) => ({ ...TLS_BASE, session, ciphers: "DEFAULT:@SECLEVEL=0" }) },
+  { name: "fresh", opts: () => ({ ...TLS_BASE }) },
+  { name: "fresh, relaxed", opts: () => ({ ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" }) },
+];
+
+/**
  * One permanent reader on the control connection.
  *
  * The obvious shape — attach a `data` handler, wait for the reply, remove it —
@@ -74,14 +103,14 @@ function makeReader(sock) {
 
 export async function connectPrinterFtps({ host, password, user = "bblp", port = 990 }) {
   const control = await new Promise((resolve, reject) => {
-    const s = tls.connect({ host, port, rejectUnauthorized: false, timeout: 15_000 }, () => resolve(s));
+    const s = tls.connect({ ...TLS_BASE, host, port, timeout: 15_000 }, () => resolve(s));
     s.on("error", reject);
     s.on("timeout", () => { s.destroy(); reject(new Error("timed out reaching the printer's card")); });
   });
   control.setTimeout(0);
   const readReply = makeReader(control);
   // Remembered across transfers so only the first one pays for the guess.
-  let dataMode = "";
+  let dataTried = null;
 
   const say = async (cmd, okCodes) => {
     control.write(cmd + CRLF);
@@ -120,42 +149,69 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     if (!m) throw new Error("could not read where to connect for the transfer");
     const dataPort = Number(m[5]) * 256 + Number(m[6]);
 
-    // Implicit FTPS puts the data channel in TLS from the first byte, the same
-    // as the control channel on 990. Handshake first, then ask — and if the
-    // printer will not handshake until it knows what is wanted, ask first and
-    // upgrade after. Which one a firmware wants is not worth guessing at, so
-    // both are tried and the one that answers is remembered.
-    const raw = await new Promise((resolve, reject) => {
-      const d = net.connect({ host, port: dataPort }, () => resolve(d));
-      d.setTimeout(30_000);
-      d.on("error", reject);
-      d.on("timeout", () => { d.destroy(); reject(new Error("the printer did not open the transfer")); });
-    });
-
-    const handshake = () =>
+    // A failed handshake leaves rubbish on the socket, so every attempt gets a
+    // socket of its own — retrying on a poisoned one is how the fallback used
+    // to fail for a reason that had nothing to do with the fallback.
+    const openRaw = () =>
       new Promise((resolve, reject) => {
-        const t = tls.connect({ socket: raw, rejectUnauthorized: false, session: control.getSession() }, () => resolve(t));
+        const d = net.connect({ host, port: dataPort }, () => resolve(d));
+        d.setTimeout(30_000);
+        d.on("error", reject);
+        d.on("timeout", () => { d.destroy(); reject(new Error("the printer did not open the transfer")); });
+      });
+
+    const upgrade = (socket, opts) =>
+      new Promise((resolve, reject) => {
+        const t = tls.connect({ ...opts, socket }, () => resolve(t));
         t.once("error", reject);
-        setTimeout(() => reject(new Error("no handshake")), 6000);
+        setTimeout(() => reject(new Error("no handshake")), 8000);
       });
 
     let secure = null;
-    if (dataMode !== "command-first") {
-      secure = await handshake().catch(() => null);
-      if (secure) dataMode = "tls-first";
-    }
+    let sent = false;
+    const session = control.getSession();
+    const problems = [];
 
-    // The command goes out over the control connection.
-    control.write(command + CRLF);
-    const start = await readReply(20_000);
-    if (![125, 150].includes(start.code)) {
-      raw.destroy();
-      throw new Error(`${command.split(" ")[0]} refused (${start.code})`);
+    // Implicit FTPS puts the data channel in TLS from the first byte. Some
+    // firmware instead waits to hear what is wanted before handshaking, so if
+    // none of the ways of starting TLS work, the command goes first and TLS
+    // follows. Which one a printer wants is not worth guessing at.
+    for (const attempt of dataTried ? [dataTried] : TLS_TRIES) {
+      const raw = await openRaw();
+      try {
+        secure = await upgrade(raw, attempt.opts(session));
+        dataTried = attempt;
+        break;
+      } catch (e) {
+        problems.push(`${attempt.name}: ${e.message}`);
+        try { raw.destroy(); } catch { /* already gone */ }
+      }
     }
 
     if (!secure) {
-      secure = await handshake();
-      dataMode = "command-first";
+      const raw = await openRaw();
+      control.write(command + CRLF);
+      sent = true;
+      const first = await readReply(20_000);
+      if (![125, 150].includes(first.code)) {
+        raw.destroy();
+        throw new Error(`${command.split(" ")[0]} refused (${first.code})`);
+      }
+      try {
+        secure = await upgrade(raw, TLS_TRIES[0].opts(session));
+      } catch (e) {
+        raw.destroy();
+        throw new Error(`could not secure the transfer — ${problems.join("; ")}; after the command: ${e.message}`);
+      }
+    }
+
+    if (!sent) {
+      control.write(command + CRLF);
+      const start = await readReply(20_000);
+      if (![125, 150].includes(start.code)) {
+        secure.destroy();
+        throw new Error(`${command.split(" ")[0]} refused (${start.code})`);
+      }
     }
 
     const body = await new Promise((resolve, reject) => {
@@ -196,6 +252,11 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     /** One file, whole, in memory. Timelapses are a few megabytes at most. */
     async download(remotePath) {
       return transfer(`RETR ${remotePath}`);
+    },
+
+    /** Which TLS handshake the printer accepted, once one has. */
+    get mode() {
+      return dataTried?.name ?? "";
     },
 
     close() {

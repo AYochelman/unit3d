@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
@@ -37,6 +37,22 @@ export default function ApprovalsTab() {
   const [onlyOpen, setOnlyOpen] = useState(true);
 
   const decided = Object.values(choices).filter((c) => c.decision).length;
+
+  /**
+   * Refusing to let an hour of answers disappear.
+   *
+   * Deciding 108 models is long work, and until it is saved it exists only in
+   * this tab. A refresh used to take all of it silently. The browser will now
+   * ask before leaving, which is the one warning it is allowed to give — and
+   * the save bar above stays on screen while scrolling, so the way to keep the
+   * work is never off the top of the page.
+   */
+  useEffect(() => {
+    if (!decided) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [decided]);
   const list = useMemo(
     () => (onlyOpen ? CANDIDATES.filter((c) => !choices[c.id]?.decision) : CANDIDATES),
     [choices, onlyOpen],
@@ -107,12 +123,14 @@ export default function ApprovalsTab() {
       </div>
 
       {decided > 0 && (
-        <AdminSaveToSite
-          json={json}
-          path="public/model-decisions.json"
-          title={`שמירת ${decided} החלטות`}
-          what="מה שאישרת נכנס לחנות"
-        />
+        <div className="sticky top-2 z-20">
+          <AdminSaveToSite
+            json={json}
+            path="public/model-decisions.json"
+            title={`שמירת ${decided} החלטות`}
+            what="עד שלא תשמור, שום דבר מזה לא נכנס לאתר — ורענון ימחק את הכל"
+          />
+        </div>
       )}
 
       <div className="grid gap-3 md:grid-cols-2">
