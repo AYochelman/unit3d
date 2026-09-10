@@ -99,15 +99,37 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     const safe = /^PASS /i.test(text) ? "PASS ******" : text;
     console.log(`      ${dir} ${safe.replace(/\r?\n/g, " ").trim().slice(0, 160)}`);
   };
-  const control = await new Promise((resolve, reject) => {
-    const s = tls.connect({ ...TLS_BASE, host, port, timeout: 15_000 }, () => resolve(s));
-    s.on("error", reject);
-    s.on("timeout", () => { s.destroy(); reject(new Error("timed out reaching the printer's card")); });
-  });
-  control.setTimeout(0);
-  const readReply = makeReader(control);
   // Remembered across transfers so only the first one pays for the search.
   let dataPlan = null;
+  let control;
+  let readReply;
+
+  /**
+   * Log in, from nothing.
+   *
+   * Kept callable more than once on purpose. A transfer that goes wrong on this
+   * printer does not fail cleanly — it leaves the control connection waiting
+   * for a data connection that will never come, and every command after it is
+   * met with silence. Draining the buffer cannot rescue that; only a new
+   * connection can. So a failed attempt throws the whole session away and the
+   * next one starts fresh, which is what made trying more than one approach
+   * meaningful instead of a formality.
+   */
+  const login = async () => {
+    control = await new Promise((resolve, reject) => {
+      const s = tls.connect({ ...TLS_BASE, host, port, timeout: 15_000 }, () => resolve(s));
+      s.on("error", reject);
+      s.on("timeout", () => { s.destroy(); reject(new Error("timed out reaching the printer's card")); });
+    });
+    control.setTimeout(0);
+    readReply = makeReader(control);
+    await readReply();                        // the greeting
+    await say(`USER ${user}`, [230, 331]);
+    await say(`PASS ${password}`, [230]);
+    await say("PBSZ 0", [200]);
+    await say("PROT P", [200]);
+    await say("TYPE I", [200]);
+  };
 
   const say = async (cmd, okCodes) => {
     trace(">", cmd);
@@ -120,12 +142,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     return r;
   };
 
-  await readReply();                        // the greeting
-  await say(`USER ${user}`, [230, 331]);
-  await say(`PASS ${password}`, [230]);
-  await say("PBSZ 0", [200]);
-  await say("PROT P", [200]);
-  await say("TYPE I", [200]);
+  await login();
 
   /**
    * Run one transfer, and hand back everything it produced.
@@ -189,11 +206,14 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     if (![125, 150].includes(r.code)) throw new Error(`refused (${r.code})`);
   };
 
+  // Connect first, because the transcript settled it: this printer holds the
+  // "150" back until something actually connects to the port PASV named. Asking
+  // and then waiting to be told to connect is a deadlock — both sides waiting
+  // for the other — and it is what killed the control connection every time.
   const STRATEGIES = [
-    { name: "command first", first: "command", tls: TLS_BASE },
-    { name: "command first, relaxed", first: "command", tls: { ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" } },
     { name: "connect first", first: "connect", tls: TLS_BASE },
     { name: "connect first, relaxed", first: "connect", tls: { ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" } },
+    { name: "command first", first: "command", tls: TLS_BASE },
   ];
 
   const runOne = async (command, plan) => {
@@ -217,17 +237,23 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
 
   const transfer = async (command) => {
     const problems = [];
-    for (const plan of dataPlan ? [dataPlan] : STRATEGIES) {
+    const plans = dataPlan ? [dataPlan] : STRATEGIES;
+    for (let i = 0; i < plans.length; i++) {
       try {
-        const body = await runOne(command, plan);
+        const body = await runOne(command, plans[i]);
         // A 226 may or may not follow; either way it must not be left in the
         // buffer for the next read to mistake for its own answer.
         await readReply(8000).catch(() => {});
-        dataPlan = plan;
+        dataPlan = plans[i];
         return body;
       } catch (e) {
-        problems.push(`${plan.name}: ${e.message}`);
-        await readReply(3000).catch(() => {});   // clear anything left behind
+        problems.push(`${plans[i].name}: ${e.message}`);
+        // The session is not recoverable after a failed transfer, so start a
+        // new one rather than asking a connection that has stopped listening.
+        if (i < plans.length - 1) {
+          try { control.destroy(); } catch { /* already gone */ }
+          try { await login(); } catch (again) { problems.push(`reconnect: ${again.message}`); break; }
+        }
       }
     }
     dataPlan = null;
@@ -278,6 +304,12 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     close() {
       try { control.write("QUIT" + CRLF); } catch { /* already gone */ }
       try { control.destroy(); } catch { /* already gone */ }
+    },
+
+    /** A fresh session, for a caller that knows the last one went wrong. */
+    async reconnect() {
+      try { control.destroy(); } catch { /* already gone */ }
+      await login();
     },
   };
 }
