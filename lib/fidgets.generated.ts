@@ -23,7 +23,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-02",
     name: "Flexi Pangolin",
-    desc: "פנגולין מפרקי. קשקשים שזזים אחד-אחד.",
+    desc: "פנגולין פלקסי. קשקשים שזזים אחד-אחד.",
     price: 125,
     size: "~83mm",
     time: "9h",
@@ -50,7 +50,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-04",
     name: "Mini Articulated Dragon (Magnet/Keychain)",
-    desc: "דרקון מיני מפרקי. מחזיק מפתחות + מגנט.",
+    desc: "דרקון מיני פלקסי. מחזיק מפתחות + מגנט.",
     price: 65,
     size: "~46mm",
     time: "1.5h",
@@ -64,7 +64,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-05",
     name: "Articulated Shark",
-    desc: "כריש מפרקי. שובט בכל הכיוונים.",
+    desc: "כריש פלקסי. שובט בכל הכיוונים.",
     price: 55,
     size: "~46mm",
     time: "1.3h",
@@ -169,7 +169,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-13",
     name: "Articulated crystal dragon v2 (fixed)",
-    desc: "דרקון מפרקי. חוליות גמישות שמתפתלות ביד.",
+    desc: "דרקון פלקסי. חוליות גמישות שמתפתלות ביד.",
     price: 90,
     size: "~65mm",
     time: "4.2h",
@@ -182,7 +182,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-14",
     name: "Articulated BiteCroc",
-    desc: "תנין מפרקי. הלסת נשברת ונסגרת.",
+    desc: "תנין פלקסי. הלסת נשברת ונסגרת.",
     price: 45,
     size: "~40mm",
     time: "53min",
@@ -247,7 +247,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-19",
     name: "The original Dragon Flexi Rex",
-    desc: "דרקון מפרקי קלאסי. הדגם שפתח את כל הסגנון.",
+    desc: "דרקון פלקסי קלאסי. הדגם שפתח את כל הסגנון.",
     price: 45,
     size: "~42mm",
     time: "49min",
@@ -273,7 +273,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-21",
     name: "Trax - Antistress Fidget toy",
-    desc: "פידג'ט מפרקי מקצועי. הדפסה אחת, ללא הרכבה.",
+    desc: "פידג'ט פלקסי מקצועי. הדפסה אחת, ללא הרכבה.",
     price: 80,
     size: "~53mm",
     time: "2.7h",
@@ -286,7 +286,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-22",
     name: "Cute Octopus - version 3",
-    desc: "תמנון מפרקי. 8 זרועות שזזות עצמאית.",
+    desc: "תמנון פלקסי. 8 זרועות שזזות עצמאית.",
     price: 70,
     size: "~54mm",
     time: "2.6h",
@@ -299,7 +299,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-23",
     name: "longboi articulated snake",
-    desc: "נחש מפרקי ארוך. מתפתל סביב היד והשולחן.",
+    desc: "נחש פלקסי ארוך. מתפתל סביב היד והשולחן.",
     price: 100,
     size: "~77mm",
     time: "5.3h",
@@ -352,7 +352,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-27",
     name: "Flex Slug",
-    desc: "שבלול מפרקי. תרפיה מנדנדת לאצבעות.",
+    desc: "שבלול פלקסי. תרפיה מנדנדת לאצבעות.",
     price: 80,
     size: "~60mm",
     time: "3.6h",
@@ -366,7 +366,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-28",
     name: "Finger Slinger - Print In Place Spinning Fidget",
-    desc: "פידג'ט מפרקי מקצועי. הדפסה אחת, ללא הרכבה.",
+    desc: "פידג'ט פלקסי מקצועי. הדפסה אחת, ללא הרכבה.",
     price: 65,
     size: "~46mm",
     time: "1h",
@@ -380,7 +380,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-29",
     name: "Twisty Micro Dragon Egg Fidget",
-    desc: "דרקון מפרקי. חוליות גמישות שמתפתלות ביד.",
+    desc: "דרקון פלקסי. חוליות גמישות שמתפתלות ביד.",
     price: 55,
     size: "~43mm",
     time: "1.5h",
@@ -430,7 +430,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-33",
     name: "3-in-1 Ultimate Multi Fidget Toy (Print in Place)",
-    desc: "פידג'ט מפרקי מקצועי. הדפסה אחת, ללא הרכבה.",
+    desc: "פידג'ט פלקסי מקצועי. הדפסה אחת, ללא הרכבה.",
     price: 55,
     size: "~48mm",
     time: "1.1h",
@@ -482,7 +482,7 @@ export const FIDGETS: Fidget[] = [
   {
     id: "mw-37",
     name: "6g Spinning Mini Octopus - Spinning Octopus - flexi fidget toy - Only 6g",
-    desc: "תמנון מפרקי. 8 זרועות שזזות עצמאית.",
+    desc: "תמנון פלקסי. 8 זרועות שזזות עצמאית.",
     price: 45,
     size: "~30mm",
     time: "35min",

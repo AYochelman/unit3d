@@ -127,7 +127,7 @@ export const HUE = { flexi: 90, fidget: 280, statues: 320, pets: 30, office: 200
 export const ART = { statues: "lowpoly", pets: "round", office: "penholder", home: "planter", smoke: "penholder", screen: "lowpoly", trendy: "keychain", b2b: "nameplate" };
 
 export const HE_DESC = {
-  flexi: "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+  flexi: "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
   fidget: "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
   statues: "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
   pets: "אביזר לחיה, מודפס ב-PETG שעמיד במים ובשמש.",

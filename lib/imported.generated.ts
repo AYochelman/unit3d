@@ -706,7 +706,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2554479",
     "name": "Articulated Prismfang Dragon",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 2.85,
     "grams": 41,
@@ -740,7 +740,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2734706",
     "name": "3g蛇 Snake关节可动小蛇-仅3g",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 0.38,
     "grams": 3,
@@ -814,7 +814,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-1663289",
     "name": "Flexi Skeleton Spinosaurus dinosaur",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 2.52,
     "grams": 44,
@@ -922,7 +922,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2760406",
     "name": "Flexi Articulated T-Rex",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 1.67,
     "grams": 23,
@@ -1192,7 +1192,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-90174",
     "name": "The original Dragon Flexi Rex",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 0.82,
     "grams": 16,
@@ -1300,7 +1300,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2869418",
     "name": "Articulated Skeleton Frog",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 2.77,
     "grams": 39,
@@ -3041,7 +3041,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-470355",
     "name": "Squeeze Fan",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 4.13,
     "grams": 83,
@@ -4354,7 +4354,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2520704",
     "name": "kit card L3GO scheletro",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 0.59,
     "grams": 8,
@@ -4444,7 +4444,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-587584",
     "name": "Mini Articulated Dragon (Magnet/Keychain)",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 0.56,
     "grams": 10,
@@ -7069,7 +7069,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-463778",
     "name": "Articulated Shark",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 1.23,
     "grams": 21,
@@ -7275,7 +7275,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-585144",
     "name": "Articulated Dragon toothless Night Fury Cute Flexi",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 0.62,
     "grams": 10,
@@ -7407,7 +7407,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-679352",
     "name": "Optimized Little White Dragon",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 3.96,
     "grams": 21,
@@ -7748,7 +7748,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-1029890",
     "name": "Flexi Funny Octopus",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 1.27,
     "grams": 9,
@@ -7832,7 +7832,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-1090887",
     "name": "Flexi Pangolin",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 7.81,
     "grams": 91,
@@ -8022,7 +8022,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-1163767",
     "name": "Shadowcoil - Articulated Dragon",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 6.41,
     "grams": 123,
@@ -8121,7 +8121,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-1634871",
     "name": "Flexi Skeleton T-Rex Dinosaur",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 3.57,
     "grams": 75,
@@ -8489,7 +8489,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-3245667",
     "name": "Flexi Alligator Snapping Turtle & Keychain",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 1.7,
     "grams": 21,
@@ -8530,7 +8530,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-3242119",
     "name": "Docobots: Fudgement Day",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 4.29,
     "grams": 64,
@@ -9352,7 +9352,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2217842",
     "name": "Flexi Dachshund Slinky Articulated Sausage Dog Toy",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 4.37,
     "grams": 70,
@@ -9456,7 +9456,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2608825",
     "name": "Flexi Dog - Articulated Keychain",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 0.53,
     "grams": 7,
@@ -9780,7 +9780,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-55289",
     "name": "Articulated Crystal Dragon by Saber3D",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 9.06,
     "grams": 139,
@@ -9930,7 +9930,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-477964",
     "name": "longboi articulated snake",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 11.15,
     "grams": 204,
@@ -10041,7 +10041,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-583017",
     "name": "A little white dragon",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 2.82,
     "grams": 41,
@@ -10290,7 +10290,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-900903",
     "name": "Tiny Flexi Snake 'As Long As It Gets One'",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 7.58,
     "grams": 83,
@@ -10987,7 +10987,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2142966",
     "name": "Articulated Crystal Spine Dragon",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 5.77,
     "grams": 72,
@@ -11054,7 +11054,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2207601",
     "name": "Flexi Dragon",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 3.42,
     "grams": 44,
@@ -11616,7 +11616,7 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
   {
     "id": "mw-2716330",
     "name": "5g蜥蜴 lizard-关节可动蜥蜴-仅5g",
-    "desc": "יצור מפרקי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
     "shelf": "flexi",
     "hours": 0.51,
     "grams": 6,

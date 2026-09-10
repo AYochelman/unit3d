@@ -45,7 +45,7 @@ export const REVIEWS: Review[] = [
   // Every picture here is a photograph taken in the studio of a print that
   // actually left it — no catalogue renders and no stock. A review is written
   // about the thing in its own photo, so the two can never drift apart.
-  { id: "r1", name: "אביב", tag: "חובב פידג'טים", seg: "private", stars: 5, when: "לפני שבוע", item: "דרקון מפרקי גמיש", photo: "/studio/print-04.jpg", hue: 90, href: "/fidgets", txt: "הגיע מפרק אחד ומתנועע לכל אורכו, בלי דבק ובלי חלק שנתקע. יושב לי על השולחן ליד המסך וכולם מרימים אותו." },
+  { id: "r1", name: "אביב", tag: "חובב פידג'טים", seg: "private", stars: 5, when: "לפני שבוע", item: "דרקון פלקסי גמיש", photo: "/studio/print-04.jpg", hue: 90, href: "/fidgets", txt: "הגיע מפרק אחד ומתנועע לכל אורכו, בלי דבק ובלי חלק שנתקע. יושב לי על השולחן ליד המסך וכולם מרימים אותו." },
   { id: "r2", name: "יואב", tag: "חטיבה 51", seg: "soldier", stars: 5, when: "לפני שבוע", item: "סמל יחידה · מחזיק מפתחות", art: "keychain", hue: 18, href: "/catalog", txt: "הזמנתי לקצין שלי לסוף מסלול. הגיע תוך 4 ימים, ההדפסה נקייה והצבעים יצאו מדויקים. הוא לא מוריד אותו מהמפתחות." },
   { id: "r3", name: "רון", tag: "גיימר מחיפה", seg: "private", stars: 5, when: "לפני 3 שבועות", item: "פסל וורונוי", photo: "/studio/print-02.jpg", hue: 145, href: "/statues", txt: "לקחתי אותו למדף ליד המסך. כל חור ברשת הודפס ולא נחתך, ואין שום סימן תמיכות. השחור מאט יוצא בדיוק כמו בתמונה." },
   { id: "r4", name: "מאיה", tag: "אמא של חייל", seg: "family", stars: 5, when: "לפני שבועיים", item: "3 מחזיקי מפתחות", art: "keychain", hue: 145, href: "/catalog", txt: "3 מחזיקים לטקס תום שירות. אריאל ענה בוואטסאפ גם בערב ועזר לבחור צבע. שווה את הכסף." },
@@ -56,7 +56,7 @@ export const REVIEWS: Review[] = [
   { id: "r9", name: "לירון", tag: "מורת מתמטיקה", seg: "family", stars: 5, when: "לפני 3 שבועות", item: "דרקון קטן דו-צבעי", photo: "/studio/print-06.jpg", hue: 275, href: "/fidgets", txt: "מתנה לתלמיד שעבר ניתוח. קטן, נכנס בכף יד, והשחור והסגול יצאו נקיים אחד ליד השני. ההורים צילמו אותו איתו בבית החולים." },
   { id: "r10", name: "הילה", tag: "מעצבת פנים", seg: "private", stars: 5, when: "לפני שבועיים", item: "פסל חוטים", photo: "/studio/print-05.jpg", hue: 165, href: "/statues", txt: "לקוחה שלי ביקשה משהו לפינת הכניסה. הדמות תלויה על מאות חוטים דקים שנמתחו בהדפסה עצמה, וזה נראה בלתי אפשרי מקרוב. כבר הזמנתי שני נוספים." },
   { id: "r11", name: "גיא", tag: "VP People · Pixie", seg: "b2b", stars: 5, when: "לפני חודשיים", item: "35 פיגורות ממותגות", art: "torso", hue: 10, href: "/b2b", txt: "חיפשנו welcome-kit שלא ישכב בארון. 35 פיגורות בעיצוב הלוגו, צבע המותג יצא מדויק, וארוז יפה. העובדים החדשים באמת שמו אותן על השולחן." },
-  { id: "r12", name: "אורי", tag: "אספן", seg: "private", stars: 5, when: "לפני 10 ימים", item: "פיגורה מפרקית בלבן", photo: "/studio/print-03.jpg", hue: 30, href: "/statues", txt: "בגודל כף יד, הידיים והרגליים זזות, והלבן יצא אחיד לגמרי בלי הבדלי גוון בין החלקים." },
+  { id: "r12", name: "אורי", tag: "אספן", seg: "private", stars: 5, when: "לפני 10 ימים", item: "פיגורה פלקסי בלבן", photo: "/studio/print-03.jpg", hue: 30, href: "/statues", txt: "בגודל כף יד, הידיים והרגליים זזות, והלבן יצא אחיד לגמרי בלי הבדלי גוון בין החלקים." },
   { id: "r13", name: "רותם", tag: "מנהלת משרד · Aquila", seg: "b2b", stars: 4, when: "לפני חודש", item: "מיכל גדול עם מכסה", photo: "/studio/print-01.jpg", hue: 45, href: "/home-office", txt: "הודפס בחלק אחד, המכסה מסתובב חלק, והצבע והברק הם של החומר עצמו בלי צביעה. הורדתי כוכב כי לקח יומיים יותר ממה שסוכם." },
   { id: "r14", name: "שיר", tag: "שייטת 13", seg: "soldier", stars: 5, when: "לפני חודש", item: "סמל יחידה · פסל שולחן", art: "trophy", hue: 195, href: "/catalog", txt: "הסמל יצא חד וקריא, וההגמרה החיצונית חלקה. ממליצה." },
 ];
@@ -188,7 +188,7 @@ const CURATED_FIDGETS: Fidget[] = [
   {
     id: "f5",
     name: "תמנון גמיש",
-    desc: "תמנון מפרקי 8 זרועות. מתפתל ומתקפל ביד.",
+    desc: "תמנון פלקסי 8 זרועות. מתפתל ומתקפל ביד.",
     price: 90,
     size: "150mm",
     time: "4h",
@@ -205,8 +205,8 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f6",
-    name: "עכבר מפרקי",
-    desc: "עכבר מפרקי חמוד. זנב, רגליים, אוזניים — הכל זז.",
+    name: "עכבר פלקסי",
+    desc: "עכבר פלקסי חמוד. זנב, רגליים, אוזניים — הכל זז.",
     price: 85,
     size: "120mm",
     time: "3h",
@@ -242,7 +242,7 @@ const CURATED_FIDGETS: Fidget[] = [
   {
     id: "f8",
     name: "כריש גמיש",
-    desc: "כריש מפרקי 180mm. שובט בכל הכיוונים.",
+    desc: "כריש פלקסי 180mm. שובט בכל הכיוונים.",
     price: 95,
     size: "180mm",
     time: "4h",
@@ -260,7 +260,7 @@ const CURATED_FIDGETS: Fidget[] = [
   {
     id: "f9",
     name: "תולעת חול גמישה",
-    desc: "תולעת חול ענקית מ-Dune. 200mm של חוליות מפרקיות.",
+    desc: "תולעת חול ענקית מ-Dune. 200mm של חוליות פלקסי.",
     price: 110,
     size: "200mm",
     time: "6h",
@@ -279,7 +279,7 @@ const CURATED_FIDGETS: Fidget[] = [
   {
     id: "f10",
     name: "נחש ארוך במיוחד",
-    desc: "נחש מפרקי ענק. 1.5m במדפסת A1 mini, או 3m במדפסת גדולה. AMS לדוגמת עור.",
+    desc: "נחש פלקסי ענק. 1.5m במדפסת A1 mini, או 3m במדפסת גדולה. AMS לדוגמת עור.",
     price: 95,
     size: "1.5m / 3m",
     time: "5h",
@@ -337,7 +337,7 @@ const CURATED_FIDGETS: Fidget[] = [
   {
     id: "f12",
     name: "דרקון גמיש",
-    desc: "דרקון מפרקי 180mm. גרסת AMS מבליטה את הקשקשים בשני צבעים.",
+    desc: "דרקון פלקסי 180mm. גרסת AMS מבליטה את הקשקשים בשני צבעים.",
     price: 105,
     size: "180mm",
     time: "6h",
@@ -375,8 +375,8 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f13",
-    name: "עכביש קופץ מפרקי",
-    desc: "עכביש מקפץ מפרקי. רגליים זזות עצמאית. גרסת AMS מבליטה את העיניים.",
+    name: "עכביש קופץ פלקסי",
+    desc: "עכביש מקפץ פלקסי. רגליים זזות עצמאית. גרסת AMS מבליטה את העיניים.",
     price: 65,
     size: "90mm",
     time: "1h",
@@ -415,8 +415,8 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f14",
-    name: "דרקון גביש מפרקי",
-    desc: "דרקון קריסטל מפרקי 200mm. פירוט גבוה. גרסת AMS לקריסטלים.",
+    name: "דרקון גביש פלקסי",
+    desc: "דרקון קריסטל פלקסי 200mm. פירוט גבוה. גרסת AMS לקריסטלים.",
     price: 130,
     size: "200mm",
     time: "10h",
@@ -455,8 +455,8 @@ const CURATED_FIDGETS: Fidget[] = [
   },
   {
     id: "f15",
-    name: "עכביש מפרקי",
-    desc: "עכביש מפרקי קלאסי. 8 רגליים שזזות עצמאית.",
+    name: "עכביש פלקסי",
+    desc: "עכביש פלקסי קלאסי. 8 רגליים שזזות עצמאית.",
     price: 70,
     size: "80mm",
     time: "2h",
