@@ -1,4 +1,153 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "3258601",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3258776",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3263118",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3264644",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3267080",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3267440",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3268118",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3268146",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3268477",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3268579",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3268698",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3270009",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3270647",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3270944",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3271077",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3271298",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3271500",
+      "decision": "approved",
+      "shelf": "trendy",
+      "also": [
+        "fidget"
+      ],
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3271827",
+      "decision": "approved",
+      "shelf": "trendy",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3272314",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3272331",
+      "decision": "approved",
+      "shelf": "statues",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3273455",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3274168",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3275194",
+      "decision": "approved",
+      "shelf": "screen",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3276599",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    },
+    {
+      "id": "3281987",
+      "decision": "rejected",
+      "at": "2026-09-10T12:12:30.373Z"
+    }
+  ]
 }
