@@ -92,7 +92,13 @@ function makeReader(sock) {
     });
 }
 
-export async function connectPrinterFtps({ host, password, user = "bblp", port = 990 }) {
+export async function connectPrinterFtps({ host, password, user = "bblp", port = 990, debug = false }) {
+  const trace = (dir, text) => {
+    if (!debug) return;
+    // Never print the password line.
+    const safe = /^PASS /i.test(text) ? "PASS ******" : text;
+    console.log(`      ${dir} ${safe.replace(/\r?\n/g, " ").trim().slice(0, 160)}`);
+  };
   const control = await new Promise((resolve, reject) => {
     const s = tls.connect({ ...TLS_BASE, host, port, timeout: 15_000 }, () => resolve(s));
     s.on("error", reject);
@@ -104,8 +110,10 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
   let dataPlan = null;
 
   const say = async (cmd, okCodes) => {
+    trace(">", cmd);
     control.write(cmd + CRLF);
     const r = await readReply();
+    trace("<", r.text);
     if (okCodes && !okCodes.includes(r.code)) {
       throw new Error(`${cmd.split(" ")[0]} refused (${r.code})`);
     }
@@ -177,6 +185,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
 
   const expectStart = async () => {
     const r = await readReply(20_000);
+    trace("<", r.text);
     if (![125, 150].includes(r.code)) throw new Error(`refused (${r.code})`);
   };
 
@@ -192,6 +201,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     const opts = { ...plan.tls, session: control.getSession() };
     let raw;
     if (plan.first === "command") {
+      trace(">", command);
       control.write(command + CRLF);
       await expectStart();
       raw = await openRaw(dataPort);
@@ -199,6 +209,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     }
     raw = await openRaw(dataPort);
     const secure = await upgrade(raw, opts);
+    trace(">", command);
     control.write(command + CRLF);
     await expectStart();
     return collect(secure);
@@ -224,14 +235,34 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
   };
 
   return {
-    /** Every file in a folder, as {name, size, modifiedAt}. */
+    /**
+     * Every file in a folder.
+     *
+     * Embedded FTP servers differ on how a listing may be asked for: some take
+     * a path on LIST, some only list where they stand, and some answer NLST
+     * and nothing else. A server that dislikes the form it was given tends to
+     * go silent rather than refuse, so all three are tried before concluding
+     * anything about the card.
+     */
     async list(dir) {
-      return parseList((await transfer(`LIST ${dir}`)).toString("utf8"));
+      return parseList(await this.listRaw(dir));
     },
 
     /** The listing exactly as the printer wrote it — for when nothing matches. */
     async listRaw(dir) {
-      return (await transfer(`LIST ${dir}`)).toString("utf8");
+      const problems = [];
+      for (const form of ["LIST", "NLST", "CWD"]) {
+        try {
+          if (form === "CWD") {
+            await say(`CWD ${dir}`, [250]);
+            return (await transfer("LIST")).toString("utf8");
+          }
+          return (await transfer(`${form} ${dir}`)).toString("utf8");
+        } catch (e) {
+          problems.push(`${form} — ${e.message}`);
+        }
+      }
+      throw new Error(problems.join(" | "));
     },
 
     /** One file, whole, in memory. Timelapses are a few megabytes at most. */
