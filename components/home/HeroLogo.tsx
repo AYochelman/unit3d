@@ -14,7 +14,7 @@ export default function HeroLogo({ className }: { className?: string }) {
     >
       <defs>
         <filter id="u3d-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="8" result="b" />
+          <feGaussianBlur stdDeviation="4" result="b" />
           <feMerge>
             <feMergeNode in="b" />
             <feMergeNode in="SourceGraphic" />
@@ -27,7 +27,7 @@ export default function HeroLogo({ className }: { className?: string }) {
       </defs>
 
       {/* nozzle — positioned by the outer group; the inner group carries the CSS bob animation */}
-      <g transform="translate(275 40)">
+      <g transform="translate(278 25)">
       <g className="u3d-nozzle">
         <rect x="-38" y="0" width="76" height="40" rx="4" fill="#F5F5F7" />
         <rect x="-26" y="10" width="52" height="6" rx="2" fill="#0A0A0B" />
@@ -41,7 +41,7 @@ export default function HeroLogo({ className }: { className?: string }) {
 
       {/* filament path from nozzle into the "3" */}
       <path
-        d="M275 118 C275 138 275 150 290 150"
+        d="M278 103 C278 118 278 137 292 137"
         fill="none"
         stroke="url(#u3d-fil)"
         strokeWidth="14"
@@ -50,9 +50,18 @@ export default function HeroLogo({ className }: { className?: string }) {
         pathLength={1}
       />
 
+      {/*
+        Geometry — all three letters share one outer box: top 120, bottom 262,
+        stroke 34. Horizontal bars sit on centre lines 137 and 245 (±17 lands
+        on the box); vertical stems use butt caps and start on the box itself.
+        Outer extents, left to right: U 40–194 · 3 218–338 · D 362–480, so the
+        two gaps are an equal 24 and the whole mark is centred on 260.
+        The 3 used to bulge to 364 while the D's stem started at 345 — nineteen
+        pixels of green sitting on top of a white letter.
+      */}
       {/* U */}
       <path
-        d="M84 130 V206 A42 42 0 0 0 126 248 H182 A22 22 0 0 0 204 226 V130"
+        d="M57 120 V203 A42 42 0 0 0 99 245 H155 A22 22 0 0 0 177 223 V120"
         fill="none"
         stroke="#F5F5F7"
         strokeWidth="34"
@@ -63,7 +72,7 @@ export default function HeroLogo({ className }: { className?: string }) {
 
       {/* 3 (drawn by the nozzle) */}
       <path
-        d="M228 150 H318 A24 24 0 0 1 318 198 H284 H322 A25 25 0 0 1 322 248 H236"
+        d="M218 137 H294 A27 27 0 0 1 294 191 H266 H294 A27 27 0 0 1 294 245 H222"
         fill="none"
         stroke="#089a47"
         strokeWidth="34"
@@ -74,12 +83,14 @@ export default function HeroLogo({ className }: { className?: string }) {
         filter="url(#u3d-glow)"
       />
 
-      {/* D — the same weight as the U, which is what makes them read as a pair.
-          Both letters run 130 to 248, so an equal stroke also puts their top
-          and bottom edges on exactly the same lines; at 30 against the U's 34
-          the D sat two pixels short at each end and looked a size smaller. */}
+      {/* D — a closed shape, so its top and bottom bars are STROKED and reach
+          17px beyond their centre lines. The U's stems end in butt caps and
+          reach nothing. That is why the three letters have to be laid out by
+          their OUTER edges (120 and 262 here), not by the numbers in the path:
+          matching centre lines is exactly what left the D a half-stroke taller
+          than the U. See the geometry note above the U. */}
       <path
-        d="M362 130 V248 H392 A59 59 0 0 0 392 130 Z"
+        d="M379 137 V245 H409 A54 54 0 0 0 409 137 Z"
         fill="none"
         stroke="#F5F5F7"
         strokeWidth="34"
@@ -90,13 +101,13 @@ export default function HeroLogo({ className }: { className?: string }) {
 
       {/* wordmark — forced LTR (the page is RTL) and centred under the mark */}
       <g className="u3d-word" style={{ direction: "ltr" }}>
-        <text x="260" y="292" textAnchor="middle" fontFamily="var(--font-mono), monospace" fontWeight="700" fontSize="30" letterSpacing="12">
+        <text x="266" y="292" textAnchor="middle" fontFamily="var(--font-mono), monospace" fontWeight="700" fontSize="30" letterSpacing="12">
           <tspan fill="#F5F5F7">UNIT </tspan>
           <tspan fill="#089a47">3D</tspan>
         </text>
       </g>
-      <path d="M52 282 H136" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
-      <path d="M384 282 H468" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
+      <path d="M40 282 H124" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
+      <path d="M396 282 H480" stroke="#089a47" strokeWidth="4" strokeLinecap="round" className="u3d-dash" />
     </svg>
   );
 }

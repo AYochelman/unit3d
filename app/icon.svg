@@ -3,10 +3,13 @@
        The whole wordmark turns to mush at 16px, so the icon is the one glyph
        that carries the brand on its own: the green 3 from the logo's mark,
        the same path as in Logo.tsx, scaled to fill a dark tile. Drawn rather
-       than typeset, so no font substitution can change it. -->
+       than typeset, so no font substitution can change it.
+       The glyph's own box is x 218-338, y 120-262 (see HeroLogo): 142 tall,
+       so 48/142 = 0.338 fits it to the tile with 8 of padding, and the 40.6
+       that leaves across is centred by hand. -->
   <rect width="64" height="64" rx="14" fill="#0A0A0B"/>
-  <g transform="translate(8 8) scale(0.363) translate(-211 -133)">
-    <path d="M228 150 H318 A24 24 0 0 1 318 198 H284 H322 A25 25 0 0 1 322 248 H236"
-          fill="none" stroke="#3FB872" stroke-width="34" stroke-linejoin="round"/>
+  <g transform="translate(11.7 8) scale(0.338) translate(-218 -120)">
+    <path d="M218 137 H294 A27 27 0 0 1 294 191 H266 H294 A27 27 0 0 1 294 245 H222"
+          fill="none" stroke="#3FB872" stroke-width="34" stroke-linejoin="round" stroke-linecap="butt"/>
   </g>
 </svg>
