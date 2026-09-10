@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-08T21:09:18.180Z
-// Items: 383
+// Items: 394
 
 import type { ImportedModel } from "./imported";
 
@@ -11938,6 +11938,260 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "home"
+    ]
+  },
+  {
+    "id": "mw-3258601",
+    "name": "6 Assorted Mini Flowers | Mini Vase & Animal Picks",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 0.59,
+    "grams": 3,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US70fe2a2023ae82/design/899e645bdd8dbd75.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Mirarin",
+    "sourceUrl": "https://makerworld.com/en/models/3258601-6-assorted-mini-flowers-mini-vase-animal-picks",
+    "license": "Standard Digital File License",
+    "downloads": 106,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 3,
+        "h": 0.59
+      },
+      {
+        "g": 6,
+        "h": 0.62
+      }
+    ]
+  },
+  {
+    "id": "mw-3258776",
+    "name": "Spinner Flip 4.0 - Hidden-Pin Modular Flip Fidget",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.97,
+    "grams": 22,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USb703756766d5f1/design/3c575882ca331730.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Fidget Central",
+    "sourceUrl": "https://makerworld.com/en/models/3258776-spinner-flip-4-0-hidden-pin-modular-flip-fidget",
+    "license": "Standard Digital File License",
+    "downloads": 440,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.98,
+    "gramsAms": 23
+  },
+  {
+    "id": "mw-3268146",
+    "name": "Fidget Cube Puzzle",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 3.78,
+    "grams": 112,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7fa5aa0edddc6e/design/58d9ee8c7b055496.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "BMA 3D",
+    "sourceUrl": "https://makerworld.com/en/models/3268146-fidget-cube-puzzle",
+    "license": "Standard Digital File License",
+    "downloads": 508,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3268477",
+    "name": "Rootwoven Voronoi Skull – Organic Skull Sculpture",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 14.19,
+    "grams": 235,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USe10c063a846e30/design/fb1b1c081f0e8ca3.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "DElex3D",
+    "sourceUrl": "https://makerworld.com/en/models/3268477-rootwoven-voronoi-skull-organic-skull-sculpture",
+    "license": "Standard Digital File License",
+    "downloads": 101,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ]
+  },
+  {
+    "id": "mw-3270009",
+    "name": "Eternal Roots - Tree of Life Wall Art",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 8.16,
+    "grams": 132,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US1942aadc084395/design/21331a8f9d458f3c.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Balzac",
+    "sourceUrl": "https://makerworld.com/en/models/3270009-eternal-roots-tree-of-life-wall-art",
+    "license": "Standard Digital File License",
+    "downloads": 94,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3270647",
+    "name": "ROPE PUMPKINS - MODERN HALLOWEEN DECOR / AUTUMN",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 4.63,
+    "grams": 130,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5ef9c8d93e88d5/design/66210f12722cf669.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Sektor 7 Studios",
+    "sourceUrl": "https://makerworld.com/en/models/3270647-rope-pumpkins-modern-halloween-decor-autumn",
+    "license": "Standard Digital File License",
+    "downloads": 91,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 5.33,
+    "gramsAms": 158
+  },
+  {
+    "id": "mw-3271298",
+    "name": "GHOST FACE CANDLE HOLDER WITH TEALIGHT CUTOUT",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 4.86,
+    "grams": 121,
+    "size": "~160mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6558e2d85e0224/design/1ca147a049193931.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Newuser92",
+    "sourceUrl": "https://makerworld.com/en/models/3271298-ghost-face-candle-holder-with-tealight-cutout",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 268,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3271500",
+    "name": "Goofy series– FRANKENSTEIN Movable Eyes NOAMS",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 4.84,
+    "grams": 92,
+    "size": "~100mm",
+    "colors": 4,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USf8959a345c99b0/design/704e23a568f8ca82.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AGo3D",
+    "sourceUrl": "https://makerworld.com/en/models/3271500-goofy-series-frankenstein-movable-eyes-noams",
+    "license": "Standard Digital File License",
+    "downloads": 131,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "fidget"
+    ],
+    "hoursAms": 1.56,
+    "gramsAms": 23
+  },
+  {
+    "id": "mw-3271827",
+    "name": "Skeleton Kitty",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 0.48,
+    "grams": 7,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US3c5f9db894ac1e/design/85ff0f8451abd80d.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Beto León Maker",
+    "sourceUrl": "https://makerworld.com/en/models/3271827-skeleton-kitty",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 150,
+    "hue": 145,
+    "art": "keychain",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "hoursAms": 15.92,
+    "gramsAms": 218
+  },
+  {
+    "id": "mw-3272331",
+    "name": "Midnight Majesty – Black Jaguar",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 18.34,
+    "grams": 406,
+    "size": "~250mm",
+    "colors": 4,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US43f45be471cb9a/design/3a34dc14f5238e1f.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Bigshot Tinkers",
+    "sourceUrl": "https://makerworld.com/en/models/3272331-midnight-majesty-black-jaguar",
+    "license": "Standard Digital File License",
+    "downloads": 61,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3275194",
+    "name": "Marvel Spider-Man Symbiote Black Suit NO AMS",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 2.72,
+    "grams": 45,
+    "size": "~100mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USd16640e4d0f3a3/design/0456ead752f10ad3.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Clean Studio",
+    "sourceUrl": "https://makerworld.com/en/models/3275194-marvel-spider-man-symbiote-black-suit-no-ams",
+    "license": "Standard Digital File License",
+    "downloads": 86,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "statues"
     ]
   }
 ];
