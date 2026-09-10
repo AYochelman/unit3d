@@ -2,29 +2,9 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 1
-// Collected: 2026-09-10T12:13:33.409Z
+// Items: 0
+// Collected: 2026-09-10T12:27:02.992Z
 
 import type { Candidate } from "./candidates";
 
-export const CANDIDATES: Candidate[] = [
-  {
-    "id": "3216620",
-    "title": "Floating Pool Party DJ Station - NO AMS",
-    "slug": "floating-pool-party-dj-station-no-ams",
-    "license": "BY-ND",
-    "creator": "aftershiftstudio",
-    "image": "https://makerworld.bblmw.com/makerworld/model/USfabd4c944d3744/design/b367c144f165217b.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 16,
-    "likes": 220,
-    "grams": 2785,
-    "hours": 67.55,
-    "colors": 4,
-    "suggested": "trendy",
-    "warnings": [
-      "הדפסה ארוכה"
-    ],
-    "via": "trending",
-    "tags": "pool party · floater · swimming pool · swimming · accessories · pool"
-  }
-];
+export const CANDIDATES: Candidate[] = [];
