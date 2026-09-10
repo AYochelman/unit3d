@@ -40,15 +40,6 @@ const TLS_BASE = {
   maxVersion: "TLSv1.2",
 };
 
-/** Tried in order until one completes. The winner is remembered. */
-const TLS_TRIES = [
-  { name: "resumed", opts: (session) => ({ ...TLS_BASE, session }) },
-  // Some firmware ships a key modern OpenSSL considers too weak to talk to.
-  { name: "resumed, relaxed", opts: (session) => ({ ...TLS_BASE, session, ciphers: "DEFAULT:@SECLEVEL=0" }) },
-  { name: "fresh", opts: () => ({ ...TLS_BASE }) },
-  { name: "fresh, relaxed", opts: () => ({ ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" }) },
-];
-
 /**
  * One permanent reader on the control connection.
  *
@@ -109,8 +100,8 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
   });
   control.setTimeout(0);
   const readReply = makeReader(control);
-  // Remembered across transfers so only the first one pays for the guess.
-  let dataTried = null;
+  // Remembered across transfers so only the first one pays for the search.
+  let dataPlan = null;
 
   const say = async (cmd, okCodes) => {
     control.write(cmd + CRLF);
@@ -131,111 +122,105 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
   /**
    * Run one transfer, and hand back everything it produced.
    *
-   * Two details have to be right, and both were wrong the first time:
+   * Three things have to line up, and each was learned the hard way:
    *
-   *   1. The data connection has to RESUME the control connection's TLS
-   *      session. Without that the printer closes the socket — which is what
-   *      made this look like a printer that refuses file transfer at all.
-   *
-   *   2. The socket is opened UNENCRYPTED, the command is sent, and only then
-   *      is the socket upgraded to TLS. Handshaking before the command leaves
-   *      both sides waiting for the other, which is a stall rather than a
-   *      refusal and reads as if the printer simply went quiet. Python's own
-   *      FTPS client orders it this way; that ordering is the whole trick.
+   *   1. The data connection must RESUME the control connection's TLS session.
+   *      Without it the printer closes the socket.
+   *   2. On TLS 1.2, because that is where `getSession()` resumes reliably, and
+   *      because this printer's stack refuses a 1.3 handshake outright.
+   *   3. The command may have to go out BEFORE the data port is connected to.
+   *      This printer answers PASV with a port it has not begun listening on
+   *      yet — connecting first times out — so the transfer command is what
+   *      makes it open. Other firmware wants the opposite. Both orders are
+   *      tried, each with its own PASV and its own socket, and whichever works
+   *      is remembered so only the first transfer pays for the search.
    */
-  const transfer = async (command) => {
+  const pasvPort = async () => {
     const pasv = await say("PASV", [227]);
     const m = /(\d+),(\d+),(\d+),(\d+),(\d+),(\d+)/.exec(pasv.text);
     if (!m) throw new Error("could not read where to connect for the transfer");
-    const dataPort = Number(m[5]) * 256 + Number(m[6]);
+    return Number(m[5]) * 256 + Number(m[6]);
+  };
 
-    // A failed handshake leaves rubbish on the socket, so every attempt gets a
-    // socket of its own — retrying on a poisoned one is how the fallback used
-    // to fail for a reason that had nothing to do with the fallback.
-    const openRaw = () =>
-      new Promise((resolve, reject) => {
-        const d = net.connect({ host, port: dataPort }, () => resolve(d));
-        d.setTimeout(30_000);
-        d.on("error", reject);
-        d.on("timeout", () => { d.destroy(); reject(new Error("the printer did not open the transfer")); });
-      });
+  const openRaw = (dataPort) =>
+    new Promise((resolve, reject) => {
+      const d = net.connect({ host, port: dataPort });
+      // Short: a port that is not listening should be discovered in seconds,
+      // not after the operating system gives up.
+      d.setTimeout(8000);
+      d.on("connect", () => { d.setTimeout(60_000); resolve(d); });
+      d.on("error", reject);
+      d.on("timeout", () => { d.destroy(); reject(new Error(`nothing listening on ${dataPort}`)); });
+    });
 
-    const upgrade = (socket, opts) =>
-      new Promise((resolve, reject) => {
-        const t = tls.connect({ ...opts, socket }, () => resolve(t));
-        t.once("error", reject);
-        setTimeout(() => reject(new Error("no handshake")), 8000);
-      });
+  const upgrade = (socket, opts) =>
+    new Promise((resolve, reject) => {
+      const t = tls.connect({ ...opts, socket }, () => resolve(t));
+      t.once("error", reject);
+      setTimeout(() => reject(new Error("no handshake")), 8000);
+    });
 
-    let secure = null;
-    let sent = false;
-    const session = control.getSession();
-    const problems = [];
-
-    // Implicit FTPS puts the data channel in TLS from the first byte. Some
-    // firmware instead waits to hear what is wanted before handshaking, so if
-    // none of the ways of starting TLS work, the command goes first and TLS
-    // follows. Which one a printer wants is not worth guessing at.
-    for (const attempt of dataTried ? [dataTried] : TLS_TRIES) {
-      const raw = await openRaw();
-      try {
-        secure = await upgrade(raw, attempt.opts(session));
-        dataTried = attempt;
-        break;
-      } catch (e) {
-        problems.push(`${attempt.name}: ${e.message}`);
-        try { raw.destroy(); } catch { /* already gone */ }
-      }
-    }
-
-    if (!secure) {
-      const raw = await openRaw();
-      control.write(command + CRLF);
-      sent = true;
-      const first = await readReply(20_000);
-      if (![125, 150].includes(first.code)) {
-        raw.destroy();
-        throw new Error(`${command.split(" ")[0]} refused (${first.code})`);
-      }
-      try {
-        secure = await upgrade(raw, TLS_TRIES[0].opts(session));
-      } catch (e) {
-        raw.destroy();
-        throw new Error(`could not secure the transfer — ${problems.join("; ")}; after the command: ${e.message}`);
-      }
-    }
-
-    if (!sent) {
-      control.write(command + CRLF);
-      const start = await readReply(20_000);
-      if (![125, 150].includes(start.code)) {
-        secure.destroy();
-        throw new Error(`${command.split(" ")[0]} refused (${start.code})`);
-      }
-    }
-
-    const body = await new Promise((resolve, reject) => {
+  const collect = (secure) =>
+    new Promise((resolve, reject) => {
       const chunks = [];
       let settled = false;
       const finish = (fn, v) => { if (settled) return; settled = true; fn(v); };
+      // Bambu drops the connection rather than closing it politely once a file
+      // is out, so bytes already in hand beat a clean goodbye.
+      const settleWith = (err) => (chunks.length ? finish(resolve, Buffer.concat(chunks)) : finish(reject, err));
       secure.on("data", (c) => chunks.push(c));
       secure.on("end", () => finish(resolve, Buffer.concat(chunks)));
       secure.on("close", () => finish(resolve, Buffer.concat(chunks)));
-      // Bambu drops the connection rather than closing it politely once a file
-      // is out, so bytes already in hand beat a clean goodbye.
-      const settleWith = (err) => {
-        if (chunks.length) finish(resolve, Buffer.concat(chunks));
-        else finish(reject, err);
-      };
       secure.on("error", settleWith);
-      secure.setTimeout(60_000, () => {
-        secure.destroy();
-        settleWith(new Error("the transfer stalled"));
-      });
+      secure.setTimeout(60_000, () => { secure.destroy(); settleWith(new Error("the transfer stalled")); });
     });
 
-    await readReply(20_000).catch(() => {});   // the 226 that closes it
-    return body;
+  const expectStart = async () => {
+    const r = await readReply(20_000);
+    if (![125, 150].includes(r.code)) throw new Error(`refused (${r.code})`);
+  };
+
+  const STRATEGIES = [
+    { name: "command first", first: "command", tls: TLS_BASE },
+    { name: "command first, relaxed", first: "command", tls: { ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" } },
+    { name: "connect first", first: "connect", tls: TLS_BASE },
+    { name: "connect first, relaxed", first: "connect", tls: { ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" } },
+  ];
+
+  const runOne = async (command, plan) => {
+    const dataPort = await pasvPort();
+    const opts = { ...plan.tls, session: control.getSession() };
+    let raw;
+    if (plan.first === "command") {
+      control.write(command + CRLF);
+      await expectStart();
+      raw = await openRaw(dataPort);
+      return collect(await upgrade(raw, opts));
+    }
+    raw = await openRaw(dataPort);
+    const secure = await upgrade(raw, opts);
+    control.write(command + CRLF);
+    await expectStart();
+    return collect(secure);
+  };
+
+  const transfer = async (command) => {
+    const problems = [];
+    for (const plan of dataPlan ? [dataPlan] : STRATEGIES) {
+      try {
+        const body = await runOne(command, plan);
+        // A 226 may or may not follow; either way it must not be left in the
+        // buffer for the next read to mistake for its own answer.
+        await readReply(8000).catch(() => {});
+        dataPlan = plan;
+        return body;
+      } catch (e) {
+        problems.push(`${plan.name}: ${e.message}`);
+        await readReply(3000).catch(() => {});   // clear anything left behind
+      }
+    }
+    dataPlan = null;
+    throw new Error(problems.join("; "));
   };
 
   return {
@@ -254,9 +239,9 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       return transfer(`RETR ${remotePath}`);
     },
 
-    /** Which TLS handshake the printer accepted, once one has. */
+    /** Which way of opening a transfer this printer accepted. */
     get mode() {
-      return dataTried?.name ?? "";
+      return dataPlan?.name ?? "";
     },
 
     close() {
