@@ -15,6 +15,7 @@
  * So this is a small FTPS client rather than a library: list, download, and
  * nothing else, with the one detail that matters done right.
  */
+import net from "node:net";
 import tls from "node:tls";
 
 const CRLF = "\r\n";
@@ -68,55 +69,80 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
   await say("TYPE I", [200]);
 
   /**
-   * Open a data connection for one transfer.
+   * Run one transfer, and hand back everything it produced.
    *
-   * The session of the control connection is handed to it: without that the
-   * printer closes the socket immediately, which is the failure that made
-   * timelapses look impossible.
+   * Two details have to be right, and both were wrong the first time:
+   *
+   *   1. The data connection has to RESUME the control connection's TLS
+   *      session. Without that the printer closes the socket — which is what
+   *      made this look like a printer that refuses file transfer at all.
+   *
+   *   2. The socket is opened UNENCRYPTED, the command is sent, and only then
+   *      is the socket upgraded to TLS. Handshaking before the command leaves
+   *      both sides waiting for the other, which is a stall rather than a
+   *      refusal and reads as if the printer simply went quiet. Python's own
+   *      FTPS client orders it this way; that ordering is the whole trick.
    */
-  const dataConnection = async () => {
+  const transfer = async (command) => {
     const pasv = await say("PASV", [227]);
     const m = /(\d+),(\d+),(\d+),(\d+),(\d+),(\d+)/.exec(pasv.text);
     if (!m) throw new Error("could not read where to connect for the transfer");
     const dataPort = Number(m[5]) * 256 + Number(m[6]);
-    const session = control.getSession();
-    return new Promise((resolve, reject) => {
-      const d = tls.connect(
-        { host, port: dataPort, rejectUnauthorized: false, session, timeout: 30_000 },
-        () => resolve(d),
-      );
-      d.on("error", reject);
-      d.on("timeout", () => { d.destroy(); reject(new Error("the transfer stalled")); });
-    });
-  };
 
-  const collect = (sock) =>
-    new Promise((resolve, reject) => {
-      const chunks = [];
-      sock.on("data", (c) => chunks.push(c));
-      sock.on("end", () => resolve(Buffer.concat(chunks)));
-      sock.on("error", reject);
+    // 1. Plain socket, no handshake yet.
+    const raw = await new Promise((resolve, reject) => {
+      const d = net.connect({ host, port: dataPort }, () => resolve(d));
+      d.setTimeout(30_000);
+      d.on("error", reject);
+      d.on("timeout", () => { d.destroy(); reject(new Error("the printer did not open the transfer")); });
     });
+
+    // 2. The command goes out over the control connection.
+    control.write(command + CRLF);
+    const start = await readReply(control, 20_000);
+    if (![125, 150].includes(start.code)) {
+      raw.destroy();
+      throw new Error(`${command.split(" ")[0]} refused (${start.code})`);
+    }
+
+    // 3. Now upgrade, resuming the session the control connection established.
+    const secure = tls.connect({ socket: raw, rejectUnauthorized: false, session: control.getSession() });
+
+    const body = await new Promise((resolve, reject) => {
+      const chunks = [];
+      let settled = false;
+      const finish = (fn, v) => { if (settled) return; settled = true; fn(v); };
+      secure.on("data", (c) => chunks.push(c));
+      secure.on("end", () => finish(resolve, Buffer.concat(chunks)));
+      secure.on("close", () => finish(resolve, Buffer.concat(chunks)));
+      secure.on("error", (e) =>
+        // Bambu drops the connection rather than closing it politely once the
+        // file is out; bytes in hand beat a clean goodbye.
+        chunks.length ? finish(resolve, Buffer.concat(chunks)) : finish(reject, e));
+      secure.setTimeout(60_000, () => {
+        secure.destroy();
+        chunks.length ? finish(resolve, Buffer.concat(chunks)) : finish(reject, new Error("the transfer stalled"));
+      });
+    });
+
+    await readReply(control, 20_000).catch(() => {});   // the 226 that closes it
+    return body;
+  };
 
   return {
     /** Every file in a folder, as {name, size, modifiedAt}. */
     async list(dir) {
-      const data = await dataConnection();
-      const body = collect(data);
-      await say(`LIST ${dir}`, [125, 150]);
-      const text = (await body).toString("utf8");
-      await readReply(control);             // the 226 that closes the transfer
-      return parseList(text);
+      return parseList((await transfer(`LIST ${dir}`)).toString("utf8"));
+    },
+
+    /** The listing exactly as the printer wrote it — for when nothing matches. */
+    async listRaw(dir) {
+      return (await transfer(`LIST ${dir}`)).toString("utf8");
     },
 
     /** One file, whole, in memory. Timelapses are a few megabytes at most. */
     async download(remotePath) {
-      const data = await dataConnection();
-      const body = collect(data);
-      await say(`RETR ${remotePath}`, [125, 150]);
-      const buf = await body;
-      await readReply(control);
-      return buf;
+      return transfer(`RETR ${remotePath}`);
     },
 
     close() {

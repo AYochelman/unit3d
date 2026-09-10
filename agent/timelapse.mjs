@@ -35,19 +35,40 @@ try {
   process.exit(1);
 }
 
-const dir = cfg.timelapse?.folder || "/timelapse";
-let files;
-try {
-  files = (await ftp.list(dir)).filter((f) => /\.(mp4|avi)$/i.test(f.name) && f.size > 100_000);
-} catch (e) {
-  bad(`could not read ${dir}: ${e.message}`);
-  ftp.close();
-  process.exit(1);
+// Where the videos live has moved between firmware versions, so look rather
+// than assume — and when nothing is found, show what IS on the card instead of
+// declaring it empty.
+const CANDIDATES = cfg.timelapse?.folder
+  ? [cfg.timelapse.folder]
+  : ["/timelapse", "timelapse", "/video", "/"];
+
+let files = [];
+let dir = "";
+for (const candidate of CANDIDATES) {
+  try {
+    const found = (await ftp.list(candidate)).filter((f) => /\.(mp4|avi)$/i.test(f.name) && f.size > 100_000);
+    if (found.length) { files = found; dir = candidate === "/" ? "" : candidate; break; }
+    if (!dir) dir = candidate;
+  } catch { /* try the next place */ }
+}
+
+if (files.length === 0) {
+  console.log("\n  No videos found. This is what the card actually contains:\n");
+  for (const candidate of ["/", "/timelapse"]) {
+    try {
+      const raw = await ftp.listRaw(candidate);
+      console.log(`  ${candidate}`);
+      console.log(raw.trim().split(/\r?\n/).map((l) => `    ${l}`).join("\n") || "    (empty)");
+      console.log("");
+    } catch (e) {
+      console.log(`  ${candidate} - could not read (${e.message})\n`);
+    }
+  }
 }
 
 if (files.length === 0) {
   console.log(`
-  The card has no timelapses on it.
+  No timelapses on the card.
 
   That is a slicer setting, not a fault: in Bambu Studio, before printing,
   turn on "Timelapse" in the print settings. The printer only records one when
