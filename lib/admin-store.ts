@@ -4,6 +4,7 @@ import type { Filament, Material, MaterialId } from "./types";
 import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
 import { stockKey, type Interest, type StockMap } from "./inventory";
 import { HE_NAME_OVERRIDES } from "./he-names.overrides";
+import { REMOVED_BY_OWNER, SHELF_MOVES } from "./shop-overrides";
 import type { OrderDecision, PlacedOrder } from "./orders";
 import { normalizeCode, type Coupon } from "./coupons";
 import { DEFAULT_USD_RATE, type Expense } from "./expenses";
@@ -106,6 +107,15 @@ type AdminState = {
   /** Live shelf moves, applied to every listing the moment they are made. */
   shelves: Record<string, ImportedShelf[]>;
   /**
+   * Products taken off the shop from /admin.
+   *
+   * A shop fills with things that turned out not to be worth printing, and
+   * until now the only way to drop one was to edit a list in the code. Held
+   * here as ids so the listings can hide them the moment the decision is made,
+   * and written to lib/shop-overrides.ts on save like every other change.
+   */
+  removed: string[];
+  /**
    * Spools the shop bought that the built-in lists never heard of.
    *
    * A filament shop is not a fixed menu — a glow-in-the-dark, a thermochromic
@@ -132,6 +142,7 @@ type AdminState = {
   setGhToken(t: string): void;
   setShelves(productId: string, shelves: ImportedShelf[]): void;
   clearShelves(productId: string): void;
+  toggleRemoved(productId: string): void;
   addMaterial(m: Material): void;
   removeMaterial(id: MaterialId): void;
   addColor(c: Filament): void;
@@ -183,7 +194,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   sbToken: "",
   interest: [],
   pricing: DEFAULT_PRICING,
-  shelves: {},
+  shelves: { ...SHELF_MOVES },
+  removed: [...REMOVED_BY_OWNER],
   materials: [],
   colors: [],
   ghToken: "",   // hydrated from the device on first render, see AdminUnlock
@@ -212,6 +224,12 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       else delete next[productId];
       return { shelves: next };
     }),
+  toggleRemoved: (productId) =>
+    set((st) => ({
+      removed: st.removed.includes(productId)
+        ? st.removed.filter((id) => id !== productId)
+        : [...st.removed, productId],
+    })),
   clearShelves: (productId) =>
     set((st) => {
       const next = { ...st.shelves };

@@ -35,7 +35,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "coupons", label: "קודי הנחה" },
   { id: "expenses", label: "הוצאות" },
   { id: "products", label: "מוצרים" },
-  { id: "names", label: "שמות" },
+  { id: "names", label: "מוצרים · שמות" },
   { id: "approvals", label: "מודלים לאישור" },
   { id: "stock", label: "מלאי" },
   { id: "materials", label: "גלילים" },

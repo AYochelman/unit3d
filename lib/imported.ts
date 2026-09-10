@@ -3,6 +3,7 @@ import { DEFAULT_COST_SETTINGS, estimateCost, fmtHours } from "./costing";
 import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
 import { photoSrc } from "./assets";
 import { applyShelf } from "./shelves";
+import { REMOVED_BY_OWNER, SHELF_MOVES } from "./shop-overrides";
 import { HE_DESCS } from "./he-descs";
 import { heName } from "./he-names";
 
@@ -172,17 +173,34 @@ export const SHOW_HELD_MODELS = false;
 
 // Photos resolve to the copies in public/img/catalog (see lib/assets.ts), so
 // nothing on the shop is loaded from a designer's CDN at page view.
+/**
+ * A move made from /admin wins over the hand-written placement, because it is
+ * the more recent decision and the person who made it was looking at the
+ * product when they made it.
+ */
+const applyOwnerShelf = (m: ImportedModel): ImportedModel => {
+  const moved = SHELF_MOVES[m.id];
+  if (!moved?.length) return m;
+  const [home, ...also] = moved;
+  return { ...m, shelf: home, ...(also.length ? { also } : { also: undefined }) };
+};
+
 export const IMPORTED: ImportedModel[] = IMPORTED_GENERATED.map((m) =>
-  applyShelf(
-    m.image || m.images?.length
-      ? { ...m, ...(m.image ? { image: photoSrc(m.image) } : {}), ...(m.images?.length ? { images: m.images.map((u) => photoSrc(u)) } : {}) }
-      : m,
+  applyOwnerShelf(
+    applyShelf(
+      m.image || m.images?.length
+        ? { ...m, ...(m.image ? { image: photoSrc(m.image) } : {}), ...(m.images?.length ? { images: m.images.map((u) => photoSrc(u)) } : {}) }
+        : m,
+    ),
   ),
 );
 export const IMPORTED_DATE = IMPORTED_AT;
 
+const ownerRemoved = new Set(REMOVED_BY_OWNER);
+
 const sellable = (m: ImportedModel) =>
-  !REMOVED_IDS.has(m.id) && (SHOW_HELD_MODELS || !m.holds.some((h) => BLOCKED_HOLDS.includes(h)));
+  !REMOVED_IDS.has(m.id) && !ownerRemoved.has(m.id) &&
+  (SHOW_HELD_MODELS || !m.holds.some((h) => BLOCKED_HOLDS.includes(h)));
 
 /** Rows kept out of the shop, for the admin page and the import report. */
 export const heldModels = (): ImportedModel[] => IMPORTED.filter((m) => !sellable(m));
