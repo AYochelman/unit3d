@@ -211,8 +211,9 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
   // and then waiting to be told to connect is a deadlock — both sides waiting
   // for the other — and it is what killed the control connection every time.
   const STRATEGIES = [
+    { name: "socket, ask, encrypt", first: "socket", tls: TLS_BASE },
+    { name: "socket, ask, encrypt, relaxed", first: "socket", tls: { ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" } },
     { name: "connect first", first: "connect", tls: TLS_BASE },
-    { name: "connect first, relaxed", first: "connect", tls: { ...TLS_BASE, ciphers: "DEFAULT:@SECLEVEL=0" } },
     { name: "command first", first: "command", tls: TLS_BASE },
   ];
 
@@ -229,18 +230,32 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     const idleMs = quick ? 15_000 : 90_000;
     const dataPort = await pasvPort();
     const opts = { ...plan.tls, session: control.getSession() };
-    let raw;
-    if (plan.first === "command") {
-      trace(">", command);
-      control.write(command + CRLF);
+    const send = () => { trace(">", command); control.write(command + CRLF); };
+
+    // Open the socket, ask, and only then start TLS.
+    //
+    // This is the order Python's own FTPS client uses, and the transcript says
+    // it is the one this printer wants: it will not answer until something has
+    // connected to the port it named, and it will not begin a handshake until
+    // it knows what the connection is for. Connecting and handshaking first
+    // hangs on a server waiting to be told; asking first hangs on a server
+    // waiting to be connected to. Both were tried, and both deadlocked.
+    if (plan.first === "socket") {
+      const raw = await openRaw(dataPort);
+      send();
       await expectStart(replyMs);
-      raw = await openRaw(dataPort);
       return collect(await upgrade(raw, opts), idleMs);
     }
-    raw = await openRaw(dataPort);
+
+    if (plan.first === "command") {
+      send();
+      await expectStart(replyMs);
+      return collect(await upgrade(await openRaw(dataPort), opts), idleMs);
+    }
+
+    const raw = await openRaw(dataPort);
     const secure = await upgrade(raw, opts);
-    trace(">", command);
-    control.write(command + CRLF);
+    send();
     await expectStart(replyMs);
     return collect(secure, idleMs);
   };
