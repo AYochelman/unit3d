@@ -53,10 +53,16 @@ for (const candidate of CANDIDATES) {
 }
 
 if (files.length === 0) {
-  console.log("\n  No videos found. This is what the card actually contains:\n");
-  for (const candidate of ["/", "/timelapse"]) {
+  // "Nothing found" has two very different causes, and telling them apart is
+  // the whole job here. A folder that answered and was empty is a slicer
+  // setting. A folder that never answered is a bug in this program, and saying
+  // "no timelapses" about it is worse than saying nothing.
+  let anyAnswered = false;
+  console.log("\n  No videos matched. Asking the card what it does contain:\n");
+  for (const candidate of ["/", "/timelapse", "/video"]) {
     try {
       const raw = await ftp.listRaw(candidate);
+      anyAnswered = true;
       console.log(`  ${candidate}`);
       console.log(raw.trim().split(/\r?\n/).map((l) => `    ${l}`).join("\n") || "    (empty)");
       console.log("");
@@ -64,11 +70,20 @@ if (files.length === 0) {
       console.log(`  ${candidate} - could not read (${e.message})\n`);
     }
   }
-}
 
-if (files.length === 0) {
+  if (!anyAnswered) {
+    bad("could not read the card at all",
+        "the login worked, so this is not the printer refusing - the listing itself failed.");
+    console.log(`
+  Do NOT take this as "the card is empty" - nothing was read, so nothing is
+  known. Send this window as a screenshot.
+`);
+    ftp.close();
+    process.exit(1);
+  }
+
   console.log(`
-  No timelapses on the card.
+  The card answered, and has no timelapses on it.
 
   That is a slicer setting, not a fault: in Bambu Studio, before printing,
   turn on "Timelapse" in the print settings. The printer only records one when

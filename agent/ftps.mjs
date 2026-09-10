@@ -20,28 +20,56 @@ import tls from "node:tls";
 
 const CRLF = "\r\n";
 
-/** A reply is done when a line starts with three digits and a space. */
-function readReply(sock, timeoutMs = 15_000) {
-  return new Promise((resolve, reject) => {
-    let buf = "";
-    const done = (fn, v) => {
-      clearTimeout(timer);
-      sock.off("data", onData);
-      sock.off("error", onError);
-      fn(v);
-    };
-    const onData = (d) => {
-      buf += d.toString("utf8");
-      const lines = buf.split(CRLF);
-      for (const line of lines) {
-        if (/^\d{3} /.test(line)) return done(resolve, { code: Number(line.slice(0, 3)), text: buf.trim() });
+/**
+ * One permanent reader on the control connection.
+ *
+ * The obvious shape — attach a `data` handler, wait for the reply, remove it —
+ * silently loses everything that arrives while no handler is attached: a Node
+ * socket keeps flowing once it has flowed, and bytes with nowhere to go are
+ * dropped. FTP servers pipeline freely (the 150 can land while the 227 is still
+ * being handled), so replies were disappearing and the next read waited for
+ * something that had already come and gone. That is what "the printer did not
+ * answer" was: not silence, but a reply nobody was listening for.
+ *
+ * So the socket is read once, into a buffer, and readers take from the buffer.
+ */
+function makeReader(sock) {
+  let pending = "";
+  let waiter = null;
+
+  const tryResolve = () => {
+    if (!waiter) return;
+    for (const line of pending.split(CRLF)) {
+      if (/^\d{3} /.test(line)) {
+        const reply = { code: Number(line.slice(0, 3)), text: pending.trim() };
+        pending = "";
+        const w = waiter;
+        waiter = null;
+        clearTimeout(w.timer);
+        w.resolve(reply);
+        return;
       }
-    };
-    const onError = (e) => done(reject, e);
-    const timer = setTimeout(() => done(reject, new Error("the printer did not answer")), timeoutMs);
-    sock.on("data", onData);
-    sock.on("error", onError);
+    }
+  };
+
+  sock.on("data", (d) => { pending += d.toString("utf8"); tryResolve(); });
+  sock.on("error", (e) => {
+    if (!waiter) return;
+    const w = waiter;
+    waiter = null;
+    clearTimeout(w.timer);
+    w.reject(e);
   });
+
+  return (timeoutMs = 15_000) =>
+    new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        waiter = null;
+        reject(new Error("the printer did not answer"));
+      }, timeoutMs);
+      waiter = { resolve, reject, timer };
+      tryResolve();   // the answer may already be in hand
+    });
 }
 
 export async function connectPrinterFtps({ host, password, user = "bblp", port = 990 }) {
@@ -51,17 +79,18 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     s.on("timeout", () => { s.destroy(); reject(new Error("timed out reaching the printer's card")); });
   });
   control.setTimeout(0);
+  const readReply = makeReader(control);
 
   const say = async (cmd, okCodes) => {
     control.write(cmd + CRLF);
-    const r = await readReply(control);
+    const r = await readReply();
     if (okCodes && !okCodes.includes(r.code)) {
       throw new Error(`${cmd.split(" ")[0]} refused (${r.code})`);
     }
     return r;
   };
 
-  await readReply(control);                 // the greeting
+  await readReply();                        // the greeting
   await say(`USER ${user}`, [230, 331]);
   await say(`PASS ${password}`, [230]);
   await say("PBSZ 0", [200]);
@@ -99,7 +128,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
 
     // 2. The command goes out over the control connection.
     control.write(command + CRLF);
-    const start = await readReply(control, 20_000);
+    const start = await readReply(20_000);
     if (![125, 150].includes(start.code)) {
       raw.destroy();
       throw new Error(`${command.split(" ")[0]} refused (${start.code})`);
@@ -128,7 +157,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       });
     });
 
-    await readReply(control, 20_000).catch(() => {});   // the 226 that closes it
+    await readReply(20_000).catch(() => {});   // the 226 that closes it
     return body;
   };
 
