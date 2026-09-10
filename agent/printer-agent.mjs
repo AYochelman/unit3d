@@ -643,59 +643,66 @@ async function liveTick() {
 }
 
 // ─── Timelapses ───────────────────────────────────────────────────────────────
-// The printer writes them to its own card, and FTPS over the LAN is how they
-// would come off it — except that Bambu's file transfer expects the data
-// connection to resume the control connection's TLS session, which this client
-// cannot do. The printer answers by closing the socket. So this is best-effort:
-// it tries once, and if the printer refuses that way it says so plainly and
-// stops asking, rather than printing the same red line every half hour.
+// Every timelapse the printer records stays on the microSD card inside it, and
+// that card is served over FTPS. This used to fail: the printer would close the
+// data connection immediately, and the conclusion drawn was that it refuses
+// third-party transfer at all. It does not — it requires the data connection to
+// resume the control connection's TLS session, which the library in use could
+// not do. ftps.mjs does, so the card is readable after all.
+//
+// In LAN Only mode this is the ONLY way to reach them: the phone app and the
+// cloud cannot see the printer any more, so if the agent does not fetch them,
+// nothing does, and the card eventually overwrites the oldest.
 const seen = new Set();
-let timelapseOff = false;
+let timelapseFails = 0;
+
 async function pushTimelapses() {
-  if (cfg.timelapse?.enabled === false || timelapseOff) return;
+  if (cfg.timelapse?.enabled === false) return;
+  const { connectPrinterFtps } = await import("./ftps.mjs");
   let ftp;
   try {
-    ({ Client: ftp } = await import("basic-ftp"));
-  } catch {
-    return; // basic-ftp not installed — timelapses simply stay on the card
-  }
-  const c = new ftp();
-  try {
-    await c.access({ host, port: 990, user: "bblp", password: accessCode, secure: "implicit", secureOptions: { rejectUnauthorized: false } });
-    const files = (await c.list("/timelapse")).filter((f) => f.isFile && /\.mp4$/i.test(f.name));
-    for (const f of files.slice(-12)) {
-      if (seen.has(f.name)) continue;
-      const tmp = path.join(HERE, ".tmp.mp4");
-      await c.downloadTo(tmp, `/timelapse/${f.name}`);
-      const body = fs.readFileSync(tmp);
-      const ok = await upload("printer", `timelapse/${f.name}`, body, "video/mp4");
-      fs.unlinkSync(tmp);
-      if (ok) {
-        seen.add(f.name);
-        await fetch(`${SB}/rest/v1/printer_timelapses?on_conflict=file`, {
-          method: "POST",
-          headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
-          body: JSON.stringify({
-            file: f.name,
-            url: `${SB}/storage/v1/object/public/printer/timelapse/${encodeURIComponent(f.name)}`,
-            size_mb: Math.round((f.size / 1048576) * 10) / 10,
-            recorded_at: (f.modifiedAt ?? new Date()).toISOString(),
-          }),
-        });
-        log("timelapse uploaded:", f.name);
-      }
+    ftp = await connectPrinterFtps({ host, password: accessCode });
+    const dir = cfg.timelapse?.folder || "/timelapse";
+    const files = (await ftp.list(dir))
+      .filter((f) => /\.(mp4|avi)$/i.test(f.name) && f.size > 100_000)
+      .sort((a, b) => a.modifiedAt - b.modifiedAt);
+
+    const fresh = files.filter((f) => !seen.has(f.name));
+    if (fresh.length && timelapseFails === 0 && seen.size === 0) {
+      log(`timelapse: the printer's card holds ${files.length} - fetching them`);
     }
+
+    // Oldest first, a few at a time: a card with a year of prints on it should
+    // not turn the first run into an hour-long upload.
+    for (const f of fresh.slice(0, cfg.timelapse?.perRun ?? 4)) {
+      const body = await ftp.download(`${dir}/${f.name}`);
+      if (!body || body.length < 100_000) { log("timelapse: came back empty -", f.name); continue; }
+      const ok = await upload("printer", `timelapse/${f.name}`, body, "video/mp4");
+      if (!ok) continue;
+      seen.add(f.name);
+      await fetch(`${SB}/rest/v1/printer_timelapses?on_conflict=file`, {
+        method: "POST",
+        headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
+        body: JSON.stringify({
+          file: f.name,
+          url: `${SB}/storage/v1/object/public/printer/timelapse/${encodeURIComponent(f.name)}`,
+          size_mb: Math.round((body.length / 1048576) * 10) / 10,
+          recorded_at: (f.modifiedAt ?? new Date()).toISOString(),
+        }),
+      });
+      log(`timelapse saved: ${f.name} (${Math.round(body.length / 1048576)} MB)`);
+    }
+    timelapseFails = 0;
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    if (/FIN|ECONNRESET|EPROTO|closed/i.test(msg)) {
-      timelapseOff = true;
-      log("timelapse: this printer does not allow third-party file transfer - skipping.");
-      log("  (everything else keeps working: status, camera, finished prints.)");
-    } else {
-      log("timelapse failed:", msg);
+    // Say it the first time and then rarely: this runs on a slow loop, and a
+    // printer that is simply asleep should not fill the window with red.
+    if (++timelapseFails === 1 || timelapseFails % 12 === 0) {
+      log("timelapse: could not read the printer's card -", msg);
+      if (timelapseFails === 1) log("  (everything else keeps working. it will try again.)");
     }
   } finally {
-    c.close();
+    ftp?.close();
   }
 }
 

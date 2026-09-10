@@ -203,8 +203,9 @@ const config = {
     // printer's light alone.
     light: old?.camera?.light ?? "auto",
   },
-  // Off by default: the printer refuses third-party file transfer (see the agent).
-  timelapse: { enabled: old?.timelapse?.enabled === true, everyMinutes: old?.timelapse?.everyMinutes ?? 30 },
+  // On: the printer's card is readable once the data connection resumes the
+  // control connection's TLS session (see ftps.mjs).
+  timelapse: { enabled: old?.timelapse?.enabled !== false, everyMinutes: old?.timelapse?.everyMinutes ?? 30 },
   statusEverySeconds: old?.statusEverySeconds ?? 2,
 };
 
