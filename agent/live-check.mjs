@@ -8,6 +8,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { makeR2 } from "./r2.mjs";
+import { banner } from "./version.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const cfg = JSON.parse(fs.readFileSync(path.join(HERE, "config.json"), "utf8"));
@@ -15,7 +16,7 @@ const cfg = JSON.parse(fs.readFileSync(path.join(HERE, "config.json"), "utf8"));
 const ok = (m, x = "") => console.log(`  \x1b[32mok\x1b[0m    ${m} ${x}`);
 const bad = (m, fix) => { console.log(`  \x1b[31mFAIL\x1b[0m  ${m}`); if (fix) console.log(`        → ${fix}`); };
 
-console.log("\n  Checking the live video setup.\n");
+banner("checking the live video setup");
 
 // 1. ffmpeg
 const bin = (() => {

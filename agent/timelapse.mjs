@@ -9,6 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { banner } from "./version.mjs";
 import { connectPrinterFtps } from "./ftps.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -22,7 +23,7 @@ const sbHeaders = { apikey: KEY, ...(legacy ? { Authorization: `Bearer ${KEY}` }
 const ok = (m) => console.log(`  \x1b[32mok\x1b[0m    ${m}`);
 const bad = (m, fix) => { console.log(`  \x1b[31mFAIL\x1b[0m  ${m}`); if (fix) console.log(`        → ${fix}`); };
 
-console.log("\n  Fetching the timelapses off the printer's card.\n");
+banner("fetching the timelapses off the printer's card");
 
 let ftp;
 try {

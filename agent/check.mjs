@@ -13,6 +13,7 @@ import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
+import { VERSION } from "./version.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const FILE = path.join(HERE, "config.json");
@@ -30,6 +31,7 @@ const SB = (cfg.supabase?.url ?? "").replace(/\/$/, "");
 const KEY = cfg.supabase?.serviceKey ?? "";
 
 console.log("\n  Unit 3D · checking the setup\n");
+console.log(`  agent version ${VERSION}`);
 console.log(`  printer ${host}   serial ${serial}   code ${String(accessCode).slice(0, 2)}******`);
 console.log(`  database ${SB}\n`);
 

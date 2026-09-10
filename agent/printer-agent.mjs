@@ -26,6 +26,7 @@ import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
 import { makeR2 } from "./r2.mjs";
+import { VERSION } from "./version.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(HERE, "config.json");
@@ -719,7 +720,7 @@ every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)
 every(1000, () => liveTick().catch((e) => log("live error:", e.message)));
 every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
 
-log(`agent running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
+log(`agent ${VERSION} running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
 
 // Live video only starts when a print does, which means an unconfigured setup
 // looks exactly like a configured one until the next print - and then fails

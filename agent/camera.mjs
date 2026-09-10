@@ -16,6 +16,7 @@ import { spawnSync } from "node:child_process";
 import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
+import { banner } from "./version.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const cfg = JSON.parse(fs.readFileSync(path.join(HERE, "config.json"), "utf8"));
@@ -28,7 +29,8 @@ const ok = (m, x = "") => console.log(`  \x1b[32mok\x1b[0m    ${m} ${x}`);
 const bad = (m, fix) => { console.log(`  \x1b[31mFAIL\x1b[0m  ${m}`); if (fix) console.log(`        → ${fix}`); };
 const step = (m) => console.log(`\n  ${m}`);
 
-console.log("\n  Checking why the camera picture is black.\n  This takes about 20 seconds.");
+banner("why is the camera picture black");
+console.log("  This takes about 20 seconds.");
 
 // ─── 1. The chamber light ────────────────────────────────────────────────────
 let ipcam = null;
