@@ -66,6 +66,7 @@ if (files.length === 0) {
   // setting. A folder that never answered is a bug in this program, and saying
   // "no timelapses" about it is worse than saying nothing.
   let anyAnswered = false;
+  let empty = 0;
   console.log("\n  No videos matched. Asking the card what it does contain:\n");
   for (const candidate of ["/", "/timelapse", "/video", "/sdcard", "/model"]) {
     try {
@@ -75,9 +76,13 @@ if (files.length === 0) {
       ftp = await connectPrinterFtps({ host, password: accessCode, debug: DEBUG, onNote: note });
       const raw = await ftp.listRaw(candidate);
       anyAnswered = true;
-      console.log(`  ${candidate}`);
-      console.log(raw.trim().split(/\r?\n/).map((l) => `    ${l}`).join("\n") || "    (empty)");
+      // The byte count matters: a folder that answered with nothing and a
+      // folder whose answer we failed to read look identical without it, and
+      // the difference decides whether to look at the code or at the printer.
+      console.log(`  ${candidate}  (${raw.length} bytes)`);
+      console.log(raw.trim().split(/\r?\n/).map((l) => `    ${l}`).join("\n") || "    (nothing at all)");
       console.log("");
+      if (raw.length === 0) empty++;
     } catch (e) {
       console.log(`  ${candidate} - could not read (${e.message})\n`);
     }
@@ -94,13 +99,28 @@ if (files.length === 0) {
     process.exit(1);
   }
 
-  console.log(`
+  if (empty >= 3) {
+    // Every folder empty, the root included, is not a slicer setting. A
+    // printer with a card in it has files at the root even when it has never
+    // recorded anything.
+    console.log(`
+  Every folder answered, and every one of them is completely empty -
+  including the root. That is the signature of a printer with NO microSD
+  CARD IN IT, not of a card with nothing on it.
+
+  Check the slot on the printer. Bambu records timelapses to that card and
+  nowhere else, so without one the "Timelapse" setting in the slicer records
+  nothing, silently.
+`);
+  } else {
+    console.log(`
   The card answered, and has no timelapses on it.
 
   That is a slicer setting, not a fault: in Bambu Studio, before printing,
   turn on "Timelapse" in the print settings. The printer only records one when
   it is asked to.
 `);
+  }
   ftp.close();
   process.exit(0);
 }
