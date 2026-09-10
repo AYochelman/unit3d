@@ -8,7 +8,7 @@ import { useAdminStore } from "@/lib/admin-store";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { deleteExpenseRow, loadExpenses, saveExpenseRow, saveUsdRate } from "@/lib/expenses-remote";
 import {
-  CYCLE_HE, EXPENSE_PRESETS, expenseTotals, inILS, monthlyILS, newExpenseId,
+  CYCLE_HE, EXPENSE_PRESETS, RECOVERED_EXPENSES, expenseTotals, inILS, monthlyILS, newExpenseId,
   type Currency, type Cycle, type Expense, type ExpensePreset,
 } from "@/lib/expenses";
 import { fmtILS } from "@/lib/format";
@@ -44,6 +44,8 @@ export default function ExpensesTab() {
   const [loaded, setLoaded] = useState(false);
   const [saveErr, setSaveErr] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
+  const [restoring, setRestoring] = useState(false);
+  const [restored, setRestored] = useState(false);
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -102,6 +104,26 @@ export default function ExpensesTab() {
     setDate(today());
     setNote(p.note ?? "");
     setErr("");
+  };
+
+  /**
+   * Put the pre-move expenses back.
+   *
+   * Only offered while the table is empty, and only once: a full table is
+   * either the restored one or a newer one, and either way these rows would be
+   * duplicates rather than a rescue.
+   */
+  const restore = async () => {
+    if (!token) return;
+    setRestoring(true);
+    let failed = 0;
+    for (const row of RECOVERED_EXPENSES) {
+      saveExpense(row);
+      if (!(await saveExpenseRow(token, row))) failed++;
+    }
+    setRestoring(false);
+    setRestored(true);
+    setSaveErr(failed ? `${failed} מתוך ${RECOVERED_EXPENSES.length} לא נשמרו. נסה שוב.` : "");
   };
 
   const edit = (e: Expense) => {
@@ -200,6 +222,19 @@ export default function ExpensesTab() {
           </div>
         ))}
       </div>
+
+      {loaded && expenses.length === 0 && !restored && (
+        <div className="p-4 rounded-2xl border border-flame/40 bg-flame/5">
+          <div className="font-bold text-sm mb-1">נמצאה היסטוריית הוצאות קודמת</div>
+          <p className="text-[13px] text-ink-300 mb-3">
+            {RECOVERED_EXPENSES.length} הוצאות שהיו רשומות לפני שהספרים עברו מאחורי ההתחברות —
+            המדפסת, הגלילים, האריזות, EmailJS והדומיין. הן לא עברו יחד עם המעבר.
+          </p>
+          <Btn size="sm" icon="rotate" onClick={() => void restore()} disabled={restoring}>
+            {restoring ? "משחזר…" : "שחזור ההוצאות"}
+          </Btn>
+        </div>
+      )}
 
       <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-3">
         {!editing && (

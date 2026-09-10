@@ -115,13 +115,16 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       secure.on("data", (c) => chunks.push(c));
       secure.on("end", () => finish(resolve, Buffer.concat(chunks)));
       secure.on("close", () => finish(resolve, Buffer.concat(chunks)));
-      secure.on("error", (e) =>
-        // Bambu drops the connection rather than closing it politely once the
-        // file is out; bytes in hand beat a clean goodbye.
-        chunks.length ? finish(resolve, Buffer.concat(chunks)) : finish(reject, e));
+      // Bambu drops the connection rather than closing it politely once a file
+      // is out, so bytes already in hand beat a clean goodbye.
+      const settleWith = (err) => {
+        if (chunks.length) finish(resolve, Buffer.concat(chunks));
+        else finish(reject, err);
+      };
+      secure.on("error", settleWith);
       secure.setTimeout(60_000, () => {
         secure.destroy();
-        chunks.length ? finish(resolve, Buffer.concat(chunks)) : finish(reject, new Error("the transfer stalled"));
+        settleWith(new Error("the transfer stalled"));
       });
     });
 

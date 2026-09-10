@@ -90,3 +90,28 @@ export const EXPENSE_PRESETS: ExpensePreset[] = [
   { name: "דומיין", currency: "ILS", cycle: "yearly" },
   { name: "Supabase", currency: "USD", cycle: "monthly", amount: 25 },
 ];
+
+/**
+ * The expenses that were in the shop's public file before the books moved
+ * behind the sign-in.
+ *
+ * Moving them was right — what a business pays out is nobody else's business —
+ * but the move did not carry the rows across, so the history went with it.
+ * They are recovered here from the file's own git history, and the tab offers
+ * to write them back while the table is still empty. Once it is not, this list
+ * is inert: it is a rescue, not a seed.
+ */
+export const RECOVERED_EXPENSES: Expense[] = [
+  { id: "xmtuaai5zcg", name: "P2S Printer", amount: 3000, currency: "ILS", cycle: "once", date: "2026-09-09", active: true },
+  { id: "xmtuadxjdly", name: "\u05d2\u05dc\u05d9\u05dc PLA \u05e2\u05e9\u05e8\u05d4", amount: 1000, currency: "ILS", cycle: "once", date: "2026-09-09", active: true },
+  { id: "xmtuacsksok", name: "\u05d2\u05dc\u05d9\u05dc PLA \u05d6\u05d5\u05d2", amount: 200, currency: "ILS", cycle: "once", date: "2026-09-09", active: true },
+  { id: "xmtuab5fkr6", name: "\u05de\u05d5\u05e6\u05e8\u05d9 \u05d0\u05e8\u05d9\u05d6\u05d4", amount: 200, currency: "ILS", cycle: "once", date: "2026-09-09", active: true },
+  {
+    id: "x-emailjs", name: "EmailJS", amount: 11, currency: "USD", cycle: "monthly",
+    date: "2026-09-09", note: "\u05de\u05d9\u05d9\u05dc \u05d0\u05d9\u05e9\u05d5\u05e8 \u05d4\u05d6\u05de\u05e0\u05d4 \u05dc\u05dc\u05e7\u05d5\u05d7\u05d5\u05ea", active: true,
+  },
+  {
+    id: "x-domain", name: "\u05d3\u05d5\u05de\u05d9\u05d9\u05df unit-3d.com", amount: 10.44, currency: "USD", cycle: "yearly",
+    date: "2026-09-08", note: "Cloudflare Registrar \u00b7 \u05d7\u05d9\u05d3\u05d5\u05e9 \u05e9\u05e0\u05ea\u05d9", active: true,
+  },
+];

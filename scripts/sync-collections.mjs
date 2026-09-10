@@ -29,12 +29,13 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   ROOT, UA, c, sleep, fetchDetails, classify, holdsFor, platesFrom,
-  readableTitle, fmtSize, ESTIMATE, HUE, ART, HE_DESC, SHELF_OVERRIDES,
+  readableTitle, SHELF_OVERRIDES,
 } from "./lib/makerworld.mjs";
 
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
-const RAW = path.join(ROOT, "data", "makerworld-raw.json");
 const PENDING = path.join(ROOT, "data", "pending-models.json");
+const CANDIDATES = path.join(ROOT, "lib", "candidates.generated.ts");
+const DECISIONS = path.join(ROOT, "public", "model-decisions.json");
 const PROFILE = process.env.MAKERWORLD_PROFILE || "Erez.yoch";
 
 const DRY = process.argv.includes("--dry");
@@ -342,77 +343,101 @@ function knownIds() {
   return new Set([...src.matchAll(/"id": "mw-(\d+)"/g)].map((m) => m[1]));
 }
 
-function buildRow(id, d, shelfHint) {
-  const name = readableTitle((d.title || "").trim(), d.slug);
-  if (!name) return null;
-
-  const shelf = SHELF_OVERRIDES[id] ?? shelfHint ?? classify(name, d.tags, d.cats);
-  const est = ESTIMATE[shelf] ?? ESTIMATE.trendy;
+/**
+ * The same model, described for the approval queue instead of the shelf.
+ *
+ * A collection used to go straight onto the shop. That quietly broke the rule
+ * the shop runs on — nothing is sold that nobody said yes to — and it meant
+ * saving a model on a phone published it. Now a collection is a nomination: it
+ * arrives in /admin → "מודלים לאישור" with the shelf its collection implies
+ * already filled in, so approving it is one click rather than a decision made
+ * from scratch.
+ */
+function buildCandidate(id, d, shelfHint, via) {
+  const title = readableTitle((d.title || "").trim(), d.slug);
+  if (!title) return null;
   const p = platesFrom(d.instances, d.defaultInstanceId);
-  const grams = Math.max(1, p?.base.g ?? d.grams ?? est.grams);
-  const hours = Math.max(0.2, p?.base.h ?? (d.seconds ? d.seconds / 3600 : est.hours));
-  const holds = holdsFor(`${name} ${d.tags.join(" ")} ${d.cats.join(" ")}`, d.license);
+  const grams = Math.max(1, p?.base.g ?? d.grams ?? 30);
+  const hours = Math.max(0.2, p?.base.h ?? (d.seconds ? d.seconds / 3600 : 2));
 
-  const row = {
-    id: `mw-${id}`,
-    name,
-    desc: HE_DESC[shelf] ?? HE_DESC.trendy,
-    shelf,
-    hours: Math.round(hours * 100) / 100,
+  return {
+    id: String(id),
+    title,
+    slug: d.slug || "",
+    license: d.license || "",
+    creator: d.creator || "",
+    image: d.cover ? `${d.cover}?x-oss-process=image/resize,w_400/format,webp` : "",
+    downloads: d.downloads || 0,
+    likes: d.likes || 0,
     grams,
-    size: fmtSize(grams),
-    colors: Math.max(1, p?.base.mc ?? d.colors ?? est.colors),
-    image: d.cover ? `${d.cover}?x-oss-process=image/resize,w_400/format,webp` : undefined,
-    creator: d.creator || undefined,
-    sourceUrl: `https://makerworld.com/en/models/${id}${d.slug ? `-${d.slug}` : ""}`,
-    license: d.license || undefined,
-    downloads: d.downloads || undefined,
-    hue: HUE[shelf] ?? HUE.trendy,
-    art: ART[shelf] ?? ART.trendy,
-    status: holds.length ? "hold" : "live",
-    holds,
-    licenseChecked: !!d.license,
+    hours: Math.round(hours * 100) / 100,
+    colors: Math.max(1, p?.base.mc ?? d.colors ?? 1),
+    suggested: SHELF_OVERRIDES[id] ?? shelfHint ?? classify(title, d.tags, d.cats),
+    // The same reasons a model would be held out of the shop are the reasons
+    // to look twice before approving it: a brand, a weapon, a licence that
+    // forbids selling.
+    warnings: holdsFor(`${title} ${d.tags.join(" ")} ${d.cats.join(" ")}`, d.license),
+    via,
+    tags: d.tags.join(" · "),
   };
-  if (p?.ams) { row.hoursAms = p.ams.h; row.gramsAms = p.ams.g; }
-  if (p?.plates) row.plates = p.plates;
-  return row;
 }
 
-/** Appends to the generated file without touching a single existing row. */
-function append(rows) {
-  let s = fs.readFileSync(OUT, "utf8");
-  const block = rows.map((r) => "  " + JSON.stringify(r, null, 2).split("\n").join("\n  ")).join(",\n");
-  const before = [...s.matchAll(/"id": "mw-(\d+)"/g)].length;
-  s = s.replace(/\n\];\n\nexport const IMPORTED_AT/, ",\n" + block + "\n];\n\nexport const IMPORTED_AT");
-  s = s.replace(/\/\/ Items: \d+/, `// Items: ${before + rows.length}`);
-  fs.writeFileSync(OUT, s, "utf8");
-
-  // Keep the record of where the catalogue came from in step with it.
-  const raw = JSON.parse(fs.readFileSync(RAW, "utf8"));
-  const have = new Set(raw.map((r) => String(r.id)));
-  for (const r of rows) {
-    const id = r.id.slice(3);
-    if (!have.has(id)) raw.push({ id, slug: r.sourceUrl.split("-").slice(1).join("-"), title: r.name, cover: r.image, url: r.sourceUrl });
+/** Ids the owner has already answered — approved or rejected. Never re-ask. */
+function decidedIds() {
+  try {
+    const f = JSON.parse(fs.readFileSync(DECISIONS, "utf8"));
+    return new Set((f.decisions ?? []).map((d) => String(d.id)));
+  } catch {
+    return new Set();
   }
-  fs.writeFileSync(RAW, JSON.stringify(raw, null, 2) + "\n", "utf8");
+}
+
+/**
+ * Put the nominations in the queue, keeping whatever is already waiting there.
+ *
+ * Newest first: what he saved this week is what he wants to see when he opens
+ * the tab, not whatever a sweep found a month ago.
+ */
+function queueCandidates(rows) {
+  let existing = [];
+  try {
+    const src = fs.readFileSync(CANDIDATES, "utf8");
+    const m = /export const CANDIDATES: Candidate\[\] = (\[[\s\S]*\]);/.exec(src);
+    if (m) existing = JSON.parse(m[1]);
+  } catch { /* an unreadable queue is an empty one */ }
+
+  const seen = new Set(rows.map((r) => String(r.id)));
+  const merged = [...rows, ...existing.filter((r) => !seen.has(String(r.id)))];
+
+  fs.writeFileSync(
+    CANDIDATES,
+    `// Auto-generated by scripts/sync-collections.mjs — DO NOT EDIT BY HAND.\n` +
+      `//\n// Models waiting for approval in /admin → "מודלים לאישור". Nothing here is\n` +
+      `// on the shop; the owner decides, one by one, in that tab.\n` +
+      `// Items: ${merged.length}\n// Collected: ${new Date().toISOString()}\n\n` +
+      `import type { Candidate } from "./candidates";\n\n` +
+      `export const CANDIDATES: Candidate[] = ${JSON.stringify(merged, null, 2)};\n`,
+    "utf8",
+  );
+  return merged.length;
 }
 
 /** A line per model for the GitHub job summary, so the owner sees what landed. */
 function summary(rows, skipped) {
   const f = process.env.GITHUB_STEP_SUMMARY;
   if (!f) return;
-  const lines = ["## מודלים חדשים מהקולקציות", ""];
-  if (!rows.length) lines.push("לא נמצא שום דבר חדש.");
-  else {
-    lines.push("| דגם | מדף | מצב | רישיון |", "| --- | --- | --- | --- |");
-    for (const r of rows) {
-      const state = r.holds.includes("weapon") ? "לא למכירה (נשק)"
-        : r.holds.includes("license-nc") ? "לא למכירה (NC)"
-        : r.holds.includes("brand") ? "מותג — לפי בקשתך" : "בחנות";
-      lines.push(`| [${r.name}](${r.sourceUrl}) | ${r.shelf} | ${state} | ${r.license ?? "—"} |`);
-    }
-  }
-  if (skipped.length) lines.push("", `קולקציות שלא נקראו: ${skipped.join(", ")}`, "", "קולקציה \"חסומה\" תיקרא בהרצה הבאה — Cloudffare חוסם לפעמים כתובות של שרתים.".replace("Cloudffare", "Cloudflare"));
+  const lines = rows.length
+    ? [
+        `### ${rows.length} מודלים נוספו לתור האישורים`,
+        "",
+        "| מודל | מדף מוצע | רישיון | הערות |",
+        "| --- | --- | --- | --- |",
+        ...rows.map((r) => `| ${r.title} | ${r.suggested} | ${r.license || "—"} | ${r.warnings.join(", ") || "—"} |`),
+        "",
+        "לאשר או לדחות: **/admin ← מודלים לאישור**. שום דבר מכאן לא בחנות עד שמאשרים.",
+      ]
+    : ["### אין מודלים חדשים", "", "כל מה שבקולקציות ובלייקים כבר בחנות או כבר הוכרע."];
+  if (skipped.length) lines.push("", `קולקציות שלא נקראו: ${skipped.join(", ")}`, "", "קולקציה \"חסומה\" תיקרא בהרצה הבאה — Cloudflare חוסם לפעמים כתובות של שרתים.");
   fs.appendFileSync(f, lines.join("\n") + "\n", "utf8");
 }
 
@@ -425,6 +450,7 @@ async function main() {
   let collections;
   const wanted = [];
   const skipped = [];
+  let likedFresh = [];
   try {
     const seenCollections = new Map();
     for (const col of [...(await readCollections(page)), ...knownCollections()]) {
@@ -451,6 +477,7 @@ async function main() {
       `${JSON.stringify({ readAt: new Date().toISOString(), all: liked, fresh }, null, 2)}\n`,
       "utf8",
     );
+    likedFresh = fresh;
     if (fresh.length) log(c.b(`  ${fresh.length} לייקים שעדיין לא בחנות — נכנסים לתור האישור`));
   } finally {
     await b.close();
@@ -466,31 +493,41 @@ async function main() {
   if (queued.length) log(c.d(`  ${queued.length} מודלים ממתינים ב-data/pending-models.json`));
 
   const known = knownIds();
+  const decided = decidedIds();
   const seen = new Set();
-  const fresh = [...wanted, ...queued].filter((x) => !known.has(x.id) && !seen.has(x.id) && seen.add(x.id));
-  log(c.b(`\n  ${wanted.length} בקולקציות · ${fresh.length} חדשים\n`));
-  if (!fresh.length) { summary([], skipped); return; }
+  // Liked models are nominations too, and were being read and then dropped.
+  const nominated = [...wanted, ...queued, ...likedFresh.map((id) => ({ id, shelf: null }))];
+  const fresh = nominated.filter(
+    (x) => !known.has(x.id) && !decided.has(x.id) && !seen.has(x.id) && seen.add(x.id),
+  );
+  log(c.b(`\n  ${wanted.length} בקולקציות · ${likedFresh.length} לייקים · ${fresh.length} חדשים\n`));
+  if (!fresh.length) {
+    log(c.d("  אין מה להוסיף לתור — הכל כבר בחנות או כבר הוכרע.\n"));
+    summary([], skipped);
+    return;
+  }
 
   const rows = [];
   for (const { id, shelf } of fresh) {
     const d = await fetchDetails(id);
     if (!d) { log(c.y(`  ${id}: ה-API לא ענה, מדולג`)); continue; }
-    const row = buildRow(id, d, shelf);
+    const row = buildCandidate(id, d, shelf, shelf ? "collection" : "like");
     if (row) rows.push(row);
     await sleep(250); // be a polite guest
   }
   if (!rows.length) { log(c.y("  שום דבר לא נוסף.")); summary([], skipped); return; }
 
   for (const r of rows) {
-    const mark = r.holds.length ? c.y(`[${r.holds.join(",")}]`) : c.g("[בחנות]");
-    log(`  ${mark} ${r.name} → ${r.shelf}`);
+    const mark = r.warnings.length ? c.y(`[${r.warnings.join(",")}]`) : c.g("[לאישור]");
+    log(`  ${mark} ${r.title} → ${r.suggested}`);
   }
 
   if (DRY) { log(c.d("\n  --dry: לא נכתב קובץ.\n")); return; }
-  append(rows);
-  clearPending(new Set(rows.map((r) => r.id.slice(3))));
+  const total = queueCandidates(rows);
+  clearPending(new Set(rows.map((r) => r.id)));
   summary(rows, skipped);
-  log(c.g(`\n  נוספו ${rows.length} מודלים ל-lib/imported.generated.ts\n`));
+  log(c.g(`\n  ${rows.length} מודלים נוספו לתור האישורים (${total} ממתינים סה"כ)`));
+  log(c.d(`  לאשר או לדחות: /admin ← "מודלים לאישור"\n`));
 }
 
 main().catch((e) => {
