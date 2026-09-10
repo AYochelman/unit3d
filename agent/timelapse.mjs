@@ -24,6 +24,8 @@ const sbHeaders = { apikey: KEY, ...(legacy ? { Authorization: `Bearer ${KEY}` }
     into evidence instead of a guess. */
 const DEBUG = process.argv.includes("--debug");
 
+const note = (m) => console.log(`      \x1b[90m${m}\x1b[0m`);
+
 const ok = (m) => console.log(`  \x1b[32mok\x1b[0m    ${m}`);
 const bad = (m, fix) => { console.log(`  \x1b[31mFAIL\x1b[0m  ${m}`); if (fix) console.log(`        → ${fix}`); };
 
@@ -31,7 +33,7 @@ banner("fetching the timelapses off the printer's card");
 
 let ftp;
 try {
-  ftp = await connectPrinterFtps({ host, password: accessCode, debug: DEBUG });
+  ftp = await connectPrinterFtps({ host, password: accessCode, debug: DEBUG, onNote: note });
   ok("connected to the printer's card");
 } catch (e) {
   bad(`could not connect: ${e.message}`,
@@ -50,6 +52,7 @@ const CANDIDATES = cfg.timelapse?.folder
 let files = [];
 let dir = "";
 for (const candidate of CANDIDATES) {
+  console.log(`\n  looking in ${candidate}`);
   try {
     const found = (await ftp.list(candidate)).filter((f) => /\.(mp4|avi)$/i.test(f.name) && f.size > 100_000);
     if (found.length) { files = found; dir = candidate === "/" ? "" : candidate; break; }
@@ -69,7 +72,7 @@ if (files.length === 0) {
       // A transfer that failed can leave the connection out of step, so each
       // probe gets a fresh one rather than inheriting the last one's mess.
       try { ftp.close(); } catch { /* already gone */ }
-      ftp = await connectPrinterFtps({ host, password: accessCode, debug: DEBUG });
+      ftp = await connectPrinterFtps({ host, password: accessCode, debug: DEBUG, onNote: note });
       const raw = await ftp.listRaw(candidate);
       anyAnswered = true;
       console.log(`  ${candidate}`);

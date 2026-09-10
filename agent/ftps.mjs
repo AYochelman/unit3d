@@ -92,7 +92,7 @@ function makeReader(sock) {
     });
 }
 
-export async function connectPrinterFtps({ host, password, user = "bblp", port = 990, debug = false }) {
+export async function connectPrinterFtps({ host, password, user = "bblp", port = 990, debug = false, onNote = () => {} }) {
   const trace = (dir, text) => {
     if (!debug) return;
     // Never print the password line.
@@ -185,7 +185,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       setTimeout(() => reject(new Error("no handshake")), 8000);
     });
 
-  const collect = (secure) =>
+  const collect = (secure, idleMs = 60_000) =>
     new Promise((resolve, reject) => {
       const chunks = [];
       let settled = false;
@@ -197,11 +197,11 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       secure.on("end", () => finish(resolve, Buffer.concat(chunks)));
       secure.on("close", () => finish(resolve, Buffer.concat(chunks)));
       secure.on("error", settleWith);
-      secure.setTimeout(60_000, () => { secure.destroy(); settleWith(new Error("the transfer stalled")); });
+      secure.setTimeout(idleMs, () => { secure.destroy(); settleWith(new Error("the transfer stalled")); });
     });
 
-  const expectStart = async () => {
-    const r = await readReply(20_000);
+  const expectStart = async (ms) => {
+    const r = await readReply(ms);
     trace("<", r.text);
     if (![125, 150].includes(r.code)) throw new Error(`refused (${r.code})`);
   };
@@ -216,29 +216,40 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
     { name: "command first", first: "command", tls: TLS_BASE },
   ];
 
+  /**
+   * A listing is a few hundred bytes and arrives at once; a file is megabytes.
+   * Waiting a minute to learn that a listing is not coming is a minute spent
+   * looking frozen, so the two are given very different patience.
+   */
+  const isListing = (command) => /^(LIST|NLST)\b/i.test(command);
+
   const runOne = async (command, plan) => {
+    const quick = isListing(command);
+    const replyMs = quick ? 12_000 : 20_000;
+    const idleMs = quick ? 15_000 : 90_000;
     const dataPort = await pasvPort();
     const opts = { ...plan.tls, session: control.getSession() };
     let raw;
     if (plan.first === "command") {
       trace(">", command);
       control.write(command + CRLF);
-      await expectStart();
+      await expectStart(replyMs);
       raw = await openRaw(dataPort);
-      return collect(await upgrade(raw, opts));
+      return collect(await upgrade(raw, opts), idleMs);
     }
     raw = await openRaw(dataPort);
     const secure = await upgrade(raw, opts);
     trace(">", command);
     control.write(command + CRLF);
-    await expectStart();
-    return collect(secure);
+    await expectStart(replyMs);
+    return collect(secure, idleMs);
   };
 
   const transfer = async (command) => {
     const problems = [];
     const plans = dataPlan ? [dataPlan] : STRATEGIES;
     for (let i = 0; i < plans.length; i++) {
+      onNote(`${command.split(" ")[0]} · ${plans[i].name}`);
       try {
         const body = await runOne(command, plans[i]);
         // A 226 may or may not follow; either way it must not be left in the
@@ -248,6 +259,7 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
         return body;
       } catch (e) {
         problems.push(`${plans[i].name}: ${e.message}`);
+        onNote(`   ${plans[i].name} — ${e.message}`);
         // The session is not recoverable after a failed transfer, so start a
         // new one rather than asking a connection that has stopped listening.
         if (i < plans.length - 1) {
