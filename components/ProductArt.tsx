@@ -281,6 +281,29 @@ export default function ProductArt({ art, hue = 200, color, size = 120, classNam
             <rect x="72" y="56" width="16" height="6" rx="3" fill={fg} stroke={line} strokeWidth="1.2" />
           </>
         );
+      case "cigcase":
+        return (
+          <>
+            {/* A hard sleeve the pack slides into. Drawn front-on at a pack's
+                real proportions (58x88mm, so noticeably taller than wide) with
+                the pack itself showing above the mouth — that overlap is what
+                makes it read as a sleeve rather than a case for something
+                else. The emblem sits on a raised badge, not in a round recess,
+                which at card size looked like a camera lens. */}
+            {/* the pack, behind and above */}
+            <rect x="36" y="12" width="28" height="20" rx="2.5" fill={dark} />
+            <rect x="36" y="12" width="28" height="5" rx="2" fill={fg} stroke={line} strokeWidth="1" />
+            {/* the sleeve */}
+            <rect x="29" y="26" width="42" height="60" rx="5" fill={fg} stroke={line} strokeWidth="1.5" />
+            {/* its mouth */}
+            <rect x="33" y="26" width="34" height="4" rx="2" fill={dark} />
+            {/* the emblem badge */}
+            <rect x="40" y="42" width="20" height="26" rx="4" fill={dark} />
+            <rect x="43.5" y="45.5" width="13" height="19" rx="2.5" fill={fg} stroke={line} strokeWidth="1" />
+            {/* the thumb notch, cut UP into the front face */}
+            <path d="M39 86 a11 11 0 0 1 22 0 Z" fill={dark} />
+          </>
+        );
       case "luggage":
         return (
           <>

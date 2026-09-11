@@ -21,6 +21,7 @@ export type UnitFormId =
   | "desk"
   | "wall"
   | "lighter"
+  | "cigcase"
   | "ashtray"
   | "grinder";
 
@@ -148,6 +149,23 @@ export const UNIT_FORMS: UnitForm[] = [
     art: "lighter",
     photo: CONFIG_PRODUCT_BY_ID.lighter_case.image,
     price: 45,
+  },
+  {
+    id: "cigcase",
+    label: "מגן לחפיסת סיגריות",
+    desc: "נרתיק קשיח שהחפיסה נכנסת אליו, הסמל בחזית.",
+    // A standard 20-pack is 88x58x23mm; the sleeve is that plus wall and clearance.
+    dim: "92×62×27mm",
+    grams: 42,
+    hours: 3.5,
+    // PLA like the rest of the bodies, so the colour list stays one list — but
+    // this one lives in a pocket and in a car, and PLA is the plastic that
+    // softens on a dashboard in the sun. Named, not silently swapped.
+    material: "pla",
+    recommends: { material: "petg", why: "לא מתעוות ברכב בשמש" },
+    group: "everyday",
+    art: "cigcase",
+    price: 85,
   },
   {
     id: "ashtray",
