@@ -94,7 +94,7 @@ export default function HelpBot() {
         aria-label={open ? "סגור את העוזר" : "פתח את העוזר"}
         aria-expanded={open}
         className={cn(
-          "fixed bottom-6 right-6 z-40 inline-flex items-center justify-center h-14 w-14 rounded-full shadow-soft transition-all duration-200 hover:-translate-y-0.5",
+          "fab fixed right-6 z-40 inline-flex items-center justify-center h-14 w-14 rounded-full shadow-soft transition-all duration-200 hover:-translate-y-0.5",
           open ? "bg-ink-800 text-ink-100" : "bg-flame-600 text-white hover:shadow-glow",
         )}
       >
@@ -111,7 +111,7 @@ export default function HelpBot() {
           aria-modal="false"
           aria-labelledby={titleId}
           dir="rtl"
-          className="fixed bottom-24 right-4 left-4 sm:left-auto sm:w-[380px] z-40 rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(70vh,560px)]"
+          className="fixed right-4 left-4 sm:left-auto sm:w-[380px] z-40 bottom-[calc(var(--fab-bottom)+4.25rem)] rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(70vh,560px)]"
         >
           <header className="flex items-center gap-3 p-3.5 border-b border-ink-800 bg-ink-950/60">
             <span className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-flame/15 text-flame shrink-0">

@@ -76,6 +76,17 @@ export default function RootLayout({
       className={`${heebo.variable} ${jetbrainsMono.variable} ${rubik.variable} ${assistant.variable} ${secular.variable} ${frank.variable} ${suez.variable} ${karantina.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        {/*
+          Marks the document as scriptable BEFORE first paint, which is what
+          lets the reveal styles hide anything at all: without JavaScript the
+          `js` class never lands and every block renders at full opacity.
+          Inline and blocking on purpose — a deferred version would flash.
+        */}
+        <script
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col">
         <a href="#main" className="skip-link">דלג לתוכן הראשי</a>
         <Header />

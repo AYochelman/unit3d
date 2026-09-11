@@ -20,6 +20,7 @@ import ShippingEstimate from "@/components/ShippingEstimate";
 import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
+import BodyClass from "@/components/ui/BodyClass";
 import { useAdminStore } from "@/lib/admin-store";
 import { estimateCost } from "@/lib/costing";
 import { suggestPrice } from "@/lib/imported";
@@ -175,6 +176,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
   };
   const backHref = BACK_BY_CATEGORY[p.category] ?? "/home-office";
   const source = p.category === "pets" ? "pets" : "office";
+
+  const showBuyBar = sellable && !quoteOnly;
 
   const handleAdd = () => {
     const lines = [
@@ -641,8 +644,51 @@ export default function ProductDetailClient({ id }: { id: string }) {
         </div>
       </div>
 
+      {/*
+        ── Sticky buy bar, phones only ───────────────────────────────────
+        On a phone the price and the add button are at the top of a long page;
+        by the time somebody has read the material, the colours and the print
+        time, the way to act on it has scrolled away. This brings it back,
+        with the live price and the same handler — not a second code path.
+        It slides out of the way under prefers-reduced-motion rather than
+        sliding in, and it steps aside for the floating WhatsApp button.
+      */}
+      {showBuyBar && (
+        <>
+          {/* Tells the floating WhatsApp and help-bot buttons to move up while
+              the bar is on screen, and puts them back on the way out. */}
+          <BodyClass name="has-buy-bar" />
+        <div
+          className={cn(
+            "lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3",
+            "bg-ink-950/92 backdrop-blur-md border-t border-ink-800",
+            "transition-transform duration-300 motion-reduce:transition-none",
+          )}
+        >
+          <div className="flex items-center gap-3">
+            <div className="shrink-0">
+              <div className="text-[11px] text-ink-400 leading-none mb-1">סה״כ</div>
+              <div className="font-mono font-black text-flame-300 leading-none" dir="ltr">{fmtILS(total)}</div>
+            </div>
+            <button
+              type="button"
+              onClick={handleAdd}
+              className={cn(
+                "flex-1 h-12 rounded-xl font-black text-base flex items-center justify-center gap-2",
+                "transition-[background-color,transform] duration-200 active:scale-[0.98]",
+                "motion-reduce:transition-none motion-reduce:active:scale-100",
+                added ? "bg-good text-ink-950" : "bg-flame-600 text-white hover:bg-flame-700",
+              )}
+            >
+              {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
+            </button>
+          </div>
+        </div>
+        </>
+      )}
+
       {/* ── Rate what you bought ─────────────────────────────────────── */}
-      <section className="mt-12 max-w-2xl">
+      <section className="mt-12 max-w-2xl lg:mb-0 mb-24">
         <h2 className="text-xl font-extrabold tracking-tight mb-1">כבר הזמנת את זה?</h2>
         <p className="text-sm text-ink-400 mb-4">
           דירוג וביקורת עוזרים ללקוח הבא להחליט, ולי לדעת מה לשפר.
