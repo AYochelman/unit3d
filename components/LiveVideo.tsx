@@ -12,19 +12,33 @@ import { useEffect, useRef, useState } from "react";
  * It reports failure upward rather than sitting on a black rectangle: if the
  * stream is not there, the page falls back to the still picture, which is the
  * honest thing to show and better than a broken player.
+ *
+ * It also reports the SMALLER failure — a stall. A live playlist that is
+ * rewritten every second from a handful of short segments makes iOS Safari run
+ * to the live edge, find nothing, and paint the element's own background. That
+ * read on screen as a flicker roughly once a second. `onStall` lets the page
+ * put the still picture back for those moments instead of showing black, and
+ * `onPlaying` takes it away again when frames resume.
  */
 export default function LiveVideo({
   src,
   className,
   onFail,
   onPlaying,
+  onStall,
+  videoRef,
 }: {
   src: string;
   className?: string;
   onFail?: () => void;
   onPlaying?: () => void;
+  /** Frames stopped arriving — briefly, not fatally. */
+  onStall?: () => void;
+  /** Lets the page drive the element (iOS puts video fullscreen, not divs). */
+  videoRef?: React.RefObject<HTMLVideoElement | null>;
 }) {
-  const ref = useRef<HTMLVideoElement>(null);
+  const own = useRef<HTMLVideoElement>(null);
+  const ref = videoRef ?? own;
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -72,7 +86,7 @@ export default function LiveVideo({
     }
 
     return () => { alive = false; destroy?.(); };
-  }, [src, failed, onFail]);
+  }, [src, failed, onFail, ref]);
 
   return (
     <video
@@ -83,6 +97,12 @@ export default function LiveVideo({
       playsInline
       controls={false}
       onPlaying={() => onPlaying?.()}
+      onCanPlay={() => onPlaying?.()}
+      // The four ways a live stream goes quiet without going away.
+      onWaiting={() => onStall?.()}
+      onStalled={() => onStall?.()}
+      onSuspend={() => onStall?.()}
+      onEmptied={() => onStall?.()}
     />
   );
 }

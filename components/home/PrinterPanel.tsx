@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Icon from "@/components/ui/Icon";
 import { fmtLeft, usePrinterLive, type PrinterState } from "@/lib/printer";
+import { useSteadyImage } from "@/lib/steady-image";
 
 /**
  * The hero's machine readout — the real one.
@@ -45,8 +46,10 @@ export default function PrinterPanel() {
   // Same as the livestream page: a URL is not a picture. Remembering WHICH url
   // failed rather than a bare flag means the next poll is a fresh attempt, so
   // the still reappears by itself once the agent starts uploading again.
-  const [failedShot, setFailedShot] = useState<string | null>(null);
-  const hasShot = !!camera && failedShot !== camera;
+  // The still is preloaded before it is shown, so the picture never blinks out
+  // while the next one downloads (see lib/steady-image.ts).
+  const { src: shotSrc, state: shotState } = useSteadyImage(camera);
+  const hasShot = shotState === "ok" && !!shotSrc;
   const [tick, setTick] = useState(0);
   const reduced = useRef(false);
 
@@ -146,11 +149,9 @@ export default function PrinterPanel() {
           {online && hasShot ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              key={camera}
-              src={camera}
+              src={shotSrc ?? undefined}
               alt="המדפסת עכשיו"
               className="w-full h-[86px] md:h-[104px] object-cover rounded-lg bg-ink-950"
-              onError={() => setFailedShot(camera)}
             />
           ) : (
             <svg

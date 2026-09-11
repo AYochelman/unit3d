@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import LiveVideo from "@/components/LiveVideo";
+import { useSteadyImage } from "@/lib/steady-image";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import { fmtLeft, jobStats, usePrinterJobs, usePrinterLive, useTimelapses, type PrinterState } from "@/lib/printer";
@@ -38,7 +39,9 @@ export default function LivestreamClient() {
   // The camera URL is assembled from the shop's config, so it exists whether or
   // not a picture was ever uploaded. Only the browser can say whether one really
   // came back, so the page waits to be told rather than assuming.
-  const [shot, setShot] = useState<"waiting" | "ok" | "missing">("waiting");
+  // Preloaded before it is shown, so swapping to a fresher frame never leaves a
+  // gap on screen (see lib/steady-image.ts).
+  const { src: shotSrc, state: shot } = useSteadyImage(camera);
   // Video is preferred while a print runs, but it is not promised: if the
   // stream will not play, the page drops back to the still rather than showing
   // a dead player. A new stream address clears the refusal, so the next print
@@ -46,6 +49,59 @@ export default function LivestreamClient() {
   const [videoFailed, setVideoFailed] = useState<string | null>(null);
   const [videoOn, setVideoOn] = useState(false);
   const showVideo = !!stream && videoFailed !== stream;
+
+  /**
+   * The flicker.
+   *
+   * iOS plays this stream natively, and a live playlist rewritten every second
+   * from a few short segments leaves it repeatedly at the live edge with
+   * nothing to show — so it painted the player's own black background about
+   * once a second, on top of a perfectly good still picture.
+   *
+   * Two changes end it. The player no longer carries an opaque background, so
+   * an empty frame shows what is UNDER it rather than black; and the still is
+   * no longer hidden the moment video starts — it is hidden only while frames
+   * are actually arriving, and comes straight back on a stall. A held still is
+   * a second old; a black rectangle is nothing at all.
+   */
+  const stallTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const framesFlowing = () => {
+    if (stallTimer.current) clearTimeout(stallTimer.current);
+    // Frames arrive continuously; a gap longer than this is a stall even if the
+    // element never fired an event for it.
+    stallTimer.current = setTimeout(() => setVideoOn(false), 1200);
+    setVideoOn(true);
+  };
+  useEffect(() => () => { if (stallTimer.current) clearTimeout(stallTimer.current); }, []);
+
+  // Fullscreen. iOS Safari will not take a div — only the video element itself
+  // — so the button tries the frame first and falls back to the player.
+  const frameRef = useRef<HTMLDivElement>(null);
+  const videoEl = useRef<HTMLVideoElement>(null);
+  const [isFull, setIsFull] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setIsFull(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", sync);
+    document.addEventListener("webkitfullscreenchange", sync);
+    return () => {
+      document.removeEventListener("fullscreenchange", sync);
+      document.removeEventListener("webkitfullscreenchange", sync);
+    };
+  }, []);
+
+  const toggleFullscreen = () => {
+    type IosVideo = HTMLVideoElement & { webkitEnterFullscreen?: () => void };
+    type AnyEl = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
+    const doc = document as Document & { webkitExitFullscreen?: () => void };
+    if (document.fullscreenElement) { void document.exitFullscreen(); return; }
+    if (doc.webkitExitFullscreen && !document.fullscreenElement && isFull) { doc.webkitExitFullscreen(); return; }
+    const frame = frameRef.current as AnyEl | null;
+    if (frame?.requestFullscreen) { void frame.requestFullscreen().catch(() => {}); return; }
+    if (frame?.webkitRequestFullscreen) { void frame.webkitRequestFullscreen(); return; }
+    // iPhone: the video element is the only thing it will enlarge.
+    (videoEl.current as IosVideo | null)?.webkitEnterFullscreen?.();
+  };
 
   const [clock, setClock] = useState("00:00:00");
   useEffect(() => {
@@ -79,27 +135,35 @@ export default function LivestreamClient() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* The chamber */}
         <div className="lg:col-span-2">
-          <div className="relative aspect-video rounded-2xl overflow-hidden border border-ink-800 bg-ink-950">
+          <div
+            ref={frameRef}
+            className="relative aspect-video rounded-2xl overflow-hidden border border-ink-800 bg-ink-950 group/frame"
+          >
             {showVideo && (
               <LiveVideo
                 key={stream}
                 src={stream}
-                className="absolute inset-0 h-full w-full object-cover z-[2] bg-ink-950"
-                onPlaying={() => setVideoOn(true)}
+                videoRef={videoEl}
+                // No background of its own: an empty frame must reveal the
+                // still underneath, not a black rectangle.
+                className="absolute inset-0 h-full w-full object-cover z-[2]"
+                onPlaying={framesFlowing}
+                onStall={() => setVideoOn(false)}
                 onFail={() => { setVideoOn(false); setVideoFailed(stream); }}
               />
             )}
 
-            {camera && online && (
+            {shotSrc && online && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                key={camera}
-                src={camera}
+                src={shotSrc ?? undefined}
                 alt="המדפסת עכשיו"
+                // Always on once it has loaded. It sits UNDER the player, so a
+                // playing video covers it anyway — and the moment the player
+                // has no frame, this is what shows instead of black. Toggling
+                // it with the video was what turned a stall into a flash.
                 className="absolute inset-0 h-full w-full object-cover z-[1] transition-opacity duration-300"
-                style={{ opacity: shot === "ok" && !videoOn ? 1 : 0 }}
-                onLoad={() => setShot("ok")}
-                onError={() => setShot("missing")}
+                style={{ opacity: shot === "ok" ? 1 : 0 }}
               />
             )}
             {shot !== "ok" && !videoOn && (
@@ -129,7 +193,21 @@ export default function LivestreamClient() {
               </>
             )}
 
-            <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+            <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+              {/* Fullscreen sits up here, not in a bottom corner: both bottom
+                  corners of the viewport already belong to the floating
+                  WhatsApp and help buttons, and on a phone the frame scrolls
+                  right under them. Always visible — a touch screen has no
+                  hover to reveal it with. */}
+              <button
+                type="button"
+                onClick={toggleFullscreen}
+                aria-label={isFull ? "צא ממסך מלא" : "מסך מלא"}
+                title={isFull ? "צא ממסך מלא" : "מסך מלא"}
+                className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-ink-700/70 bg-ink-950/70 backdrop-blur text-ink-100 hover:border-flame hover:text-flame transition-colors"
+              >
+                <Icon name="expand" size={16} />
+              </button>
               <Pill tone={printing ? "bad" : "neutral"}>
                 {printing && <span className="w-1.5 h-1.5 rounded-full bg-bad live-dot" />}
                 {STATE_HE[state]}
