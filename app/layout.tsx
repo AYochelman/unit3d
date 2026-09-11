@@ -47,7 +47,12 @@ export const metadata: Metadata = {
   // Deliberately NOT a site-wide canonical: metadata is inherited, so a
   // canonical here would make all 408 pages claim to be the homepage. Pages
   // that need one declare it themselves.
-  robots: { index: true, follow: true },
+  //
+  // A base path means this is the /preview staging copy — belt and braces with
+  // its robots.txt, since a stray link into staging must not get indexed.
+  robots: process.env.NEXT_PUBLIC_BASE_PATH
+    ? { index: false, follow: false }
+    : { index: true, follow: true },
 };
 
 export const viewport: Viewport = {

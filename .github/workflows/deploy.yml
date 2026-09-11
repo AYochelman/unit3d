@@ -7,7 +7,9 @@ name: Deploy site
 
 on:
   push:
-    branches: [main]
+    # `main` is the live site. `preview` is the staging copy that lands at
+    # /preview on the same domain — pushing to it never touches the live pages.
+    branches: [main, preview]
   workflow_dispatch:
 
 permissions:
@@ -62,6 +64,47 @@ jobs:
           # Pages serves the repo at /<repo>/ unless a custom domain is set.
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
         run: npm run build
+
+      # ── The staging copy ──────────────────────────────────────────────
+      #
+      # GitHub Pages publishes ONE site per repository, so the preview cannot
+      # have a deployment of its own. Instead it is built from the `preview`
+      # branch into ./out/preview and rides along: unit-3d.com stays the live
+      # site and unit-3d.com/preview/ is the same shop with the experiment on.
+      #
+      # continue-on-error is the point of the whole arrangement — a preview
+      # that does not compile must never be able to stop the live site from
+      # deploying. If this step fails, the upload below still carries a
+      # complete, correct production build.
+      - name: Check out the preview branch
+        id: preview_src
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: preview
+          path: .preview-src
+
+      - name: Build the preview
+        id: preview_build
+        if: steps.preview_src.outcome == 'success'
+        continue-on-error: true
+        env:
+          STATIC_EXPORT: "1"
+          NEXT_PUBLIC_BASE_PATH: /preview
+        run: |
+          cd .preview-src
+          npm ci
+          npm run build
+          mkdir -p ../out/preview
+          cp -r out/. ../out/preview/
+
+      - name: Say what the preview did
+        run: |
+          if [ "${{ steps.preview_build.outcome }}" = "success" ]; then
+            echo "preview built -> /preview/" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "preview NOT built (${{ steps.preview_build.outcome }}) - the live site deployed anyway" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
