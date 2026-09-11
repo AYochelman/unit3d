@@ -17,16 +17,24 @@ permissions:
   pages: write
   id-token: write
 
-# Never run two deploys at once; a newer push supersedes an in-flight one.
+# Never run two deploys at once. NOT cancel-in-progress: a push to `preview`
+# would otherwise cancel a live deploy that was already running — which is
+# exactly what happened once, and the live site silently kept the old build.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # ALWAYS the live branch, whichever branch triggered the run. A push to
+      # `preview` must never be able to build preview code into the root of
+      # unit-3d.com — the deploy below is gated too, and this is the second
+      # lock on the same door.
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -105,6 +113,12 @@ jobs:
           else
             echo "preview NOT built (${{ steps.preview_build.outcome }}) - the live site deployed anyway" >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "This run was triggered from \`${{ github.ref_name }}\`, so it BUILT but did not publish." >> "$GITHUB_STEP_SUMMARY"
+            echo "GitHub Pages only accepts a deployment from the default branch." >> "$GITHUB_STEP_SUMMARY"
+            echo "Publish it with: Actions -> Deploy site -> Run workflow (on main)." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -112,6 +126,11 @@ jobs:
 
   deploy:
     needs: build
+    # GitHub Pages accepts a deployment only from the default branch: a run on
+    # `preview` had its deploy job rejected in one second, with no log, every
+    # time. Skipping it deliberately is honest — a green "built, not published"
+    # beats a red X that looks like the build broke.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
