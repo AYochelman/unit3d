@@ -15,6 +15,14 @@ type CommonProps = {
   icon?: IconName;
   iconRight?: IconName;
   className?: string;
+  /**
+   * Work in progress. The label stays put and the leading icon becomes a
+   * spinner, so the button keeps its width and the row does not jump.
+   * A loading button is also disabled — a second click is never wanted.
+   */
+  loading?: boolean;
+  /** Done. Swaps the icon for a tick for a moment, without changing the label. */
+  success?: boolean;
 };
 
 type ButtonProps = CommonProps &
@@ -54,24 +62,43 @@ const Btn = forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(function Bt
     className,
   } = props;
 
+  const { loading, success } = props;
+
   const cls = cn(
-    "inline-flex items-center justify-center rounded-lg font-semibold transition-all duration-200 ease-smooth disabled:opacity-50 disabled:cursor-not-allowed",
+    "inline-flex items-center justify-center rounded-lg font-semibold ease-smooth",
+    "transition-[transform,box-shadow,background-color,border-color,color] duration-200",
+    // Pressing something should feel like pressing something. 0.97 is enough to
+    // register on a touch screen and small enough not to read as a bounce.
+    "active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
+    "motion-reduce:transition-none motion-reduce:active:scale-100",
     sizes[size],
     variants[variant],
     className,
   );
 
   const iconSize = size === "lg" ? 20 : 18;
+  const lead = loading ? (
+    <span
+      aria-hidden
+      className="inline-block rounded-full border-2 border-current border-t-transparent animate-spin motion-reduce:animate-none"
+      style={{ width: iconSize, height: iconSize }}
+    />
+  ) : success ? (
+    <Icon name="check" size={iconSize} strokeWidth={3} />
+  ) : icon ? (
+    <Icon name={icon} size={iconSize} />
+  ) : null;
+
   const content = (
     <>
-      {icon && <Icon name={icon} size={iconSize} />}
+      {lead}
       {children}
-      {iconRight && <Icon name={iconRight} size={iconSize} />}
+      {iconRight && !loading && <Icon name={iconRight} size={iconSize} />}
     </>
   );
 
   if (props.as === "a") {
-    const { as: _, variant: __, size: ___, icon: ____, iconRight: _____, className: ______, children: _______, ...rest } = props;
+    const { as: _, variant: __, size: ___, icon: ____, iconRight: _____, className: ______, children: _______, loading: ________, success: _________, ...rest } = props;
     // An internal href MUST go through next/link: a plain <a> is a full document
     // navigation, which recreates the in-memory cart store empty (there is no
     // persistence by design). External links stay as real anchors.
@@ -90,9 +117,15 @@ const Btn = forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(function Bt
     );
   }
 
-  const { as: _, variant: __, size: ___, icon: ____, iconRight: _____, className: ______, children: _______, ...rest } = props as ButtonProps;
+  const { as: _, variant: __, size: ___, icon: ____, iconRight: _____, className: ______, children: _______, loading: ________, success: _________, ...rest } = props as ButtonProps;
   return (
-    <button ref={ref as React.Ref<HTMLButtonElement>} className={cls} {...rest}>
+    <button
+      ref={ref as React.Ref<HTMLButtonElement>}
+      className={cls}
+      aria-busy={loading || undefined}
+      {...rest}
+      disabled={rest.disabled || loading}
+    >
       {content}
     </button>
   );

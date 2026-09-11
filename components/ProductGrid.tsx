@@ -116,7 +116,17 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   const quoteOnly = useQuoteOnly(priceable);
 
   const shell =
-    "group flex flex-col rounded-2xl bg-ink-900 border border-ink-800 hover:border-ink-700 hover:-translate-y-1 transition-all duration-300 ease-smooth overflow-hidden text-right";
+    cn(
+      "group flex flex-col rounded-2xl bg-ink-900 border border-ink-800 overflow-hidden text-right",
+      "transition-[transform,border-color,box-shadow] duration-300 ease-smooth",
+      "hover:border-ink-700 hover:-translate-y-1 hover:shadow-[0_10px_30px_-12px_rgba(8,154,71,0.35)]",
+      // A keyboard user gets the same signal as a mouse user: the card lifts
+      // when anything inside it takes focus, not only when a pointer is over it.
+      "focus-within:border-flame/50 focus-within:-translate-y-1",
+      // On a touch screen there is no hover at all, so the press IS the feedback.
+      "active:translate-y-0 active:scale-[0.99]",
+      "motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:focus-within:translate-y-0 motion-reduce:active:scale-100",
+    );
 
   /** Pick the card without leaving the page. */
   const pick = { onClick: () => setPicked(true), role: "button", tabIndex: 0,

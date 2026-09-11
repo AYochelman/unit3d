@@ -10,6 +10,7 @@ import ReviewsRow from "@/components/home/ReviewsRow";
 import FinalCTA from "@/components/home/FinalCTA";
 import JsonLd from "@/components/seo/JsonLd";
 import { businessJsonLd, websiteJsonLd } from "@/lib/seo";
+import Reveal from "@/components/ui/Reveal";
 
 // The root's own address. The layout cannot declare it — metadata is
 // inherited, and a canonical there would point all 408 pages here.
@@ -28,14 +29,20 @@ export default function HomePage() {
           a visitor has to take anyone's word for it — the reviews then land on
           someone already half convinced. */}
       <LivePreview />
-      <AudienceSwitcher />
-      <Categories />
-      <ProductShowcase />
-      <HowItWorks />
-      <ReviewsRow />
-      <Marquee />
-      <B2BBlock />
-      <FinalCTA />
+      {/*
+        Everything below the fold settles in as it is reached.
+        Hero and LivePreview are deliberately NOT wrapped: they are on screen
+        before a scroll happens, and fading in what someone is already looking
+        at is a stutter, not an entrance.
+      */}
+      <Reveal><AudienceSwitcher /></Reveal>
+      <Reveal><Categories /></Reveal>
+      <Reveal><ProductShowcase /></Reveal>
+      <Reveal><HowItWorks /></Reveal>
+      <Reveal><ReviewsRow /></Reveal>
+      <Reveal><Marquee /></Reveal>
+      <Reveal><B2BBlock /></Reveal>
+      <Reveal><FinalCTA /></Reveal>
     </>
   );
 }

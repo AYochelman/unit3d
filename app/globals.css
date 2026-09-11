@@ -51,6 +51,53 @@
   .skip-link:focus {
     top: 1rem;
   }
+
+  /*
+   * Scroll-in reveal (components/ui/Reveal.tsx).
+   *
+   * Guarded by `.js` so the resting state only exists once we know a browser
+   * can leave it — without that guard, no-JS visitors and crawlers would read
+   * an empty page. The distance is small on purpose: 14px reads as the block
+   * settling, while 40px reads as a slideshow and makes a long page feel slow.
+   */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  /*
+   * Where the floating buttons sit.
+   *
+   * The WhatsApp bubble and the help bot are fixed to the bottom corners. A
+   * page that puts its own bar down there (the product page's buy bar) raises
+   * them by adding `has-buy-bar` to the body, so nothing ever sits on top of
+   * the price or the add button. One variable, two consumers, no guessing.
+   */
+  :root {
+    --fab-bottom: 1.5rem;
+  }
+  body.has-buy-bar {
+    --fab-bottom: calc(5.25rem + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 1024px) {
+    /* The bar is phones-only, so the desktop corners go back to normal. */
+    body.has-buy-bar {
+      --fab-bottom: 1.5rem;
+    }
+  }
+  .fab {
+    bottom: var(--fab-bottom);
+    transition: bottom 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -247,6 +294,12 @@
   /* The mark is drawn BY its animation, so stopping it has to leave the drawn
      state behind rather than an empty outline. */
   .u3d-three, .u3d-fil { stroke-dashoffset: 0; opacity: 1; }
+  /* A reveal that cannot animate is simply already arrived. */
+  .js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* A colour input that looks like a spool rather than a form control.

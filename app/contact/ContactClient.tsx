@@ -212,9 +212,24 @@ export default function ContactClient() {
           <div className="font-mono text-[11px] tracking-widest text-ink-500" dir="ltr">
             REF · {refCode}
           </div>
+          {/* The two writes that happen after the screen swaps — the order row
+              and the confirmation mail — now say so while they are in flight
+              instead of only once they finish. Real state, not a fake delay. */}
+          {(filed === "pending" || mailed === "pending") && (
+            <div className="inline-flex items-center gap-2 text-[11px] text-ink-400">
+              <span
+                aria-hidden
+                className="inline-block h-3 w-3 rounded-full border-2 border-current border-t-transparent animate-spin motion-reduce:animate-none"
+              />
+              <span>שומר את ההזמנה…</span>
+            </div>
+          )}
           {mailed === "sent" && (
-            <div className="text-[11px] text-ink-400">
-              אישור הזמנה עם כל הפירוט נשלח אליך למייל <span dir="ltr">{mailTo}</span>.
+            <div className="inline-flex items-center gap-1.5 text-[11px] text-good">
+              <Icon name="check" size={12} strokeWidth={3} />
+              <span className="text-ink-400">
+                אישור הזמנה עם כל הפירוט נשלח אליך למייל <span dir="ltr">{mailTo}</span>.
+              </span>
             </div>
           )}
           {(filed === "failed" || mailed === "failed") && (

@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 import Btn from "./ui/Btn";
 import ThemeToggle from "./ThemeToggle";
+import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
 
@@ -38,14 +39,37 @@ const SECONDARY = [
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const cartCount = useOrderStore((s) => s.items.length);
+
+  /**
+   * The bar earns its edge once the page has moved under it.
+   *
+   * At the top it sits on the hero with almost no seam; past that it needs to
+   * separate itself from the content scrolling beneath. Read from a passive
+   * listener, and rounded to a boolean so React re-renders twice per page, not
+   * on every frame of the scroll.
+   */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname?.startsWith(href);
 
   return (
     <>
-      <header className="sticky top-0 z-40 h-16 bg-ink-950/85 backdrop-blur-md border-b border-ink-800">
+      <header
+        className={cn(
+          "sticky top-0 z-40 h-16 backdrop-blur-md border-b transition-[background-color,border-color,box-shadow] duration-300",
+          scrolled
+            ? "bg-ink-950/92 border-ink-800 shadow-[0_1px_0_0_rgba(8,154,71,0.18)]"
+            : "bg-ink-950/70 border-transparent",
+        )}
+      >
         <div className="max-w-7xl mx-auto h-full px-6 md:px-10 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="Unit 3D · דף הבית">
             <Logo size={30} />
@@ -62,9 +86,13 @@ export default function Header() {
                   href={item.href}
                   className={cn(
                     "whitespace-nowrap px-2 xl:px-2.5 py-2 rounded-md font-medium transition-colors",
+                    // The active item is marked twice — tint AND a rule beneath
+                    // it — so it does not depend on colour alone.
+                    "relative after:absolute after:inset-x-2 after:-bottom-px after:h-0.5 after:rounded-full after:bg-flame",
+                    "after:origin-center after:transition-transform after:duration-300 motion-reduce:after:transition-none",
                     isActive(item.href)
-                      ? "text-flame bg-flame/5"
-                      : "text-ink-300 hover:text-ink-50",
+                      ? "text-flame bg-flame/5 after:scale-x-100"
+                      : "text-ink-300 hover:text-ink-50 after:scale-x-0 hover:after:scale-x-100",
                   )}
                 >
                   {item.label}
@@ -74,6 +102,9 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            {/* Search sits before the settings and the cart: on a catalogue of
+                this size it is the most-wanted control in the bar. */}
+            <QuickSearch />
             <ThemeToggle />
 
             <Link
