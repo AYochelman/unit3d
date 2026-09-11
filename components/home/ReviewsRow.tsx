@@ -132,11 +132,39 @@ function Track({ items, reverse }: { items: Review[]; reverse?: boolean }) {
  * seamless loop. Motion is disabled under prefers-reduced-motion (globals.css).
  */
 export default function ReviewsRow() {
-  // No reviews, no section. A shop that has not sold anything yet does not
-  // get to show a five-star wall — the invited review form on /reviews is what
-  // fills this, and until it does the home page simply goes on to the next
-  // block.
-  if (!REVIEWS.length) return null;
+  /*
+   * Nothing to show yet — but the slot stays.
+   *
+   * A shop that has not sold anything does not get to show a five-star wall,
+   * and it should not quietly drop the section either: the space is where the
+   * first real review goes, and saying so out loud is a better invitation than
+   * a gap in the page. The moment REVIEWS has one entry, everything below this
+   * renders instead.
+   */
+  if (!REVIEWS.length) {
+    return (
+      <section className="py-12 md:py-16" aria-label="ביקורות לקוחות">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <SectionHead eyebrow="REVIEWS" title="כאן יהיו הביקורות." />
+          <div className="mt-6 p-8 md:p-10 rounded-2xl border border-dashed border-ink-700 bg-ink-900/40 text-center">
+            <div className="inline-flex mb-4 text-ink-500" aria-hidden>
+              <Stars n={0} />
+            </div>
+            <p className="text-ink-100 font-bold text-lg mb-2">
+              עוד לא קיבלנו ביקורת אחת.
+            </p>
+            <p className="text-ink-300 max-w-lg mx-auto leading-relaxed mb-6">
+              החנות חדשה, ואנחנו מעדיפים מקום ריק על פני ביקורות שלא נכתבו.
+              הזמנת ממני? תכתוב מה יצא — ועם רשותך זה יופיע כאן ראשון.
+            </p>
+            <Btn as="a" href="/reviews" icon="star">
+              כתוב את הביקורת הראשונה
+            </Btn>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const half = Math.ceil(REVIEWS.length / 2);
   return (

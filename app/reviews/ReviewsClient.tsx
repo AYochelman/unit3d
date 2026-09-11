@@ -21,7 +21,9 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 };
 
 export default function ReviewsClient() {
-  const [showForm, setShowForm] = useState(false);
+  // With nothing to read yet, the form IS the page — it opens straight away
+  // rather than hiding behind a button on an empty screen.
+  const [showForm, setShowForm] = useState(REVIEWS.length === 0);
 
   return (
     <div className="max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-16">
