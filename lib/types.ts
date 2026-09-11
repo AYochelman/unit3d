@@ -291,7 +291,7 @@ export type ProductArtId =
   | "penholder" | "cableclip" | "headphones" | "phonestand" | "coaster" | "hook"
   | "keyrack" | "cardholder" | "planter" | "bagclip" | "bookmark" | "doorsign"
   | "organizer" | "lighter" | "phonecase" | "dogtag" | "luggage" | "nameplate"
-  | "keychain" | "bagtag" | "brushcase" | "pokerchip" | "ashtray"
+  | "keychain" | "bagtag" | "brushcase" | "pokerchip" | "ashtray" | "cigcase"
   // Statues / display pieces (עמודת הפסלים)
   | "bust" | "chess" | "dragonstatue" | "lowpoly" | "vase" | "trophy"
   | "moon" | "torso";
