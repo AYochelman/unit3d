@@ -203,7 +203,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
       {added && (
         <div className="fixed top-20 inset-x-0 flex justify-center z-50 pointer-events-none">
-          <div className="inline-flex items-center gap-2 bg-good text-white px-5 py-2.5 rounded-full shadow-xl font-semibold text-sm">
+          <div className="inline-flex items-center gap-2 bg-good text-ink-950 px-5 py-2.5 rounded-full shadow-xl font-semibold text-sm">
             <Icon name="check" size={16} strokeWidth={3} />
             נוסף לסל · {cartCount} {cartCount === 1 ? "פריט" : "פריטים"}
             <Link href="/contact" className="pointer-events-auto underline opacity-80 hover:opacity-100 mr-1">לסל</Link>
@@ -359,7 +359,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                     key={o.id}
                     type="button"
                     onClick={() => setOptionId(o.id)}
-                    className={cn("px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors", optionId === o.id ? "bg-flame text-white border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500")}
+                    className={cn("px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors", optionId === o.id ? "bg-flame-600 text-white border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500")}
                   >
                     {o.label}{o.priceAdd > 0 ? ` (+${fmtILS(o.priceAdd)})` : ""}
                   </button>
@@ -569,7 +569,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <div className="space-y-2">
               <Link
                 href="/contact"
-                className="w-full h-12 rounded-xl font-black text-base flex items-center justify-center gap-2 bg-flame text-white hover:bg-flame/90 transition-colors shadow-lg"
+                className="w-full h-12 rounded-xl font-black text-base flex items-center justify-center gap-2 bg-flame-600 text-white hover:bg-flame-700 transition-colors shadow-lg"
               >
                 <Icon name="whatsapp" size={18} />
                 בקש הצעת מחיר
@@ -583,7 +583,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <button
               type="button"
               onClick={handleAdd}
-              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-white" : "bg-flame text-white hover:bg-flame/90")}
+              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "bg-flame-600 text-white hover:bg-flame-700")}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
             </button>

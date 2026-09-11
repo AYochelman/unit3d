@@ -101,7 +101,7 @@ export default function ShippingEstimate({ grams, size, fragile = false, qty = 1
           <p className="text-[10px] text-ink-500 leading-relaxed">
             כולל אריזה ({pack ? pack.label : "לפי מידה"}) ואת הנחת דואר בקליק. מעל ₪200 המשלוח חינם.
             {" "}
-            <Link href="/shipping" className="text-cyan2 hover:underline">למחשבון המלא</Link>
+            <Link href="/shipping" className="text-cyan2 underline hover:no-underline">למחשבון המלא</Link>
           </p>
         </div>
       )}

@@ -56,7 +56,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
             onClick={() => set("sort", s.id)}
             className={cn(
               "px-3 py-1.5 rounded-full text-sm font-medium border transition-colors",
-              state.sort === s.id ? "bg-flame text-white border-flame" : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
+              state.sort === s.id ? "bg-flame-600 text-white border-flame" : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
             )}
           >
             {s.label}

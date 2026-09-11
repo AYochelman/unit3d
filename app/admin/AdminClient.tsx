@@ -152,7 +152,7 @@ export default function AdminClient() {
             onClick={() => setTab(t.id)}
             className={cn(
               "px-3 py-1.5 rounded-full text-sm font-medium border transition-colors",
-              tab === t.id ? "bg-flame text-white border-flame" : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
+              tab === t.id ? "bg-flame-600 text-white border-flame" : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
             )}
           >
             {t.label}
@@ -379,7 +379,7 @@ function AddMaterialForm() {
         </label>
       </div>
       <button type="button" onClick={submit} disabled={!name.trim()}
-        className="mt-3 px-4 h-10 rounded-lg font-bold text-sm bg-flame text-white disabled:opacity-40">
+        className="mt-3 px-4 h-10 rounded-lg font-bold text-sm bg-flame-600 text-white disabled:opacity-40">
         הוסף חומר
       </button>
     </div>
@@ -558,7 +558,7 @@ function AddColorForm() {
         </div>
         <span className="flex-1" />
         <button type="button" onClick={submit} disabled={!name.trim()}
-          className="px-5 h-11 rounded-xl font-bold text-sm bg-flame text-white disabled:opacity-40 hover:bg-flame/90 transition-colors">
+          className="px-5 h-11 rounded-xl font-bold text-sm bg-flame-600 text-white disabled:opacity-40 hover:bg-flame-700 transition-colors">
           הוסף צבע
         </button>
       </div>
@@ -844,7 +844,7 @@ function ParamsTab() {
             onClick={() => setPricing({ auto: !pricing.auto })}
             className={cn(
               "h-9 px-4 rounded-lg text-sm font-bold border transition-colors",
-              pricing.auto ? "bg-flame text-white border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
+              pricing.auto ? "bg-flame-600 text-white border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
             )}
           >
             {pricing.auto ? "דולק" : "כבוי"}

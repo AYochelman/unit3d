@@ -9,7 +9,10 @@ const TIERS = [
   { range: "200+", price: 0, label: "פנה" },
 ];
 
-const CLIENTS = ["▲ MoonTech", "◆ Pixie", "● Orca Labs", "■ Halo HR"];
+// A "PRODUCED FOR" strip of four company names used to sit at the bottom of
+// this block. None of them was a customer. A wall of invented clients is the
+// single most quotable thing on a page like this, so it is gone until there is
+// a real one to name — with that company's permission.
 
 const PERKS = [
   "חשבונית מס",
@@ -100,22 +103,6 @@ export default function B2BBlock() {
                   </div>
                 );
               })}
-            </div>
-            <div className="mt-6 pt-5 border-t border-ink-800">
-              <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-                PRODUCED FOR
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {CLIENTS.map((c) => (
-                  <span
-                    key={c}
-                    className="text-xs px-2.5 py-1.5 rounded-full bg-ink-800 border border-ink-700 text-ink-200 font-mono"
-                    dir="ltr"
-                  >
-                    {c}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
         </div>

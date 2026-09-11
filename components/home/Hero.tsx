@@ -24,7 +24,7 @@ export default function Hero() {
             <span className="w-1.5 h-1.5 rounded-full bg-flame live-dot" />
             <span>המדפסת רצה עכשיו</span>
             <span className="text-ink-400">·</span>
-            <span dir="ltr">הזמנה #4781</span>
+            <span>שידור חי מהסטודיו</span>
           </div>
           <h1 className="text-[44px] md:text-[88px] leading-[0.95] font-black tracking-tightest text-ink-50">
             כל רעיון.
@@ -48,7 +48,7 @@ export default function Hero() {
           <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-300">
             <li className="inline-flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-flame" />
-              מעל 500 הזמנות
+              הדפסה לפי הזמנה
             </li>
             <li className="inline-flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-flame" />

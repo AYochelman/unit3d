@@ -122,6 +122,7 @@ export default function ShippingClient() {
               כמה חבילות אתה שולח בחודש
             </div>
             <select
+              aria-label="כמה חבילות אתה שולח בחודש"
               value={tier}
               onChange={(e) => setTier(e.target.value as VolumeTier)}
               className="w-full h-10 px-3 rounded-xl bg-ink-950 border border-ink-700 text-sm text-ink-100 focus:border-flame focus:outline-none"
@@ -164,13 +165,17 @@ export default function ShippingClient() {
                 </tr>
               </thead>
               <tbody>
+                {/* An unavailable option is marked by a struck-through name and by
+                    the sentence saying why — not by fading the row, which dropped
+                    its text under the contrast floor and told a colour-blind
+                    reader nothing anyway. */}
                 {options.map((o) => (
-                  <tr key={o.id} className={cn("border-t border-ink-800", o.unavailable && "opacity-45")}>
+                  <tr key={o.id} className={cn("border-t border-ink-800", o.unavailable && "bg-ink-900/40")}>
                     <td className="p-3">
-                      <div className="font-bold">{o.service}</div>
-                      <div className="text-[11px] text-ink-500">{o.unavailable ?? o.detail}</div>
+                      <div className={cn("font-bold", o.unavailable && "line-through text-ink-400")}>{o.service}</div>
+                      <div className="text-[11px] text-ink-400">{o.unavailable ?? o.detail}</div>
                       {!o.unavailable && (
-                        <div className="text-[11px] text-ink-600 mt-0.5">{o.packagingLabel}</div>
+                        <div className="text-[11px] text-ink-400 mt-0.5">{o.packagingLabel}</div>
                       )}
                     </td>
                     <td className="p-3 text-left font-mono text-ink-200" dir="ltr">
@@ -201,7 +206,7 @@ export default function ShippingClient() {
               </ul>
               <p className="mt-3 text-[11px] text-ink-500">
                 מחירים ליחידה מ־
-                <a href={PACKAGING_SOURCE.url} target="_blank" rel="noopener noreferrer" className="text-cyan2 hover:underline">
+                <a href={PACKAGING_SOURCE.url} target="_blank" rel="noopener noreferrer" className="text-cyan2 underline hover:no-underline">
                   {PACKAGING_SOURCE.name}
                 </a>
                 . בנוסף מחושבים ניילון בועות, סרט הדבקה ומדבקת משלוח.
@@ -213,7 +218,7 @@ export default function ShippingClient() {
               <p className="text-sm text-ink-300 leading-relaxed">
                 כל מחירי המשלוח לקוחים מ־<span className="text-ink-100">{RATES_SOURCE.title}</span>.
                 {" "}
-                <a href={RATES_SOURCE.url} target="_blank" rel="noopener noreferrer" className="text-cyan2 hover:underline">
+                <a href={RATES_SOURCE.url} target="_blank" rel="noopener noreferrer" className="text-cyan2 underline hover:no-underline">
                   לקובץ המקורי
                 </a>
                 . {RATES_SOURCE.note}

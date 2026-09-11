@@ -234,7 +234,7 @@ export default function UnitOrderScreen({
                           <ProductArt art={f.art} color={artColor(filament?.hex)} size={86} />
                         )}
                         {picked && (
-                          <span className="absolute top-2 left-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-flame text-white">
+                          <span className="absolute top-2 left-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-flame-600 text-white">
                             <Icon name="check" size={12} strokeWidth={3} />
                           </span>
                         )}

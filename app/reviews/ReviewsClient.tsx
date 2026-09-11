@@ -28,20 +28,24 @@ export default function ReviewsClient() {
       <header className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-            REVIEWS · {REVIEWS.length}+
+            REVIEWS{REVIEWS.length ? ` · ${REVIEWS.length}` : ""}
           </div>
           <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
             לקוחות שדיברו.
           </h1>
-          <div className="mt-3 flex items-center gap-2 text-ink-300">
-            <span className="font-mono text-2xl text-flame font-bold" dir="ltr">
-              4.9
-            </span>
-            <span className="text-ink-500">/</span>
-            <span className="font-mono text-ink-300" dir="ltr">5.0</span>
-            <span className="text-ink-500">·</span>
-            <span className="text-sm">{REVIEWS.length}+ ביקורות מאומתות</span>
-          </div>
+          {/* The average is computed from what is actually here. The page used
+              to print a hard-coded 4.9 — a number nobody had given. */}
+          {REVIEWS.length > 0 && (
+            <div className="mt-3 flex items-center gap-2 text-ink-300">
+              <span className="font-mono text-2xl text-flame font-bold" dir="ltr">
+                {(REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1)}
+              </span>
+              <span className="text-ink-500">/</span>
+              <span className="font-mono text-ink-300" dir="ltr">5.0</span>
+              <span className="text-ink-500">·</span>
+              <span className="text-sm">{REVIEWS.length} ביקורות</span>
+            </div>
+          )}
         </div>
         <Btn onClick={() => setShowForm((v) => !v)} icon={showForm ? "x" : "star"}>
           {showForm ? "סגור" : "השאר ביקורת"}
@@ -49,6 +53,16 @@ export default function ReviewsClient() {
       </header>
 
       {showForm && <div className="mb-10"><ReviewForm /></div>}
+
+      {REVIEWS.length === 0 && !showForm && (
+        <div className="p-10 rounded-2xl border border-dashed border-ink-700 text-center">
+          <p className="text-ink-100 font-semibold text-lg mb-2">עוד אין ביקורות כאן.</p>
+          <p className="text-ink-300 max-w-md mx-auto leading-relaxed">
+            החנות חדשה, ואנחנו מעדיפים עמוד ריק על פני ביקורות שלא נכתבו. הזמנת ממני?
+            תכתוב מה יצא — עם רשותך זה יופיע כאן ראשון.
+          </p>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-5">
         {REVIEWS.map((r) => (

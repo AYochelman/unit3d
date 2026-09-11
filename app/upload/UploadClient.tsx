@@ -115,6 +115,10 @@ export default function UploadClient() {
             </Btn>
             <input
               ref={inputRef}
+              // Opened by the visible button beside it; kept out of the tab
+              // order so it is not a second, invisible stop on the way there.
+              tabIndex={-1}
+              aria-label="בחירת קובץ להדפסה"
               type="file"
               accept=".stl,.obj,.3mf"
               className="hidden"
@@ -153,6 +157,10 @@ export default function UploadClient() {
             </div>
             <input
               ref={inputRef}
+              // Opened by the visible button beside it; kept out of the tab
+              // order so it is not a second, invisible stop on the way there.
+              tabIndex={-1}
+              aria-label="בחירת קובץ להדפסה"
               type="file"
               accept=".stl,.obj,.3mf"
               className="hidden"
@@ -210,7 +218,7 @@ export default function UploadClient() {
                       }}
                     />
                     {color === f.id && (
-                      <span className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-flame text-white flex items-center justify-center">
+                      <span className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-flame-600 text-white flex items-center justify-center">
                         <Icon name="check" size={10} strokeWidth={3} />
                       </span>
                     )}
@@ -228,6 +236,7 @@ export default function UploadClient() {
               </div>
               <input
                 type="range"
+                aria-label="גודל מרבי של ההדפסה במילימטרים"
                 min={20}
                 max={200}
                 value={maxSize}

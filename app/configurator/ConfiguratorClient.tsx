@@ -461,7 +461,7 @@ export default function ConfiguratorClient({
                             onClick={() => update("mode", m)}
                             className={cn(
                               "px-3 h-8 rounded-md text-xs font-semibold transition-colors",
-                              config.mode === m ? "bg-flame text-white" : "text-ink-300 hover:text-ink-50",
+                              config.mode === m ? "bg-flame-600 text-white" : "text-ink-300 hover:text-ink-50",
                             )}
                           >
                             {m === "text" ? "טקסט מהיר" : "עיצוב חופשי"}
@@ -541,7 +541,7 @@ export default function ConfiguratorClient({
                         <div className="aspect-square rounded-lg mb-1.5 relative overflow-hidden" style={{ backgroundColor: f.hex }}>
                           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 50%, rgba(0,0,0,0.25) 100%)" }} />
                           {config.color === f.id && (
-                            <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-flame text-white flex items-center justify-center">
+                            <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-flame-600 text-white flex items-center justify-center">
                               <Icon name="check" size={10} strokeWidth={3} />
                             </div>
                           )}
@@ -573,7 +573,7 @@ export default function ConfiguratorClient({
                           config.size === s.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
                         )}
                       >
-                        <div className={cn("w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold", config.size === s.id ? "border-flame bg-flame text-white" : "border-ink-700 text-ink-400")}>
+                        <div className={cn("w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold", config.size === s.id ? "border-flame bg-flame-600 text-white" : "border-ink-700 text-ink-400")}>
                           {s.label.charAt(0)}
                         </div>
                         <div className="flex-1">
@@ -605,7 +605,7 @@ export default function ConfiguratorClient({
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                     {[1, 3, 5, 10].map((n) => (
-                      <button key={n} onClick={() => update("qty", n)} className={cn("h-9 rounded-lg font-mono font-semibold", config.qty === n ? "bg-flame text-white" : "bg-ink-800 text-ink-300 hover:bg-ink-700")}>
+                      <button key={n} onClick={() => update("qty", n)} className={cn("h-9 rounded-lg font-mono font-semibold", config.qty === n ? "bg-flame-600 text-white" : "bg-ink-800 text-ink-300 hover:bg-ink-700")}>
                         ×{n}
                       </button>
                     ))}

@@ -246,7 +246,7 @@ export default function CatalogClient() {
                 className={cn(
                   "px-3 py-1.5 rounded-full text-sm font-medium border transition-colors",
                   branchFilter === b.id
-                    ? "bg-flame text-white border-flame"
+                    ? "bg-flame-600 text-white border-flame"
                     : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
                 )}
               >
@@ -256,6 +256,7 @@ export default function CatalogClient() {
           </div>
           <div className="flex-1 min-w-[180px] relative">
             <Input
+              aria-label="חיפוש בקטלוג הסמלים"
               placeholder="חפש סמל, גדוד, מספר, שם חיבה…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -636,7 +637,7 @@ function BattalionCard({
             variant="secondary"
             onClick={onAdd}
             iconRight="arrowLeft"
-            className="hover:bg-flame hover:border-flame hover:text-white"
+            className="hover:bg-flame-600 hover:border-flame hover:text-white"
           >
             הזמן
           </Btn>

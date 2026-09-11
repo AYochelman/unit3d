@@ -4,16 +4,23 @@
 export type ListingStats = {
   id: string;
   price: number;
-  /** 1-5 */
+  /**
+   * An internal ranking signal ONLY — never shown.
+   *
+   * `orders` is derived from the designer's download count on the source
+   * platform and `rating` is a constant. They were once printed on every card
+   * as "4.8 ★ · 1,240 הזמנות", which is an invented sales figure and an
+   * invented review score presented as fact. They now order the grid and
+   * nothing else.
+   */
   rating: number;
-  /** Orders to date (demo counters until there is a backend). */
   orders: number;
   /** Max colours the item is offered in (1 = single colour, 2-4 = AMS). */
   colors: number;
   isNew?: boolean;
 };
 
-export type SortId = "popular" | "orders" | "rating" | "priceDesc" | "priceAsc" | "newest";
+export type SortId = "popular" | "priceDesc" | "priceAsc" | "newest";
 export type ColorFilter = "all" | "1" | "2" | "3+";
 export type PriceFilter = "all" | "lt50" | "50-100" | "gt100";
 
@@ -21,10 +28,10 @@ export type ListingState = { sort: SortId; colors: ColorFilter; price: PriceFilt
 
 export const DEFAULT_LISTING: ListingState = { sort: "popular", colors: "all", price: "all" };
 
+// "הכי מוזמן" and "דירוג הכי גבוה" are gone with the numbers behind them:
+// a shop that has not sold yet cannot sort by how much it has sold.
 export const SORTS: { id: SortId; label: string }[] = [
-  { id: "popular", label: "פופולרי" },
-  { id: "orders", label: "הכי מוזמן" },
-  { id: "rating", label: "דירוג הכי גבוה" },
+  { id: "popular", label: "מומלצים" },
   { id: "priceDesc", label: "מחיר: מהגבוה לנמוך" },
   { id: "priceAsc", label: "מחיר: מהנמוך לגבוה" },
   { id: "newest", label: "חדש באתר" },
@@ -59,10 +66,6 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
   const popularity = (it: ListingStats) => it.orders * (0.6 + it.rating / 5);
   out = [...out].sort((a, b) => {
     switch (s.sort) {
-      case "orders":
-        return b.orders - a.orders;
-      case "rating":
-        return b.rating - a.rating || b.orders - a.orders;
       case "priceDesc":
         return b.price - a.price;
       case "priceAsc":

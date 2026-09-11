@@ -2,6 +2,8 @@ import Link from "next/link";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 import { CONTACT } from "@/lib/contact";
+import { BUSINESS, addressLine, businessDetailsComplete, orPending } from "@/lib/business";
+import { LEGAL_PAGES } from "@/components/legal/LegalPage";
 import PrinterDot from "./PrinterDot";
 
 const SHOP = [
@@ -28,6 +30,10 @@ const SUPPORT = [
   { href: "/contact", label: "צור קשר" },
   { href: "/admin", label: "ניהול (מנהל)" },
 ];
+
+// חוק הגנת הצרכן obliges a distance seller to state who it is. Kept in one
+// place (lib/business.ts) so the footer and the legal pages cannot disagree.
+
 
 const QUICK = [
   { label: "זמן הדפסה", value: "3-5 ימי עסקים" },
@@ -127,7 +133,30 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-ink-800">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 py-6">
+          <nav aria-label="מסמכים משפטיים" className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {LEGAL_PAGES.map((p) => (
+              <Link key={p.href} href={p.href} className="text-ink-300 hover:text-flame transition-colors">
+                {p.label}
+              </Link>
+            ))}
+          </nav>
+          <address className="mt-4 not-italic text-[13px] leading-relaxed text-ink-400">
+            <span className="text-ink-300">{orPending(BUSINESS.legalName) || BUSINESS.tradingName}</span>
+            {" · "}{BUSINESS.entityType} {orPending(BUSINESS.vatId)}
+            {" · "}{addressLine()}
+            {" · "}
+            <a href={`tel:${BUSINESS.phone}`} dir="ltr" className="hover:text-flame transition-colors">{BUSINESS.phoneDisplay}</a>
+            {" · "}
+            <a href={`mailto:${BUSINESS.email}`} dir="ltr" className="hover:text-flame transition-colors">{BUSINESS.email}</a>
+            {!businessDetailsComplete() && (
+              <span className="block mt-1 text-ink-500">
+                פרטי העוסק יושלמו בקרוב. עד אז אפשר לקבל אותם בטלפון או במייל.
+              </span>
+            )}
+          </address>
+        </div>
+        <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 border-t border-ink-800 flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             © 2026 Unit3D · MADE IN GIVATAYIM · NOZZLE 0.4mm · v2.6
           </div>

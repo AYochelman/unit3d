@@ -39,6 +39,7 @@ export default function TrackingClient() {
       >
         <Input
           dir="ltr"
+            aria-label="מספר הזמנה"
           placeholder="#4781"
           value={order}
           onChange={(e) => setOrder(e.target.value)}
@@ -79,7 +80,7 @@ export default function TrackingClient() {
                   <span
                     className={cn(
                       "absolute -right-1.5 top-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border-2",
-                      isDone && "bg-flame border-flame text-white",
+                      isDone && "bg-flame-600 border-flame text-white",
                       isActive && "border-flame text-flame",
                       isFuture && "border-ink-700 bg-ink-900 text-ink-500",
                     )}

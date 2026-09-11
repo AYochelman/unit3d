@@ -53,7 +53,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  // No maximumScale. Capping it at 1 blocks pinch-zoom, which is how a lot of
+  // people read a phone screen at all — and it is a WCAG 1.4.4 failure on
+  // every page of the site.
   themeColor: "#0A0A0B",
 };
 
@@ -70,8 +72,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen flex flex-col">
+        <a href="#main" className="skip-link">דלג לתוכן הראשי</a>
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="main" tabIndex={-1} className="flex-1">
+          {children}
+        </main>
         <Footer />
         <AdminSettingsBoot />
         <OrdersBoot />

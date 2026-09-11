@@ -87,7 +87,7 @@ export default function CheaperOptions({ productName }: { productName?: string }
             href={wa}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-1 w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-good/15 text-good border border-good/35 hover:bg-good hover:text-white transition-colors"
+            className="mt-1 w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-good/15 text-good border border-good/35 hover:bg-good hover:text-ink-950 transition-colors"
           >
             <Icon name="whatsapp" size={16} />
             תשאל אותנו מה משתלם כאן

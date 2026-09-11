@@ -9,7 +9,7 @@ import Emblem from "@/components/Emblem";
 import { FIDGETS } from "@/lib/data";
 import { fidgetStats } from "@/lib/products";
 import ProductToolbar from "@/components/ProductToolbar";
-import { applyListing, DEFAULT_LISTING, fmtOrders, type ListingState } from "@/lib/listing";
+import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 import { fidgetKind, FIDGET_KIND_TABS, FIDGET_KIND_LABEL, type FidgetKindFilter } from "@/lib/fidget-kind";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
@@ -157,23 +157,13 @@ function FidgetCard({
           )}
         </div>
 
-        {/* Shelf · rating · orders */}
-        {(() => {
-          const st = fidgetStats(f);
-          return (
-            <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400">
-              <span className="px-1.5 py-0.5 rounded bg-ink-800 text-ink-300 font-sans font-semibold">
-                {FIDGET_KIND_LABEL[fidgetKind(f)]}
-              </span>
-              <span className="inline-flex items-center gap-0.5 text-flame">
-                <Icon name="star" size={10} className="fill-current" />
-                <bdi dir="ltr">{st.rating.toFixed(1)}</bdi>
-              </span>
-              <span>·</span>
-              <span><bdi dir="ltr">{fmtOrders(st.orders)}</bdi> הזמנות</span>
-            </div>
-          );
-        })()}
+        {/* Which shelf it is on. The star rating and the order count that used
+            to sit here were invented numbers — see ListingStats in listing.ts. */}
+        <div className="mt-1.5 flex items-center gap-2 text-[10px]">
+          <span className="px-1.5 py-0.5 rounded bg-ink-800 text-ink-300 font-semibold">
+            {FIDGET_KIND_LABEL[fidgetKind(f)]}
+          </span>
+        </div>
 
         {/* Variant dropdown */}
         {hasVariants && f.variants && (
@@ -226,7 +216,7 @@ function FidgetCard({
           </div>
           <button
             onClick={() => onAdd(f.id, variantId)}
-            className="inline-flex items-center gap-1 h-7 px-2 rounded-md bg-ink-800 hover:bg-flame hover:text-white text-xs font-semibold transition-colors"
+            className="inline-flex items-center gap-1 h-7 px-2 rounded-md bg-ink-800 hover:bg-flame-600 hover:text-white text-xs font-semibold transition-colors"
           >
             <Icon name="plus" size={12} />
             הוסף
@@ -323,12 +313,12 @@ export default function FidgetsClient() {
               className={cn(
                 "px-4 py-2 rounded-xl text-sm font-bold border transition-colors",
                 active
-                  ? "bg-flame text-white border-flame"
+                  ? "bg-flame-600 text-white border-flame"
                   : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
               )}
             >
               {t.label}
-              <span className={cn("mr-1.5 font-mono text-[11px]", active ? "text-white/70" : "text-ink-500")} dir="ltr">
+              <span className={cn("mr-1.5 font-mono text-[11px]", active ? "text-white/90" : "text-ink-500")} dir="ltr">
                 {count}
               </span>
             </button>

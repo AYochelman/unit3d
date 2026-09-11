@@ -174,7 +174,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
       {/* Toast */}
       {added && (
         <div className="fixed top-20 inset-x-0 flex justify-center z-50 pointer-events-none">
-          <div className="inline-flex items-center gap-2 bg-good text-white px-5 py-2.5 rounded-full shadow-xl font-semibold text-sm">
+          <div className="inline-flex items-center gap-2 bg-good text-ink-950 px-5 py-2.5 rounded-full shadow-xl font-semibold text-sm">
             <Icon name="check" size={16} strokeWidth={3} />
             נוסף לסל · {cartCount} {cartCount === 1 ? "פריט" : "פריטים"}
             <Link href="/contact" className="pointer-events-auto underline opacity-80 hover:opacity-100 mr-1">
@@ -231,7 +231,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                     <button
                       type="button"
                       onClick={() => setImgIdx((p) => (p - 1 + images.length) % images.length)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-ink-950/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-flame transition-all z-10"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-ink-950/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-flame-600 transition-all z-10"
                       aria-label="קודם"
                     >
                       <Icon name="chevRight" size={18} />
@@ -239,7 +239,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                     <button
                       type="button"
                       onClick={() => setImgIdx((p) => (p + 1) % images.length)}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-ink-950/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-flame transition-all z-10"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-ink-950/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-flame-600 transition-all z-10"
                       aria-label="הבא"
                     >
                       <Icon name="chevLeft" size={18} />
@@ -385,7 +385,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                     className={cn(
                       "px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors",
                       variantId === v.id
-                        ? "bg-flame text-white border-flame"
+                        ? "bg-flame-600 text-white border-flame"
                         : "border-ink-700 text-ink-300 hover:border-ink-500",
                     )}
                   >
@@ -640,8 +640,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               className={cn(
                 "w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg",
                 added
-                  ? "bg-good text-white shadow-good/20"
-                  : "bg-flame text-white hover:bg-flame/90 shadow-flame/20",
+                  ? "bg-good text-ink-950 shadow-good/20"
+                  : "bg-flame-600 text-white hover:bg-flame-700 shadow-flame/20",
               )}
             >
               {added ? (

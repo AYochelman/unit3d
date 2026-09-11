@@ -443,6 +443,7 @@ export default function ContactClient() {
                 ) : (
                   <div className="flex items-center gap-2">
                     <input
+                      aria-label="קוד הנחה"
                       value={codeInput}
                       onChange={(e) => { setCodeInput(e.target.value); setCodeErr(""); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); tryCode(); } }}
@@ -496,7 +497,7 @@ export default function ContactClient() {
                   className={cn(
                     "px-3.5 py-2 rounded-full text-sm font-semibold border transition-all",
                     inquiry === q.id
-                      ? "border-flame bg-flame text-white"
+                      ? "border-flame bg-flame-600 text-white"
                       : "border-ink-700 bg-ink-900 text-ink-300 hover:border-ink-600",
                   )}
                 >
@@ -612,9 +613,17 @@ export default function ContactClient() {
 
           {/* Submit row */}
           <section className="pt-6 border-t border-ink-800 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-xs text-ink-400 max-w-sm">
-              בלחיצה על &quot;שלח&quot; אתה מאשר שאני יכול לחזור אליך
-              בוואטסאפ עם פרטי ההזמנה.
+            {/* The disclosure has to be visible where the data is given, not
+                only in a footer link — and it has to name where the details
+                actually go. */}
+            <p className="text-xs text-ink-400 max-w-md leading-relaxed">
+              בלחיצה על &quot;שלח&quot; אתה מאשר שאני יכול לחזור אליך בוואטסאפ עם פרטי ההזמנה,
+              ומסכים ל
+              <Link href="/terms" className="text-flame-300 underline hover:text-flame">תנאי השימוש</Link>
+              {" ול"}
+              <Link href="/privacy" className="text-flame-300 underline hover:text-flame">מדיניות הפרטיות</Link>.
+              {" "}הפרטים משמשים לביצוע ההזמנה בלבד ולא נמסרים לאף אחד לצורכי שיווק.{" "}
+              <Link href="/returns" className="text-flame-300 underline hover:text-flame">זכות הביטול</Link>.
             </p>
             <Btn type="submit" size="lg" icon="whatsapp">
               שלח פנייה

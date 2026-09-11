@@ -42,23 +42,16 @@ export const BRANCHES = [
 ] as const;
 
 export const REVIEWS: Review[] = [
-  // Every picture here is a photograph taken in the studio of a print that
-  // actually left it — no catalogue renders and no stock. A review is written
-  // about the thing in its own photo, so the two can never drift apart.
-  { id: "r1", name: "אביב", tag: "חובב פידג'טים", seg: "private", stars: 5, when: "לפני שבוע", item: "דרקון פלקסי גמיש", photo: "/studio/print-04.jpg", hue: 90, href: "/fidgets", txt: "הגיע מפרק אחד ומתנועע לכל אורכו, בלי דבק ובלי חלק שנתקע. יושב לי על השולחן ליד המסך וכולם מרימים אותו." },
-  { id: "r2", name: "יואב", tag: "חטיבה 51", seg: "soldier", stars: 5, when: "לפני שבוע", item: "סמל יחידה · מחזיק מפתחות", art: "keychain", hue: 18, href: "/catalog", txt: "הזמנתי לקצין שלי לסוף מסלול. הגיע תוך 4 ימים, ההדפסה נקייה והצבעים יצאו מדויקים. הוא לא מוריד אותו מהמפתחות." },
-  { id: "r3", name: "רון", tag: "גיימר מחיפה", seg: "private", stars: 5, when: "לפני 3 שבועות", item: "פסל וורונוי", photo: "/studio/print-02.jpg", hue: 145, href: "/statues", txt: "לקחתי אותו למדף ליד המסך. כל חור ברשת הודפס ולא נחתך, ואין שום סימן תמיכות. השחור מאט יוצא בדיוק כמו בתמונה." },
-  { id: "r4", name: "מאיה", tag: "אמא של חייל", seg: "family", stars: 5, when: "לפני שבועיים", item: "3 מחזיקי מפתחות", art: "keychain", hue: 145, href: "/catalog", txt: "3 מחזיקים לטקס תום שירות. אריאל ענה בוואטסאפ גם בערב ועזר לבחור צבע. שווה את הכסף." },
-  { id: "r5", name: "ניר", tag: "גיימר", seg: "private", stars: 5, when: "לפני 6 ימים", item: "מעמד לשלט PS5 · מסכת אוני", photo: "/studio/print-07.jpg", hue: 200, href: "/home-office", txt: "השחור והלבן הודפסו יחד, בלי צביעה אחר כך. השלט יושב יציב ולא מחליק, וזה נראה טוב יותר מכל מעמד שקניתי בחנות." },
-  { id: "r6", name: "דניאלה", tag: "מנהלת תפעול · MoonTech", seg: "b2b", stars: 5, when: "לפני חודש", item: "80 מחזיקים ממותגים", art: "nameplate", hue: 190, href: "/b2b", txt: "80 מחזיקי מפתחות עם הלוגו שלנו לוועידה. חשבונית מס מסודרת, אריזה אישית לכל עובד, והכל הגיע יומיים לפני התאריך. ספק שאני חוזרת אליו." },
-  { id: "r7", name: "עומר", tag: "אבא לשלושה", seg: "family", stars: 5, when: "לפני 4 ימים", item: "ראש מואאי", photo: "/studio/print-08.jpg", hue: 40, href: "/statues", txt: "קניתי לבן שלי לשולחן הכתיבה. הפנים יצאו חלקות לגמרי בלי סימני שכבות, והמשקפיים הלבנים הודפסו יחד עם הראש." },
-  { id: "r8", name: "איתי", tag: "גולני 13", seg: "soldier", stars: 5, when: "לפני 5 ימים", item: "סמל גולני", art: "dogtag", hue: 90, href: "/catalog", txt: "נכנסתי, בחרתי, שלחתי. שיחה קצרה בוואטסאפ והכל סגור." },
-  { id: "r9", name: "לירון", tag: "מורת מתמטיקה", seg: "family", stars: 5, when: "לפני 3 שבועות", item: "דרקון קטן דו-צבעי", photo: "/studio/print-06.jpg", hue: 275, href: "/fidgets", txt: "מתנה לתלמיד שעבר ניתוח. קטן, נכנס בכף יד, והשחור והסגול יצאו נקיים אחד ליד השני. ההורים צילמו אותו איתו בבית החולים." },
-  { id: "r10", name: "הילה", tag: "מעצבת פנים", seg: "private", stars: 5, when: "לפני שבועיים", item: "פסל חוטים", photo: "/studio/print-05.jpg", hue: 165, href: "/statues", txt: "לקוחה שלי ביקשה משהו לפינת הכניסה. הדמות תלויה על מאות חוטים דקים שנמתחו בהדפסה עצמה, וזה נראה בלתי אפשרי מקרוב. כבר הזמנתי שני נוספים." },
-  { id: "r11", name: "גיא", tag: "VP People · Pixie", seg: "b2b", stars: 5, when: "לפני חודשיים", item: "35 פיגורות ממותגות", art: "torso", hue: 10, href: "/b2b", txt: "חיפשנו welcome-kit שלא ישכב בארון. 35 פיגורות בעיצוב הלוגו, צבע המותג יצא מדויק, וארוז יפה. העובדים החדשים באמת שמו אותן על השולחן." },
-  { id: "r12", name: "אורי", tag: "אספן", seg: "private", stars: 5, when: "לפני 10 ימים", item: "פיגורה פלקסי בלבן", photo: "/studio/print-03.jpg", hue: 30, href: "/statues", txt: "בגודל כף יד, הידיים והרגליים זזות, והלבן יצא אחיד לגמרי בלי הבדלי גוון בין החלקים." },
-  { id: "r13", name: "רותם", tag: "מנהלת משרד · Aquila", seg: "b2b", stars: 4, when: "לפני חודש", item: "מיכל גדול עם מכסה", photo: "/studio/print-01.jpg", hue: 45, href: "/home-office", txt: "הודפס בחלק אחד, המכסה מסתובב חלק, והצבע והברק הם של החומר עצמו בלי צביעה. הורדתי כוכב כי לקח יומיים יותר ממה שסוכם." },
-  { id: "r14", name: "שיר", tag: "שייטת 13", seg: "soldier", stars: 5, when: "לפני חודש", item: "סמל יחידה · פסל שולחן", art: "trophy", hue: 195, href: "/catalog", txt: "הסמל יצא חד וקריא, וההגמרה החיצונית חלקה. ממליצה." },
+  // Deliberately empty.
+  //
+  // This list used to hold thirteen written reviews with full names, unit
+  // names and companies. None of them came from a customer — the shop had not
+  // opened. Publishing an invented review as a real one is misleading conduct
+  // under section 2 of חוק הגנת הצרכן, and it is the kind of thing a
+  // competitor screenshots.
+  //
+  // The review form on /reviews collects real ones. The first real review goes
+  // here, with the reviewer's permission to publish their name.
 ];
 
 export const GALLERY: GalleryItem[] = [

@@ -26,6 +26,31 @@
     outline-offset: 2px;
     border-radius: 6px;
   }
+
+  /*
+   * Skip to content.
+   *
+   * The header carries twelve navigation links. Without this, somebody using a
+   * keyboard or a screen reader tabs through all of them on every page before
+   * reaching what they came for. It sits off-screen until it takes focus, and
+   * then it is the first thing on the page.
+   */
+  .skip-link {
+    position: absolute;
+    inset-inline-start: 1rem;
+    top: -100%;
+    z-index: 100;
+    padding: 0.65rem 1.1rem;
+    border-radius: 0.5rem;
+    background: #0a0a0b;
+    color: #fafafa;
+    border: 2px solid #089a47;
+    font-weight: 600;
+    transition: top 0.15s ease;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -50,12 +75,18 @@
 
 /* ─── Custom utilities (rebuilt: the originals were lost with the source) ─── */
 @layer components {
+  /*
+   * The main call to action, and it carries white text — so every stop in the
+   * gradient has to clear 4.5:1 against white, not just the average. The old
+   * top stop #0fae54 was 2.92:1: the button read as green-on-green at the top
+   * edge. These three are 5.05, 6.13 and 7.52.
+   */
   .btn-primary {
-    background: linear-gradient(180deg, #0fae54 0%, #089a47 60%, #067138 100%);
+    background: linear-gradient(180deg, #07803c 0%, #067138 60%, #055a2d 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
   .btn-primary:hover {
-    background: linear-gradient(180deg, #0fae54 0%, #067138 100%);
+    background: linear-gradient(180deg, #078641 0%, #055a2d 100%);
     transform: translateY(-1px);
   }
   .printer-grid {
@@ -195,10 +226,26 @@
   20%, 100% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
+  /*
+   * Catch-all first: the named list below covers the animations this site
+   * wrote itself, and missed Tailwind's own (animate-ping) and every CSS
+   * transition. Someone who has asked their operating system to stop motion
+   * has asked once, for everything.
+   */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
   .u3d-three, .u3d-fil, .u3d-nozzle, .u3d-drop, .u3d-letter, .u3d-word, .u3d-dash,
   .reviews-track, .marquee-track, .live-dot, .spin-y {
     animation: none !important;
   }
+  /* The mark is drawn BY its animation, so stopping it has to leave the drawn
+     state behind rather than an empty outline. */
   .u3d-three, .u3d-fil { stroke-dashoffset: 0; opacity: 1; }
 }
 

@@ -6,7 +6,6 @@ import ProductArt from "@/components/ProductArt";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import { fmtILS } from "@/lib/format";
-import { fmtOrders } from "@/lib/listing";
 import { MATERIAL_BY_ID } from "@/lib/materials";
 import { CATEGORY_LABEL } from "@/lib/products";
 import { cn } from "@/lib/cn";
@@ -198,14 +197,6 @@ export function ListingCardView({ c }: { c: ListingCard }) {
             </>
           )}
         </div>
-        <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-ink-400">
-          <span className="inline-flex items-center gap-0.5 text-flame">
-            <Icon name="star" size={10} className="fill-current" />
-            <bdi dir="ltr">{c.rating.toFixed(1)}</bdi>
-          </span>
-          <span>·</span>
-          <span><bdi dir="ltr">{fmtOrders(c.orders)}</bdi> הזמנות</span>
-        </div>
         <div className="mt-auto" />
       </div>
     </>
@@ -275,8 +266,8 @@ export function ListingCardView({ c }: { c: ListingCard }) {
               className={cn(
                 "inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold border transition-colors",
                 picked
-                  ? "bg-flame text-white border-flame"
-                  : "bg-flame/15 text-flame border-flame/40 hover:bg-flame hover:text-white",
+                  ? "bg-flame-600 text-white border-flame"
+                  : "bg-flame/15 text-flame border-flame/40 hover:bg-flame-600 hover:text-white",
               )}
             >
               <span className="hidden sm:inline">{picked ? "המשך לעיצוב" : "עצב עכשיו"}</span>
@@ -352,7 +343,7 @@ export default function ProductGrid({ cards }: { cards: ListingCard[] }) {
               aria-current={i === at ? "page" : undefined}
               className={cn(
                 "w-8 h-8 rounded-lg text-sm font-bold transition-colors",
-                i === at ? "bg-flame text-white" : "text-ink-400 border border-ink-800 hover:border-ink-600 hover:text-ink-100",
+                i === at ? "bg-flame-600 text-white" : "text-ink-400 border border-ink-800 hover:border-ink-600 hover:text-ink-100",
               )}
             >
               {i + 1}

@@ -94,7 +94,7 @@ export default function Header() {
               <Icon name="package" size={18} />
               {cartCount > 0 && (
                 <span
-                  className="absolute -top-1 -right-1 h-5 min-w-[20px] px-1 rounded-full bg-flame text-white text-[10px] font-black flex items-center justify-center leading-none"
+                  className="absolute -top-1 -right-1 h-5 min-w-[20px] px-1 rounded-full bg-flame-600 text-white text-[10px] font-black flex items-center justify-center leading-none"
                   dir="ltr"
                 >
                   {cartCount > 9 ? "9+" : cartCount}

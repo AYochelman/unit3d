@@ -95,7 +95,7 @@ export default function HelpBot() {
         aria-expanded={open}
         className={cn(
           "fixed bottom-6 right-6 z-40 inline-flex items-center justify-center h-14 w-14 rounded-full shadow-soft transition-all duration-200 hover:-translate-y-0.5",
-          open ? "bg-ink-800 text-ink-100" : "bg-flame text-white hover:shadow-glow",
+          open ? "bg-ink-800 text-ink-100" : "bg-flame-600 text-white hover:shadow-glow",
         )}
       >
         <Icon name={open ? "x" : "sparkles"} size={24} />
@@ -141,7 +141,7 @@ export default function HelpBot() {
                   className={cn(
                     "max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed",
                     m.from === "me"
-                      ? "bg-flame text-white rounded-br-sm"
+                      ? "bg-flame-600 text-white rounded-br-sm"
                       : "bg-ink-800 text-ink-100 rounded-bl-sm",
                   )}
                 >
@@ -215,7 +215,7 @@ export default function HelpBot() {
               type="submit"
               disabled={!draft.trim()}
               aria-label="שלח"
-              className="h-10 w-10 rounded-xl bg-flame text-white inline-flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed hover:bg-flame/90 transition-colors"
+              className="h-10 w-10 rounded-xl bg-flame-600 text-white inline-flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed hover:bg-flame-700 transition-colors"
             >
               <Icon name="arrowLeft" size={18} />
             </button>

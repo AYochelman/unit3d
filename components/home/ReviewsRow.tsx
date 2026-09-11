@@ -23,7 +23,11 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
   b2b: "cyan",
 };
 
-const AVG = (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1);
+// NaN when there are no reviews yet, which is the honest state: the section
+// below returns null rather than printing a rating nobody gave.
+const AVG = REVIEWS.length
+  ? (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1)
+  : null;
 
 // photoSrc handles the base path GitHub Pages serves the site under; next/image
 // does NOT prefix it onto a local src when images are unoptimised, which is why
@@ -67,10 +71,6 @@ function ReviewCard({ r }: { r: Review }) {
         )}
         <span className="absolute top-2 right-2">
           <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>
-        </span>
-        <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border backdrop-blur bg-good/15 text-good border-good/40">
-          <Icon name="check" size={9} strokeWidth={3} />
-          רכישה מאומתת
         </span>
       </div>
 
@@ -132,6 +132,12 @@ function Track({ items, reverse }: { items: Review[]; reverse?: boolean }) {
  * seamless loop. Motion is disabled under prefers-reduced-motion (globals.css).
  */
 export default function ReviewsRow() {
+  // No reviews, no section. A shop that has not sold anything yet does not
+  // get to show a five-star wall — the invited review form on /reviews is what
+  // fills this, and until it does the home page simply goes on to the next
+  // block.
+  if (!REVIEWS.length) return null;
+
   const half = Math.ceil(REVIEWS.length / 2);
   return (
     <section className="py-12 md:py-16 overflow-hidden">

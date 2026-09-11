@@ -498,6 +498,7 @@ function TextProps({ el, onPatch }: { el: DesignTextElement; onPatch: (p: Partia
     <div className="grid gap-3">
       <div className="grid grid-cols-[1fr_auto] gap-2">
         <input
+          aria-label="הטקסט על העיצוב"
           value={el.text}
           onChange={(e) => onPatch({ text: e.target.value.slice(0, 40) })}
           className="h-9 px-3 rounded-lg bg-ink-900 border border-ink-700 text-sm focus:border-flame outline-none"

@@ -20,8 +20,13 @@ const config: Config = {
           800: "#1C1C1F",
           700: "#2A2A2E",
           600: "#3A3A3F",
-          500: "#48484C",
-          400: "#8E8E93",
+          // 500 and 400 are the muted text greys, and on a dark page a muted
+          // grey has to be LIGHTER, not darker. #48484C gave 2.17:1 on the page
+          // background — unreadable, and it was set as the text colour in 185
+          // places. #85858B is 4.63:1 at worst, which clears WCAG AA. 400 moved
+          // with it so the two tones still read as two tones.
+          500: "#85858B",
+          400: "#A5A5AA",
           300: "#C7C7CC",
           200: "#E5E5EA",
           100: "#F2F2F4",

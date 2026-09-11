@@ -107,7 +107,7 @@ export default function PersonalizeClient() {
           <div className="font-bold truncate">{item.name}</div>
           <div className="font-mono text-xs text-ink-400 mt-0.5" dir="ltr">{fmtILS(item.price)}</div>
         </div>
-        <Link href={item.href} className="shrink-0 text-xs font-semibold text-cyan2 hover:underline">
+        <Link href={item.href} className="shrink-0 text-xs font-semibold text-cyan2 underline hover:no-underline">
           לעמוד המוצר
         </Link>
       </div>

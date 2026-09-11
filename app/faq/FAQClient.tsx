@@ -24,7 +24,7 @@ export default function FAQClient() {
                 className={cn(
                   "shrink-0 inline-flex items-center justify-center h-8 w-8 rounded-full border transition-all duration-200",
                   isOpen
-                    ? "rotate-45 bg-flame border-flame text-white"
+                    ? "rotate-45 bg-flame-600 border-flame text-white"
                     : "border-ink-700 text-ink-300",
                 )}
               >

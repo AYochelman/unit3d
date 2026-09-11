@@ -63,7 +63,7 @@ const INCLUDED: { iconKey: IconName; title: string; desc: string }[] = [
   { iconKey: "truck", title: "משלוח מרוכז", desc: "למשרד אחד או לכמה כתובות. הכל מתואם." },
 ];
 
-const CLIENTS = ["▲ MoonTech", "◆ Pixie", "● Orca Labs", "■ Halo HR", "⬢ Nimbus", "✦ Forge"];
+// The "PRODUCED FOR" client wall is gone — see the note in B2BBlock.tsx.
 
 export default function B2BClient() {
   // Real, brandable products with real photographs, instead of a page that only
@@ -365,24 +365,6 @@ export default function B2BClient() {
       </section>
 
       {/* Clients */}
-      <section className="py-12 border-t border-ink-800">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 text-center">
-          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-4">
-            PRODUCED FOR
-          </div>
-          <div className="flex flex-wrap justify-center gap-2">
-            {CLIENTS.map((c) => (
-              <span
-                key={c}
-                className="text-sm px-3 py-1.5 rounded-full bg-ink-900 border border-ink-800 text-ink-300 font-mono"
-                dir="ltr"
-              >
-                {c}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
