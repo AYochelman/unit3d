@@ -17,11 +17,17 @@ permissions:
   pages: write
   id-token: write
 
-# Never run two deploys at once. NOT cancel-in-progress: a push to `preview`
-# would otherwise cancel a live deploy that was already running — which is
-# exactly what happened once, and the live site silently kept the old build.
+# Never run two deploys at once — but only against runs on the SAME branch.
+#
+# Two lessons, both learned the hard way:
+#   * cancel-in-progress: true let a push to `preview` kill a live deploy that
+#     was already running, and the live site silently kept the old build.
+#   * even with it off, a queued run is superseded by a newer one in the same
+#     group — so a `preview` push could discard a `main` deploy that had not
+#     started yet. `preview` runs do not deploy at all, so they have no business
+#     sharing a queue with the ones that do.
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
