@@ -22,6 +22,8 @@ import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import ReviewForm from "@/components/ReviewForm";
 import BodyClass from "@/components/ui/BodyClass";
 import { useAdminStore } from "@/lib/admin-store";
+import ModelDownload from "@/components/admin/ModelDownload";
+import { modelSourceById } from "@/lib/model-source";
 import { estimateCost } from "@/lib/costing";
 import { suggestPrice } from "@/lib/imported";
 import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
@@ -555,6 +557,16 @@ export default function ProductDetailClient({ id }: { id: string }) {
             fragile={p.category === "statues"}
             qty={qty}
           />
+
+          {adminUnlocked && (
+            <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-ink-800 bg-ink-900">
+              <div className="min-w-0">
+                <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500">ADMIN</div>
+                <div className="text-xs text-ink-400 truncate">הקובץ להדפסה של הפריט הזה</div>
+              </div>
+              <ModelDownload model={modelSourceById(id)} className="shrink-0" />
+            </div>
+          )}
 
           {adminUnlocked && (
             <AdminCostPanel

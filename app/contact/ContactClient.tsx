@@ -5,6 +5,7 @@ import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
+import { modelSourceFromMeta } from "@/lib/model-source";
 import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
@@ -282,12 +283,18 @@ export default function ContactClient() {
               inquiry: inquiries.find((q) => q.id === inquiry)?.label ?? "",
               delivery,
               ...(message.trim() ? { note: message.trim() } : {}),
-              lines: items.map((it) => ({
-                title: it.baseTitle,
-                summary: it.summary,
-                qty: it.qty,
-                price: it.price ?? null,
-              })),
+              lines: items.map((it) => {
+                // Each page writes its own key into meta; this normalises them
+                // to the one id the admin can look a source file up by.
+                const src = modelSourceFromMeta(it.meta);
+                return {
+                  title: it.baseTitle,
+                  summary: it.summary,
+                  qty: it.qty,
+                  price: it.price ?? null,
+                  ...(src?.id ? { itemId: src.id } : {}),
+                };
+              }),
               itemsTotal,
               // Re-checked at the moment of sending: a code that expired while
               // the page sat open must not travel with the order.

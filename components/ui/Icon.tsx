@@ -12,6 +12,7 @@ export type IconName =
   | "moon"
   | "check"
   | "upload"
+  | "download"
   | "play"
   | "star"
   | "search"
@@ -93,6 +94,14 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
       <polyline points="17 8 12 3 7 8" />
       <line x1="12" y1="3" x2="12" y2="15" />
+    </>
+  ),
+  // The same tray, arrow the other way.
+  download: (
+    <>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
     </>
   ),
   play: <polygon points="5 3 19 12 5 21 5 3" />,

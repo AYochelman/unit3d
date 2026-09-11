@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
+import ModelDownload from "./ModelDownload";
+import { modelSourceForLine } from "@/lib/model-source";
 import Pill from "@/components/ui/Pill";
 import { Input, Textarea } from "@/components/ui/Field";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
@@ -437,21 +439,27 @@ function OrderRow({
                     </span>
                     <span className="font-mono text-xs">{l.price == null ? "לפי הזמנה" : fmtILS(l.price)}</span>
                   </div>
-                  {state === "approved" && (
-                    <button
-                      type="button"
-                      onClick={() => onMarkLine(i, !lineDone(o, i))}
-                      className={cn(
-                        "mt-2 inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg text-[11px] border transition-colors",
-                        lineDone(o, i)
-                          ? "border-good text-good bg-good/10"
-                          : "border-ink-700 text-ink-300 hover:border-ink-600",
-                      )}
-                    >
-                      <Icon name="check" size={11} strokeWidth={3} />
-                      {lineDone(o, i) ? "מוכן" : "סמן כמוכן"}
-                    </button>
-                  )}
+                  {/* The file to print, on the line that needs it — at every
+                      stage, not only after approval: deciding whether to take
+                      an order often means looking at the model first. */}
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <ModelDownload model={modelSourceForLine(l)} size="sm" />
+                    {state === "approved" && (
+                      <button
+                        type="button"
+                        onClick={() => onMarkLine(i, !lineDone(o, i))}
+                        className={cn(
+                          "inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg text-[11px] border transition-colors",
+                          lineDone(o, i)
+                            ? "border-good text-good bg-good/10"
+                            : "border-ink-700 text-ink-300 hover:border-ink-600",
+                        )}
+                      >
+                        <Icon name="check" size={11} strokeWidth={3} />
+                        {lineDone(o, i) ? "מוכן" : "סמן כמוכן"}
+                      </button>
+                    )}
+                  </div>
                   <ul className="mt-1 space-y-0.5 text-[11px] text-ink-400">
                     {l.summary.map((x) => <li key={x}>{x}</li>)}
                   </ul>

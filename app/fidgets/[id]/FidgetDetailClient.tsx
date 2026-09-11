@@ -23,6 +23,8 @@ import { filamentsFor, useMaterials } from "@/lib/palette";
 import { nearestColor, offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
+import ModelDownload from "@/components/admin/ModelDownload";
+import { modelSourceById } from "@/lib/model-source";
 import { useLivePrice } from "@/lib/live-price";
 import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
@@ -619,6 +621,16 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           <CheaperOptions productName={f.name} />
 
           <ShippingEstimate grams={weightG} qty={qty} />
+
+          {adminUnlocked && (
+            <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-ink-800 bg-ink-900">
+              <div className="min-w-0">
+                <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500">ADMIN</div>
+                <div className="text-xs text-ink-400 truncate">הקובץ להדפסה של הפריט הזה</div>
+              </div>
+              <ModelDownload model={modelSourceById(id)} className="shrink-0" />
+            </div>
+          )}
 
           {adminUnlocked && (
             <AdminCostPanel

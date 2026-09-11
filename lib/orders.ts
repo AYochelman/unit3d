@@ -33,6 +33,15 @@ export type OrderLine = {
   summary: string[];
   qty: number;
   price: number | null;
+  /**
+   * Which catalogue item this line is, so the admin can open the right source
+   * file without reading the name and searching for it.
+   *
+   * Optional because every order placed before this existed has none — those
+   * fall back to matching the title (lib/model-source.ts), which is exact-match
+   * only. A near-miss would hand the owner the wrong file to print.
+   */
+  itemId?: string;
 };
 
 export type OrderDecision = "pending" | "approved" | "rejected" | "refunded";
