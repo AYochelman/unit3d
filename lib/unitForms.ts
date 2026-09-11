@@ -156,8 +156,12 @@ export const UNIT_FORMS: UnitForm[] = [
     desc: "נרתיק קשיח שהחפיסה נכנסת אליו, הסמל בחזית.",
     // A standard 20-pack is 88x58x23mm; the sleeve is that plus wall and clearance.
     dim: "92×62×27mm",
-    grams: 42,
-    hours: 3.5,
+    // The shop already sells this exact body on the smoking shelf, and the card
+    // below now shows THAT print. So the weight and the time are its real
+    // published figures rather than my estimate — a card that shows one object
+    // and prices another is the kind of thing a customer notices at the door.
+    grams: 64,
+    hours: 1.33,
     // PLA like the rest of the bodies, so the colour list stays one list — but
     // this one lives in a pocket and in a car, and PLA is the plastic that
     // softens on a dashboard in the sun. Named, not silently swapped.
@@ -165,7 +169,8 @@ export const UNIT_FORMS: UnitForm[] = [
     recommends: { material: "petg", why: "לא מתעוות ברכב בשמש" },
     group: "everyday",
     art: "cigcase",
-    price: 85,
+    photo: shelfPhoto("mw-713529"),
+    price: 60,
   },
   {
     id: "ashtray",
