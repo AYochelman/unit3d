@@ -81,11 +81,6 @@ export function productToCard(p: Product): ListingCard {
 export function ListingCardView({ c }: { c: ListingCard }) {
   const stock = useAdminStore((s) => s.stock);
   const [askRestock, setAskRestock] = useState(false);
-  // Personalised products only: a click picks the card, and the footer button
-  // then opens the designer. Landing inside an editor because you tapped a
-  // photograph is a jump worth asking about first — an ordinary product page
-  // is not, and opens on the first click.
-  const [picked, setPicked] = useState(false);
   // The designer's clip, where one exists. It plays while the pointer is on
   // the card and rewinds when it leaves — the way MakerWorld shows a fidget
   // actually clicking, which no still photograph manages.
@@ -128,12 +123,6 @@ export function ListingCardView({ c }: { c: ListingCard }) {
       "motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:focus-within:translate-y-0 motion-reduce:active:scale-100",
     );
 
-  /** Pick the card without leaving the page. */
-  const pick = { onClick: () => setPicked(true), role: "button", tabIndex: 0,
-    onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setPicked(true); }
-    } } as const;
-  const ring = picked ? "border-flame/60 ring-1 ring-flame/40" : "";
 
   const body = (
     <>
@@ -253,38 +242,40 @@ export function ListingCardView({ c }: { c: ListingCard }) {
     );
   }
 
-  // Personalised products open the designer, because writing the name on it IS
-  // the purchase. The product page stays one click away on the "פרטים" link —
-  // it can't be nested inside the card link, so the footer sits outside it.
+  /*
+   * Personalised products: the card opens the product page, the button opens
+   * the designer.
+   *
+   * Tapping the photograph used to only mark the card as "picked" — no
+   * navigation, and on a phone not even a visible change, because the label
+   * that was supposed to swap to "המשך לעיצוב" is `hidden sm:inline`. On 55 of
+   * the catalogue's products a tap therefore did nothing at all, which reads as
+   * a broken card rather than as a question being asked.
+   *
+   * The original caution still stands and is still honoured: being dropped
+   * inside an editor because you touched a picture IS a bigger jump than
+   * opening a page. So the picture now does what it does on every other card —
+   * opens the details — and the designer stays its own deliberate click.
+   *
+   * The two links are siblings, never nested: an <a> inside an <a> is invalid
+   * and the inner one stops working.
+   */
   if (c.personalizable && c.designHref) {
     return (
-      <div className={cn(shell, "h-full", ring)} {...hover}>
-        <div className="flex flex-col flex-1 cursor-pointer" {...pick}>
+      <div className={cn(shell, "h-full")} {...hover}>
+        <Link href={c.href} className="flex flex-col flex-1">
           {body}
-        </div>
+        </Link>
         <div className="px-3 pb-3 flex items-center justify-between gap-1.5">
           {priceRow}
-          <div className="flex items-center gap-1">
-            <Link
-              href={c.href}
-              className="px-2 py-1 rounded-md text-[11px] font-semibold text-ink-400 border border-ink-800 hover:border-ink-600 hover:text-ink-200 transition-colors"
-            >
-              פרטים
-            </Link>
-            <Link
-              href={c.designHref}
-              className={cn(
-                "inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold border transition-colors",
-                picked
-                  ? "bg-flame-600 text-white border-flame"
-                  : "bg-flame/15 text-flame border-flame/40 hover:bg-flame-600 hover:text-white",
-              )}
-            >
-              <span className="hidden sm:inline">{picked ? "המשך לעיצוב" : "עצב עכשיו"}</span>
-              <span className="sm:hidden">עצב</span>
-              <Icon name="arrowLeft" size={11} />
-            </Link>
-          </div>
+          <Link
+            href={c.designHref}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold border transition-colors bg-flame/15 text-flame border-flame/40 hover:bg-flame-600 hover:text-white"
+          >
+            <span className="hidden sm:inline">עצב עכשיו</span>
+            <span className="sm:hidden">עצב</span>
+            <Icon name="arrowLeft" size={11} />
+          </Link>
         </div>
       </div>
     );
