@@ -442,12 +442,11 @@ export default function LivestreamClient() {
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">THE NUMBERS</div>
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה יצא מהמדפסת הזאת.</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { label: "הדפסות שהסתיימו", value: String(stats.ok) },
               { label: "שעות הדפסה", value: String(stats.hours) },
               { label: "בחודש האחרון", value: String(stats.lastMonth) },
-              { label: "אחוז הצלחה", value: stats.successRate != null ? `${stats.successRate}%` : "—" },
             ].map((s) => (
               <div key={s.label} className="p-5 rounded-2xl bg-ink-900 border border-ink-800">
                 <div className="font-mono text-3xl font-black text-flame tabular-nums" dir="ltr">{s.value}</div>
