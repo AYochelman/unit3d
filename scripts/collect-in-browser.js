@@ -53,6 +53,24 @@
   document.body.appendChild(a);
   a.click();
   a.remove();
-  console.log(`נאספו ${list.length} מודלים. הקובץ ירד בשם makerworld-raw.json`);
-  alert(`נאספו ${list.length} מודלים.\nהקובץ ירד בשם makerworld-raw.json — העבר אותו לתיקיית data בפרויקט.`);
+
+  /*
+     ועוד דרך, קצרה מהקובץ.
+
+     מעביר קבצים בין תיקיות זה ארבעה צעדים שאפשר לטעות בכל אחד מהם. רשימת
+     המספרים מספיקה לבדה: היא נכנסת ישירות לשדה של "מודלים לאישור" ב-GitHub,
+     והשרת שם כן מצליח למשוך את פרטי כל מודל - רק את דפי האוספים הוא לא
+     מצליח לפתוח. לכן הרשימה מועתקת ללוח מיד, ומודפסת גם כאן למקרה שההעתקה
+     נחסמה.
+  */
+  const ids = list.map((x) => x.id).join(" ");
+  navigator.clipboard?.writeText(ids).catch(() => {});
+  console.log(`%c${list.length} מודלים. הרשימה הועתקה ללוח:`, "font-weight:bold");
+  console.log(ids);
+  alert(
+    `נאספו ${list.length} מודלים.\n\n` +
+      `הרשימה הועתקה ללוח — הדבק אותה ב-GitHub:\n` +
+      `Actions ← Model candidates ← Run workflow ← השדה של הקישורים.\n\n` +
+      `(ירד גם קובץ makerworld-raw.json, למי שמעדיף את הדרך הישנה.)`,
+  );
 })();
