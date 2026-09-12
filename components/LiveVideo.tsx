@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * The printer, as video.
@@ -50,18 +50,37 @@ export default function LiveVideo({
 }) {
   const own = useRef<HTMLVideoElement>(null);
   const ref = videoRef ?? own;
-  const [failed, setFailed] = useState(false);
+
+  /**
+   * The callbacks, held still.
+   *
+   * They are written inline by the page, so a new function object arrives on
+   * every render — and this component's setup effect listed them as
+   * dependencies. The page re-renders once a second (it shows a clock), so the
+   * player was torn down and rebuilt once a second, for ever: it would start,
+   * play a fraction of a second, be destroyed mid-frame and start again. On
+   * screen that is not video at all, it is a picture that never moves — which
+   * is exactly what it looked like.
+   *
+   * A ref lets the effect call the CURRENT callback without depending on its
+   * identity, so the player is built once per stream address and left alone.
+   */
+  const cbs = useRef({ onFail, onPlaying, onStall, onDiag });
+  useEffect(() => { cbs.current = { onFail, onPlaying, onStall, onDiag }; });
+  // Refused streams are remembered without re-running the effect either.
+  const failed = useRef(false);
 
   useEffect(() => {
+    failed.current = false;
     const video = ref.current;
     if (!video) return;
     let alive = true;
     let destroy: (() => void) | undefined;
 
     const give = () => {
-      if (!alive || failed) return;
-      setFailed(true);
-      onFail?.();
+      if (!alive || failed.current) return;
+      failed.current = true;
+      cbs.current.onFail?.();
     };
 
     // Safari and iOS play this natively, and doing so uses far less battery
@@ -69,7 +88,7 @@ export default function LiveVideo({
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = src;
       const nativeFail = () => {
-        onDiag?.(`native ${video.error?.code ?? "?"}: ${video.error?.message || "לא ניתן לנגן"}`);
+        cbs.current.onDiag?.(`native ${video.error?.code ?? "?"}: ${video.error?.message || "לא ניתן לנגן"}`);
         give();
       };
       video.addEventListener("error", nativeFail);
@@ -97,7 +116,7 @@ export default function LiveVideo({
         hls.on(Hls.Events.ERROR, (_e, data) => {
           if (!data.fatal) return;
           const code = data.response?.code;
-          onDiag?.(`${data.details}${code ? ` (${code})` : ""}`);
+            cbs.current.onDiag?.(`${data.details}${code ? ` (${code})` : ""}`);
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
             if (++netTries > 3) return give();
             hls.startLoad();
@@ -111,7 +130,9 @@ export default function LiveVideo({
     }
 
     return () => { alive = false; destroy?.(); };
-  }, [src, failed, onFail, onDiag, ref]);
+    // Deliberately ONLY the stream address. Anything else here rebuilds the
+    // player mid-playback; see the note on `cbs` above.
+  }, [src, ref]);
 
   return (
     <video
