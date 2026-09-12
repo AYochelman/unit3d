@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-08T21:09:18.180Z
-// Items: 394
+// Items: 426
 
 import type { ImportedModel } from "./imported";
 
@@ -12193,6 +12193,905 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "statues"
     ]
+  },
+  {
+    "id": "mw-38255",
+    "name": "Box - small and print in place",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 1.25,
+    "grams": 42,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfe4b65c9e56ff9/design/2024-05-14_5b05d27be216e.webp?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "YogiTech",
+    "sourceUrl": "https://makerworld.com/en/models/38255-box-small-and-print-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 86463,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 1.27,
+    "gramsAms": 35,
+    "plates": [
+      {
+        "g": 42,
+        "h": 1.25
+      },
+      {
+        "g": 78,
+        "h": 2.19
+      },
+      {
+        "g": 133,
+        "h": 4.05
+      }
+    ]
+  },
+  {
+    "id": "mw-50835",
+    "name": "Pokemon-Pikachu(NO SUPPORT)",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 0.52,
+    "grams": 2,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US74bc2fe4f032d4/design/2024-09-28_fcc3e902f19ea.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "SnapPrint3D_SuperCrazyPrints",
+    "sourceUrl": "https://makerworld.com/en/models/50835-pokemon-pikachu-no-support",
+    "license": "BY-ND",
+    "downloads": 75122,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ],
+    "hoursAms": 6.89,
+    "gramsAms": 100,
+    "plates": [
+      {
+        "g": 2,
+        "h": 0.52
+      },
+      {
+        "g": 637,
+        "h": 15.51
+      },
+      {
+        "g": 1282,
+        "h": 29.61
+      }
+    ]
+  },
+  {
+    "id": "mw-129872",
+    "name": "Articulated Skeleton Dragon",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 2.44,
+    "grams": 36,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2bcdfcd556d945/design/6b50c7c4e806a6d8.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "3D design",
+    "sourceUrl": "https://makerworld.com/en/models/129872-articulated-skeleton-dragon",
+    "license": "Standard Digital File License",
+    "downloads": 81701,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 36,
+        "h": 2.44
+      },
+      {
+        "g": 55,
+        "h": 2.9
+      },
+      {
+        "g": 103,
+        "h": 5.25
+      }
+    ]
+  },
+  {
+    "id": "mw-171580",
+    "name": "Stand for Toothpaste V3.0",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.48,
+    "grams": 46,
+    "size": "~100mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US3fc31dc9b20299/design/2024-02-04_70a87d8fcc52d.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "3DKUB - (Ruvim KUB)",
+    "sourceUrl": "https://makerworld.com/en/models/171580-stand-for-toothpaste-v3-0",
+    "license": "Standard Digital File License",
+    "downloads": 65098,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.44,
+    "gramsAms": 42
+  },
+  {
+    "id": "mw-198362",
+    "name": "Vernier Caliper Ruler - Two Lengths",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 1.33,
+    "grams": 36,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US20b733ea7bdd6/design/2024-02-22_2ef61241b4db6.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "3D Print Masters Hub",
+    "sourceUrl": "https://makerworld.com/en/models/198362-vernier-caliper-ruler-two-lengths",
+    "license": "Standard Digital File License",
+    "downloads": 69200,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.66,
+    "gramsAms": 43
+  },
+  {
+    "id": "mw-219200",
+    "name": "Easter bunny",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 1.13,
+    "grams": 19,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6361a780eaecf9/design/2024-03-02_f0557192e192f.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "SabreDesign",
+    "sourceUrl": "https://makerworld.com/en/models/219200-easter-bunny",
+    "license": "Standard Digital File License",
+    "downloads": 82595,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 4.22,
+    "gramsAms": 39,
+    "plates": [
+      {
+        "g": 19,
+        "h": 1.13
+      },
+      {
+        "g": 28,
+        "h": 2.33
+      },
+      {
+        "g": 49,
+        "h": 4.12
+      },
+      {
+        "g": 95,
+        "h": 5.73
+      },
+      {
+        "g": 154,
+        "h": 13.44
+      },
+      {
+        "g": 1169,
+        "h": 33.53
+      }
+    ]
+  },
+  {
+    "id": "mw-420924",
+    "name": "Fidget Morf Worm",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.38,
+    "grams": 47,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USb6ba9efcd33dbe/design/2024-04-09_4aabe599e356e.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AmandaM",
+    "sourceUrl": "https://makerworld.com/en/models/420924-fidget-morf-worm",
+    "license": "CC0",
+    "downloads": 79448,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.4,
+    "gramsAms": 39,
+    "plates": [
+      {
+        "g": 47,
+        "h": 2.38
+      },
+      {
+        "g": 148,
+        "h": 6.1
+      }
+    ]
+  },
+  {
+    "id": "mw-498558",
+    "name": "Articulated Mini Baby Dragon",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 0.72,
+    "grams": 7,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/DSM00000000498558/design/2024-06-16_f2c5a23b993d4.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "thierry.57",
+    "sourceUrl": "https://makerworld.com/en/models/498558-articulated-mini-baby-dragon",
+    "license": "Standard Digital File License",
+    "downloads": 72164,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.27,
+    "gramsAms": 32,
+    "plates": [
+      {
+        "g": 7,
+        "h": 0.72
+      },
+      {
+        "g": 19,
+        "h": 1.54
+      },
+      {
+        "g": 26,
+        "h": 2.93
+      }
+    ]
+  },
+  {
+    "id": "mw-707208",
+    "name": "clicker fidget - print-in-place",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.32,
+    "grams": 8,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7fc25c68cb473f/design/2024-10-16_65fc0515f8bf2.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Kit Crafters",
+    "sourceUrl": "https://makerworld.com/en/models/707208-clicker-fidget-print-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 84234,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.62,
+    "gramsAms": 11
+  },
+  {
+    "id": "mw-819327",
+    "name": "Phone stand",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 1.68,
+    "grams": 71,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US1fe3260294cd56/design/2024-11-24_69c4543ac71f8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "K2 Tech Designs",
+    "sourceUrl": "https://makerworld.com/en/models/819327-phone-stand",
+    "license": "Standard Digital File License",
+    "downloads": 77762,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 4.85,
+    "gramsAms": 77,
+    "plates": [
+      {
+        "g": 71,
+        "h": 1.68
+      },
+      {
+        "g": 136,
+        "h": 3.52
+      },
+      {
+        "g": 320,
+        "h": 7
+      }
+    ]
+  },
+  {
+    "id": "mw-824320",
+    "name": "Dragon Egg (Hidden Seam)",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 9.17,
+    "grams": 128,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US9eed06ae838fd/design/2024-11-26_e54430fb329cf8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "squinn",
+    "sourceUrl": "https://makerworld.com/en/models/824320-dragon-egg-hidden-seam",
+    "license": "Standard Digital File License",
+    "downloads": 76067,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 21.34,
+    "gramsAms": 343,
+    "plates": [
+      {
+        "g": 128,
+        "h": 9.17
+      },
+      {
+        "g": 174,
+        "h": 11.18
+      },
+      {
+        "g": 267,
+        "h": 16.17
+      },
+      {
+        "g": 451,
+        "h": 24.91
+      }
+    ]
+  },
+  {
+    "id": "mw-860190",
+    "name": "Small Vise No Hardware Required",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 3.65,
+    "grams": 100,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2dd58b8d5f33dc/design/2024-12-08_a90ac91cbf93c.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Ms",
+    "sourceUrl": "https://makerworld.com/en/models/860190-small-vise-no-hardware-required",
+    "license": "Standard Digital File License",
+    "downloads": 35769,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 100,
+        "h": 3.65
+      },
+      {
+        "g": 553,
+        "h": 11.61
+      }
+    ]
+  },
+  {
+    "id": "mw-919124",
+    "name": "V3 Series - Impossible Passthrough Cone - Mk 2",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.13,
+    "grams": 33,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USa85d1c6d202941/design/2024-12-27_2f172a7e4ed22.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "RJ Design",
+    "sourceUrl": "https://makerworld.com/en/models/919124-v3-series-impossible-passthrough-cone-mk-2",
+    "license": "Standard Digital File License",
+    "downloads": 74930,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.21,
+    "gramsAms": 34
+  },
+  {
+    "id": "mw-953502",
+    "name": "Collapsible Stack Organizer",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 4.05,
+    "grams": 142,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US413b32df3af2a1/design/2025-01-04_62a69f645384b.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Mc2.project3D",
+    "sourceUrl": "https://makerworld.com/en/models/953502-collapsible-stack-organizer",
+    "license": "Standard Digital File License",
+    "downloads": 36925,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.3,
+    "gramsAms": 4,
+    "plates": [
+      {
+        "g": 142,
+        "h": 4.05
+      },
+      {
+        "g": 229,
+        "h": 6.4
+      }
+    ]
+  },
+  {
+    "id": "mw-961340",
+    "name": "Satisfying Fabric",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 4.68,
+    "grams": 48,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US51fde9c5da3b00/design/2025-01-06_f47e2eda8f29f.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Caleb Wride",
+    "sourceUrl": "https://makerworld.com/en/models/961340-satisfying-fabric",
+    "license": "Standard Digital File License",
+    "downloads": 85832,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "flexi"
+    ],
+    "hoursAms": 8.74,
+    "gramsAms": 53,
+    "plates": [
+      {
+        "g": 48,
+        "h": 4.68
+      },
+      {
+        "g": 95,
+        "h": 9.11
+      }
+    ]
+  },
+  {
+    "id": "mw-1024791",
+    "name": "Shoe Organizer With Pull Tab.",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.03,
+    "grams": 103,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2169962a29f8ae/design/2025-01-21_afe1d7d42c9c6.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "MeasureOnce",
+    "sourceUrl": "https://makerworld.com/en/models/1024791-shoe-organizer-with-pull-tab",
+    "license": "Standard Digital File License",
+    "downloads": 31160,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 103,
+        "h": 2.03
+      },
+      {
+        "g": 207,
+        "h": 4.89
+      }
+    ]
+  },
+  {
+    "id": "mw-1087279",
+    "name": "Small smartphone stand  -  print in place design",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 0.62,
+    "grams": 17,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US9ed59c39f449a5/design/03f80702c023e3a0.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "mgm86",
+    "sourceUrl": "https://makerworld.com/en/models/1087279-small-smartphone-stand-print-in-place-design",
+    "license": "Standard Digital File License",
+    "downloads": 75420,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 31.35,
+    "gramsAms": 396,
+    "plates": [
+      {
+        "g": 17,
+        "h": 0.62
+      },
+      {
+        "g": 39,
+        "h": 1.49
+      },
+      {
+        "g": 55,
+        "h": 2.18
+      }
+    ]
+  },
+  {
+    "id": "mw-1453243",
+    "name": "Expanded Sensory Fidget Star - WITH HANDLES",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 3.63,
+    "grams": 152,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US615afc5daa4e62/design/2025-05-25_fb0bbfab9abfe.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Dave'sPrints",
+    "sourceUrl": "https://makerworld.com/en/models/1453243-expanded-sensory-fidget-star-with-handles",
+    "license": "Standard Digital File License",
+    "downloads": 82749,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 8.23,
+    "gramsAms": 234
+  },
+  {
+    "id": "mw-1702633",
+    "name": "X-Wing Kit Card",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 17.37,
+    "grams": 295,
+    "size": "~160mm",
+    "colors": 3,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7e691af03593cd/design/2025-08-15_d0b4c8cd4e4d98.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Galactic Armory",
+    "sourceUrl": "https://makerworld.com/en/models/1702633-x-wing-kit-card",
+    "license": "Standard Digital File License",
+    "downloads": 30166,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ],
+    "hoursAms": 6.27,
+    "gramsAms": 84
+  },
+  {
+    "id": "mw-1772809",
+    "name": "Overengineered Mechanical Hand V2 - 4 Fingers!",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 5.26,
+    "grams": 112,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USb1e95a9889e970/design/2025-09-07_a261b97b3ce88.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "TLPOD",
+    "sourceUrl": "https://makerworld.com/en/models/1772809-overengineered-mechanical-hand-v2-4-fingers",
+    "license": "Standard Digital File License",
+    "downloads": 78762,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 6.76,
+    "gramsAms": 122
+  },
+  {
+    "id": "mw-2433278",
+    "name": "Twisty Dragon Egg Fidget",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 6.11,
+    "grams": 109,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US53e79415a183f9/design/23af55e4afa04531.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "NUKDDD",
+    "sourceUrl": "https://makerworld.com/en/models/2433278-twisty-dragon-egg-fidget",
+    "license": "Standard Digital File License",
+    "downloads": 74522,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 7.35,
+    "gramsAms": 133
+  },
+  {
+    "id": "mw-2459711",
+    "name": "Fluffy Tail Cute Flexi Cat Toy / Keychain",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 2.86,
+    "grams": 51,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6b941ba8302236/design/2c7d72fa7a1a4499.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Fluffy Tails",
+    "sourceUrl": "https://makerworld.com/en/models/2459711-fluffy-tail-cute-flexi-cat-toy-keychain",
+    "license": "Standard Digital File License",
+    "downloads": 45640,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 19.81,
+    "gramsAms": 272
+  },
+  {
+    "id": "mw-3265508",
+    "name": "japandi cotton swab holder",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 3.05,
+    "grams": 67,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US116f21c21d591/design/42ada09706e7dd9c.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "ABO Design",
+    "sourceUrl": "https://makerworld.com/en/models/3265508-japandi-cotton-swab-holder",
+    "license": "Standard Digital File License",
+    "downloads": 275,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3266486",
+    "name": "Cute Fidget Flexi Snake - Free to Sell",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 1.74,
+    "grams": 24,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7760d0554abfd0/design/44fe241484e91fb4.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "BeninManc",
+    "sourceUrl": "https://makerworld.com/en/models/3266486-cute-fidget-flexi-snake-free-to-sell",
+    "license": "CC0",
+    "downloads": 335,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3269395",
+    "name": "PocketPal - The Minimalist Desk Companion",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 1.28,
+    "grams": 15,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US207d864476496b/design/930e8b61c660487b.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Spennolio",
+    "sourceUrl": "https://makerworld.com/en/models/3269395-pocketpal-the-minimalist-desk-companion",
+    "license": "Standard Digital File License",
+    "downloads": 255,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.98,
+    "gramsAms": 13
+  },
+  {
+    "id": "mw-3271845",
+    "name": "Titan God Atlas - Gaming Controller Stand-Xbox/PS5",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 8.28,
+    "grams": 282,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfdb316aa76a565/design/fd58f97ae3b93da8.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "ShapeShift 3D Creations",
+    "sourceUrl": "https://makerworld.com/en/models/3271845-titan-god-atlas-gaming-controller-stand-xbox-ps5",
+    "license": "Standard Digital File License",
+    "downloads": 82,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "statues",
+      "home"
+    ]
+  },
+  {
+    "id": "mw-3272219",
+    "name": "DO NOT DUMB - Funny Warning Sign & Fridge Magnet",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 8.2,
+    "grams": 148,
+    "size": "~160mm",
+    "colors": 3,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US874e5862e33b26/design/8b0270202f113fe3.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Waldog",
+    "sourceUrl": "https://makerworld.com/en/models/3272219-do-not-dumb-funny-warning-sign-fridge-magnet",
+    "license": "Standard Digital File License",
+    "downloads": 56,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3273571",
+    "name": "Cabinet Door Towel Holder",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 4.3,
+    "grams": 82,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US47781d382e26ee/design/0a8b263baa7e7437.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Martin S.",
+    "sourceUrl": "https://makerworld.com/en/models/3273571-cabinet-door-towel-holder",
+    "license": "Standard Digital File License",
+    "downloads": 198,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3273702",
+    "name": "Cat Candy Bowl – Cute Cat Storage & Treat Holder",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.38,
+    "grams": 65,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USeef3d6f84ab096/design/043a7c960392ceae.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Duo3DPrint",
+    "sourceUrl": "https://makerworld.com/en/models/3273702-cat-candy-bowl-cute-cat-storage-treat-holder",
+    "license": "Standard Digital File License",
+    "downloads": 87,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 65,
+        "h": 2.38
+      },
+      {
+        "g": 180,
+        "h": 5.1
+      }
+    ]
+  },
+  {
+    "id": "mw-3275036",
+    "name": "Calavera Espartana \"Dios de la Batalla\" - NO AMS",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 9.96,
+    "grams": 310,
+    "size": "~250mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6449d6df5f55a1/design/2380a491c4fccc2a.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "BMaker",
+    "sourceUrl": "https://makerworld.com/en/models/3275036-spartan-skull-god-of-battle-no-ams",
+    "license": "Standard Digital File License",
+    "downloads": 64,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ]
+  },
+  {
+    "id": "mw-3279889",
+    "name": "The Rude Ghost",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 3.03,
+    "grams": 88,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US248612f5cb467f/design/4a3cda7db9bc0292.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "NAI-3D",
+    "sourceUrl": "https://makerworld.com/en/models/3279889-the-rude-ghost",
+    "license": "Standard Digital File License",
+    "downloads": 88,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.4,
+    "gramsAms": 26
+  },
+  {
+    "id": "mw-3290052",
+    "name": "Christmas Tree Kit Card – Spiral Tree Decoration",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.76,
+    "grams": 29,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USa977adafbaa278/design/2ae7559d85322c6e.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Boleq3D Studio",
+    "sourceUrl": "https://makerworld.com/en/models/3290052-christmas-tree-kit-card-spiral-tree-decoration",
+    "license": "Standard Digital File License",
+    "downloads": 29,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
   }
 ];
 
