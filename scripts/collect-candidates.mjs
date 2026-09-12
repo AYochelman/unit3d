@@ -29,10 +29,16 @@ const DECISIONS = path.join(ROOT, "public", "model-decisions.json");
 const SEARCH = (sort, offset) =>
   `https://makerworld.com/api/v1/search-service/select/design2?orderBy=${sort}&designType=0&keyword=&limit=20&offset=${offset}`;
 
-// Four different senses of "popular": what is climbing now, what everyone has
-// printed, what people liked, and what they saved to print later.
-const SORTS = ["trending", "downloadCount", "likeCount", "collectionCount"];
-const PAGES = [0, 20, 40];
+// Senses of "popular", plus what is simply NEW.
+//
+// Popularity alone is a closed loop: the same few hundred models are popular
+// week after week, so once they have all been ruled on the sweep returns
+// plenty and offers nothing, for ever. The queue looked broken when it was
+// only finished. Models published this week are the one source that cannot
+// run out. An orderBy this site does not accept simply contributes nothing —
+// the per-sort line below says which ones actually brought anything back.
+const SORTS = ["trending", "new", "createTime", "downloadCount", "likeCount", "collectionCount"];
+const PAGES = [0, 20, 40, 60, 80];
 const LIMIT = Number(process.env.CANDIDATE_LIMIT || 140);
 
 const WEAPON =
@@ -68,6 +74,7 @@ async function main() {
 
   const found = new Map();
   for (const sort of SORTS) {
+    const before = found.size;
     for (const offset of PAGES) {
       const res = await getJson(SEARCH(sort, offset));
       const hits = res.ok ? res.body.hits ?? [] : [];
@@ -77,11 +84,19 @@ async function main() {
       }
       await sleep(200);
     }
-    log(`  ${sort}: ${found.size} עד כה`);
+    // Per sort, so a name this site does not accept shows up as a zero rather
+    // than as a mystery at the end.
+    log(`  ${sort}: +${found.size - before} (${found.size} עד כה)`);
   }
 
-  const fresh = [...found.entries()].filter(([id]) => !handled.has(id)).slice(0, LIMIT);
-  log(c.b(`\n  ${found.size} נמצאו · ${fresh.length} חדשים\n`));
+  const all = [...found.entries()];
+  const fresh = all.filter(([id]) => !handled.has(id)).slice(0, LIMIT);
+  log(c.b(`\n  ${found.size} נמצאו · ${all.length - fresh.length} כבר טופלו · ${fresh.length} חדשים\n`));
+  // The difference between "the sweep is broken" and "the sweep is finished"
+  // is the whole question when the queue comes up empty, and it used to take a
+  // reading of the code to tell them apart.
+  if (!found.size) log(c.b("  מייקרוורלד לא החזיר כלום - כנראה ה-API השתנה.\n"));
+  else if (!fresh.length) log(c.b(`  הכל כבר טופל (${handled.size} מודלים בחנות או שנדחו). אין חדש להציע.\n`));
 
   const rows = [];
   let dropped = 0;
