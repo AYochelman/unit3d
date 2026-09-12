@@ -175,8 +175,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
   // Back to the shelf the product actually sits on, not the one it nearly fits.
   const BACK_BY_CATEGORY: Partial<Record<typeof p.category, string>> = {
     pets: "/pets", statues: "/statues", screen: "/screen", smoke: "/smoke", trendy: "/trendy", b2b: "/b2b",
+    home: "/home", office: "/office",
   };
-  const backHref = BACK_BY_CATEGORY[p.category] ?? "/home-office";
+  const backHref = BACK_BY_CATEGORY[p.category] ?? "/home";
   const source = p.category === "pets" ? "pets" : "office";
 
   const showBuyBar = sellable && !quoteOnly;

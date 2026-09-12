@@ -8,13 +8,14 @@ import PrinterDot from "./PrinterDot";
 
 const SHOP = [
   { href: "/trendy", label: "טרנדי כרגע" },
-  { href: "/catalog", label: "סמלי יחידה" },
+  { href: "/catalog", label: "לחיילים" },
   { href: "/fidgets", label: "פידג'טים" },
   { href: "/pets", label: "תגים לחיות" },
   { href: "/statues", label: "פסלים" },
   { href: "/screen", label: "סרטים וסדרות" },
   { href: "/smoke", label: "מוצרי עישון" },
-  { href: "/home-office", label: "לבית ולמשרד" },
+  { href: "/home", label: "לבית" },
+  { href: "/office", label: "למשרד" },
   { href: "/configurator", label: "מעצב אישי" },
   { href: "/upload", label: "העלאת קובץ" },
   { href: "/b2b", label: "B2B" },

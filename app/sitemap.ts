@@ -17,7 +17,7 @@ const url = (path: string) => `${SITE}${path === "/" ? "/" : `${path}/`}`;
 /** Shelves and the pages a person browses. */
 const BROWSE = [
   "/trendy", "/catalog", "/fidgets", "/pets", "/statues",
-  "/screen", "/smoke", "/home-office", "/b2b",
+  "/screen", "/smoke", "/home", "/office", "/home-office", "/b2b",
 ];
 
 /** Make-it-yours pages: the designer, personalisation, file upload. */

@@ -73,8 +73,8 @@ const priceOf = (m: ImportedModel): number =>
  * Where a shelf actually lives.
  *
  * The shelf keys are not routes and four of them differ: flexi and fidget both
- * list under /fidgets, home and office share /home-office. Linking to
- * `/${shelf}` sends people to /flexi and /office, which are 404s.
+ * list under /fidgets. Home and office have a shelf each. Linking to
+ * `/${shelf}` would send people to /flexi, which is a 404.
  */
 export const SHELF_ROUTE: Record<ImportedShelf, string> = {
   flexi: "/fidgets",
@@ -82,8 +82,8 @@ export const SHELF_ROUTE: Record<ImportedShelf, string> = {
   statues: "/statues",
   screen: "/screen",
   pets: "/pets",
-  home: "/home-office",
-  office: "/home-office",
+  home: "/home",
+  office: "/office",
   smoke: "/smoke",
   trendy: "/trendy",
   b2b: "/b2b",

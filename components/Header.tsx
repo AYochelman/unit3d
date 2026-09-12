@@ -13,13 +13,14 @@ import { useOrderStore } from "@/lib/order-store";
 const NAV = [
   { href: "/", label: "בית" },
   { href: "/trendy", label: "טרנדי" },
-  { href: "/catalog", label: "סמלי יחידה" },
+  { href: "/catalog", label: "לחיילים" },
   { href: "/fidgets", label: "פידג'טים" },
   { href: "/pets", label: "לחיות" },
   { href: "/statues", label: "פסלים" },
   { href: "/screen", label: "סרטים וסדרות" },
   { href: "/smoke", label: "מוצרי עישון" },
-  { href: "/home-office", label: "בית ומשרד" },
+  { href: "/home", label: "לבית" },
+  { href: "/office", label: "למשרד" },
   { href: "/configurator", label: "מעצב" },
   { href: "/b2b", label: "עסקים" },
 ];

@@ -29,7 +29,7 @@ const CATS: Cat[] = [
   },
   {
     index: "02",
-    title: "סמלי יחידה צה\"ליים",
+    title: "לחיילים — סמלי יחידה",
     cta: "סמלים",
     desc: "מחזיקי מפתחות, פסלי שולחן, מתנות לטקסים.",
     href: "/catalog",
@@ -77,7 +77,7 @@ const CATS: Cat[] = [
     title: "לבית ולמשרד",
     cta: "לבית",
     desc: "מעמדים, מארגנים, תחתיות ושלטים עם השם שלך.",
-    href: "/home-office",
+    href: "/home",
     hue: 260,
     art: "homeoffice",
   },
