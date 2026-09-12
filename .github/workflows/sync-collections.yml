@@ -1,16 +1,13 @@
-# Adds to the shop whatever the owner saved on MakerWorld, and queues what he
-# liked.
+# Queues for approval whatever the owner saved or liked on MakerWorld.
 #
 # He curates from the Bambu Lab app on his phone: a model he wants goes into one
-# of his collections. This reads those collections every night, appends the ones
-# the catalogue does not have, fetches their photos, commits, and asks the site
-# to rebuild — so a model saved in the evening is on the shop in the morning
-# without anyone opening a laptop.
+# of his collections. This reads those collections every night and puts what the
+# catalogue does not already have into /admin -> "מודלים לאישור", so a model
+# saved in the evening is waiting to be approved in the morning.
 #
-# It only ever adds. Existing rows are never rewritten, and a weapon or a model
-# under a non-commercial licence is imported but held out of the shop, exactly
-# as in a manual import. The run summary lists what landed and under which
-# licence.
+# Nothing here reaches the shop on its own: a person still decides model by
+# model. data/collections-status.json records what the run saw, so a run that
+# finds nothing says whether it was blocked, empty, or simply finished.
 name: Sync MakerWorld collections
 
 on:
@@ -86,7 +83,8 @@ jobs:
           # One path a step did not produce must not throw away the rest.
           for p in lib/imported.generated.ts lib/localImages.generated.ts \
                    lib/candidates.generated.ts data/makerworld-raw.json \
-                   data/pending-models.json data/liked-models.json public/img/catalog; do
+                   data/pending-models.json data/liked-models.json \
+                   data/collections-status.json public/img/catalog; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
           if git diff --cached --quiet; then

@@ -501,6 +501,30 @@ async function main() {
     (x) => !known.has(x.id) && !decided.has(x.id) && !seen.has(x.id) && seen.add(x.id),
   );
   log(c.b(`\n  ${wanted.length} בקולקציות · ${likedFresh.length} לייקים · ${fresh.length} חדשים\n`));
+
+  /**
+   * What this run actually saw, in one small file.
+   *
+   * A run that ends with nothing has three different causes — Cloudflare turned
+   * the runner away, the collections are empty, or everything in them is
+   * already ruled on — and telling them apart meant reading a thousand lines of
+   * workflow log. This is the answer, committed beside the data.
+   */
+  try {
+    fs.writeFileSync(
+      path.join(ROOT, "data", "collections-status.json"),
+      `${JSON.stringify({
+        readAt: new Date().toISOString(),
+        signedIn: Boolean((process.env.MAKERWORLD_COOKIE || "").trim()),
+        collections: (collections ?? []).map((x) => x.name),
+        blocked: skipped,
+        inCollections: wanted.length,
+        likesNotInShop: likedFresh.length,
+        newForApproval: fresh.length,
+        alreadyHandled: nominated.length - fresh.length,
+      }, null, 2)}\n`,
+    );
+  } catch { /* a status file is never worth failing the run for */ }
   if (!fresh.length) {
     log(c.d("  אין מה להוסיף לתור — הכל כבר בחנות או כבר הוכרע.\n"));
     summary([], skipped);
