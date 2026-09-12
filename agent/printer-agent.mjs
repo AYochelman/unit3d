@@ -521,6 +521,8 @@ let hlsStartedFor = "";
 let hlsLastStart = 0;
 let sentSegments = new Set();  // what R2 already has
 let hlsWarned = false;
+/** Stamped into this run's segment names so no two runs can share one. */
+let runId = "0";
 /**
  * Whether there is really something to play.
  *
@@ -614,6 +616,7 @@ function startLive() {
   sentSegments = new Set();
   liveOnAir = false;
   hlsLastStart = Date.now();
+  runId = Date.now().toString(36);
   hlsStartedFor = url;
 
   const authed = url.replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
@@ -645,9 +648,23 @@ function startLive() {
     "-an",
     "-f", "hls",
     "-hls_time", String(SEG_SECONDS),
-    "-hls_list_size", "6",
+    // A little more slack than the player needs, so a viewer who falls a
+    // second behind still finds the piece he is asking for.
+    "-hls_list_size", "10",
     "-hls_flags", "delete_segments+independent_segments+temp_file",
-    "-hls_segment_filename", path.join(HLS_DIR, "seg_%05d.ts"),
+    // Every run gets its own name for its pieces.
+    //
+    // They used to be seg_00000, seg_00001 … starting again from zero on every
+    // single run — while being uploaded with "this file never changes, keep it
+    // for a year". Both halves are defensible alone and together they are a
+    // trap: the next print writes DIFFERENT video to the same names, and the
+    // network that serves the bucket keeps handing out the copy it cached from
+    // the print before. The playlist was current and the video inside it was
+    // from another day. That is the "random old footage".
+    //
+    // With a run id in the name, a name means one piece of video for ever, and
+    // the year-long cache is simply true.
+    "-hls_segment_filename", path.join(HLS_DIR, `seg_${runId}_%05d.ts`),
     path.join(HLS_DIR, "stream.m3u8"),
   ];
 

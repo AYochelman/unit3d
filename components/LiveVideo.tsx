@@ -123,10 +123,15 @@ export default function LiveVideo({
         if (!alive) return;
         if (!Hls.isSupported()) { cbs.current.onDiag?.("hlsjs-unsupported"); return give(); }
         const hls = new Hls({
-          // A live view wants to be near the front, and would rather skip than
-          // fall behind: an old frame presented as now is worse than a gap.
-          lowLatencyMode: true,
-          liveSyncDurationCount: 2,
+          // Near the front, but not pressed against it.
+          //
+          // Sitting two segments from the live edge means any hiccup — a piece
+          // that has not finished uploading, a slow second of network — leaves
+          // the player with nothing and it jumps to catch up. Three segments
+          // back costs a few seconds of delay nobody watching a printer will
+          // notice, and buys a picture that runs instead of lurching.
+          lowLatencyMode: false,
+          liveSyncDurationCount: 3,
           maxLiveSyncPlaybackRate: 1.5,
           manifestLoadingMaxRetry: 2,
           levelLoadingMaxRetry: 4,

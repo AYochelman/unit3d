@@ -7,7 +7,7 @@
  * like a fix that did not work. Every tool prints this line first, so the
  * question "is this the new code?" is answered before anything else is read.
  */
-export const VERSION = "2026-09-12.19";
+export const VERSION = "2026-09-12.20";
 
 export const banner = (what) =>
   console.log(`\n  Unit 3D · ${what}\n  agent version ${VERSION}\n`);
