@@ -530,6 +530,34 @@ let hlsWarned = false;
  * a playlist and at least one piece of video have actually reached the bucket.
  */
 let liveOnAir = false;
+/** Set while the previous broadcast is being cleared out of the bucket. */
+let clearing = null;
+
+/**
+ * Leave nothing behind from the previous broadcast.
+ *
+ * The encoder numbers its pieces from zero every time it starts. A new run
+ * therefore overwrites some of the old pieces and leaves the rest — and the
+ * playlist from the old run is still sitting there too, naming exactly those
+ * leftovers. A player that arrives in that moment reads yesterday's playlist,
+ * finds yesterday's pieces, and plays them as if they were live.
+ *
+ * So the bucket is emptied of video before a run starts and after it ends.
+ * Only the pieces and the playlist go; the status file must survive, since it
+ * is what tells the page there is nothing to watch.
+ */
+async function clearBroadcast() {
+  if (!R2) return;
+  try {
+    const keys = await R2.list(`${HLS_KEY}/`);
+    const doomed = keys.filter((k) => k.endsWith(".ts") || k.endsWith("stream.m3u8"));
+    if (!doomed.length) return;
+    await Promise.all(doomed.map((k) => R2.remove(k)));
+    log(`live: cleared ${doomed.length} leftover file${doomed.length === 1 ? "" : "s"} from the last broadcast`);
+  } catch (e) {
+    log("live: could not clear the last broadcast -", e.message);
+  }
+}
 
 /**
  * A broadcast on demand, without waiting for a print.
@@ -577,6 +605,9 @@ function startLive() {
   // give: the still grabber is reading it right now, and from here the encoder
   // writes that still itself.
   stopStream();
+
+  // Nothing from the previous run may still be reachable when this one starts.
+  clearing = clearBroadcast().finally(() => { clearing = null; });
 
   fs.mkdirSync(HLS_DIR, { recursive: true });
   for (const f of fs.readdirSync(HLS_DIR)) { try { fs.unlinkSync(path.join(HLS_DIR, f)); } catch {} }
@@ -641,6 +672,9 @@ function stopLive() {
   if (hls) { try { hls.kill(); } catch {} hls = null; }
   hlsStartedFor = "";
   liveOnAir = false;
+  // A finished broadcast must not stay playable. The page is told there is no
+  // video, but a page already open would happily keep reading the playlist.
+  void clearBroadcast();
 }
 
 /**
@@ -653,6 +687,10 @@ function stopLive() {
  */
 async function pushLive() {
   if (!R2 || !hls) return;
+  // Never upload into a bucket that is still being emptied — the delete would
+  // take the new piece with it.
+  if (clearing) await clearing;
+  if (!hls) return;
   let files;
   try { files = fs.readdirSync(HLS_DIR); } catch { return; }
 

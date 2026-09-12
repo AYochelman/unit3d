@@ -24,15 +24,21 @@ export function makeR2({ accountId, accessKeyId, secretAccessKey, bucket }) {
   const service = "s3";
 
   // `key` empty means the bucket itself (that is where its settings live);
-  // `query` is a sub-resource such as `cors`, which is part of the signature.
+  // `query` is either a sub-resource such as `cors`, or an object of parameters
+  // — either way it is part of what gets signed.
   async function send(method, key, body, extraHeaders = {}, query = "") {
     const payload = body ?? Buffer.alloc(0);
     const hash = sha256hex(payload);
     const amzDate = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
     const date = amzDate.slice(0, 8);
     const uri = key ? `/${bucket}/${escapeKey(key)}` : `/${bucket}`;
-    // A sub-resource with no value still signs as `name=`.
-    const canonicalQuery = query ? `${query}=` : "";
+    // A sub-resource with no value still signs as `name=`; a set of parameters
+    // signs sorted by name, each one encoded.
+    const enc = (v) => encodeURIComponent(v).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
+    const canonicalQuery =
+      typeof query === "object" && query
+        ? Object.keys(query).sort().map((k) => `${enc(k)}=${enc(query[k])}`).join("&")
+        : query ? `${query}=` : "";
 
     // Header names are lowercased and sorted; that ordering is part of what
     // gets signed, so it has to match exactly what is sent.
@@ -56,7 +62,7 @@ export function makeR2({ accountId, accessKeyId, secretAccessKey, bucket }) {
       `AWS4-HMAC-SHA256 Credential=${accessKeyId}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
     delete headers.host; // fetch sets it, and setting it by hand is refused
 
-    const res = await fetch(`https://${host}${uri}${query ? `?${query}` : ""}`, {
+    const res = await fetch(`https://${host}${uri}${canonicalQuery ? `?${canonicalQuery}` : ""}`, {
       method,
       headers,
       body: method === "PUT" ? payload : undefined,
@@ -112,6 +118,30 @@ export function makeR2({ accountId, accessKeyId, secretAccessKey, bucket }) {
         "content-md5": crypto.createHash("md5").update(body).digest("base64"),
       }, "cors");
       return { ok: res.ok, status: res.status, text: res.ok ? "" : (await res.text()).slice(0, 300) };
+    },
+
+    /**
+     * Every key under a prefix.
+     *
+     * Needed to clear a finished broadcast out: the encoder restarts its
+     * numbering from zero each time, so pieces from a previous run that the
+     * new run does not happen to overwrite would sit in the bucket for ever —
+     * and a player that reads the old playlist finds them and plays them.
+     * Old video presented as live is worse than no video.
+     */
+    async list(prefix) {
+      const out = [];
+      let token;
+      do {
+        const q = { "list-type": "2", prefix, "max-keys": "1000", ...(token ? { "continuation-token": token } : {}) };
+        const res = await send("GET", "", null, {}, q);
+        if (!res.ok) return out;
+        const xml = await res.text();
+        for (const m of xml.matchAll(/<Key>([^<]+)<\/Key>/g)) out.push(m[1]);
+        const next = /<NextContinuationToken>([^<]+)<\/NextContinuationToken>/.exec(xml);
+        token = next?.[1];
+      } while (token);
+      return out;
     },
 
     /** A cheap round trip that proves the keys and the bucket name are right. */
