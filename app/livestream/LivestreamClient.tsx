@@ -154,6 +154,7 @@ export default function LivestreamClient() {
   const WHY_HE: Record<string, string> = {
     "r2-not-configured": "אין הגדרות R2 ב-config.json של הסוכן — לווידאו אין לאן לעלות.",
     "disabled-in-config": "live.enabled מוגדר false ב-config.json של הסוכן.",
+    "cors-blocked": "ה-bucket לא מרשה לאתר לקרוא ממנו, אז שום דפדפן לא יוכל לנגן את השידור. start.bat מדפיס בדיוק מה להדביק ב-Cloudflare.",
     "not-printing": "המדפסת לא מדפיסה כרגע, אז אין שידור — זה תקין.",
     "printer-offers-no-stream": "המדפסת לא מפרסמת כתובת RTSP. צריך LAN Only + Liveview + Developer Mode בתפריט המדפסת.",
     "ffmpeg-missing": "ffmpeg לא מותקן על המחשב של הסוכן. הרץ פעם אחת ffmpeg-install.bat.",

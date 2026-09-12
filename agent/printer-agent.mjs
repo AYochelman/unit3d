@@ -635,10 +635,17 @@ async function pushLiveFlag(live, why) {
   await R2.put(`${HLS_KEY}/status.json`, body, "application/json", "no-cache, max-age=0");
 }
 
+/** null = not checked yet or unanswerable; false = the browser will be refused. */
+let corsOk = null;
+
 /** In one word, what is stopping the video. */
 function liveBlocker() {
   if (!R2) return "r2-not-configured";
   if (cfg.live?.enabled === false) return "disabled-in-config";
+  // Before anything about the printer: a stream the site is not allowed to
+  // read cannot play no matter how well everything else works, and it is the
+  // one fault that looks like success from every other angle.
+  if (corsOk === false) return "cors-blocked";
   if (state() !== "printing") return "not-printing";
   if (!rtspUrl()) return "printer-offers-no-stream";
   if (!findFfmpeg()) return "ffmpeg-missing";
@@ -652,6 +659,7 @@ function liveBlocker() {
 // on the site, where it renders.
 const BLOCKER_TEXT = {
   "r2-not-configured": "no Cloudflare settings in config.json - the video has nowhere to go",
+  "cors-blocked": "the bucket does not let the site read it - set its CORS policy (start.bat prints what to paste)",
   "disabled-in-config": "live.enabled is false in config.json",
   "not-printing": "the printer is not printing right now",
   "printer-offers-no-stream": "the printer is not offering a stream - it needs LAN Only + Liveview + Developer Mode",
@@ -677,23 +685,59 @@ const LIVE_ORIGINS = cfg.live?.allowOrigins ?? [
   "http://localhost:3000",
 ];
 
+const PUBLIC_URL = (cfg.live?.publicUrl || "https://live.unit-3d.com").replace(/\/$/, "");
+
+/**
+ * Ask the way the page asks.
+ *
+ * Setting the policy and believing it worked is how this went wrong once
+ * already. The only answer worth having is the one a browser would get, so
+ * this uploads a tiny file, fetches it back with the site's address attached,
+ * and looks for the permission coming home. `null` means the question could
+ * not be put — not that the answer was no.
+ */
+async function corsAllowsSite() {
+  if (!R2) return null;
+  const key = "live/.cors-probe.txt";
+  const up = await R2.put(key, Buffer.from("ok"), "text/plain", "no-cache, max-age=0").catch(() => null);
+  if (!up?.ok) return null;
+  const res = await fetch(`${PUBLIC_URL}/${key}?t=${Date.now()}`, {
+    headers: { Origin: LIVE_ORIGINS[0] },
+    cache: "no-store",
+  }).catch(() => null);
+  void R2.remove(key);
+  if (!res?.ok) return null;
+  const allow = res.headers.get("access-control-allow-origin") || "";
+  return allow === "*" || allow === LIVE_ORIGINS[0];
+}
+
 async function ensureLiveCors() {
   if (!R2 || cfg.live?.enabled === false) return;
-  const cur = await R2.cors().catch(() => ({ ok: false, status: 0, origins: [] }));
-  const covered = (o) => cur.origins.includes(o) || cur.origins.includes("*");
-  if (cur.ok && LIVE_ORIGINS.every(covered)) {
+
+  const before = await corsAllowsSite();
+  if (before === true) {
+    corsOk = true;
     log("live video: the site is allowed to read the stream (CORS ok)");
     return;
   }
+
   const set = await R2.setCors(LIVE_ORIGINS).catch((e) => ({ ok: false, status: 0, text: e.message }));
   if (set.ok) {
-    log("live video: opened the bucket to the site - the browser can play it now (CORS set)");
-    return;
+    // Cloudflare takes a moment to apply it, and a policy that was written but
+    // does not work is exactly the case worth catching.
+    await new Promise((r) => setTimeout(r, 4000));
+    corsOk = await corsAllowsSite();
+    if (corsOk === true) {
+      log("live video: opened the bucket to the site - the browser can play it now (CORS set)");
+      return;
+    }
+    log("live video: the CORS policy was written but the browser is still refused - give it a minute and restart, or set it by hand:");
+  } else {
+    // The upload token may not be allowed to change bucket settings.
+    corsOk = before === false ? false : null;
+    log(`live video: could not set CORS on the bucket (${set.status || "no answer"}) - the video will NOT play in a browser until this is set.`);
+    log("  fix it once by hand: Cloudflare > R2 > your bucket > Settings > CORS Policy > Edit, and paste:");
   }
-  // The upload token may not be allowed to change bucket settings. Say exactly
-  // what to paste where, rather than leaving a number on the screen.
-  log(`live video: could not set CORS on the bucket (${set.status || "no answer"}) - the video will NOT play in a browser until this is set.`);
-  log("  fix it once by hand: Cloudflare > R2 > your bucket > Settings > CORS Policy > Edit, and paste:");
   log(`  ${JSON.stringify([{ AllowedOrigins: LIVE_ORIGINS, AllowedMethods: ["GET", "HEAD"], AllowedHeaders: ["*"], MaxAgeSeconds: 3600 }])}`);
 }
 
@@ -714,7 +758,10 @@ async function liveTick() {
   } else if (hls) {
     stopLive();
   }
-  const nowLive = shouldStream && !!hls;
+  // A stream the site is not allowed to read is not a stream from the site's
+  // point of view, so it is reported as no video WITH the reason, rather than
+  // as working video the page then fails to play for reasons of its own.
+  const nowLive = shouldStream && !!hls && corsOk !== false;
   const why = nowLive ? "" : liveBlocker();
   if (nowLive !== wasLive || why !== lastWhy) {
     wasLive = nowLive;
@@ -800,6 +847,11 @@ every(STATUS_EVERY, async () => {
 every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)));
 every(1000, () => liveTick().catch((e) => log("live error:", e.message)));
 every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
+// Cheap, and it means a policy fixed in the dashboard is noticed on its own
+// rather than needing the agent restarted to be believed.
+every(10 * 60 * 1000, () => {
+  if (corsOk !== true) void ensureLiveCors().catch(() => {});
+});
 
 log(`agent ${VERSION} running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
 
