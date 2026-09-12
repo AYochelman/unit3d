@@ -63,7 +63,17 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
     if (s.price === "gt100" && it.price <= 100) return false;
     return true;
   });
-  const popularity = (it: ListingStats) => it.orders * (0.6 + it.rating / 5);
+  /**
+   * "מומלצים", for a shop where most things have never been ordered.
+   *
+   * The score is orders-weighted, so anything with no orders scores zero and
+   * lands at the very bottom — behind every older product, on page two, where
+   * nobody looks. A product added today would therefore be invisible on its
+   * own shelf on the day it was added, which is the opposite of recommending.
+   * Something marked new goes to the front until it has numbers of its own.
+   */
+  const popularity = (it: ListingStats) =>
+    it.orders ? it.orders * (0.6 + it.rating / 5) : it.isNew ? Number.MAX_SAFE_INTEGER : 0;
   out = [...out].sort((a, b) => {
     switch (s.sort) {
       case "priceDesc":

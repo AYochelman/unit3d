@@ -95,6 +95,32 @@ export const PET_PRODUCTS: Product[] = [
 // ─── Office & home (מוצרים למשרד ולבית) ──────────────────────────────────────
 export const OFFICE_PRODUCTS: Product[] = [
   {
+    // Listed on three shelves on purpose: it is a desk object, a business
+    // object, and the kind of thing people photograph — so it belongs on the
+    // office, business and trending shelves rather than only one of them.
+    id: "biz-card-3d",
+    category: "office",
+    categories: ["office", "b2b", "trendy"],
+    name: "כרטיס ביקור תלת מימדי",
+    desc: "כרטיס ביקור תלת מימדי עם אופציה לטקסט בולט, ואפשרות להוספת ברקוד מאחורה.",
+    price: 45, size: "70×70×6mm", time: "1.8h", hours: 1.8, grams: 20,
+    art: "qr", hue: 150, ams: true, colors: 3, material: "pla_matte",
+    tag: "חדש",
+    isNew: true,
+    image: "/img/products/biz-card-1.webp",
+    images: [
+      "/img/products/biz-card-1.webp",
+      "/img/products/biz-card-2.webp",
+      "/img/products/biz-card-3.webp",
+    ],
+    engraving: {
+      label: "הטקסט הבולט",
+      placeholder: "UNIT 3D",
+      max: 18,
+      second: { label: "טלפון / שורה שנייה", placeholder: "050-930-0990", max: 18 },
+    },
+  },
+  {
     id: "off-pen-holder",
     category: "office",
     name: "מעמד עטים משושה",

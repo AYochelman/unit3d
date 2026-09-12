@@ -192,11 +192,15 @@
     gap: 16px;
     width: max-content;
     padding: 0 8px;
-    animation: marquee 48s linear infinite;
+    /* 48s read as stalled rather than calm, especially with a handful of
+       cards: the strip barely moved while someone looked at it. */
+    animation: marquee 26s linear infinite;
   }
   .reviews-track--reverse {
     animation-direction: reverse;
-    animation-duration: 56s;
+    /* Kept a little slower than the row above it, so the two directions do not
+       lock into step and read as one block sliding. */
+    animation-duration: 31s;
   }
   /* Pause on hover AND on keyboard focus, so the strip is readable without a mouse. */
   .reviews-row:hover .reviews-track,
