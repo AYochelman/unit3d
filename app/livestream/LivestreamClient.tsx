@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import LiveVideo from "@/components/LiveVideo";
 import { useSteadyImage } from "@/lib/steady-image";
+import { useAdminStore } from "@/lib/admin-store";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import { fmtLeft, jobStats, usePrinterJobs, usePrinterLive, useTimelapses, type PrinterState } from "@/lib/printer";
@@ -31,7 +32,7 @@ const when = (iso: string) =>
  * truth, and the truth is checkable against the photo.
  */
 export default function LivestreamClient() {
-  const { live, camera, stream, ready, online } = usePrinterLive();
+  const { live, camera, stream, liveWhy, ready, online } = usePrinterLive();
   const jobs = usePrinterJobs();
   const clips = useTimelapses();
   const stats = jobStats(jobs);
@@ -101,6 +102,21 @@ export default function LivestreamClient() {
     if (frame?.webkitRequestFullscreen) { void frame.webkitRequestFullscreen(); return; }
     // iPhone: the video element is the only thing it will enlarge.
     (videoEl.current as IosVideo | null)?.webkitEnterFullscreen?.();
+  };
+
+  const adminUnlocked = useAdminStore((s) => s.unlocked);
+
+  /** The agent's reason, in Hebrew, for the owner only. */
+  const WHY_HE: Record<string, string> = {
+    "r2-not-configured": "אין הגדרות R2 ב-config.json של הסוכן — לווידאו אין לאן לעלות.",
+    "disabled-in-config": "live.enabled מוגדר false ב-config.json של הסוכן.",
+    "not-printing": "המדפסת לא מדפיסה כרגע, אז אין שידור — זה תקין.",
+    "printer-offers-no-stream": "המדפסת לא מפרסמת כתובת RTSP. צריך LAN Only + Liveview + Developer Mode בתפריט המדפסת.",
+    "ffmpeg-missing": "ffmpeg לא מותקן על המחשב של הסוכן. הרץ פעם אחת ffmpeg-install.bat.",
+    "encoder-not-started": "ffmpeg עוד לא הספיק לעלות. עוד כמה שניות.",
+    "agent-status-unreachable": "לא הצלחתי לקרוא את live/status.json. או שהסוכן לא רץ, או שהוא לא מעלה ל-R2.",
+    "agent-status-unreadable": "live/status.json קיים אבל לא נקרא כ-JSON.",
+    unknown: "הסוכן לא אמר למה. כנראה גרסה ישנה — הרץ את update.",
   };
 
   const [clock, setClock] = useState("00:00:00");
@@ -191,6 +207,16 @@ export default function LivestreamClient() {
                   </div>
                 </div>
               </>
+            )}
+
+            {/* Why there is no video — the owner's answer, never a customer's.
+                Without it, a printer that is mid-print with the camera on and
+                no R2 keys looks exactly like one that is working. */}
+            {adminUnlocked && !videoOn && liveWhy && (
+              <div className="absolute bottom-4 right-4 z-20 max-w-[min(92%,30rem)] rounded-lg border border-amber-500/40 bg-ink-950/85 backdrop-blur px-3 py-2 text-[11px] leading-relaxed text-amber-200">
+                <span className="font-mono text-[10px] tracking-widest uppercase text-amber-400/80">ADMIN · אין וידאו</span>
+                <div className="mt-0.5 text-ink-100">{WHY_HE[liveWhy] ?? liveWhy}</div>
+              </div>
             )}
 
             <div className="absolute top-4 right-4 z-20 flex items-center gap-2">

@@ -614,20 +614,57 @@ async function pushLive() {
   }
 }
 
-/** Tell the page whether video is worth asking for, without a database column. */
-async function pushLiveFlag(live) {
+/**
+ * Tell the page whether video is worth asking for, without a database column.
+ *
+ * It now also carries WHY, when the answer is no. Every reason the stream does
+ * not run is knowable here and nowhere else — the browser can only observe that
+ * no video arrived — and three of them used to return from `startLive` without
+ * a single line of output, so a printer that was mid-print with the camera on
+ * simply showed stills forever and said nothing about it.
+ */
+async function pushLiveFlag(live, why) {
   if (!R2) return;
   const body = Buffer.from(JSON.stringify({
     live,
+    ...(live ? {} : { why: why || "unknown" }),
+    agent: VERSION,
     segment_seconds: SEG_SECONDS,
     updated_at: new Date().toISOString(),
   }));
   await R2.put(`${HLS_KEY}/status.json`, body, "application/json", "no-cache, max-age=0");
 }
 
+/** In one word, what is stopping the video. */
+function liveBlocker() {
+  if (!R2) return "r2-not-configured";
+  if (cfg.live?.enabled === false) return "disabled-in-config";
+  if (state() !== "printing") return "not-printing";
+  if (!rtspUrl()) return "printer-offers-no-stream";
+  if (!findFfmpeg()) return "ffmpeg-missing";
+  if (!hls) return "encoder-not-started";
+  return "";
+}
+
+const BLOCKER_HE = {
+  "r2-not-configured": "אין הגדרות R2 ב-config.json - הווידאו לא יכול לעלות לשום מקום",
+  "disabled-in-config": "live.enabled מוגדר false ב-config.json",
+  "not-printing": "המדפסת לא מדפיסה כרגע",
+  "printer-offers-no-stream": "המדפסת לא מפרסמת כתובת RTSP - צריך LAN Only + Liveview + Developer Mode",
+  "ffmpeg-missing": "ffmpeg לא מותקן - הרץ פעם אחת ffmpeg-install.bat",
+  "encoder-not-started": "ffmpeg עוד לא הספיק לעלות",
+};
+
 let wasLive = false;
+let lastWhy = null;
 async function liveTick() {
-  if (!R2 || cfg.live?.enabled === false) return;
+  // The two outermost gates used to return here in silence, which is how a
+  // machine with no R2 keys looked identical to one that was working.
+  if (!R2 || cfg.live?.enabled === false) {
+    const why = liveBlocker();
+    if (why !== lastWhy) { lastWhy = why; log(`live: no video - ${BLOCKER_HE[why] || why}`); }
+    return;
+  }
   const shouldStream = state() === "printing" && !!rtspUrl();
   if (shouldStream) {
     startLive();
@@ -636,10 +673,12 @@ async function liveTick() {
     stopLive();
   }
   const nowLive = shouldStream && !!hls;
-  if (nowLive !== wasLive) {
+  const why = nowLive ? "" : liveBlocker();
+  if (nowLive !== wasLive || why !== lastWhy) {
     wasLive = nowLive;
-    await pushLiveFlag(nowLive);
-    log(nowLive ? "live: the stream is on the site" : "live: stream stopped - back to stills");
+    lastWhy = why;
+    await pushLiveFlag(nowLive, why);
+    log(nowLive ? "live: the stream is on the site" : `live: no video - ${BLOCKER_HE[why] || why}`);
   }
 }
 

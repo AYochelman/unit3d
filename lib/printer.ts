@@ -82,6 +82,16 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
   const [live, setLive] = useState<PrinterLive | null>(null);
   const [camera, setCamera] = useState<string | null>(null);
   const [stream, setStream] = useState<string | null>(null);
+  /**
+   * Why there is no video, in the agent's own words.
+   *
+   * The browser can only see that no stream arrived; the agent beside the
+   * printer is the only thing that knows whether R2 is unconfigured, ffmpeg is
+   * missing, or the printer is not advertising RTSP at all. It writes that into
+   * the same status file, and the page shows it to the owner (never to a
+   * customer, who has no use for it).
+   */
+  const [liveWhy, setLiveWhy] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -108,8 +118,10 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
       const res = await fetch(`${c.liveUrl}/live/status.json?t=${Date.now()}`, { cache: "no-store" })
         .catch(() => null);
       if (!alive) return;
-      const on = res?.ok ? (await res.json().catch(() => null))?.live === true : false;
+      const status = res?.ok ? await res.json().catch(() => null) : null;
+      const on = status?.live === true;
       setStream(on ? `${c.liveUrl}/live/stream.m3u8` : null);
+      setLiveWhy(on ? null : (status?.why ?? (res ? "agent-status-unreadable" : "agent-status-unreachable")));
     };
 
     const stop = () => {
@@ -136,7 +148,7 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
     };
   }, [everyMs, cameraEveryMs]);
 
-  return { live, camera, stream, ready, online: !!live && live.state !== "offline" };
+  return { live, camera, stream, liveWhy, ready, online: !!live && live.state !== "offline" };
 }
 
 export function usePrinterJobs(limit = 60) {
