@@ -47,9 +47,26 @@ export default function LivestreamClient() {
   // stream will not play, the page drops back to the still rather than showing
   // a dead player. A new stream address clears the refusal, so the next print
   // gets a fresh chance.
-  const [videoFailed, setVideoFailed] = useState<string | null>(null);
+  /**
+   * A refusal, remembered for a minute — not for ever.
+   *
+   * It used to be remembered by stream address, with the note that "a new
+   * address clears the refusal". The address never changes: it is one constant
+   * URL for the life of the shop. So the FIRST time the player gave up — which
+   * happens normally at the end of every broadcast, when the playlist it is
+   * still reading is taken down — the page refused to try again until someone
+   * reloaded it by hand. One broadcast would play, and every one after it
+   * showed stills, which is exactly what it did.
+   *
+   * A minute is long enough not to hammer a stream that is genuinely broken,
+   * and short enough that the next print is picked up on its own.
+   */
+  const REFUSAL_MS = 45_000;
+  const [videoFault, setVideoFault] = useState<{ src: string; at: number } | null>(null);
   const [videoOn, setVideoOn] = useState(false);
-  const showVideo = !!stream && videoFailed !== stream;
+  // The clock below lets it go once it is old enough; reading the time during
+  // render would make the same view render differently twice.
+  const showVideo = !!stream && videoFault?.src !== stream;
 
   /**
    * The other half of "why is there no video".
@@ -185,6 +202,9 @@ export default function LivestreamClient() {
     const id = setInterval(() => {
       const d = new Date();
       setClock(`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`);
+      // And let an old refusal go, so the next broadcast gets a fresh chance
+      // without anyone reloading the page.
+      setVideoFault((f) => (f && Date.now() - f.at > REFUSAL_MS ? null : f));
     }, 1000);
     return () => clearInterval(id);
   }, []);
@@ -227,7 +247,7 @@ export default function LivestreamClient() {
                 onPlaying={framesFlowing}
                 onStall={() => setVideoOn(false)}
                 onDiag={onDiag}
-                onFail={() => { setVideoOn(false); setVideoFailed(stream); }}
+                onFail={() => { setVideoOn(false); setVideoFault({ src: stream ?? "", at: Date.now() }); }}
               />
             )}
 
