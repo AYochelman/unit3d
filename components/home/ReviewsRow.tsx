@@ -94,7 +94,11 @@ function ReviewCard({ r }: { r: Review }) {
           </div>
         )}
 
-        <p className="text-ink-200 text-sm leading-relaxed line-clamp-4 flex-1">{r.txt}</p>
+        {r.txt ? (
+          <p className="text-ink-200 text-sm leading-relaxed line-clamp-4 flex-1">{r.txt}</p>
+        ) : (
+          <p className="text-ink-500 text-sm flex-1">דירוג ללא פירוט.</p>
+        )}
 
         <div className="mt-4 pt-3 border-t border-ink-800 flex items-center gap-3">
           <div

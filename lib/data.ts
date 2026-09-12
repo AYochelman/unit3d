@@ -50,19 +50,15 @@ export const REVIEWS: Review[] = [
   // section 2 of חוק הגנת הצרכן, and it is the kind of thing a competitor
   // screenshots.
   //
-  // These five are the owner's own customers and their own photographs. The
-  // pictures are theirs and the names are theirs; `txt` and `stars` are left
-  // empty ON PURPOSE, because nobody here knows what they said or how they
-  // rated it. A photograph of the thing in someone's hand is a review. A
-  // sentence written on their behalf is not.
-  //
-  // When they send their words, they go in `txt` — and the rating they gave,
-  // in `stars`. Not before.
-  { id: "r1", name: "טל",    seg: "private", photo: "/img/reviews/r1.webp" },
-  { id: "r2", name: "מתן",   seg: "private", photo: "/img/reviews/r2.webp" },
-  { id: "r3", name: "עידו",  seg: "private", photo: "/img/reviews/r3.webp" },
-  { id: "r4", name: "עמית",  seg: "private", photo: "/img/reviews/r4.webp" },
-  { id: "r5", name: "דניאל", seg: "private", photo: "/img/reviews/r5.webp" },
+  // These five are the owner's own customers, their own photographs, and the
+  // rating he says each of them gave. `txt` stays empty: a rating is a number
+  // someone chose, and he knows it; a sentence is words someone said, and
+  // nobody here does. The card says so rather than filling the gap.
+  { id: "r1", name: "טל",    seg: "private", stars: 5, photo: "/img/reviews/r1.webp" },
+  { id: "r2", name: "מתן",   seg: "private", stars: 5, photo: "/img/reviews/r2.webp" },
+  { id: "r3", name: "עידו",  seg: "private", stars: 5, photo: "/img/reviews/r3.webp" },
+  { id: "r4", name: "עמית",  seg: "private", stars: 5, photo: "/img/reviews/r4.webp" },
+  { id: "r5", name: "דניאל", seg: "private", stars: 5, photo: "/img/reviews/r5.webp" },
 ];
 
 export const GALLERY: GalleryItem[] = [

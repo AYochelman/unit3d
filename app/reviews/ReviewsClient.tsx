@@ -116,7 +116,13 @@ export default function ReviewsClient() {
               />
             )}
 
-            {r.txt && <p className="text-ink-200 leading-relaxed mt-3">{r.txt}</p>}
+            {r.txt ? (
+              <p className="text-ink-200 leading-relaxed mt-3">{r.txt}</p>
+            ) : (
+              // Said plainly rather than left blank: an empty space under a
+              // rating reads like something failed to load.
+              <p className="text-ink-500 text-sm mt-3">דירוג ללא פירוט.</p>
+            )}
 
             {r.when && (
               <div className="mt-4 pt-4 border-t border-ink-800">
