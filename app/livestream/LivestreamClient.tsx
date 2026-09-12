@@ -107,6 +107,18 @@ export default function LivestreamClient() {
    * are actually arriving, and comes straight back on a stall. A held still is
    * a second old; a black rectangle is nothing at all.
    */
+  /**
+   * The frame takes the camera's shape, rather than the camera being cut to fit.
+   *
+   * The box was fixed at 16:9 with `object-cover`, which does exactly what it
+   * says: anything the camera sends that is not 16:9 gets its edges cut off,
+   * and the middle is blown up to fill. A printer camera is a wide-angle lens
+   * in a corner — the parts that get cut are the plate edges, which is the part
+   * worth seeing. Now the box adopts the stream's real proportions the moment
+   * they are known, so nothing is cropped and nothing is letterboxed either.
+   */
+  const [frameRatio, setFrameRatio] = useState(16 / 9);
+
   const stallTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const framesFlowing = () => {
     if (stallTimer.current) clearTimeout(stallTimer.current);
@@ -116,6 +128,11 @@ export default function LivestreamClient() {
     setVideoOn(true);
     // Frames are arriving, so whatever the player complained about is over.
     setPlayFault(null);
+    const v = videoEl.current;
+    if (v?.videoWidth && v.videoHeight) {
+      const r = v.videoWidth / v.videoHeight;
+      setFrameRatio((prev) => (Math.abs(prev - r) > 0.01 ? r : prev));
+    }
   };
   useEffect(() => () => { if (stallTimer.current) clearTimeout(stallTimer.current); }, []);
 
@@ -234,7 +251,8 @@ export default function LivestreamClient() {
         <div className="lg:col-span-2">
           <div
             ref={frameRef}
-            className="relative aspect-video rounded-2xl overflow-hidden border border-ink-800 bg-ink-950 group/frame"
+            className="relative w-full rounded-2xl overflow-hidden border border-ink-800 bg-ink-950 group/frame"
+            style={{ aspectRatio: String(frameRatio) }}
           >
             {showVideo && (
               <LiveVideo
@@ -243,7 +261,7 @@ export default function LivestreamClient() {
                 videoRef={videoEl}
                 // No background of its own: an empty frame must reveal the
                 // still underneath, not a black rectangle.
-                className="absolute inset-0 h-full w-full object-cover z-[2]"
+                className="absolute inset-0 h-full w-full object-contain z-[2]"
                 onPlaying={framesFlowing}
                 onStall={() => setVideoOn(false)}
                 onDiag={onDiag}
@@ -260,7 +278,7 @@ export default function LivestreamClient() {
                 // playing video covers it anyway — and the moment the player
                 // has no frame, this is what shows instead of black. Toggling
                 // it with the video was what turned a stall into a flash.
-                className="absolute inset-0 h-full w-full object-cover z-[1] transition-opacity duration-300"
+                className="absolute inset-0 h-full w-full object-contain z-[1] transition-opacity duration-300"
                 style={{ opacity: shot === "ok" ? 1 : 0 }}
               />
             )}
@@ -308,6 +326,7 @@ export default function LivestreamClient() {
                 </div>
                 <div className="mt-1 font-mono text-[10px] text-ink-500" dir="ltr">
                   {liveWhy ?? `player: ${playWhy}`}{liveAgent ? ` · agent ${liveAgent}` : " · agent ?"}
+                  {` · frame ${frameRatio.toFixed(3)}`}
                 </div>
               </div>
             )}
