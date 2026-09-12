@@ -32,7 +32,7 @@ const when = (iso: string) =>
  * truth, and the truth is checkable against the photo.
  */
 export default function LivestreamClient() {
-  const { live, camera, stream, liveWhy, ready, online } = usePrinterLive();
+  const { live, camera, stream, liveWhy, liveAgent, ready, online } = usePrinterLive();
   const jobs = usePrinterJobs();
   const clips = useTimelapses();
   const stats = jobStats(jobs);
@@ -106,6 +106,23 @@ export default function LivestreamClient() {
 
   const adminUnlocked = useAdminStore((s) => s.unlocked);
 
+  /**
+   * How the owner actually gets to see the diagnosis.
+   *
+   * The admin unlock lives in one tab's memory and is cleared by any hard
+   * load — and a hard load is exactly how this page is reached. Gated on the
+   * unlock alone, the box below could never appear for the person it was
+   * written for. `?debug=1` is the way in that survives a cold load, on a
+   * phone, without unlocking anything: the reasons it shows carry no secret,
+   * they are copied from the agent's own publicly readable status file.
+   */
+  const [urlDebug, setUrlDebug] = useState(false);
+  useEffect(() => {
+    const on = new URLSearchParams(window.location.search).has("debug");
+    if (on) requestAnimationFrame(() => setUrlDebug(true));
+  }, []);
+  const showWhy = adminUnlocked || urlDebug;
+
   /** The agent's reason, in Hebrew, for the owner only. */
   const WHY_HE: Record<string, string> = {
     "r2-not-configured": "אין הגדרות R2 ב-config.json של הסוכן — לווידאו אין לאן לעלות.",
@@ -114,8 +131,11 @@ export default function LivestreamClient() {
     "printer-offers-no-stream": "המדפסת לא מפרסמת כתובת RTSP. צריך LAN Only + Liveview + Developer Mode בתפריט המדפסת.",
     "ffmpeg-missing": "ffmpeg לא מותקן על המחשב של הסוכן. הרץ פעם אחת ffmpeg-install.bat.",
     "encoder-not-started": "ffmpeg עוד לא הספיק לעלות. עוד כמה שניות.",
-    "agent-status-unreachable": "לא הצלחתי לקרוא את live/status.json. או שהסוכן לא רץ, או שהוא לא מעלה ל-R2.",
+    "agent-status-unreachable": "לא הצלחתי להגיע ל-live.unit-3d.com בכלל. או שהסוכן לא רץ, או שהוא לא מעלה ל-R2.",
+    "agent-status-missing": "live/status.json לא קיים ב-R2. הסוכן רץ? הוא מעלה?",
     "agent-status-unreadable": "live/status.json קיים אבל לא נקרא כ-JSON.",
+    "agent-too-old": "הסוכן מעלה סטטוס אבל בלי שדה why — גרסה ישנה. הרץ update.bat.",
+    "no-live-url": "אין liveUrl ב-public/shop.json של האתר.",
     unknown: "הסוכן לא אמר למה. כנראה גרסה ישנה — הרץ את update.",
   };
 
@@ -212,10 +232,13 @@ export default function LivestreamClient() {
             {/* Why there is no video — the owner's answer, never a customer's.
                 Without it, a printer that is mid-print with the camera on and
                 no R2 keys looks exactly like one that is working. */}
-            {adminUnlocked && !videoOn && liveWhy && (
+            {showWhy && !videoOn && liveWhy && (
               <div className="absolute bottom-4 right-4 z-20 max-w-[min(92%,30rem)] rounded-lg border border-amber-500/40 bg-ink-950/85 backdrop-blur px-3 py-2 text-[11px] leading-relaxed text-amber-200">
                 <span className="font-mono text-[10px] tracking-widest uppercase text-amber-400/80">ADMIN · אין וידאו</span>
                 <div className="mt-0.5 text-ink-100">{WHY_HE[liveWhy] ?? liveWhy}</div>
+                <div className="mt-1 font-mono text-[10px] text-ink-500">
+                  {liveWhy}{liveAgent ? ` · agent ${liveAgent}` : " · agent ?"}
+                </div>
               </div>
             )}
 

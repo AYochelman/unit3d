@@ -92,6 +92,8 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
    * customer, who has no use for it).
    */
   const [liveWhy, setLiveWhy] = useState<string | null>(null);
+  /** Which build of the agent wrote that reason — an old one cannot give one at all. */
+  const [liveAgent, setLiveAgent] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -114,14 +116,28 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
       // The video only exists while a print is running, and the agent says so
       // in a small file beside it — cheaper and simpler than a database column,
       // and it costs nothing to read from where the video already lives.
-      if (!c.liveUrl) return;
+      if (!c.liveUrl) {
+        setStream(null);
+        setLiveWhy("no-live-url");
+        return;
+      }
       const res = await fetch(`${c.liveUrl}/live/status.json?t=${Date.now()}`, { cache: "no-store" })
         .catch(() => null);
       if (!alive) return;
       const status = res?.ok ? await res.json().catch(() => null) : null;
       const on = status?.live === true;
       setStream(on ? `${c.liveUrl}/live/stream.m3u8` : null);
-      setLiveWhy(on ? null : (status?.why ?? (res ? "agent-status-unreadable" : "agent-status-unreachable")));
+      setLiveAgent(typeof status?.agent === "string" ? status.agent : null);
+      // Each of these is a different fault and needs a different fix, so they
+      // are told apart rather than collapsed into one vague "no video".
+      setLiveWhy(
+        on ? null
+          : !res ? "agent-status-unreachable"
+          : !res.ok ? "agent-status-missing"
+          : !status ? "agent-status-unreadable"
+          : typeof status.why === "string" ? status.why
+          : "agent-too-old",
+      );
     };
 
     const stop = () => {
@@ -148,7 +164,7 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
     };
   }, [everyMs, cameraEveryMs]);
 
-  return { live, camera, stream, liveWhy, ready, online: !!live && live.state !== "offline" };
+  return { live, camera, stream, liveWhy, liveAgent, ready, online: !!live && live.state !== "offline" };
 }
 
 export function usePrinterJobs(limit = 60) {
