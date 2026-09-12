@@ -1,6 +1,10 @@
-import { FAQS } from "./data";
+import { FAQS } from "./faqs";
 import { CONTACT } from "./contact";
 import { catalogueSize, findProducts, findShelf, fold as foldHe, shelfCount, SHELF_ROUTE, type Found } from "./helpbot-catalog";
+// Re-exported so the one lazy chunk carries both the answers and the index —
+// the search needs the catalogue, the bot needs both, and neither should cost
+// a second round trip. See lib/helpbot-lazy.ts.
+export * as catalog from "./helpbot-catalog";
 import type { ImportedShelf } from "./imported";
 
 // A small, honest help bot: it matches what you typed against a list of

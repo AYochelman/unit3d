@@ -1,14 +1,14 @@
 import { importedFidgets } from "./imported";
 import { photoSrc } from "./assets";
+export { FILAMENTS } from "./filaments";
+export { FAQS } from "./faqs";
 import type {
   Unit,
   Review,
   GalleryItem,
-  Filament,
   FontOpt,
   Shape,
   Size,
-  Faq,
   Fidget,
   Audience,
 } from "./types";
@@ -509,20 +509,6 @@ export const AUDIENCES: Audience[] = [
 // row above, so "שחור מאט" under plain PLA promised a finish nobody selected —
 // `desc` still carries the spool these usually come on, because the
 // configurator reads it to pick a material, but nothing shows it to a customer.
-export const FILAMENTS: Filament[] = [
-  { id: "black", name: "שחור", hex: "#1a1a1d", desc: "PLA Matte" },
-  { id: "white", name: "לבן", hex: "#f2f2ef", desc: "PLA Marble" },
-  { id: "orange", name: "כתום לוהט", hex: "#FF6B1A", desc: "PLA+" },
-  { id: "red", name: "אדום דם", hex: "#C2261C", desc: "PLA+" },
-  { id: "blue", name: "כחול כהה", hex: "#1E40AF", desc: "PLA" },
-  { id: "cyan", name: "טורקיז", hex: "#00C2C7", desc: "PLA Silk" },
-  { id: "green", name: "ירוק זית", hex: "#3D5229", desc: "PLA Army" },
-  { id: "gold", name: "זהב", hex: "#C9A227", desc: "PLA Silk" },
-  { id: "silver", name: "כסף", hex: "#A8A9AD", desc: "PLA Silk" },
-  { id: "purple", name: "סגול חצות", hex: "#4C1D95", desc: "PLA" },
-  { id: "pink", name: "ורוד פלמינגו", hex: "#EC4899", desc: "PLA" },
-  { id: "glow", name: "זוהר בחושך", hex: "#7EE787", desc: "Glow PLA", kind: "glow" },
-];
 
 export const FONTS: FontOpt[] = [
   { id: "sans", name: "Heebo Bold", preview: "דוגמה", css: "var(--font-sans), sans-serif", weight: 800 },
@@ -543,13 +529,3 @@ export const SIZES: Size[] = [
   { id: "lg", label: "גדול", dim: "70×50mm", priceAdd: 30, time: "2.5h" },
 ];
 
-export const FAQS: Faq[] = [
-  { q: "כמה זמן לוקחת הדפסה?", a: "רוב ההזמנות יוצאות תוך 3-5 ימי עסקים מרגע אישור העיצוב. מחזיקי מפתחות פשוטים — לרוב תוך 48 שעות. פיגורות גדולות או הזמנות במספרים גדולים יכולות לקחת עד 7-10 ימים." },
-  { q: "איזה חומרים אתה משתמש?", a: "בעיקר PLA ו-PLA+ לחיים יומיומיים, PETG לחלקים שצריכים לעמוד בחום/שמש, ו-Resin לפיגורות בדיוק גבוה. אני אסביר לך מה הכי מתאים להזמנה שלך." },
-  { q: "מה האחריות?", a: "אם משהו נשבר תוך 30 יום משימוש סביר — אני מדפיס מחדש בחינם ושולח. אם זה היה תאונה (החתול אכל את זה) — אני אדפיס שוב במחיר עלות." },
-  { q: "איך מחושב המחיר?", a: "מחיר = חומר + זמן הדפסה + זמן עיבוד אחרי. למוצרי קטלוג יש מחיר קבוע. להזמנות מיוחדות אני נותן הצעת מחיר תוך 24 שעות אחרי שאתה שולח לי את הבקשה." },
-  { q: "אפשר לבטל הזמנה?", a: "כן, עד הרגע שההדפסה התחילה (בדרך כלל 24-48 שעות אחרי שאישרת עיצוב). אחרי שהמדפסת כבר רצה — אפשר לבטל עם החזר חלקי." },
-  { q: "אתה שולח לכל הארץ?", a: "כן — דואר רשום (3-5 ימים, ₪25) או שליח עד הבית (יום-יומיים, ₪45). יש גם איסוף עצמי מהבית שלי בגבעתיים — בחינם." },
-  { q: "איך אתה מקבל קבצים?", a: "דרך טופס יצירת קשר באתר אפשר להעלות STL/OBJ/3MF עד 50MB. גם וואטסאפ עובד. אני אגיד לך אם הקובץ צריך תיקונים לפני ההדפסה." },
-  { q: "יש מינימום הזמנה?", a: "אין. אפילו אם זה מחזיק מפתחות אחד ב-₪65 — אני מדפיס. אבל הזמנות מעל ₪200 מקבלות משלוח חינם." },
-];

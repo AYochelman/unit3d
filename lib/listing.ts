@@ -79,4 +79,3 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
   return out;
 }
 
-export const fmtOrders = (n: number): string => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n));

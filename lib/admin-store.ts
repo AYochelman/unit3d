@@ -25,7 +25,9 @@ import { readToken, writeToken } from "./admin-token";
  * NOT what protects customer details: the orders table opens only to a signed-in
  * Supabase user, and the GitHub token is never written into the code at all.
  */
-export const ADMIN_PASSWORD = "Erez!987654";
+// Module-private on purpose: nothing outside this file has any business
+// reading it, and it was exported only by habit.
+const ADMIN_PASSWORD = "Erez!987654";
 
 export type ItemOverride = {
   grams?: number;

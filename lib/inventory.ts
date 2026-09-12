@@ -1,6 +1,6 @@
 import type { MaterialId } from "./types";
 import { MATERIALS } from "./materials";
-import { FILAMENTS } from "./data";
+import { FILAMENTS } from "./filaments";
 
 // Which filament we actually have on the shelf, per material family and colour.
 //

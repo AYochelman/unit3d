@@ -3,16 +3,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-import {
-  BOT_ANSWERS,
-  BOT_FALLBACK,
-  BOT_GREETING,
-  BOT_STARTERS,
-  getAnswer,
-  matchAnswer,
-  type BotAnswer,
-  type BotLink,
-} from "@/lib/helpbot";
+import { helpBotNow, loadHelpBot, warmHelpBot } from "@/lib/helpbot-lazy";
+import type { BotAnswer, BotLink } from "@/lib/helpbot";
 
 type Msg = {
   id: number;
@@ -31,8 +23,11 @@ type Msg = {
  */
 export default function HelpBot() {
   const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState<Msg[]>([{ id: 0, from: "bot", text: BOT_GREETING }]);
-  const [chips, setChips] = useState<string[]>(BOT_STARTERS);
+  // The greeting names the real size of the catalogue, so it cannot be written
+  // until the answer engine is here. It is only ever SEEN once the panel is
+  // open, and the engine is warmed long before that — see lib/helpbot-lazy.ts.
+  const [msgs, setMsgs] = useState<Msg[]>([]);
+  const [chips, setChips] = useState<string[]>([]);
   const [draft, setDraft] = useState("");
   const [seenPrompt, setSeenPrompt] = useState(false);
   const nextId = useRef(1);
@@ -60,18 +55,37 @@ export default function HelpBot() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Fetch it in the background as soon as the page is quiet, so the first click
+  // opens a panel that is already able to answer.
+  useEffect(() => { warmHelpBot(); }, []);
+
+  // …and make sure it is here the moment the panel is actually opened, greeting
+  // written, before anything can be typed.
+  useEffect(() => {
+    if (!open) return;
+    let alive = true;
+    void loadHelpBot().then((m) => {
+      if (!alive) return;
+      setMsgs((prev) => (prev.length ? prev : [{ id: nextId.current++, from: "bot", text: m.BOT_GREETING }]));
+      setChips((prev) => (prev.length ? prev : m.BOT_STARTERS));
+    });
+    return () => { alive = false; };
+  }, [open]);
+
   const push = (m: Omit<Msg, "id">) => setMsgs((prev) => [...prev, { ...m, id: nextId.current++ }]);
 
-  const reply = (a: BotAnswer) => {
+  const reply = (m: NonNullable<ReturnType<typeof helpBotNow>>, a: BotAnswer) => {
     push({ from: "bot", text: a.text, links: a.links });
-    setChips(a.next?.length ? a.next : BOT_STARTERS);
+    setChips(a.next?.length ? a.next : m.BOT_STARTERS);
   };
 
   const askById = (id: string) => {
-    const a = getAnswer(id);
-    if (!a) return;
-    push({ from: "me", text: a.chip ?? a.keys[0] ?? id });
-    reply(a);
+    void loadHelpBot().then((m) => {
+      const a = m.getAnswer(id);
+      if (!a) return;
+      push({ from: "me", text: a.chip ?? a.keys[0] ?? id });
+      reply(m, a);
+    });
   };
 
   const send = (raw: string) => {
@@ -79,7 +93,7 @@ export default function HelpBot() {
     if (!text) return;
     push({ from: "me", text });
     setDraft("");
-    reply(matchAnswer(text) ?? BOT_FALLBACK);
+    void loadHelpBot().then((m) => reply(m, m.matchAnswer(text) ?? m.BOT_FALLBACK));
   };
 
   return (
@@ -182,7 +196,8 @@ export default function HelpBot() {
           {/* Suggested questions */}
           <div className="px-3.5 pb-2 flex flex-wrap gap-1.5">
             {chips
-              .map((id) => BOT_ANSWERS.find((a) => a.id === id))
+              // The engine is loaded by the time chips exist — they come from it.
+              .map((id) => helpBotNow()?.BOT_ANSWERS.find((a) => a.id === id))
               .filter((a): a is BotAnswer => !!a)
               .map((a) => (
                 <button

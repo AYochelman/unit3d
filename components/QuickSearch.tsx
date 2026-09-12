@@ -5,7 +5,8 @@ import Link from "next/link";
 import Icon from "./ui/Icon";
 import { cn } from "@/lib/cn";
 import { fmtILS } from "@/lib/format";
-import { findProducts, findShelf, SHELF_ROUTE, catalogueSize, type Found } from "@/lib/helpbot-catalog";
+import type { Found } from "@/lib/helpbot-catalog";
+import { helpBotNow, loadHelpBot, warmHelpBot } from "@/lib/helpbot-lazy";
 
 /**
  * Find anything in the shop from anywhere in it.
@@ -26,8 +27,20 @@ export default function QuickSearch() {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const results: Found[] = useMemo(() => (q.trim().length < 2 ? [] : findProducts(q, 7)), [q]);
-  const shelf = useMemo(() => (q.trim().length < 2 ? null : findShelf(q)), [q]);
+  /**
+   * The catalogue index is not in the page's first load (lib/helpbot-lazy.ts).
+   * `ready` flips once it is here, which is what re-runs the two lookups below
+   * for anything already typed.
+   */
+  const [ready, setReady] = useState(() => helpBotNow() !== null);
+  useEffect(() => { warmHelpBot(); }, []);
+
+  const cat = ready ? helpBotNow()?.catalog : undefined;
+  const results: Found[] = useMemo(
+    () => (!cat || q.trim().length < 2 ? [] : cat.findProducts(q, 7)),
+    [cat, q],
+  );
+  const shelf = useMemo(() => (!cat || q.trim().length < 2 ? null : cat.findShelf(q)), [cat, q]);
 
   const close = () => {
     setOpen(false);
@@ -62,6 +75,14 @@ export default function QuickSearch() {
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
+
+  // Opening it is the last moment the index can arrive late.
+  useEffect(() => {
+    if (!open || ready) return;
+    let alive = true;
+    void loadHelpBot().then(() => { if (alive) setReady(true); });
+    return () => { alive = false; };
+  }, [open, ready]);
 
   const go = (href: string) => {
     close();
@@ -111,7 +132,7 @@ export default function QuickSearch() {
                 onChange={(e) => type(e.target.value)}
                 onKeyDown={onKeyDown}
                 aria-label="חפש מוצר"
-                placeholder={`חפש בין ${catalogueSize()} הדגמים — "דרקון", "מחזיק מפתחות"…`}
+                placeholder={cat ? `חפש בין ${cat.catalogueSize()} הדגמים — "דרקון", "מחזיק מפתחות"…` : "חפש מוצר…"}
                 className="flex-1 h-14 bg-transparent text-ink-50 placeholder:text-ink-500 outline-none text-[15px]"
               />
               <kbd className="hidden sm:block text-[10px] font-mono text-ink-500 border border-ink-700 rounded px-1.5 py-0.5">ESC</kbd>
@@ -150,7 +171,7 @@ export default function QuickSearch() {
               {shelf && (
                 <button
                   type="button"
-                  onClick={() => go(SHELF_ROUTE[shelf.shelf])}
+                  onClick={() => go(cat!.SHELF_ROUTE[shelf.shelf])}
                   className="w-full flex items-center gap-3 px-4 py-3 text-right hover:bg-ink-800/60 transition-colors border-t border-ink-800"
                 >
                   <Icon name="package" size={15} className="text-flame shrink-0" />

@@ -1,7 +1,7 @@
 import FAQClient from "./FAQClient";
 import JsonLd from "@/components/seo/JsonLd";
 import { faqJsonLd } from "@/lib/seo";
-import { FAQS } from "@/lib/data";
+import { FAQS } from "@/lib/faqs";
 
 export const metadata = {
   title: "שאלות נפוצות · Unit 3D",
