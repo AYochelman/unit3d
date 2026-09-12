@@ -19,6 +19,7 @@ import { EXTRA_COLOR_PRICE, PERSONALIZE_PRICE } from "@/lib/personalize";
 import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { estimateCost, parseHours } from "@/lib/costing";
 import { useAdminStore } from "@/lib/admin-store";
+import { isColorInStock } from "@/lib/inventory";
 import { useLivePrice, useLivePricer } from "@/lib/live-price";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -264,7 +265,24 @@ export default function ConfiguratorClient({
 
   const photo = override?.image ?? product.image;
   const showCanvas = current === "text" && config.mode === "design" && product.hasDesigner;
-  const colorChoices = product.material === "tpu" ? FILAMENTS.filter((f) => TPU_COLORS.has(f.id)) : FILAMENTS;
+  /**
+   * Only what is actually on the shelf.
+   *
+   * The page said "בחר מתוך N צבעים שיש לי במלאי כרגע" while listing every
+   * colour the shop has ever stocked — including the ones marked as run out in
+   * /admin. A customer would choose one, order it, and then be told no. The
+   * stock map is the same one the shelves already respect; this reads it too.
+   *
+   * If every colour of a material is out, the list falls back to showing them
+   * rather than leaving an empty step — an empty picker looks broken, and the
+   * owner can still say so in the conversation.
+   */
+  const stock = useAdminStore((s) => s.stock);
+  const inStock = (f: (typeof FILAMENTS)[number]) =>
+    isColorInStock(stock, product.material === "tpu" ? "tpu" : materialFromFilamentDesc(f.desc), f.id);
+  const allChoices = product.material === "tpu" ? FILAMENTS.filter((f) => TPU_COLORS.has(f.id)) : FILAMENTS;
+  const available = allChoices.filter(inStock);
+  const colorChoices = available.length ? available : allChoices;
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
@@ -529,7 +547,7 @@ export default function ConfiguratorClient({
                   <p className="text-sm text-ink-400 mb-5">
                     {product.material === "tpu"
                       ? "קייסים מודפסים ב-TPU גמיש. הצבעים שיש לי ב-TPU כרגע:"
-                      : `בחר מתוך ${FILAMENTS.length} צבעים שיש לי במלאי כרגע. החומר נקבע לפי הצבע.`}
+                      : `בחר מתוך ${colorChoices.length} צבעים שיש לי במלאי כרגע. החומר נקבע לפי הצבע.`}
                   </p>
                   <div className="grid grid-cols-4 gap-2">
                     {colorChoices.map((f) => (

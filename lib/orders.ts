@@ -42,6 +42,16 @@ export type OrderLine = {
    * only. A near-miss would hand the owner the wrong file to print.
    */
   itemId?: string;
+  /**
+   * The design the customer drew, as the drawing itself.
+   *
+   * The configurator has produced this SVG all along and the customer saw it
+   * on his own cart — but it stopped there. The one person who has to PRINT
+   * the thing got a list of words ("טקסט 8mm, שתי צורות") and had to imagine
+   * the rest. It is small (a few KB of text), it travels with the order, and
+   * it is the difference between reading an order and seeing it.
+   */
+  designSvg?: string;
 };
 
 export type OrderDecision = "pending" | "approved" | "rejected" | "refunded";

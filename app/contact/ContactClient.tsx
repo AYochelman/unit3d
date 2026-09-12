@@ -293,6 +293,7 @@ export default function ContactClient() {
                   qty: it.qty,
                   price: it.price ?? null,
                   ...(src?.id ? { itemId: src.id } : {}),
+                  ...(typeof it.meta?.designSvg === "string" ? { designSvg: it.meta.designSvg } : {}),
                 };
               }),
               itemsTotal,

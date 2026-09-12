@@ -463,6 +463,21 @@ function OrderRow({
                   <ul className="mt-1 space-y-0.5 text-[11px] text-ink-400">
                     {l.summary.map((x) => <li key={x}>{x}</li>)}
                   </ul>
+
+                  {/* What the customer actually drew.
+                      The configurator already carries the design as an SVG on
+                      the order, and the customer sees it on his own cart — but
+                      the only person who has to PRINT it saw a list of words:
+                      "טקסט בגודל 8mm, שתי צורות". Reading an order meant
+                      imagining it. Here it is, the way he left it. */}
+                  {l.designSvg && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={`data:image/svg+xml;utf8,${encodeURIComponent(l.designSvg)}`}
+                      alt="העיצוב שהלקוח הכין"
+                      className="mt-2 w-full max-w-[260px] rounded-lg border border-ink-700 bg-ink-950"
+                    />
+                  )}
                 </div>
               ))}
               {o.note && (
