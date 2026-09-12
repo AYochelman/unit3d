@@ -83,20 +83,45 @@ export default function LiveVideo({
       cbs.current.onFail?.();
     };
 
+    /**
+     * Ask for play, and listen to the answer.
+     *
+     * `autoplay` is a request, not an instruction: a browser may decline it and
+     * say so nowhere an event can be caught — no error on the element, nothing
+     * from the player. The result is a video that never starts and never
+     * complains, which is indistinguishable from every other silent failure.
+     * Calling play() ourselves turns that refusal into a promise rejection we
+     * can name.
+     */
+    const nudge = () => {
+      void video.play()?.catch((e: DOMException) => {
+        cbs.current.onDiag?.(`play-refused: ${e.name}${e.name === "NotAllowedError" ? " (autoplay)" : ""}`);
+      });
+    };
+
+    /** Where it got to, so a stall has an address rather than just a silence. */
+    const stage = (where: string) => cbs.current.onDiag?.(`stalled-at: ${where}`);
+
     // Safari and iOS play this natively, and doing so uses far less battery
     // than the JavaScript player would.
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = src;
+      stage("native-attached");
+      video.addEventListener("loadedmetadata", nudge, { once: true });
+      nudge();
       const nativeFail = () => {
         cbs.current.onDiag?.(`native ${video.error?.code ?? "?"}: ${video.error?.message || "לא ניתן לנגן"}`);
         give();
       };
       video.addEventListener("error", nativeFail);
-      destroy = () => video.removeEventListener("error", nativeFail);
+      destroy = () => {
+        video.removeEventListener("error", nativeFail);
+        video.removeEventListener("loadedmetadata", nudge);
+      };
     } else {
       void import("hls.js").then(({ default: Hls }) => {
         if (!alive) return;
-        if (!Hls.isSupported()) return give();
+        if (!Hls.isSupported()) { cbs.current.onDiag?.("hlsjs-unsupported"); return give(); }
         const hls = new Hls({
           // A live view wants to be near the front, and would rather skip than
           // fall behind: an old frame presented as now is worse than a gap.
@@ -123,10 +148,20 @@ export default function LiveVideo({
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
           else give();
         });
+        // Each stage overwrites the last, so whatever is reported is the
+        // furthest the player actually got before going quiet.
+        hls.on(Hls.Events.MEDIA_ATTACHED, () => stage("media-attached"));
+        hls.on(Hls.Events.MANIFEST_PARSED, () => { stage("manifest-parsed"); nudge(); });
+        hls.on(Hls.Events.FRAG_BUFFERED, () => { stage("frag-buffered"); nudge(); });
         hls.loadSource(src);
         hls.attachMedia(video);
         destroy = () => hls.destroy();
-      }, give);
+      }, (e: Error) => {
+        // The player itself is a separate download. When it does not arrive,
+        // nothing below ever runs — and this path used to report nothing at all.
+        cbs.current.onDiag?.(`hlsjs-failed-to-load: ${e?.message || "?"}`);
+        give();
+      });
     }
 
     return () => { alive = false; destroy?.(); };
@@ -144,6 +179,11 @@ export default function LiveVideo({
       controls={false}
       onPlaying={() => onPlaying?.()}
       onCanPlay={() => onPlaying?.()}
+      // The one signal that REPEATS while frames are arriving. `playing` and
+      // `canplay` fire once at the start, so a page watching only those
+      // concludes the stream has stalled a second after it starts — and then
+      // says so, about a video that is playing perfectly.
+      onTimeUpdate={() => onPlaying?.()}
       // The four ways a live stream goes quiet without going away.
       onWaiting={() => onStall?.()}
       onStalled={() => onStall?.()}

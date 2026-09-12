@@ -167,7 +167,11 @@ export default function LivestreamClient() {
     "no-live-url": "אין liveUrl ב-public/shop.json של האתר.",
     unknown: "הסוכן לא אמר למה. כנראה גרסה ישנה — הרץ את update.",
     // The player's side: the agent says the stream is up, the browser disagrees.
-    "stream-never-started": "הסוכן מדווח ששידור באוויר, אבל הנגן לא התחיל לנגן ולא התלונן. לרוב זה CORS: ל-bucket של R2 אין הרשאת גישה מהדומיין של האתר.",
+    "stream-never-started": "הסוכן מדווח ששידור באוויר, אבל הנגן לא התחיל ולא התלונן — ולא הספיק להגיע לשום שלב מדווח. סימן שנגן הווידאו עצמו לא נטען.",
+    "play-refused": "הדפדפן סירב להתחיל לנגן מעצמו. לחץ על הכפתור שמופיע על התמונה.",
+    "hlsjs-failed-to-load": "נגן הווידאו (hls.js) לא הצליח להיטען בדפדפן — כנראה חסימת רשת או קובץ ישן בזיכרון המטמון. רענון קשיח.",
+    "hlsjs-unsupported": "הדפדפן הזה לא תומך בניגון השידור. נסה כרום או אדג'.",
+    "stalled-at": "הנגן נעצר באמצע. השלב שהוא הספיק להגיע אליו מופיע בשורה הקטנה מתחת.",
     manifestLoadError: "הדפדפן לא הצליח לטעון את stream.m3u8. אם הקוד הוא 0 — זה CORS על ה-bucket. אם 404 — הקובץ לא שם.",
     manifestLoadTimeOut: "stream.m3u8 לא ענה בזמן.",
     manifestParsingError: "stream.m3u8 נטען אבל לא נקרא כפלייליסט תקין.",
@@ -277,7 +281,7 @@ export default function LivestreamClient() {
                   {/* The player appends the HTTP code to its reason, so the
                       lookup uses the reason alone and the code stays in the
                       line below it. */}
-                  {WHY_HE[(liveWhy ?? playWhy ?? "").split(" (")[0]] ??
+                  {WHY_HE[(liveWhy ?? playWhy ?? "").split(/[:(]/)[0].trim()] ??
                     (liveWhy
                       ? liveWhy
                       : `הסוכן משדר, אבל הנגן בדפדפן נכשל: ${playWhy}`)}
@@ -286,6 +290,22 @@ export default function LivestreamClient() {
                   {liveWhy ?? `player: ${playWhy}`}{liveAgent ? ` · agent ${liveAgent}` : " · agent ?"}
                 </div>
               </div>
+            )}
+
+            {/* The browser would not start it by itself. Everyone sees this —
+                it is the one failure a visitor can actually fix, with a tap. */}
+            {playWhy?.startsWith("play-refused") && !videoOn && (
+              <button
+                type="button"
+                onClick={() => { setPlayFault(null); void videoEl.current?.play().catch(() => {}); }}
+                className="absolute inset-0 z-[3] flex items-center justify-center bg-ink-950/45 backdrop-blur-[2px]"
+                aria-label="הפעל את השידור החי"
+              >
+                <span className="inline-flex items-center gap-2 rounded-full bg-ink-950/85 border border-ink-700 px-5 py-3 text-sm font-semibold text-ink-50">
+                  <Icon name="play" size={18} />
+                  הפעל את השידור
+                </span>
+              </button>
             )}
 
             <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
