@@ -21,7 +21,7 @@ import { cn } from "@/lib/cn";
  * the rotation carries on from there.
  */
 const CLIPS = [
-  { file: "motion-20260829", label: "מגש מלא, סדרה שלמה", date: "29.08" },
+  { file: "motion-20260829", label: "ספיידרמן בהדפסת רשת", date: "29.08" },
   { file: "motion-20260805", label: "שתי דיסקיות לבנות", date: "05.08" },
   { file: "motion-20260716", label: "הדפסה מלאה מ-0", date: "16.07" },
   { file: "motion-20260613", label: "שכבה ראשונה על הפלטה", date: "13.06" },

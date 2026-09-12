@@ -69,8 +69,8 @@ const SLIDES: Slide[] = [
     title: "צפו בנו מדפיסים",
     line: "המדפסת משדרת מהסטודיו בזמן אמת. בלי עריכה, בלי פילטרים.",
     href: "/#live",
-    video: "/videos/motion-20260903.mp4",
-    poster: "/videos/posters/motion-20260903.jpg",
+    video: "/videos/hero-live.mp4",
+    poster: "/videos/posters/hero-live.jpg",
   },
 ];
 
@@ -118,7 +118,13 @@ export default function HeroCarousel() {
           if (Math.abs(dx) > 40) go(at + (dx < 0 ? 1 : -1));
         }}
       >
-        <div className="relative aspect-[16/10] sm:aspect-[16/9]">
+        {/* Two columns, not a stretched backdrop.
+            The catalogue photographs are 400px wide — the size a shop listing
+            needs. Blown across a 16:9 banner they turn to mush, and a slide
+            whose picture is a drawing ends up mostly empty space. Given its own
+            panel, each picture is shown at a size it can actually fill, and the
+            words sit beside it instead of on top of it. */}
+        <div className="relative min-h-[320px] sm:min-h-[360px] md:min-h-[420px]">
           {SLIDES.map((s, i) => (
             <Link
               key={s.id}
@@ -126,47 +132,47 @@ export default function HeroCarousel() {
               aria-hidden={i !== at}
               tabIndex={i === at ? 0 : -1}
               className={cn(
-                "absolute inset-0 block transition-opacity duration-700 motion-reduce:transition-none",
+                "absolute inset-0 grid md:grid-cols-2 transition-opacity duration-700 motion-reduce:transition-none",
                 i === at ? "opacity-100" : "opacity-0 pointer-events-none",
               )}
             >
-              {s.video ? (
-                <video
-                  src={assetSrc(s.video)}
-                  poster={assetSrc(s.poster)}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              ) : s.art ? (
-                <span className="absolute inset-0 flex items-center justify-center bg-ink-900">
-                  <Emblem shape="wings" hue={140} size={190} />
-                </span>
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={photoSrc(s.photo!)}
-                  alt={s.title}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  loading={i === 0 ? "eager" : "lazy"}
-                />
-              )}
+              <span className="relative flex items-center justify-center bg-ink-900/60 p-4 md:p-6 overflow-hidden">
+                {s.video ? (
+                  <video
+                    src={assetSrc(s.video)}
+                    poster={assetSrc(s.poster)}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="max-h-full w-auto max-w-full rounded-xl object-contain"
+                  />
+                ) : s.art ? (
+                  <Emblem shape="wings" hue={140} size={150} />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={photoSrc(s.photo!)}
+                    alt={s.title}
+                    // Never enlarged past what the file actually holds: a 400px
+                    // photograph shown at 400px is sharp, and at 1000px is mud.
+                    className="max-h-full w-auto max-w-full rounded-xl object-contain"
+                    loading={i === 0 ? "eager" : "lazy"}
+                  />
+                )}
+              </span>
 
-              <span className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/55 to-transparent" />
-
-              <span className="absolute inset-x-0 bottom-0 p-5 md:p-8 block text-right">
+              <span className="flex flex-col justify-center p-5 md:p-8 text-right">
                 <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase text-flame block mb-1.5">
                   {s.kicker}
                 </span>
-                <span className="block text-2xl md:text-4xl font-black tracking-tight text-ink-50">
+                <span className="block text-2xl md:text-4xl font-black tracking-tight text-ink-50 leading-tight">
                   {s.title}
                 </span>
-                <span className="mt-1.5 block text-sm md:text-base text-ink-200 max-w-xl mr-auto">
+                <span className="mt-2 block text-sm md:text-base text-ink-300">
                   {s.line}
                 </span>
-                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-flame">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-flame">
                   {/* RTL: forward is a left-pointing arrow. */}
                   <Icon name="arrowLeft" size={16} />
                   {s.id === "live" ? "לצפייה בשידור" : "לצפייה במדף"}
@@ -176,26 +182,21 @@ export default function HeroCarousel() {
           ))}
         </div>
 
-        {/* Controls sit above the slides, and never inside the link. */}
-        <button
-          type="button"
-          onClick={() => go(at + 1)}
-          aria-label="השקופית הבאה"
-          className="absolute top-1/2 -translate-y-1/2 right-3 z-10 h-10 w-10 rounded-full bg-ink-950/70 border border-ink-700 text-ink-100 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
-        >
-          <Icon name="arrowRight" size={18} />
-        </button>
+      </div>
+
+      {/* Controls below the frame, never over the words.
+          At the edges of a two-column slide they landed on top of the
+          sentence, which is both ugly and a target that covers a link. */}
+      <div className="mt-3 flex items-center justify-center gap-3">
         <button
           type="button"
           onClick={() => go(at - 1)}
           aria-label="השקופית הקודמת"
-          className="absolute top-1/2 -translate-y-1/2 left-3 z-10 h-10 w-10 rounded-full bg-ink-950/70 border border-ink-700 text-ink-100 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
+          className="h-9 w-9 rounded-full border border-ink-700 text-ink-300 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
         >
-          <Icon name="arrowLeft" size={18} />
+          <Icon name="arrowRight" size={16} />
         </button>
-      </div>
 
-      <div className="mt-3 flex items-center justify-center gap-2">
         {SLIDES.map((s, i) => (
           <button
             key={s.id}
@@ -209,6 +210,15 @@ export default function HeroCarousel() {
             )}
           />
         ))}
+
+        <button
+          type="button"
+          onClick={() => go(at + 1)}
+          aria-label="השקופית הבאה"
+          className="h-9 w-9 rounded-full border border-ink-700 text-ink-300 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
+        >
+          <Icon name="arrowLeft" size={16} />
+        </button>
       </div>
     </div>
   );
