@@ -83,11 +83,14 @@ function readTar(buf) {
   return out;
 }
 
+// GitHub fingerprints the archive in its ETag. It is not the commit id, but it
+// does answer "did this run get the same archive as the last one?" — which is
+// the question worth asking when an update seems not to have taken. An archive
+// asked for within a minute or so of a push can still be the previous one.
+const stamp = (res.headers?.get("etag") || "").replace(/^W\//, "").replace(/"/g, "").slice(0, 7);
+
 const entries = readTar(zlib.gunzipSync(Buffer.from(await res.arrayBuffer())));
-// GitHub names the archive's one top folder after the commit it was cut from,
-// which answers "is this really the new code?" before anything is written.
 const root = entries[0]?.name.split("/")[0] ?? "";
-const commit = /-([0-9a-f]{7,40})$/.exec(root)?.[1] ?? "";
 
 const wanted = entries
   .map((e) => ({ ...e, rel: e.name.startsWith(`${root}/agent/`) ? e.name.slice(root.length + 7) : "" }))
@@ -110,7 +113,7 @@ for (const f of wanted) {
 }
 
 if (!written) {
-  console.log(`  already up to date. nothing changed.${commit ? `  (${commit.slice(0, 7)})` : ""}\n`);
+  console.log(`  already up to date. nothing changed.${stamp ? `  (archive ${stamp})` : ""}\n`);
   process.exit(0);
 }
 
@@ -119,7 +122,7 @@ if (!written) {
 const now = /VERSION = "([^"]+)"/.exec(fs.readFileSync(path.join(HERE, "version.mjs"), "utf8"))?.[1] ?? "?";
 console.log(`
   ${written} file${written === 1 ? "" : "s"} updated.
-  now on version ${now}${commit ? `  (commit ${commit.slice(0, 7)})` : ""}
+  now on version ${now}${stamp ? `  (archive ${stamp})` : ""}
 
   config.json, ffmpeg and the installed packages were left alone.
   Close the agent window if it is open, then run start.bat again.
