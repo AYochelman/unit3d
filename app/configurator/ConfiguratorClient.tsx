@@ -48,7 +48,7 @@ const STEP_LABEL: Record<StepId, string> = {
   product: "מוצר",
   model: "דגם",
   shape: "צורה",
-  text: "טקסט / עיצוב",
+  text: "טקסט ועיצוב",
   color: "צבע",
   size: "גודל",
   qty: "כמות",
@@ -170,8 +170,10 @@ export default function ConfiguratorClient({
     const s: StepId[] = ["product"];
     if (product.models) s.push("model");
     if (product.hasShape) s.push("shape");
-    if (product.hasText) s.push("text");
+    // The colour comes first: the design step draws on top of the filament,
+    // so you want to know what you are drawing on before you draw.
     s.push("color");
+    if (product.hasText) s.push("text");
     if (product.hasSize) s.push("size");
     s.push("qty");
     return s;
@@ -234,11 +236,11 @@ export default function ConfiguratorClient({
     if (override?.href) lines.push(`מתוך הקטלוג: ${product.label}`);
     if (modelLabel) lines.push(`${product.models!.label}: ${modelLabel}`);
     if (product.hasShape) lines.push(`צורה: ${shapes.find((s) => s.id === shape)?.label ?? ""}`);
+    lines.push(`צבע: ${colorObj.name} · ${material.name}`);
     if (product.hasText) {
       if (hasDesign) lines.push(...designSummary(design));
       else lines.push(`טקסט: "${config.text}${config.number ? " " + config.number : ""}" · ${fontObj.name}`);
     }
-    lines.push(`צבע: ${colorObj.name} · ${material.name}`);
     if (sizeObj) lines.push(`גודל: ${sizeObj.label} (${sizeObj.dim})`);
     else lines.push(`מידה: ${face[0]}×${face[1]}mm`);
     lines.push(`כמות: ${config.qty}${discount ? ` · ${BULK_NOTE}` : ""}`);
@@ -373,8 +375,8 @@ export default function ConfiguratorClient({
               {steps.map((id, i) => (
                 <button key={id} onClick={() => setStep(i)} className="flex-1 min-w-[56px] text-right group">
                   <div className={cn("h-1 rounded-full mb-2 transition-colors", i <= step ? "bg-flame" : "bg-ink-800")} />
-                  <div className={cn("font-mono text-[10px] tracking-wider truncate", i === step ? "text-flame" : "text-ink-500")} dir="ltr">
-                    {String(i + 1).padStart(2, "0")} · {STEP_LABEL[id]}
+                  <div className={cn("font-mono text-[10px] tracking-wider truncate", i === step ? "text-flame" : "text-ink-500")}>
+                    <span dir="ltr">{String(i + 1).padStart(2, "0")}</span> · {STEP_LABEL[id]}
                   </div>
                 </button>
               ))}
