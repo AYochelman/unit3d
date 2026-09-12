@@ -1,6 +1,7 @@
 import Btn from "@/components/ui/Btn";
 import HeroLogo from "./HeroLogo";
 import PrinterPanel from "./PrinterPanel";
+import { photoSrc } from "@/lib/assets";
 
 export default function Hero() {
   return (
@@ -64,6 +65,30 @@ export default function Hero() {
             </li>
           </ul>
         </div>
+      </div>
+
+      {/* One real thing, printed here.
+          The banner above is type and a logo — true of any shop. A photograph
+          of something that actually came off this machine is the only part of
+          a first screen that cannot be copied from a template, so it goes as
+          high as it can without pushing the buttons below the fold. */}
+      <div className="max-w-4xl mx-auto px-6 md:px-10 -mt-2 md:-mt-4 mb-12 md:mb-16">
+        <figure className="relative rounded-2xl overflow-hidden border border-ink-800 bg-ink-950">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photoSrc("/img/products/biz-card-3.webp")}
+            alt="כרטיס ביקור תלת מימדי מודפס — לוגו בולט בצד אחד וברקוד בצד השני"
+            width={1200}
+            height={900}
+            // Above the fold: it is the one image worth blocking a moment for.
+            fetchPriority="high"
+            className="w-full h-auto object-contain"
+          />
+          <figcaption className="absolute bottom-0 inset-x-0 p-3 md:p-4 bg-gradient-to-t from-ink-950/90 to-transparent text-right">
+            <span className="text-ink-100 text-sm md:text-base font-semibold">כרטיס ביקור תלת מימדי</span>
+            <span className="text-ink-400 text-xs md:text-sm block">טקסט בולט, וברקוד מאחור. הודפס כאן.</span>
+          </figcaption>
+        </figure>
       </div>
 
       {/* Machine readout — replaces the missing hero video with live printer data */}
