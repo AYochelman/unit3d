@@ -26,6 +26,7 @@ export default function LiveVideo({
   onFail,
   onPlaying,
   onStall,
+  onDiag,
   videoRef,
 }: {
   src: string;
@@ -34,6 +35,16 @@ export default function LiveVideo({
   onPlaying?: () => void;
   /** Frames stopped arriving — briefly, not fatally. */
   onStall?: () => void;
+  /**
+   * What the player itself is complaining about, in its own words.
+   *
+   * A stream the agent is happily uploading can still be unplayable in the
+   * browser — the wrong content type, a CORS header the bucket never sends, a
+   * codec the machine will not decode. From outside, all of those look
+   * identical to "no video", so the player says which one it is instead of
+   * retrying in silence.
+   */
+  onDiag?: (detail: string) => void;
   /** Lets the page drive the element (iOS puts video fullscreen, not divs). */
   videoRef?: React.RefObject<HTMLVideoElement | null>;
 }) {
@@ -57,8 +68,12 @@ export default function LiveVideo({
     // than the JavaScript player would.
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = src;
-      video.addEventListener("error", give);
-      destroy = () => video.removeEventListener("error", give);
+      const nativeFail = () => {
+        onDiag?.(`native ${video.error?.code ?? "?"}: ${video.error?.message || "לא ניתן לנגן"}`);
+        give();
+      };
+      video.addEventListener("error", nativeFail);
+      destroy = () => video.removeEventListener("error", nativeFail);
     } else {
       void import("hls.js").then(({ default: Hls }) => {
         if (!alive) return;
@@ -73,10 +88,20 @@ export default function LiveVideo({
           levelLoadingMaxRetry: 4,
           fragLoadingMaxRetry: 4,
         });
+        // A fatal network error used to restart the load and say nothing, for
+        // ever: a playlist the browser cannot fetch left the page retrying in
+        // silence behind the still picture, with no way to tell that from a
+        // printer that simply is not streaming. Retrying is still right — a
+        // live stream drops segments — but it is bounded now, and it reports.
+        let netTries = 0;
         hls.on(Hls.Events.ERROR, (_e, data) => {
           if (!data.fatal) return;
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-          else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+          const code = data.response?.code;
+          onDiag?.(`${data.details}${code ? ` (${code})` : ""}`);
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            if (++netTries > 3) return give();
+            hls.startLoad();
+          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
           else give();
         });
         hls.loadSource(src);
@@ -86,7 +111,7 @@ export default function LiveVideo({
     }
 
     return () => { alive = false; destroy?.(); };
-  }, [src, failed, onFail, ref]);
+  }, [src, failed, onFail, onDiag, ref]);
 
   return (
     <video

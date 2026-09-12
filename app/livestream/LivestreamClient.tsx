@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import LiveVideo from "@/components/LiveVideo";
 import { useSteadyImage } from "@/lib/steady-image";
@@ -52,6 +52,31 @@ export default function LivestreamClient() {
   const showVideo = !!stream && videoFailed !== stream;
 
   /**
+   * The other half of "why is there no video".
+   *
+   * The agent can be uploading happily and the browser still refuse to play
+   * what it uploaded. In that case the status file says the stream IS on, so
+   * there is no agent-side reason to show — and the page used to fall back to
+   * the still with nothing to say at all. This is the player's own complaint,
+   * plus a plain timeout for the case where it never complains and never
+   * starts either.
+   */
+  // Tagged with the stream it belongs to, so a new address drops the old
+  // complaint on its own rather than needing an effect to clear it.
+  const [playFault, setPlayFault] = useState<{ src: string; why: string } | null>(null);
+  const onDiag = useCallback((d: string) => setPlayFault({ src: stream ?? "", why: d }), [stream]);
+  const playWhy = stream && playFault?.src === stream ? playFault.why : null;
+  useEffect(() => {
+    if (!stream) return;
+    // No complaint and no picture is its own fault, and the commonest one.
+    const id = setTimeout(
+      () => setPlayFault((prev) => (prev?.src === stream ? prev : { src: stream, why: "stream-never-started" })),
+      12_000,
+    );
+    return () => clearTimeout(id);
+  }, [stream]);
+
+  /**
    * The flicker.
    *
    * iOS plays this stream natively, and a live playlist rewritten every second
@@ -72,6 +97,8 @@ export default function LivestreamClient() {
     // element never fired an event for it.
     stallTimer.current = setTimeout(() => setVideoOn(false), 1200);
     setVideoOn(true);
+    // Frames are arriving, so whatever the player complained about is over.
+    setPlayFault(null);
   };
   useEffect(() => () => { if (stallTimer.current) clearTimeout(stallTimer.current); }, []);
 
@@ -137,6 +164,14 @@ export default function LivestreamClient() {
     "agent-too-old": "הסוכן מעלה סטטוס אבל בלי שדה why — גרסה ישנה. הרץ update.bat.",
     "no-live-url": "אין liveUrl ב-public/shop.json של האתר.",
     unknown: "הסוכן לא אמר למה. כנראה גרסה ישנה — הרץ את update.",
+    // The player's side: the agent says the stream is up, the browser disagrees.
+    "stream-never-started": "הסוכן מדווח ששידור באוויר, אבל הנגן לא התחיל לנגן ולא התלונן. לרוב זה CORS: ל-bucket של R2 אין הרשאת גישה מהדומיין של האתר.",
+    manifestLoadError: "הדפדפן לא הצליח לטעון את stream.m3u8. אם הקוד הוא 0 — זה CORS על ה-bucket. אם 404 — הקובץ לא שם.",
+    manifestLoadTimeOut: "stream.m3u8 לא ענה בזמן.",
+    manifestParsingError: "stream.m3u8 נטען אבל לא נקרא כפלייליסט תקין.",
+    fragLoadError: "הפלייליסט נטען אבל קטעי הווידאו עצמם לא — כנראה הרשאות או נתיב.",
+    levelLoadError: "רשימת הקטעים לא נטענה.",
+    bufferAppendError: "הדפדפן לא מצליח לפענח את הווידאו — קידוד לא נתמך.",
   };
 
   const [clock, setClock] = useState("00:00:00");
@@ -185,6 +220,7 @@ export default function LivestreamClient() {
                 className="absolute inset-0 h-full w-full object-cover z-[2]"
                 onPlaying={framesFlowing}
                 onStall={() => setVideoOn(false)}
+                onDiag={onDiag}
                 onFail={() => { setVideoOn(false); setVideoFailed(stream); }}
               />
             )}
@@ -232,12 +268,20 @@ export default function LivestreamClient() {
             {/* Why there is no video — the owner's answer, never a customer's.
                 Without it, a printer that is mid-print with the camera on and
                 no R2 keys looks exactly like one that is working. */}
-            {showWhy && !videoOn && liveWhy && (
+            {showWhy && !videoOn && (liveWhy || playWhy) && (
               <div className="absolute bottom-4 right-4 z-20 max-w-[min(92%,30rem)] rounded-lg border border-amber-500/40 bg-ink-950/85 backdrop-blur px-3 py-2 text-[11px] leading-relaxed text-amber-200">
                 <span className="font-mono text-[10px] tracking-widest uppercase text-amber-400/80">ADMIN · אין וידאו</span>
-                <div className="mt-0.5 text-ink-100">{WHY_HE[liveWhy] ?? liveWhy}</div>
-                <div className="mt-1 font-mono text-[10px] text-ink-500">
-                  {liveWhy}{liveAgent ? ` · agent ${liveAgent}` : " · agent ?"}
+                <div className="mt-0.5 text-ink-100">
+                  {/* The player appends the HTTP code to its reason, so the
+                      lookup uses the reason alone and the code stays in the
+                      line below it. */}
+                  {WHY_HE[(liveWhy ?? playWhy ?? "").split(" (")[0]] ??
+                    (liveWhy
+                      ? liveWhy
+                      : `הסוכן משדר, אבל הנגן בדפדפן נכשל: ${playWhy}`)}
+                </div>
+                <div className="mt-1 font-mono text-[10px] text-ink-500" dir="ltr">
+                  {liveWhy ?? `player: ${playWhy}`}{liveAgent ? ` · agent ${liveAgent}` : " · agent ?"}
                 </div>
               </div>
             )}
