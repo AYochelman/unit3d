@@ -514,6 +514,32 @@ let hlsLastStart = 0;
 let sentSegments = new Set();  // what R2 already has
 let hlsWarned = false;
 
+/**
+ * A broadcast on demand, without waiting for a print.
+ *
+ * Live video only runs while something is printing, which is right — nobody
+ * needs a broadcast of an empty plate. But it also means the only way to find
+ * out whether the video WORKS is to start a real print and watch, and every
+ * round of that costs filament and an hour. live-test.bat drops a file here
+ * and the stream runs for a minute and a half through exactly the same code
+ * path a print uses, so what it proves is worth something.
+ */
+const TEST_FLAG = path.join(HERE, ".live-test");
+const TEST_SECONDS = 90;
+let testAnnounced = false;
+
+function testBroadcastWanted() {
+  let asked;
+  try { asked = Number(fs.readFileSync(TEST_FLAG, "utf8").trim()); } catch { testAnnounced = false; return false; }
+  if (Number.isFinite(asked) && Date.now() - asked < TEST_SECONDS * 1000) {
+    if (!testAnnounced) { testAnnounced = true; log(`live: test broadcast requested - streaming for ${TEST_SECONDS}s`); }
+    return true;
+  }
+  try { fs.unlinkSync(TEST_FLAG); } catch {}
+  if (testAnnounced) { testAnnounced = false; log("live: test broadcast finished"); }
+  return false;
+}
+
 function startLive() {
   if (!R2 || cfg.live?.enabled === false) return;
   const url = rtspUrl();
@@ -751,7 +777,7 @@ async function liveTick() {
     if (why !== lastWhy) { lastWhy = why; log(`live: no video - ${BLOCKER_TEXT[why] || why}`); }
     return;
   }
-  const shouldStream = state() === "printing" && !!rtspUrl();
+  const shouldStream = (state() === "printing" || testBroadcastWanted()) && !!rtspUrl();
   if (shouldStream) {
     startLive();
     await pushLive();
@@ -867,7 +893,8 @@ if (cfg.live?.enabled === false) {
   log("live video: ffmpeg is missing - double-click ffmpeg-install.bat.");
 } else {
   log(`live video: ready (bucket ${r2cfg.bucket}) - it starts by itself when a print starts.`);
-  log("  to check it now without printing: double-click live-check.bat");
+  log("  to check the setup:        double-click live-check.bat");
+  log("  to SEE it without a print: double-click live-test.bat (90 seconds)");
   void ensureLiveCors().catch((e) => log("live video: CORS check failed -", e.message));
 }
 process.on("SIGINT", () => {
