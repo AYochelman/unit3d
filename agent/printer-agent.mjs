@@ -646,14 +646,56 @@ function liveBlocker() {
   return "";
 }
 
-const BLOCKER_HE = {
-  "r2-not-configured": "אין הגדרות R2 ב-config.json - הווידאו לא יכול לעלות לשום מקום",
-  "disabled-in-config": "live.enabled מוגדר false ב-config.json",
-  "not-printing": "המדפסת לא מדפיסה כרגע",
-  "printer-offers-no-stream": "המדפסת לא מפרסמת כתובת RTSP - צריך LAN Only + Liveview + Developer Mode",
-  "ffmpeg-missing": "ffmpeg לא מותקן - הרץ פעם אחת ffmpeg-install.bat",
-  "encoder-not-started": "ffmpeg עוד לא הספיק לעלות",
+// English on purpose. These go to a Windows console window, which draws Hebrew
+// as a row of empty boxes even with the code page set — so the one line that
+// explains what is wrong was the one line nobody could read. The Hebrew lives
+// on the site, where it renders.
+const BLOCKER_TEXT = {
+  "r2-not-configured": "no Cloudflare settings in config.json - the video has nowhere to go",
+  "disabled-in-config": "live.enabled is false in config.json",
+  "not-printing": "the printer is not printing right now",
+  "printer-offers-no-stream": "the printer is not offering a stream - it needs LAN Only + Liveview + Developer Mode",
+  "ffmpeg-missing": "ffmpeg is not installed - run ffmpeg-install.bat once",
+  "encoder-not-started": "ffmpeg has not come up yet",
 };
+
+/**
+ * Let the site's browser read the stream.
+ *
+ * A bucket serves its files to anyone who types the address, and refuses every
+ * one of them to a page's JavaScript unless it says which sites may read it.
+ * The video player IS JavaScript, so without this the stream uploads perfectly,
+ * serves perfectly, and never plays: the browser discards the response before
+ * the player ever sees it, without an error anyone can catch.
+ *
+ * It is a bucket setting, not a file setting, so it is set once and checked on
+ * every start — cheap, and it survives someone recreating the bucket.
+ */
+const LIVE_ORIGINS = cfg.live?.allowOrigins ?? [
+  "https://unit-3d.com",
+  "https://www.unit-3d.com",
+  "http://localhost:3000",
+];
+
+async function ensureLiveCors() {
+  if (!R2 || cfg.live?.enabled === false) return;
+  const cur = await R2.cors().catch(() => ({ ok: false, status: 0, origins: [] }));
+  const covered = (o) => cur.origins.includes(o) || cur.origins.includes("*");
+  if (cur.ok && LIVE_ORIGINS.every(covered)) {
+    log("live video: the site is allowed to read the stream (CORS ok)");
+    return;
+  }
+  const set = await R2.setCors(LIVE_ORIGINS).catch((e) => ({ ok: false, status: 0, text: e.message }));
+  if (set.ok) {
+    log("live video: opened the bucket to the site - the browser can play it now (CORS set)");
+    return;
+  }
+  // The upload token may not be allowed to change bucket settings. Say exactly
+  // what to paste where, rather than leaving a number on the screen.
+  log(`live video: could not set CORS on the bucket (${set.status || "no answer"}) - the video will NOT play in a browser until this is set.`);
+  log("  fix it once by hand: Cloudflare > R2 > your bucket > Settings > CORS Policy > Edit, and paste:");
+  log(`  ${JSON.stringify([{ AllowedOrigins: LIVE_ORIGINS, AllowedMethods: ["GET", "HEAD"], AllowedHeaders: ["*"], MaxAgeSeconds: 3600 }])}`);
+}
 
 let wasLive = false;
 let lastWhy = null;
@@ -662,7 +704,7 @@ async function liveTick() {
   // machine with no R2 keys looked identical to one that was working.
   if (!R2 || cfg.live?.enabled === false) {
     const why = liveBlocker();
-    if (why !== lastWhy) { lastWhy = why; log(`live: no video - ${BLOCKER_HE[why] || why}`); }
+    if (why !== lastWhy) { lastWhy = why; log(`live: no video - ${BLOCKER_TEXT[why] || why}`); }
     return;
   }
   const shouldStream = state() === "printing" && !!rtspUrl();
@@ -678,7 +720,7 @@ async function liveTick() {
     wasLive = nowLive;
     lastWhy = why;
     await pushLiveFlag(nowLive, why);
-    log(nowLive ? "live: the stream is on the site" : `live: no video - ${BLOCKER_HE[why] || why}`);
+    log(nowLive ? "live: the stream is on the site" : `live: no video - ${BLOCKER_TEXT[why] || why}`);
   }
 }
 
@@ -774,6 +816,7 @@ if (cfg.live?.enabled === false) {
 } else {
   log(`live video: ready (bucket ${r2cfg.bucket}) - it starts by itself when a print starts.`);
   log("  to check it now without printing: double-click live-check.bat");
+  void ensureLiveCors().catch((e) => log("live video: CORS check failed -", e.message));
 }
 process.on("SIGINT", () => {
   stopStream();

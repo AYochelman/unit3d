@@ -64,6 +64,28 @@ if (back?.ok) {
   bad(`the public address did not serve it (${back ? back.status : "no answer"})`,
       `in Cloudflare > R2 > ${r2.bucket} > Settings > Public access, connect the domain ${publicUrl.replace(/^https?:\/\//, "")}. DNS can take a few minutes.`);
 }
+
+// 5. Will a BROWSER be allowed to read it? This is the one that was missed.
+//
+// Step 4 passes whether or not the bucket grants permission — this program is
+// not a browser, so nothing stops it. The player in the page is JavaScript, and
+// a browser throws away a cross-site response that arrives without permission,
+// silently. So ask the way the page asks, with its own address attached, and
+// look for the answer coming back.
+const SITE = (cfg.live?.allowOrigins?.[0]) || "https://unit-3d.com";
+const pre = await fetch(`${publicUrl}/live/.probe.txt?t=${Date.now()}`, {
+  headers: { Origin: SITE },
+  cache: "no-store",
+}).catch(() => null);
+const allow = pre?.headers.get("access-control-allow-origin") || "";
+if (allow === "*" || allow === SITE) {
+  ok("a browser on the site is allowed to play it", `(allows ${allow})`);
+} else {
+  bad("a browser on the site is NOT allowed to play it - this is why it shows stills instead of video",
+      `start.bat sets this by itself now. To do it by hand: Cloudflare > R2 > ${r2.bucket} > Settings > CORS Policy > Edit, and paste:\n        ` +
+      JSON.stringify([{ AllowedOrigins: [SITE, "https://www.unit-3d.com"], AllowedMethods: ["GET", "HEAD"], AllowedHeaders: ["*"], MaxAgeSeconds: 3600 }]));
+}
+
 await store.remove("live/.probe.txt");
 
 console.log(`
