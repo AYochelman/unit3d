@@ -213,7 +213,11 @@ function knownCollections() {
 /** Model ids in one collection, scrolling until the page stops adding any. */
 async function readCollection(page, col) {
   const ok = await open(page, `https://makerworld.com/en/collections/${col.id}-${col.slug}`);
-  if (!ok) return { blocked: true };
+  // "Turned away at the door" and "walked in and found the furniture moved" are
+  // different problems with different fixes, and they were reported with the
+  // same word — so eight collections came back "blocked" with no way to know
+  // which it was.
+  if (!ok) return { blocked: true, why: "cloudflare" };
   await page.waitForTimeout(4000);
   if ((await page.evaluate(() => document.body.innerText)).includes("collection does not exist")) return { private: true };
 
@@ -223,7 +227,21 @@ async function readCollection(page, col) {
   if (!ids.length) {
     await page.waitForTimeout(6000);
     ids = idsIn(await page.content());
-    if (!ids.length) return { blocked: true };
+    if (!ids.length) {
+      // What the page DID contain, so a changed layout names itself instead of
+      // hiding behind "blocked" for another month.
+      const probe = await page.evaluate(() => {
+        const hrefs = [...document.querySelectorAll("a[href]")].map((a) => a.getAttribute("href") || "");
+        return {
+          title: document.title.slice(0, 80),
+          links: hrefs.length,
+          modelish: hrefs.filter((h) => /\/models?\//.test(h)).length,
+          sample: [...new Set(hrefs.filter((h) => h.length < 70))].slice(0, 8),
+          text: (document.body.innerText || "").trim().replace(/\s+/g, " ").slice(0, 140),
+        };
+      }).catch(() => null);
+      return { blocked: true, why: "no-model-links", probe };
+    }
   }
 
   // The list loads twenty at a time. Nudging the mouse wheel does not move a
@@ -450,6 +468,7 @@ async function main() {
   let collections;
   const wanted = [];
   const skipped = [];
+  const probes = [];
   let likedFresh = [];
   try {
     const seenCollections = new Map();
@@ -463,7 +482,13 @@ async function main() {
     for (const col of collections) {
       const res = await readCollection(page, col);
       if (res.private) { skipped.push(`${col.name} (פרטית)`); log(c.y(`  ${col.name}: פרטית, מדולגת`)); continue; }
-      if (res.blocked) { skipped.push(`${col.name} (חסומה)`); log(c.y(`  ${col.name}: לא נקראה — Cloudflare`)); continue; }
+      if (res.blocked) {
+        const cf = res.why === "cloudflare";
+        skipped.push(`${col.name} (${cf ? "Cloudflare" : "לא נמצאו קישורי מודלים"})`);
+        log(c.y(`  ${col.name}: לא נקראה — ${cf ? "Cloudflare" : "הדף נטען אבל אין בו קישורי מודלים"}`));
+        if (res.probe && probes.length < 2) probes.push({ collection: col.name, ...res.probe });
+        continue;
+      }
       log(`  ${col.name}: ${res.ids.length} מודלים`);
       const shelf = shelfForCollection(col.name) ?? shelfForCollection(col.slug);
       for (const id of res.ids) wanted.push({ id, shelf });
@@ -518,6 +543,7 @@ async function main() {
         signedIn: Boolean((process.env.MAKERWORLD_COOKIE || "").trim()),
         collections: (collections ?? []).map((x) => x.name),
         blocked: skipped,
+        probes,
         inCollections: wanted.length,
         likesNotInShop: likedFresh.length,
         newForApproval: fresh.length,
