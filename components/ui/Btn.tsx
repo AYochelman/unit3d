@@ -65,7 +65,10 @@ const Btn = forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(function Bt
   const { loading, success } = props;
 
   const cls = cn(
-    "inline-flex items-center justify-center rounded-lg font-semibold ease-smooth",
+    // Every size here is a fixed height, so a label that wraps does not make the
+    // button taller — it spills out of it. A button label is a few words by
+    // design; it stays on one line and the button grows sideways instead.
+    "inline-flex items-center justify-center whitespace-nowrap rounded-lg font-semibold ease-smooth",
     "transition-[transform,box-shadow,background-color,border-color,color] duration-200",
     // Pressing something should feel like pressing something. 0.97 is enough to
     // register on a touch screen and small enough not to read as a bounce.

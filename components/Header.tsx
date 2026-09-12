@@ -70,7 +70,10 @@ export default function Header() {
             : "bg-ink-950/70 border-transparent",
         )}
       >
-        <div className="max-w-7xl mx-auto h-full px-6 md:px-10 flex items-center justify-between gap-4">
+        {/* A narrow phone has room for the logo and four controls and nothing
+            to spare, so the gutter tightens rather than pushing the last
+            button off the edge and making the whole page scroll sideways. */}
+        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 md:px-10 flex items-center justify-between gap-2 sm:gap-4">
           <Link href="/" className="flex items-center" aria-label="Unit 3D · דף הבית">
             <Logo size={30} />
           </Link>
@@ -85,7 +88,7 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "whitespace-nowrap px-2 xl:px-2.5 py-2 rounded-md font-medium transition-colors",
+                    "whitespace-nowrap px-1.5 xl:px-2.5 py-2 rounded-md font-medium transition-colors",
                     // The active item is marked twice — tint AND a rule beneath
                     // it — so it does not depend on colour alone.
                     "relative after:absolute after:inset-x-2 after:-bottom-px after:h-0.5 after:rounded-full after:bg-flame",
@@ -101,7 +104,7 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Search sits before the settings and the cart: on a catalogue of
                 this size it is the most-wanted control in the bar. */}
             <QuickSearch />
@@ -133,11 +136,16 @@ export default function Header() {
               )}
             </Link>
 
+            {/* Between lg and xl the eleven nav links, four icon buttons and
+                this CTA do not fit on one row — that is what was squeezing the
+                label onto two lines. At those widths the nav itself carries
+                "מעצב", which goes to the same place, so the button steps out
+                rather than being crushed. */}
             <Btn
               as="a"
               href="/configurator"
               size="md"
-              className="hidden md:inline-flex"
+              className="hidden md:inline-flex lg:hidden xl:inline-flex"
             >
               התחל להזמין
             </Btn>
