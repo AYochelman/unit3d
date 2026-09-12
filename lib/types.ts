@@ -45,10 +45,19 @@ export type Unit = {
 export type Review = {
   id: string;
   name: string;
-  tag: string;
+  /**
+   * A line under the name — a unit, a company.
+   *
+   * Nothing renders it; it is left from the invented reviews that used to sit
+   * here, where it carried made-up unit names. Optional, because a real
+   * reviewer only has one if they chose to give it.
+   */
+  tag?: string;
   seg: ReviewSeg;
-  stars: number;
-  txt: string;
+  /** Their rating, when they gave one. A photo can be the whole review. */
+  stars?: number;
+  /** Their words, in their words. Absent when all they sent was a picture. */
+  txt?: string;
   /** What they ordered — drawn on the card as a picture of the item. */
   item?: string;
   art?: ProductArtId;

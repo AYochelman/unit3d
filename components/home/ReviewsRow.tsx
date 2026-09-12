@@ -25,8 +25,11 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 
 // NaN when there are no reviews yet, which is the honest state: the section
 // below returns null rather than printing a rating nobody gave.
-const AVG = REVIEWS.length
-  ? (REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1)
+// Only reviews that carry a rating count towards it; a photograph with no
+// stars is still a review, it is just not a score.
+const RATED = REVIEWS.filter((r) => r.stars);
+const AVG = RATED.length
+  ? (RATED.reduce((n, r) => n + (r.stars ?? 0), 0) / RATED.length).toFixed(1)
   : null;
 
 // photoSrc handles the base path GitHub Pages serves the site under; next/image
@@ -76,8 +79,12 @@ function ReviewCard({ r }: { r: Review }) {
 
       <div className="p-4 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">
-          <Stars n={r.stars} />
-          <span className="font-mono text-xs text-ink-300" dir="ltr">{r.stars.toFixed(1)}</span>
+          {!!r.stars && (
+            <>
+              <Stars n={r.stars} />
+              <span className="font-mono text-xs text-ink-300" dir="ltr">{r.stars.toFixed(1)}</span>
+            </>
+          )}
           {r.when && <span className="text-[10px] text-ink-500 mr-auto">{r.when}</span>}
         </div>
 

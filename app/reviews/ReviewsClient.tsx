@@ -5,6 +5,7 @@ import Btn from "@/components/ui/Btn";
 import ReviewForm from "@/components/ReviewForm";
 import Icon from "@/components/ui/Icon";
 import { REVIEWS } from "@/lib/data";
+import { photoSrc } from "@/lib/assets";
 import type { ReviewSeg } from "@/lib/types";
 
 const SEG_LABEL: Record<ReviewSeg, string> = {
@@ -40,7 +41,12 @@ export default function ReviewsClient() {
           {REVIEWS.length > 0 && (
             <div className="mt-3 flex items-center gap-2 text-ink-300">
               <span className="font-mono text-2xl text-flame font-bold" dir="ltr">
-                {(REVIEWS.reduce((n, r) => n + r.stars, 0) / REVIEWS.length).toFixed(1)}
+                {(() => {
+                  const rated = REVIEWS.filter((r) => r.stars);
+                  return rated.length
+                    ? (rated.reduce((n, r) => n + (r.stars ?? 0), 0) / rated.length).toFixed(1)
+                    : "—";
+                })()}
               </span>
               <span className="text-ink-500">/</span>
               <span className="font-mono text-ink-300" dir="ltr">5.0</span>
@@ -88,23 +94,35 @@ export default function ReviewsClient() {
               </div>
               <Pill tone={SEG_TONE[r.seg]}>{SEG_LABEL[r.seg]}</Pill>
             </div>
-            <div className="flex gap-0.5 text-flame mb-3">
-              {Array.from({ length: r.stars }).map((_, i) => (
-                <Icon key={i} name="star" size={16} className="fill-current" />
-              ))}
-            </div>
-            <p className="text-ink-200 leading-relaxed">{r.txt}</p>
-            <div className="mt-4 pt-4 border-t border-ink-800 flex items-center justify-between">
-              <span
-                className="font-mono text-[10px] tracking-widest uppercase text-ink-500"
-                dir="ltr"
-              >
-                VERIFIED ORDER · 2024
-              </span>
-              <button className="text-xs text-ink-400 hover:text-flame transition-colors">
-                מועיל
-              </button>
-            </div>
+            {!!r.stars && (
+              <div className="flex gap-0.5 text-flame mb-3">
+                {Array.from({ length: r.stars }).map((_, i) => (
+                  <Icon key={i} name="star" size={16} className="fill-current" />
+                ))}
+              </div>
+            )}
+
+            {/* The photograph they sent.
+                It is the review as much as any sentence is — it shows the
+                thing, in their hands, in their home. Shown whole rather than
+                cropped to a tidy square: it is theirs, not a product shot. */}
+            {r.photo && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={photoSrc(r.photo)}
+                alt={`תמונה שצילם ${r.name}`}
+                loading="lazy"
+                className="w-full rounded-xl border border-ink-800 bg-ink-950 object-contain max-h-80"
+              />
+            )}
+
+            {r.txt && <p className="text-ink-200 leading-relaxed mt-3">{r.txt}</p>}
+
+            {r.when && (
+              <div className="mt-4 pt-4 border-t border-ink-800">
+                <span className="text-[11px] text-ink-500">{r.when}</span>
+              </div>
+            )}
           </article>
         ))}
       </div>

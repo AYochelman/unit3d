@@ -42,16 +42,27 @@ export const BRANCHES = [
 ] as const;
 
 export const REVIEWS: Review[] = [
-  // Deliberately empty.
+  // Real customers, real photographs — and not a word put in their mouths.
   //
-  // This list used to hold thirteen written reviews with full names, unit
-  // names and companies. None of them came from a customer — the shop had not
-  // opened. Publishing an invented review as a real one is misleading conduct
-  // under section 2 of חוק הגנת הצרכן, and it is the kind of thing a
-  // competitor screenshots.
+  // This list once held thirteen written reviews with full names, units and
+  // companies, none of which came from a customer. They were deleted: an
+  // invented review published as a real one is misleading conduct under
+  // section 2 of חוק הגנת הצרכן, and it is the kind of thing a competitor
+  // screenshots.
   //
-  // The review form on /reviews collects real ones. The first real review goes
-  // here, with the reviewer's permission to publish their name.
+  // These five are the owner's own customers and their own photographs. The
+  // pictures are theirs and the names are theirs; `txt` and `stars` are left
+  // empty ON PURPOSE, because nobody here knows what they said or how they
+  // rated it. A photograph of the thing in someone's hand is a review. A
+  // sentence written on their behalf is not.
+  //
+  // When they send their words, they go in `txt` — and the rating they gave,
+  // in `stars`. Not before.
+  { id: "r1", name: "טל",    seg: "private", photo: "/img/reviews/r1.webp" },
+  { id: "r2", name: "מתן",   seg: "private", photo: "/img/reviews/r2.webp" },
+  { id: "r3", name: "עידו",  seg: "private", photo: "/img/reviews/r3.webp" },
+  { id: "r4", name: "עמית",  seg: "private", photo: "/img/reviews/r4.webp" },
+  { id: "r5", name: "דניאל", seg: "private", photo: "/img/reviews/r5.webp" },
 ];
 
 export const GALLERY: GalleryItem[] = [
