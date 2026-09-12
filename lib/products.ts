@@ -95,6 +95,26 @@ export const PET_PRODUCTS: Product[] = [
 // ─── Office & home (מוצרים למשרד ולבית) ──────────────────────────────────────
 export const OFFICE_PRODUCTS: Product[] = [
   {
+    // First in this list on purpose: ties under "מומלצים" are broken by array
+    // order, and this one is meant to sit at the head of the trending shelf.
+    id: "mystery-box",
+    category: "trendy",
+    categories: ["trendy"],
+    name: "קופסת מיסטרי",
+    desc: "כולל חמישה מוצרי פידג'ט ופלקסי רנדומליים. למי שלא בטוח מה לבחור — אנחנו דואגים לכם.",
+    // Five items, planned around the SMALL end of the fidget/flexi catalogue:
+    // roughly 18g and an hour each. The catalogue's median is 36g and 2.3h,
+    // and a box filled at the median costs about ₪104 to make — which this
+    // price would not carry. What goes in the box is therefore a choice, not
+    // a lottery on our side.
+    price: 149, size: "5 פריטים", time: "~5h", hours: 5, grams: 90,
+    art: "organizer", hue: 210, colors: 2, material: "pla",
+    tag: "חדש",
+    isNew: true,
+    image: "/img/products/mystery-box.webp",
+    images: ["/img/products/mystery-box.webp"],
+  },
+  {
     // Listed on three shelves on purpose: it is a desk object, a business
     // object, and the kind of thing people photograph — so it belongs on the
     // office, business and trending shelves rather than only one of them.
