@@ -542,7 +542,10 @@ let liveOnAir = false;
  * path a print uses, so what it proves is worth something.
  */
 const TEST_FLAG = path.join(HERE, ".live-test");
-const TEST_SECONDS = 90;
+// Long enough to open the page, wait out the encoder coming up, and actually
+// watch: ninety seconds sounds ample and is not, once fifteen of them go on
+// starting up and the rest on finding the tab.
+const TEST_SECONDS = 180;
 let testAnnounced = false;
 
 function testBroadcastWanted() {
@@ -841,7 +844,14 @@ async function liveTick() {
     wasLive = nowLive;
     lastWhy = why;
     await pushLiveFlag(nowLive, why);
-    log(nowLive ? "live: the stream is on the site" : `live: no video - ${BLOCKER_TEXT[why] || why}`);
+    if (nowLive) {
+      log("live: the stream is on the site");
+      // During a test the whole point is to be looking at the right moment, so
+      // say the moment out loud rather than leaving it to be worked out.
+      if (testAnnounced) log("live: >>> VIDEO IS ON AIR NOW - open https://unit-3d.com/livestream <<<");
+    } else {
+      log(`live: no video - ${BLOCKER_TEXT[why] || why}`);
+    }
   }
 }
 
@@ -923,9 +933,11 @@ every(1000, () => liveTick().catch((e) => log("live error:", e.message)));
 every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
 // Cheap, and it means a policy fixed in the dashboard is noticed on its own
 // rather than needing the agent restarted to be believed.
-every(10 * 60 * 1000, () => {
+// setInterval, not every(): every() fires straight away, which ran this a
+// second time on top of the startup check and said the same thing twice.
+setInterval(() => {
   if (corsOk !== true) void ensureLiveCors().catch(() => {});
-});
+}, 10 * 60 * 1000);
 
 log(`agent ${VERSION} running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
 
@@ -942,7 +954,7 @@ if (cfg.live?.enabled === false) {
 } else {
   log(`live video: ready (bucket ${r2cfg.bucket}) - it starts by itself when a print starts.`);
   log("  to check the setup:        double-click live-check.bat");
-  log("  to SEE it without a print: double-click live-test.bat (90 seconds)");
+  log("  to SEE it without a print: double-click live-test.bat (3 minutes)");
   void ensureLiveCors().catch((e) => log("live video: CORS check failed -", e.message));
 }
 process.on("SIGINT", () => {
