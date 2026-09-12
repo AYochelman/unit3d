@@ -454,8 +454,16 @@ async function pushCamera() {
 
   let jpeg = null;
   if (rtspUrl()) {
-    startStream();
-    watchStream();
+    // While the live encoder is running it is already reading the printer and
+    // writing this same still, so a second reader here would be competing with
+    // it for the one connection the printer gives out — which is exactly the
+    // fault that kept video off the air. One of them owns the printer at a
+    // time, and while video is up, that is the encoder.
+    if (hls) stopStream();
+    else {
+      startStream();
+      watchStream();
+    }
     // ffmpeg overwrites one file in place; a newer timestamp means a new still.
     try {
       const st = fs.statSync(CAM_FILE);
@@ -513,6 +521,15 @@ let hlsStartedFor = "";
 let hlsLastStart = 0;
 let sentSegments = new Set();  // what R2 already has
 let hlsWarned = false;
+/**
+ * Whether there is really something to play.
+ *
+ * This used to be inferred from "the encoder process exists", which is not the
+ * same thing at all: an encoder that connects to nothing runs happily and
+ * uploads nothing, and the site was told video was on air. It is set only once
+ * a playlist and at least one piece of video have actually reached the bucket.
+ */
+let liveOnAir = false;
 
 /**
  * A broadcast on demand, without waiting for a print.
@@ -553,9 +570,15 @@ function startLive() {
     return;
   }
 
+  // Hand the printer over before asking it for a second connection it will not
+  // give: the still grabber is reading it right now, and from here the encoder
+  // writes that still itself.
+  stopStream();
+
   fs.mkdirSync(HLS_DIR, { recursive: true });
   for (const f of fs.readdirSync(HLS_DIR)) { try { fs.unlinkSync(path.join(HLS_DIR, f)); } catch {} }
   sentSegments = new Set();
+  liveOnAir = false;
   hlsLastStart = Date.now();
   hlsStartedFor = url;
 
@@ -565,8 +588,21 @@ function startLive() {
   // player from stalling. A printer's picture barely moves, so 480p at this
   // bitrate looks the same as the original and costs a fraction to send.
   const copy = cfg.live?.mode === "copy";
+  const stillEvery = Math.max(2, Math.round(CAM_EVERY / 1000));
   const args = [
     ...RTSP_IN(authed),
+    // The still comes out of THIS connection too.
+    //
+    // The printer serves one video connection at a time, and until now two
+    // were asked for: this encoder, and the separate one that grabs the still
+    // picture. The still grabber gets there first and holds it, so the encoder
+    // connected to nothing and produced nothing — while the agent, which only
+    // checked that the encoder process existed, told the site video was on
+    // air. Stills worked, video never did, and nothing said why.
+    //
+    // One connection, two outputs: the same frames become the still and the
+    // video, so they cannot compete for the printer.
+    "-vf", `fps=1/${stillEvery}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE,
     ...(copy
       ? ["-c:v", "copy"]
       : ["-c:v", "libx264", "-preset", "veryfast", "-tune", "zerolatency",
@@ -582,19 +618,26 @@ function startLive() {
   ];
 
   hls = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"] });
-  let said = false;
+  // Only the FIRST chunk of output used to be printed, and the first thing
+  // ffmpeg says is never the problem — so the line that mattered was the one
+  // line that never appeared. A handful is enough to diagnose and few enough
+  // not to bury the window.
+  let saidTimes = 0;
   hls.stderr?.on("data", (d) => {
-    if (said) return;
-    said = true;
-    log("live:", String(d).replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim().slice(0, 180));
+    if (saidTimes >= 5) return;
+    const text = String(d).replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim();
+    if (!text) return;
+    saidTimes++;
+    log("live:", text.slice(0, 200));
   });
-  hls.on("exit", () => { hls = null; hlsStartedFor = ""; });
+  hls.on("exit", () => { hls = null; hlsStartedFor = ""; liveOnAir = false; });
   log(`live: streaming to the site in ${SEG_SECONDS}s pieces`);
 }
 
 function stopLive() {
   if (hls) { try { hls.kill(); } catch {} hls = null; }
   hlsStartedFor = "";
+  liveOnAir = false;
 }
 
 /**
@@ -630,6 +673,9 @@ async function pushLive() {
 
   // The playlist changes every few seconds, so it must never be cached.
   await R2.put(`${HLS_KEY}/stream.m3u8`, Buffer.from(playlist), "application/vnd.apple.mpegurl", "no-cache, max-age=0");
+  // A playlist naming pieces that are in the bucket is the whole definition of
+  // "there is video to watch".
+  liveOnAir = named.size > 0 && sentSegments.size > 0;
 
   // Anything ffmpeg has rolled off is no longer playable; take it out of the
   // bucket so a print does not leave a trail behind it.
@@ -676,6 +722,7 @@ function liveBlocker() {
   if (!rtspUrl()) return "printer-offers-no-stream";
   if (!findFfmpeg()) return "ffmpeg-missing";
   if (!hls) return "encoder-not-started";
+  if (!liveOnAir) return "no-video-from-printer";
   return "";
 }
 
@@ -691,6 +738,7 @@ const BLOCKER_TEXT = {
   "printer-offers-no-stream": "the printer is not offering a stream - it needs LAN Only + Liveview + Developer Mode",
   "ffmpeg-missing": "ffmpeg is not installed - run ffmpeg-install.bat once",
   "encoder-not-started": "ffmpeg has not come up yet",
+  "no-video-from-printer": "ffmpeg is running but the printer is sending it no video - nothing has reached the bucket",
 };
 
 /**
@@ -787,7 +835,7 @@ async function liveTick() {
   // A stream the site is not allowed to read is not a stream from the site's
   // point of view, so it is reported as no video WITH the reason, rather than
   // as working video the page then fails to play for reasons of its own.
-  const nowLive = shouldStream && !!hls && corsOk !== false;
+  const nowLive = shouldStream && !!hls && liveOnAir && corsOk !== false;
   const why = nowLive ? "" : liveBlocker();
   if (nowLive !== wasLive || why !== lastWhy) {
     wasLive = nowLive;

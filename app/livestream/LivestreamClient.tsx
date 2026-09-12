@@ -159,6 +159,7 @@ export default function LivestreamClient() {
     "printer-offers-no-stream": "המדפסת לא מפרסמת כתובת RTSP. צריך LAN Only + Liveview + Developer Mode בתפריט המדפסת.",
     "ffmpeg-missing": "ffmpeg לא מותקן על המחשב של הסוכן. הרץ פעם אחת ffmpeg-install.bat.",
     "encoder-not-started": "ffmpeg עוד לא הספיק לעלות. עוד כמה שניות.",
+    "no-video-from-printer": "ffmpeg רץ אבל המדפסת לא שולחת לו וידאו — כלום לא הגיע ל-bucket. בדוק שה-Liveview דלוק בתפריט המדפסת.",
     "agent-status-unreachable": "לא הצלחתי להגיע ל-live.unit-3d.com בכלל. או שהסוכן לא רץ, או שהוא לא מעלה ל-R2.",
     "agent-status-missing": "live/status.json לא קיים ב-R2. הסוכן רץ? הוא מעלה?",
     "agent-status-unreadable": "live/status.json קיים אבל לא נקרא כ-JSON.",
