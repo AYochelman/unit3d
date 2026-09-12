@@ -1,14 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Icon from "@/components/ui/Icon";
 import { CONTACT } from "@/lib/contact";
 import Btn from "@/components/ui/Btn";
 import { Field, Input, Textarea, Select } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
+import { submitReview } from "@/lib/reviews-remote";
 import type { ReviewSeg } from "@/lib/types";
 
 const WA = CONTACT.whatsapp;
 const MAIL = CONTACT.email;
+
+/**
+ * The clock lives out here on purpose.
+ *
+ * Reading it during render is impure — the same render would give a different
+ * answer each time — so the component only ever calls this from an effect or
+ * from a click.
+ */
+const clockNow = () => Date.now();
 
 type Props = {
   /** Pre-fills "what did you order" when the form sits on a product page. */
@@ -20,10 +30,17 @@ type Props = {
 /**
  * Leave a rating and a review.
  *
- * There is no backend, so "submit" does not quietly drop the text into
- * nowhere: it opens WhatsApp with the review already written out (and offers
- * e-mail as the alternative), which is the same route every order takes. The
- * form says so rather than pretending the review was published.
+ * Send puts it on the site. The review goes straight into the shop's table and
+ * the next visitor reads it — nobody approves it first, which is what Ariel
+ * asked for. If the table is not reachable (not configured yet, or the network
+ * is down), the form does not silently eat the text: it falls back to the old
+ * route and opens WhatsApp with the review already written out, and says which
+ * of the two happened.
+ *
+ * `hp` is a honeypot — a field no human sees and no human fills. Together with
+ * the few seconds a person needs to actually write a review, it stops the
+ * drive-by bots. It stops nothing else; the admin screen can take a review down
+ * after the fact, and that is the safety net here.
  */
 export default function ReviewForm({ itemName, compact }: Props) {
   const [stars, setStars] = useState(5);
@@ -33,7 +50,12 @@ export default function ReviewForm({ itemName, compact }: Props) {
   const [seg, setSeg] = useState<ReviewSeg>("private");
   const [item, setItem] = useState(itemName ?? "");
   const [text, setText] = useState("");
-  const [sent, setSent] = useState(false);
+  const [hp, setHp] = useState("");
+  const [sent, setSent] = useState<null | "published" | "whatsapp">(null);
+  const [busy, setBusy] = useState(false);
+  // Set on mount, not during render.
+  const opened = useRef(0);
+  useEffect(() => { opened.current = clockNow(); }, []);
 
   const SEG_LABEL: Record<ReviewSeg, string> = {
     private: "לקוח פרטי",
@@ -57,13 +79,42 @@ export default function ReviewForm({ itemName, compact }: Props) {
 
   const canSend = name.trim().length > 1 && text.trim().length > 9;
 
-  const send = (channel: "wa" | "mail") => {
+  /** The old route, still here for when the table is not reachable. */
+  const openMessage = (channel: "wa" | "mail") => {
     const url =
       channel === "wa"
         ? `${WA}?text=${encodeURIComponent(body)}`
         : `mailto:${MAIL}?subject=${encodeURIComponent("ביקורת מהאתר")}&body=${encodeURIComponent(body)}`;
     window.open(url, "_blank", "noopener,noreferrer");
-    setSent(true);
+    setSent("whatsapp");
+  };
+
+  const publish = async () => {
+    if (!canSend || busy) return;
+    // A filled honeypot, or a review written in under four seconds, is not a
+    // person. Nothing is said about it — a bot that is told it failed retries.
+    if (hp || clockNow() - opened.current < 4000) {
+      setSent("published");
+      return;
+    }
+    setBusy(true);
+    const r = await submitReview({ name, tag, seg, stars, txt: text, item });
+    setBusy(false);
+    if (r === "published") {
+      setSent("published");
+      reset();
+      return;
+    }
+    openMessage("wa");
+  };
+
+  const reset = () => {
+    setName("");
+    setTag("");
+    setItem(itemName ?? "");
+    setText("");
+    setStars(5);
+    opened.current = clockNow();
   };
 
   if (sent) {
@@ -74,11 +125,13 @@ export default function ReviewForm({ itemName, compact }: Props) {
         </div>
         <div className="font-bold mb-1">תודה!</div>
         <p className="text-ink-300 text-sm leading-relaxed">
-          הביקורת נפתחה בחלון שליחה. שלח אותה ואני מפרסם אותה באתר אחרי שאאמת את ההזמנה.
+          {sent === "published"
+            ? "הביקורת שלך פורסמה באתר. רענן את הדף כדי לראות אותה בין השאר."
+            : "לא הצלחתי לפרסם אותה כרגע, אז פתחתי לך אותה בוואטסאפ. שלח, ואני מעלה אותה ידנית."}
         </p>
         <button
           type="button"
-          onClick={() => setSent(false)}
+          onClick={() => setSent(null)}
           className="mt-3 text-xs text-ink-400 hover:text-flame transition-colors"
         >
           לכתוב ביקורת נוספת
@@ -89,10 +142,10 @@ export default function ReviewForm({ itemName, compact }: Props) {
 
   return (
     <form
-      className={cn("rounded-2xl bg-ink-900 border border-ink-800", compact ? "p-4" : "p-6")}
+      className={cn("relative rounded-2xl bg-ink-900 border border-ink-800", compact ? "p-4" : "p-6")}
       onSubmit={(e) => {
         e.preventDefault();
-        if (canSend) send("wa");
+        void publish();
       }}
     >
       {compact && (
@@ -166,21 +219,30 @@ export default function ReviewForm({ itemName, compact }: Props) {
         </Field>
       </div>
 
+      {/* Not for people. Hidden from the screen and from the screen reader,
+          and never focusable by tab. */}
+      <div aria-hidden="true" style={{ position: "absolute", insetInlineStart: "-9999px", top: 0 }}>
+        <label>
+          אל תמלא שדה זה
+          <input tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} />
+        </label>
+      </div>
+
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <Btn type="submit" icon="whatsapp" disabled={!canSend}>
-          שלח בוואטסאפ
+        <Btn type="submit" icon="star" disabled={!canSend || busy}>
+          {busy ? "מפרסם…" : "פרסם ביקורת"}
         </Btn>
         <button
           type="button"
-          onClick={() => canSend && send("mail")}
-          disabled={!canSend}
+          onClick={() => canSend && openMessage("mail")}
+          disabled={!canSend || busy}
           className="text-sm text-ink-400 hover:text-flame transition-colors disabled:opacity-40"
         >
-          או במייל
+          או שלח לי במייל
         </button>
       </div>
       <p className="mt-2 text-[11px] text-ink-500 leading-relaxed">
-        הביקורת נשלחת אליי ומתפרסמת באתר אחרי אימות ההזמנה. אין באתר שמירה אוטומטית של ביקורות.
+        הביקורת מתפרסמת באתר מיד, בלי אישור מראש. אפשר לבקש ממני להוריד אותה בכל רגע.
       </p>
     </form>
   );

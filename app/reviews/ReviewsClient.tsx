@@ -4,7 +4,7 @@ import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import ReviewForm from "@/components/ReviewForm";
 import Icon from "@/components/ui/Icon";
-import { REVIEWS } from "@/lib/data";
+import { useReviews } from "@/lib/use-reviews";
 import { photoSrc } from "@/lib/assets";
 import type { ReviewSeg } from "@/lib/types";
 
@@ -22,27 +22,29 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
 };
 
 export default function ReviewsClient() {
+  // Whatever is in the repo, plus whatever customers published themselves.
+  const { reviews } = useReviews();
   // With nothing to read yet, the form IS the page — it opens straight away
   // rather than hiding behind a button on an empty screen.
-  const [showForm, setShowForm] = useState(REVIEWS.length === 0);
+  const [showForm, setShowForm] = useState(reviews.length === 0);
 
   return (
     <div className="max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-            REVIEWS{REVIEWS.length ? ` · ${REVIEWS.length}` : ""}
+            REVIEWS{reviews.length ? ` · ${reviews.length}` : ""}
           </div>
           <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
             לקוחות שדיברו.
           </h1>
           {/* The average is computed from what is actually here. The page used
               to print a hard-coded 4.9 — a number nobody had given. */}
-          {REVIEWS.length > 0 && (
+          {reviews.length > 0 && (
             <div className="mt-3 flex items-center gap-2 text-ink-300">
               <span className="font-mono text-2xl text-flame font-bold" dir="ltr">
                 {(() => {
-                  const rated = REVIEWS.filter((r) => r.stars);
+                  const rated = reviews.filter((r) => r.stars);
                   return rated.length
                     ? (rated.reduce((n, r) => n + (r.stars ?? 0), 0) / rated.length).toFixed(1)
                     : "—";
@@ -51,7 +53,7 @@ export default function ReviewsClient() {
               <span className="text-ink-500">/</span>
               <span className="font-mono text-ink-300" dir="ltr">5.0</span>
               <span className="text-ink-500">·</span>
-              <span className="text-sm">{REVIEWS.length} ביקורות</span>
+              <span className="text-sm">{reviews.length} ביקורות</span>
             </div>
           )}
         </div>
@@ -62,7 +64,7 @@ export default function ReviewsClient() {
 
       {showForm && <div className="mb-10"><ReviewForm /></div>}
 
-      {REVIEWS.length === 0 && !showForm && (
+      {reviews.length === 0 && !showForm && (
         <div className="p-10 rounded-2xl border border-dashed border-ink-700 text-center">
           <p className="text-ink-100 font-semibold text-lg mb-2">עוד אין ביקורות כאן.</p>
           <p className="text-ink-300 max-w-md mx-auto leading-relaxed">
@@ -73,7 +75,7 @@ export default function ReviewsClient() {
       )}
 
       <div className="grid md:grid-cols-2 gap-5">
-        {REVIEWS.map((r) => (
+        {reviews.map((r) => (
           <article
             key={r.id}
             className="p-6 rounded-2xl bg-ink-900 border border-ink-800 hover:border-ink-700 transition-colors"

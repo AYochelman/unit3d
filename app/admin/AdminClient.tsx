@@ -23,15 +23,17 @@ import OrdersTab from "@/components/admin/OrdersTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import ExpensesTab from "@/components/admin/ExpensesTab";
 import ChangelogTab from "@/components/admin/ChangelogTab";
+import ReviewsTab from "@/components/admin/ReviewsTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "orders" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
+type Tab = "orders" | "reviews" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "orders", label: "הזמנות" },
+  { id: "reviews", label: "ביקורות" },
   { id: "coupons", label: "קודי הנחה" },
   { id: "expenses", label: "הוצאות" },
   { id: "products", label: "מוצרים" },
@@ -162,6 +164,7 @@ export default function AdminClient() {
 
       {tab === "products" && <ProductsTab />}
       {tab === "orders" && <OrdersTab />}
+      {tab === "reviews" && <ReviewsTab />}
       {tab === "coupons" && <CouponsTab />}
       {tab === "expenses" && <ExpensesTab />}
       {tab === "names" && <NamesTab />}

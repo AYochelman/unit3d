@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import SectionHead from "@/components/ui/SectionHead";
 import Pill from "@/components/ui/Pill";
@@ -6,7 +7,7 @@ import { photoSrc } from "@/lib/assets";
 import Btn from "@/components/ui/Btn";
 import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
-import { REVIEWS } from "@/lib/data";
+import { useReviews } from "@/lib/use-reviews";
 import type { Review, ReviewSeg } from "@/lib/types";
 
 const SEG_LABEL: Record<ReviewSeg, string> = {
@@ -23,14 +24,16 @@ const SEG_TONE: Record<ReviewSeg, "neutral" | "flame" | "cyan" | "good"> = {
   b2b: "cyan",
 };
 
-// NaN when there are no reviews yet, which is the honest state: the section
-// below returns null rather than printing a rating nobody gave.
-// Only reviews that carry a rating count towards it; a photograph with no
-// stars is still a review, it is just not a score.
-const RATED = REVIEWS.filter((r) => r.stars);
-const AVG = RATED.length
-  ? (RATED.reduce((n, r) => n + (r.stars ?? 0), 0) / RATED.length).toFixed(1)
-  : null;
+// The honest state when there are no reviews yet: the section below returns
+// null rather than printing a rating nobody gave. Only reviews that carry a
+// rating count towards it; a photograph with no stars is still a review, it is
+// just not a score.
+const avgOf = (list: Review[]) => {
+  const rated = list.filter((r) => r.stars);
+  return rated.length
+    ? (rated.reduce((n, r) => n + (r.stars ?? 0), 0) / rated.length).toFixed(1)
+    : null;
+};
 
 // photoSrc handles the base path GitHub Pages serves the site under; next/image
 // does NOT prefix it onto a local src when images are unoptimised, which is why
@@ -143,16 +146,20 @@ function Track({ items, reverse }: { items: Review[]; reverse?: boolean }) {
  * seamless loop. Motion is disabled under prefers-reduced-motion (globals.css).
  */
 export default function ReviewsRow() {
+  // Repo reviews render immediately; ones customers published arrive a moment
+  // later, on top.
+  const { reviews } = useReviews();
+  const AVG = avgOf(reviews);
   /*
    * Nothing to show yet — but the slot stays.
    *
    * A shop that has not sold anything does not get to show a five-star wall,
    * and it should not quietly drop the section either: the space is where the
    * first real review goes, and saying so out loud is a better invitation than
-   * a gap in the page. The moment REVIEWS has one entry, everything below this
+   * a gap in the page. The moment there is one entry, everything below this
    * renders instead.
    */
-  if (!REVIEWS.length) {
+  if (!reviews.length) {
     return (
       <section className="py-12 md:py-16" aria-label="ביקורות לקוחות">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -177,7 +184,7 @@ export default function ReviewsRow() {
     );
   }
 
-  const half = Math.ceil(REVIEWS.length / 2);
+  const half = Math.ceil(reviews.length / 2);
   return (
     <section className="py-12 md:py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -192,13 +199,13 @@ export default function ReviewsRow() {
           <div className="text-center sm:text-right">
             <div className="font-mono text-5xl font-black text-flame leading-none" dir="ltr">{AVG}</div>
             <div className="mt-1.5 flex justify-center sm:justify-start"><Stars n={5} /></div>
-            <div className="text-[11px] text-ink-400 mt-1">{REVIEWS.length} ביקורות</div>
+            <div className="text-[11px] text-ink-400 mt-1">{reviews.length} ביקורות</div>
           </div>
 
           <div className="space-y-1">
             {[5, 4, 3, 2, 1].map((n) => {
-              const count = REVIEWS.filter((r) => r.stars === n).length;
-              const pct = Math.round((count / REVIEWS.length) * 100);
+              const count = reviews.filter((r) => r.stars === n).length;
+              const pct = Math.round((count / reviews.length) * 100);
               return (
                 <div key={n} className="flex items-center gap-2 text-[11px]">
                   <span className="w-3 text-ink-400 font-mono" dir="ltr">{n}</span>
@@ -219,8 +226,8 @@ export default function ReviewsRow() {
         </div>
       </div>
       <div className="relative space-y-4">
-        <Track items={REVIEWS.slice(0, half)} />
-        <Track items={REVIEWS.slice(half)} reverse />
+        <Track items={reviews.slice(0, half)} />
+        <Track items={reviews.slice(half)} reverse />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-ink-950 to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-ink-950 to-transparent" />
       </div>
