@@ -3,30 +3,11 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 2
-// Collected: 2026-09-13T13:18:25.012Z
+// Collected: 2026-09-13T13:36:07.194Z
 
 import type { Candidate } from "./candidates";
 
 export const CANDIDATES: Candidate[] = [
-  {
-    "id": "3283067",
-    "title": "Stretch Skull Fidget",
-    "slug": "stretch-skull-fidget",
-    "license": "MakerWorld Exclusive License",
-    "creator": "FilliFuu",
-    "image": "https://makerworld.bblmw.com/makerworld/model/US16f8cfd52e46f/design/c23de5bcd84e86b4.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 98,
-    "likes": 105,
-    "grams": 54,
-    "hours": 2.02,
-    "colors": 1,
-    "suggested": "fidget",
-    "warnings": [
-      "רישיון בלעדי"
-    ],
-    "via": "trending",
-    "tags": "skull · fidget · toy · stretch · articulated · flexi"
-  },
   {
     "id": "3283101",
     "title": "Modern Fruit Bowl with Banana Holder",
@@ -35,7 +16,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "FormCore 3D",
     "image": "https://makerworld.bblmw.com/makerworld/model/US526d16ef7007c9/design/bdc00f2002d22b6c.png?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 24,
-    "likes": 89,
+    "likes": 90,
     "grams": 603,
     "hours": 15.86,
     "colors": 2,
@@ -45,5 +26,24 @@ export const CANDIDATES: Candidate[] = [
     ],
     "via": "trending",
     "tags": "fruit bowl · banana holder · modern design · bowl · kitchen organizer · 2 color"
+  },
+  {
+    "id": "3292526",
+    "title": "Decoração Porta Guardanapo Natal",
+    "slug": "christmas-napkin-holder-decoration",
+    "license": "MakerWorld Exclusive License",
+    "creator": "MeshBeeLab 3d",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US143c24af4b9ab9/design/fbbaf59e27102240.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 7,
+    "likes": 52,
+    "grams": 60,
+    "hours": 2.18,
+    "colors": 3,
+    "suggested": "home",
+    "warnings": [
+      "רישיון בלעדי"
+    ],
+    "via": "trending",
+    "tags": "mesa posta · natal · navidad · guardanapo · decoracao · mesa"
   }
 ];
