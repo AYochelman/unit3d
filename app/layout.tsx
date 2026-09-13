@@ -7,6 +7,7 @@ import FloatingWA from "@/components/FloatingWA";
 import HelpBot from "@/components/HelpBot";
 import AdminSettingsBoot from "@/components/AdminSettingsBoot";
 import AdminUnlockBoot from "@/components/AdminUnlockBoot";
+import AnalyticsBoot from "@/components/AnalyticsBoot";
 import OrdersBoot from "@/components/OrdersBoot";
 import CouponsBoot from "@/components/CouponsBoot";
 
@@ -97,6 +98,7 @@ export default function RootLayout({
         <Footer />
         <AdminSettingsBoot />
         <AdminUnlockBoot />
+        <AnalyticsBoot />
         <OrdersBoot />
         <CouponsBoot />
         <FloatingWA />

@@ -12,6 +12,7 @@ import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
 import { DELIVERY, makeRef, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
 import { placeOrder, sendOrderEmail } from "@/lib/orders-remote";
+import { track } from "@/lib/analytics";
 import { PRODUCTS } from "@/lib/products";
 import ProductGrid, { productToCard } from "@/components/ProductGrid";
 import { makeCoupon, NEXT_ORDER_DISCOUNT } from "@/lib/coupon";
@@ -316,6 +317,10 @@ export default function ContactClient() {
             // And the same order is written to the shop's queue, so it is
             // already waiting on Ariel's screen instead of being carried there
             // by hand. If that write fails the message still holds everything.
+            // The end of the funnel. Page views only mean something next to
+            // this number.
+            track("order_sent", { items: order.lines.length, total: order.itemsTotal, delivery: order.delivery });
+
             setFiled("pending");
             void placeOrder(order).then((r) => setFiled(r === "saved" ? "saved" : "failed"));
 

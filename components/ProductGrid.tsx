@@ -14,6 +14,7 @@ import { DEFAULT_MATERIAL } from "@/lib/inventory";
 import { canPrint, startingMaterial } from "@/lib/offer";
 import { useFilaments, useMaterials } from "@/lib/palette";
 import { useLivePrice, useQuoteOnly } from "@/lib/live-price";
+import { track } from "@/lib/analytics";
 import { clipSrc } from "@/lib/assets";
 import { designHref, isPersonalizable } from "@/lib/designable";
 import RestockModal from "@/components/RestockModal";
@@ -266,13 +267,14 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   if (c.personalizable && c.designHref) {
     return (
       <div className={cn(shell, "h-full")} {...hover}>
-        <Link href={c.href} className="flex flex-col flex-1">
+        <Link href={c.href} className="flex flex-col flex-1" onClick={() => track("product_open", { id: c.id, name: c.name })}>
           {body}
         </Link>
         <div className="px-3 pb-3 flex items-center justify-between gap-1.5">
           {priceRow}
           <Link
             href={c.designHref}
+            onClick={() => track("configurator_open", { id: c.id, name: c.name })}
             className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold border transition-colors bg-flame/15 text-flame border-flame/40 hover:bg-flame-600 hover:text-white"
           >
             <span className="hidden sm:inline">עצב עכשיו</span>
@@ -287,7 +289,7 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   // An ordinary product opens on one click. Only the designer asks first —
   // being dropped into an editor is a bigger jump than opening a page.
   return (
-    <Link href={c.href} className={cn(shell, "h-full")} {...hover}>
+    <Link href={c.href} className={cn(shell, "h-full")} onClick={() => track("product_open", { id: c.id, name: c.name })} {...hover}>
       {body}
       <div className="px-3 pb-3 flex items-center justify-between">
         {priceRow}
