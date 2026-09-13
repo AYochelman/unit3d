@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
-import UnitWings from "@/components/UnitWings";
 import { photoSrc, assetSrc } from "@/lib/assets";
 import { cn } from "@/lib/cn";
 
@@ -27,11 +26,14 @@ type Slide = {
   video?: string;
   poster?: string;
   /**
-   * Drawn instead of a photograph, until there is one.
+   * This slide has no photograph yet.
    *
-   * The slide still asks for `photo` first: if that file exists it wins, and
-   * the drawing is only what shows when the request 404s. So dropping the real
-   * photograph into the repo is the whole change — no code follows it.
+   * It still asks for `photo` first: the moment that file exists the slide
+   * becomes a normal two-column one with the picture in it, and no code has to
+   * change. Until then it renders as a single centred column of type — a
+   * deliberate slide rather than a picture panel standing empty, and better
+   * than the drawn emblem that used to fill it, which read as clip art next to
+   * four real photographs.
    */
   art?: boolean;
 };
@@ -141,10 +143,12 @@ export default function HeroCarousel() {
               aria-hidden={i !== at}
               tabIndex={i === at ? 0 : -1}
               className={cn(
-                "absolute inset-0 grid md:grid-cols-2 transition-opacity duration-700 motion-reduce:transition-none",
+                "absolute inset-0 grid transition-opacity duration-700 motion-reduce:transition-none",
+                s.art && !shown[s.id] ? "place-items-center" : "md:grid-cols-2",
                 i === at ? "opacity-100" : "opacity-0 pointer-events-none",
               )}
             >
+              {(!s.art || shown[s.id]) && (
               <span className="relative flex items-center justify-center bg-ink-900/60 p-4 md:p-6 overflow-hidden">
                 {s.video ? (
                   <video
@@ -156,8 +160,6 @@ export default function HeroCarousel() {
                     playsInline
                     className="max-h-full w-auto max-w-full rounded-xl object-contain"
                   />
-                ) : s.art && !shown[s.id] ? (
-                  <UnitWings className="max-h-full w-full max-w-[92%]" />
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -172,20 +174,27 @@ export default function HeroCarousel() {
                     {...(s.art ? { onLoad: () => setShown((m) => ({ ...m, [s.id]: true })) } : {})}
                   />
                 )}
-                {s.art && !shown[s.id] && (
-                  // Off-screen, only to find out whether the photograph exists.
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={photoSrc(s.photo!)}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute h-px w-px opacity-0 pointer-events-none"
-                    onLoad={() => setShown((m) => ({ ...m, [s.id]: true }))}
-                  />
-                )}
               </span>
+              )}
 
-              <span className="flex flex-col justify-center p-5 md:p-8 text-right">
+              {/* Off-screen, only to find out whether the photograph exists. */}
+              {s.art && !shown[s.id] && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={photoSrc(s.photo!)}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute h-px w-px opacity-0 pointer-events-none"
+                  onLoad={() => setShown((m) => ({ ...m, [s.id]: true }))}
+                />
+              )}
+
+              <span
+                className={cn(
+                  "flex flex-col justify-center p-5 md:p-8",
+                  s.art && !shown[s.id] ? "text-center items-center max-w-xl" : "text-right",
+                )}
+              >
                 <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase text-flame block mb-1.5">
                   {s.kicker}
                 </span>
