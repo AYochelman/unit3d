@@ -10,6 +10,7 @@ import { normalizeCode, type Coupon } from "./coupons";
 import { DEFAULT_USD_RATE, type Expense } from "./expenses";
 import type { ImportedShelf } from "./imported";
 import { readToken, writeToken } from "./admin-token";
+import { forgetUnlock, rememberUnlock } from "./admin-unlock";
 
 // The admin area is a client-side tool. Per the project rules there is no
 // localStorage, so settings live for the session and can be exported /
@@ -137,6 +138,14 @@ type AdminState = {
   ghToken: string;
 
   unlock(pin: string): boolean;
+  /**
+   * Open the admin because this device was already unlocked.
+   *
+   * Separate from `unlock` on purpose: this one takes no password, so it can
+   * only ever be called by the boot component that read the device — never
+   * from a form.
+   */
+  restore(): void;
   lock(): void;
   setSpoolPrice(id: MaterialId, ils: number): void;
   setSetting<K extends Exclude<keyof CostSettings, "spoolPrices">>(k: K, v: CostSettings[K]): void;
@@ -206,12 +215,20 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     const ok = pin.trim() === ADMIN_PASSWORD;
     // Reading the device only on unlock keeps it out of the server render and
     // out of every page that is not the admin.
-    if (ok) set({ unlocked: true, ghToken: get().ghToken || readToken() });
+    if (ok) {
+      set({ unlocked: true, ghToken: get().ghToken || readToken() });
+      rememberUnlock();
+    }
     return ok;
   },
-  // Locking hides the admin but keeps the remembered token: the whole point is
-  // that he does not paste it again. "שכח את הטוקן" is what erases it.
-  lock: () => set({ unlocked: false }),
+  restore: () => set({ unlocked: true, ghToken: get().ghToken || readToken() }),
+  // Locking hides the admin and makes this device ask for the password again.
+  // The GitHub token is deliberately kept: the whole point of it is that he
+  // does not paste it again, and "שכח את הטוקן" is what erases that one.
+  lock: () => {
+    forgetUnlock();
+    set({ unlocked: false });
+  },
   setGhToken: (t) => {
     set({ ghToken: t });
     writeToken(t);

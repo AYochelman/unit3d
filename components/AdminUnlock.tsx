@@ -7,10 +7,11 @@ import { useAdminStore } from "@/lib/admin-store";
 /**
  * The little "admin" affordance in the corner of a product page.
  *
- * The admin session lives in memory only (the project forbids storing it), so
- * a hard refresh on a product page logs you out. Rather than send you back to
- * /admin every time, this unlocks in place: click "admin", type the password, and
- * the cost panel appears on the page you were already looking at.
+ * The unlock now survives a refresh (lib/admin-unlock.ts), so this is mostly
+ * for the first time on a device, or after "נעילה". It still unlocks IN PLACE
+ * rather than sending you to /admin: type the password and the cost panel
+ * appears on the page you were already looking at. Clicking the ADMIN pill
+ * locks again, and that forgets the device.
  */
 export default function AdminUnlock() {
   const unlocked = useAdminStore((s) => s.unlocked);
