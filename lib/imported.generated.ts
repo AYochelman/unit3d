@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-08T21:09:18.180Z
-// Items: 426
+// Items: 428
 
 import type { ImportedModel } from "./imported";
 
@@ -13092,6 +13092,63 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "status": "live",
     "holds": [],
     "licenseChecked": true
+  },
+  {
+    "id": "mw-3287399",
+    "name": "Dachshund Dog Tray – Catchall Organizer",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.08,
+    "grams": 89,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2765121f26d400/design/5749cb96776728f0.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Sofie",
+    "sourceUrl": "https://makerworld.com/en/models/3287399-dachshund-dog-tray-catchall-organizer",
+    "license": "Standard Digital File License",
+    "downloads": 48,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 89,
+        "h": 2.08
+      },
+      {
+        "g": 146,
+        "h": 3.17
+      }
+    ]
+  },
+  {
+    "id": "mw-3290414",
+    "name": "Symbiote Suit Spider-Man - Secret Wars (No AMS)",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 6.91,
+    "grams": 141,
+    "size": "~160mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US4b580b4e44994b/design/c87696cdfbd93953.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Solark",
+    "sourceUrl": "https://makerworld.com/en/models/3290414-symbiote-suit-spider-man-secret-wars-no-ams",
+    "license": "Standard Digital File License",
+    "downloads": 42,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ],
+    "hoursAms": 26.83,
+    "gramsAms": 467
   }
 ];
 
