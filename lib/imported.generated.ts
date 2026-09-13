@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-08T21:09:18.180Z
-// Items: 428
+// Items: 429
 
 import type { ImportedModel } from "./imported";
 
@@ -13149,6 +13149,29 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "hoursAms": 26.83,
     "gramsAms": 467
+  },
+  {
+    "id": "mw-2786539",
+    "name": "Under-Monitor Phone Holder",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 1.52,
+    "grams": 34,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US63fff922fcd706/design/d29f08964ab53787.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "keirikl",
+    "sourceUrl": "https://makerworld.com/en/models/2786539-under-monitor-phone-holder",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 5227,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "b2b"
+    ]
   }
 ];
 
