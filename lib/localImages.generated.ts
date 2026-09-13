@@ -2,7 +2,7 @@
 //
 // Remote photo URL → the copy of it stored in public/. Run
 // `npm run fetch:images` after adding models.
-// Images: 1780
+// Images: 1781
 
 export const LOCAL_IMAGES: Record<string, string> = {
   "https://dl2.myminifactory.com/object-assets/5992b909866ea/images/720X720-imgp5831.jpg": "img/catalog/f4da1d23d4d5c008.webp",
@@ -681,6 +681,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US63bc46d2d2a17b/design/7ede07f7ba40f423.jpg": "img/catalog/0b55545c3e156a00.webp",
   "https://makerworld.bblmw.com/makerworld/model/US63bc46d2d2a17b/design/9cd21fe09d3d9509.jpg": "img/catalog/effd390815e6d4b6.webp",
   "https://makerworld.bblmw.com/makerworld/model/US63bc46d2d2a17b/design/e21fd92be0bd0310.jpg": "img/catalog/7aa7b42976a08fe3.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US63fff922fcd706/design/d29f08964ab53787.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/358f3b403c6a736f.webp",
   "https://makerworld.bblmw.com/makerworld/model/US6449d6df5f55a1/design/2380a491c4fccc2a.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/93c2540cbf70dbf3.webp",
   "https://makerworld.bblmw.com/makerworld/model/US64c0b98ef22015/design/2025-09-04_1799263e4e0138.png": "img/catalog/4a40dee6e503ecac.webp",
   "https://makerworld.bblmw.com/makerworld/model/US64c0b98ef22015/design/2025-09-04_4ef82fbbeca5e8.png": "img/catalog/963da19f6ec39d91.webp",
