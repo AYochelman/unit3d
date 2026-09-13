@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
-import Emblem from "@/components/Emblem";
+import UnitWings from "@/components/UnitWings";
 import { photoSrc, assetSrc } from "@/lib/assets";
 import { cn } from "@/lib/cn";
 
@@ -26,7 +26,13 @@ type Slide = {
   photo?: string;
   video?: string;
   poster?: string;
-  /** Drawn instead of a photograph, until there is one. */
+  /**
+   * Drawn instead of a photograph, until there is one.
+   *
+   * The slide still asks for `photo` first: if that file exists it wins, and
+   * the drawing is only what shows when the request 404s. So dropping the real
+   * photograph into the repo is the whole change — no code follows it.
+   */
   art?: boolean;
 };
 
@@ -45,6 +51,7 @@ const SLIDES: Slide[] = [
     title: "עיצוב מותאם לחיילים",
     line: "סמל היחידה שלכם, בצבעים שלו, מודפס בגודל שתבחרו.",
     href: "/catalog",
+    photo: "/img/hero/soldiers.webp",
     art: true,
   },
   {
@@ -78,6 +85,8 @@ const EVERY_MS = 6000;
 
 export default function HeroCarousel() {
   const [at, setAt] = useState(0);
+  // Which "art" slides turned out to have a real photograph behind them.
+  const [shown, setShown] = useState<Record<string, boolean>>({});
   const [paused, setPaused] = useState(false);
   const go = useCallback((i: number) => setAt(((i % SLIDES.length) + SLIDES.length) % SLIDES.length), []);
 
@@ -147,8 +156,8 @@ export default function HeroCarousel() {
                     playsInline
                     className="max-h-full w-auto max-w-full rounded-xl object-contain"
                   />
-                ) : s.art ? (
-                  <Emblem shape="wings" hue={140} size={150} />
+                ) : s.art && !shown[s.id] ? (
+                  <UnitWings className="max-h-full w-full max-w-[92%]" />
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -158,6 +167,20 @@ export default function HeroCarousel() {
                     // photograph shown at 400px is sharp, and at 1000px is mud.
                     className="max-h-full w-auto max-w-full rounded-xl object-contain"
                     loading={i === 0 ? "eager" : "lazy"}
+                    // A slide that carries BOTH a drawing and a photograph shows
+                    // the drawing until the file proves it is there.
+                    {...(s.art ? { onLoad: () => setShown((m) => ({ ...m, [s.id]: true })) } : {})}
+                  />
+                )}
+                {s.art && !shown[s.id] && (
+                  // Off-screen, only to find out whether the photograph exists.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={photoSrc(s.photo!)}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute h-px w-px opacity-0 pointer-events-none"
+                    onLoad={() => setShown((m) => ({ ...m, [s.id]: true }))}
                   />
                 )}
               </span>
