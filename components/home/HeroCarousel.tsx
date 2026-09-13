@@ -88,7 +88,24 @@ const EVERY_MS = 6000;
 export default function HeroCarousel() {
   const [at, setAt] = useState(0);
   // Which "art" slides turned out to have a real photograph behind them.
+  //
+  // Asked with an Image() rather than with onLoad on a rendered <img>: this is
+  // a static export, so that tag is already in the HTML and already finished
+  // loading before React attaches a handler to it — the event never fires and
+  // the slide stays text-only next to a photograph that is sitting right there.
   const [shown, setShown] = useState<Record<string, boolean>>({});
+  useEffect(() => {
+    let alive = true;
+    for (const s of SLIDES) {
+      if (!s.art || !s.photo) continue;
+      const probe = new Image();
+      probe.onload = () => {
+        if (alive) setShown((m) => (m[s.id] ? m : { ...m, [s.id]: true }));
+      };
+      probe.src = photoSrc(s.photo);
+    }
+    return () => { alive = false; };
+  }, []);
   const [paused, setPaused] = useState(false);
   const go = useCallback((i: number) => setAt(((i % SLIDES.length) + SLIDES.length) % SLIDES.length), []);
 
@@ -169,25 +186,12 @@ export default function HeroCarousel() {
                     // photograph shown at 400px is sharp, and at 1000px is mud.
                     className="max-h-full w-auto max-w-full rounded-xl object-contain"
                     loading={i === 0 ? "eager" : "lazy"}
-                    // A slide that carries BOTH a drawing and a photograph shows
-                    // the drawing until the file proves it is there.
-                    {...(s.art ? { onLoad: () => setShown((m) => ({ ...m, [s.id]: true })) } : {})}
                   />
                 )}
               </span>
               )}
 
-              {/* Off-screen, only to find out whether the photograph exists. */}
-              {s.art && !shown[s.id] && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={photoSrc(s.photo!)}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute h-px w-px opacity-0 pointer-events-none"
-                  onLoad={() => setShown((m) => ({ ...m, [s.id]: true }))}
-                />
-              )}
+
 
               <span
                 className={cn(
