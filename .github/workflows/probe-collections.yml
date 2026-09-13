@@ -1,0 +1,28 @@
+# Asks MakerWorld which API path holds a collection's contents.
+#
+# The browser path is blocked: Cloudflare challenges every collection PAGE,
+# eight out of eight, signed in. The API is a different door — the candidate
+# sweep reads makerworld.com/api/v1/search-service from a plain runner without
+# a browser and without a challenge.
+#
+# This job writes nothing to the repository. It prints what each candidate URL
+# answers, so the next change can be made against what the site actually does
+# rather than against a guess.
+name: Probe collection API
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Probe
+        env:
+          MAKERWORLD_COOKIE: ${{ secrets.MAKERWORLD_COOKIE }}
+        run: node scripts/probe-collection-api.mjs
