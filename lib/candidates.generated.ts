@@ -2,9 +2,222 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 0
-// Collected: 2026-09-12T14:30:45.083Z
+// Items: 12
+// Collected: 2026-09-13T09:36:18.872Z
 
 import type { Candidate } from "./candidates";
 
-export const CANDIDATES: Candidate[] = [];
+export const CANDIDATES: Candidate[] = [
+  {
+    "id": "3282467",
+    "title": "Custom Name Pen Holder Personalized Desk Organizer",
+    "slug": "custom-name-pen-holder-personalized-desk-organizer",
+    "license": "Standard Digital File License",
+    "creator": "GreedyDog",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US1e9f877de51b41/design/0b4fcf07334d2043.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 405,
+    "likes": 91,
+    "grams": 142,
+    "hours": 3.22,
+    "colors": 1,
+    "suggested": "office",
+    "warnings": [],
+    "via": "trending",
+    "tags": "organizers · custom name pen holder personalized desk organizer · pen pencil holder · stationary · custom name name pen holder pen holder pencil holder personalized personalized gift desk · organizer desk tidy stationery organizer stationery holder office organizer school organizer"
+  },
+  {
+    "id": "3288156",
+    "title": "IPHONE DUO",
+    "slug": "iphone-duo",
+    "license": "Standard Digital File License",
+    "creator": "MECZone3D",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US74957893273cb8/design/9e42686b66c4a93e.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 159,
+    "likes": 47,
+    "grams": 74,
+    "hours": 2.29,
+    "colors": 2,
+    "suggested": "office",
+    "warnings": [],
+    "via": "trending",
+    "tags": "iphone18 · iPhone · iphone duo · duo · fold · fold phone"
+  },
+  {
+    "id": "3292477",
+    "title": "Wiggly Eye Bear - Interactive Push Belly Toy",
+    "slug": "wiggly-eye-bear-interactive-push-belly-toy",
+    "license": "Standard Digital File License - Community Use",
+    "creator": "PrintBits",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6c6cc4c35f68ce/design/1311b6313f0387b0.webp?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 51,
+    "likes": 83,
+    "grams": 50,
+    "hours": 1.98,
+    "colors": 3,
+    "suggested": "fidget",
+    "warnings": [],
+    "via": "trending",
+    "tags": "BEAR · wiggly · wiggly eyes · googly eyes · interactive · kids"
+  },
+  {
+    "id": "3294439",
+    "title": "Dragon Secret Book – Hidden Storage",
+    "slug": "dragon-secret-book-hidden-storage",
+    "license": "Standard Digital File License",
+    "creator": "StrabonZ",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US48fc85f9c098b7/design/16f0143a4cd16ecb.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 50,
+    "likes": 80,
+    "grams": 210,
+    "hours": 9.77,
+    "colors": 3,
+    "suggested": "flexi",
+    "warnings": [],
+    "via": "trending",
+    "tags": "Dragon · &amp;#39;dragon · dragon · dragonbook · sleepingdragon · cutedragon"
+  },
+  {
+    "id": "3279470",
+    "title": "Minimalist Nativity Scene-Minimalist Nativity Set",
+    "slug": "minimalist-nativity-scene-minimalist-nativity-set",
+    "license": "Standard Digital File License",
+    "creator": "Urban Mix Studio",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US91241692256a64/design/a0c58c3c3ea8acf5.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 45,
+    "likes": 101,
+    "grams": 384,
+    "hours": 23.22,
+    "colors": 2,
+    "suggested": "home",
+    "warnings": [
+      "הדפסה ארוכה"
+    ],
+    "via": "trending",
+    "tags": "natale · Christmas · Christmas\\ · presepe · nativita · nativity"
+  },
+  {
+    "id": "3288538",
+    "title": "Pastel Goth Halloween Samhain Moth Pumpkin Wreath",
+    "slug": "pastel-goth-halloween-samhain-moth-pumpkin-wreath",
+    "license": "Standard Digital File License",
+    "creator": "o0 john titor 0o",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US546bde38c26bdc/design/d68c6ee3929eb3cb.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 41,
+    "likes": 134,
+    "grams": 104,
+    "hours": 9.26,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [],
+    "via": "trending",
+    "tags": "pastel goth wreath goth wreath gothic wreath halloween wreath samhain wreath pumpkin wreath · moth wreath luna moth decor skull wreath rose wreath door wreath wall decor halloween decor · samhain decor pastel goth decor gothic home decor spooky decor · witchy decor goth stl file 3d printable decor · pastel goth halloween samhain moth pumpkin wreath for gothic doors and spooky wall decor · goth halloween samhain decorative wreath with luna moth pumpkins skulls and rose details"
+  },
+  {
+    "id": "3290414",
+    "title": "Symbiote Suit Spider-Man - Secret Wars (No AMS)",
+    "slug": "symbiote-suit-spider-man-secret-wars-no-ams",
+    "license": "Standard Digital File License",
+    "creator": "Solark",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US4b580b4e44994b/design/c87696cdfbd93953.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 41,
+    "likes": 88,
+    "grams": 141,
+    "hours": 6.91,
+    "colors": 2,
+    "suggested": "statues",
+    "warnings": [
+      "מותג"
+    ],
+    "via": "trending",
+    "tags": "spider - man · spider man · spider man 2 · brand new day · Marvel · marvel"
+  },
+  {
+    "id": "3287399",
+    "title": "Dachshund Dog Tray – Catchall Organizer",
+    "slug": "dachshund-dog-tray-catchall-organizer",
+    "license": "Standard Digital File License",
+    "creator": "Sofie",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US2765121f26d400/design/5749cb96776728f0.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 40,
+    "likes": 72,
+    "grams": 89,
+    "hours": 2.08,
+    "colors": 1,
+    "suggested": "home",
+    "warnings": [],
+    "via": "trending",
+    "tags": "dachshund · dog · dog tray · dachshund tray · catchall · catchall tray"
+  },
+  {
+    "id": "3292595",
+    "title": "STITCH HALLOWEEN EDITION / NO AMS",
+    "slug": "stitch-halloween-edition-no-ams",
+    "license": "Standard Digital File License",
+    "creator": "model lover",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US81b4f8ad245cf6/design/08135a2633b2f2aa.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 37,
+    "likes": 110,
+    "grams": 316,
+    "hours": 11.72,
+    "colors": 6,
+    "suggested": "statues",
+    "warnings": [
+      "הדפסה ארוכה"
+    ],
+    "via": "trending",
+    "tags": "STITCH · Stitch · stitch · stitch 2025 · stitch 2026 · Halloween"
+  },
+  {
+    "id": "3285255",
+    "title": "Halloween Poké Ball Pumpkin",
+    "slug": "halloween-poke-ball-pumpkin",
+    "license": "Standard Digital File License",
+    "creator": "Dommivat",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7abf36822bb750/design/5f755fb09e2487fb.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 32,
+    "likes": 109,
+    "grams": 163,
+    "hours": 4.87,
+    "colors": 4,
+    "suggested": "home",
+    "warnings": [
+      "מותג"
+    ],
+    "via": "trending",
+    "tags": "pokemon · pokeball · poke ball · halloween · pumpkin · pokemon halloween"
+  },
+  {
+    "id": "3292460",
+    "title": "Ghostface NO AMS - Assalto nella Notte",
+    "slug": "ghostface-no-ams-assault-in-the-night",
+    "license": "Standard Digital File License",
+    "creator": "Clean Studio",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US53e1e21ad9dc93/design/43e1854139402b02.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 31,
+    "likes": 81,
+    "grams": 107,
+    "hours": 7.51,
+    "colors": 3,
+    "suggested": "statues",
+    "warnings": [],
+    "via": "trending",
+    "tags": "ghostface · scream · Halloween · horror · horrormovie · noams"
+  },
+  {
+    "id": "3292184",
+    "title": "Halloween Skeleton in Coffin. Articulated skeleton",
+    "slug": "halloween-skeleton-in-coffin-articulated-skeleton",
+    "license": "Standard Digital File License",
+    "creator": "gobotoru",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5b5bdd3b6ae424/design/e2a436e29677d4bc.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 31,
+    "likes": 91,
+    "grams": 52,
+    "hours": 3.34,
+    "colors": 1,
+    "suggested": "flexi",
+    "warnings": [],
+    "via": "trending",
+    "tags": "flexi · articulated · fisget · toy · skeleton · skull"
+  }
+];
