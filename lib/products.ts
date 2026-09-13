@@ -133,11 +133,13 @@ export const OFFICE_PRODUCTS: Product[] = [
     art: "qr", hue: 150, ams: true, colors: 3, material: "pla_matte",
     tag: "חדש",
     isNew: true,
-    image: "/img/products/biz-card-1.webp",
+    // The angled shot leads — it is the one on the home page, and the card
+    // reads as an object rather than as two flat squares at thumbnail size.
+    image: "/img/products/biz-card-3.webp",
     images: [
+      "/img/products/biz-card-3.webp",
       "/img/products/biz-card-1.webp",
       "/img/products/biz-card-2.webp",
-      "/img/products/biz-card-3.webp",
     ],
     engraving: {
       label: "הטקסט הבולט",
