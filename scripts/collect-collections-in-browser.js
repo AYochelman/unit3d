@@ -1,5 +1,5 @@
 /* ============================================================================
-   Unit 3D — כל האוספים שלך במייקרוורלד, בהדבקה אחת.
+   Unit 3D — האוספים והלייקים שלך במייקרוורלד, בהדבקה אחת.
 
    ⚠️ לא ללחוץ פעמיים על הקובץ. הוא רץ בתוך הדפדפן בלבד.
 
@@ -10,12 +10,14 @@
      · הפרמטרים collectionId / collection / filter בשירות החיפוש מתעלמים
        ומחזירים טרנדינג — נראה כמו הצלחה, ואינו.
      · קורא טקסט ציבורי חיצוני נחסם גם הוא.
-     · design-service/design/{id} כן עונה מכל מקום. לכן ברגע שיש רשימת
-       מספרים, הייבוא עובד לבד.
+     · אין גם נתיב API ללייקים. נבדקו שבעה.
+     · ב-13:00 שירות החיפוש עדיין ענה לשרת; ב-21:12 אותו נתיב בדיוק החזיר
+       403. Cloudflare הידק, והדלת שהייתה פתוחה בצהריים נסגרה בערב.
    כלומר: החסר היחיד הוא רשימת המספרים, והדפדפן שלך הוא הדלת היחידה אליה.
 
    איך משתמשים:
    1. פתח את מייקרוורלד בדפדפן, מחובר לחשבון שלך. כל עמוד באתר מתאים.
+      (הוא עובר על הלייקים ועל כל האוספים בעצמו — אין צורך לפתוח אותם.)
    2. F12 ← לשונית Console.
    3. הדבק את כל הקובץ הזה ו-Enter.
    4. חכה. הוא עובר אוסף אחרי אוסף ומדפיס התקדמות.
@@ -131,9 +133,30 @@
   } catch { /* the written-down five are enough to start */ }
   log(`${collections.length} אוספים: ${collections.map(([, s]) => s || "?").join(", ")}`, "font-weight:bold");
 
-  /* ── 2. every model in every collection ─────────────────────────────── */
+  /* ── 2. the likes tab ───────────────────────────────────────────────────
+     A like is weaker than a collection — "this is good" rather than "I want
+     this" — but he asked for both, and the shop's approval queue is where the
+     difference gets decided anyway. MakerWorld has moved this tab around, so
+     the address is tried rather than assumed. */
   const all = new Map();
   let popupBlocked = false;
+
+  for (const likeUrl of [
+    `${ORIGIN}/en/@${PROFILE}/likes`,
+    `${ORIGIN}/en/@${PROFILE}?tab=likes`,
+    `${ORIGIN}/en/@${PROFILE}/like`,
+  ]) {
+    const { how, ids, blocked } = await read(likeUrl);
+    if (blocked) { popupBlocked = true; continue; }
+    if (!ids.length) continue;
+    let fresh = 0;
+    for (const mid of ids) if (!all.has(mid)) { all.set(mid, "likes"); fresh++; }
+    log(`  לייקים: ${ids.length} (${fresh} חדשים) · ${how}`);
+    break; // the first address that answers is the right one
+  }
+  if (!all.size) log("  לייקים: לא נמצאו — ייתכן שהטאב מוסתר, ממשיך לאוספים", "color:#e0af68");
+
+  /* ── 3. every model in every collection ─────────────────────────────── */
   for (const [id, slug] of collections) {
     const url = `${ORIGIN}/en/collections/${id}-${slug}`;
     const { how, ids, blocked } = await read(url);
@@ -144,6 +167,7 @@
     await wait(400);
   }
 
+  /* ── 4. out ─────────────────────────────────────────────────────────── */
   const list = [...all.keys()];
   if (!list.length) {
     alert(
@@ -154,7 +178,6 @@
     return;
   }
 
-  /* ── 3. out ─────────────────────────────────────────────────────────── */
   const line = list.join(" ");
   try { await navigator.clipboard.writeText(line); } catch { /* printed below anyway */ }
 
@@ -166,7 +189,7 @@
   a.click();
   a.remove();
 
-  log(`\n${list.length} מודלים מ-${collections.length} אוספים. הרשימה בלוח:`, "font-weight:bold;color:#9ece6a");
+  log(`\n${list.length} מודלים מ-${collections.length} אוספים ומהלייקים. הרשימה בלוח:`, "font-weight:bold;color:#9ece6a");
   console.log(line);
   alert(
     `נאספו ${list.length} מודלים מ-${collections.length} אוספים.\n\n` +
