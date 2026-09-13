@@ -2,7 +2,7 @@ import CatalogClient from "./CatalogClient";
 
 export const metadata = {
   alternates: { canonical: "/catalog/" },
-  title: "סמלי יחידה · Unit 3D",
+  title: "לחיילים · Unit 3D",
   description:
     "כל סמלי היחידה הצה\"ליים — שריון, אוויר, ים, מודיעין, משטרה. הזמן בעצמך, או שלח לי תמונה ואדפיס.",
 };

@@ -61,35 +61,35 @@ export const REVIEWS: Review[] = [
   { id: "r5", name: "דניאל", seg: "private", stars: 5, photo: "/img/reviews/r5.webp" },
 ];
 
+// Eight photographs, eight prints that actually came off this printer.
+//
+// What was here before were eighteen invented entries — "פיגורת DnD · Resin ·
+// 70mm · 4h", "Welcome Kit (×40)" — drawn as coloured emblems, with materials
+// he does not print and quantities nobody ordered. That is what the ?cat=b2b
+// filter was showing when he asked "מה זה כל זה תחת עסקיים?".
+//
+// `meta` says only what the photograph itself shows. No weights, no print
+// times, no material names were measured for these, so none are printed.
 export const GALLERY: GalleryItem[] = [
-  { id: "g1", cat: "unit", seg: "soldier", title: "סמל פלוגה", meta: "PLA · 47×40mm · 2.5h", hue: 18, shape: "shield" },
-  { id: "g2", cat: "keychain", seg: "private", title: "מחזיק עם שם", meta: "PETG · 60×25mm · 1.5h", hue: 200, shape: "rect" },
-  { id: "g3", cat: "figurine", seg: "private", title: "פיגורת DnD", meta: "Resin · 70mm · 4h", hue: 45, shape: "circle" },
-  { id: "g4", cat: "part", seg: "private", title: "גלגל שיניים מותאם", meta: "PETG · 35mm · 1h", hue: 0, shape: "hex" },
-  { id: "g5", cat: "unit", seg: "soldier", title: "סמל חיל אוויר", meta: "PLA · 50×50mm · 3h", hue: 220, shape: "wings" },
-  { id: "g6", cat: "b2b", seg: "b2b", title: "לוגו עסק (×40)", meta: "PLA · 55×30mm · 1.5h", hue: 120, shape: "rect" },
-  { id: "g7", cat: "fidget", seg: "private", title: "Fidget Spinner", meta: "PLA+ · 65mm · 1h", hue: 280, shape: "diamond" },
-  { id: "g8", cat: "figurine", seg: "private", title: "בוסט של חבר", meta: "PLA · 80mm · 5h", hue: 35, shape: "circle" },
-  { id: "g9", cat: "unit", seg: "soldier", title: "סמל ימי", meta: "PLA · 50×50mm · 3h", hue: 195, shape: "anchor" },
-  { id: "g10", cat: "part", seg: "private", title: "מתאם לכלי עבודה", meta: "PETG · 80×40mm · 2h", hue: 30, shape: "rect" },
-  { id: "g11", cat: "fidget", seg: "private", title: "Articulated Dragon", meta: "PLA · 180mm · 4h", hue: 90, shape: "hex" },
-  { id: "g12", cat: "b2b", seg: "b2b", title: "פרס \"עובד החודש\"", meta: "PLA Silk · 120×80mm · 4h", hue: 160, shape: "shield" },
-  { id: "g13", cat: "keychain", seg: "soldier", title: "מחזיק כפול", meta: "PLA · 55×35mm · 1.5h", hue: 240, shape: "rect" },
-  { id: "g14", cat: "unit", seg: "soldier", title: "סמל מטכ\"ל", meta: "PLA · 50×45mm · 3.5h", hue: 60, shape: "diamond" },
-  { id: "g15", cat: "figurine", seg: "private", title: "בעל חיים מיניאטורי", meta: "Resin · 45mm · 3h", hue: 330, shape: "circle" },
-  { id: "g16", cat: "fidget", seg: "private", title: "Infinity Cube", meta: "PLA · 35mm · 2h", hue: 140, shape: "hex" },
-  { id: "g17", cat: "b2b", seg: "b2b", title: "Welcome Kit (×25)", meta: "PLA · 60mm · 2h ea", hue: 10, shape: "circle" },
-  { id: "g18", cat: "fidget", seg: "private", title: "Fidget Cube", meta: "PLA · 40mm · 1.5h", hue: 250, shape: "hex" },
+  { id: "g1", cat: "figurine", seg: "private", title: "ספיידרמן ברשת", meta: "print · voronoi", hue: 0,   shape: "shield", photo: "/studio/print-02.jpg" },
+  { id: "g2", cat: "figurine", seg: "private", title: "פיגורת KAWS", meta: "print · white", hue: 200, shape: "circle", photo: "/studio/print-03.jpg" },
+  { id: "g3", cat: "fidget",   seg: "private", title: "דרקון מפרקי", meta: "print-in-place", hue: 45,  shape: "hex",    photo: "/studio/print-04.jpg" },
+  { id: "g4", cat: "figurine", seg: "private", title: "דמות בקשת", meta: "print · silver", hue: 220, shape: "wings",  photo: "/studio/print-05.jpg" },
+  { id: "g5", cat: "fidget",   seg: "private", title: "דרקון קטן", meta: "print-in-place", hue: 280, shape: "diamond", photo: "/studio/print-06.jpg" },
+  { id: "g6", cat: "part",     seg: "private", title: "מעמד לשלט", meta: "desk print", hue: 120, shape: "rect",   photo: "/studio/print-07.jpg" },
+  { id: "g7", cat: "part",     seg: "private", title: "ראש מואאי", meta: "desk print", hue: 160, shape: "circle", photo: "/studio/print-08.jpg" },
+  { id: "g8", cat: "part",     seg: "private", title: "אגרטל מחורץ", meta: "print · gold", hue: 35,  shape: "circle", photo: "/studio/print-01.jpg" },
 ];
 
+// Only the filters that have something behind them. A tab that opens on an
+// empty grid is how the invented b2b items came to be noticed in the first
+// place; when there is a photograph of a unit emblem or a business gift, its
+// filter comes back with it.
 export const GALLERY_CATS = [
   { id: "all", label: "הכל" },
-  { id: "unit", label: "סמלי יחידה" },
-  { id: "keychain", label: "מחזיקי מפתחות" },
   { id: "fidget", label: "פידג'טים" },
   { id: "figurine", label: "פסלונים" },
   { id: "part", label: "חלקי חילוף" },
-  { id: "b2b", label: "מתנות עסקיות" },
 ] as const;
 
 const CURATED_FIDGETS: Fidget[] = [

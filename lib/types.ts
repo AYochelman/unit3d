@@ -87,6 +87,13 @@ export type GalleryItem = {
   meta: string;
   hue: number;
   shape: EmblemShape;
+  /**
+   * A photograph of the actual print, under /studio.
+   *
+   * When it is there it replaces the drawn emblem — a picture of the thing
+   * that came off the plate says more than any illustration of it.
+   */
+  photo?: string;
 };
 
 // ─── Fidgets ──────────────────────────────────────────────────────────────────

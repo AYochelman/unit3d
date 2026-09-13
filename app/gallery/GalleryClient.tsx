@@ -6,6 +6,7 @@ import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
 import Emblem from "@/components/Emblem";
 import { GALLERY, GALLERY_CATS } from "@/lib/data";
+import { photoSrc } from "@/lib/assets";
 import { useOrderStore } from "@/lib/order-store";
 import { cn } from "@/lib/cn";
 import type { GalleryItem } from "@/lib/types";
@@ -90,7 +91,17 @@ export default function GalleryClient() {
               }}
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <Emblem shape={g.shape} hue={g.hue} size={130} className="spin-y" />
+                {g.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={photoSrc(g.photo)}
+                    alt={g.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Emblem shape={g.shape} hue={g.hue} size={130} className="spin-y" />
+                )}
               </div>
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-ink-950/75 flex flex-col items-end justify-end p-4 text-right gap-2">
                 <Icon name="expand" size={20} className="text-flame self-start" />
@@ -127,7 +138,12 @@ export default function GalleryClient() {
                     background: `radial-gradient(circle at 50% 40%, hsla(${active.hue}, 70%, 50%, 0.22), transparent 60%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
                   }}
                 >
-                  <Emblem shape={active.shape} hue={active.hue} size={200} />
+                  {active.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={photoSrc(active.photo)} alt={active.title} className="h-full w-full object-contain" />
+                  ) : (
+                    <Emblem shape={active.shape} hue={active.hue} size={200} />
+                  )}
                 </div>
                 <div>
                   <Pill tone="flame" className="mb-3">
@@ -142,15 +158,11 @@ export default function GalleryClient() {
                   <div className="space-y-4 text-sm leading-relaxed text-ink-300">
                     <div>
                       <div className="font-mono text-[10px] text-flame uppercase tracking-widest mb-1">החומר</div>
-                      <p>נבחר לפי שילוב של עמידות, גימור, ועלות. רוב ההזמנות יוצאות ב-PLA או PLA+.</p>
+                      <p>נבחר לפי שילוב של עמידות, גימור ועלות. רוב ההזמנות יוצאות ב-PLA או PLA+.</p>
                     </div>
                     <div>
-                      <div className="font-mono text-[10px] text-flame uppercase tracking-widest mb-1">האתגר</div>
-                      <p>חלקים דקים הצריכו supports במיקום מדויק. שתי חזרות עד שהפרופורציה התיישבה.</p>
-                    </div>
-                    <div>
-                      <div className="font-mono text-[10px] text-flame uppercase tracking-widest mb-1">משלוח</div>
-                      <p>נשלח באריזה ייעודית עם רפידה בנדון לפגיעות. הגיעה במצב מושלם תוך 3 ימים.</p>
+                      <div className="font-mono text-[10px] text-flame uppercase tracking-widest mb-1">הצילום</div>
+                      <p>התמונה היא ההדפסה עצמה, כפי שיצאה מהמדפסת הזאת. בלי רינדור ובלי תמונת יצרן.</p>
                     </div>
                   </div>
                   <div className="mt-6">

@@ -190,10 +190,10 @@ export default function CatalogClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
         <Pill tone="flame" className="mb-4">
-          קטלוג סמלי יחידה
+          לחיילים · קטלוג הסמלים
         </Pill>
         <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
-          סמלי יחידה. מודפסים בדיוק.
+          לחיילים. הסמל שלכם, מודפס בדיוק.
         </h1>
         <p className="text-ink-300 max-w-2xl mb-4">
           לוחמים, בוגרי קורסים, משפחות — כל סמל זמין במחזיק מפתחות, בפסל
