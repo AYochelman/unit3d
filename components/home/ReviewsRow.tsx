@@ -71,12 +71,12 @@ function ReviewCard({ r }: { r: Review }) {
         }}
       >
         {photo ? (
-          <Image src={photo} alt={r.item ?? r.name} fill sizes="300px" className="object-cover" unoptimized />
+          <Image src={photo} alt={r.item ?? r.name ?? "תמונה מלקוח"} fill sizes="300px" className="object-cover" unoptimized />
         ) : (
           <ProductArt art={r.art ?? "keychain"} hue={r.hue ?? 145} size={92} />
         )}
         <span className="absolute top-2 right-2">
-          <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>
+          {r.seg && <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>}
         </span>
       </div>
 
@@ -108,10 +108,10 @@ function ReviewCard({ r }: { r: Review }) {
             className="h-9 w-9 rounded-full text-ink-50 font-bold inline-flex items-center justify-center text-sm shrink-0"
             style={{ background: `linear-gradient(135deg, hsl(${r.hue ?? 145}, 60%, 26%), hsl(${r.hue ?? 145}, 65%, 42%))` }}
           >
-            {r.name.charAt(0)}
+            {r.name ? r.name.charAt(0) : "\u05dc"}
           </div>
           <div className="min-w-0">
-            <div className="text-sm font-semibold truncate">{r.name}</div>
+            <div className="text-sm font-semibold truncate">{r.name ?? "לקוח"}</div>
           </div>
         </div>
       </div>
@@ -185,6 +185,11 @@ export default function ReviewsRow() {
   }
 
   const half = Math.ceil(reviews.length / 2);
+  // The bars are a breakdown of the RATINGS, not of the reviews: a photograph
+  // someone sent with no stars is a review, but it is not a score, and putting
+  // it in the denominator would show "5 כוכבים" at 38% when every rating given
+  // was five.
+  const rated = reviews.filter((r) => r.stars).length;
   return (
     <section className="py-12 md:py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -199,13 +204,13 @@ export default function ReviewsRow() {
           <div className="text-center sm:text-right">
             <div className="font-mono text-5xl font-black text-flame leading-none" dir="ltr">{AVG}</div>
             <div className="mt-1.5 flex justify-center sm:justify-start"><Stars n={5} /></div>
-            <div className="text-[11px] text-ink-400 mt-1">{reviews.length} ביקורות</div>
+            <div className="text-[11px] text-ink-400 mt-1">{rated} דירוגים · {reviews.length} ביקורות</div>
           </div>
 
           <div className="space-y-1">
             {[5, 4, 3, 2, 1].map((n) => {
               const count = reviews.filter((r) => r.stars === n).length;
-              const pct = Math.round((count / reviews.length) * 100);
+              const pct = rated ? Math.round((count / rated) * 100) : 0;
               return (
                 <div key={n} className="flex items-center gap-2 text-[11px]">
                   <span className="w-3 text-ink-400 font-mono" dir="ltr">{n}</span>

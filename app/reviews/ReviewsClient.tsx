@@ -53,7 +53,7 @@ export default function ReviewsClient() {
               <span className="text-ink-500">/</span>
               <span className="font-mono text-ink-300" dir="ltr">5.0</span>
               <span className="text-ink-500">·</span>
-              <span className="text-sm">{reviews.length} ביקורות</span>
+              <span className="text-sm">{reviews.filter((r) => r.stars).length} דירוגים · {reviews.length} ביקורות</span>
             </div>
           )}
         </div>
@@ -88,13 +88,13 @@ export default function ReviewsClient() {
                     background: "linear-gradient(135deg, #055A2D, #089a47)",
                   }}
                 >
-                  {r.name.charAt(0)}
+                  {r.name ? r.name.charAt(0) : "\u05dc"}
                 </div>
                 <div>
-                  <div className="font-semibold leading-tight">{r.name}</div>
+                  <div className="font-semibold leading-tight">{r.name ?? "לקוח"}</div>
                 </div>
               </div>
-              <Pill tone={SEG_TONE[r.seg]}>{SEG_LABEL[r.seg]}</Pill>
+              {r.seg && <Pill tone={SEG_TONE[r.seg]}>{SEG_LABEL[r.seg]}</Pill>}
             </div>
             {!!r.stars && (
               <div className="flex gap-0.5 text-flame mb-3">
@@ -112,7 +112,7 @@ export default function ReviewsClient() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={photoSrc(r.photo)}
-                alt={`תמונה שצילם ${r.name}`}
+                alt={r.name ? `תמונה שצילם ${r.name}` : "תמונה מלקוח"}
                 loading="lazy"
                 className="w-full rounded-xl border border-ink-800 bg-ink-950 object-contain max-h-80"
               />

@@ -59,6 +59,19 @@ export const REVIEWS: Review[] = [
   { id: "r3", name: "עידו",  seg: "private", stars: 5, photo: "/img/reviews/r3.webp" },
   { id: "r4", name: "עמית",  seg: "private", stars: 5, photo: "/img/reviews/r4.webp" },
   { id: "r5", name: "דניאל", seg: "private", stars: 5, photo: "/img/reviews/r5.webp" },
+
+  // Eight more photographs customers sent — he confirmed they came from them.
+  // A photograph with nothing attached to it carries no name, no rating and no
+  // sentence, so none of the three is printed. The card shows the picture and
+  // says "לקוח", which is all anyone here actually knows.
+  { id: "c1", photo: "/studio/print-02.jpg", item: "ספיידרמן ברשת" },
+  { id: "c2", photo: "/studio/print-03.jpg", item: "פיגורת KAWS" },
+  { id: "c3", photo: "/studio/print-04.jpg", item: "דרקון מפרקי" },
+  { id: "c4", photo: "/studio/print-05.jpg", item: "דמות בקשת" },
+  { id: "c5", photo: "/studio/print-06.jpg", item: "דרקון קטן" },
+  { id: "c6", photo: "/studio/print-07.jpg", item: "מעמד לשלט" },
+  { id: "c7", photo: "/studio/print-08.jpg", item: "ראש מואאי" },
+  { id: "c8", photo: "/studio/print-01.jpg", item: "אגרטל מחורץ" },
 ];
 
 // Eight photographs, eight prints that actually came off this printer.

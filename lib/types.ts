@@ -44,7 +44,14 @@ export type Unit = {
 // ─── Reviews ──────────────────────────────────────────────────────────────────
 export type Review = {
   id: string;
-  name: string;
+  /**
+   * Who wrote it, when that is known.
+   *
+   * Some of these arrived as a photograph and nothing else — no name, no note.
+   * The card says "לקוח" rather than putting a name on someone who never gave
+   * one, which is the same rule as the empty `txt`.
+   */
+  name?: string;
   /**
    * A line under the name — a unit, a company.
    *
@@ -53,7 +60,8 @@ export type Review = {
    * reviewer only has one if they chose to give it.
    */
   tag?: string;
-  seg: ReviewSeg;
+  /** What kind of customer, when that is known. */
+  seg?: ReviewSeg;
   /** Their rating, when they gave one. A photo can be the whole review. */
   stars?: number;
   /** Their words, in their words. Absent when all they sent was a picture. */
