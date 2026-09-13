@@ -1,4 +1,29 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "2786539",
+      "decision": "approved",
+      "shelf": "office",
+      "also": [
+        "b2b"
+      ],
+      "at": "2026-09-13T13:34:59.395Z"
+    },
+    {
+      "id": "3278419",
+      "decision": "rejected",
+      "at": "2026-09-13T13:34:59.396Z"
+    },
+    {
+      "id": "3284338",
+      "decision": "rejected",
+      "at": "2026-09-13T13:34:59.396Z"
+    },
+    {
+      "id": "3287222",
+      "decision": "rejected",
+      "at": "2026-09-13T13:34:59.396Z"
+    }
+  ]
 }
