@@ -345,6 +345,14 @@ export type Product = {
   orders?: number;
   /** Max colours offered (1 = single colour, 2-4 = AMS). Defaults to ams ? 2 : 1. */
   colors?: number;
+  /**
+   * Separate printed pieces sold as one product.
+   *
+   * Only for a product that is genuinely several different models handled one
+   * by one — a mystery box, not a set of six identical clips that come off one
+   * plate together. It scales the hands-on cost; see CostInput.pieces.
+   */
+  pieces?: number;
   isNew?: boolean;
   /** Optional engraving/text field on the product (pet name, phone…). */
   engraving?: { label: string; placeholder: string; max: number; second?: { label: string; placeholder: string; max: number } };

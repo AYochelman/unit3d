@@ -103,12 +103,18 @@ export const OFFICE_PRODUCTS: Product[] = [
     name: "קופסת מיסטרי",
     desc: "כולל חמישה מוצרי פידג'ט ופלקסי רנדומליים. למי שלא בטוח מה לבחור — אנחנו דואגים לכם.",
     // Five items, planned around the SMALL end of the fidget/flexi catalogue:
-    // roughly 18g and an hour each. The catalogue's median is 36g and 2.3h,
-    // and a box filled at the median costs about ₪104 to make — which this
-    // price would not carry. What goes in the box is therefore a choice, not
-    // a lottery on our side.
-    price: 149, size: "5 פריטים", time: "~5h", hours: 5, grams: 90,
-    art: "organizer", hue: 210, colors: 2, material: "pla",
+    // roughly 18g and an hour each. The catalogue's median is 33g and 2.1h,
+    // and a box filled at the median costs far more to make than this one.
+    // What goes in the box is therefore a choice, not a lottery on our side.
+    //
+    // `pieces: 5` is the number that was missing. The shop prices from cost,
+    // and the cost model charged ONE item's handling for a box of five — so
+    // the box came out at ₪36 while the five smallest items in it come to ₪45
+    // bought separately, and five typical ones to ₪60. Five pieces of handling
+    // is five times ₪5, which lands the box at ₪60: the same margin the rest
+    // of the shelf runs on, instead of a loss dressed as a bargain.
+    price: 60, size: "5 פריטים", time: "~5h", hours: 5, grams: 90,
+    art: "organizer", hue: 210, colors: 2, pieces: 5, material: "pla",
     tag: "חדש",
     isNew: true,
     image: "/img/products/mystery-box.webp",

@@ -56,6 +56,8 @@ type Row = {
   material: MaterialId;
   price: number;
   colors: number;
+  /** Separate printed pieces sold as one product — scales the handling cost. */
+  pieces?: number;
 };
 
 function baseRows(): Row[] {
@@ -78,6 +80,7 @@ function baseRows(): Row[] {
     material: p.material ?? "pla",
     price: p.price,
     colors: p.colors ?? (p.ams ? 2 : 1),
+    pieces: p.pieces,
   }));
   const config: Row[] = CONFIG_PRODUCTS.map((c) => ({
     id: `cfg-${c.id}`,
@@ -194,7 +197,7 @@ function ProductsTab() {
     const list = baseRows().map((r) => {
       const o = overrides[r.id] ?? {};
       const cost = estimateCost(
-        { grams: o.grams ?? r.grams, hours: o.hours ?? r.hours, material: r.material, colors: r.colors, price: o.price ?? r.price },
+        { grams: o.grams ?? r.grams, hours: o.hours ?? r.hours, material: r.material, colors: r.colors, pieces: r.pieces, price: o.price ?? r.price },
         settings,
       );
       return { ...r, cost };
@@ -219,7 +222,7 @@ function ProductsTab() {
       const grams = o.grams ?? r.grams;
       const hours = o.hours ?? r.hours;
       const price = o.price ?? r.price;
-      const cost = estimateCost({ grams, hours, material: r.material, colors: r.colors, price }, settings);
+      const cost = estimateCost({ grams, hours, material: r.material, colors: r.colors, pieces: r.pieces, price }, settings);
       return { ...r, grams, hours, price, cost, overridden: !!overrides[r.id] };
     });
     const filtered = q.trim() ? list.filter((r) => r.name.includes(q.trim()) || r.kind.includes(q.trim())) : list;

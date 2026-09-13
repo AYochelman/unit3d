@@ -35,6 +35,16 @@ export type CostInput = {
   material: MaterialId;
   /** Number of colours on the part (1 = single colour). */
   colors?: number;
+  /**
+   * How many separate printed pieces the product is.
+   *
+   * `laborPerItem` is the hands-on time for ONE piece — taking it off the
+   * plate, cleaning it, checking it, packing it. A product that is five
+   * different models in a box costs five of those, and pricing it as if it
+   * were one print is how the mystery box came to be cheaper than the items
+   * inside it. Defaults to 1, so nothing that is a single print changes.
+   */
+  pieces?: number;
   qty?: number;
   /** Customer price per unit, to compute margin. */
   price?: number;
@@ -65,7 +75,7 @@ export function estimateCost(input: CostInput, s: CostSettings): CostBreakdown {
   const materialCost = (gramsUsed / 1000) * spool;
   const machineCost = input.hours * s.machineRatePerHour;
   const electricityCost = input.hours * (s.printerWatts / 1000) * s.kwhPriceILS;
-  const laborCost = s.laborPerItem;
+  const laborCost = s.laborPerItem * Math.max(1, Math.round(input.pieces ?? 1));
   const unitCost = materialCost + machineCost + electricityCost + laborCost;
 
   const profit = input.price != null ? input.price - unitCost : null;

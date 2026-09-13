@@ -24,6 +24,8 @@ export type Priceable = {
   hours: number;
   material?: MaterialId;
   colors?: number;
+  /** Separate printed pieces in one product — see CostInput.pieces. */
+  pieces?: number;
 };
 
 export function resolvePrice(
@@ -42,6 +44,7 @@ export function resolvePrice(
       hours: o?.hours ?? item.hours,
       material: item.material ?? DEFAULT_MATERIAL,
       colors: item.colors ?? 1,
+      pieces: item.pieces ?? 1,
     },
     settings,
   );

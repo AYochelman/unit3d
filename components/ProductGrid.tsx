@@ -46,6 +46,8 @@ export type ListingCard = {
   /** true = the shop sells this with the customer's own text on it. */
   personalizable?: boolean;
   colors: number;
+  /** Separate printed pieces in one product — scales the handling cost. */
+  pieces?: number;
   rating: number;
   orders: number;
   isNew?: boolean;
@@ -72,6 +74,7 @@ export function productToCard(p: Product): ListingCard {
     designHref: designHref(p),
     personalizable: isPersonalizable(p),
     colors: p.colors ?? (p.ams ? 2 : 1),
+    pieces: p.pieces,
     rating: p.rating ?? 4.8,
     orders: p.orders ?? 0,
     isNew: p.isNew,
@@ -105,7 +108,7 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   // What the waiting list should actually name if it IS out.
   const wouldUse = startingMaterial(materials, stock, palette, material);
   // The shelf price follows /admin, so a margin change moves every card at once.
-  const priceable = { id: c.itemId ?? c.id, price: c.price, grams: c.grams, hours: c.hours, material, colors: c.colors };
+  const priceable = { id: c.itemId ?? c.id, price: c.price, grams: c.grams, hours: c.hours, material, colors: c.colors, pieces: c.pieces };
   const price = useLivePrice(priceable);
   // Heavy pieces are quoted, not priced — see MADE_TO_ORDER_FROM.
   const quoteOnly = useQuoteOnly(priceable);

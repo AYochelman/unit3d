@@ -110,6 +110,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
     hours: p?.hours ?? 0,
     material,
     colors: amsOn ? amsColors : 1,
+    pieces: p?.pieces,
   };
   const basePrice = useLivePrice(priceable);
   // A piece this heavy is quoted, not sold off a shelf — see MADE_TO_ORDER_FROM.
