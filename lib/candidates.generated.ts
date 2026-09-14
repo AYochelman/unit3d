@@ -2,12 +2,29 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 30
-// Updated: 2026-09-14T13:10:28.988Z
+// Items: 31
+// Updated: 2026-09-14T14:16:49.455Z
 
 import type { Candidate } from "./candidates";
 
 export const CANDIDATES: Candidate[] = [
+  {
+    "id": "3138323",
+    "title": "Strong Clamp",
+    "slug": "strong-clamp",
+    "license": "Standard Digital File License",
+    "creator": "NYDER",
+    "image": "https://makerworld.bblmw.com/makerworld/model/US785faab004ff9/design/323328f22f7f360e.png?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 1133,
+    "likes": 1873,
+    "grams": 32,
+    "hours": 1.58,
+    "colors": 2,
+    "suggested": "office",
+    "warnings": [],
+    "via": "נשלח על ידך",
+    "tags": "clamp · strong · Tool · tool · garage"
+  },
   {
     "id": "3286439",
     "title": "Dread Dragon Kit Card - DragonCards",

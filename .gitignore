@@ -64,3 +64,7 @@ next-env.d.ts
 agent/config.json
 agent/node_modules/
 agent/.tmp.mp4
+
+# The signed-in MakerWorld browser profile. Never leaves his machine.
+data/mw-profile/
+scripts/sync-daily.log

@@ -37,6 +37,7 @@ const PENDING = path.join(ROOT, "data", "pending-models.json");
 const CANDIDATES = path.join(ROOT, "lib", "candidates.generated.ts");
 const DECISIONS = path.join(ROOT, "public", "model-decisions.json");
 const PROFILE = process.env.MAKERWORLD_PROFILE || "Erez.yoch";
+const LOGIN = process.argv.slice(2).includes("--login");
 
 const DRY = process.argv.includes("--dry");
 const log = (...a) => console.log(...a);
@@ -52,6 +53,24 @@ const COLLECTION_SHELF = [
 ];
 const shelfForCollection = (name) => COLLECTION_SHELF.find(([re]) => re.test(name))?.[1] ?? null;
 
+/**
+ * Where a signed-in browser can live between runs.
+ *
+ * Set MAKERWORLD_PROFILE_DIR and the run uses a real browser profile on disk
+ * instead of a blank one: sign in there once (`npm run sync:collections --
+ * --login`) and every run after that is already signed in, and stays signed in,
+ * because the site refreshes that profile's own cookies like it would anyone's.
+ * No secret to paste, nothing to re-paste when it expires.
+ *
+ * This is the setup that actually works, and the reason is the address, not the
+ * login: Cloudflare serves the collection PAGES a challenge to every datacenter
+ * — GitHub's runners and a hosted browser service alike, tested — while the
+ * design API answers them fine. A home connection is not challenged. So the
+ * profile belongs on the owner's own machine, which is also the one place his
+ * session never has to be copied to.
+ */
+const PROFILE_DIR = (process.env.MAKERWORLD_PROFILE_DIR || "").trim();
+
 async function browser() {
   const { chromium } = await import("playwright").catch(() => ({ chromium: null }));
   if (!chromium) throw new Error("playwright חסר — הרץ npm i -D playwright");
@@ -59,10 +78,50 @@ async function browser() {
   // MakerWorld sits behind Cloudflare, which challenges datacenter addresses on
   // sight. None of this defeats a challenge, but a headless browser that does
   // not announce itself as one gets shown far fewer of them.
+  const args = ["--disable-blink-features=AutomationControlled"];
+
+  if (PROFILE_DIR) {
+    // A persistent context IS the context — there is no separate browser to
+    // open one from — so it answers both calls and `context()` passes it on.
+    const ctx = await chromium.launchPersistentContext(PROFILE_DIR, {
+      ...(exe ? { executablePath: exe } : {}),
+      headless: !LOGIN,
+      args,
+      userAgent: UA,
+      locale: "en-US",
+      timezoneId: "Asia/Jerusalem",
+      viewport: { width: 1440, height: 900 },
+    });
+    ctx.__persistent = true;
+    log(c.d(`  פרופיל דפדפן שמור: ${PROFILE_DIR}`));
+    return ctx;
+  }
+
   return chromium.launch({
     ...(exe ? { executablePath: exe } : {}),
-    args: ["--disable-blink-features=AutomationControlled"],
+    args,
   });
+}
+
+/**
+ * Sign in once, by hand, into the profile the nightly run will use.
+ *
+ * It opens a normal visible browser on the login page and waits. Nothing is
+ * typed for him and no password is ever read here — he signs in himself, the
+ * profile keeps the session, and the window closes when he presses Enter.
+ */
+async function login() {
+  if (!PROFILE_DIR) {
+    log(c.r("\n  צריך MAKERWORLD_PROFILE_DIR כדי לשמור את ההתחברות.\n"));
+    return;
+  }
+  const ctx = await browser();
+  const page = ctx.pages()[0] || (await ctx.newPage());
+  await page.goto("https://makerworld.com/en/login", { waitUntil: "domcontentloaded" }).catch(() => {});
+  log(c.b("\n  נפתח דפדפן. תתחבר למייקרוורלד, ואז תחזור לכאן ותלחץ Enter.\n"));
+  await new Promise((res) => process.stdin.once("data", res));
+  await ctx.close();
+  log(c.g("  ההתחברות נשמרה. מעכשיו כל הרצה כבר מחוברת.\n"));
 }
 
 /**
@@ -76,6 +135,8 @@ async function browser() {
  * and nothing here logs the cookie's value.
  */
 async function context(b) {
+  // A persistent context is already the context, cookies and all.
+  if (b.__persistent) return b;
   const ctx = await b.newContext({
     userAgent: UA,
     locale: "en-US",
@@ -460,6 +521,7 @@ function summary(rows, skipped) {
 }
 
 async function main() {
+  if (LOGIN) return login();
   log(c.b(`\n  קורא את הקולקציות של @${PROFILE}\n`));
   const b = await browser();
   const ctx = await context(b);
