@@ -62,6 +62,9 @@ export default function ReviewForm({ itemName, compact }: Props) {
   const [preview, setPreview] = useState("");
   const [photoErr, setPhotoErr] = useState("");
   const [sent, setSent] = useState<null | "published" | "no-photo" | "whatsapp">(null);
+  // What they wrote, kept on screen when the table would not take it.
+  const [draft, setDraft] = useState("");
+  const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState<"" | "photo" | "send">("");
   const pick = useRef<HTMLInputElement>(null);
   // Set on mount, not during render.
@@ -98,14 +101,34 @@ export default function ReviewForm({ itemName, compact }: Props) {
 
   const canSend = name.trim().length > 1 && text.trim().length > 9;
 
-  /** The old route, still here for when the table is not reachable. */
+  const waUrl = `${WA}?text=${encodeURIComponent(body)}`;
+  const mailUrl = `mailto:${MAIL}?subject=${encodeURIComponent("ביקורת מהאתר")}&body=${encodeURIComponent(body)}`;
+
+  /**
+   * The old route, still here for when the table is not reachable.
+   *
+   * The text is put on the screen as well as into the message, and that is the
+   * point: `window.open` is blocked by every phone browser that decides this
+   * click was not direct enough, and when it was the only copy, a review that
+   * someone actually wrote simply vanished. Now the worst case is that they
+   * press "העתק".
+   */
   const openMessage = (channel: "wa" | "mail") => {
-    const url =
-      channel === "wa"
-        ? `${WA}?text=${encodeURIComponent(body)}`
-        : `mailto:${MAIL}?subject=${encodeURIComponent("ביקורת מהאתר")}&body=${encodeURIComponent(body)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    setDraft(body);
+    setCopied(false);
     setSent("whatsapp");
+    window.open(channel === "wa" ? waUrl : mailUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const copyDraft = async () => {
+    try {
+      await navigator.clipboard.writeText(draft);
+      setCopied(true);
+    } catch {
+      // No clipboard permission. The text is already on screen and selectable,
+      // which is the whole reason it is printed there.
+      setCopied(false);
+    }
   };
 
   /** One picture, from the camera or the roll. */
@@ -170,25 +193,60 @@ export default function ReviewForm({ itemName, compact }: Props) {
   };
 
   if (sent) {
+    const failed = sent === "whatsapp";
     return (
-      <div className="p-5 rounded-2xl border border-good/30 bg-good/10 text-center">
-        <div className="inline-flex items-center justify-center h-11 w-11 rounded-full bg-good/20 text-good mb-2">
-          <Icon name="check" size={22} strokeWidth={2.5} />
+      <div
+        className={cn(
+          "p-5 rounded-2xl border text-center",
+          failed ? "border-flame/40 bg-flame/10" : "border-good/30 bg-good/10",
+        )}
+      >
+        <div
+          className={cn(
+            "inline-flex items-center justify-center h-11 w-11 rounded-full mb-2",
+            failed ? "bg-flame/20 text-flame" : "bg-good/20 text-good",
+          )}
+        >
+          <Icon name={failed ? "info" : "check"} size={22} strokeWidth={2.5} />
         </div>
-        <div className="font-bold mb-1">תודה!</div>
+        <div className="font-bold mb-1">{failed ? "הביקורת לא נשמרה" : "תודה!"}</div>
         <p className="text-ink-300 text-sm leading-relaxed">
           {sent === "published"
             ? "הביקורת שלך פורסמה באתר. רענן את הדף כדי לראות אותה בין השאר."
             : sent === "no-photo"
               ? "הביקורת שלך פורסמה באתר, אבל התמונה לא עלתה. אפשר לשלוח לי אותה בוואטסאפ ואני אצרף אותה."
-              : "לא הצלחתי לפרסם אותה כרגע, אז פתחתי לך אותה בוואטסאפ. שלח, ואני מעלה אותה ידנית."}
+              : "משהו אצלי לא עבד, וזה לא בגללך. הטקסט שכתבת שמור כאן למטה — שלח לי אותו ואני מעלה אותו ידנית."}
         </p>
+
+        {/* The words themselves, on the screen.
+            Not inside a popup that the browser may have blocked, and not only
+            inside a WhatsApp draft that was never sent — that is exactly how a
+            real review was lost once. */}
+        {failed && draft && (
+          <div className="mt-4 text-start">
+            <pre className="p-3 rounded-xl bg-ink-950 border border-ink-800 text-ink-200 text-xs leading-relaxed whitespace-pre-wrap max-h-56 overflow-y-auto">
+              {draft}
+            </pre>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+              <Btn size="sm" icon={copied ? "check" : "file"} onClick={() => void copyDraft()}>
+                {copied ? "הועתק" : "העתק"}
+              </Btn>
+              <a href={waUrl} target="_blank" rel="noopener noreferrer">
+                <Btn size="sm" variant="ghost" icon="whatsapp">שלח בוואטסאפ</Btn>
+              </a>
+              <a href={mailUrl}>
+                <Btn size="sm" variant="ghost" icon="mail">שלח במייל</Btn>
+              </a>
+            </div>
+          </div>
+        )}
+
         <button
           type="button"
           onClick={() => setSent(null)}
           className="mt-3 text-xs text-ink-400 hover:text-flame transition-colors"
         >
-          לכתוב ביקורת נוספת
+          {failed ? "חזרה לטופס (מה שכתבת עדיין שם)" : "לכתוב ביקורת נוספת"}
         </button>
       </div>
     );
