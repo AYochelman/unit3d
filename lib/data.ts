@@ -54,15 +54,6 @@ export const REVIEWS: Review[] = [
   // rating he says each of them gave. `txt` stays empty: a rating is a number
   // someone chose, and he knows it; a sentence is words someone said, and
   // nobody here does. The card says so rather than filling the gap.
-  // Linor wrote this one through the form on 14.9, and it never reached the
-  // table: `photo` had just been added to the insert and the column did not
-  // exist yet, so PostgREST rejected the row. Her words are restored here from
-  // the screenshot of the form she filled in — the rating, the item and the
-  // sentence are hers, character for character, and nothing was added to them.
-  // If the table ever gets the same review again this line should go.
-  { id: "r0", name: "לינור", tag: "אמא", seg: "private", stars: 5,
-    item: "צפרדעים ❤️❤️", txt: "הזמנתי ממש אוסף של צפרדע בכל צבע! יצא מהמם למדף שלי" },
-
   { id: "r1", name: "טל",    seg: "private", stars: 5, photo: "/img/reviews/r1.webp" },
   { id: "r2", name: "מתן",   seg: "private", stars: 5, photo: "/img/reviews/r2.webp" },
   { id: "r3", name: "עידו",  seg: "private", stars: 5, photo: "/img/reviews/r3.webp" },
