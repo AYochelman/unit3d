@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Emblem from "@/components/Emblem";
+import { photoSrc } from "@/lib/assets";
 import Pill from "@/components/ui/Pill";
 import { GALLERY } from "@/lib/data";
 import type { GallerySeg } from "@/lib/types";
@@ -43,9 +45,30 @@ export default function Marquee() {
                   {SEG_LABEL[it.seg]}
                 </Pill>
               </div>
+              {/* The photograph of the thing, when there is one.
+                  This row calls itself "הזמנות אמיתיות שנשלחו ללקוחות" and then
+                  drew a coloured shield for each of them — the eight real
+                  studio photographs were already sitting on these same rows,
+                  in `photo`, and nothing read the field. A drawn emblem over
+                  that caption is the one thing the section must not be. */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <Emblem shape={it.shape} hue={it.hue} size={170} />
+                {it.photo ? (
+                  <Image
+                    src={photoSrc(it.photo)}
+                    alt={it.title}
+                    fill
+                    sizes="288px"
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <Emblem shape={it.shape} hue={it.hue} size={170} />
+                )}
               </div>
+              {/* A photograph can be pale exactly where the caption sits. */}
+              {it.photo && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-ink-950/85 to-transparent" />
+              )}
               <div
                 className="absolute bottom-3 left-3 right-3 font-mono text-[10px] tracking-wider text-ink-300 truncate"
                 dir="ltr"
