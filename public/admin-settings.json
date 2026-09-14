@@ -101,7 +101,8 @@
     "abs:pink": false,
     "abs:glow": false,
     "tpu:white": false,
-    "pla:black": false
+    "pla:black": false,
+    "pla_matte:white": false
   },
   "shelves": {},
   "materials": [],
