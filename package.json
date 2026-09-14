@@ -19,7 +19,8 @@
     "collect:candidates": "node scripts/collect-candidates.mjs",
     "add:candidates": "node scripts/add-candidates.mjs",
     "apply:approvals": "node scripts/apply-approvals.mjs",
-    "recheck:figures": "node scripts/recheck-figures.mjs"
+    "recheck:figures": "node scripts/recheck-figures.mjs",
+    "audit:shelves": "node scripts/audit-shelves.mjs"
   },
   "dependencies": {
     "hls.js": "^1.7.2",
