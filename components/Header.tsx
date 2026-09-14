@@ -75,8 +75,12 @@ export default function Header() {
             to spare, so the gutter tightens rather than pushing the last
             button off the edge and making the whole page scroll sideways. */}
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 md:px-10 flex items-center justify-between gap-2 sm:gap-4">
+          {/* The mark alone. The header used to print the U3D glyph AND the
+              words "UNIT 3D" beside it, which is the same name twice — the
+              glyph already spells it. The wordmark stays in the footer, where
+              there is room for a signature. */}
           <Link href="/" className="flex items-center" aria-label="Unit 3D · דף הבית">
-            <Logo size={30} />
+            <Logo size={34} wordmark={false} />
           </Link>
 
           {/* Eleven links, four of them two words long. Without nowrap the row

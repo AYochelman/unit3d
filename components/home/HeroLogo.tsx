@@ -27,7 +27,7 @@ export default function HeroLogo({ className }: { className?: string }) {
       </defs>
 
       {/* nozzle — positioned by the outer group; the inner group carries the CSS bob animation */}
-      <g transform="translate(278 25)">
+      <g transform="translate(260 25)">
       <g className="u3d-nozzle">
         <rect x="-38" y="0" width="76" height="40" rx="4" fill="#F5F5F7" />
         <rect x="-26" y="10" width="52" height="6" rx="2" fill="#0A0A0B" />
@@ -41,7 +41,7 @@ export default function HeroLogo({ className }: { className?: string }) {
 
       {/* filament path from nozzle into the "3" */}
       <path
-        d="M278 103 C278 118 278 137 292 137"
+        d="M260 103 C260 118 260 137 274 137"
         fill="none"
         stroke="url(#u3d-fil)"
         strokeWidth="14"
@@ -54,14 +54,18 @@ export default function HeroLogo({ className }: { className?: string }) {
         Geometry — all three letters share one outer box: top 120, bottom 262,
         stroke 34. Horizontal bars sit on centre lines 137 and 245 (±17 lands
         on the box); vertical stems use butt caps and start on the box itself.
-        Outer extents, left to right: U 40–194 · 3 218–338 · D 362–480, so the
+        Outer extents, left to right: U 40–176 · 3 200–320 · D 344–480, so the
         two gaps are an equal 24 and the whole mark is centred on 260.
+        The U and the D are DELIBERATELY the same size: 136 wide by 142 tall.
+        They used to differ by 36px of width, which does not read as a wider U,
+        it reads as a bigger one. Changing either means changing both, and
+        moving the 3 (and the nozzle above it) to keep the two gaps equal.
         The 3 used to bulge to 364 while the D's stem started at 345 — nineteen
         pixels of green sitting on top of a white letter.
       */}
       {/* U */}
       <path
-        d="M57 120 V203 A42 42 0 0 0 99 245 H155 A22 22 0 0 0 177 223 V120"
+        d="M57 120 V209 A36 36 0 0 0 93 245 H140 A19 19 0 0 0 159 226 V120"
         fill="none"
         stroke="#F5F5F7"
         strokeWidth="34"
@@ -72,7 +76,7 @@ export default function HeroLogo({ className }: { className?: string }) {
 
       {/* 3 (drawn by the nozzle) */}
       <path
-        d="M218 137 H294 A27 27 0 0 1 294 191 H266 H294 A27 27 0 0 1 294 245 H222"
+        d="M200 137 H276 A27 27 0 0 1 276 191 H248 H276 A27 27 0 0 1 276 245 H204"
         fill="none"
         stroke="#089a47"
         strokeWidth="34"
@@ -90,7 +94,7 @@ export default function HeroLogo({ className }: { className?: string }) {
           matching centre lines is exactly what left the D a half-stroke taller
           than the U. See the geometry note above the U. */}
       <path
-        d="M379 137 V245 H409 A54 54 0 0 0 409 137 Z"
+        d="M361 137 V245 H409 A54 54 0 0 0 409 137 Z"
         fill="none"
         stroke="#F5F5F7"
         strokeWidth="34"
