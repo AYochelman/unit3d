@@ -28,14 +28,48 @@ export const c = {
   b: (s) => `\x1b[1m${s}\x1b[0m`,
 };
 
+/**
+ * Answers that were fetched somewhere else.
+ *
+ * The design API is normally reachable from anywhere, which is the whole
+ * reason this importer exists. "Anywhere" turned out not to include every
+ * machine: a network that blocks makerworld.com outright answers 403 to the
+ * connection itself, and the script could only report "not found" — which is
+ * a lie about the model.
+ *
+ * So a response can be dropped into data/mw-api/<id>.json by hand, or by
+ * anything that CAN reach the API, and it answers when the network will not.
+ * It is a fallback and not a cache on purpose: the live API is always tried
+ * first, so on a machine that can reach MakerWorld nothing here changes and
+ * nothing goes stale behind your back.
+ */
+const SNAPSHOTS = path.join(ROOT, "data", "mw-api");
+
+function snapshot(url) {
+  const m = /design-service\/design\/(\d+)/.exec(url);
+  if (!m) return null;
+  const file = path.join(SNAPSHOTS, `${m[1]}.json`);
+  if (!fs.existsSync(file)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 export async function getJson(url, timeoutMs = 25_000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": UA, accept: "application/json" } });
-    if (!res.ok) return { ok: false, status: res.status };
+    if (!res.ok) {
+      const snap = snapshot(url);
+      return snap ? { ok: true, body: snap } : { ok: false, status: res.status };
+    }
     return { ok: true, body: await res.json() };
   } catch (e) {
+    const snap = snapshot(url);
+    if (snap) return { ok: true, body: snap };
     return { ok: false, status: 0, error: e.name === "AbortError" ? "timeout" : e.message };
   } finally {
     clearTimeout(t);
