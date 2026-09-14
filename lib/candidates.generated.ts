@@ -2,48 +2,9 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 2
-// Collected: 2026-09-13T13:36:07.194Z
+// Items: 0
+// Collected: 2026-09-14T04:40:48.946Z
 
 import type { Candidate } from "./candidates";
 
-export const CANDIDATES: Candidate[] = [
-  {
-    "id": "3283101",
-    "title": "Modern Fruit Bowl with Banana Holder",
-    "slug": "modern-fruit-bowl-with-banana-holder",
-    "license": "Standard Digital File License",
-    "creator": "FormCore 3D",
-    "image": "https://makerworld.bblmw.com/makerworld/model/US526d16ef7007c9/design/bdc00f2002d22b6c.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 24,
-    "likes": 90,
-    "grams": 603,
-    "hours": 15.86,
-    "colors": 2,
-    "suggested": "home",
-    "warnings": [
-      "הדפסה ארוכה"
-    ],
-    "via": "trending",
-    "tags": "fruit bowl · banana holder · modern design · bowl · kitchen organizer · 2 color"
-  },
-  {
-    "id": "3292526",
-    "title": "Decoração Porta Guardanapo Natal",
-    "slug": "christmas-napkin-holder-decoration",
-    "license": "MakerWorld Exclusive License",
-    "creator": "MeshBeeLab 3d",
-    "image": "https://makerworld.bblmw.com/makerworld/model/US143c24af4b9ab9/design/fbbaf59e27102240.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 7,
-    "likes": 52,
-    "grams": 60,
-    "hours": 2.18,
-    "colors": 3,
-    "suggested": "home",
-    "warnings": [
-      "רישיון בלעדי"
-    ],
-    "via": "trending",
-    "tags": "mesa posta · natal · navidad · guardanapo · decoracao · mesa"
-  }
-];
+export const CANDIDATES: Candidate[] = [];
