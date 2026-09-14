@@ -102,4 +102,10 @@ for (const [label, url] of [
   ["user-service/{uid}/collection", `${M}/user-service/user/${who}/collection?limit=50&offset=0`],
   ["collection/28743692/design", `${M}/design-service/collection/28743692/design?limit=50&offset=0`],
 ]) await probe(label, url);
+console.log(`\n== the two paths the shop actually depends on ==`);
+// If these are gone, the weekly sweep brings nothing and "send me a link and
+// I will queue it" stops working too. Worth knowing separately from the
+// collection question.
+await probe("design-service/design/{id} — import by id", `${M}/design-service/design/2786539`);
+await probe("search sweep — the weekly candidates", `${M}/search-service/select/design2?orderBy=trending&designType=0&keyword=&limit=20&offset=0`);
 console.log("");
