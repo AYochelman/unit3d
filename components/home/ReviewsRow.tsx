@@ -112,6 +112,7 @@ function ReviewCard({ r }: { r: Review }) {
           </div>
           <div className="min-w-0">
             <div className="text-sm font-semibold truncate">{r.name ?? "לקוח"}</div>
+            {r.tag && <div className="text-[11px] text-ink-400 truncate">{r.tag}</div>}
           </div>
         </div>
       </div>

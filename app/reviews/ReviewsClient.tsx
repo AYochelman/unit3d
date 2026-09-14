@@ -93,15 +93,32 @@ export default function ReviewsClient() {
                 </div>
                 <div>
                   <div className="font-semibold leading-tight">{r.name ?? "לקוח"}</div>
+                  {/* What they wrote about themselves in "תיאור / יחידה / חברה".
+                      It sat unused for a long time because the field used to
+                      carry invented unit names; now that it is filled in by the
+                      reviewer, it belongs under their own name. */}
+                  {r.tag && <div className="text-xs text-ink-400 leading-tight mt-0.5">{r.tag}</div>}
                 </div>
               </div>
               {r.seg && <Pill tone={SEG_TONE[r.seg]}>{SEG_LABEL[r.seg]}</Pill>}
             </div>
+            {/* Five stars, not `stars` of them.
+                Drawing only the filled ones made a four-star review look like a
+                four-star scale, and dropped the number the reviewer actually
+                chose. The empty ones and the figure are the rating as given. */}
             {!!r.stars && (
-              <div className="flex gap-0.5 text-flame mb-3">
-                {Array.from({ length: r.stars }).map((_, i) => (
-                  <Icon key={i} name="star" size={16} className="fill-current" />
+              <div className="flex items-center gap-0.5 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Icon
+                    key={i}
+                    name="star"
+                    size={16}
+                    className={i < r.stars! ? "fill-current text-flame" : "text-ink-700"}
+                  />
                 ))}
+                <span className="font-mono text-xs text-ink-300 mr-1.5" dir="ltr">
+                  {r.stars.toFixed(1)}
+                </span>
               </div>
             )}
 

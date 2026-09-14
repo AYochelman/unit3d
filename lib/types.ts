@@ -53,11 +53,12 @@ export type Review = {
    */
   name?: string;
   /**
-   * A line under the name — a unit, a company.
+   * A line under the name — a unit, a company, "אמא".
    *
-   * Nothing renders it; it is left from the invented reviews that used to sit
-   * here, where it carried made-up unit names. Optional, because a real
-   * reviewer only has one if they chose to give it.
+   * The reviewer types it into "תיאור / יחידה / חברה" and both review views
+   * print it under their name. It went unrendered while the list held invented
+   * reviews with made-up unit names; a real one is the reviewer's own words
+   * about themselves, so it shows. Optional — most people leave it empty.
    */
   tag?: string;
   /** What kind of customer, when that is known. */
