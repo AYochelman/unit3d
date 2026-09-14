@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
@@ -101,6 +102,24 @@ export default function ReviewsClient() {
                 {Array.from({ length: r.stars }).map((_, i) => (
                   <Icon key={i} name="star" size={16} className="fill-current" />
                 ))}
+              </div>
+            )}
+
+            {/* What they bought.
+                The customer typed it into "מה הזמנת", and the home carousel
+                has always printed it — this page dropped it on the floor, so a
+                review of a specific thing read as a review of nothing. When the
+                review points at a product, the name is the way in. */}
+            {r.item && (
+              <div className="text-xs text-ink-400 mb-2.5">
+                הזמינו:{" "}
+                {r.href ? (
+                  <Link href={r.href} className="text-ink-100 hover:text-flame transition-colors">
+                    {r.item}
+                  </Link>
+                ) : (
+                  <span className="text-ink-100">{r.item}</span>
+                )}
               </div>
             )}
 
