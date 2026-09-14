@@ -60,7 +60,12 @@ export function trendingCards(): ListingCard[] {
       if (!pr) continue;
       cards.push({ ...productToCard(pr), id: `product-${pr.id}`, itemId: pr.id, tag: p.tag });
     } else {
+      // Guarded like the product branch above. A curated pick names an id by
+      // hand, and an id can stop existing — a designer product whose only
+      // filament was retired, say. Without this the whole shelf throws on a
+      // name that is simply no longer there, and /trendy fails to build.
       const c = CONFIG_PRODUCT_BY_ID[p.id];
+      if (!c) continue;
       cards.push({
         id: `config-${c.id}`,
         itemId: `cfg-${c.id}`,

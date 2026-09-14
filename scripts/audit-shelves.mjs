@@ -35,6 +35,13 @@ const removedInCode = new Set(idsIn(imp.slice(imp.indexOf("REMOVED_IDS"), imp.in
 // is not illegal on our side, and that decision is documented there.
 const BLOCKED = new Set(["weapon", "license-nc"]);
 
+// Filaments we no longer print. A model that needs one cannot be made, so the
+// shop does not offer it — mirrors `retired` in lib/materials.ts.
+const mat = read("lib/materials.ts");
+const RETIRED = new Set(
+  [...mat.matchAll(/\{\s*(?:family:[^,]*,\s*)?id:\s*"([^"]+)"[^}]*retired:\s*true/g)].map((m) => m[1]),
+);
+
 // The owner's moves decide the shelf when there is one.
 const movesSrc = ov.slice(ov.indexOf("SHELF_MOVES"), ov.indexOf("};", ov.indexOf("SHELF_MOVES")));
 const MOVES = {};
@@ -56,6 +63,7 @@ const rows = MODELS.map((m) => {
     removedByOwner.has(m.id) ? "הורד על ידך ב-admin"
     : removedInCode.has(m.id) ? "הוסר בקוד"
     : (m.holds ?? []).some((h) => BLOCKED.has(h)) ? `מוחזק (${m.holds.join(",")})`
+    : RETIRED.has(m.material) ? `חומר שהוסר (${m.material})`
     : !shelves.some((s) => PAGES[s]) ? `מדף ללא עמוד: ${shelves.join(",") || "—"}`
     : null;
   return { ...m, shelves, reason };

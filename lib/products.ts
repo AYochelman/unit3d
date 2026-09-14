@@ -1,4 +1,5 @@
 import { parseHours } from "./costing";
+import { retiredMaterial } from "./materials";
 import type { ConfigProduct, Product, ProductCategory, Shape, Size } from "./types";
 import { IMPORTED, importedProducts } from "./imported";
 
@@ -341,12 +342,20 @@ export const STATUE_PRODUCTS: Product[] = [
 
 // The hand-written catalogue plus anything pulled in by the MakerWorld import
 // (empty until `npm run import:makerworld` has run).
+/**
+ * Everything the shop sells.
+ *
+ * A product whose ONLY material has been retired is dropped here rather than
+ * hidden one shelf at a time: it cannot be printed, so there is nowhere it
+ * should appear — not on a shelf, not in search, not in a related row. Bring
+ * the material back in lib/materials.ts and its products come back with it.
+ */
 export const PRODUCTS: Product[] = [
   ...PET_PRODUCTS,
   ...OFFICE_PRODUCTS,
   ...STATUE_PRODUCTS,
   ...importedProducts(),
-];
+].filter((p) => !retiredMaterial(p.material));
 
 /**
  * Every product on one shelf that we can show a photograph of.
@@ -468,7 +477,7 @@ const COASTER_SIZES: Size[] = [
   { id: "lg", label: "סט 6", dim: "Ø90mm ×6", priceAdd: 70, time: "3.8h" },
 ];
 
-export const CONFIG_PRODUCTS: ConfigProduct[] = [
+const CONFIG_PRODUCTS_ALL: ConfigProduct[] = [
   {
     id: "keychain", label: "מחזיק מפתחות", desc: "שם, מספר אישי, סמל יחידה.",
     art: "keychain", image: shelfPhoto("mw-65972"), basePrice: 55, hours: 1.5, grams: 12, material: "pla_plus",
@@ -562,6 +571,11 @@ export const CONFIG_PRODUCTS: ConfigProduct[] = [
     hasShape: false, hasSize: false, hasText: true, hasDesigner: true, face: [70, 70],
   },
 ];
+
+/** The same rule in the designer: no material, no product. */
+export const CONFIG_PRODUCTS: ConfigProduct[] = CONFIG_PRODUCTS_ALL.filter(
+  (p) => !retiredMaterial(p.material),
+);
 
 export const CONFIG_PRODUCT_BY_ID = Object.fromEntries(CONFIG_PRODUCTS.map((p) => [p.id, p])) as Record<ConfigProduct["id"], ConfigProduct>;
 

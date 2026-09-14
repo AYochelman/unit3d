@@ -1,5 +1,5 @@
 import type { MaterialId } from "./types";
-import { MATERIALS } from "./materials";
+import { OFFERED_MATERIALS } from "./materials";
 import { FILAMENTS } from "./filaments";
 
 // Which filament we actually have on the shelf, per material family and colour.
@@ -93,7 +93,9 @@ export function buyAdvice(
   spoolPrices: Record<MaterialId, number>,
 ): BuyAdvice[] {
   const out: BuyAdvice[] = [];
-  for (const m of MATERIALS) {
+  // Nothing retired: "buy a spool of TPU" is not advice, it is a decision
+  // that was already made the other way.
+  for (const m of OFFERED_MATERIALS) {
     if (isMaterialInStock(stock, m.id)) continue;
     const mine = interest.filter((i) => i.material === m.id);
     const blocked = items.filter((i) => (i.material ?? DEFAULT_MATERIAL) === m.id).length;

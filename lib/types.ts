@@ -286,6 +286,15 @@ export type MaterialId =
 export type Material = {
   id: MaterialId;
   /**
+   * No longer printed.
+   *
+   * The row stays so that old orders, saved settings and cost history still
+   * resolve their material instead of finding `undefined`; it is simply never
+   * offered again. Anything that can ONLY be printed in it comes off the shop
+   * with it — see `retiredMaterial` in lib/materials.ts.
+   */
+  retired?: boolean;
+  /**
    * The materials this one can stand in for.
    *
    * PLA, PLA+, matte and silk are the same plastic with a different finish, so

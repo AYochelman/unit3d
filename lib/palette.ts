@@ -1,6 +1,6 @@
 "use client";
 import { useMemo } from "react";
-import { MATERIALS } from "./materials";
+import { OFFERED_MATERIALS } from "./materials";
 import { FILAMENTS } from "./data";
 import { useAdminStore } from "./admin-store";
 import type { Filament, Material, MaterialId } from "./types";
@@ -20,9 +20,18 @@ function merge<T extends { id: string }>(base: T[], extra: T[]): T[] {
   return [...base.filter((x) => !added.has(x.id)), ...extra];
 }
 
+/**
+ * The materials a customer can pick, and the admin can price.
+ *
+ * Reads OFFERED_MATERIALS rather than MATERIALS so a retired filament stops
+ * being offered everywhere at once — the product page, the fidget page, the
+ * designer and the admin's own colour grid all come through here. Anything
+ * that merely looks a material up by id still sees the full list, so old
+ * orders and saved settings never resolve to nothing.
+ */
 export function useMaterials(): Material[] {
   const custom = useAdminStore((s) => s.materials);
-  return useMemo(() => merge(MATERIALS, custom), [custom]);
+  return useMemo(() => merge(OFFERED_MATERIALS, custom), [custom]);
 }
 
 export function useFilaments(): Filament[] {

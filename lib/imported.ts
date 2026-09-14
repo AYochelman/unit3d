@@ -4,6 +4,7 @@ import { IMPORTED_GENERATED, IMPORTED_AT } from "./imported.generated";
 import { photoSrc } from "./assets";
 import { applyShelf } from "./shelves";
 import { REMOVED_BY_OWNER, SHELF_MOVES } from "./shop-overrides";
+import { retiredMaterial } from "./materials";
 import { HE_DESCS } from "./he-descs";
 import { heName } from "./he-names";
 
@@ -200,6 +201,9 @@ const ownerRemoved = new Set(REMOVED_BY_OWNER);
 
 const sellable = (m: ImportedModel) =>
   !REMOVED_IDS.has(m.id) && !ownerRemoved.has(m.id) &&
+  // A model that needs a filament we no longer print cannot be made, so it is
+  // not offered — and a re-import cannot quietly bring it back either.
+  !retiredMaterial(m.material) &&
   (SHOW_HELD_MODELS || !m.holds.some((h) => BLOCKED_HOLDS.includes(h)));
 
 /** Rows kept out of the shop, for the admin page and the import report. */
