@@ -1,4 +1,261 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "469275",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "office"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "574787",
+      "decision": "approved",
+      "shelf": "fidget",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "716663",
+      "decision": "approved",
+      "shelf": "office",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "851444",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "screen",
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "969468",
+      "decision": "approved",
+      "shelf": "trendy",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "1259184",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "office"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "1914756",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "office",
+        "trendy"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2131460",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2257373",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2578419",
+      "decision": "approved",
+      "shelf": "screen",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2667491",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2688702",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "trendy"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2690429",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "screen",
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2695546",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "screen",
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2700974",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "screen",
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2700993",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "screen",
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2711074",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "screen",
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2760237",
+      "decision": "approved",
+      "shelf": "office",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2802730",
+      "decision": "approved",
+      "shelf": "office",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2914835",
+      "decision": "approved",
+      "shelf": "statues",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2927155",
+      "decision": "approved",
+      "shelf": "office",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "2983933",
+      "decision": "approved",
+      "shelf": "flexi",
+      "also": [
+        "trendy"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3003734",
+      "decision": "approved",
+      "shelf": "trendy",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3057768",
+      "decision": "approved",
+      "shelf": "flexi",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3075445",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3127131",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3138323",
+      "decision": "approved",
+      "shelf": "office",
+      "also": [
+        "home"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3286307",
+      "decision": "approved",
+      "shelf": "statues",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3286365",
+      "decision": "approved",
+      "shelf": "trendy",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3286439",
+      "decision": "approved",
+      "shelf": "statues",
+      "at": "2026-09-14T18:44:09.945Z"
+    },
+    {
+      "id": "3286545",
+      "decision": "approved",
+      "shelf": "office",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-09-14T18:44:09.945Z"
+    }
+  ]
 }
