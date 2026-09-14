@@ -116,6 +116,7 @@ export const OFFICE_PRODUCTS: Product[] = [
     // of the shelf runs on, instead of a loss dressed as a bargain.
     price: 60, size: "5 פריטים", time: "~5h", hours: 5, grams: 90,
     art: "organizer", hue: 210, colors: 2, pieces: 5, material: "pla",
+    surprise: true,
     tag: "חדש",
     isNew: true,
     image: "/img/products/mystery-box.webp",

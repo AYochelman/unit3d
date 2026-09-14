@@ -544,6 +544,25 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <AdminUnlock />
           </div>
 
+          {/* A surprise product has to give up the two things the shop is
+              otherwise proud of — the "your print started" message and the
+              livestream — because either one shows the customer what is in the
+              box before it arrives. Said here, before the order, rather than
+              discovered as silence afterwards. */}
+          {p.surprise && (
+            <div className="p-3 rounded-xl border border-good/30 bg-good/5">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-good mb-1">
+                <Icon name="eye" size={14} />
+                ההפתעה נשמרת עד שהיא אצלך
+              </div>
+              <p className="text-[11px] text-ink-400 leading-relaxed">
+                על הקופסה הזאת <span className="text-ink-200">לא תקבל התראה כשהיא נכנסת להדפסה</span>,
+                והיא לא תופיע בשידור החי של המדפסת — אחרת אין הפתעה.
+                את הסרטונים של ההדפסה עצמה תקבל <span className="text-ink-200">אחרי</span> שהיא מגיעה אליך.
+              </p>
+            </div>
+          )}
+
           {p.image && (
             <p className="text-[11px] text-ink-500 leading-relaxed border-r-2 border-amber-500/40 pr-2.5">
               התמונה היא של המעצב המקורי, לא של ההדפסה שלנו. אנחנו מדפיסים בצבע שתבחר למעלה —

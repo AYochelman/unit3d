@@ -378,6 +378,16 @@ export type Product = {
    * plate together. It scales the hands-on cost; see CostInput.pieces.
    */
   pieces?: number;
+  /**
+   * The contents are deliberately not known to the customer.
+   *
+   * The shop otherwise tells you when your print starts and lets you watch it
+   * on the livestream — which, for a box whose whole product is not knowing
+   * what is inside, would hand the surprise away before it ships. So a
+   * surprise product says so on its own page: no notification while it
+   * prints, no live view of it, and the footage afterwards.
+   */
+  surprise?: boolean;
   isNew?: boolean;
   /** Optional engraving/text field on the product (pet name, phone…). */
   engraving?: { label: string; placeholder: string; max: number; second?: { label: string; placeholder: string; max: number } };
