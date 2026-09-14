@@ -1,4 +1,16 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "3283101",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-09-14T04:40:03.645Z"
+    },
+    {
+      "id": "3292526",
+      "decision": "rejected",
+      "at": "2026-09-14T04:40:03.645Z"
+    }
+  ]
 }
