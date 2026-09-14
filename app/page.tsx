@@ -4,7 +4,7 @@ import Categories from "@/components/home/Categories";
 import ProductShowcase from "@/components/home/ProductShowcase";
 import HowItWorks from "@/components/home/HowItWorks";
 import LivePreview from "@/components/home/LivePreview";
-import Marquee from "@/components/home/Marquee";
+import RecentPrints from "@/components/home/RecentPrints";
 import B2BBlock from "@/components/home/B2BBlock";
 import ReviewsRow from "@/components/home/ReviewsRow";
 import FinalCTA from "@/components/home/FinalCTA";
@@ -40,7 +40,7 @@ export default function HomePage() {
       <Reveal><ProductShowcase /></Reveal>
       <Reveal><HowItWorks /></Reveal>
       <Reveal><ReviewsRow /></Reveal>
-      <Reveal><Marquee /></Reveal>
+      <Reveal><RecentPrints /></Reveal>
       <Reveal><B2BBlock /></Reveal>
       <Reveal><FinalCTA /></Reveal>
     </>

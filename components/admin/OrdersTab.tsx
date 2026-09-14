@@ -19,6 +19,10 @@ import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
 const FILE = "public/orders.json";
+/** What the home page shows under "מה יצא מהמדפסת לאחרונה". */
+const RECENT_FILE = "data/recent-prints.json";
+/** Enough to fill the grid twice over; more is a scroll nobody does. */
+const RECENT_MAX = 12;
 
 const DECISION: { id: OrderDecision; label: string; tone: string }[] = [
   { id: "approved", label: "אישור", tone: "border-good text-good bg-good/10" },
@@ -238,6 +242,43 @@ export default function OrdersTab() {
   const needsSetup = cfg !== null && !isConfigured(cfg);
   const siteFile = () => `${JSON.stringify(localOrders, null, 2)}\n`;
 
+  /**
+   * The home page's "what came off the printer lately", taken from real orders.
+   *
+   * Only orders that reached "ready" count — an order that is approved but
+   * still on the bench has not come off the printer, and saying it has is the
+   * kind of small untruth the whole section was rebuilt to avoid. Newest first,
+   * each product once, and nothing about the customer travels: the file holds
+   * catalogue ids and a timestamp, and that is all.
+   *
+   * A line with no `itemId` is skipped rather than guessed at by its title —
+   * the shop has two products whose names differ by one word.
+   */
+  const recentPrintsFile = () => {
+    const seen = new Set<string>();
+    const itemIds: string[] = [];
+    for (const o of [...orders].sort((a, b) => (a.at < b.at ? 1 : -1))) {
+      if (fulfilment(o) !== "ready") continue;
+      for (const l of o.lines) {
+        if (!l.itemId || seen.has(l.itemId)) continue;
+        seen.add(l.itemId);
+        itemIds.push(l.itemId);
+        if (itemIds.length >= RECENT_MAX) break;
+      }
+      if (itemIds.length >= RECENT_MAX) break;
+    }
+    return `${JSON.stringify({ updatedAt: new Date().toISOString(), itemIds }, null, 2)}\n`;
+  };
+
+  const recentCount = (() => {
+    const seen = new Set<string>();
+    for (const o of orders) {
+      if (fulfilment(o) !== "ready") continue;
+      for (const l of o.lines) if (l.itemId) seen.add(l.itemId);
+    }
+    return Math.min(seen.size, RECENT_MAX);
+  })();
+
   return (
     <div className="space-y-4">
       <div>
@@ -388,6 +429,30 @@ export default function OrdersTab() {
             )}
           </div>
         )}
+
+        {/* The home page's "what came off the printer lately".
+            It is not filled automatically on purpose: publishing which products
+            were printed is a decision, and one that should happen when he means
+            it and not on every tick of a checkbox. */}
+        <div className="mt-4 p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-2">
+          <div className="font-bold text-sm">מה יצא מהמדפסת לאחרונה</div>
+          <p className="text-[11px] text-ink-500 leading-relaxed">
+            הרשת בדף הבית. נלקחת מההזמנות שכבר סומנו כמוכנות — {recentCount} מוצרים כרגע.
+            נשמרים רק מזהי המוצרים, שום פרט של לקוח לא מתפרסם.
+          </p>
+          {recentCount === 0 ? (
+            <p className="text-[11px] text-amber-500">
+              אין עדיין הזמנה מוכנה עם מוצר מהקטלוג, אז הרשת לא מוצגת באתר.
+            </p>
+          ) : (
+            <AdminSaveToSite
+              json={recentPrintsFile}
+              path={RECENT_FILE}
+              title="עדכן את הרשת בדף הבית"
+              what="המוצרים שהודפסו לאחרונה"
+            />
+          )}
+        </div>
       </div>
     </div>
   );

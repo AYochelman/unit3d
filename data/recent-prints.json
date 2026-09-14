@@ -1,0 +1,12 @@
+{
+  "_readme": [
+    "What actually came off the printer lately, as catalogue item ids.",
+    "Written by /admin -> הזמנות -> \"עדכן את 'מה יצא מהמדפסת'\", which reads the",
+    "real orders and takes the items from the ones that were finished. No",
+    "customer detail is published here - only which products were printed.",
+    "An empty list hides the section on the home page rather than filling it",
+    "with something nobody ordered."
+  ],
+  "updatedAt": null,
+  "itemIds": []
+}

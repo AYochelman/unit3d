@@ -160,12 +160,6 @@
     animation: slowspin 5s linear infinite;
     transform-style: preserve-3d;
   }
-  .marquee-track {
-    animation: marquee 40s linear infinite;
-  }
-  .marquee-track:hover {
-    animation-play-state: paused;
-  }
   .hero-tinted {
     background: #0a0a0b;
   }
@@ -292,7 +286,7 @@
     scroll-behavior: auto !important;
   }
   .u3d-three, .u3d-fil, .u3d-nozzle, .u3d-drop, .u3d-letter, .u3d-word, .u3d-dash,
-  .reviews-track, .marquee-track, .live-dot, .spin-y {
+  .reviews-track, .live-dot, .spin-y {
     animation: none !important;
   }
   /* The mark is drawn BY its animation, so stopping it has to leave the drawn
