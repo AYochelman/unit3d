@@ -149,8 +149,10 @@ export default function ReviewForm({ itemName, compact }: Props) {
     setBusy("send");
     const r = await submitReview({ name, tag, seg, stars, txt: text, item, photo: url });
     setBusy("");
-    if (r === "published") {
-      setSent(photo && !url ? "no-photo" : "published");
+    if (r === "published" || r === "published-no-photo") {
+      // "published-no-photo" comes back when the table took the review but not
+      // the picture. Either way the words are up and the picture is not.
+      setSent(r === "published-no-photo" || (photo && !url) ? "no-photo" : "published");
       reset();
       return;
     }

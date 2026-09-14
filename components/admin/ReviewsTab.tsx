@@ -35,20 +35,23 @@ export default function ReviewsTab() {
   const [pw, setPw] = useState("");
   const [rows, setRows] = useState<RemoteReview[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [readErr, setReadErr] = useState("");
   const [working, setWorking] = useState("");
 
   const load = useCallback(async (t: string) => {
-    const r = await adminReviews(t);
+    const { rows: r, error } = await adminReviews(t);
     setRows(r);
+    setReadErr(error ?? "");
     setLoaded(true);
   }, []);
 
   useEffect(() => {
     if (!token) return;
     let alive = true;
-    void adminReviews(token).then((r) => {
+    void adminReviews(token).then(({ rows: r, error }) => {
       if (!alive) return;
       setRows(r);
+      setReadErr(error ?? "");
       setLoaded(true);
     });
     return () => { alive = false; };
@@ -123,7 +126,16 @@ export default function ReviewsTab() {
 
       {!loaded && <div className="p-8 text-center text-sm text-ink-500 rounded-2xl border border-ink-800">טוען…</div>}
 
-      {loaded && rows.length === 0 && (
+      {/* A read that failed is not a quiet week. Saying which of the two it is
+          is the difference between "אף אחד לא כתב" and "ה-SQL לא רץ". */}
+      {loaded && readErr && (
+        <div className="p-4 rounded-2xl border border-bad/40 bg-bad/10 text-sm text-ink-100">
+          <div className="font-bold mb-1">לא הצלחתי לקרוא את הביקורות</div>
+          <p className="text-ink-300 leading-relaxed">{readErr}</p>
+        </div>
+      )}
+
+      {loaded && !readErr && rows.length === 0 && (
         <div className="p-8 rounded-2xl border border-dashed border-ink-700 text-center text-sm text-ink-400">
           עוד לא כתבו ביקורת דרך האתר. כשיכתבו — היא תהיה כאן ובאתר באותו רגע.
         </div>

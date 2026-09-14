@@ -92,28 +92,62 @@ export function toReview(r: RemoteReview): Review {
   };
 }
 
-export type SubmitResult = "published" | "not-configured" | "failed";
+export type SubmitResult = "published" | "published-no-photo" | "not-configured" | "failed";
 
-/** One row, written by the reviewer's own browser. It is live on send. */
+/** The row, as PostgREST wants it. */
+type Row = Record<string, string | number | boolean | null>;
+
+const rowOf = (r: NewReview): Row => ({
+  name: r.name.trim().slice(0, 40),
+  tag: (r.tag || "").trim().slice(0, 60) || null,
+  seg: r.seg,
+  stars: Math.min(5, Math.max(1, Math.round(r.stars))),
+  txt: r.txt.trim().slice(0, 1200),
+  item: (r.item || "").trim().slice(0, 80) || null,
+  photo: (r.photo || "").trim().slice(0, 400) || null,
+  hidden: false,
+});
+
+async function insert(c: ShopConfig, row: Row): Promise<Response> {
+  return fetch(`${c.supabaseUrl}/rest/v1/reviews`, {
+    method: "POST",
+    headers: { ...headers(c), Prefer: "return=minimal" },
+    body: JSON.stringify(row),
+  });
+}
+
+/**
+ * One row, written by the reviewer's own browser. It is live on send.
+ *
+ * The second attempt is not paranoia, it is a scar. `photo` was added to this
+ * row before the column existed in the table, and PostgREST does not ignore a
+ * column it does not know — it rejects the whole insert, and it does so even
+ * when the value is null. So a customer wrote a review, pressed send, and the
+ * words went nowhere because of a field she had never filled in.
+ *
+ * Hence the retry, and hence it does NOT depend on a picture being attached:
+ * the key alone is enough to sink the row. Everything a review cannot live
+ * without goes in the first attempt; the optional half retries without itself
+ * before giving up. What someone wrote is never lost to a column that is not
+ * there yet.
+ */
 export async function submitReview(r: NewReview): Promise<SubmitResult> {
   const c = await shopConfig();
   if (!isConfigured(c)) return "not-configured";
   try {
-    const res = await fetch(`${c.supabaseUrl}/rest/v1/reviews`, {
-      method: "POST",
-      headers: { ...headers(c), Prefer: "return=minimal" },
-      body: JSON.stringify({
-        name: r.name.trim().slice(0, 40),
-        tag: (r.tag || "").trim().slice(0, 60) || null,
-        seg: r.seg,
-        stars: Math.min(5, Math.max(1, Math.round(r.stars))),
-        txt: r.txt.trim().slice(0, 1200),
-        item: (r.item || "").trim().slice(0, 80) || null,
-        photo: (r.photo || "").trim().slice(0, 400) || null,
-        hidden: false,
-      }),
-    });
-    return res.ok ? "published" : "failed";
+    const row = rowOf(r);
+    const res = await insert(c, row);
+    if (res.ok) return "published";
+
+    // Loud on purpose: this is the one failure a customer cannot see and Ariel
+    // cannot reproduce. `hidden` stays in — without it the insert policy fails.
+    const why = await res.text().catch(() => "");
+    console.warn("[reviews] insert failed", res.status, why);
+
+    const { photo, ...withoutPhoto } = row;
+    if (!(await insert(c, withoutPhoto)).ok) return "failed";
+    // A picture was meant to go with it only if there was one to begin with.
+    return photo === null ? "published" : "published-no-photo";
   } catch {
     return "failed";
   }
@@ -138,18 +172,32 @@ export async function publicReviews(): Promise<Review[]> {
 
 // ─── Ariel's side ────────────────────────────────────────────────────────────
 
-/** Including the ones he took down, so he can put one back. */
-export async function adminReviews(token: string): Promise<RemoteReview[]> {
+/**
+ * Including the ones he took down, so he can put one back.
+ *
+ * Failure is reported, not swallowed. An empty array used to mean both "nobody
+ * has written one" and "the table is not there", and the screen said the first
+ * — which is how a missing table looks exactly like a quiet week.
+ */
+export async function adminReviews(token: string): Promise<{ rows: RemoteReview[]; error?: string }> {
   const c = await shopConfig();
-  if (!isConfigured(c)) return [];
+  if (!isConfigured(c)) return { rows: [], error: "shop.json עוד לא מוגדר." };
   try {
     const res = await fetch(`${c.supabaseUrl}/rest/v1/reviews?select=*&order=created_at.desc`, {
       headers: headers(c, token),
       cache: "no-store",
     });
-    return res.ok ? ((await res.json()) as RemoteReview[]) : [];
+    if (res.ok) return { rows: (await res.json()) as RemoteReview[] };
+    const body = await res.text().catch(() => "");
+    return {
+      rows: [],
+      error:
+        res.status === 404 || /does not exist|schema cache/i.test(body)
+          ? "טבלת הביקורות לא קיימת ב-Supabase. צריך להריץ את docs/reviews-table.md."
+          : `הקריאה נכשלה (${res.status}). ${body.slice(0, 160)}`,
+    };
   } catch {
-    return [];
+    return { rows: [], error: "אין חיבור ל-Supabase." };
   }
 }
 
