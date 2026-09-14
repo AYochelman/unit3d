@@ -13,7 +13,7 @@ import {
   DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
   type Fulfilment, type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
-import { adminDecide, adminOrders, adminProgress, isConfigured, sendOrderEmail, shopConfig, type ShopConfig } from "@/lib/orders-remote";
+import { adminDecide, adminOrders, adminProgress, isConfigured, markReadyEmailSent, sendOrderEmail, sendReadyEmail, shopConfig, type EmailResult, type ShopConfig } from "@/lib/orders-remote";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -53,6 +53,14 @@ const when = (iso: string) => {
  * — a link in the message, or the message pasted by hand — still work, and are
  * what the shop falls back to if the queue is unreachable.
  */
+/** Why the customer has not been told, in his words rather than in an error code. */
+const MAIL_PROBLEM: Record<EmailResult, string> = {
+  sent: "נשלח.",
+  "no-address": "ללקוח אין כתובת מייל בהזמנה — עדכן אותו בוואטסאפ.",
+  "not-configured": "שליחת מייל לא מוגדרת (EmailJS ב-shop.json).",
+  failed: "המייל לא נשלח. אפשר לנסות שוב.",
+};
+
 export default function OrdersTab() {
   const localOrders = useAdminStore((s) => s.orders);
   const addOrder = useAdminStore((s) => s.addOrder);
@@ -68,6 +76,9 @@ export default function OrdersTab() {
   const [pw, setPw] = useState("");
   const [remote, setRemote] = useState<PlacedOrder[]>([]);
   const [loadErr, setLoadErr] = useState("");
+  /** Which order is mid-send, and how the last send for each one went. */
+  const [mailing, setMailing] = useState("");
+  const [mailed, setMailed] = useState<Record<string, EmailResult>>({});
 
   const [openRef, setOpenRef] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
@@ -182,13 +193,38 @@ export default function OrdersTab() {
   // second name for "approved".
   const markLine = async (o: PlacedOrder, index: number, done: boolean) => {
     const next = o.lines.map((_l, i) => (i === index ? done : lineDone(o, i)));
+    const after: PlacedOrder = { ...o, progress: next };
     if (isRemote(o.ref) && token) {
       setRemote((rows) => rows.map((r) => (r.ref === o.ref ? { ...r, progress: next } : r)));
       const ok = await adminProgress(token, o.ref, next);
-      if (!ok) { setLoadErr("הסימון לא נשמר. נסה שוב."); await load(token); }
+      if (!ok) { setLoadErr("הסימון לא נשמר. נסה שוב."); await load(token); return; }
+      await tellCustomer(after);
       return;
     }
     setOrderProgress(o.ref, next);
+    await tellCustomer(after);
+  };
+
+  /**
+   * The last tick is the one the customer has been waiting for.
+   *
+   * The confirmation email promised "מעדכן אותך כשהכל מוכן"; until now that
+   * update happened only if Ariel remembered to write. Ticking the final item
+   * is exactly the moment it becomes true, so that is where the letter is sent
+   * from — and only once, which is what `readyEmailAt` is for. A re-tick of an
+   * item, or a correction, must not mail the customer again.
+   */
+  const tellCustomer = async (o: PlacedOrder, force = false) => {
+    if (!force && (fulfilment(o) !== "ready" || o.readyEmailAt)) return;
+    setMailing(o.ref);
+    const r = await sendReadyEmail(o);
+    setMailing("");
+    setMailed((m) => ({ ...m, [o.ref]: r }));
+    if (r !== "sent") return;
+    const at = new Date().toISOString();
+    setRemote((rows) => rows.map((x) => (x.ref === o.ref ? { ...x, readyEmailAt: at } : x)));
+    // Its own write, so a missing column costs the flag and not the tick.
+    if (isRemote(o.ref) && token) await markReadyEmailSent(token, o.ref);
   };
 
   const file = () => {
@@ -296,6 +332,9 @@ export default function OrdersTab() {
               onNote={(v) => setNotes((n) => ({ ...n, [o.ref]: v }))}
               onDecide={(d) => void decide(o, d)}
               onMarkLine={(i, done) => void markLine(o, i, done)}
+              mailing={mailing === o.ref}
+              mailed={mailed[o.ref]}
+              onSendReady={() => void tellCustomer(o, true)}
               onRemove={isRemote(o.ref) ? null : () => removeLocal(o.ref)}
             />
           ))}
@@ -362,7 +401,7 @@ const FULFIL: Record<Fulfilment, { label: string; tone: "good" | "flame" | "neut
 };
 
 function OrderRow({
-  order: o, open, onToggle, note, onNote, onDecide, onMarkLine, onRemove,
+  order: o, open, onToggle, note, onNote, onDecide, onMarkLine, onRemove, mailing, mailed, onSendReady,
 }: {
   order: PlacedOrder;
   open: boolean;
@@ -371,6 +410,11 @@ function OrderRow({
   onNote: (v: string) => void;
   onDecide: (d: OrderDecision) => void;
   onMarkLine: (index: number, done: boolean) => void;
+  /** A "your order is ready" letter is on its way out right now. */
+  mailing: boolean;
+  /** How the last attempt for this order went, this session. */
+  mailed?: EmailResult;
+  onSendReady: () => void;
   onRemove: (() => void) | null;
 }) {
   const d = DELIVERY_BY_ID[o.delivery];
@@ -421,6 +465,38 @@ function OrderRow({
                 <span className="text-ink-500"> · {d.price ? fmtILS(d.price) : "חינם"} · {d.note}</span>
               </div>
             </div>
+
+            {/* Did the customer actually hear about it?
+                The letter goes out by itself on the last tick, which is the
+                point — but "by itself" is also how a silent failure looks, so
+                the answer is printed here either way: sent and when, or what
+                went wrong and a button to try again. */}
+            {stage === "ready" && (
+              <div className={cn(
+                "rounded-lg border p-2.5 text-[11px] flex flex-wrap items-center gap-2",
+                o.readyEmailAt ? "border-good/40 bg-good/5" : "border-amber-500/40 bg-amber-500/5",
+              )}>
+                <Icon name={o.readyEmailAt ? "check" : "mail"} size={13} className={o.readyEmailAt ? "text-good" : "text-amber-500"} />
+                <span className="text-ink-200">
+                  {mailing
+                    ? "שולח ללקוח מייל…"
+                    : o.readyEmailAt
+                      ? `הלקוח קיבל מייל ש${o.delivery === "pickup" ? "מוכן לאיסוף" : "יוצא למשלוח"} · ${when(o.readyEmailAt)}`
+                      : MAIL_PROBLEM[mailed ?? (o.customer.email ? "failed" : "no-address")]}
+                </span>
+                <span className="flex-1" />
+                {!mailing && (
+                  <button
+                    type="button"
+                    onClick={onSendReady}
+                    disabled={!o.customer.email}
+                    className="px-2.5 h-7 rounded-lg border border-ink-700 text-ink-300 hover:border-ink-600 transition-colors disabled:opacity-40"
+                  >
+                    {o.readyEmailAt ? "שלח שוב" : "שלח עכשיו"}
+                  </button>
+                )}
+              </div>
+            )}
 
             <div className="space-y-2">
               <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500">ההזמנה</div>

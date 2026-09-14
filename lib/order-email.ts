@@ -75,13 +75,14 @@ const STEPS: [string, string][] = [
   ["3", "מעדכן אותך כשהכל מוכן, ומתאמים מסירה."],
 ];
 
-/** The whole confirmation, as one HTML document. */
-export function orderEmailHtml(o: PlacedOrder): string {
-  const d = DELIVERY_BY_ID[o.delivery];
-  const total = orderTotal(o);
-  const items = o.itemsTotal;
-
-  return `<!DOCTYPE html>
+/**
+ * The letterhead every mail from the shop shares.
+ *
+ * Two letters go out now — the confirmation when an order is placed, and the
+ * "it is ready" when it comes off the bench — and they have to look like the
+ * same shop wrote them. Only the middle differs.
+ */
+const shell = (inner: string): string => `<!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:${PAPER};">
@@ -94,13 +95,35 @@ export function orderEmailHtml(o: PlacedOrder): string {
       <td align="left" style="font:400 13px/1 ${FONT};color:${MUTED};">הדפסת תלת מימד</td>
     </tr></table>
   </td></tr>
+${inner}
+  <tr><td style="background:${PAPER};padding:20px 24px;border-top:1px solid ${LINE};">
+    <div style="font:400 13px/1.9 ${FONT};color:${MUTED};">
+      שאלה? אפשר להשיב למייל הזה, או בוואטסאפ:
+      <a href="${CONTACT.whatsapp}" style="color:${GREEN};text-decoration:none;font-weight:700;">${esc(CONTACT.phoneDisplay)}</a>
+    </div>
+    <div style="font:400 12px/1.9 ${FONT};color:${MUTED};padding-top:4px;" dir="ltr">${SITE_URL} · ${esc(CONTACT.instagramHandle)}</div>
+  </td></tr>
 
+</table>
+</div></body></html>`;
+
+/** The ref, drawn as the black pill both letters open with. */
+const refChip = (ref: string): string =>
+  `<div style="margin-top:16px;display:inline-block;background:${INK};border-radius:999px;padding:9px 18px;font:700 15px/1 ${FONT};color:${GREEN_LIGHT};" dir="ltr">${esc(ref)}</div>`;
+
+/** The whole confirmation, as one HTML document. */
+export function orderEmailHtml(o: PlacedOrder): string {
+  const d = DELIVERY_BY_ID[o.delivery];
+  const total = orderTotal(o);
+  const items = o.itemsTotal;
+
+  return shell(`
   <tr><td style="padding:28px 24px 4px;">
     <div style="font:700 22px/1.4 ${FONT};color:${INK};">קיבלתי את ההזמנה שלך 🎉</div>
     <div style="font:400 15px/1.7 ${FONT};color:${MUTED};margin-top:6px;">
       ${o.customer.name ? esc(o.customer.name) + ", " : ""}תודה. זה הפירוט המלא — שמור אותו, מספר ההזמנה הוא מה שמזהה אותה מולי.
     </div>
-    <div style="margin-top:16px;display:inline-block;background:${INK};border-radius:999px;padding:9px 18px;font:700 15px/1 ${FONT};color:${GREEN_LIGHT};" dir="ltr">${esc(o.ref)}</div>
+    ${refChip(o.ref)}
   </td></tr>
 
   <tr><td style="padding:24px 24px 8px;">
@@ -146,18 +169,89 @@ export function orderEmailHtml(o: PlacedOrder): string {
   <tr><td style="padding:8px 24px 28px;">
     <a href="${SITE_URL}" style="display:inline-block;background:${GREEN};color:#FFFFFF;text-decoration:none;border-radius:10px;padding:13px 26px;font:700 15px/1 ${FONT};">חזרה לחנות</a>
   </td></tr>
-
-  <tr><td style="background:${PAPER};padding:20px 24px;border-top:1px solid ${LINE};">
-    <div style="font:400 13px/1.9 ${FONT};color:${MUTED};">
-      שאלה? אפשר להשיב למייל הזה, או בוואטסאפ:
-      <a href="${CONTACT.whatsapp}" style="color:${GREEN};text-decoration:none;font-weight:700;">${esc(CONTACT.phoneDisplay)}</a>
-    </div>
-    <div style="font:400 12px/1.9 ${FONT};color:${MUTED};padding-top:4px;" dir="ltr">${SITE_URL} · ${esc(CONTACT.instagramHandle)}</div>
-  </td></tr>
-
-</table>
-</div></body></html>`;
+`);
 }
 
 export const orderEmailSubject = (o: PlacedOrder): string =>
   `אישור הזמנה ${o.ref} · Unit 3D`;
+
+// ─── "It is ready" ───────────────────────────────────────────────────────────
+/**
+ * What the customer gets the moment the last item comes off the bench.
+ *
+ * The confirmation promised "מעדכן אותך כשהכל מוכן" and, until now, nothing
+ * kept that promise automatically — the update happened when Ariel remembered
+ * to write. This is step 3 of that same letter, sent by itself.
+ *
+ * It says two different things depending on how the order travels, because
+ * "מוכנה" means "come and take it" for a pickup and "it left" for a delivery,
+ * and a customer who reads the wrong one either waits at home for nothing or
+ * drives to Givatayim for nothing.
+ */
+const READY: Record<PlacedOrder["delivery"], { title: string; lead: string; subject: string }> = {
+  pickup: {
+    title: "ההזמנה שלך מוכנה לאיסוף 📦",
+    lead: "הכל ירד מהמדפסת, נבדק ונארז. נשאר רק לתאם מתי נוח לך לקפוץ.",
+    subject: "מוכנה לאיסוף",
+  },
+  post: {
+    title: "ההזמנה שלך יוצאת אליך 📮",
+    lead: "הכל ירד מהמדפסת, נבדק ונארז, והחבילה יוצאת בדואר רשום.",
+    subject: "יוצאת למשלוח",
+  },
+  courier: {
+    title: "ההזמנה שלך יוצאת אליך 🚚",
+    lead: "הכל ירד מהמדפסת, נבדק ונארז, והחבילה יוצאת עם שליח.",
+    subject: "יוצאת למשלוח",
+  },
+};
+
+export function readyEmailHtml(o: PlacedOrder): string {
+  const d = DELIVERY_BY_ID[o.delivery];
+  const r = READY[o.delivery] ?? READY.pickup;
+  const total = orderTotal(o);
+  const pickup = o.delivery === "pickup";
+
+  return shell(`
+  <tr><td style="padding:28px 24px 4px;">
+    <div style="font:700 22px/1.4 ${FONT};color:${INK};">${esc(r.title)}</div>
+    <div style="font:400 15px/1.7 ${FONT};color:${MUTED};margin-top:6px;">
+      ${o.customer.name ? esc(o.customer.name) + ", " : ""}${esc(r.lead)}
+    </div>
+    ${refChip(o.ref)}
+  </td></tr>
+
+  <tr><td style="padding:24px 24px 8px;">
+    <div style="font:700 12px/1 ${FONT};letter-spacing:2px;color:${MUTED};padding-bottom:10px;">מה בפנים</div>
+  </td></tr>
+  <tr><td style="padding:0 4px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${LINE};">
+      ${o.lines.map(lineRow).join("")}
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:20px 24px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      ${infoRow(pickup ? "איסוף" : "משלוח", `${esc(d.label)}<div style="font:400 12px/1.6 ${FONT};color:${MUTED};">${esc(d.note)}</div>`, true)}
+      ${total == null ? "" : infoRow("סה\"כ", esc(fmtILS(total)), true)}
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:20px 24px 4px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${INK};border-radius:12px;">
+      <tr><td style="padding:16px 20px;font:400 14px/1.7 ${FONT};color:#FAFAFA;">
+        ${pickup
+          ? `האיסוף מגבעתיים, בתיאום מראש. כתוב לי מתי נוח לך ואני אהיה כאן.`
+          : `אעדכן אותך ברגע שהיא בדרך. אם משהו בכתובת השתנה — עכשיו הזמן לומר.`}
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:16px 24px 28px;">
+    <a href="${CONTACT.whatsapp}" style="display:inline-block;background:${GREEN};color:#FFFFFF;text-decoration:none;border-radius:10px;padding:13px 26px;font:700 15px/1 ${FONT};">${pickup ? "לתאם איסוף בוואטסאפ" : "לכתוב לי בוואטסאפ"}</a>
+  </td></tr>
+`);
+}
+
+export const readyEmailSubject = (o: PlacedOrder): string =>
+  `ההזמנה ${o.ref} ${(READY[o.delivery] ?? READY.pickup).subject} · Unit 3D`;

@@ -57,31 +57,43 @@ function Stars({ n }: { n: number }) {
 
 /**
  * One review card: a picture of what they ordered, the rating, the comment,
- * and who wrote it. The picture is the product illustration for the item they
- * bought — the same drawing the shop uses on that product's own card.
+ * and who wrote it.
+ *
+ * The picture band is drawn only when there is something true to put in it: a
+ * photograph the customer sent, or a product illustration the review actually
+ * names. A review that is words alone used to get `art ?? "keychain"` — a
+ * drawing of a keyring over a review about frogs, which looks like a picture
+ * that failed to load and tells the reader something that is not so. Without
+ * the band the card is the review, which is what it is.
  */
 function ReviewCard({ r }: { r: Review }) {
   const photo = photoUrl(r.photo);
+  const band = Boolean(photo || r.art);
+  const seg = r.seg && (
+    <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>
+  );
   const Body = (
     <>
-      <div
-        className="relative h-28 flex items-center justify-center shrink-0"
-        style={{
-          background: `radial-gradient(circle at 50% 40%, hsla(${r.hue ?? 145}, 70%, 50%, 0.20), transparent 62%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
-        }}
-      >
-        {photo ? (
-          <Image src={photo} alt={r.item ?? r.name ?? "תמונה מלקוח"} fill sizes="300px" className="object-cover" unoptimized />
-        ) : (
-          <ProductArt art={r.art ?? "keychain"} hue={r.hue ?? 145} size={92} />
-        )}
-        <span className="absolute top-2 right-2">
-          {r.seg && <Pill tone={SEG_TONE[r.seg]} className="text-[10px] px-1.5 py-0.5">{SEG_LABEL[r.seg]}</Pill>}
-        </span>
-      </div>
+      {band && (
+        <div
+          className="relative h-28 flex items-center justify-center shrink-0"
+          style={{
+            background: `radial-gradient(circle at 50% 40%, hsla(${r.hue ?? 145}, 70%, 50%, 0.20), transparent 62%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 8px, rgba(255,255,255,0) 8px 16px)`,
+          }}
+        >
+          {photo ? (
+            <Image src={photo} alt={r.item ?? r.name ?? "תמונה מלקוח"} fill sizes="300px" className="object-cover" unoptimized />
+          ) : (
+            <ProductArt art={r.art!} hue={r.hue ?? 145} size={92} />
+          )}
+          <span className="absolute top-2 right-2">{seg}</span>
+        </div>
+      )}
 
       <div className="p-4 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">
+          {/* With no band above, the tag has nowhere else to live. */}
+          {!band && seg}
           {!!r.stars && (
             <>
               <Stars n={r.stars} />

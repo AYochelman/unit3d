@@ -1,6 +1,6 @@
 "use client";
 import type { OrderDecision, PlacedOrder } from "./orders";
-import { orderEmailHtml, orderEmailSubject } from "./order-email";
+import { orderEmailHtml, orderEmailSubject, readyEmailHtml, readyEmailSubject } from "./order-email";
 
 /**
  * Where an order lives between the customer's phone and Ariel's screen.
@@ -152,6 +152,7 @@ type Row = {
   decision_note: string | null;
   decided_at: string | null;
   progress: boolean[] | null;
+  ready_email_at: string | null;
 };
 
 const toOrder = (r: Row): PlacedOrder => ({
@@ -167,6 +168,7 @@ const toOrder = (r: Row): PlacedOrder => ({
   decisionNote: r.decision_note ?? "",
   ...(Array.isArray(r.progress) ? { progress: r.progress } : {}),
   ...(r.decided_at ? { decidedAt: r.decided_at } : {}),
+  ...(r.ready_email_at ? { readyEmailAt: r.ready_email_at } : {}),
 });
 
 /** Everything that came in, newest first. */
@@ -236,7 +238,10 @@ export async function adminDecide(
  * No address, no send. A failure is never fatal: the order is already on its
  * way to Ariel by WhatsApp, and the thank-you screen says what happened.
  */
-export async function sendOrderEmail(o: PlacedOrder): Promise<"sent" | "no-address" | "not-configured" | "failed"> {
+export type EmailResult = "sent" | "no-address" | "not-configured" | "failed";
+
+/** One pipe, two letters. */
+async function sendMail(o: PlacedOrder, subject: string, html: string): Promise<EmailResult> {
   const to = o.customer.email?.trim();
   if (!to) return "no-address";
   const c = await shopConfig();
@@ -253,14 +258,48 @@ export async function sendOrderEmail(o: PlacedOrder): Promise<"sent" | "no-addre
         template_params: {
           to_email: to,
           to_name: o.customer.name || to,
-          subject: orderEmailSubject(o),
+          subject,
           order_ref: o.ref,
-          message_html: orderEmailHtml(o),
+          message_html: html,
         },
       }),
     });
     return res.ok ? "sent" : "failed";
   } catch {
     return "failed";
+  }
+}
+
+export async function sendOrderEmail(o: PlacedOrder): Promise<EmailResult> {
+  return sendMail(o, orderEmailSubject(o), orderEmailHtml(o));
+}
+
+/**
+ * "It is ready", sent from Ariel's own browser when the last item is ticked.
+ *
+ * Same pipe as the confirmation, opposite end of the job. It goes out from the
+ * admin rather than from the customer's browser for the obvious reason: the
+ * customer is not there when their order comes off the bench.
+ */
+export async function sendReadyEmail(o: PlacedOrder): Promise<EmailResult> {
+  return sendMail(o, readyEmailSubject(o), readyEmailHtml(o));
+}
+
+/** Records that the customer has been told, so a re-tick does not tell them twice. */
+export async function markReadyEmailSent(token: string, ref: string): Promise<boolean> {
+  const c = await shopConfig();
+  if (!isConfigured(c)) return false;
+  try {
+    // Its own PATCH, deliberately not folded into the progress write: if the
+    // column has not been added yet this request fails, and the tick that the
+    // customer's order actually depends on must not fail with it.
+    const res = await fetch(`${c.supabaseUrl}/rest/v1/orders?ref=eq.${encodeURIComponent(ref)}`, {
+      method: "PATCH",
+      headers: { ...headers(c, token), Prefer: "return=minimal" },
+      body: JSON.stringify({ ready_email_at: new Date().toISOString() }),
+    });
+    return res.ok;
+  } catch {
+    return false;
   }
 }
