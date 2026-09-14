@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { RECENT_PRINTS } from "@/lib/recent-prints";
+import { RECENT_SECTION, SHOWING_ORDERS } from "@/lib/recent-prints";
 
 /**
  * What came off the printer lately — as products, not as decoration.
@@ -11,28 +11,35 @@ import { RECENT_PRINTS } from "@/lib/recent-prints";
  * product page, because "someone ordered this" is the best reason the shop can
  * give for looking at a product.
  *
- * Renders nothing at all when there is nothing to show. A section headed
- * "הזמנות אמיתיות" must never be filled with products nobody ordered — that
- * was the whole complaint that produced it.
+ * Two states, both true. With published orders behind it, it says so. Without
+ * them it shows the newest models in the shop and changes its own heading and
+ * caption to match. What it never does is put "הזמנות אמיתיות" over products
+ * nobody ordered — that was the whole complaint that produced it.
  */
 export default function RecentPrints() {
-  if (RECENT_PRINTS.length === 0) return null;
+  if (RECENT_SECTION.length === 0) return null;
 
   return (
     <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-          RECENT WORK
+          {SHOWING_ORDERS ? "RECENT WORK" : "NEW IN THE SHOP"}
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05]">
-          מה יצא מהמדפסת <span className="text-flame">לאחרונה</span>.
+          {SHOWING_ORDERS ? (
+            <>מה יצא מהמדפסת <span className="text-flame">לאחרונה</span>.</>
+          ) : (
+            <>מה נכנס לחנות <span className="text-flame">עכשיו</span>.</>
+          )}
         </h2>
         <p className="text-ink-400 mt-3 max-w-2xl">
-          הזמנות אמיתיות שכבר הודפסו ונשלחו. לחיצה פותחת את המוצר.
+          {SHOWING_ORDERS
+            ? "הזמנות אמיתיות שכבר הודפסו ונשלחו. לחיצה פותחת את המוצר."
+            : "הדגמים האחרונים שנוספו למדפים. לחיצה פותחת את המוצר."}
         </p>
 
         <div className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {RECENT_PRINTS.map((p) => (
+          {RECENT_SECTION.map((p) => (
             <Link
               key={p.id}
               href={p.href}

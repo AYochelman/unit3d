@@ -433,25 +433,30 @@ export default function OrdersTab() {
         {/* The home page's "what came off the printer lately".
             It is not filled automatically on purpose: publishing which products
             were printed is a decision, and one that should happen when he means
-            it and not on every tick of a checkbox. */}
+            it and not on every tick of a checkbox.
+
+            The button is always here, including when it would publish nothing.
+            Hiding it when the count was zero is what made him ask where it had
+            gone — a control that vanishes reads as broken, and "publish an
+            empty list" is a real action: it is how the grid goes back to
+            showing the newest models instead. */}
         <div className="mt-4 p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-2">
           <div className="font-bold text-sm">מה יצא מהמדפסת לאחרונה</div>
           <p className="text-[11px] text-ink-500 leading-relaxed">
-            הרשת בדף הבית. נלקחת מההזמנות שכבר סומנו כמוכנות — {recentCount} מוצרים כרגע.
-            נשמרים רק מזהי המוצרים, שום פרט של לקוח לא מתפרסם.
+            הרשת בדף הבית, מההזמנות שכבר סומנו כמוכנות. נשמרים רק מזהי המוצרים,
+            שום פרט של לקוח לא מתפרסם.
           </p>
-          {recentCount === 0 ? (
-            <p className="text-[11px] text-amber-500">
-              אין עדיין הזמנה מוכנה עם מוצר מהקטלוג, אז הרשת לא מוצגת באתר.
-            </p>
-          ) : (
-            <AdminSaveToSite
-              json={recentPrintsFile}
-              path={RECENT_FILE}
-              title="עדכן את הרשת בדף הבית"
-              what="המוצרים שהודפסו לאחרונה"
-            />
-          )}
+          <p className={cn("text-[11px]", recentCount ? "text-good" : "text-amber-500")}>
+            {recentCount
+              ? `${recentCount} מוצרים ייכנסו לרשת.`
+              : "אין עדיין הזמנה מוכנה עם מוצר מהקטלוג — עד אז הרשת מציגה את הדגמים החדשים בחנות."}
+          </p>
+          <AdminSaveToSite
+            json={recentPrintsFile}
+            path={RECENT_FILE}
+            title="עדכן את הרשת בדף הבית"
+            what="המוצרים שהודפסו לאחרונה"
+          />
         </div>
       </div>
     </div>

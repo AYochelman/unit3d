@@ -1,5 +1,6 @@
 import RECENT from "@/data/recent-prints.json";
 import { photoById, type Photo } from "./photos";
+import { sellableModels } from "./imported";
 
 /**
  * The products that actually came off this printer lately.
@@ -17,8 +18,11 @@ import { photoById, type Photo } from "./photos";
  * only which products were printed.
  *
  * An id that is no longer in the catalogue is dropped rather than drawn as a
- * hole, and an empty list hides the whole section. "Recently printed" with
- * nothing behind it is exactly the claim this section exists to stop making.
+ * hole. When the list is empty the section does NOT disappear — a hole in the
+ * home page is its own kind of wrong — it falls back to what genuinely IS new
+ * here: the models most recently added to the shop, under a heading that says
+ * so. Both halves are true; what the section must never do is put "הזמנות
+ * אמיתיות" over products nobody ordered.
  */
 const ids: string[] = Array.isArray((RECENT as { itemIds?: unknown }).itemIds)
   ? ((RECENT as { itemIds: string[] }).itemIds)
@@ -31,3 +35,21 @@ export const RECENT_PRINTS: Photo[] = ids
 /** When the list was last taken from the orders, for the section's own caption. */
 export const RECENT_PRINTS_AT: string | null =
   (RECENT as { updatedAt?: string | null }).updatedAt ?? null;
+
+/**
+ * The newest things in the shop, for when no order has been published yet.
+ *
+ * `IMPORTED` is only ever appended to (the nightly sync adds and never
+ * rewrites), so the tail of it is genuinely the most recent arrivals — not a
+ * guess, and not a random pick dressed up as one.
+ */
+export const NEWEST_IN_SHOP: Photo[] = sellableModels()
+  .filter((m) => !!m.image)
+  .slice(-8)
+  .reverse()
+  .map((m) => photoById(m.id))
+  .filter((p): p is Photo => Boolean(p));
+
+/** Which of the two the section is showing, so it can title itself honestly. */
+export const SHOWING_ORDERS = RECENT_PRINTS.length > 0;
+export const RECENT_SECTION: Photo[] = SHOWING_ORDERS ? RECENT_PRINTS : NEWEST_IN_SHOP;
