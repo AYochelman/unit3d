@@ -154,6 +154,22 @@ export default function ReviewsTab() {
             </div>
 
             {r.item && <div className="text-xs text-ink-400 mb-1">הזמינו: {r.item}</div>}
+
+            {/* The picture they attached, at a size that is enough to judge it.
+                It is already on the site by the time it is here, so this is
+                for deciding whether it stays. */}
+            {r.photo && (
+              <a href={r.photo} target="_blank" rel="noopener noreferrer" className="block mb-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={r.photo}
+                  alt={`תמונה מ${r.name}`}
+                  loading="lazy"
+                  className="max-h-48 rounded-xl border border-ink-800 bg-ink-950 object-contain"
+                />
+              </a>
+            )}
+
             <p className="text-sm text-ink-200 leading-relaxed whitespace-pre-wrap">{r.txt}</p>
 
             <div className="mt-3 flex items-center gap-2">

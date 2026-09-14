@@ -18,6 +18,8 @@ create table if not exists public.reviews (
   stars       smallint not null,
   txt         text not null,
   item        text,
+  -- ה-URL של התמונה שהלקוח צירף, כשצירף. הדלי עצמו נוצר ב-docs/review-photos.md.
+  photo       text,
   hidden      boolean not null default false,
 
   -- המגבלות האלה הן מה שמחליף אישור מראש: דפדפן שמדלג על הטופס
@@ -27,6 +29,7 @@ create table if not exists public.reviews (
   constraint reviews_txt_len     check (char_length(txt)  between 10 and 1200),
   constraint reviews_tag_len     check (tag  is null or char_length(tag)  <= 60),
   constraint reviews_item_len    check (item is null or char_length(item) <= 80),
+  constraint reviews_photo_len   check (photo is null or char_length(photo) <= 400),
   constraint reviews_seg_valid   check (seg in ('private','soldier','family','b2b'))
 );
 
@@ -62,6 +65,9 @@ drop policy if exists reviews_admin_delete on public.reviews;
 create policy reviews_admin_delete on public.reviews
   for delete to authenticated using (true);
 ```
+
+> כדי שגם **תמונה** תוכל להתלוות לביקורת צריך עוד הרצה אחת — יצירת דלי האחסון
+> וההרשאות שלו. זה `docs/review-photos.md`, וזה עובד גם אם הטבלה כבר קיימת.
 
 ## איך זה מתנהג אחרי זה
 

@@ -37,6 +37,8 @@ export type RemoteReview = {
   stars: number;
   txt: string;
   item: string | null;
+  /** A public Supabase Storage URL, when they attached a picture. */
+  photo: string | null;
   hidden: boolean;
 };
 
@@ -47,6 +49,8 @@ export type NewReview = {
   stars: number;
   txt: string;
   item?: string;
+  /** Already uploaded by `uploadReviewPhoto`; this only stores the URL. */
+  photo?: string;
 };
 
 const headers = (c: ShopConfig, token?: string) => {
@@ -83,6 +87,7 @@ export function toReview(r: RemoteReview): Review {
     stars: r.stars,
     txt: r.txt,
     item: r.item || undefined,
+    photo: r.photo || undefined,
     when: said(r.created_at),
   };
 }
@@ -104,6 +109,7 @@ export async function submitReview(r: NewReview): Promise<SubmitResult> {
         stars: Math.min(5, Math.max(1, Math.round(r.stars))),
         txt: r.txt.trim().slice(0, 1200),
         item: (r.item || "").trim().slice(0, 80) || null,
+        photo: (r.photo || "").trim().slice(0, 400) || null,
         hidden: false,
       }),
     });

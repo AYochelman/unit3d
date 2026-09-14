@@ -6,6 +6,7 @@ import Btn from "@/components/ui/Btn";
 import { Field, Input, Textarea, Select } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
 import { submitReview } from "@/lib/reviews-remote";
+import { uploadReviewPhoto, MAX_PICK } from "@/lib/review-photo";
 import type { ReviewSeg } from "@/lib/types";
 
 const WA = CONTACT.whatsapp;
@@ -37,6 +38,12 @@ type Props = {
  * route and opens WhatsApp with the review already written out, and says which
  * of the two happened.
  *
+ * A picture can come with it. It goes up first, into the shop's own bucket, and
+ * the review stores the URL — see lib/review-photo.ts for what happens to the
+ * file on the way (it is made small, re-encoded, and stripped of the EXIF that
+ * carries the customer's GPS). If that upload fails the review still publishes
+ * without it: the words are the point, the picture is the bonus.
+ *
  * `hp` is a honeypot — a field no human sees and no human fills. Together with
  * the few seconds a person needs to actually write a review, it stops the
  * drive-by bots. It stops nothing else; the admin screen can take a review down
@@ -51,11 +58,20 @@ export default function ReviewForm({ itemName, compact }: Props) {
   const [item, setItem] = useState(itemName ?? "");
   const [text, setText] = useState("");
   const [hp, setHp] = useState("");
-  const [sent, setSent] = useState<null | "published" | "whatsapp">(null);
-  const [busy, setBusy] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [preview, setPreview] = useState("");
+  const [photoErr, setPhotoErr] = useState("");
+  const [sent, setSent] = useState<null | "published" | "no-photo" | "whatsapp">(null);
+  const [busy, setBusy] = useState<"" | "photo" | "send">("");
+  const pick = useRef<HTMLInputElement>(null);
   // Set on mount, not during render.
   const opened = useRef(0);
   useEffect(() => { opened.current = clockNow(); }, []);
+  // The preview is a blob URL and it leaks if nobody gives it back.
+  useEffect(() => {
+    if (!preview) return;
+    return () => URL.revokeObjectURL(preview);
+  }, [preview]);
 
   const SEG_LABEL: Record<ReviewSeg, string> = {
     private: "לקוח פרטי",
@@ -71,6 +87,9 @@ export default function ReviewForm({ itemName, compact }: Props) {
     tag ? `תיאור: ${tag}` : null,
     `סוג לקוח: ${SEG_LABEL[seg]}`,
     item ? `מה הוזמן: ${item}` : null,
+    // A wa.me link carries text and nothing else, so the picture cannot ride
+    // along. Saying so beats a customer assuming it did.
+    photo ? "(צירפתי תמונה — שולח אותה כאן בצ'אט)" : null,
     "",
     text,
   ]
@@ -89,6 +108,29 @@ export default function ReviewForm({ itemName, compact }: Props) {
     setSent("whatsapp");
   };
 
+  /** One picture, from the camera or the roll. */
+  const choose = (f: File | null | undefined) => {
+    if (!f) return;
+    if (!f.type.startsWith("image/")) {
+      setPhotoErr("זאת לא תמונה.");
+      return;
+    }
+    if (f.size > MAX_PICK) {
+      setPhotoErr("התמונה גדולה מדי. עד 25MB.");
+      return;
+    }
+    setPhotoErr("");
+    setPhoto(f);
+    setPreview(URL.createObjectURL(f));
+  };
+
+  const dropPhoto = () => {
+    setPhoto(null);
+    setPreview("");
+    setPhotoErr("");
+    if (pick.current) pick.current.value = "";
+  };
+
   const publish = async () => {
     if (!canSend || busy) return;
     // A filled honeypot, or a review written in under four seconds, is not a
@@ -97,11 +139,18 @@ export default function ReviewForm({ itemName, compact }: Props) {
       setSent("published");
       return;
     }
-    setBusy(true);
-    const r = await submitReview({ name, tag, seg, stars, txt: text, item });
-    setBusy(false);
+    // The picture goes up first. If it does not, the review still does — losing
+    // what someone wrote because their photo would not upload is the wrong trade.
+    let url: string | undefined;
+    if (photo) {
+      setBusy("photo");
+      url = await uploadReviewPhoto(photo);
+    }
+    setBusy("send");
+    const r = await submitReview({ name, tag, seg, stars, txt: text, item, photo: url });
+    setBusy("");
     if (r === "published") {
-      setSent("published");
+      setSent(photo && !url ? "no-photo" : "published");
       reset();
       return;
     }
@@ -114,6 +163,7 @@ export default function ReviewForm({ itemName, compact }: Props) {
     setItem(itemName ?? "");
     setText("");
     setStars(5);
+    dropPhoto();
     opened.current = clockNow();
   };
 
@@ -127,7 +177,9 @@ export default function ReviewForm({ itemName, compact }: Props) {
         <p className="text-ink-300 text-sm leading-relaxed">
           {sent === "published"
             ? "הביקורת שלך פורסמה באתר. רענן את הדף כדי לראות אותה בין השאר."
-            : "לא הצלחתי לפרסם אותה כרגע, אז פתחתי לך אותה בוואטסאפ. שלח, ואני מעלה אותה ידנית."}
+            : sent === "no-photo"
+              ? "הביקורת שלך פורסמה באתר, אבל התמונה לא עלתה. אפשר לשלוח לי אותה בוואטסאפ ואני אצרף אותה."
+              : "לא הצלחתי לפרסם אותה כרגע, אז פתחתי לך אותה בוואטסאפ. שלח, ואני מעלה אותה ידנית."}
         </p>
         <button
           type="button"
@@ -219,6 +271,67 @@ export default function ReviewForm({ itemName, compact }: Props) {
         </Field>
       </div>
 
+      {/* ── The picture ───────────────────────────────────────────────────
+          Optional, and said so. `capture` is deliberately NOT set: on a phone
+          that would force the camera open, and most of these photos already
+          exist in the roll by the time someone sits down to write. */}
+      <div className="mt-4">
+        <div className="flex items-baseline justify-between mb-1.5">
+          <span className="text-sm font-semibold text-ink-100">
+            תמונה מההזמנה <span className="text-ink-400 text-xs font-normal mr-1">(אופציונלי)</span>
+          </span>
+          <span className="text-xs text-ink-400">התמונות של הלקוחות הן החלק הכי משכנע</span>
+        </div>
+
+        <input
+          ref={pick}
+          type="file"
+          accept="image/*"
+          className="sr-only"
+          onChange={(e) => choose(e.target.files?.[0])}
+        />
+
+        {preview ? (
+          <div className="relative rounded-xl border border-ink-700 bg-ink-950 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={preview} alt="התמונה שבחרת" className="w-full max-h-64 object-contain" />
+            <div className="absolute top-2 left-2 flex gap-2">
+              <button
+                type="button"
+                onClick={() => pick.current?.click()}
+                className="px-2.5 py-1 rounded-lg text-xs bg-ink-950/80 border border-ink-700 text-ink-200 hover:text-flame transition-colors"
+              >
+                החלף
+              </button>
+              <button
+                type="button"
+                onClick={dropPhoto}
+                className="px-2.5 py-1 rounded-lg text-xs bg-ink-950/80 border border-ink-700 text-ink-200 hover:text-bad transition-colors"
+              >
+                הסר
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => pick.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              choose(e.dataTransfer.files?.[0]);
+            }}
+            className="w-full py-5 rounded-xl border border-dashed border-ink-700 bg-ink-950/40 text-ink-400 hover:border-flame hover:text-flame transition-colors flex flex-col items-center gap-1.5"
+          >
+            <Icon name="camera" size={20} />
+            <span className="text-sm font-semibold">צרף תמונה</span>
+            <span className="text-[11px] text-ink-500">JPG / PNG / HEIC · עד 25MB</span>
+          </button>
+        )}
+
+        {photoErr && <p className="mt-1 text-xs text-bad">{photoErr}</p>}
+      </div>
+
       {/* Not for people. Hidden from the screen and from the screen reader,
           and never focusable by tab. */}
       <div aria-hidden="true" style={{ position: "absolute", insetInlineStart: "-9999px", top: 0 }}>
@@ -229,13 +342,13 @@ export default function ReviewForm({ itemName, compact }: Props) {
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <Btn type="submit" icon="star" disabled={!canSend || busy}>
-          {busy ? "מפרסם…" : "פרסם ביקורת"}
+        <Btn type="submit" icon="star" disabled={!canSend || !!busy}>
+          {busy === "photo" ? "מעלה תמונה…" : busy === "send" ? "מפרסם…" : "פרסם ביקורת"}
         </Btn>
         <button
           type="button"
           onClick={() => canSend && openMessage("mail")}
-          disabled={!canSend || busy}
+          disabled={!canSend || !!busy}
           className="text-sm text-ink-400 hover:text-flame transition-colors disabled:opacity-40"
         >
           או שלח לי במייל
