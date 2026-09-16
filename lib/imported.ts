@@ -309,6 +309,10 @@ export function importedProducts(): Product[] {
       colors: m.colors,
       ams: m.colors > 1,
       rating: 4.8,
+      // The raw figure is what orders the shelves (see lib/listing.ts); the
+      // divided-down `orders` stays only as a tie-break between models the
+      // source reports with the same download count.
+      downloads: m.downloads,
       orders: Math.round((m.downloads ?? 0) / 500),
       isNew: true,
       // CC-BY asks for the designer's name next to the work.

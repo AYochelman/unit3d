@@ -51,6 +51,8 @@ export type ListingCard = {
   pieces?: number;
   rating: number;
   orders: number;
+  /** Downloads on the source platform — what orders every shelf. */
+  downloads?: number;
   isNew?: boolean;
 };
 
@@ -78,6 +80,7 @@ export function productToCard(p: Product): ListingCard {
     pieces: p.pieces,
     rating: p.rating ?? 4.8,
     orders: p.orders ?? 0,
+    downloads: p.downloads,
     isNew: p.isNew,
   };
 }

@@ -368,6 +368,12 @@ export type Product = {
   /** Listing stats (demo counters until there is a backend). */
   rating?: number;
   orders?: number;
+  /**
+   * Downloads on the platform the model was published on. Real, unlike the two
+   * above — it is the designer's own figure — and it is what orders the
+   * shelves. Absent on anything the shop drew itself.
+   */
+  downloads?: number;
   /** Max colours offered (1 = single colour, 2-4 = AMS). Defaults to ams ? 2 : 1. */
   colors?: number;
   /**

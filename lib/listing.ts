@@ -15,6 +15,16 @@ export type ListingStats = {
    */
   rating: number;
   orders: number;
+  /**
+   * Downloads on the platform the model came from, as the designer's page
+   * reports them. This is the only number on a card that is measured rather
+   * than assigned, so it is what orders every shelf.
+   *
+   * Undefined means the shop drew it itself and there is no source page to
+   * count — those sit after everything with a figure, ordered among
+   * themselves by `orders`.
+   */
+  downloads?: number;
   /** Max colours the item is offered in (1 = single colour, 2-4 = AMS). */
   colors: number;
   isNew?: boolean;
@@ -29,9 +39,11 @@ export type ListingState = { sort: SortId; colors: ColorFilter; price: PriceFilt
 export const DEFAULT_LISTING: ListingState = { sort: "popular", colors: "all", price: "all" };
 
 // "הכי מוזמן" and "דירוג הכי גבוה" are gone with the numbers behind them:
-// a shop that has not sold yet cannot sort by how much it has sold.
+// a shop that has not sold yet cannot sort by how much it has sold. What it
+// CAN sort by is how many people downloaded each model where it was published,
+// which is a real count of other people's interest — so that is the default.
 export const SORTS: { id: SortId; label: string }[] = [
-  { id: "popular", label: "מומלצים" },
+  { id: "popular", label: "הכי פופולריים" },
   { id: "priceDesc", label: "מחיר: מהגבוה לנמוך" },
   { id: "priceAsc", label: "מחיר: מהנמוך לגבוה" },
   { id: "newest", label: "חדש באתר" },
@@ -64,16 +76,21 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
     return true;
   });
   /**
-   * "מומלצים", for a shop where most things have never been ordered.
+   * Every shelf runs on the source download count, highest first.
    *
-   * The score is orders-weighted, so anything with no orders scores zero and
-   * lands at the very bottom — behind every older product, on page two, where
-   * nobody looks. A product added today would therefore be invisible on its
-   * own shelf on the day it was added, which is the opposite of recommending.
-   * Something marked new goes to the front until it has numbers of its own.
+   * The score this replaces was `orders * (0.6 + rating / 5)`, where `orders`
+   * was the download count divided by 500 and rounded. That rounding did two
+   * things, both wrong: it flattened 15,600 and 15,900 into the same bucket,
+   * and it turned every model under 250 downloads into a zero — which then hit
+   * the `isNew` branch and jumped to the FRONT of the shelf. Since the import
+   * marks every model new, the 50 least-downloaded models led their own
+   * categories. Sorting on the raw figure removes both faults at once.
+   *
+   * `-1` for a missing count, not `0`: the shop's own designs have no source
+   * page to count, and they belong after everything that does — not tangled
+   * among models that were published and downloaded zero times.
    */
-  const popularity = (it: ListingStats) =>
-    it.orders ? it.orders * (0.6 + it.rating / 5) : it.isNew ? Number.MAX_SAFE_INTEGER : 0;
+  const rank = (it: ListingStats) => it.downloads ?? -1;
   out = [...out].sort((a, b) => {
     switch (s.sort) {
       case "priceDesc":
@@ -81,9 +98,9 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
       case "priceAsc":
         return a.price - b.price;
       case "newest":
-        return Number(!!b.isNew) - Number(!!a.isNew) || b.orders - a.orders;
+        return Number(!!b.isNew) - Number(!!a.isNew) || rank(b) - rank(a);
       default:
-        return popularity(b) - popularity(a);
+        return rank(b) - rank(a) || b.orders - a.orders;
     }
   });
   return out;
