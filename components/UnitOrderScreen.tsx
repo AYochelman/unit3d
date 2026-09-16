@@ -76,6 +76,16 @@ export default function UnitOrderScreen({
   // A fresh unit is a fresh decision, so the caller keys this on the slug and
   // React gives it new state — keeping the last one's answers would quietly
   // order the wrong thing.
+  /**
+   * Photographs that did not load, so the drawing takes over.
+   *
+   * A product can be given its photograph's path before the file itself is in
+   * the repository — that is how a real print gets onto its card without a
+   * round trip: the path is wired, the photo is uploaded later, and the card
+   * lights up on the next build. Until then a missing file must look like the
+   * old drawing and not like a broken image.
+   */
+  const [noPhoto, setNoPhoto] = useState<Record<string, true>>({});
   const [formId, setFormId] = useState<UnitFormId>("keychain");
   const [colorId, setColorId] = useState<string | null>(null);
   const [twoTone, setTwoTone] = useState(false);
@@ -221,7 +231,7 @@ export default function UnitOrderScreen({
                       )}
                     >
                       <span className="block relative aspect-[4/3] bg-ink-950/60 flex items-center justify-center overflow-hidden">
-                        {f.photo ? (
+                        {f.photo && !noPhoto[f.id] ? (
                           <Image
                             src={f.photo}
                             alt={f.label}
@@ -229,6 +239,7 @@ export default function UnitOrderScreen({
                             sizes="(max-width: 640px) 50vw, 200px"
                             className="object-cover"
                             unoptimized
+                            onError={() => setNoPhoto((m) => (m[f.id] ? m : { ...m, [f.id]: true }))}
                           />
                         ) : (
                           <ProductArt art={f.art} color={artColor(filament?.hex)} size={86} />
