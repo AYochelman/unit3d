@@ -31,8 +31,21 @@
 
 ### מה מתקינים (פעם אחת, שניהם חינם, Next-Next-Finish)
 
+**הדרך הקלה — פקודה אחת לכל אחד.** פותחים **Command Prompt** ומריצים:
+
+```
+winget install --id Git.Git -e --source winget
+winget install --id OpenJS.NodeJS.LTS -e --source winget
+```
+
+`winget` מובנה ב-Windows 10 ו-11. הוא מוריד, מתקין, **ומגדיר את ה-PATH נכון** —
+בלי מסכי מתקין ובלי אפשרות לבחור לא נכון. אם הוא מבקש אישור, לאשר.
+
+אם `winget` לא מוכר במחשב שלך, אז ידנית:
+
 1. **Node.js** — <https://nodejs.org> · הכפתור של **LTS**
-2. **Git** — <https://git-scm.com/download/win>
+2. **Git** — <https://git-scm.com/download/win> · במסך **Adjusting your PATH
+   environment** לבחור את **האפשרות האמצעית**, לא את הראשונה
 
 > **אחרי ההתקנה — לסגור את חלון ה-Command Prompt ולפתוח חדש.** חלון שכבר היה
 > פתוח לא מכיר תוכנות שהותקנו אחריו, ויענה
