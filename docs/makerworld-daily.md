@@ -46,8 +46,36 @@
 > node -v
 > ```
 >
-> שתי השורות צריכות להחזיר מספר גרסה. אם אחת מהן עדיין לא מוכרת — ההתקנה
-> שלה באמת לא עברה.
+> שתי השורות צריכות להחזיר מספר גרסה.
+
+### "התקנתי את Git והוא עדיין לא מוכר"
+
+זה לא אומר שההתקנה נכשלה. במתקין של Git יש מסך בשם **Adjusting your PATH
+environment** עם שלוש אפשרויות, והראשונה — *"Use Git from Git Bash only"* —
+**לא מוסיפה את git ל-Windows**. מי שלחץ Next על הכל עלול לקבל אותה.
+
+קודם תבדוק אם הוא בכלל שם. ב-Command Prompt:
+
+```
+"C:\Program Files\Git\cmd\git.exe" --version
+```
+
+| התשובה | המשמעות | התיקון |
+|---|---|---|
+| מחזיר מספר גרסה | מותקן, פשוט לא ב-PATH | להריץ את המתקין שוב ולבחור **באמצע**: *Git from the command line and also from 3rd-party software* |
+| "The system cannot find the path" | לא מותקן | להתקין מ-git-scm.com/download/win |
+
+**דרך עוקפת שעובדת מיד:** להקליק ימני על התיקייה שרוצים ולבחור **Git Bash
+Here**. זה חלון שמכיר את git תמיד. שם מריצים:
+
+```
+cd /g
+git clone https://github.com/AYochelman/unit3d.git
+```
+
+> הסקריפטים עצמם כבר לא תלויים בזה: `sync-daily.bat` ו-`first-time-setup.bat`
+> מחפשים את git גם במקומות שהמתקין משתמש בהם, ולא רק ב-PATH. אבל עדיף לתקן
+> את ה-PATH — כלים אחרים יצפו לו שם.
 
 ### מביאים את הפרויקט
 

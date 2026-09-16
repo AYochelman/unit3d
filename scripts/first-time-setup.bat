@@ -31,17 +31,38 @@ if errorlevel 1 (
 )
 for /f "delims=" %%v in ('node -v') do echo   [יש] Node.js %%v
 
+REM ── איפה git ────────────────────────────────────────────────────────────────
+REM  מתקין Git שבו נבחרה האפשרות "Use Git from Git Bash only" לא מוסיף את git
+REM  ל-PATH של Windows, ואז cmd עונה "'git' is not recognized" למרות שהוא
+REM  מותקן. במקום להיכשל, מחפשים אותו במקומות שהמתקין משתמש בהם.
+set "GIT=git"
 where git >nul 2>&1
 if errorlevel 1 (
-  echo   [חסר] Git לא מותקן, או שהחלון הזה נפתח לפני ההתקנה.
-  echo         להוריד מ- https://git-scm.com/download/win
-  echo         אחרי ההתקנה - לסגור את החלון הזה ולהריץ שוב. חלון שכבר היה
-  echo         פתוח לא מכיר תוכנה שהותקנה אחריו.
-  echo.
-  pause
-  exit /b 1
+  if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
 )
-for /f "delims=" %%v in ('git --version') do echo   [יש] %%v
+if errorlevel 1 (
+  if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "GIT=%ProgramFiles(x86)%\Git\cmd\git.exe"
+)
+if errorlevel 1 (
+  if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Programs\Git\cmd\git.exe"
+)
+
+if "%GIT%"=="git" (
+  where git >nul 2>&1
+  if errorlevel 1 (
+    echo   [חסר] Git לא נמצא.
+    echo.
+    echo         אם עוד לא התקנת: https://git-scm.com/download/win
+    echo         אם התקנת והוא עדיין לא מוכר - במתקין נבחרה האפשרות
+    echo         "Use Git from Git Bash only", שלא מוסיפה אותו ל-PATH.
+    echo         להריץ את המתקין שוב ולבחור באמצע:
+    echo         "Git from the command line and also from 3rd-party software".
+    echo.
+    pause
+    exit /b 1
+  )
+)
+for /f "delims=" %%v in ('%GIT% --version') do echo   [יש] %%v
 
 REM ── האם זו בכלל תיקיית עבודה של git ─────────────────────────────────────────
 REM  קובץ ZIP שהורידו מ-GitHub הוא לא עותק עבודה: אין בו .git, ולכן אי אפשר

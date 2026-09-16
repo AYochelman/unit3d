@@ -21,9 +21,25 @@ REM The signed-in browser profile. Created once by: npm run sync:collections -- 
 set MAKERWORLD_PROFILE_DIR=%~dp0..\data\mw-profile
 set LOG=%~dp0sync-daily.log
 
+REM ── איפה git ────────────────────────────────────────────────────────────────
+REM  מתקין Git שבו נבחרה האפשרות "Use Git from Git Bash only" לא מוסיף את git
+REM  ל-PATH של Windows, ואז cmd עונה "'git' is not recognized" למרות שהוא
+REM  מותקן. במקום להיכשל, מחפשים אותו במקומות שהמתקין משתמש בהם.
+set "GIT=git"
+where git >nul 2>&1
+if errorlevel 1 (
+  if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
+)
+if errorlevel 1 (
+  if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "GIT=%ProgramFiles(x86)%\Git\cmd\git.exe"
+)
+if errorlevel 1 (
+  if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Programs\Git\cmd\git.exe"
+)
+
 echo [%date% %time%] sync starting >> "%LOG%"
 
-call git pull --rebase origin main  >> "%LOG%" 2>&1
+call %GIT% pull --rebase origin main  >> "%LOG%" 2>&1
 call npm run sync:collections       >> "%LOG%" 2>&1
 
 REM A like is not a decision either: it goes to the same approval queue.
@@ -42,14 +58,14 @@ if errorlevel 1 (
   exit /b 1
 )
 
-git add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts ^
+%GIT% add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts ^
         data/makerworld-raw.json data/pending-models.json data/liked-models.json ^
         data/collections-status.json public/img/catalog  >> "%LOG%" 2>&1
 
-git diff --cached --quiet
+%GIT% diff --cached --quiet
 if errorlevel 1 (
-  git commit -m "MakerWorld: queue what was saved and liked"  >> "%LOG%" 2>&1
-  git push origin main                                        >> "%LOG%" 2>&1
+  %GIT% commit -m "MakerWorld: queue what was saved and liked"  >> "%LOG%" 2>&1
+  %GIT% push origin main                                      >> "%LOG%" 2>&1
   echo [%date% %time%] pushed >> "%LOG%"
 ) else (
   echo [%date% %time%] nothing new >> "%LOG%"
