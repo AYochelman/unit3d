@@ -25,21 +25,23 @@ REM ── איפה git ──────────────────�
 REM  מתקין Git שבו נבחרה האפשרות "Use Git from Git Bash only" לא מוסיף את git
 REM  ל-PATH של Windows, ואז cmd עונה "'git' is not recognized" למרות שהוא
 REM  מותקן. במקום להיכשל, מחפשים אותו במקומות שהמתקין משתמש בהם.
+REM
+REM  בלי סוגריים ובלי שרשור if: הנתיב של ProgramFiles(x86) מכיל ")" בעצמו,
+REM  ובתוך בלוק סוגריים הוא סוגר את הבלוק מוקדם. זאת מלכודת ותיקה של batch.
 set "GIT=git"
 where git >nul 2>&1
-if errorlevel 1 (
-  if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
-)
-if errorlevel 1 (
-  if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "GIT=%ProgramFiles(x86)%\Git\cmd\git.exe"
-)
-if errorlevel 1 (
-  if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Programs\Git\cmd\git.exe"
-)
+if not errorlevel 1 goto :git_ok
+if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
+if not "%GIT%"=="git" goto :git_ok
+set "PF86=%ProgramFiles(x86)%"
+if exist "%PF86%\Git\cmd\git.exe" set "GIT=%PF86%\Git\cmd\git.exe"
+if not "%GIT%"=="git" goto :git_ok
+if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Programs\Git\cmd\git.exe"
+:git_ok
 
 echo [%date% %time%] sync starting >> "%LOG%"
 
-call %GIT% pull --rebase origin main  >> "%LOG%" 2>&1
+call "%GIT%" pull --rebase origin main  >> "%LOG%" 2>&1
 call npm run sync:collections       >> "%LOG%" 2>&1
 
 REM A like is not a decision either: it goes to the same approval queue.
@@ -58,14 +60,14 @@ if errorlevel 1 (
   exit /b 1
 )
 
-%GIT% add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts ^
+"%GIT%" add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts ^
         data/makerworld-raw.json data/pending-models.json data/liked-models.json ^
         data/collections-status.json public/img/catalog  >> "%LOG%" 2>&1
 
-%GIT% diff --cached --quiet
+"%GIT%" diff --cached --quiet
 if errorlevel 1 (
-  %GIT% commit -m "MakerWorld: queue what was saved and liked"  >> "%LOG%" 2>&1
-  %GIT% push origin main                                      >> "%LOG%" 2>&1
+  "%GIT%" commit -m "MakerWorld: queue what was saved and liked"  >> "%LOG%" 2>&1
+  "%GIT%" push origin main                                      >> "%LOG%" 2>&1
   echo [%date% %time%] pushed >> "%LOG%"
 ) else (
   echo [%date% %time%] nothing new >> "%LOG%"

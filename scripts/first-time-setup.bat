@@ -35,17 +35,19 @@ REM ── איפה git ──────────────────�
 REM  מתקין Git שבו נבחרה האפשרות "Use Git from Git Bash only" לא מוסיף את git
 REM  ל-PATH של Windows, ואז cmd עונה "'git' is not recognized" למרות שהוא
 REM  מותקן. במקום להיכשל, מחפשים אותו במקומות שהמתקין משתמש בהם.
+REM
+REM  בלי סוגריים ובלי שרשור if: הנתיב של ProgramFiles(x86) מכיל ")" בעצמו,
+REM  ובתוך בלוק סוגריים הוא סוגר את הבלוק מוקדם. זאת מלכודת ותיקה של batch.
 set "GIT=git"
 where git >nul 2>&1
-if errorlevel 1 (
-  if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
-)
-if errorlevel 1 (
-  if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "GIT=%ProgramFiles(x86)%\Git\cmd\git.exe"
-)
-if errorlevel 1 (
-  if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Programs\Git\cmd\git.exe"
-)
+if not errorlevel 1 goto :git_ok
+if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
+if not "%GIT%"=="git" goto :git_ok
+set "PF86=%ProgramFiles(x86)%"
+if exist "%PF86%\Git\cmd\git.exe" set "GIT=%PF86%\Git\cmd\git.exe"
+if not "%GIT%"=="git" goto :git_ok
+if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Programs\Git\cmd\git.exe"
+:git_ok
 
 if "%GIT%"=="git" (
   where git >nul 2>&1
@@ -62,7 +64,7 @@ if "%GIT%"=="git" (
     exit /b 1
   )
 )
-for /f "delims=" %%v in ('%GIT% --version') do echo   [יש] %%v
+for /f "delims=" %%v in ('"%GIT%" --version') do echo   [יש] %%v
 
 REM ── האם זו בכלל תיקיית עבודה של git ─────────────────────────────────────────
 REM  קובץ ZIP שהורידו מ-GitHub הוא לא עותק עבודה: אין בו .git, ולכן אי אפשר
