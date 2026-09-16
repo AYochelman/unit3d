@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מודלים חדשים מהאוספים — מדריך הפעלה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&display=swap">
+<style>
+  :root{
+    --bg:#0d0f10; --card:#15181a; --card2:#1b1f22; --line:#272c30;
+    --ink:#eef1f2; --dim:#9aa3a8; --faint:#697277;
+    --flame:#ff6a2b; --green:#2fbf6b; --cyan:#31c3d6; --amber:#e8b23a;
+    --mono:ui-monospace,"JetBrains Mono","Cascadia Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); direction:rtl;
+    font-family:"Assistant","Segoe UI","Arial Hebrew",Arial,sans-serif;
+    line-height:1.7; font-size:16.5px;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:36px 20px 80px}
+
+  h1{font-family:"Secular One",sans-serif; font-size:clamp(27px,5.5vw,40px);
+     margin:0 0 8px; letter-spacing:-.5px; line-height:1.2}
+  .lede{color:var(--dim); font-size:17px; margin:0 0 8px}
+  .lede strong{color:var(--ink)}
+
+  h2{font-family:"Secular One",sans-serif; font-size:23px; margin:44px 0 6px;
+     padding-top:16px; border-top:1px solid var(--line); letter-spacing:-.3px}
+  h3{font-size:17.5px; margin:22px 0 6px}
+
+  p{margin:10px 0}
+  ul,ol{padding-inline-start:24px; margin:10px 0}
+  li{margin:7px 0}
+  .muted{color:var(--dim)}
+  .faint{color:var(--faint); font-size:14.5px}
+
+  /* --- code, paths, anything Latin --- */
+  code{
+    direction:ltr; unicode-bidi:isolate; display:inline-block;
+    font-family:var(--mono); font-size:.85em; line-height:1.5;
+    background:#090b0c; border:1px solid var(--line); border-radius:5px;
+    padding:1px 7px; color:var(--cyan); white-space:nowrap;
+  }
+  code.path{color:var(--amber)}
+  pre{
+    direction:ltr; text-align:left; overflow-x:auto;
+    background:#090b0c; border:1px solid var(--line); border-radius:10px;
+    padding:14px 16px; margin:12px 0;
+    font-family:var(--mono); font-size:14px; line-height:1.75; color:#d8dee2;
+  }
+  pre b{color:var(--cyan); font-weight:600}
+
+  /* --- step cards --- */
+  .step{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:16px; margin:20px 0; overflow:hidden;
+  }
+  .step-head{
+    display:flex; align-items:center; gap:13px;
+    padding:15px 18px; background:var(--card2); border-bottom:1px solid var(--line);
+  }
+  .step-num{
+    flex:none; width:34px; height:34px; border-radius:50%;
+    background:var(--flame); color:#0d0f10;
+    font-family:"Secular One",sans-serif; font-size:17px;
+    display:grid; place-items:center;
+  }
+  .step-title{font-family:"Secular One",sans-serif; font-size:19px; letter-spacing:-.2px}
+  .step-body{padding:6px 18px 18px}
+
+  .row{
+    display:flex; gap:12px; padding:13px 0;
+    border-bottom:1px dashed #22272a; align-items:flex-start;
+  }
+  .row:last-of-type{border-bottom:0}
+  .row-k{
+    flex:none; width:118px; color:var(--faint);
+    font-size:13px; font-weight:600; padding-top:3px;
+    text-transform:uppercase; letter-spacing:.3px;
+  }
+  .row-v{flex:1; min-width:0}
+  .row-v p:first-child{margin-top:0}
+  .row-v p:last-child{margin-bottom:0}
+
+  .check{
+    background:rgba(47,191,107,.07); border:1px solid rgba(47,191,107,.28);
+    border-radius:11px; padding:13px 15px; margin:14px 0 2px;
+  }
+  .check .t{color:var(--green); font-weight:700; font-size:14px;
+            letter-spacing:.3px; margin-bottom:5px}
+  .warn{
+    background:rgba(232,178,58,.07); border:1px solid rgba(232,178,58,.3);
+    border-radius:11px; padding:13px 15px; margin:14px 0;
+  }
+  .warn .t{color:var(--amber); font-weight:700; font-size:14px;
+           letter-spacing:.3px; margin-bottom:5px}
+  .note{
+    background:rgba(49,195,214,.06); border:1px solid rgba(49,195,214,.26);
+    border-radius:11px; padding:13px 15px; margin:14px 0;
+  }
+  .note .t{color:var(--cyan); font-weight:700; font-size:14px;
+           letter-spacing:.3px; margin-bottom:5px}
+  .check p:last-child,.warn p:last-child,.note p:last-child{margin-bottom:0}
+  .check p:first-of-type,.warn p:first-of-type,.note p:first-of-type{margin-top:0}
+
+  /* --- tables --- */
+  .tblwrap{overflow-x:auto; margin:14px 0;
+           border:1px solid var(--line); border-radius:12px}
+  table{border-collapse:collapse; width:100%; font-size:15px; min-width:520px}
+  th,td{text-align:right; padding:11px 14px; vertical-align:top;
+        border-bottom:1px solid var(--line)}
+  tr:last-child td{border-bottom:0}
+  th{background:var(--card2); color:var(--faint); font-size:12.5px;
+     font-weight:700; text-transform:uppercase; letter-spacing:.5px}
+  td:first-child{font-weight:600}
+
+  /* --- file map --- */
+  .map{
+    background:#090b0c; border:1px solid var(--line); border-radius:12px;
+    padding:16px; margin:14px 0; overflow-x:auto;
+  }
+  .map table{min-width:0; font-size:14.5px}
+  .map th,.map td{border-bottom:1px solid #1a1e21; padding:8px 12px}
+  .map td:first-child{font-weight:400}
+
+  .kbd{
+    display:inline-block; font-family:var(--mono); font-size:12.5px;
+    background:#22282c; border:1px solid #363d42; border-bottom-width:2px;
+    border-radius:5px; padding:1px 7px; color:#dfe5e8;
+  }
+  .screen{
+    background:#000; border:1px solid #2e3538; border-radius:8px;
+    padding:11px 14px; margin:10px 0; direction:ltr; text-align:left;
+    font-family:var(--mono); font-size:13.5px; color:#c8ced2; line-height:1.6;
+    overflow-x:auto; white-space:pre-wrap;
+  }
+  .screen .ok{color:var(--green)}
+  .screen .bad{color:#ff6b6b}
+
+  .toc{background:var(--card); border:1px solid var(--line);
+       border-radius:14px; padding:16px 20px; margin:22px 0}
+  .toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid transparent}
+  .toc a:hover{border-bottom-color:var(--flame); color:var(--flame)}
+  .toc ol{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>מודלים חדשים מהאוספים — מדריך הפעלה</h1>
+<p class="lede">
+  <strong>המטרה:</strong> מודל שאתה שומר לאוסף במייקרוורלד בערב — מחכה לך לאישור
+  באתר למחרת בבוקר. אתה רק מאשר.
+</p>
+<p class="lede">
+  <strong>מה נדרש ממך:</strong> חמישה שלבים, פעם אחת בחיים, כ-20 דקות בסך הכל.
+  מכאן והלאה זה רץ לבד.
+</p>
+
+<div class="toc">
+  <strong>מה יש כאן</strong>
+  <ol>
+    <li><a href="#tools">הכלים — איזו תוכנה, ואיך פותחים אותה</a></li>
+    <li><a href="#map">המפה — איפה כל קובץ יושב</a></li>
+    <li><a href="#why">למה זה רץ על המחשב שלך</a></li>
+    <li><a href="#steps">חמשת השלבים</a></li>
+    <li><a href="#daily">מה קורה מכאן, כל יום</a></li>
+    <li><a href="#trouble">כשמשהו לא עובד</a></li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="tools">1 · הכלים — איזו תוכנה, ואיך פותחים אותה</h2>
+
+<p>בכל המדריך משתמשים בחמש תוכנות בלבד. <strong>כולן כבר מותקנות אצלך</strong>
+(חוץ מהדפדפן שגם הוא כמובן מותקן). זאת הטבלה שאליה כדאי לחזור בכל פעם שכתוב
+"פתח X":</p>
+
+<div class="tblwrap">
+<table>
+  <thead><tr><th>התוכנה</th><th>איך פותחים אותה</th><th>איך היא נראית</th><th>בשביל מה</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Command&nbsp;Prompt<br><span class="faint">"שורת הפקודה"</span></td>
+      <td>מקש <span class="kbd">⊞ Windows</span> ← להקליד <code>cmd</code> ← <span class="kbd">Enter</span></td>
+      <td>חלון שחור עם שורת טקסט לבנה</td>
+      <td>שלבים 1 ו-2 — התקנה והורדת הפרויקט</td>
+    </tr>
+    <tr>
+      <td>File&nbsp;Explorer<br><span class="faint">"סייר הקבצים"</span></td>
+      <td><span class="kbd">⊞ Windows</span> + <span class="kbd">E</span><br><span class="faint">או אייקון התיקייה הצהובה בשורת המשימות</span></td>
+      <td>חלון תיקיות רגיל</td>
+      <td>שלבים 3 ו-4 — הקלקה כפולה על קבצים</td>
+    </tr>
+    <tr>
+      <td>Task&nbsp;Scheduler<br><span class="faint">"מתזמן המשימות"</span></td>
+      <td>מקש <span class="kbd">⊞ Windows</span> ← להקליד <code>Task Scheduler</code> ← <span class="kbd">Enter</span></td>
+      <td>חלון מחולק לשלוש עמודות</td>
+      <td>שלב 5 — לקבוע שזה ירוץ כל בוקר</td>
+    </tr>
+    <tr>
+      <td>דפדפן<br><span class="faint">כרום / אדג'</span></td>
+      <td>כרגיל</td>
+      <td>—</td>
+      <td>שלב 4 (התחברות) ואישור יומי</td>
+    </tr>
+    <tr>
+      <td>Notepad<br><span class="faint">"פנקס רשימות"</span></td>
+      <td>הקלקה ימנית על הקובץ ← <strong>Open with</strong> ← <strong>Notepad</strong></td>
+      <td>חלון טקסט לבן פשוט</td>
+      <td>לקרוא את היומן כשמשהו לא עובד</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <div class="t">מונח אחד שכדאי להכיר</div>
+  <p><strong>"להקליד ב-Command Prompt"</strong> = לכתוב את השורה בחלון השחור
+  וללחוץ <span class="kbd">Enter</span>. אפשר גם להעתיק ולהדביק: להעתיק מכאן
+  עם <span class="kbd">Ctrl</span>+<span class="kbd">C</span>, ובחלון השחור
+  ללחוץ <strong>הקלקה ימנית</strong> — זה מדביק. (<span class="kbd">Ctrl</span>+<span class="kbd">V</span>
+  עובד גם בגרסאות חדשות.)</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="map">2 · המפה — איפה כל קובץ יושב</h2>
+
+<p>בסוף שלב 2 תיווצר במחשב תיקייה אחת:
+<code class="path">G:\unit3d</code>. זה כל הפרויקט. אלה הקבצים
+היחידים שתצטרך אי פעם לגעת בהם:</p>
+
+<div class="map">
+<table>
+  <tbody>
+    <tr><td><code class="path">G:\unit3d\scripts\first-time-setup.bat</code></td>
+        <td>הקלקה כפולה — <strong>פעם אחת</strong>, שלב 3</td></tr>
+    <tr><td><code class="path">G:\unit3d\scripts\mw-login.bat</code></td>
+        <td>הקלקה כפולה — <strong>פעם אחת</strong>, שלב 4<br><span class="faint">ושוב, רק אם ההתחברות תתנתק יום אחד</span></td></tr>
+    <tr><td><code class="path">G:\unit3d\scripts\sync-daily.bat</code></td>
+        <td>זה מה שרץ לבד כל בוקר. <strong>אתה לא נוגע בו</strong> — רק מצביע עליו בשלב 5</td></tr>
+    <tr><td><code class="path">G:\unit3d\scripts\sync-daily.log</code></td>
+        <td><strong>היומן.</strong> מה הריצה האחרונה אמרה. הקובץ הראשון לפתוח כשמשהו לא עובד</td></tr>
+    <tr><td><code class="path">G:\unit3d\data\collections-status.json</code></td>
+        <td>מה הריצה <em>ראתה</em> במייקרוורלד — אילו אוספים, כמה מודלים, מה נחסם</td></tr>
+    <tr><td><code class="path">G:\unit3d\data\mw-profile\</code></td>
+        <td>כאן נשמרת ההתחברות שלך למייקרוורלד. לא לפתוח, לא למחוק</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="warn">
+  <div class="t">⚠ התיקייה הישנה היא לא הפרויקט</div>
+  <p>יש אצלך <code class="path">G:\Unit 3D</code> — עם רווח ובאותיות גדולות.
+  יש בה שני קבצים מ-4.9; בפרויקט האמיתי יש בתיקיית <code>scripts</code> לבדה 25.
+  זה עותק ישן וחלקי.</p>
+  <p><strong>אל תעבוד בה ואל תריץ ממנה כלום.</strong> הפרויקט האמיתי ייווצר
+  בשלב 2 ויקרא <code class="path">G:\unit3d</code> — <em>בלי</em> רווח,
+  באותיות קטנות. שתי תיקיות שונות לגמרי.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="why">3 · למה זה רץ על המחשב שלך ולא בענן</h2>
+
+<p>שאלה הוגנת, ומגיעה לה תשובה ישרה.</p>
+
+<p>הכל <strong>כבר בנוי בענן</strong>. יש ב-GitHub תהליך אוטומטי שרץ פעמיים
+ביום, והחיבור שלך למייקרוורלד שמור שם. הוא רץ כל לילה, מדווח שהוא מחובר
+בהצלחה — ומיד אחרי זה נחסם על כל שמונת האוספים.</p>
+
+<p><strong>זאת לא בעיית הרשאות. זאת בעיית כתובת.</strong></p>
+
+<p>Cloudflare — שירות האבטחה שמייקרוורלד משתמשת בו — מציגה אתגר אבטחה
+("Just a moment…") לעמודי האוספים כשהבקשה מגיעה מכתובת של מרכז נתונים.
+בדקתי שתי דרכים כאלה: את השרתים של GitHub, ושירות דפדפן מארח בתשלום.
+שתיהן נחסמו. <strong>מה שלא נחסם זה חיבור ביתי רגיל</strong> — המחשב שלך,
+דרך ספק האינטרנט שלך.</p>
+
+<p>לכן הסנכרון עובר לרוץ אצלך. אין דרך עוקפת; זה לא עניין של להתאמץ יותר.</p>
+
+<p class="faint">התהליך ב-GitHub נשאר דלוק. הוא לא מזיק, הוא רושם מה קרה, ואם
+Cloudflare תפסיק לחסום כתובות שרתים — הוא יחזור לעבוד לבד והמשימה במחשב
+תהפוך למיותרת. עד אז, המשימה במחשב היא מה שעובד.</p>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="steps">4 · חמשת השלבים</h2>
+
+<!-- ── STEP 1 ─────────────────────────── -->
+<div class="step">
+  <div class="step-head">
+    <div class="step-num">1</div>
+    <div class="step-title">להתקין שתי תוכנות</div>
+  </div>
+  <div class="step-body">
+
+    <div class="row">
+      <div class="row-k">באיזו תוכנה</div>
+      <div class="row-v"><strong>Command Prompt</strong><br>
+        <span class="faint">מקש <span class="kbd">⊞ Windows</span> ← להקליד <code>cmd</code> ← <span class="kbd">Enter</span></span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה תראה</div>
+      <div class="row-v">חלון שחור. בשורה האחרונה משהו כמו:
+        <div class="screen">C:\Users\Alon&gt;_</div>
+        <span class="faint">הסמן מהבהב אחרי הסימן <code>&gt;</code>. שם מקלידים.</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה מקלידים</div>
+      <div class="row-v">
+        <p>שורה ראשונה, ואז <span class="kbd">Enter</span>. לחכות שתסתיים, ואז השנייה:</p>
+<pre>winget install --id Git.Git -e --source winget
+winget install --id OpenJS.NodeJS.LTS -e --source winget</pre>
+        <p class="faint">אם Windows שואל אם לאשר — לאשר.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה תראה תוך כדי</div>
+      <div class="row-v">
+        <div class="screen">Found Git [Git.Git] Version 2.47.0
+Downloading https://github.com/git-for-windows/...
+  ██████████████████████████████  65.2 MB / 65.2 MB
+Successfully installed<span class="ok"> ✓</span></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה זה בכלל</div>
+      <div class="row-v">
+        <p><strong>Git</strong> — מה שמוריד את הפרויקט למחשב ומחזיר אליו שינויים.<br>
+        <strong>Node.js</strong> — מה שמריץ בפועל את הסקריפט של הסנכרון.<br>
+        <strong>winget</strong> — מנהל ההתקנות המובנה של Windows. הוא מוריד,
+        מתקין <em>ומגדיר נכון</em> — בלי מסכי מתקין ובלי אפשרות לבחור לא נכון.</p>
+      </div>
+    </div>
+
+    <div class="check">
+      <div class="t">✅ איך יודעים שהצליח</div>
+      <p><strong>קודם כל: לסגור את החלון השחור, ולפתוח חלון חדש.</strong>
+      (למה — ראה "החלון ישן" בסוף המדריך. זאת התקלה הכי נפוצה.)</p>
+      <p>בחלון <strong>החדש</strong> להקליד, שורה אחרי שורה:</p>
+<pre>git --version
+node -v</pre>
+      <p>אמור לחזור:</p>
+      <div class="screen"><span class="ok">git version 2.47.0.windows.1</span>
+<span class="ok">v22.11.0</span></div>
+      <p>אם שתיהן החזירו מספר — שלב 1 הושלם.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── STEP 2 ─────────────────────────── -->
+<div class="step">
+  <div class="step-head">
+    <div class="step-num">2</div>
+    <div class="step-title">להוריד את הפרויקט למחשב</div>
+  </div>
+  <div class="step-body">
+
+    <div class="row">
+      <div class="row-k">באיזו תוכנה</div>
+      <div class="row-v"><strong>Command Prompt</strong> — אותו חלון חדש מהבדיקה הקודמת</div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה מקלידים</div>
+      <div class="row-v">
+        <p>ארבע שורות, אחת אחרי השנייה, <span class="kbd">Enter</span> בין כל אחת:</p>
+<pre>G:
+cd \
+git clone https://github.com/AYochelman/unit3d.git
+cd unit3d</pre>
+        <p class="faint">
+          <code>G:</code> — לעבור לכונן G.<br>
+          <code>cd \</code> — לעלות לשורש הכונן.<br>
+          <code>git clone …</code> — להוריד את הפרויקט.<br>
+          <code>cd unit3d</code> — להיכנס לתיקייה שנוצרה.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה תראה</div>
+      <div class="row-v">
+        <div class="screen">Cloning into 'unit3d'...
+remote: Enumerating objects: 4821, done.
+Receiving objects: 100% (4821/4821), 68.4 MiB | 9.2 MiB/s, done.
+Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
+        <p class="faint">בפעם הראשונה ייתכן שייפתח חלון דפדפן שמבקש להתחבר
+        ל-GitHub — להתחבר. הוא זוכר מכאן והלאה.</p>
+      </div>
+    </div>
+
+    <div class="check">
+      <div class="t">✅ איך יודעים שהצליח</div>
+      <p>לפתוח <strong>File Explorer</strong>
+      (<span class="kbd">⊞ Windows</span> + <span class="kbd">E</span>)
+      וללכת ל-<code class="path">G:\unit3d</code>.</p>
+      <p>אמורות להיות שם תיקיות בשמות
+      <code>app</code>, <code>components</code>, <code>lib</code>,
+      <code>scripts</code>, <code>docs</code> ועוד.</p>
+      <p>אם התיקייה <code>scripts</code> מכילה יותר מ-20 קבצים — זה הפרויקט הנכון.</p>
+    </div>
+
+    <div class="warn">
+      <div class="t">⚠ למה לא פשוט להוריד ZIP מ-GitHub</div>
+      <p>קובץ ZIP נראה זהה, אבל חסר בו החלק ששומר קשר ל-GitHub. בלעדיו
+      אי אפשר למשוך עדכונים ואי אפשר לדחוף חזרה — והסנכרון היומי עושה
+      את שניהם. חייבים <code>git clone</code> אמיתי.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── STEP 3 ─────────────────────────── -->
+<div class="step">
+  <div class="step-head">
+    <div class="step-num">3</div>
+    <div class="step-title">התקנה ראשונית של הפרויקט</div>
+  </div>
+  <div class="step-body">
+
+    <div class="row">
+      <div class="row-k">באיזו תוכנה</div>
+      <div class="row-v"><strong>File Explorer</strong> — לא צריך יותר את החלון השחור</div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">לאיזו תיקייה</div>
+      <div class="row-v"><code class="path">G:\unit3d\scripts</code></div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה עושים</div>
+      <div class="row-v"><strong>הקלקה כפולה</strong> על הקובץ
+        <code>first-time-setup.bat</code></div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה תראה</div>
+      <div class="row-v">
+        <p>נפתח חלון שחור עם טקסט בעברית. הוא רץ 3–5 דקות בפעם הראשונה,
+        ומדפיס שורות תוך כדי. מה שהוא עושה:</p>
+        <ol>
+          <li>בודק ש-Node ו-Git נמצאים — ואם לא, אומר <strong>בדיוק</strong> מה חסר</li>
+          <li>בודק שזה הורד כמו שצריך ולא כ-ZIP</li>
+          <li>מתקין את כל מה שהפרויקט צריך</li>
+          <li>מתקין את הדפדפן שהסנכרון משתמש בו</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="check">
+      <div class="t">✅ איך יודעים שהצליח</div>
+      <p>בסוף החלון כותב:</p>
+      <div class="screen"><span class="ok">  ================================================
+    מוכן. השלב הבא: scripts\mw-login.bat
+  ================================================</span></div>
+      <p>אם כתוב משהו אחר — מה שכתוב שם <em>הוא</em> הסיבה, והוא כתוב בעברית.
+      לתקן ולהריץ שוב. אפשר להריץ את הקובץ הזה כמה פעמים שרוצים; הוא לא שובר כלום.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── STEP 4 ─────────────────────────── -->
+<div class="step">
+  <div class="step-head">
+    <div class="step-num">4</div>
+    <div class="step-title">להתחבר למייקרוורלד</div>
+  </div>
+  <div class="step-body">
+
+    <div class="row">
+      <div class="row-k">באיזו תוכנה</div>
+      <div class="row-v"><strong>File Explorer</strong>, ואז <strong>דפדפן</strong> שייפתח לבד</div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">לאיזו תיקייה</div>
+      <div class="row-v"><code class="path">G:\unit3d\scripts</code> — אותה תיקייה</div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה עושים</div>
+      <div class="row-v">
+        <p><strong>הקלקה כפולה</strong> על <code>mw-login.bat</code>, ואז:</p>
+        <ol>
+          <li>נפתח חלון שחור שכותב <em>"נפתח דפדפן. תתחבר למייקרוורלד…"</em></li>
+          <li>אחריו נפתח חלון דפדפן על עמוד ההתחברות של מייקרוורלד</li>
+          <li><strong>להתחבר כרגיל</strong> — אותו שם משתמש וסיסמה שאתה תמיד משתמש בהם</li>
+          <li>כשאתה בפנים ורואה את הפרופיל שלך — <strong>לחזור לחלון השחור</strong>
+              וללחוץ <span class="kbd">Enter</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">שים לב</div>
+      <div class="row-v">
+        <p>הדפדפן שנפתח הוא <strong>לא הכרום הרגיל שלך</strong>. זה חלון נפרד
+        שנראה כמו כרום נקי, בלי הסימניות וההיסטוריה שלך. <strong>זה תקין</strong>
+        — הוא צריך פרופיל משלו.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">איפה זה נשמר</div>
+      <div class="row-v">
+        <p><code class="path">G:\unit3d\data\mw-profile</code></p>
+        <p>הסנכרון היומי פותח את אותו פרופיל בדיוק, ולכן הוא תמיד מחובר —
+        מייקרוורלד מרעננת לו את החיבור כמו לכל משתמש שגולש באתר.
+        <strong>אין טוקן להדביק, ואין שום דבר שיפוג ויצטרך חידוש חודשי.</strong></p>
+        <p class="faint">התיקייה הזאת לא עולה ל-GitHub. ההתחברות שלך לא מגיעה
+        אליי ולא עוזבת את המחשב שלך.</p>
+      </div>
+    </div>
+
+    <div class="check">
+      <div class="t">✅ איך יודעים שהצליח</div>
+      <p>בחלון השחור מופיע:</p>
+      <div class="screen"><span class="ok">  ההתחברות נשמרה. מעכשיו כל הרצה כבר מחוברת.</span></div>
+      <p>אם יום אחד בכל זאת תתנתק — מריצים שוב את אותו קובץ. זה כל התיקון.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── STEP 5 ─────────────────────────── -->
+<div class="step">
+  <div class="step-head">
+    <div class="step-num">5</div>
+    <div class="step-title">לקבוע שזה ירוץ כל בוקר</div>
+  </div>
+  <div class="step-body">
+
+    <div class="row">
+      <div class="row-k">באיזו תוכנה</div>
+      <div class="row-v"><strong>Task Scheduler</strong><br>
+        <span class="faint">מקש <span class="kbd">⊞ Windows</span> ← להקליד
+        <code>Task Scheduler</code> ← <span class="kbd">Enter</span></span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה תראה</div>
+      <div class="row-v">
+        <p>חלון מחולק לשלוש עמודות:</p>
+        <ul>
+          <li><strong>שמאל</strong> — עץ תיקיות (<em>Task Scheduler Library</em>)</li>
+          <li><strong>אמצע</strong> — רשימת המשימות הקיימות</li>
+          <li><strong>ימין</strong> — עמודה בשם <strong>Actions</strong>. <em>שם הכפתור שאנחנו צריכים.</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-k">מה עושים</div>
+      <div class="row-v">
+        <p>בעמודת <strong>Actions</strong> (בצד), ללחוץ על <strong>Create Task…</strong></p>
+        <div class="warn" style="margin:10px 0">
+          <div class="t">⚠ לא "Create Basic Task"</div>
+          <p>יש שם שני כפתורים דומים. <strong>Create Basic Task</strong> הוא אשף
+          מקוצר שחסר בו השדה הקריטי. צריך את <strong>Create Task…</strong> — בלי
+          המילה Basic.</p>
+        </div>
+        <p>נפתח חלון עם לשוניות בראש. ממלאים שלוש מהן:</p>
+      </div>
+    </div>
+
+    <div class="tblwrap">
+    <table>
+      <thead><tr><th>לשונית</th><th>שדה</th><th>מה למלא</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2">General</td>
+            <td>Name</td><td><code>Unit3D MakerWorld Sync</code></td></tr>
+        <tr><td>תיבת סימון</td><td>לסמן ✅ <strong>Run whether user is logged on or not</strong></td></tr>
+
+        <tr><td rowspan="3">Triggers<br><span class="faint">← New…</span></td>
+            <td>Begin the task</td><td><code>On a schedule</code></td></tr>
+        <tr><td>תדירות</td><td><strong>Daily</strong></td></tr>
+        <tr><td>שעה</td><td><strong>07:45</strong> ← ואז <strong>OK</strong></td></tr>
+
+        <tr><td rowspan="3">Actions<br><span class="faint">← New…</span></td>
+            <td>Action</td><td><code>Start a program</code></td></tr>
+        <tr><td>Program/script</td><td><code class="path">G:\unit3d\scripts\sync-daily.bat</code></td></tr>
+        <tr><td>Start in (optional)</td><td><code class="path">G:\unit3d</code> ← ואז <strong>OK</strong></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>ואז <strong>OK</strong> לסגירת החלון כולו. ייתכן שיבקש את סיסמת המשתמש
+    של Windows — זה תקין, ונדרש בגלל התיבה שסימנו ב-General.</p>
+
+    <div class="warn">
+      <div class="t">⚠ השדה היחיד שאנשים מפספסים: "Start in"</div>
+      <p>הוא מסומן <em>optional</em> ולכן קל לדלג עליו. אבל בלעדיו המשימה רצה
+      מתיקייה אחרת, לא מוצאת את הפרויקט, <strong>ונכשלת בשקט</strong> — בלי
+      הודעת שגיאה, בלי כלום.</p>
+      <p>שים לב גם שהוא <code class="path">G:\unit3d</code>
+      ו<strong>לא</strong> <code class="path">G:\unit3d\scripts</code> —
+      שונה מהשדה שמעליו. זה מכוון.</p>
+    </div>
+
+    <div class="check">
+      <div class="t">✅ איך יודעים שהצליח — בלי לחכות למחר</div>
+      <p>ברשימה שבאמצע החלון, למצוא את <strong>Unit3D MakerWorld Sync</strong>,
+      <strong>הקלקה ימנית</strong> עליו ← <strong>Run</strong>.</p>
+      <p>לחכות 1–2 דקות. ואז לפתוח ב-<strong>Notepad</strong> את הקובץ:</p>
+      <p><code class="path">G:\unit3d\scripts\sync-daily.log</code></p>
+      <p class="faint">(File Explorer ← הקלקה ימנית על הקובץ ← Open with ← Notepad)</p>
+      <p>אמורות להיות שם שורות עם התאריך והשעה של עכשיו. מה כתוב בשורה
+      האחרונה — <a href="#logtable">בטבלה בהמשך</a>.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="daily">5 · מה קורה מכאן, כל יום</h2>
+
+<p>כל בוקר ב-07:45, לבד, בלי שתעשה כלום:</p>
+
+<ol>
+  <li>מושך את הגרסה האחרונה של הפרויקט</li>
+  <li>קורא את <strong>כל האוספים</strong> ואת <strong>הלייקים</strong> שלך במייקרוורלד</li>
+  <li>מוסיף כל מודל שעוד לא בחנות לתור האישור</li>
+  <li>מוריד את התמונות שלו, מחשב משקל, זמן הדפסה ומחיר</li>
+  <li>בודק שהקוד תקין — ואם לא, לא דוחף כלום</li>
+  <li>דוחף, והאתר נבנה מחדש לבד</li>
+</ol>
+
+<p><strong>ואתה, דקה ביום:</strong> נכנס בדפדפן לאתר ← <code>/admin</code>
+← הלשונית <strong>"מודלים לאישור"</strong>, ומאשר מה שרוצה.</p>
+
+<h3>מה זה עושה, ומה זה במכוון לא עושה</h3>
+
+<div class="tblwrap">
+<table>
+  <thead><tr><th style="color:var(--green)">✅ עושה</th><th style="color:#ff6b6b">❌ לא עושה</th></tr></thead>
+  <tbody>
+    <tr><td>קורא אוספים ולייקים</td><td><strong>לא מאשר מודלים</strong></td></tr>
+    <tr><td>מוסיף לתור האישור</td><td>לא מחליט על מדף סופי</td></tr>
+    <tr><td>מוריד תמונות</td><td>לא מעלה לחנות בלי לחיצה שלך</td></tr>
+    <tr><td>מחשב משקל, זמן הדפסה ומחיר</td><td></td></tr>
+    <tr><td>זורק רישיון לא-מסחרי ופריטי נשק</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>האישור נשאר שלך, וזה בכוונה.</strong> באישור של מודל יש שתי החלטות:
+אם למכור אותו בכלל, ובאיזה מדף. סקריפט שמחליט אותן בשמך מנחש בשתיהן — ואתה
+מגלה את התוצאה מול לקוח.</p>
+
+<p>מה שכן: המודל מגיע אליך <strong>מוכן לגמרי</strong> — שם בעברית, מדף מוצע,
+משקל, זמן הדפסה, מחיר מחושב ותמונות. לא נשאר לך אלא קליק.</p>
+
+<h3>להריץ ידנית עכשיו</h3>
+<p>שמרת משהו לאוסף ואתה לא רוצה לחכות לבוקר?
+<strong>File Explorer</strong> ← <code class="path">G:\unit3d\scripts</code> ←
+הקלקה כפולה על <code>sync-daily.bat</code>. אותו דבר בדיוק, רק עכשיו.</p>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="trouble">6 · כשמשהו לא עובד</h2>
+
+<h3 id="logtable">קודם כל: היומן</h3>
+
+<p><strong>הקובץ הראשון שפותחים, תמיד:</strong>
+<code class="path">G:\unit3d\scripts\sync-daily.log</code><br>
+<span class="faint">File Explorer ← הקלקה ימנית ← Open with ← Notepad</span></p>
+
+<p>להסתכל על <strong>השורה האחרונה</strong>:</p>
+
+<div class="tblwrap">
+<table>
+  <thead><tr><th>מה כתוב בסוף</th><th>המשמעות</th><th>מה לעשות</th></tr></thead>
+  <tbody>
+    <tr><td><code>pushed</code></td><td>עבד, ויש מודלים חדשים</td>
+        <td>להיכנס ל-<code>/admin</code> ולאשר</td></tr>
+    <tr><td><code>nothing new</code></td><td>עבד, פשוט לא נוסף כלום לאוספים</td>
+        <td>כלום. הכל תקין</td></tr>
+    <tr><td><code>TYPE CHECK FAILED</code></td><td>נמצאה בעיה בקוד והריצה עצרה בכוונה</td>
+        <td>לשלוח לי את היומן</td></tr>
+    <tr><td><code>'git' is not recognized</code></td><td>Git לא נגיש</td>
+        <td>ראה "שלוש התקלות" למטה</td></tr>
+    <tr><td>הקובץ ריק או לא קיים</td><td><strong>המשימה לא רצה בכלל</strong></td>
+        <td>ראה "המשימה לא רצה" למטה</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>אם כתוב שהוא לא מחובר</h3>
+
+<p>לפתוח ב-Notepad את
+<code class="path">G:\unit3d\data\collections-status.json</code>
+ולחפש את השורה:</p>
+
+<div class="screen">"signedIn": <span class="bad">false</span></div>
+
+<p>אם זה <code>false</code> — הפרופיל התנתק ממייקרוורלד. <strong>התיקון:</strong>
+להריץ שוב את <code class="path">G:\unit3d\scripts\mw-login.bat</code>
+(שלב 4). זה כל הסיפור, וזה לוקח דקה.</p>
+
+<h3>המשימה לא רצה</h3>
+
+<p>לפתוח <strong>Task Scheduler</strong>, לסמן את
+<strong>Unit3D MakerWorld Sync</strong> ברשימה, ולפתוח את הלשונית
+<strong>History</strong> בחלק התחתון של החלון.</p>
+
+<div class="tblwrap">
+<table>
+  <thead><tr><th>מה רואים</th><th>התיקון</th></tr></thead>
+  <tbody>
+    <tr><td>אין שורות בכלל</td>
+        <td>המשימה מושבתת — הקלקה ימנית עליה ← <strong>Enable</strong></td></tr>
+    <tr><td>שורות עם שגיאה</td>
+        <td>הקלקה ימנית ← Properties ← לשונית Actions ← לבדוק את השדה
+            <strong>Start in</strong> = <code class="path">G:\unit3d</code></td></tr>
+    <tr><td>"The task did not run because…"</td>
+        <td>המחשב היה כבוי ב-07:45. לשונית <strong>Settings</strong> ← לסמן ✅
+            <em>Run task as soon as possible after a scheduled start is missed</em></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p class="faint">הסנכרון רץ על המחשב שלך, אז הוא צריך שהמחשב יהיה דלוק ב-07:45.
+אם הוא כבוי — הריצה מדלגת על אותו יום. שום דבר לא אבד: המודלים ממתינים באוסף
+וייקלטו בריצה הבאה.</p>
+
+<h3>שלוש התקלות שעוצרות אנשים בשלב 1</h3>
+
+<div class="step" style="margin-top:14px">
+  <div class="step-head"><div class="step-title">א. החלון ישן</div></div>
+  <div class="step-body">
+    <div class="row"><div class="row-k">התסמין</div>
+      <div class="row-v"><div class="screen"><span class="bad">'git' is not recognized as an internal or external command</span></div>
+      למרות שההתקנה הסתיימה בהצלחה.</div></div>
+    <div class="row"><div class="row-k">הסיבה</div>
+      <div class="row-v">חלון Command Prompt שנפתח <strong>לפני</strong> ההתקנה
+      לא מכיר תוכנות שהותקנו אחריו. הוא קרא את רשימת התוכנות פעם אחת כשנפתח,
+      והיא לא מתעדכנת.</div></div>
+    <div class="row"><div class="row-k">התיקון</div>
+      <div class="row-v"><strong>לסגור את החלון. לפתוח חדש. לנסות שוב.</strong>
+      זה הכל. זאת התקלה הכי שכיחה והכי מטעה.</div></div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-head"><div class="step-title">ב. הכותרת אומרת "Select"</div></div>
+  <div class="step-body">
+    <div class="row"><div class="row-k">התסמין</div>
+      <div class="row-v">הקלדת פקודה, לחצת <span class="kbd">Enter</span>,
+      ושום דבר לא קורה. החלון קפוא.</div></div>
+    <div class="row"><div class="row-k">הסיבה</div>
+      <div class="row-v">זה לא תקוע — זה <strong>מושהה</strong>. לחצת עם העכבר
+      בתוך החלון, ו-Windows נכנס למצב סימון טקסט והקפיא את מה שרץ. אפשר לזהות
+      את זה <strong>בכותרת החלון</strong>: כתוב שם <code>Select</code> לפני השם.</div></div>
+    <div class="row"><div class="row-k">התיקון</div>
+      <div class="row-v">ללחוץ <span class="kbd">Esc</span>. החלון ממשיך מהמקום
+      שבו היה.</div></div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-head"><div class="step-title">ג. במתקין נבחרה האפשרות הראשונה</div></div>
+  <div class="step-body">
+    <div class="row"><div class="row-k">מתי זה קורה</div>
+      <div class="row-v">רק אם התקנת את Git <strong>ידנית</strong> מהאתר במקום
+      דרך <code>winget</code>.</div></div>
+    <div class="row"><div class="row-k">הסיבה</div>
+      <div class="row-v">במתקין של Git יש מסך בשם
+      <strong>Adjusting your PATH environment</strong> עם שלוש אפשרויות.
+      הראשונה — <em>"Use Git from Git Bash only"</em> — <strong>לא הופכת את
+      Git לזמין ל-Windows</strong>. מי שלחץ Next על הכל עלול לקבל אותה.</div></div>
+    <div class="row"><div class="row-k">איך בודקים</div>
+      <div class="row-v">ב-Command Prompt להקליד:
+<pre>"C:\Program Files\Git\cmd\git.exe" --version</pre>
+      <div class="tblwrap" style="margin-top:10px">
+      <table><thead><tr><th>התשובה</th><th>המשמעות</th><th>התיקון</th></tr></thead>
+      <tbody>
+        <tr><td>מספר גרסה</td><td>מותקן, פשוט לא נגיש</td>
+            <td>להריץ <code>winget install --id Git.Git -e --source winget</code></td></tr>
+        <tr><td><em>"The system cannot find the path"</em></td><td>לא מותקן באמת</td>
+            <td>להתקין מחדש דרך <code>winget</code></td></tr>
+      </tbody></table></div>
+      </div></div>
+    <div class="row"><div class="row-k">עקיפה מיידית</div>
+      <div class="row-v">הקלקה ימנית על שולחן העבודה ← <strong>Git Bash Here</strong>.
+      זה חלון שמכיר את Git תמיד. שם הפקודות של שלב 2 מעט שונות:
+<pre>cd /g
+git clone https://github.com/AYochelman/unit3d.git</pre>
+      </div></div>
+  </div>
+</div>
+
+<div class="note">
+  <div class="t">בכל מקרה — הסקריפטים כבר לא תלויים בזה</div>
+  <p><code>sync-daily.bat</code> ו-<code>first-time-setup.bat</code> מחפשים את
+  Git גם במקומות שהמתקין משתמש בהם, לא רק ברשימה הרשמית. גם אם הבחירה במתקין
+  הייתה שגויה — <strong>הם יעבדו</strong>. אבל עדיף לתקן, כי כלים אחרים כן
+  יצפו למצוא אותו שם.</p>
+</div>
+
+</div>
+</body>
+</html>
