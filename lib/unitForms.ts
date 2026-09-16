@@ -129,10 +129,12 @@ export const UNIT_FORMS: UnitForm[] = [
     id: "wall",
     label: "סמל גדול לתלייה",
     desc: "מידה גדולה לקיר, עם תלייה מאחור.",
-    // Ariel's own photograph of one on a wall. The path is wired ahead of the
-    // file: until the image is in public/studio the card falls back to the
-    // drawing (see `noPhoto` in UnitOrderScreen), so nothing breaks in between.
-    photo: "/studio/wall-emblem.jpg",
+    // Ariel's own photograph of one on a wall. It arrived named .jpg and is
+    // actually a WebP — browsers sniff the bytes and render it either way, but
+    // the server still labels it image/jpeg from the extension, and anything
+    // that trusts that label rather than the content is then simply wrong.
+    // The extension says what the file is.
+    photo: "/studio/wall-emblem.webp",
     dim: "200×180mm",
     grams: 190,
     hours: 12,
