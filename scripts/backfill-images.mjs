@@ -13,9 +13,15 @@
  * hand and next to a coin for scale.
  *
  * Runs against the MakerWorld API, which answers a plain request (HANDOFF §17)
- * — but RATE LIMITS. Twelve parallel requests with no pause failed 86% of the
- * time. This is deliberately one at a time with a pause between, because a
- * backfill that runs once has no reason to hurry.
+ * — but RATE LIMITS, and hands out its refusals in streaks. The first real run
+ * over 191 models lost 157 of them: one request each, no retry, and a long run
+ * of consecutive misses in the middle that came right again by itself near the
+ * end. That is a throttle, not a catalogue of dead models.
+ *
+ * So: one model at a time, and each one gets three tries with a growing wait
+ * (HANDOFF §17 measured three retries as the point where it holds). A streak
+ * also earns a longer pause before the next model, because hammering through
+ * a throttle is how the streak got long in the first place.
  *
  * Writes lib/imported.generated.ts in place, preserving field order, and then
  * `npm run fetch:images` downloads the new URLs into public/img/catalog so the
@@ -28,6 +34,22 @@ import { ROOT, c, sleep, fetchDetails, picturesOf } from "./lib/makerworld.mjs";
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
 const ALL = process.argv.includes("--all");
 const DRY = process.argv.includes("--dry");
+
+/**
+ * Ask for one model, up to three times.
+ *
+ * `fetchDetails` gives up on the first refusal, which is right for a sweep of
+ * thousands and wrong here: this run has a known, finite list, and every model
+ * it drops is a product page that keeps showing one photograph.
+ */
+async function withRetry(id, tries = 3) {
+  for (let attempt = 1; attempt <= tries; attempt++) {
+    const d = await fetchDetails(id);
+    if (d) return d;
+    if (attempt < tries) await sleep(1500 * attempt + Math.random() * 700);
+  }
+  return null;
+}
 
 /** How many pictures a model carries today. */
 const galleryOf = (m) => (Array.isArray(m.images) ? m.images.length : 0);
@@ -80,13 +102,19 @@ async function main() {
   }
 
   let filled = 0, added = 0, empty = 0, failed = 0;
+  // How many models in a row the API has just refused. It drives the pause
+  // below: the longer the streak, the longer we wait before asking again.
+  let streak = 0;
+
   for (const [i, m] of todo.entries()) {
     const id = m.id.replace(/^mw-/, "");
-    const d = await fetchDetails(id);
+    const d = await withRetry(id);
     if (!d) {
+      streak++;
       failed++;
       console.log(`  ${c.r("✗")} ${m.id}  ${(m.name || "").slice(0, 40)}  — לא נענה`);
     } else {
+      streak = 0;
       const pics = picturesOf(d) ?? [];
       const before = galleryOf(m);
       if (pics.length > before) {
@@ -101,8 +129,12 @@ async function main() {
         console.log(`  ${c.d("·")} ${m.id}  ${(m.name || "").slice(0, 40)}  — אין יותר ממה שיש`);
       }
     }
-    // Slow on purpose. See the header.
-    if (i < todo.length - 1) await sleep(300 + Math.random() * 900);
+    // Slow on purpose, and slower while it is refusing. Capped at 8s so a bad
+    // patch costs minutes and not an afternoon.
+    if (i < todo.length - 1) {
+      const backoff = Math.min(8000, 300 * 2 ** Math.min(streak, 5));
+      await sleep(backoff + Math.random() * 900);
+    }
   }
 
   if (!DRY && filled) write(file, models);
@@ -114,6 +146,10 @@ async function main() {
     console.log("  הצעד הבא, כדי שהאתר יגיש עותקים משלו:");
     console.log(c.b("    npm run fetch:images\n"));
     console.log("  ואז קומיט של lib/imported.generated.ts ושל public/img/catalog.\n");
+  }
+  if (failed) {
+    console.log(c.y(`  ${failed} לא נענו — זו הגבלת קצב, לא מודלים שנעלמו.`));
+    console.log(c.y("  להריץ שוב: הריצה הבאה מתחילה בדיוק מהם, כי עדיין אין להם גלריה.\n"));
   }
   // A few models failing is the API rate limiting, not a broken run: the next
   // run picks them up, because they still have no gallery.
