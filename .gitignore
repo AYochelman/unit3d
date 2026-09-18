@@ -68,3 +68,8 @@ agent/.tmp.mp4
 # The signed-in MakerWorld browser profile. Never leaves his machine.
 data/mw-profile/
 scripts/sync-daily.log
+
+# Reference Studio keeps its library (uploads, notes, settings) out of git.
+tools/reference-studio/data/
+tools/reference-studio/.next/
+tools/reference-studio/node_modules/
