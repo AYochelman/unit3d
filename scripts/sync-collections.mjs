@@ -278,6 +278,22 @@ const COLLECTION_HREF = /\/collections\/(\d+)-([a-z0-9-]+)/gi;
  * number of seconds, and falls back to reading the ids out of the HTML when the
  * anchors are rendered in a way the selector misses.
  */
+/**
+ * What to call a collection in the log.
+ *
+ * The slug, normally. The card's text used to be the title on its own line,
+ * and the first line was a fine name; the card now runs the whole thing
+ * together and the "first line" comes out "+63FollowOthers67 models0
+ * followers". The slug is the title MakerWorld itself derived from the name,
+ * it has not moved, and it is what the shelf rules match on anyway — so the
+ * text is only consulted when it looks like a title and not like a card.
+ */
+function nameOf(slug, text) {
+  const first = (text || "").split("\n")[0].trim();
+  const clean = first && first.length <= 40 && !/\d\s*(models|followers)|Follow/i.test(first);
+  return clean ? first : slug.replace(/-/g, " ");
+}
+
 async function readCollections(page) {
   const ok = await open(page, `https://makerworld.com/en/@${PROFILE}/collections`);
   if (!ok) { log(c.y("  הפרופיל חסום כרגע על ידי Cloudflare — משתמש ברשימה השמורה")); return []; }
@@ -290,7 +306,7 @@ async function readCollections(page) {
   );
   for (const { href, text } of found) {
     const m = /\/collections\/(\d+)-([a-z0-9-]+)/i.exec(href);
-    if (m) out.set(m[1], { id: m[1], slug: m[2], name: (text.split("\n")[0] || m[2]).slice(0, 40) });
+    if (m) out.set(m[1], { id: m[1], slug: m[2], name: nameOf(m[2], text) });
   }
   if (!out.size) {
     for (const m of (await page.content()).matchAll(COLLECTION_HREF)) {
