@@ -13,6 +13,8 @@ const eslintConfig = [
       "out/**",
       // Throw-away Playwright checks run by hand; not part of the site.
       "*.cjs",
+      // Vendored bundles shipped inside the impeccable skill install.
+      "**/skills/impeccable/**",
     ],
   },
   ...coreWebVitals,
