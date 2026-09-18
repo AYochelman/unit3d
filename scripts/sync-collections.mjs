@@ -102,15 +102,31 @@ async function browser() {
   if (PROFILE_DIR) {
     // A persistent context IS the context — there is no separate browser to
     // open one from — so it answers both calls and `context()` passes it on.
-    const ctx = await chromium.launchPersistentContext(PROFILE_DIR, {
-      ...(exe ? { executablePath: exe } : {}),
+    //
+    // No userAgent override here, and the installed Chrome in preference to
+    // Playwright's own build. Both for the same reason: the challenge page was
+    // looping forever on this profile. A UA string saying Chrome 131 travels
+    // with Sec-CH-UA headers the browser fills in from its REAL version, so the
+    // two disagree, and disagreeing with yourself about what browser you are is
+    // exactly what the challenge looks for. Real Chrome, telling the truth
+    // about itself, from his own home address, is a person as far as
+    // Cloudflare can tell — which is what it is.
+    const opts = {
       headless: !LOGIN,
       args,
-      userAgent: UA,
       locale: "en-US",
       timezoneId: "Asia/Jerusalem",
       viewport: { width: 1440, height: 900 },
-    });
+    };
+    const ctx = exe
+      ? await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, executablePath: exe })
+      // Installed Chrome first; Playwright's bundled Chromium is missing pieces
+      // a real Chrome has, and the challenge notices. Fall back to it anyway
+      // when Chrome is not installed — a challenge that might loop beats no
+      // browser at all.
+      : await chromium
+          .launchPersistentContext(PROFILE_DIR, { ...opts, channel: "chrome" })
+          .catch(() => chromium.launchPersistentContext(PROFILE_DIR, opts));
     ctx.__persistent = true;
     log(c.d(`  פרופיל דפדפן שמור: ${PROFILE_DIR}`));
     return ctx;
@@ -136,8 +152,15 @@ async function login() {
   }
   const ctx = await browser();
   const page = ctx.pages()[0] || (await ctx.newPage());
-  await page.goto("https://makerworld.com/en/login", { waitUntil: "domcontentloaded" }).catch(() => {});
-  log(c.b("\n  נפתח דפדפן. תתחבר למייקרוורלד, ואז תחזור לכאן ותלחץ Enter.\n"));
+  // The home page, not /en/login: that path 404s now, and a login URL is the
+  // most likely thing on a site to move. The home page has carried a sign-in
+  // link through every redesign so far, and a person can find it there even
+  // when it moves again — which a hardcoded path cannot.
+  await page.goto("https://makerworld.com/en/", { waitUntil: "domcontentloaded" }).catch(() => {});
+  log(c.b("\n  נפתח דפדפן על מייקרוורלד."));
+  log("  ללחוץ Sign In בפינה ולהתחבר כרגיל.");
+  log(c.d("  אם נתקע על \"Verifying you are human\" — לרענן פעם אחת (F5)."));
+  log(c.b("  אחר כך לחזור לכאן וללחוץ Enter.\n"));
   await new Promise((res) => process.stdin.once("data", res));
   await ctx.close();
   log(c.g("  ההתחברות נשמרה. מעכשיו כל הרצה כבר מחוברת.\n"));
