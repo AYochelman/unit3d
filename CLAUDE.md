@@ -41,7 +41,7 @@ app/admin/                    אזור ניהול (PIN): טבלת עלויות �
 app/pets/ · app/home-office/  הקטגוריות החדשות · app/products/[id] עמוד מוצר (צבע, חומר, AMS, חריטה, כמות, בלוק עלות למנהל)
 ```
 
-17 מסלולים: `/` `/catalog` `/configurator` `/fidgets` `/fidgets/[id]` `/pets` `/home-office` `/products/[id]` `/admin` `/b2b` `/contact` `/gallery` `/livestream` `/reviews` `/tracking` `/upload` `/faq`
+כ-30 מסלולים. העיקריים: `/` `/catalog` `/configurator` `/fidgets` `/fidgets/[id]` `/pets` `/home-office` `/statues` `/trendy` `/products/[id]` `/admin` `/b2b` `/contact` `/gallery` `/livestream` `/reviews` `/tracking` `/upload` `/faq` `/shipping`. הרשימה המלאה: `find app -name page.tsx`.
 
 ## המעצב האישי (`/configurator`) — מבנה
 
@@ -112,9 +112,9 @@ PIN ב-`lib/admin-store.ts` (ברירת מחדל 1234). המצב נשמר לסש
 `docs/emblems-needed.md` — 100 שמות הקבצים ש-`/catalog` מחפש תחת `public/emblems/` (גם בלשונית "סמלי יחידות" ב-/admin, עם בדיקה חיה).
 `בריף-לקלוד-דיזיין.md` הוא מסמך העיצוב המקורי — קהלי יעד, פלטה, וכל דרישה לכל עמוד.
 
-## המשימה הפתוחה הכי משתלמת
+## העברה למחשב חדש
 
-לבדוק אם `D:\Claude Projects\Unit 3D` עדיין קיימת. שם נמצאים `public/`, ה־`lib/types.ts` המקורי, והגרסה האחרונה האמיתית של הקוד.
+הכל בגיט (`main` = מקור האמת, `public/` קיימת). מה ש**לא** בגיט וצריך להקים מחדש: `node_modules`, פרופיל הדפדפן של מייקרוורלד (`scripts\mw-login.bat`), המשימה המתוזמנת של `sync-daily.bat`, טוקן ה-GitHub של האדמין (localStorage, לכל מכשיר), ו-`agent/config.json` אם הסוכן לא על Pi. סדר ההקמה המלא: HANDOFF.md סעיף 21. שאלת `D:\Claude Projects\Unit 3D` מהשחזור המקורי כבר לא רלוונטית.
 
 
 ## עמודות החנות (v2.6)
