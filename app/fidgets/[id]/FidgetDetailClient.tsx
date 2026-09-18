@@ -23,6 +23,7 @@ import { filamentsFor, useMaterials } from "@/lib/palette";
 import { nearestColor, offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
+import ProductClip from "@/components/ProductClip";
 import ModelDownload from "@/components/admin/ModelDownload";
 import { modelSourceById } from "@/lib/model-source";
 import { useLivePrice } from "@/lib/live-price";
@@ -311,6 +312,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               ))}
             </div>
           )}
+
+          {/* A fidget is the case this matters most for: the whole product is
+              a movement. Renders nothing when there is no clip. */}
+          <ProductClip id={f.id} name={f.name} />
         </div>
 
         {/* ── RIGHT: config panel ─────────────────────────────────────── */}
