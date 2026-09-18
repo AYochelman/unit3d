@@ -288,6 +288,27 @@ async function open(page, url, tries = 3) {
     log(c.d(`  אימות של Cloudflare (${i}/${tries}) — מנסה שוב`));
     await sleep(4000 * i);
   }
+
+  // Everything above is the browser trying by itself, and on the collection
+  // pages it does not get through: the challenge there is the one with a box
+  // to tick, and a driven browser cannot tick it — that IS what the box is
+  // asking. But the window is open in front of him, and he can. One click
+  // earns a clearance cookie for the whole domain, so the remaining
+  // collections sail past without asking again.
+  if (HEADFUL) {
+    await page.bringToFront().catch(() => {});
+    log(c.y("\n  יש אתגר בחלון הדפדפן. ללחוץ שם על התיבה \"Verify you are human\"."));
+    log(c.d("  לחיצה אחת מספיקה לכל השאר. מחכה עד 3 דקות...\n"));
+    for (let w = 0; w < 60; w++) {
+      const title = await page.title().catch(() => "");
+      if (!CHALLENGE.test(title)) {
+        log(c.g("  עבר. ממשיך.\n"));
+        return true;
+      }
+      await page.waitForTimeout(3000);
+    }
+    log(c.r("  האתגר לא נפתר. ממשיך הלאה.\n"));
+  }
   return false;
 }
 
