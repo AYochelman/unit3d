@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Launches Next.js for the studio with this folder as the working directory,
-// resolving the `next` binary from wherever it is installed - the repository
-// root (the normal case, because the studio shares the root's node_modules) or
-// a local install. Keeping it in one script means the npm scripts at the root
-// and here stay identical on Windows and Unix.
+// resolving the `next` binary from wherever it is installed - normally the
+// repository root, because the studio has no node_modules of its own and every
+// dependency it uses is a root one. Keeping it in one script means the npm
+// scripts at the root and here stay identical on Windows and Unix.
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";

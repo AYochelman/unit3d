@@ -2,13 +2,11 @@
   "name": "reference-studio",
   "version": "1.0.0",
   "private": true,
-  "description": "Local reference library and design-brief builder. Shares the repository root's node_modules; only the optional Anthropic SDK is installed here.",
+  "description": "Local reference library and design-brief builder. It has no dependencies of its own: everything, including @anthropic-ai/sdk, comes from the repository root's single npm install.",
   "scripts": {
     "dev": "node scripts/studio.mjs dev",
     "build": "node scripts/studio.mjs build",
     "start": "node scripts/studio.mjs start"
   },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.127.0"
-  }
+  "dependencies": {}
 }

@@ -11,9 +11,10 @@ npm install          # once, in the repository root
 npm run studio       # http://localhost:3100
 ```
 
-That is the whole setup. It shares the repository root's `node_modules`, so there
-is nothing else to install; `@anthropic-ai/sdk` is the one extra package and it
-already lives in this folder.
+That is the whole setup — one `npm install`, at the repository root. The studio
+has no dependencies of its own: it shares the root's `node_modules`, and
+`@anthropic-ai/sdk` is a root devDependency so a single install covers both the
+shop and the studio.
 
 ---
 

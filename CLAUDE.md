@@ -197,8 +197,10 @@ npm run studio:check  # בדיקה עצמית (‎-- --live גם מול שרת �
 Pages, ושם אין route handlers. הסטודיו צריך שרת אמיתי (העלאות, צילומי מסך, מפתח API
 בצד השרת), ולכן הוא יושב לבד — עם `tsconfig` ו-`eslint.config` משלו, ומוחרג מ-`tools/**`
 בשניהם בשורש. **שלוש השערים של האתר (`tsc`, `lint`, `build`) לא רואים אותו בכלל.**
-הוא כן חולק את `node_modules` של השורש; החבילה היחידה שמותקנת מקומית היא
-`@anthropic-ai/sdk`.
+הוא כן חולק את `node_modules` של השורש, ואין לו תלויות משלו: `@anthropic-ai/sdk`
+יושב ב-devDependencies של השורש, כך ש-`npm install` אחד מקים גם את האתר וגם את
+הסטודיו. (בגרסה הראשונה הוא הותקן מקומית בתוך `tools/reference-studio`, ומכיוון
+ש-`node_modules` מוחרג בגיט — בשיבוט נקי כל לשונית הניתוח החזירה 500.)
 
 **הנתונים** ב-`tools/reference-studio/data/` (מוחרג ב-.gitignore): `library.json` +
 `files/`. אין localStorage — עקבי עם כללי הפרויקט.
