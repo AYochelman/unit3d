@@ -27,6 +27,9 @@ export const DELIVERY: { id: DeliveryId; label: string; price: number; note: str
 
 export const DELIVERY_BY_ID = Object.fromEntries(DELIVERY.map((d) => [d.id, d])) as Record<DeliveryId, (typeof DELIVERY)[number]>;
 
+/** Does this way of getting the order to the customer need a street address? */
+export const needsAddress = (d: DeliveryId): boolean => d !== "pickup";
+
 export type OrderLine = {
   title: string;
   /** The configuration the customer chose, line by line: unit, material, colour, size… */
@@ -59,7 +62,25 @@ export type OrderDecision = "pending" | "approved" | "rejected" | "refunded";
 export type PlacedOrder = {
   ref: string;
   at: string;
-  customer: { name: string; phone: string; email?: string; kind: string; unit?: string; company?: string };
+  customer: {
+    name: string;
+    phone: string;
+    email?: string;
+    kind: string;
+    unit?: string;
+    company?: string;
+    /**
+     * Where the parcel goes. Present only when the order ships.
+     *
+     * A pickup has no address to give, so asking for one there is a field the
+     * customer has to think about and then invent. `needsAddress` below is the
+     * single answer to "does this delivery need one", and the form, the
+     * message, the letters and the admin all read it rather than testing the
+     * id themselves — a fourth delivery option added later is then shipping or
+     * not in one place.
+     */
+    address?: string;
+  };
   inquiry: string;
   delivery: DeliveryId;
   note?: string;
@@ -225,6 +246,7 @@ export function orderMessage(o: PlacedOrder): string {
     "",
     ...(o.discount ? [`הנחה: ${o.discount.code} · ${o.discount.label} · -${fmtILS(o.discount.off)}`] : []),
     `מסירה: ${d.label}${d.price ? ` · ${fmtILS(d.price)}` : " · חינם"}`,
+    ...(needsAddress(o.delivery) ? [`כתובת: ${o.customer.address?.trim() || "—"}`] : []),
     `הערות: ${o.note?.trim() || "—"}`,
     total == null ? "סה\"כ לתשלום: לפי הזמנה" : `סה"כ לתשלום: ${fmtILS(total)}`,
     "",
@@ -258,7 +280,7 @@ const field = (line: string, label: string): string | null =>
  */
 export function parseOrderMessage(text: string): PlacedOrder | null {
   const rows = (text || "").split(/\r?\n/);
-  let ref = "", phone = "", email = "", kind = "", note = "";
+  let ref = "", phone = "", email = "", kind = "", note = "", address = "";
   let delivery: DeliveryId = "pickup";
   let discount: AppliedDiscount | undefined;
   const lines: OrderLine[] = [];
@@ -302,6 +324,8 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
     kind = field(t, "סוג לקוח") ?? kind;
     const mail = field(t, "מייל");
     if (mail) email = mail === "—" ? "" : mail;
+    const addr = field(t, "כתובת");
+    if (addr) address = addr === "—" ? "" : addr;
     const rem = field(t, "הערות");
     if (rem) note = rem === "—" ? "" : rem;
     const disc = field(t, "הנחה");
@@ -324,7 +348,7 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
   return {
     ref,
     at: new Date().toISOString(),
-    customer: { name: "", phone, email, kind: kind || "לקוח" },
+    customer: { name: "", phone, email, kind: kind || "לקוח", ...(address ? { address } : {}) },
     inquiry: "",
     delivery,
     note,

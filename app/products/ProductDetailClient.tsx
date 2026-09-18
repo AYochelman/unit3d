@@ -23,6 +23,7 @@ import ReviewForm from "@/components/ReviewForm";
 import BodyClass from "@/components/ui/BodyClass";
 import { useAdminStore } from "@/lib/admin-store";
 import ModelDownload from "@/components/admin/ModelDownload";
+import ProductClip from "@/components/ProductClip";
 import { modelSourceById } from "@/lib/model-source";
 import { estimateCost } from "@/lib/costing";
 import { suggestPrice } from "@/lib/imported";
@@ -281,6 +282,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
               ))}
             </div>
           )}
+
+          {/* Renders only when the shop holds a clip for this model. */}
+          <ProductClip id={p.id} name={p.name} />
 
           {!hero && (
             <p className="mt-2 text-[11px] text-ink-500 text-center">איור סכמטי. תמונות של הדפסות אמיתיות יתווספו לכל מוצר.</p>

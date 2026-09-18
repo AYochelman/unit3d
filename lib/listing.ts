@@ -3,6 +3,11 @@
 
 export type ListingStats = {
   id: string;
+  /**
+   * The catalogue id, when `id` carries a prefix to keep React keys unique
+   * across shelves that mix sources. `PINNED` is matched against this first.
+   */
+  itemId?: string;
   price: number;
   /**
    * An internal ranking signal ONLY — never shown.
@@ -65,6 +70,28 @@ export const PRICE_FILTERS: { id: PriceFilter; label: string }[] = [
   { id: "gt100", label: "מעל ₪100" },
 ];
 
+/**
+ * The two products that lead every shelf they appear on, in this order.
+ *
+ * Both are the shop's own, and neither has a download count to be ranked by —
+ * so under the rule below they would sit after every imported model, at the
+ * very bottom. That is backwards for what they are: the mystery box is the
+ * answer to "I don't know what to pick", and the 3D business card is the one
+ * object a visitor shows someone else. They earn the top of the shelf by what
+ * they do for the shop, not by a number, so the decision is written here
+ * rather than faked with an invented download figure.
+ *
+ * It applies to the default order only. A customer who sorts by price asked a
+ * question, and pinning would answer a different one.
+ */
+export const PINNED: string[] = ["mystery-box", "biz-card-3d"];
+
+/** Position in PINNED, or -1. Lower index wins; -1 means "not pinned". */
+const pinRank = (it: ListingStats): number => {
+  const i = PINNED.indexOf(it.itemId ?? it.id);
+  return i === -1 ? PINNED.indexOf(it.id) : i;
+};
+
 export function applyListing<T extends ListingStats>(items: T[], s: ListingState): T[] {
   let out = items.filter((it) => {
     if (s.colors === "1" && it.colors !== 1) return false;
@@ -99,8 +126,17 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
         return a.price - b.price;
       case "newest":
         return Number(!!b.isNew) - Number(!!a.isNew) || rank(b) - rank(a);
-      default:
+      default: {
+        // Pinned first, in the order they are listed; everything else by the
+        // download count, highest first.
+        const pa = pinRank(a), pb = pinRank(b);
+        if (pa !== -1 || pb !== -1) {
+          if (pa === -1) return 1;
+          if (pb === -1) return -1;
+          return pa - pb;
+        }
         return rank(b) - rank(a) || b.orders - a.orders;
+      }
     }
   });
   return out;

@@ -20,7 +20,9 @@
     "add:candidates": "node scripts/add-candidates.mjs",
     "apply:approvals": "node scripts/apply-approvals.mjs",
     "recheck:figures": "node scripts/recheck-figures.mjs",
-    "audit:shelves": "node scripts/audit-shelves.mjs"
+    "audit:shelves": "node scripts/audit-shelves.mjs",
+    "audit:media": "node scripts/audit-media.mjs",
+    "backfill:images": "node scripts/backfill-images.mjs"
   },
   "dependencies": {
     "hls.js": "^1.7.2",

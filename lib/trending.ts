@@ -92,7 +92,13 @@ export function trendingCards(): ListingCard[] {
   // Imported models that did not fit a named shelf land on "trendy" — without
   // this they would be in the catalogue but on no page.
   for (const p of productsByCategory("trendy")) {
-    cards.push({ ...productToCard(p), id: `product-${p.id}`, tag: p.tag ?? "חדש באתר" });
+    // `itemId` matters as much as the prefixed `id`: the prefix keeps React
+    // keys unique across a shelf that mixes fidgets, products and designer
+    // items, and everything that has to recognise the catalogue product behind
+    // a card — the admin overrides, and the pinned order in lib/listing.ts —
+    // reads `itemId`. Without it the shop's own products are unrecognisable on
+    // this shelf and only on this shelf.
+    cards.push({ ...productToCard(p), id: `product-${p.id}`, itemId: p.id, tag: p.tag ?? "חדש באתר" });
   }
   // Same rule as the shelves: nothing without a picture.
   return cards.filter((c) => !!c.image);
