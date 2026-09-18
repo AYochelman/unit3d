@@ -119,19 +119,34 @@ async function browser() {
     const opts = {
       headless: !HEADFUL,
       args,
+      // Playwright adds --enable-automation of its own accord, and it was in
+      // every launch line while every page came back a challenge. It is the
+      // loudest thing a browser can say about itself, said before any page
+      // loads. Dropping it is not a disguise: this IS his browser, his
+      // profile and his address, and the flag was describing the wrapper
+      // rather than the person on the other end of it.
+      ignoreDefaultArgs: ["--enable-automation"],
       locale: "en-US",
       timezoneId: "Asia/Jerusalem",
       viewport: { width: 1440, height: 900 },
     };
-    const ctx = exe
-      ? await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, executablePath: exe })
-      // Installed Chrome first; Playwright's bundled Chromium is missing pieces
-      // a real Chrome has, and the challenge notices. Fall back to it anyway
-      // when Chrome is not installed — a challenge that might loop beats no
-      // browser at all.
-      : await chromium
-          .launchPersistentContext(PROFILE_DIR, { ...opts, channel: "chrome" })
-          .catch(() => chromium.launchPersistentContext(PROFILE_DIR, opts));
+    // Whatever opens this profile must be the browser that CREATED it. A
+    // profile written by real Chrome does not open in Playwright's Chromium:
+    // it closes on the spot. An earlier version fell back to Chromium when
+    // Chrome failed to start, which turned a clear error into "Target page,
+    // context or browser has been closed" and lost the reason with it. So no
+    // fallback here — if Chrome will not start, say why.
+    let ctx;
+    try {
+      ctx = exe
+        ? await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, executablePath: exe })
+        : await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, channel: "chrome" });
+    } catch (e) {
+      log(c.r(`\n  כרום לא נפתח על הפרופיל: ${e.message.split("\n")[0]}`));
+      log(c.y("  לוודא שאין חלון כרום פתוח על אותה תיקייה, ואז להריץ שוב."));
+      log(c.d(`  אפשר גם להצביע על כרום ידנית:  set PLAYWRIGHT_CHROMIUM=<נתיב ל-chrome.exe>\n`));
+      throw e;
+    }
     ctx.__persistent = true;
     log(c.d(`  פרופיל דפדפן שמור: ${PROFILE_DIR}`));
     return ctx;
