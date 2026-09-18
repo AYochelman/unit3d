@@ -231,6 +231,11 @@ export default function ContactClient() {
               <Icon name="check" size={12} strokeWidth={3} />
               <span className="text-ink-400">
                 אישור הזמנה עם כל הפירוט נשלח אליך למייל <span dir="ltr">{mailTo}</span>.
+                {/* A first letter from a new sender lands in spam more often
+                    than not, and a customer who never sees it thinks nothing
+                    was sent. Telling them where to look — and to mark it — is
+                    also what teaches their mailbox for the next two letters. */}
+                {" "}לא רואה אותו? תבדוק בספאם ותסמן &quot;לא ספאם&quot;, כדי שגם העדכונים הבאים יגיעו.
               </span>
             </div>
           )}

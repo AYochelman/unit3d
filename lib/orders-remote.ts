@@ -1,6 +1,7 @@
 "use client";
 import type { OrderDecision, PlacedOrder } from "./orders";
 import { liveEmailHtml, liveEmailSubject, orderEmailHtml, orderEmailSubject, readyEmailHtml, readyEmailSubject } from "./order-email";
+import { CONTACT } from "./contact";
 
 /**
  * Where an order lives between the customer's phone and Ariel's screen.
@@ -263,6 +264,10 @@ async function sendMail(o: PlacedOrder, subject: string, html: string): Promise<
           subject,
           order_ref: o.ref,
           message_html: html,
+          // Where a reply lands. The letter leaves through a sending service
+          // (docs/email-deliverability.md), and a reply to that address would
+          // reach nobody — the EmailJS template puts this in Reply-To.
+          reply_to: CONTACT.email,
         },
       }),
     });
