@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design directions - comparison</title>
+<!--
+  Reference Studio comparison page.
+
+  Drop this next to your direction files and edit the DIRECTIONS array below.
+  Everything is loaded in a live iframe, so what you compare is the real page at
+  a real width - not a screenshot of it.
+-->
+<style>
+  :root{
+    --bg:#0c0c0d; --surface:#161618; --line:#ffffff1a; --text:#f3f1ef; --muted:#93908b; --accent:#e8664a;
+    --gap:20px;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f4f3f1; --surface:#ffffff; --line:#00000014; --text:#17181a; --muted:#6b6863; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:15px/1.5 ui-sans-serif,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Hebrew",sans-serif}
+  header{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+    padding:14px 20px;background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  h1{font-size:15px;font-weight:600;margin:0;flex:1;min-width:180px}
+  .controls{display:flex;gap:6px;flex-wrap:wrap}
+  button{all:unset;cursor:pointer;padding:6px 12px;border-radius:8px;border:1px solid var(--line);
+    background:transparent;color:var(--muted);font-size:13px}
+  button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#1a0d08;font-weight:600}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  main{display:grid;gap:var(--gap);padding:20px;
+    grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))}
+  main[data-width="mobile"]{grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr))}
+  figure{margin:0;display:flex;flex-direction:column;background:var(--surface);
+    border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  figcaption{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+  figcaption strong{font-size:13px;font-weight:600}
+  figcaption span{color:var(--muted);font-size:12px;flex:1}
+  figcaption a{color:var(--accent);font-size:12px;text-decoration:none}
+  figcaption a:hover{text-decoration:underline}
+  .frame{position:relative;background:#fff;overflow:hidden;height:640px}
+  .frame iframe{position:absolute;inset-block-start:0;inset-inline-start:0;border:0;
+    transform-origin:top left;background:#fff}
+  [dir="rtl"] .frame iframe{transform-origin:top right}
+  footer{padding:16px 20px 40px;color:var(--muted);font-size:13px}
+  @media (prefers-reduced-motion:no-preference){ button{transition:background .15s,color .15s} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Design directions</h1>
+  <div class="controls" role="group" aria-label="Preview width">
+    <button type="button" data-width="desktop" aria-pressed="true">Desktop 1440</button>
+    <button type="button" data-width="tablet" aria-pressed="false">Tablet 834</button>
+    <button type="button" data-width="mobile" aria-pressed="false">Mobile 390</button>
+  </div>
+</header>
+
+<main id="grid" data-width="desktop"></main>
+<footer id="note"></footer>
+
+<script type="module">
+  // ---- edit this list -------------------------------------------------
+  const DIRECTIONS = [
+    { file: "direction-1.html", name: "Direction 1", note: "" },
+    { file: "direction-2.html", name: "Direction 2", note: "" },
+    { file: "direction-3.html", name: "Direction 3", note: "" },
+    { file: "direction-4.html", name: "Direction 4", note: "" },
+    { file: "direction-5.html", name: "Direction 5", note: "" },
+  ];
+  // ---------------------------------------------------------------------
+
+  const WIDTHS = { desktop: 1440, tablet: 834, mobile: 390 };
+  const grid = document.getElementById("grid");
+
+  for (const d of DIRECTIONS) {
+    const figure = document.createElement("figure");
+    const caption = document.createElement("figcaption");
+    const strong = document.createElement("strong");
+    strong.textContent = d.name;
+    const span = document.createElement("span");
+    span.textContent = d.note ?? "";
+    const link = document.createElement("a");
+    link.href = d.file; link.target = "_blank"; link.rel = "noopener";
+    link.textContent = "Open full size ↗";
+    caption.append(strong, span, link);
+
+    const frame = document.createElement("div");
+    frame.className = "frame";
+    const iframe = document.createElement("iframe");
+    iframe.src = d.file;
+    iframe.loading = "lazy";
+    iframe.title = `${d.name} preview`;
+    frame.appendChild(iframe);
+
+    figure.append(caption, frame);
+    grid.appendChild(figure);
+  }
+
+  // Render each direction at a real viewport width, then scale the whole frame
+  // down to fit its card. Scaling beats a narrow iframe: the page still lays
+  // itself out as if it were on a 1440px screen.
+  function fit() {
+    const target = WIDTHS[grid.dataset.width] ?? 1440;
+    for (const frame of grid.querySelectorAll(".frame")) {
+      const iframe = frame.querySelector("iframe");
+      const scale = frame.clientWidth / target;
+      iframe.style.width = `${target}px`;
+      iframe.style.height = `${Math.round(frame.clientHeight / scale)}px`;
+      iframe.style.transform = `scale(${scale})`;
+    }
+  }
+
+  for (const button of document.querySelectorAll(".controls button")) {
+    button.addEventListener("click", () => {
+      for (const b of document.querySelectorAll(".controls button")) b.setAttribute("aria-pressed", "false");
+      button.setAttribute("aria-pressed", "true");
+      grid.dataset.width = button.dataset.width;
+      fit();
+    });
+  }
+
+  addEventListener("resize", fit);
+  addEventListener("load", fit);
+  fit();
+
+  document.getElementById("note").textContent =
+    `${DIRECTIONS.length} directions, previewed at ${Object.values(WIDTHS).join("px / ")}px. ` +
+    "Earlier rounds are still in their own versions/ folder - nothing here overwrites them.";
+</script>
+</body>
+</html>

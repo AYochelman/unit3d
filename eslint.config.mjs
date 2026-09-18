@@ -13,6 +13,10 @@ const eslintConfig = [
       "out/**",
       // Throw-away Playwright checks run by hand; not part of the site.
       "*.cjs",
+      // Reference Studio is a separate local tool with its own tsconfig and
+      // eslint config (tools/reference-studio). It is never built into the
+      // shop, so it must not be able to fail the shop's gates either.
+      "tools/**",
     ],
   },
   ...coreWebVitals,
