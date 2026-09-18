@@ -428,3 +428,89 @@ Standard). 6 לחיות, 4 למשרד, 3 לבית, 3 לעסקים. עכשיו 15
   "תמונה כלשהי מהמדף הנכון", שנתן תמונה שלא קשורה למה שכתוב. התואר של הלקוח
   ("אמא של חייל", "VP People") ירד מהתצוגה; נשאר רק השם.
 - `/trendy` — מוצרי המעצב אין להם צילום ולכן ירדו מהרשת; במקומם באנר למעצב האישי.
+
+## 21. העברה למחשב חדש — מצב הפרויקט ב-18 בספטמבר 2026
+
+> נכתב בסשן העברה. הסעיפים 1–20 מתארים את הדרך; הסעיף הזה אומר **מה נכון עכשיו**
+> ומה צריך להקים מחדש על מחשב שמעולם לא ראה את הפרויקט.
+
+### מה נכון עכשיו (ומבטל הערות ישנות במסמך)
+
+- **`main` ב-GitHub הוא מקור האמת.** 61 קומיטים, האחרון מ-18.9. אין עבודה
+  שחיה רק על דיסק מקומי. שאלת `D:\Claude Projects\Unit 3D` (סעיפים 1, 8, 10)
+  כבר לא רלוונטית — הכל בגיט.
+- **`public/` קיימת** (כ-2,040 קבצים): `img/catalog` לתמונות המודלים
+  המיובאים, `emblems/` (170 סמלים), `img/hero`, `img/reviews`, `studio/`,
+  וקובצי ההגדרות שהאדמין מפרסם (`admin-settings.json`, `shop.json`,
+  `coupons.json`, `expenses.json`, `orders.json`, `model-decisions.json`).
+  אין `public/fidgets/` — `lib/fidgets.generated.ts` נשאר קוד מת ואין סיבה
+  לעבור לגרסת 28.5 (סעיף 4). הפידג'טים היום מגיעים מהייבוא ממייקרוורלד.
+- **שלוש הבדיקות עוברות נקי על clone טרי**: `npx tsc --noEmit`,
+  `npm run lint`, `npm run build`. אותן שלוש רצות ב-`deploy.yml` לפני כל
+  פרסום.
+- **מסלולים**: ~30 (הרשימה ב-CLAUDE.md של 17 ישנה). נוספו מאז: `/trendy`,
+  `/statues`, `/office`, `/home`, `/personalize`, `/shipping`, `/returns`,
+  `/terms`, `/privacy`, `/cookies`, `/accessibility`, `/screen`, `/smoke`.
+- **לשוניות האדמין**: הזמנות · תנועה · ביקורות · קודי הנחה · הוצאות · מוצרים ·
+  מוצרים · שמות · מודלים לאישור · מלאי · גלילים · פרמטרים · סמלי יחידות · גיבוי
+  · עדכונים.
+
+### מה נבנה בין 5.9 ל-18.9 (לא תועד בסעיפים הקודמים)
+
+| תחום | מה יש | איפה |
+|---|---|---|
+| הזמנות | טבלת `orders` ב-Supabase, הלקוח כותב, האדמין מחליט; מייל ללקוח כשמוכן (EmailJS) | `lib/orders*.ts`, `docs/supabase-orders.md` |
+| מעקב הזמנה חי | מספר ההזמנה בשם קובץ ההדפסה → הסוכן מזהה → `/tracking` עם אסימון | `docs/order-tracking.md` |
+| סוכן המדפסת | Node על מחשב/Pi ליד המדפסת: מצב, מצלמה, טיימלפס, יומן הדפסות ל-Supabase | `agent/`, `agent/README.md`, `docs/printer-live.md` |
+| ביקורות | טבלה ב-Supabase + צילום שהלקוח מצרף; הלקוחה מעלה בעצמה | `docs/reviews-table.md`, `docs/reviews.sql` |
+| תנועה | אירועי ביקור ולחיצה ל-`site_events`; לשונית "תנועה" | `lib/analytics.ts`, `docs/analytics-table.md` |
+| קופונים · הוצאות | ניהול באדמין, פרסום כקובצי JSON ב-`public/` | `lib/coupons.ts`, `lib/expenses.ts` |
+| פרסום בקליק | האדמין כותב ישירות ל-GitHub עם טוקן שמור במכשיר | `lib/admin-token.ts`, `components/AdminSaveToSite.tsx` |
+| סנכרון מייקרוורלד יומי | רץ **מקומית** (Cloudflare חוסמת שרתים), Task Scheduler 07:45 | `scripts/sync-daily.bat`, `docs/makerworld-daily.html` |
+| דומיין | `unit-3d.com` דרך Cloudflare (DNS only) → GitHub Pages | `docs/domain.md`, `public/CNAME` |
+| מיון מדפים | לפי הורדות במקור, מהגבוה לנמוך | `lib/listing.ts` |
+
+### מה **לא** נמצא בגיט וצריך להקים מחדש על המחשב החדש
+
+זה לב הסעיף. כל דבר אחר מגיע עם `git clone`.
+
+| מה | למה זה לא בגיט | איך מקימים מחדש |
+|---|---|---|
+| `node_modules/` | תלויות | `npm ci` (או `scripts\first-time-setup.bat` בהקלקה כפולה) |
+| `data/mw-profile/` | פרופיל דפדפן **מחובר** למייקרוורלד | `scripts\mw-login.bat` — נפתח דפדפן, מתחברים פעם אחת |
+| משימה מתוזמנת של הסנכרון | הגדרה של Windows, לא קובץ | Task Scheduler → `sync-daily.bat`, שדה **Start in** = תיקיית `scripts`. המדריך המלא: `docs/makerworld-daily.html` |
+| טוקן GitHub של האדמין | `localStorage` של הדפדפן במכשיר הישן | ליצור fine-grained token חדש (ריפו יחיד, Contents: Read and write), להדביק פעם אחת ב-`/admin` ← גיבוי / "שמירה לאתר" |
+| `agent/config.json` | IP, קוד גישה למדפסת, ומפתח `service_role` של Supabase | `agent\settings.bat` (או `start.bat` בהרצה ראשונה) שואל חמש שאלות. **אם הסוכן רץ על Pi — אין מה להעביר**, הוא לא תלוי במחשב |
+| `scripts/sync-daily.log` | יומן ריצה | נוצר לבד |
+
+מה שכן נמצא בגיט ואין מה להעביר: `public/shop.json` (כתובת Supabase ומפתח
+anon — פומבי בכוונה, RLS הוא ההגנה), הגדרות המחירים והמלאי, קופונים, הוצאות,
+החלטות המודלים. סודות ב-GitHub Actions (`MAKERWORLD_COOKIE`) יושבים בריפו ולא
+במחשב.
+
+### סדר ההקמה על המחשב החדש
+
+1. **Node.js LTS ו-Git** — הדרך הבטוחה: `winget install OpenJS.NodeJS.LTS Git.Git`
+   (מסך ה-PATH של מתקין Git הפיל שלושה סבבים; winget עוקף אותו). לסגור ולפתוח
+   חלון חדש אחרי ההתקנה.
+2. **clone אמיתי, לא ZIP**: `git clone https://github.com/ayochelman/unit3d.git`
+   לתיקייה קבועה. ZIP חסר `.git`, והסנכרון היומי גם מושך וגם דוחף.
+   המדריכים מניחים `G:\unit3d`; אם הנתיב שונה, לעדכן ב-Task Scheduler בלבד.
+3. `scripts\first-time-setup.bat` — בודק Node ו-Git, `npm install`, דפדפן ל-Playwright.
+4. `start.bat` בשורש → `http://localhost:3000`. לוודא שהאתר עולה.
+5. `scripts\mw-login.bat` → להתחבר למייקרוורלד → לרשום את `sync-daily.bat`
+   ב-Task Scheduler. לבדוק בבוקר שלמחרת את `scripts\sync-daily.log`.
+6. `/admin` (PIN ב-`lib/admin-store.ts`) → להדביק טוקן GitHub חדש → לבצע
+   "שמירה לאתר" קטנה כדי לוודא שהפרסום עובד. **לבטל את הטוקן הישן** ב-GitHub
+   → Settings → Developer settings; המחשב הישן לא צריך אותו יותר.
+7. אם הסוכן רץ על המחשב הישן ולא על Pi: `agent\start.bat` על המחשב החדש,
+   ואז `agent\check.bat` ו-`agent\page-check.bat` — הראשון מוכיח שהסוכן מגיע
+   למדפסת ולמסד, השני שהעמוד באתר באמת מציג את זה.
+
+### הצעד הבא
+
+- אין משימה פתוחה שחוסמת. הפרויקט חי בכתובת, מפרסם בכל דחיפה ל-`main`,
+  והתור לאישור מתמלא כל בוקר.
+- `public/studio/wall-emblem.webp` נכנס (16.9) ומחווט ב-`lib/unitForms.ts`;
+  כרטיס "סמל גדול לתלייה" מציג צילום אמיתי.
+- CLAUDE.md עודכן לשקף את המצב הזה בקצרה; הפירוט נשאר כאן.
