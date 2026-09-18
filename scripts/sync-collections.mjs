@@ -142,9 +142,20 @@ async function browser() {
         ? await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, executablePath: exe })
         : await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, channel: "chrome" });
     } catch (e) {
-      log(c.r(`\n  כרום לא נפתח על הפרופיל: ${e.message.split("\n")[0]}`));
-      log(c.y("  לוודא שאין חלון כרום פתוח על אותה תיקייה, ואז להריץ שוב."));
-      log(c.d(`  אפשר גם להצביע על כרום ידנית:  set PLAYWRIGHT_CHROMIUM=<נתיב ל-chrome.exe>\n`));
+      // "Opening in existing browser session" is Chrome saying a process is
+      // ALREADY on this profile: it handed the request over and exited, which
+      // closes the pipe and surfaces as the unhelpful "Target page, context or
+      // browser has been closed". Closing the window does not always end that
+      // process, so say what to do about it rather than what it said.
+      if (/Opening in existing browser session/i.test(e.message)) {
+        log(c.r("\n  כבר רץ כרום על תיקיית הפרופיל הזו, והוא תפס אותה."));
+        log(c.y("  לסגור את כל חלונות כרום ואז:  taskkill /F /IM chrome.exe"));
+        log(c.d("  ואחר כך להריץ שוב.\n"));
+      } else {
+        log(c.r(`\n  כרום לא נפתח על הפרופיל: ${e.message.split("\n")[0]}`));
+        log(c.y("  לוודא שאין חלון כרום פתוח על אותה תיקייה, ואז להריץ שוב."));
+        log(c.d("  אפשר גם להצביע על כרום ידנית:  set PLAYWRIGHT_CHROMIUM=<נתיב ל-chrome.exe>\n"));
+      }
       throw e;
     }
     ctx.__persistent = true;
