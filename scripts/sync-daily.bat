@@ -20,10 +20,14 @@ cd /d "%~dp0.."
 REM The signed-in browser profile. Created once by: npm run sync:collections -- --login
 set MAKERWORLD_PROFILE_DIR=%~dp0..\data\mw-profile
 
-REM  חלון גלוי, לא נסתר. דפדפן נסתר מקבל אתגר של Cloudflare בכל עמוד ולא גומר
-REM  אותו לעולם - נמדד כאן: אותו פרופיל, אותה כתובת, נסתר קרא 0 אוספים וגלוי
-REM  קרא 8. ייפתח חלון לכמה דקות בכל בוקר, ואין בו מה לעשות.
-set MAKERWORLD_HEADFUL=1
+REM  אין כאן דפדפן. עמודי האוספים מקבלים את האתגר של Cloudflare עם תיבה
+REM  לסימון, ודפדפן מנוהל לא יכול לסמן אותה - זה בדיוק מה שהתיבה בודקת.
+REM  נוסו: נסתר, גלוי, Chromium, כרום אמיתי, ופרופיל מחובר. כולם נעצרו שם.
+REM
+REM  לכן רשימת המספרים מגיעה מהדפדפן שלך: פותחים makerworld.com מחובר,
+REM  F12 ואז Console, מדביקים את scripts\collect-collections-in-browser.js,
+REM  והתוצאה נכנסת ל-data\pending-models.json. כל השאר - רישיון, מדף,
+REM  מספרים ותמונות - ממשיך דרך ה-API, שעונה תמיד.
 set LOG=%~dp0sync-daily.log
 
 REM ── איפה git ────────────────────────────────────────────────────────────────
@@ -50,7 +54,7 @@ call "%GIT%" pull --rebase origin main  >> "%LOG%" 2>&1
 REM --publish: a model the owner saved to his OWN collection is approved on the
 REM spot, because saving it was the yes. Likes, and anything with a licence or
 REM subject warning, still wait for him in /admin. See sync-collections.mjs.
-call npm run sync:collections -- --publish  >> "%LOG%" 2>&1
+call npm run sync:collections -- --offline --publish  >> "%LOG%" 2>&1
 
 REM Turn those answers - his own, and the ones just written above - into rows
 REM on the shelf. Reads public/model-decisions.json, which /admin also writes.
