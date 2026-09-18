@@ -39,6 +39,11 @@ const CANDIDATES = path.join(ROOT, "lib", "candidates.generated.ts");
 const DECISIONS = path.join(ROOT, "public", "model-decisions.json");
 const PROFILE = process.env.MAKERWORLD_PROFILE || "Erez.yoch";
 const LOGIN = process.argv.slice(2).includes("--login");
+// A visible window for the nightly run too, when MAKERWORLD_HEADFUL is set.
+// Headless is the more suspicious of the two to a challenge, and the escape
+// hatch costs nothing: on the one machine this runs on, a window opening at
+// 07:45 is a smaller problem than a run that quietly reads nothing.
+const HEADFUL = !!(process.env.MAKERWORLD_HEADFUL || "").trim();
 
 const DRY = process.argv.includes("--dry");
 /**
@@ -112,7 +117,7 @@ async function browser() {
     // about itself, from his own home address, is a person as far as
     // Cloudflare can tell — which is what it is.
     const opts = {
-      headless: !LOGIN,
+      headless: !HEADFUL,
       args,
       locale: "en-US",
       timezoneId: "Asia/Jerusalem",
@@ -141,28 +146,64 @@ async function browser() {
 /**
  * Sign in once, by hand, into the profile the nightly run will use.
  *
- * It opens a normal visible browser on the login page and waits. Nothing is
- * typed for him and no password is ever read here — he signs in himself, the
- * profile keeps the session, and the window closes when he presses Enter.
+ * This opens ORDINARY CHROME — not Playwright, not a driven browser, no flags
+ * beyond the profile directory — and waits while he signs in himself. Nothing
+ * is typed for him and no password is ever read here.
+ *
+ * It has to be ordinary Chrome, and that was learned the hard way. A driven
+ * browser cannot finish Cloudflare's challenge on the Bambu Lab sign-in at all:
+ * the "Verify you are human" box never ticks, however many times it is clicked,
+ * because the thing it is checking for is precisely that the browser is being
+ * driven. There is no flag that argues with that and there should not be — the
+ * honest answer is to let a person use a person's browser. He signs in, the
+ * profile keeps the cookies, and the nightly run inherits a session that was
+ * created by a human being, which is what it is.
  */
+function chromePath() {
+  const set = (process.env.CHROME_PATH || "").trim();
+  if (set) return set;
+  const env = (k) => process.env[k] || "";
+  const candidates = process.platform === "win32"
+    ? [
+        path.join(env("ProgramFiles"), "Google/Chrome/Application/chrome.exe"),
+        path.join(env("ProgramFiles(x86)"), "Google/Chrome/Application/chrome.exe"),
+        path.join(env("LOCALAPPDATA"), "Google/Chrome/Application/chrome.exe"),
+      ]
+    : process.platform === "darwin"
+      ? ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
+      : ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"];
+  return candidates.find((f) => f && fs.existsSync(f)) || null;
+}
+
 async function login() {
   if (!PROFILE_DIR) {
     log(c.r("\n  צריך MAKERWORLD_PROFILE_DIR כדי לשמור את ההתחברות.\n"));
     return;
   }
-  const ctx = await browser();
-  const page = ctx.pages()[0] || (await ctx.newPage());
+  const chrome = chromePath();
+  if (!chrome) {
+    log(c.r("\n  לא מצאתי את כרום."));
+    log("  אפשר להצביע עליו ידנית:  set CHROME_PATH=C:\\Path\\To\\chrome.exe\n");
+    return;
+  }
+
+  const { spawn } = await import("node:child_process");
+  fs.mkdirSync(PROFILE_DIR, { recursive: true });
   // The home page, not /en/login: that path 404s now, and a login URL is the
   // most likely thing on a site to move. The home page has carried a sign-in
   // link through every redesign so far, and a person can find it there even
   // when it moves again — which a hardcoded path cannot.
-  await page.goto("https://makerworld.com/en/", { waitUntil: "domcontentloaded" }).catch(() => {});
-  log(c.b("\n  נפתח דפדפן על מייקרוורלד."));
-  log("  ללחוץ Sign In בפינה ולהתחבר כרגיל.");
-  log(c.d("  אם נתקע על \"Verifying you are human\" — לרענן פעם אחת (F5)."));
-  log(c.b("  אחר כך לחזור לכאן וללחוץ Enter.\n"));
+  const child = spawn(chrome, [`--user-data-dir=${path.resolve(PROFILE_DIR)}`, "https://makerworld.com/en/"], {
+    detached: true,
+    stdio: "ignore",
+  });
+  child.unref();
+
+  log(c.b("\n  נפתח כרום רגיל — בלי שום אוטומציה, ולכן בדיקת Cloudflare תיגמר כרגיל."));
+  log("  ללחוץ Sign In בפינה ולהתחבר.");
+  log(c.y("\n  כשמסיימים: לסגור את חלון הדפדפן, ורק אז לחזור לכאן וללחוץ Enter."));
+  log(c.d("  (הסגירה היא מה שמוודא שהעוגיות נכתבו לדיסק.)\n"));
   await new Promise((res) => process.stdin.once("data", res));
-  await ctx.close();
   log(c.g("  ההתחברות נשמרה. מעכשיו כל הרצה כבר מחוברת.\n"));
 }
 
