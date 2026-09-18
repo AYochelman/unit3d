@@ -19,6 +19,11 @@ cd /d "%~dp0.."
 
 REM The signed-in browser profile. Created once by: npm run sync:collections -- --login
 set MAKERWORLD_PROFILE_DIR=%~dp0..\data\mw-profile
+
+REM  חלון גלוי, לא נסתר. דפדפן נסתר מקבל אתגר של Cloudflare בכל עמוד ולא גומר
+REM  אותו לעולם - נמדד כאן: אותו פרופיל, אותה כתובת, נסתר קרא 0 אוספים וגלוי
+REM  קרא 8. ייפתח חלון לכמה דקות בכל בוקר, ואין בו מה לעשות.
+set MAKERWORLD_HEADFUL=1
 set LOG=%~dp0sync-daily.log
 
 REM ── איפה git ────────────────────────────────────────────────────────────────
