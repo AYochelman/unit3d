@@ -10,7 +10,7 @@ import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
-import { DELIVERY, makeRef, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
+import { DELIVERY, makeRef, needsAddress, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
 import { placeOrder, sendOrderEmail } from "@/lib/orders-remote";
 import { track } from "@/lib/analytics";
 import { PRODUCTS } from "@/lib/products";
@@ -85,6 +85,11 @@ export default function ContactClient() {
   const [vat, setVat] = useState("");
   const [bulkQty, setBulkQty] = useState("");
   const [delivery, setDelivery] = useState<DeliveryId>("pickup");
+  const [address, setAddress] = useState("");
+  // A pickup has no address. Asking for one there, or worse carrying a stale
+  // one from a delivery the customer changed their mind about, puts a street
+  // on an order nobody is posting anything to.
+  const wantsAddress = needsAddress(delivery);
 
   // A discount code is checked against the list Ariel wrote in /admin, which
   // every browser loads at boot (CouponsBoot) — so the customer sees the money
@@ -270,6 +275,10 @@ export default function ContactClient() {
             e.preventDefault();
             // The field says why; sending a half-number helps nobody.
             if (!phoneLooksReal(phone)) return;
+            // The browser blocks this too (the input below is `required`), but
+            // a parcel with no address is the one mistake on this form that
+            // costs a delivery rather than a follow-up message.
+            if (wantsAddress && !address.trim()) return;
             const ref = makeRef();
             setRefCode(ref);
 
@@ -285,6 +294,7 @@ export default function ContactClient() {
                 kind: CUST_OPTIONS.find((o) => o.id === cust)?.label ?? "",
                 ...(unitName.trim() ? { unit: unitName.trim() } : {}),
                 ...(company.trim() ? { company: `${company.trim()}${vat.trim() ? ` · ח.פ. ${vat.trim()}` : ""}${bulkQty.trim() ? ` · ${bulkQty.trim()} יח׳` : ""}` } : {}),
+                ...(wantsAddress && address.trim() ? { address: address.trim() } : {}),
               },
               inquiry: inquiries.find((q) => q.id === inquiry)?.label ?? "",
               delivery,
@@ -642,6 +652,29 @@ export default function ContactClient() {
                 </button>
               ))}
             </div>
+
+            {/* Only for the options that actually post something.
+                It sits under the picker rather than with the name and phone
+                because that is where the customer has just decided they need
+                it — and it disappears again the moment they pick pickup. */}
+            {wantsAddress && (
+              <div className="mt-3">
+                <Field
+                  label="כתובת למשלוח"
+                  hint="רחוב, מספר, דירה, עיר ומיקוד"
+                  required
+                >
+                  <Textarea
+                    required
+                    rows={2}
+                    dir="rtl"
+                    placeholder="הרצל 12, דירה 4, תל אביב, 6120101"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </Field>
+              </div>
+            )}
           </section>
 
           {/* Submit row */}

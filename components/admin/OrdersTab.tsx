@@ -486,6 +486,11 @@ function OrderRow({
                   <span className="text-ink-500"> · {o.discount.label} · -{fmtILS(o.discount.off)}</span>
                 </div>
               )}
+              {o.customer.address && (
+                <div className="pt-1">
+                  כתובת: <span className="text-ink-100">{o.customer.address}</span>
+                </div>
+              )}
               <div className="pt-1">
                 מסירה: <span className="text-ink-100">{d.label}</span>
                 <span className="text-ink-500"> · {d.price ? fmtILS(d.price) : "חינם"} · {d.note}</span>
