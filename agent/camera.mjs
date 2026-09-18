@@ -17,6 +17,7 @@ import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
 import { banner } from "./version.mjs";
+import { HINT } from "./hints.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const cfg = JSON.parse(fs.readFileSync(path.join(HERE, "config.json"), "utf8"));
@@ -140,7 +141,7 @@ if (!jpeg && ipcam?.rtsp_url) {
 
   if (!bin) {
     bad("ffmpeg is not installed, and video cannot be read without it",
-        "double-click ffmpeg-install.bat (Mac: ffmpeg-install-mac.command), then run this again.");
+        `${HINT.ffmpeg}, then run this again.`);
   } else {
     const out = path.join(HERE, "camera-test.jpg");
     const authed = String(ipcam.rtsp_url).replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
@@ -209,7 +210,7 @@ if (!up.ok) {
       up.status === 404
         ? "the bucket 'printer' does not exist. Supabase > Storage > New bucket > name it exactly 'printer' and tick Public."
         : up.status === 400 || up.status === 401 || up.status === 403
-          ? "the secret key is wrong or has no rights. run settings.bat and paste the Secret key again."
+          ? `the secret key is wrong or has no rights. ${HINT.settings} and paste the Secret key again.`
           : `Supabase said: ${body}`);
   console.log("");
   process.exit(1);

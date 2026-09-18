@@ -27,12 +27,13 @@ import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
 import { makeR2 } from "./r2.mjs";
 import { VERSION } from "./version.mjs";
+import { HINT } from "./hints.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(HERE, "config.json");
 
 if (!fs.existsSync(CONFIG_PATH)) {
-  console.error("config.json is missing. Run settings.bat (or: node setup.mjs).");
+  console.error(`config.json is missing. ${HINT.settings}`);
   process.exit(1);
 }
 const cfg = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
@@ -173,7 +174,7 @@ client.on("error", (e) => {
   if (/FIN|ECONNRESET|closed|EPROTO/i.test(e.message)) {
     log("  the printer closed the connection.");
     log("  on the printer screen: Settings > LAN Only > turn ON 'Developer Mode',");
-    log("  then close this window and run start.bat again.");
+    log(`  then ${HINT.start}`);
   }
 });
 client.on("reconnect", () => log("reconnecting..."));
@@ -325,7 +326,7 @@ function startStream() {
     if (!ffWarned) {
       ffWarned = true;
       log("camera: this printer streams video, which needs ffmpeg - it is not installed.");
-      log("  double-click ffmpeg-install.bat once, then restart the agent.");
+      log(`  ${HINT.ffmpeg} once, then restart the agent.`);
       log("  (everything else keeps working without it.)");
     }
     return;
@@ -488,7 +489,7 @@ async function pushCamera() {
     if (++camFailures === 5 && !camWarned) {
       camWarned = true;
       log("camera: the printer is not sending pictures. everything else still works.");
-      log("  double-click camera.bat to find out why.");
+      log(`  ${HINT.camera} to find out why.`);
     }
     return;
   }

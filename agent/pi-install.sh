@@ -68,6 +68,11 @@ Description=Unit 3D printer agent
 Documentation=https://unit-3d.com/livestream
 After=network-online.target
 Wants=network-online.target
+# The printer is on the LAN and may answer late after a power cut, so the agent
+# must be allowed to keep retrying instead of being given up on. This belongs in
+# [Unit]: systemd reads StartLimit* here only, and silently logs
+# "Unknown key ... in section [Service], ignoring" when it sits below.
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
@@ -76,8 +81,6 @@ WorkingDirectory=$HERE
 ExecStart=$(command -v node) $HERE/printer-agent.mjs
 Restart=always
 RestartSec=10
-# The printer is on the LAN and may answer late after a power cut; keep trying.
-StartLimitIntervalSec=0
 StandardOutput=journal
 StandardError=journal
 

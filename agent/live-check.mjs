@@ -9,6 +9,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { makeR2 } from "./r2.mjs";
 import { banner } from "./version.mjs";
+import { HINT } from "./hints.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const cfg = JSON.parse(fs.readFileSync(path.join(HERE, "config.json"), "utf8"));
@@ -25,12 +26,12 @@ const bin = (() => {
   return spawnSync(process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg", ["-version"], { stdio: "ignore" }).status === 0 ? "ffmpeg" : "";
 })();
 if (bin) ok("ffmpeg is here");
-else bad("ffmpeg is missing", "double-click ffmpeg-install.bat, then run this again.");
+else bad("ffmpeg is missing", `${HINT.ffmpeg}, then run this again.`);
 
 // 2. The settings
 const r2 = cfg.live?.r2;
 if (!r2?.accountId || !r2?.accessKeyId || !r2?.secretAccessKey || !r2?.bucket) {
-  bad("the Cloudflare settings are not filled in", "run settings.bat and answer the live-video questions.");
+  bad("the Cloudflare settings are not filled in", `${HINT.settings} and answer the live-video questions.`);
   console.log("");
   process.exit(1);
 }
