@@ -27,6 +27,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import {
   ROOT, UA, c, sleep, fetchDetails, classify, holdsFor, platesFrom,
   readableTitle, SHELF_OVERRIDES,
@@ -40,6 +41,24 @@ const PROFILE = process.env.MAKERWORLD_PROFILE || "Erez.yoch";
 const LOGIN = process.argv.slice(2).includes("--login");
 
 const DRY = process.argv.includes("--dry");
+/**
+ * Approve what came out of the owner's OWN collections, without asking again.
+ *
+ * The shop's standing rule is that nothing reaches a shelf that nobody said
+ * yes to, and a sweep of trending models absolutely needs that gate. A model
+ * the owner saved to one of his own collections is different: saving it WAS
+ * the yes. Asking him to click approve on a list he assembled himself is the
+ * same decision twice.
+ *
+ * Two things stay behind the gate even in this mode, and deliberately:
+ *   · a LIKE is still only a nomination. He said "collections only", and a
+ *     like is how you remember something, not how you choose to sell it.
+ *   · anything `holdsFor` flagged — a non-commercial licence, a weapon, a
+ *     brand — waits for him whatever collection it sits in. Those are the
+ *     cases where approving by habit is how a shop ends up selling something
+ *     it may not sell, and no collection membership answers them.
+ */
+const PUBLISH = process.argv.includes("--publish");
 const log = (...a) => console.log(...a);
 
 /** The shelf a collection's name implies, when its name is that explicit. */
@@ -501,6 +520,44 @@ function queueCandidates(rows) {
   return merged.length;
 }
 
+/**
+ * Write "approved" for the collection models that need no second look.
+ *
+ * It answers into the SAME file /admin writes (public/model-decisions.json),
+ * so `npm run apply:approvals` builds the catalogue rows exactly as it does
+ * for a decision made by hand. One path to the shelf, whoever said yes.
+ *
+ * Returns the rows it approved, so the run can report the split.
+ */
+export function approveClean(rows) {
+  const ok = rows.filter((r) => r.via === "collection" && !r.warnings.length);
+  if (!ok.length) return [];
+
+  let doc = { version: 1, decisions: [] };
+  try {
+    const parsed = JSON.parse(fs.readFileSync(DECISIONS, "utf8"));
+    if (Array.isArray(parsed?.decisions)) doc = parsed;
+  } catch { /* an unreadable decisions file is an empty one */ }
+
+  // Never overwrite an answer that already exists — a rejection especially.
+  // `fresh` above already drops decided ids, so this is the belt to that
+  // brace: a model the owner said no to must not come back as a yes because
+  // it is still sitting in a collection he never cleaned out.
+  const answered = new Set(doc.decisions.map((d) => String(d.id)));
+  const at = new Date().toISOString();
+  const added = [];
+  for (const r of ok) {
+    if (answered.has(String(r.id))) continue;
+    doc.decisions.push({ id: String(r.id), decision: "approved", shelf: r.suggested, at });
+    added.push(r);
+  }
+  if (!added.length) return [];
+
+  fs.writeFileSync(DECISIONS, `${JSON.stringify(doc, null, 2)}\n`, "utf8");
+  for (const r of added) log(c.g(`  ✓ ${r.title} → ${r.suggested}`));
+  return added;
+}
+
 /** A line per model for the GitHub job summary, so the owner sees what landed. */
 function summary(rows, skipped) {
   const f = process.env.GITHUB_STEP_SUMMARY;
@@ -635,14 +692,23 @@ async function main() {
   }
 
   if (DRY) { log(c.d("\n  --dry: לא נכתב קובץ.\n")); return; }
+  const published = PUBLISH ? approveClean(rows) : [];
   const total = queueCandidates(rows);
   clearPending(new Set(rows.map((r) => r.id)));
   summary(rows, skipped);
-  log(c.g(`\n  ${rows.length} מודלים נוספו לתור האישורים (${total} ממתינים סה"כ)`));
-  log(c.d(`  לאשר או לדחות: /admin ← "מודלים לאישור"\n`));
+  if (published.length) {
+    log(c.g(`\n  ${published.length} מהאוספים אושרו אוטומטית — apply:approvals יעלה אותם למדף`));
+  }
+  const waiting = total - published.length;
+  log(c.g(`\n  ${rows.length} מודלים נוספו לתור (${waiting} ממתינים להחלטה)`));
+  if (waiting > 0) log(c.d(`  לאשר או לדחות: /admin ← "מודלים לאישור"\n`));
 }
 
-main().catch((e) => {
-  console.error(c.r(`\n  שגיאה: ${e.message}\n`));
-  process.exitCode = 1;
-});
+// Only when run as a command. Importing this file — which a test does, to
+// exercise approveClean without opening a browser — must not start a sweep.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((e) => {
+    console.error(c.r(`\n  שגיאה: ${e.message}\n`));
+    process.exitCode = 1;
+  });
+}

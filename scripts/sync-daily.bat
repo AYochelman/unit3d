@@ -42,7 +42,14 @@ if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Progr
 echo [%date% %time%] sync starting >> "%LOG%"
 
 call "%GIT%" pull --rebase origin main  >> "%LOG%" 2>&1
-call npm run sync:collections       >> "%LOG%" 2>&1
+REM --publish: a model the owner saved to his OWN collection is approved on the
+REM spot, because saving it was the yes. Likes, and anything with a licence or
+REM subject warning, still wait for him in /admin. See sync-collections.mjs.
+call npm run sync:collections -- --publish  >> "%LOG%" 2>&1
+
+REM Turn those answers - his own, and the ones just written above - into rows
+REM on the shelf. Reads public/model-decisions.json, which /admin also writes.
+call npm run apply:approvals        >> "%LOG%" 2>&1
 
 REM A like is not a decision either: it goes to the same approval queue.
 if exist data\liked-models.json (
@@ -50,6 +57,12 @@ if exist data\liked-models.json (
     if not "%%I"=="" call npm run add:candidates -- %%I >> "%LOG%" 2>&1
   )
 )
+
+REM The designer's whole gallery for models that only ever got a cover. Touches
+REM only models with no gallery yet, so it shrinks to nothing after a few days
+REM and then costs one pass over the catalogue. Runs HERE and not on GitHub:
+REM makerworld.com answers a home connection and turns datacenters away.
+call npm run backfill:images  >> "%LOG%" 2>&1
 
 call npm run fetch:images  >> "%LOG%" 2>&1
 
@@ -61,12 +74,13 @@ if errorlevel 1 (
 )
 
 "%GIT%" add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts ^
+        public/model-decisions.json data/rejected-models.json ^
         data/makerworld-raw.json data/pending-models.json data/liked-models.json ^
         data/collections-status.json public/img/catalog  >> "%LOG%" 2>&1
 
 "%GIT%" diff --cached --quiet
 if errorlevel 1 (
-  "%GIT%" commit -m "MakerWorld: queue what was saved and liked"  >> "%LOG%" 2>&1
+  "%GIT%" commit -m "MakerWorld: publish what was saved, queue what was liked"  >> "%LOG%" 2>&1
   "%GIT%" push origin main                                      >> "%LOG%" 2>&1
   echo [%date% %time%] pushed >> "%LOG%"
 ) else (
