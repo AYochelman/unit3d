@@ -80,6 +80,8 @@ export type PlacedOrder = {
   /** Ariel's own note on the decision. */
   decisionNote?: string;
   decidedAt?: string;
+  /** When the customer was told it went on the printer. Absent means they have not been. */
+  liveEmailAt?: string;
   /** When the customer was told it is ready. Absent means they have not been. */
   readyEmailAt?: string;
 };

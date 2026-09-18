@@ -13,7 +13,7 @@ import {
   DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
   type Fulfilment, type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
-import { adminDecide, adminOrders, adminProgress, isConfigured, markReadyEmailSent, sendOrderEmail, sendReadyEmail, shopConfig, type EmailResult, type ShopConfig } from "@/lib/orders-remote";
+import { adminDecide, adminOrders, adminProgress, isConfigured, markLiveEmailSent, markReadyEmailSent, sendLiveEmail, sendOrderEmail, sendReadyEmail, shopConfig, type EmailResult, type ShopConfig } from "@/lib/orders-remote";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -182,10 +182,33 @@ export default function OrdersTab() {
         ),
       );
       const ok = await adminDecide(token, o.ref, d, note);
-      if (!ok) { setLoadErr("ההחלטה לא נשמרה. נסה שוב."); await load(token); }
+      if (!ok) { setLoadErr("ההחלטה לא נשמרה. נסה שוב."); await load(token); return; }
+      if (d === "approved") await tellLive({ ...o, decision: d, decisionNote: note });
       return;
     }
     decideLocal(o.ref, d, note);
+    if (d === "approved") await tellLive({ ...o, decision: d, decisionNote: note });
+  };
+
+  /**
+   * Approval is the moment the customer's wait gets a picture.
+   *
+   * The confirmation promised a mail with the live link "ברגע האישור"; this is
+   * where that promise is kept, and only once — an order re-approved after a
+   * correction must not tell the customer it went on the printer again. The
+   * note typed with the decision goes in the letter, so a substitution or a
+   * delay reaches them in the same breath as the good news.
+   */
+  const tellLive = async (o: PlacedOrder, force = false) => {
+    if (!force && o.liveEmailAt) return;
+    setMailing(o.ref);
+    const r = await sendLiveEmail(o);
+    setMailing("");
+    setMailed((m) => ({ ...m, [o.ref]: r }));
+    if (r !== "sent") return;
+    const at = new Date().toISOString();
+    setRemote((rows) => rows.map((x) => (x.ref === o.ref ? { ...x, liveEmailAt: at } : x)));
+    if (isRemote(o.ref) && token) await markLiveEmailSent(token, o.ref);
   };
 
   // Marking one item ready. An approved order stays on the bench until every
@@ -335,6 +358,7 @@ export default function OrdersTab() {
               mailing={mailing === o.ref}
               mailed={mailed[o.ref]}
               onSendReady={() => void tellCustomer(o, true)}
+              onSendLive={() => void tellLive(o, true)}
               onRemove={isRemote(o.ref) ? null : () => removeLocal(o.ref)}
             />
           ))}
@@ -402,7 +426,7 @@ const FULFIL: Record<Fulfilment, { label: string; tone: "good" | "flame" | "neut
 };
 
 function OrderRow({
-  order: o, open, onToggle, note, onNote, onDecide, onMarkLine, onRemove, mailing, mailed, onSendReady,
+  order: o, open, onToggle, note, onNote, onDecide, onMarkLine, onRemove, mailing, mailed, onSendReady, onSendLive,
 }: {
   order: PlacedOrder;
   open: boolean;
@@ -411,11 +435,12 @@ function OrderRow({
   onNote: (v: string) => void;
   onDecide: (d: OrderDecision) => void;
   onMarkLine: (index: number, done: boolean) => void;
-  /** A "your order is ready" letter is on its way out right now. */
+  /** A letter to the customer (live or ready) is on its way out right now. */
   mailing: boolean;
   /** How the last attempt for this order went, this session. */
   mailed?: EmailResult;
   onSendReady: () => void;
+  onSendLive: () => void;
   onRemove: (() => void) | null;
 }) {
   const d = DELIVERY_BY_ID[o.delivery];
@@ -472,6 +497,36 @@ function OrderRow({
                 point — but "by itself" is also how a silent failure looks, so
                 the answer is printed here either way: sent and when, or what
                 went wrong and a button to try again. */}
+            {/* The same answer for the letter that goes out at approval: an
+                approved order with no live mail behind it is a customer who
+                is waiting in silence, and that is printed here in amber. */}
+            {stage === "active" && (
+              <div className={cn(
+                "rounded-lg border p-2.5 text-[11px] flex flex-wrap items-center gap-2",
+                o.liveEmailAt ? "border-good/40 bg-good/5" : "border-amber-500/40 bg-amber-500/5",
+              )}>
+                <Icon name={o.liveEmailAt ? "check" : "mail"} size={13} className={o.liveEmailAt ? "text-good" : "text-amber-500"} />
+                <span className="text-ink-200">
+                  {mailing
+                    ? "שולח ללקוח מייל…"
+                    : o.liveEmailAt
+                      ? `הלקוח קיבל מייל שההזמנה עלתה למדפסת, עם קישור לשידור החי · ${when(o.liveEmailAt)}`
+                      : MAIL_PROBLEM[mailed ?? (o.customer.email ? "failed" : "no-address")]}
+                </span>
+                <span className="flex-1" />
+                {!mailing && (
+                  <button
+                    type="button"
+                    onClick={onSendLive}
+                    disabled={!o.customer.email}
+                    className="px-2.5 h-7 rounded-lg border border-ink-700 text-ink-300 hover:border-ink-600 transition-colors disabled:opacity-40"
+                  >
+                    {o.liveEmailAt ? "שלח שוב" : "שלח עכשיו"}
+                  </button>
+                )}
+              </div>
+            )}
+
             {stage === "ready" && (
               <div className={cn(
                 "rounded-lg border p-2.5 text-[11px] flex flex-wrap items-center gap-2",

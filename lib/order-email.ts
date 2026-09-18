@@ -71,7 +71,7 @@ const infoRow = (label: string, value: string, strong = false): string => `
 
 const STEPS: [string, string][] = [
   ["1", "אני עובר על ההזמנה ומאשר אותה מולך בוואטסאפ."],
-  ["2", "ההדפסה יוצאת לדרך — כל פריט מודפס בנפרד, לפי החומר והצבע שבחרת."],
+  ["2", "ברגע האישור תקבל מייל עם קישור לשידור החי — כל פריט מודפס בנפרד, לפי החומר והצבע שבחרת."],
   ["3", "מעדכן אותך כשהכל מוכן, ומתאמים מסירה."],
 ];
 
@@ -174,6 +174,75 @@ export function orderEmailHtml(o: PlacedOrder): string {
 
 export const orderEmailSubject = (o: PlacedOrder): string =>
   `אישור הזמנה ${o.ref} · Unit 3D`;
+
+// ─── "It is on the printer" ──────────────────────────────────────────────────
+/**
+ * What the customer gets the moment Ariel approves the order.
+ *
+ * Between "קיבלתי" and "מוכנה" there was silence, and it is the longest part
+ * of the wait. Approval is the moment the order stops being a request and
+ * becomes a job on the bench, and the shop has a live camera on that bench —
+ * so this letter says both: it is happening, and here is where to watch.
+ *
+ * It goes out from the admin, once, at the click that approves; the note Ariel
+ * typed with the decision rides along, because that is where he says "the
+ * blue is out, printing it in black" and the customer should hear it.
+ */
+export function liveEmailHtml(o: PlacedOrder): string {
+  const total = orderTotal(o);
+  const note = (o.decisionNote ?? "").trim();
+
+  return shell(`
+  <tr><td style="padding:28px 24px 4px;">
+    <div style="font:700 22px/1.4 ${FONT};color:${INK};">ההזמנה שלך אושרה ועולה למדפסת 🟢</div>
+    <div style="font:400 15px/1.7 ${FONT};color:${MUTED};margin-top:6px;">
+      ${o.customer.name ? esc(o.customer.name) + ", " : ""}עברתי על ההזמנה והיא בדרך להדפסה. אפשר לראות את המדפסת עובדת בשידור חי.
+    </div>
+    ${refChip(o.ref)}
+  </td></tr>
+
+  ${note ? `
+  <tr><td style="padding:20px 24px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${PAPER};border-radius:12px;">
+      <tr><td style="padding:14px 18px;">
+        <div style="font:700 12px/1 ${FONT};letter-spacing:2px;color:${MUTED};padding-bottom:8px;">הערה ממני</div>
+        <div style="font:400 14px/1.7 ${FONT};color:${INK};">${esc(note)}</div>
+      </td></tr>
+    </table>
+  </td></tr>` : ""}
+
+  <tr><td style="padding:24px 24px 8px;">
+    <div style="font:700 12px/1 ${FONT};letter-spacing:2px;color:${MUTED};padding-bottom:10px;">מה מודפס</div>
+  </td></tr>
+  <tr><td style="padding:0 4px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${LINE};">
+      ${o.lines.map(lineRow).join("")}
+    </table>
+  </td></tr>
+
+  ${total == null ? "" : `
+  <tr><td style="padding:20px 24px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      ${infoRow("סה\"כ", esc(fmtILS(total)), true)}
+    </table>
+  </td></tr>`}
+
+  <tr><td style="padding:20px 24px 4px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${INK};border-radius:12px;">
+      <tr><td style="padding:16px 20px;font:400 14px/1.7 ${FONT};color:#FAFAFA;">
+        המדפסת משודרת בזמן אמת: מצב ההדפסה, אחוזים, וכמה זמן נשאר. כל פריט מודפס בנפרד, לפי החומר והצבע שבחרת — וכשהכל ירד מהמדפסת ייצא מייל נוסף.
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:16px 24px 28px;">
+    <a href="${SITE_URL}/livestream" style="display:inline-block;background:${GREEN};color:#FFFFFF;text-decoration:none;border-radius:10px;padding:13px 26px;font:700 15px/1 ${FONT};">לצפות בשידור החי</a>
+  </td></tr>
+`);
+}
+
+export const liveEmailSubject = (o: PlacedOrder): string =>
+  `ההזמנה ${o.ref} אושרה ועולה למדפסת · Unit 3D`;
 
 // ─── "It is ready" ───────────────────────────────────────────────────────────
 /**
