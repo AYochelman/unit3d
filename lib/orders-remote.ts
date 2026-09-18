@@ -1,6 +1,6 @@
 "use client";
 import type { OrderDecision, PlacedOrder } from "./orders";
-import { orderEmailHtml, orderEmailSubject, readyEmailHtml, readyEmailSubject } from "./order-email";
+import { liveEmailHtml, liveEmailSubject, orderEmailHtml, orderEmailSubject, readyEmailHtml, readyEmailSubject } from "./order-email";
 
 /**
  * Where an order lives between the customer's phone and Ariel's screen.
@@ -152,6 +152,7 @@ type Row = {
   decision_note: string | null;
   decided_at: string | null;
   progress: boolean[] | null;
+  live_email_at: string | null;
   ready_email_at: string | null;
 };
 
@@ -168,6 +169,7 @@ const toOrder = (r: Row): PlacedOrder => ({
   decisionNote: r.decision_note ?? "",
   ...(Array.isArray(r.progress) ? { progress: r.progress } : {}),
   ...(r.decided_at ? { decidedAt: r.decided_at } : {}),
+  ...(r.live_email_at ? { liveEmailAt: r.live_email_at } : {}),
   ...(r.ready_email_at ? { readyEmailAt: r.ready_email_at } : {}),
 });
 
@@ -275,6 +277,14 @@ export async function sendOrderEmail(o: PlacedOrder): Promise<EmailResult> {
 }
 
 /**
+ * "It is on the printer", sent from Ariel's own browser at the click that
+ * approves the order. Same pipe, the middle of the job.
+ */
+export async function sendLiveEmail(o: PlacedOrder): Promise<EmailResult> {
+  return sendMail(o, liveEmailSubject(o), liveEmailHtml(o));
+}
+
+/**
  * "It is ready", sent from Ariel's own browser when the last item is ticked.
  *
  * Same pipe as the confirmation, opposite end of the job. It goes out from the
@@ -287,16 +297,25 @@ export async function sendReadyEmail(o: PlacedOrder): Promise<EmailResult> {
 
 /** Records that the customer has been told, so a re-tick does not tell them twice. */
 export async function markReadyEmailSent(token: string, ref: string): Promise<boolean> {
+  return stamp(token, ref, "ready_email_at");
+}
+
+/** Records that the customer heard it went on the printer, so a re-approval does not tell them twice. */
+export async function markLiveEmailSent(token: string, ref: string): Promise<boolean> {
+  return stamp(token, ref, "live_email_at");
+}
+
+async function stamp(token: string, ref: string, column: "live_email_at" | "ready_email_at"): Promise<boolean> {
   const c = await shopConfig();
   if (!isConfigured(c)) return false;
   try {
-    // Its own PATCH, deliberately not folded into the progress write: if the
-    // column has not been added yet this request fails, and the tick that the
-    // customer's order actually depends on must not fail with it.
+    // Its own PATCH, deliberately not folded into the decision or progress
+    // write: if the column has not been added yet this request fails, and the
+    // write the customer's order actually depends on must not fail with it.
     const res = await fetch(`${c.supabaseUrl}/rest/v1/orders?ref=eq.${encodeURIComponent(ref)}`, {
       method: "PATCH",
       headers: { ...headers(c, token), Prefer: "return=minimal" },
-      body: JSON.stringify({ ready_email_at: new Date().toISOString() }),
+      body: JSON.stringify({ [column]: new Date().toISOString() }),
     });
     return res.ok;
   } catch {
