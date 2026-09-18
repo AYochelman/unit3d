@@ -51,10 +51,12 @@ if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Progr
 echo [%date% %time%] sync starting >> "%LOG%"
 
 call "%GIT%" pull --rebase origin main  >> "%LOG%" 2>&1
-REM --publish: a model the owner saved to his OWN collection is approved on the
-REM spot, because saving it was the yes. Likes, and anything with a licence or
-REM subject warning, still wait for him in /admin. See sync-collections.mjs.
-call npm run sync:collections -- --offline --publish  >> "%LOG%" 2>&1
+REM  No --publish. Every new model waits for him in /admin, including ones he
+REM  saved to his own collection - he said so in as many words on 18.9, and it
+REM  overrides the exception that used to live here. What comes in from a
+REM  collection still arrives with its shelf already worked out; what it does
+REM  not arrive with is a decision.
+call npm run sync:collections -- --offline  >> "%LOG%" 2>&1
 
 REM Turn those answers - his own, and the ones just written above - into rows
 REM on the shelf. Reads public/model-decisions.json, which /admin also writes.
@@ -89,7 +91,7 @@ if errorlevel 1 (
 
 "%GIT%" diff --cached --quiet
 if errorlevel 1 (
-  "%GIT%" commit -m "MakerWorld: publish what was saved, queue what was liked"  >> "%LOG%" 2>&1
+  "%GIT%" commit -m "MakerWorld: queue what was found for approval"  >> "%LOG%" 2>&1
   "%GIT%" push origin main                                      >> "%LOG%" 2>&1
   echo [%date% %time%] pushed >> "%LOG%"
 ) else (
