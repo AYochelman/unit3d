@@ -10864,7 +10864,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [
       "license-nc"
     ],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USb0a2e81c642af2/design/2025-10-21_16ec0fd5c929e.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USb0a2e81c642af2/design/2025-10-21_fd6f220ab7c85.png",
+      "https://makerworld.bblmw.com/makerworld/model/USb0a2e81c642af2/design/2025-10-21_ad622d7614342.jpg"
+    ]
   },
   {
     "id": "mw-1935027",
@@ -11545,6 +11550,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "screen"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US1e14f2eed8488a/design/55c35a74d68fcd66.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US1e14f2eed8488a/design/4c809d5eca57adbc.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US1e14f2eed8488a/design/87d53da3c7bc22cb.jpeg"
     ]
   },
   {
@@ -11829,7 +11839,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "keychain",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USa1dc87ce4d58b6/design/004ce27cea5c88ef.png",
+      "https://makerworld.bblmw.com/makerworld/model/USa1dc87ce4d58b6/design/fc5bce62f01e1709.png",
+      "https://makerworld.bblmw.com/makerworld/model/USa1dc87ce4d58b6/design/794cc12ebc1fca33.png"
+    ]
   },
   {
     "id": "mw-2876996",
@@ -13194,6 +13209,10 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "office"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USdfb2211c62de29/design/2024-05-19_1f3353abb034.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USdfb2211c62de29/design/2024-05-19_d5281d1318a2c.jpg"
     ]
   },
   {
@@ -13217,6 +13236,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USabab31acf7f921/design/2025-05-23_906c35f177de28.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/USabab31acf7f921/design/2025-05-23_8d38f0886f2f78.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/USabab31acf7f921/design/2025-05-23_964542843ddca8.jpeg"
     ]
   },
   {
@@ -13240,6 +13264,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USe64876f43617e/design/2024-10-20_e8d28d94fac3b.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USe64876f43617e/design/2024-10-20_ce705f71a902c.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USe64876f43617e/design/2024-10-20_683c5c47000728.jpg"
     ]
   },
   {
@@ -13264,6 +13293,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "screen",
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US2f00181473f583/design/2024-12-05_486a39d2a0ba5.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US2f00181473f583/design/2024-12-05_6c04fa357ff12.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US2f00181473f583/design/2024-12-05_76332bab59c4f.jpg"
     ]
   },
   {
@@ -13288,7 +13322,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "licenseChecked": true,
     "hoursAms": 0.31,
-    "gramsAms": 8
+    "gramsAms": 8,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USa06d0263de6919/design/2025-01-12_cbb1312cd9ea2.png",
+      "https://makerworld.bblmw.com/makerworld/model/USa06d0263de6919/design/2025-01-12_31a4a80adca2a.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USa06d0263de6919/design/2025-01-12_c4a9f2b0acec5.jpg"
+    ]
   },
   {
     "id": "mw-1259184",
@@ -13311,6 +13350,9 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "office"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USa31742e2cd0542/design/2025-03-28_f2954f698f24a.jpg"
     ]
   },
   {
@@ -13337,7 +13379,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "trendy"
     ],
     "hoursAms": 0.53,
-    "gramsAms": 9
+    "gramsAms": 9,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US52044e1a4a74da/design/2025-10-22_fbdeb4b052c3e8.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US52044e1a4a74da/design/2025-10-23_804b1a289943f8.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US52044e1a4a74da/design/2025-10-22_afd2993ce53848.jpg"
+    ]
   },
   {
     "id": "mw-2131460",
@@ -13359,7 +13406,10 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 1.48,
-    "gramsAms": 21
+    "gramsAms": 21,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US69738034695b29/design/2025-12-18_efe4de8bb59df8.jpg"
+    ]
   },
   {
     "id": "mw-2257373",
@@ -13382,6 +13432,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "statues"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USfdf3ba61aa2adc/design/2026-01-17_94b782564987e8.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/USfdf3ba61aa2adc/design/2026-01-17_854bdf9f298048.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/USfdf3ba61aa2adc/design/2026-01-17_cb59232b09762.jpeg"
     ]
   },
   {
@@ -13405,6 +13460,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "statues"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US62ebebe0e36b17/design/7f9fb3492845d5a7.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US62ebebe0e36b17/design/990c2451c56b56e8.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US62ebebe0e36b17/design/f1f05863c81c4ec0.jpg"
     ]
   },
   {
@@ -13437,6 +13497,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
         "g": 88,
         "h": 3.7
       }
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USf265b3990e22ca/design/21d84debd45cbf09.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USf265b3990e22ca/design/3c163914036833e6.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USf265b3990e22ca/design/265607854efe0fd8.jpg"
     ]
   },
   {
@@ -13462,7 +13527,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "trendy"
     ],
     "hoursAms": 11.03,
-    "gramsAms": 294
+    "gramsAms": 294,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US6dddd5b0696bd5/design/5897fa48573dbd90.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US6dddd5b0696bd5/design/ae539a4a1181804c.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US6dddd5b0696bd5/design/7583edfbf9564b20.jpg"
+    ]
   },
   {
     "id": "mw-2690429",
@@ -13488,6 +13558,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "screen",
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US410c9c816899b1/design/2659e0075c1eb45d.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US410c9c816899b1/design/ce6a613e65ccf5eb.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US410c9c816899b1/design/ab89edd5c9895c35.jpg"
     ]
   },
   {
@@ -13512,6 +13587,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "screen",
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US11631f373bba89/design/852c7a618c161db5.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US11631f373bba89/design/e938a4b0e960975c.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/US11631f373bba89/design/9fa893b2e244a576.jpg"
     ]
   },
   {
@@ -13538,6 +13618,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "screen",
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/UScf70f035ac8e77/design/f463723fdce8ff5c.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/UScf70f035ac8e77/design/d6c1b33d388d9163.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/UScf70f035ac8e77/design/4ace5a59aa677827.jpeg"
     ]
   },
   {
@@ -13564,6 +13649,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "screen",
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USf635727285bff3/design/cf2c0246344efd22.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/USf635727285bff3/design/db322d588f1315be.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/USf635727285bff3/design/c7d71e9438fbae14.jpeg"
     ]
   },
   {
@@ -13590,6 +13680,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "screen",
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US44728e712c6b5a/design/a1c49365d70f3806.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US44728e712c6b5a/design/ef5a5e2d0f67c1c3.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US44728e712c6b5a/design/2c5c048ae1de4ad2.jpeg"
     ]
   },
   {
@@ -13613,6 +13708,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US7071723e779e99/design/5f1052ea94032e18.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US7071723e779e99/design/e4eb74069c9c6a49.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US7071723e779e99/design/3bda603667c58781.jpeg"
     ]
   },
   {
@@ -13636,6 +13736,10 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "home"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US7dba467c4c9033/design/395147b589704367.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US7dba467c4c9033/design/1265b7f34637bf0e.png"
     ]
   },
   {
@@ -13661,7 +13765,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "home"
     ],
     "hoursAms": 10.98,
-    "gramsAms": 181
+    "gramsAms": 181,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USb72f33ba3f363e/design/3b06724fa1f84f31.png",
+      "https://makerworld.bblmw.com/makerworld/model/USb72f33ba3f363e/design/203c4febcddc486a.png",
+      "https://makerworld.bblmw.com/makerworld/model/USb72f33ba3f363e/design/79a6904c5d6bb492.png"
+    ]
   },
   {
     "id": "mw-2927155",
@@ -13681,7 +13790,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "penholder",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US38a3528f923c5e/design/c5e27bf11c019614.png",
+      "https://makerworld.bblmw.com/makerworld/model/US38a3528f923c5e/design/15d9323df9ec82f3.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US38a3528f923c5e/design/961f7fbe75d65b54.jpeg"
+    ]
   },
   {
     "id": "mw-2983933",
@@ -13718,6 +13832,10 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
         "g": 110,
         "h": 3.78
       }
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US57b08d6179d9bb/design/27d575190520c2d6.png",
+      "https://makerworld.bblmw.com/makerworld/model/US57b08d6179d9bb/design/88ebbe7c917914f7.png"
     ]
   },
   {
@@ -13738,7 +13856,10 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "keychain",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US99a7dd5453554e/design/1bc50506f230e6f6.png"
+    ]
   },
   {
     "id": "mw-3057768",
@@ -13768,6 +13889,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
         "g": 56,
         "h": 3.31
       }
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US76dac02218e5e4/design/1f0b3f92d79e8378.png",
+      "https://makerworld.bblmw.com/makerworld/model/US76dac02218e5e4/design/8a0d0ce3dd32c911.png",
+      "https://makerworld.bblmw.com/makerworld/model/US76dac02218e5e4/design/874a5e9e9c5223f7.png"
     ]
   },
   {
@@ -13788,7 +13914,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "planter",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USd3d873f78ba49b/design/ba1f983838cef901.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USd3d873f78ba49b/design/6812417fcc542fa7.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USd3d873f78ba49b/design/2d8bdf932cbeac15.jpg"
+    ]
   },
   {
     "id": "mw-3127131",
@@ -13810,7 +13941,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 4.18,
-    "gramsAms": 67
+    "gramsAms": 67,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000003127131/design/e2fb608a52b94da8.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000003127131/design/d6c108ecf5b4e4b3.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000003127131/design/dcb4124621b91371.jpg"
+    ]
   },
   {
     "id": "mw-3138323",
@@ -13835,7 +13971,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "home"
     ],
     "hoursAms": 1.04,
-    "gramsAms": 19
+    "gramsAms": 19,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US785faab004ff9/design/323328f22f7f360e.png",
+      "https://makerworld.bblmw.com/makerworld/model/US785faab004ff9/design/284583d2063abbf6.png",
+      "https://makerworld.bblmw.com/makerworld/model/US785faab004ff9/design/90f36353661f1fa7.png"
+    ]
   },
   {
     "id": "mw-3286307",
@@ -13857,7 +13998,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "holds": [],
     "licenseChecked": true,
     "hoursAms": 3.19,
-    "gramsAms": 44
+    "gramsAms": 44,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USbd1e21e6bfa5fc/design/382213fe41d4c7e4.png",
+      "https://makerworld.bblmw.com/makerworld/model/USbd1e21e6bfa5fc/design/51cf63818884f01b.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/USbd1e21e6bfa5fc/design/5095f58dc3983c1f.jpg"
+    ]
   },
   {
     "id": "mw-3286365",
@@ -13880,6 +14026,11 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "licenseChecked": true,
     "also": [
       "statues"
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US37654fcc5e79f4/design/c5351ef95151574e.png",
+      "https://makerworld.bblmw.com/makerworld/model/US37654fcc5e79f4/design/daefbcaa84066db5.png",
+      "https://makerworld.bblmw.com/makerworld/model/US37654fcc5e79f4/design/8379f6bbce6149b7.jpeg"
     ]
   },
   {
@@ -13900,7 +14051,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "art": "lowpoly",
     "status": "live",
     "holds": [],
-    "licenseChecked": true
+    "licenseChecked": true,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USda9a96433e6b37/design/d88cbb50d55308e8.png",
+      "https://makerworld.bblmw.com/makerworld/model/USda9a96433e6b37/design/f6144db250afb99f.png",
+      "https://makerworld.bblmw.com/makerworld/model/USda9a96433e6b37/design/dff492f731b68f98.png"
+    ]
   },
   {
     "id": "mw-3286545",
@@ -13925,7 +14081,12 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "statues"
     ],
     "hoursAms": 2.34,
-    "gramsAms": 53
+    "gramsAms": 53,
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US9c36145e3ea0ef/design/7ad00ffaed4e5529.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US9c36145e3ea0ef/design/a0ce75c738051641.jpeg",
+      "https://makerworld.bblmw.com/makerworld/model/US9c36145e3ea0ef/design/47ecde2f2e682632.jpeg"
+    ]
   }
 ];
 
