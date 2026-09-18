@@ -231,36 +231,40 @@
 <h2 id="map">2 · המפה — איפה כל קובץ יושב</h2>
 
 <p>בסוף שלב 2 תיווצר במחשב תיקייה אחת:
-<code class="path">G:\unit3d</code>. זה כל הפרויקט. אלה הקבצים
+<code class="path">C:\unit3d</code>. זה כל הפרויקט. אלה הקבצים
 היחידים שתצטרך אי פעם לגעת בהם:</p>
 
 <div class="map">
 <table>
   <tbody>
-    <tr><td><code class="path">G:\unit3d\scripts\first-time-setup.bat</code></td>
+    <tr><td><code class="path">C:\unit3d\scripts\first-time-setup.bat</code></td>
         <td>הקלקה כפולה — <strong>פעם אחת</strong>, שלב 3</td></tr>
-    <tr><td><code class="path">G:\unit3d\scripts\mw-login.bat</code></td>
+    <tr><td><code class="path">C:\unit3d\scripts\mw-login.bat</code></td>
         <td>הקלקה כפולה — <strong>פעם אחת</strong>, שלב 4<br><span class="faint">ושוב, רק אם ההתחברות תתנתק יום אחד</span></td></tr>
-    <tr><td><code class="path">G:\unit3d\scripts\sync-daily.bat</code></td>
+    <tr><td><code class="path">C:\unit3d\scripts\sync-daily.bat</code></td>
         <td>זה מה שרץ לבד כל בוקר. <strong>אתה לא נוגע בו</strong> — רק מצביע עליו בשלב 5</td></tr>
-    <tr><td><code class="path">G:\unit3d\scripts\sync-daily.log</code></td>
+    <tr><td><code class="path">C:\unit3d\scripts\sync-daily.log</code></td>
         <td><strong>היומן.</strong> מה הריצה האחרונה אמרה. הקובץ הראשון לפתוח כשמשהו לא עובד</td></tr>
-    <tr><td><code class="path">G:\unit3d\data\collections-status.json</code></td>
+    <tr><td><code class="path">C:\unit3d\data\collections-status.json</code></td>
         <td>מה הריצה <em>ראתה</em> במייקרוורלד — אילו אוספים, כמה מודלים, מה נחסם</td></tr>
-    <tr><td><code class="path">G:\unit3d\data\mw-profile\</code></td>
+    <tr><td><code class="path">C:\unit3d\data\mw-profile\</code></td>
         <td>כאן נשמרת ההתחברות שלך למייקרוורלד. לא לפתוח, לא למחוק</td></tr>
   </tbody>
 </table>
 </div>
 
 <div class="warn">
-  <div class="t">⚠ התיקייה הישנה היא לא הפרויקט</div>
-  <p>יש אצלך <code class="path">G:\Unit 3D</code> — עם רווח ובאותיות גדולות.
-  יש בה שני קבצים מ-4.9; בפרויקט האמיתי יש בתיקיית <code>scripts</code> לבדה 25.
-  זה עותק ישן וחלקי.</p>
-  <p><strong>אל תעבוד בה ואל תריץ ממנה כלום.</strong> הפרויקט האמיתי ייווצר
-  בשלב 2 ויקרא <code class="path">G:\unit3d</code> — <em>בלי</em> רווח,
-  באותיות קטנות. שתי תיקיות שונות לגמרי.</p>
+  <div class="t">⚠ הנתיבים כאן הם דוגמה, לא חוק</div>
+  <p>כל נתיב במדריך נכתב כ-<code class="path">C:\unit3d</code>, כי שם הפרויקט
+  יושב אחרי ה-clone שבשלב 2. אם שמת אותו במקום אחר — בכונן אחר, או בתוך
+  תיקיית משתמש — <strong>כל נתיב כאן משתנה בהתאם</strong>, וזה כולל את שני
+  השדות ב-Task Scheduler.</p>
+  <p>הדרך הבטוחה לדעת מה הנתיב שלך: לפתוח את תיקיית הפרויקט בסייר הקבצים
+  וללחוץ על שורת הכתובת למעלה. מה שמופיע שם הוא התשובה, ואפשר להעתיק אותו
+  משם ישירות.</p>
+  <p>בגרסה קודמת של המחשב הפרויקט ישב ב-<code class="path">G:</code>, והמדריך
+  היה כתוב לפיו. אם נתיב כלשהו כאן שולח אותך לתיקייה שלא קיימת — זה הסימן
+  שהוא לא עודכן, ולא שמשהו אצלך שבור.</p>
 </div>
 
 <!-- ══════════════════════════════════════════════════════ -->
@@ -403,7 +407,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
       <div class="t">✅ איך יודעים שהצליח</div>
       <p>לפתוח <strong>File Explorer</strong>
       (<span class="kbd">⊞ Windows</span> + <span class="kbd">E</span>)
-      וללכת ל-<code class="path">G:\unit3d</code>.</p>
+      וללכת ל-<code class="path">C:\unit3d</code>.</p>
       <p>אמורות להיות שם תיקיות בשמות
       <code>app</code>, <code>components</code>, <code>lib</code>,
       <code>scripts</code>, <code>docs</code> ועוד.</p>
@@ -435,7 +439,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
 
     <div class="row">
       <div class="row-k">לאיזו תיקייה</div>
-      <div class="row-v"><code class="path">G:\unit3d\scripts</code></div>
+      <div class="row-v"><code class="path">C:\unit3d\scripts</code></div>
     </div>
 
     <div class="row">
@@ -486,7 +490,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
 
     <div class="row">
       <div class="row-k">לאיזו תיקייה</div>
-      <div class="row-v"><code class="path">G:\unit3d\scripts</code> — אותה תיקייה</div>
+      <div class="row-v"><code class="path">C:\unit3d\scripts</code> — אותה תיקייה</div>
     </div>
 
     <div class="row">
@@ -515,7 +519,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
     <div class="row">
       <div class="row-k">איפה זה נשמר</div>
       <div class="row-v">
-        <p><code class="path">G:\unit3d\data\mw-profile</code></p>
+        <p><code class="path">C:\unit3d\data\mw-profile</code></p>
         <p>הסנכרון היומי פותח את אותו פרופיל בדיוק, ולכן הוא תמיד מחובר —
         מייקרוורלד מרעננת לו את החיבור כמו לכל משתמש שגולש באתר.
         <strong>אין טוקן להדביק, ואין שום דבר שיפוג ויצטרך חידוש חודשי.</strong></p>
@@ -590,8 +594,8 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
 
         <tr><td rowspan="3">Actions<br><span class="faint">← New…</span></td>
             <td>Action</td><td><code>Start a program</code></td></tr>
-        <tr><td>Program/script</td><td><code class="path">G:\unit3d\scripts\sync-daily.bat</code></td></tr>
-        <tr><td>Start in (optional)</td><td><code class="path">G:\unit3d</code> ← ואז <strong>OK</strong></td></tr>
+        <tr><td>Program/script</td><td><code class="path">C:\unit3d\scripts\sync-daily.bat</code></td></tr>
+        <tr><td>Start in (optional)</td><td><code class="path">C:\unit3d</code> ← ואז <strong>OK</strong></td></tr>
       </tbody>
     </table>
     </div>
@@ -604,8 +608,8 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
       <p>הוא מסומן <em>optional</em> ולכן קל לדלג עליו. אבל בלעדיו המשימה רצה
       מתיקייה אחרת, לא מוצאת את הפרויקט, <strong>ונכשלת בשקט</strong> — בלי
       הודעת שגיאה, בלי כלום.</p>
-      <p>שים לב גם שהוא <code class="path">G:\unit3d</code>
-      ו<strong>לא</strong> <code class="path">G:\unit3d\scripts</code> —
+      <p>שים לב גם שהוא <code class="path">C:\unit3d</code>
+      ו<strong>לא</strong> <code class="path">C:\unit3d\scripts</code> —
       שונה מהשדה שמעליו. זה מכוון.</p>
     </div>
 
@@ -614,7 +618,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
       <p>ברשימה שבאמצע החלון, למצוא את <strong>Unit3D MakerWorld Sync</strong>,
       <strong>הקלקה ימנית</strong> עליו ← <strong>Run</strong>.</p>
       <p>לחכות 1–2 דקות. ואז לפתוח ב-<strong>Notepad</strong> את הקובץ:</p>
-      <p><code class="path">G:\unit3d\scripts\sync-daily.log</code></p>
+      <p><code class="path">C:\unit3d\scripts\sync-daily.log</code></p>
       <p class="faint">(File Explorer ← הקלקה ימנית על הקובץ ← Open with ← Notepad)</p>
       <p>אמורות להיות שם שורות עם התאריך והשעה של עכשיו. מה כתוב בשורה
       האחרונה — <a href="#logtable">בטבלה בהמשך</a>.</p>
@@ -664,7 +668,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
 
 <h3>להריץ ידנית עכשיו</h3>
 <p>שמרת משהו לאוסף ואתה לא רוצה לחכות לבוקר?
-<strong>File Explorer</strong> ← <code class="path">G:\unit3d\scripts</code> ←
+<strong>File Explorer</strong> ← <code class="path">C:\unit3d\scripts</code> ←
 הקלקה כפולה על <code>sync-daily.bat</code>. אותו דבר בדיוק, רק עכשיו.</p>
 
 <!-- ══════════════════════════════════════════════════════ -->
@@ -673,7 +677,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
 <h3 id="logtable">קודם כל: היומן</h3>
 
 <p><strong>הקובץ הראשון שפותחים, תמיד:</strong>
-<code class="path">G:\unit3d\scripts\sync-daily.log</code><br>
+<code class="path">C:\unit3d\scripts\sync-daily.log</code><br>
 <span class="faint">File Explorer ← הקלקה ימנית ← Open with ← Notepad</span></p>
 
 <p>להסתכל על <strong>השורה האחרונה</strong>:</p>
@@ -699,13 +703,13 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
 <h3>אם כתוב שהוא לא מחובר</h3>
 
 <p>לפתוח ב-Notepad את
-<code class="path">G:\unit3d\data\collections-status.json</code>
+<code class="path">C:\unit3d\data\collections-status.json</code>
 ולחפש את השורה:</p>
 
 <div class="screen">"signedIn": <span class="bad">false</span></div>
 
 <p>אם זה <code>false</code> — הפרופיל התנתק ממייקרוורלד. <strong>התיקון:</strong>
-להריץ שוב את <code class="path">G:\unit3d\scripts\mw-login.bat</code>
+להריץ שוב את <code class="path">C:\unit3d\scripts\mw-login.bat</code>
 (שלב 4). זה כל הסיפור, וזה לוקח דקה.</p>
 
 <h3>המשימה לא רצה</h3>
@@ -722,7 +726,7 @@ Resolving deltas: 100% (2903/2903), done.<span class="ok"> ✓</span></div>
         <td>המשימה מושבתת — הקלקה ימנית עליה ← <strong>Enable</strong></td></tr>
     <tr><td>שורות עם שגיאה</td>
         <td>הקלקה ימנית ← Properties ← לשונית Actions ← לבדוק את השדה
-            <strong>Start in</strong> = <code class="path">G:\unit3d</code></td></tr>
+            <strong>Start in</strong> = <code class="path">C:\unit3d</code></td></tr>
     <tr><td>"The task did not run because…"</td>
         <td>המחשב היה כבוי ב-07:45. לשונית <strong>Settings</strong> ← לסמן ✅
             <em>Run task as soon as possible after a scheduled start is missed</em></td></tr>

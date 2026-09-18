@@ -13,12 +13,12 @@
 
 | | |
 |---|---|
-| הפרויקט יושב ב- | `G:\unit3d` |
-| הסקריפט שרץ כל בוקר | `G:\unit3d\scripts\sync-daily.bat` (07:45, Task Scheduler) |
-| היומן | `G:\unit3d\scripts\sync-daily.log` ← הקובץ הראשון לפתוח כשמשהו לא עובד |
-| מה הריצה ראתה | `G:\unit3d\data\collections-status.json` |
-| התחברות מחדש | `G:\unit3d\scripts\mw-login.bat` — התיקון ל-`"signedIn": false` |
-| התקנה ראשונה | `G:\unit3d\scripts\first-time-setup.bat` |
+| הפרויקט יושב ב- | `C:\unit3d` — **אם שמת אותו במקום אחר, כל שורה בטבלה משתנה בהתאם** |
+| הסקריפט שרץ כל בוקר | `C:\unit3d\scripts\sync-daily.bat` (07:45, Task Scheduler) |
+| היומן | `C:\unit3d\scripts\sync-daily.log` ← הקובץ הראשון לפתוח כשמשהו לא עובד |
+| מה הריצה ראתה | `C:\unit3d\data\collections-status.json` |
+| התחברות מחדש | `C:\unit3d\scripts\mw-login.bat` — התיקון ל-`"signedIn": false` |
+| התקנה ראשונה | `C:\unit3d\scripts\first-time-setup.bat` |
 
 **למה זה רץ מקומית ולא ב-GitHub:** Cloudflare מגישה אתגר אבטחה לעמודי האוספים
 של מייקרוורלד מכל כתובת של מרכז נתונים — גם runners של GitHub, גם שירות דפדפן
