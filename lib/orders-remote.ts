@@ -264,10 +264,11 @@ async function sendMail(o: PlacedOrder, subject: string, html: string): Promise<
           subject,
           order_ref: o.ref,
           message_html: html,
-          // Where a reply lands. The letter leaves through a sending service
-          // (docs/email-deliverability.md), and a reply to that address would
-          // reach nobody — the EmailJS template puts this in Reply-To.
-          reply_to: CONTACT.email,
+          // Where a reply lands. On our own domain, never on Gmail: a letter
+          // from unit-3d.com that asks for replies at a free provider reads as
+          // a forgery to filters, and is scored as one. Cloudflare Email
+          // Routing forwards it to the real inbox.
+          reply_to: CONTACT.replyTo,
         },
       }),
     });

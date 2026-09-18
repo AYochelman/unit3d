@@ -16,6 +16,19 @@ export const CONTACT = {
   instagram: "https://www.instagram.com/unit3design/",
   instagramHandle: "@unit3design",
   email: "unit3designow@gmail.com",
+  /**
+   * Where a reply to one of our letters goes.
+   *
+   * It has to sit on unit-3d.com, not on Gmail. A letter sent FROM our domain
+   * with a Reply-To at a free provider is the shape of a forgery, and filters
+   * score it as one: SpamAssassin's FREEMAIL_FORGED_REPLYTO took 2.5 points off
+   * a 10-point deliverability test, more than every other penalty together.
+   *
+   * Nothing listens on this address by itself. Cloudflare Email Routing
+   * forwards it to CONTACT.email, so replies still land in the same inbox —
+   * see docs/email-deliverability.md.
+   */
+  replyTo: "orders@unit-3d.com",
 } as const;
 
 /** A mailto with the subject and body already written. */
