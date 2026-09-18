@@ -44,6 +44,16 @@ const LOGIN = process.argv.slice(2).includes("--login");
 // hatch costs nothing: on the one machine this runs on, a window opening at
 // 07:45 is a smaller problem than a run that quietly reads nothing.
 const HEADFUL = !!(process.env.MAKERWORLD_HEADFUL || "").trim();
+// No browser at all: work from data/pending-models.json and the details API.
+//
+// Cloudflare serves the collection pages the challenge with a box to tick, and
+// a driven browser cannot tick it — that is exactly what the box is checking,
+// and no flag, no real Chrome and no visible window changes the answer. The
+// ids come from his own browser instead (scripts/collect-collections-in-browser.js),
+// and everything after that — licence, shelf, figures, pictures — is the API,
+// which has never once refused us. So this mode is not a lesser fallback: it
+// is the whole job minus the one step a person does in three clicks.
+const OFFLINE = process.argv.slice(2).includes("--offline");
 
 const DRY = process.argv.includes("--dry");
 /**
@@ -706,6 +716,7 @@ function summary(rows, skipped) {
 
 async function main() {
   if (LOGIN) return login();
+  if (OFFLINE) return offline();
   log(c.b(`\n  קורא את הקולקציות של @${PROFILE}\n`));
   const b = await browser();
   const ctx = await context(b);
@@ -760,6 +771,17 @@ async function main() {
     log(c.d("  והערך: העוגיות של makerworld.com מהדפדפן שלך אחרי התחברות."));
   }
 
+  return queue(wanted, likedFresh, skipped, probes);
+}
+
+/**
+ * Everything after the ids are in hand: filter, look up, queue, publish.
+ *
+ * Split out of main() because there are now two ways to arrive here — a
+ * browser that read the collections, or a list his own browser collected —
+ * and from this point on they are the same job.
+ */
+async function queue(wanted, likedFresh, skipped, probes) {
   const queued = pendingIds();
   if (queued.length) log(c.d(`  ${queued.length} מודלים ממתינים ב-data/pending-models.json`));
 
@@ -830,6 +852,18 @@ async function main() {
   log(c.g(`\n  ${rows.length} מודלים נוספו לתור (${waiting} ממתינים להחלטה)`));
   if (waiting > 0) log(c.d(`  לאשר או לדחות: /admin ← "מודלים לאישור"\n`));
 }
+
+/**
+ * The run with no browser in it.
+ *
+ * Reads data/pending-models.json and nothing else. Likes are not read here:
+ * that tab needs a browser, and a like was never a decision anyway.
+ */
+async function offline() {
+  log(c.b("\n  מצב לא-מקוון: קורא רק את data/pending-models.json\n"));
+  return queue([], [], [], []);
+}
+
 
 // Only when run as a command. Importing this file — which a test does, to
 // exercise approveClean without opening a browser — must not start a sweep.
