@@ -2,12 +2,29 @@
 //
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
-// Items: 39
-// Collected: 2026-09-19T09:27:59.407Z
+// Items: 40
+// Collected: 2026-09-19T10:35:30.972Z
 
 import type { Candidate } from "./candidates";
 
 export const CANDIDATES: Candidate[] = [
+  {
+    "id": "1597402",
+    "title": "Flexi Corn Cob Mini - Super Satisfying",
+    "slug": "flexi-corn-cob-mini-super-satisfying",
+    "license": "Standard Digital File License",
+    "creator": "horseman3000",
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfcfd361fb44129/design/2025-07-11_9a1d603929586.gif?x-oss-process=image/resize,w_400/format,webp",
+    "downloads": 11455,
+    "likes": 8487,
+    "grams": 93,
+    "hours": 5.8,
+    "colors": 1,
+    "suggested": "fidget",
+    "warnings": [],
+    "via": "like",
+    "tags": "corn · its corn · corn cob · corn cob fidget · corncob · corncob fidget"
+  },
   {
     "id": "1975492",
     "title": "Articulated Skeleton Shark",
