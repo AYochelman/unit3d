@@ -68,3 +68,17 @@ agent/.tmp.mp4
 # The signed-in MakerWorld browser profile. Never leaves his machine.
 data/mw-profile/
 scripts/sync-daily.log
+
+# Impeccable (npx impeccable install). The skills, agents and launcher are
+# tracked; these are per-machine or per-run and are not.
+# Engine binaries are fetched per platform by the launcher on first run.
+**/skills/impeccable/scripts/bin/
+# Claude Code hook registration is machine-local by design (hooks.md).
+.claude/settings.local.json
+# Hook cache / local config / per-run critique snapshots.
+**/.impeccable/hook.cache.json
+**/.impeccable/hook.pending.json
+.impeccable/config.local.json
+.impeccable/history/
+.impeccable/critique/*
+!.impeccable/critique/ignore.md
