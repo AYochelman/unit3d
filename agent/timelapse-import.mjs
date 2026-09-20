@@ -19,7 +19,8 @@
 //     timestamp from one printer, so the same name IS the same video.
 //   · it skips files under --min-mb (1 MB by default). A print that failed in
 //     its first minutes leaves a very short video, and that is the only signal
-//     the folder actually contains.
+//     the folder actually contains. --all turns that rule off and uploads the
+//     short ones too, for when the owner wants the whole folder regardless.
 //   · everything else it LISTS, and --dry stops before uploading so the list
 //     can be read first.
 //
@@ -37,7 +38,12 @@ const cfg = readJson(path.join(HERE, "config.json"));
 
 const args = process.argv.slice(2);
 const DRY = args.includes("--dry");
-const minMb = Number((args.find((a) => a.startsWith("--min-mb=")) || "").split("=")[1]) || 1;
+// `|| 1` here meant --min-mb=0 quietly became 1, because 0 is falsy: asking
+// for everything got the default instead, and the run said so in a line nobody
+// re-read. A number is a number; only a missing or unparseable one defaults.
+const askedRaw = (args.find((a) => a.startsWith("--min-mb=")) || "").slice("--min-mb=".length);
+const asked = askedRaw === "" ? NaN : Number(askedRaw);
+const minMb = args.includes("--all") ? 0 : (Number.isFinite(asked) && asked >= 0 ? asked : 1);
 const folder = args.find((a) => !a.startsWith("--")) || cfg?.timelapse?.importFolder || "";
 
 const ok = (m) => console.log(`  \x1b[32mok\x1b[0m    ${m}`);
@@ -165,7 +171,7 @@ console.log(`
   ${picked.length} to upload
   ${skipped.already} already on the site
   ${skipped.twice} the same file name twice in the folder
-  ${skipped.tiny} under ${minMb} MB (a print that stopped in its first minutes)
+  ${minMb ? `${skipped.tiny} under ${minMb} MB (a print that stopped in its first minutes)` : "--all: the size rule is off, the short ones go up too"}
 `);
 
 if (!picked.length) {
