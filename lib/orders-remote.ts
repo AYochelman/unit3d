@@ -1,4 +1,5 @@
 "use client";
+import type { Shipment } from "./couriers";
 import type { OrderDecision, PlacedOrder } from "./orders";
 import { liveEmailHtml, liveEmailSubject, orderEmailHtml, orderEmailSubject, readyEmailHtml, readyEmailSubject } from "./order-email";
 import { CONTACT } from "./contact";
@@ -155,6 +156,7 @@ type Row = {
   progress: boolean[] | null;
   live_email_at: string | null;
   ready_email_at: string | null;
+  shipment: Shipment | null;
 };
 
 const toOrder = (r: Row): PlacedOrder => ({
@@ -170,6 +172,10 @@ const toOrder = (r: Row): PlacedOrder => ({
   decisionNote: r.decision_note ?? "",
   ...(Array.isArray(r.progress) ? { progress: r.progress } : {}),
   ...(r.decided_at ? { decidedAt: r.decided_at } : {}),
+  // A row written before the column existed simply has no shipment, which is
+  // also what an order that has not left yet looks like. Same absence, and
+  // nothing downstream has to tell the two apart.
+  ...(r.shipment ? { shipment: r.shipment } : {}),
   ...(r.live_email_at ? { liveEmailAt: r.live_email_at } : {}),
   ...(r.ready_email_at ? { readyEmailAt: r.ready_email_at } : {}),
 });
@@ -309,6 +315,28 @@ export async function markReadyEmailSent(token: string, ref: string): Promise<bo
 /** Records that the customer heard it went on the printer, so a re-approval does not tell them twice. */
 export async function markLiveEmailSent(token: string, ref: string): Promise<boolean> {
   return stamp(token, ref, "live_email_at");
+}
+
+/**
+ * Record the carrier and the number, once the parcel is handed over.
+ *
+ * Its own PATCH for the same reason the stamps have one: the `shipment`
+ * column is added by hand in Supabase, and until it is there this request
+ * fails. Nothing the order depends on may fail with it.
+ */
+export async function saveShipment(token: string, ref: string, shipment: Shipment | null): Promise<boolean> {
+  const c = await shopConfig();
+  if (!isConfigured(c)) return false;
+  try {
+    const res = await fetch(`${c.supabaseUrl}/rest/v1/orders?ref=eq.${encodeURIComponent(ref)}`, {
+      method: "PATCH",
+      headers: { ...headers(c, token), Prefer: "return=minimal" },
+      body: JSON.stringify({ shipment }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 async function stamp(token: string, ref: string, column: "live_email_at" | "ready_email_at"): Promise<boolean> {

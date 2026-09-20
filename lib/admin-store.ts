@@ -1,4 +1,5 @@
 "use client";
+import type { Shipment } from "./couriers";
 import { create } from "zustand";
 import type { Filament, Material, MaterialId } from "./types";
 import { DEFAULT_COST_SETTINGS, type CostSettings } from "./costing";
@@ -172,6 +173,8 @@ type AdminState = {
   removeOrder(ref: string): void;
   /** Which of the order's items are printed and ready. */
   setOrderProgress(ref: string, progress: boolean[]): void;
+  /** The carrier and number once the parcel is handed over; null clears it. */
+  setOrderShipment(ref: string, shipment: Shipment | null): void;
   /** Replace the whole list — used when the saved file loads at boot. */
   setOrders(orders: PlacedOrder[]): void;
   /** Write a code. An existing code with the same name is replaced. */
@@ -318,6 +321,17 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
   setOrderProgress: (ref, progress) =>
     set((s) => ({ orders: s.orders.map((o) => (o.ref === ref ? { ...o, progress } : o)) })),
+
+  setOrderShipment: (ref, shipment) =>
+    set((s) => ({
+      orders: s.orders.map((o) => {
+        if (o.ref !== ref) return o;
+        // Dropped rather than set to null: an order with no shipment has no
+        // key at all, which is what a row that predates the field looks like.
+        const { shipment: _was, ...rest } = o;
+        return shipment ? { ...rest, shipment } : rest;
+      }),
+    })),
 
   setOrders: (orders) => set({ orders }),
 
