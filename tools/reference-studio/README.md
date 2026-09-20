@@ -42,6 +42,7 @@ node tools/reference-studio/scripts/add-links.mjs links.txt --no-capture
 node tools/reference-studio/scripts/add-links.mjs --retry-failed
 node tools/reference-studio/scripts/add-links.mjs --recapture --only dribbble.com
 node tools/reference-studio/scripts/add-links.mjs --delete --only pin.it
+node tools/reference-studio/scripts/add-links.mjs --adopt-sites
 ```
 
 One URL per line; blank lines, `#` comments and duplicates are skipped. It adds
@@ -53,6 +54,13 @@ library whose capture failed, so a second attempt does not add every link twice.
 `--recapture` does the same for links that did capture, which is what you want
 after a capture fix. `--delete` removes matching references and always requires
 `--only`, so it can never take the whole library at once.
+
+**`--adopt-sites` turns a library of gallery links into one that can be
+measured.** A shot page has no CSS of its own, but it links to where the work
+lives — the designer's site, the client's, the product's. Every capture records
+those outbound hosts, ignoring the gallery itself, social profiles and
+infrastructure, and this adds each one as its own reference and captures it.
+Sites already in the library are skipped, so it is safe to run again.
 
 Reference Studio is a **separate Next.js app on purpose**. The shop deploys as a
 static export to GitHub Pages, which cannot host API routes — so the studio keeps

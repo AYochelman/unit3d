@@ -19,11 +19,12 @@ const ADD_BATCH = 20; // the API's own per-request ceiling
 function parseArgs(argv) {
   const opts = {
     file: "", base: "http://localhost:3100", collection: "", capture: true, only: "",
-    retryFailed: false, recapture: false, remove: false,
+    retryFailed: false, recapture: false, remove: false, adoptSites: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === "--retry-failed") opts.retryFailed = true;
+    else if (a === "--adopt-sites") opts.adoptSites = true;
     else if (a === "--recapture") opts.recapture = true;
     else if (a === "--delete") opts.remove = true;
     else if (a === "--no-capture") opts.capture = false;
@@ -75,11 +76,12 @@ async function api(base, path, init) {
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
-  if (!opts.file && !opts.retryFailed && !opts.recapture && !opts.remove) {
+  if (!opts.file && !opts.retryFailed && !opts.recapture && !opts.remove && !opts.adoptSites) {
     console.error("Usage: node tools/reference-studio/scripts/add-links.mjs <file-of-urls> [--collection NAME] [--no-capture] [--only dribbble.com] [--port 3100]");
     console.error("       node tools/reference-studio/scripts/add-links.mjs --retry-failed [--only dribbble.com]");
     console.error("       node tools/reference-studio/scripts/add-links.mjs --recapture --only dribbble.com");
     console.error("       node tools/reference-studio/scripts/add-links.mjs --delete --only pin.it");
+    console.error("       node tools/reference-studio/scripts/add-links.mjs --adopt-sites");
     process.exit(2);
   }
   // Deleting is the one action with nothing to undo it, so it never runs
@@ -97,6 +99,80 @@ async function main() {
     console.error(`The studio is not answering on ${opts.base} — start it with "npm run studio" first.`);
     console.error(`  (${err.message})`);
     process.exit(1);
+  }
+
+  // A gallery reference cannot say how a design was built - the artwork on it
+  // has no CSS. But the page links to where the work actually lives, and the
+  // capture records those hosts. Adding them turns a wall of pictures into
+  // references that can be measured.
+  if (opts.adoptSites) {
+    const library = await api(opts.base, "/api/library", { method: "GET" });
+    const refs = library?.references ?? [];
+    const have = new Set(
+      refs.map((r) => {
+        try { return new URL(r.source?.url ?? "").hostname.replace(/^www\./, "").toLowerCase(); }
+        catch { return ""; }
+      }).filter(Boolean),
+    );
+
+    const found = new Map();
+    let recorded = 0;   // how many outbound hosts the captures know about at all
+    let alreadyHere = 0;
+    for (const r of refs) {
+      for (const site of r.source?.observed?.build?.relatedSites ?? []) {
+        if (!site.host) continue;
+        recorded += 1;
+        if (have.has(site.host)) { alreadyHere += 1; continue; }
+        if (opts.only && !site.host.includes(opts.only)) continue;
+        const entry = found.get(site.host) ?? { host: site.host, seen: 0, from: [] };
+        entry.seen += site.count || 1;
+        if (entry.from.length < 3) entry.from.push(r.title || r.source?.url || r.id);
+        found.set(site.host, entry);
+      }
+    }
+
+    const candidates = [...found.values()].sort((a, b) => b.seen - a.seen);
+    if (!candidates.length) {
+      if (!recorded) {
+        console.log("No outbound sites are recorded on any reference.");
+        console.log("Only captures taken since this feature existed carry them — re-capture first:");
+        console.log("  node tools/reference-studio/scripts/add-links.mjs --recapture");
+      } else if (alreadyHere && !opts.only) {
+        console.log(`Nothing new: all ${alreadyHere} linked site${alreadyHere === 1 ? " is" : "s are"} already in the library.`);
+      } else {
+        console.log(`No linked site matches "${opts.only}".`);
+      }
+      return;
+    }
+
+    console.log(`${candidates.length} site${candidates.length === 1 ? "" : "s"} linked from references in your library:\n`);
+    for (const c of candidates) console.log(`  ${c.host}  — from ${c.from.join(", ")}`);
+
+    const urls = candidates.map((c) => `https://${c.host}/`);
+    console.log("");
+    const added = [];
+    const rejected = [];
+    for (let i = 0; i < urls.length; i += ADD_BATCH) {
+      const batch = urls.slice(i, i + ADD_BATCH);
+      try {
+        const body = await api(opts.base, "/api/references", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ urls: batch, collection: opts.collection || undefined }),
+        });
+        added.push(...(body?.created ?? []));
+        rejected.push(...(body?.rejected ?? []));
+      } catch (err) {
+        for (const url of batch) rejected.push({ url, reason: err.message });
+      }
+    }
+    console.log(`Added ${added.length}, rejected ${rejected.length}.`);
+    for (const r of rejected) console.log(`  rejected  ${r.url} — ${r.reason}`);
+    if (opts.capture && added.length) {
+      console.log("");
+      await captureAll(opts, added);
+    }
+    return;
   }
 
   // Re-capturing what is already in the library, rather than adding it again:

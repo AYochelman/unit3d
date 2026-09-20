@@ -335,9 +335,25 @@ export function buildPrompt(ref: Reference): string {
       out.push("");
     }
 
+    const related = observed.build?.relatedSites ?? [];
+    if (related.length) {
+      out.push("## Sites this page links out to");
+      out.push("Candidates for where the work actually lives — the designer's own site, the client's, or the product it was made for. Capture one of those and the measurements become real:");
+      for (const r of related) {
+        out.push(`- \`${r.host}\`${r.text ? ` — linked as "${r.text}"` : ""}${r.count > 1 ? ` (${r.count} links)` : ""}`);
+      }
+      out.push("");
+      out.push("`node tools/reference-studio/scripts/add-links.mjs --adopt-sites` adds every such host in the library as its own reference and captures it.");
+      out.push("");
+    }
+
     out.push("## To get something usable out of this");
     out.push("1. **Describe the picture.** The Analysis tab reads the artwork itself — with an API key directly, or by exporting a package and running it in Claude Code. That is the only honest way to say anything about a still.");
-    out.push(`2. **Find the real site.** If the shot is a concept, there may be none. If it is work that shipped, the studio's own site is the thing worth capturing — there the CSS *is* the design, and this tool will tell you every library and technique it uses.`);
+    out.push(
+      related.length
+        ? "2. **Capture one of the sites above.** There the CSS *is* the design, and this tool will tell you every library and technique it uses."
+        : "2. **Find the real site.** This page linked to none that could be told apart from the gallery's own furniture. If the shot is a concept there may be no site at all; if it shipped, the studio's own site is the thing worth capturing.",
+    );
     if (ref.use.length) {
       out.push("");
       out.push(`Keep: ${ref.use.join("; ")}.`);

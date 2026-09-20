@@ -82,6 +82,12 @@ export interface ObservedProbe {
    * this existed, so every reader must treat it as optional.
    */
   build?: {
+    /**
+     * Outbound hosts linked from the page that are neither the page's own site,
+     * a social profile nor infrastructure. On a gallery page this is where the
+     * designer's real site tends to be - the one worth capturing.
+     */
+    relatedSites?: { host: string; count: number; text: string }[];
     libraries: { name: string; evidence: string; note: string }[];
     techniques: { name: string; count: number; detail: string }[];
     fontSources: string[];

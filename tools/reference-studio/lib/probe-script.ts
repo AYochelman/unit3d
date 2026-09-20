@@ -316,7 +316,44 @@ export function pageProbe() {
   }).length;
   note("Full-width video", videoBackdrops, "video used as a backdrop rather than as a player");
 
+  /* ---------- where the real site might be ----------
+   * A gallery page is a page about someone else's work, and it almost always
+   * links to them. Collect the outbound hosts that are not the gallery itself,
+   * not a social profile and not infrastructure, so a shot can lead back to
+   * the site where the CSS actually is. */
+  const IGNORED_LINK_HOSTS = [
+    "dribbble.com", "behance.net", "pinterest.com", "pin.it", "instagram.com",
+    "x.com", "twitter.com", "facebook.com", "linkedin.com", "youtube.com",
+    "youtu.be", "tiktok.com", "threads.net", "medium.com", "github.com",
+    "google.com", "gstatic.com", "googleapis.com", "apple.com", "microsoft.com",
+    "cloudflare.com", "gravatar.com", "paypal.com", "adobe.com", "figma.com",
+    "notion.so", "calendly.com", "mailchi.mp", "bit.ly", "t.co", "wa.me",
+    "telegram.me", "t.me", "vimeo.com", "spotify.com", "amazon.com",
+  ];
+  const pageHost = location.hostname.replace(/^www\./, "").toLowerCase();
+  const siteCounts = new Map<string, { count: number; sample: string }>();
+  for (const a of Array.from(document.querySelectorAll<HTMLAnchorElement>("a[href]"))) {
+    const href = a.getAttribute("href") ?? "";
+    if (!/^https?:/i.test(href)) continue;
+    let u: URL;
+    try { u = new URL(href, document.baseURI); } catch { continue; }
+    const h = u.hostname.replace(/^www\./, "").toLowerCase();
+    if (!h || h === pageHost || h.endsWith(`.${pageHost}`)) continue;
+    if (IGNORED_LINK_HOSTS.some((ig) => h === ig || h.endsWith(`.${ig}`))) continue;
+    // A CDN or tracker is not a designer's site.
+    if (/(^|\.)(cdn|static|assets|img|images|fonts|track|analytics|ads)\./.test(h)) continue;
+    const text = (a.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 60);
+    const existing = siteCounts.get(h);
+    if (existing) existing.count += 1;
+    else siteCounts.set(h, { count: 1, sample: text });
+  }
+  const relatedSites = [...siteCounts.entries()]
+    .map(([host, v]) => ({ host, count: v.count, text: v.sample }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+
   const build = {
+    relatedSites,
     libraries,
     techniques: techniques.sort((a, b) => b.count - a.count).slice(0, 14),
     fontSources: [...new Set(fontSources)],
