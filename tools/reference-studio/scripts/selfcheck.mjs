@@ -29,7 +29,8 @@ const { visibleReferences, allTags } = await import(`${lib}/filters.ts`);
 const { isBlockedAddress, guardUrl } = await import(`${lib}/net-guard.ts`);
 const { makeZip } = await import(`${lib}/zip.ts`);
 const { cleanTitle, titleFromUrl } = await import(`${lib}/titles.ts`);
-const { coverOf, byCoverOrder } = await import(`${lib}/cover.ts`);
+const { coverOf, byCoverOrder, motionOf } = await import(`${lib}/cover.ts`);
+const { inspectVideo } = await import(`${lib}/video-info.ts`);
 const { contrastRatio, describeColor, parseCssColor } = await import(`${lib}/color.ts`);
 const { inspectImage } = await import(`${lib}/image-info.ts`);
 
@@ -110,6 +111,24 @@ section("Cover image");
   ok("the vision order matches the cover order",
     byCoverOrder([asset("mobile"), asset("desktop"), asset("manual"), asset("artwork")])
       .map((a) => a.role).join(",") === "manual,artwork,desktop,mobile");
+}
+
+section("Video sniffing");
+{
+  const mp4 = Buffer.concat([Buffer.alloc(4), Buffer.from("ftypisom", "ascii"), Buffer.alloc(8)]);
+  const webm = Buffer.concat([Buffer.from([0x1a, 0x45, 0xdf, 0xa3]), Buffer.alloc(16)]);
+  const notVideo = Buffer.from("GIF89a and then some bytes", "ascii");
+  const clip = { id: "m", role: "motion", file: "m.mp4", mime: "video/mp4", bytes: 1, width: 0, height: 0 };
+  const still = { id: "s", role: "artwork", file: "s.png", mime: "image/png", bytes: 1, width: 4, height: 3 };
+
+  ok("reads an MP4", inspectVideo(mp4)?.mime === "video/mp4");
+  ok("reads a WebM", inspectVideo(webm)?.mime === "video/webm");
+  ok("rejects something that is not video", inspectVideo(notVideo) === null);
+  ok("rejects a short buffer", inspectVideo(Buffer.alloc(4)) === null);
+  ok("a still is the cover when there is one", coverOf({ assets: [clip, still] })?.role === "artwork");
+  ok("a clip alone is still shown rather than nothing", coverOf({ assets: [clip] })?.role === "motion");
+  ok("motionOf finds the clip", motionOf({ assets: [still, clip] })?.file === "m.mp4");
+  ok("motionOf is empty when there is no clip", motionOf({ assets: [still] }) === undefined);
 }
 
 section("Titles");

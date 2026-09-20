@@ -31,7 +31,7 @@ export const PURPOSE_LABELS: Record<Purpose, { en: string; he: string }> = {
   motion: { en: "Motion", he: "אנימציה" },
 };
 
-export type AssetRole = "image" | "desktop" | "mobile" | "manual" | "artwork";
+export type AssetRole = "image" | "desktop" | "mobile" | "manual" | "artwork" | "motion";
 
 export interface Asset {
   id: string;

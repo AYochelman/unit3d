@@ -75,6 +75,12 @@ a real browser and you get:
 - **the page's own preview image** (`og:image`) where it publishes one. On a
   gallery or portfolio page the screenshot is the site's furniture wrapped
   around the work, and this is the work; the card leads with it,
+- **the motion**, where the page plays any — its declared `og:video`, or the
+  largest `<video>` on the page. Half of what a shot is about is often how it
+  moves, and a still of frame one is not that. The card marks it `motion` and
+  plays it when you point at it; the clip only downloads then, so a wall of
+  references does not fetch thirty videos to be scrolled past. (An animated GIF
+  needs none of this — it is an image and animates on its own.)
 - and, more useful than either, **what the live page is actually doing**: the font
   families really applied, colours weighted by painted area, the heading ladder,
   button fills and radii, the measured container width, CSS transition and

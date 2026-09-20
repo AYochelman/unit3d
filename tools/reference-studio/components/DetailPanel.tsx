@@ -108,13 +108,25 @@ function Overview({ reference }: { reference: Reference }) {
             style={{ background: "rgb(var(--raised))" }}>
             <button type="button" onClick={() => openLightbox(reference.id, i)} className="block w-full"
               aria-label={`Open ${asset.label ?? asset.role} full size`}>
-              {/* eslint-disable-next-line @next/next/no-img-element -- local file route */}
-              <img src={`/api/files/${asset.file}`} alt={asset.label ?? asset.role} loading="lazy"
-                className="aspect-[4/3] w-full object-cover object-top" />
+              {asset.role === "motion" ? (
+                <video src={`/api/files/${asset.file}`} muted loop playsInline preload="metadata"
+                  aria-label={asset.label ?? asset.role}
+                  onMouseEnter={(e) => { void e.currentTarget.play().catch(() => {}); }}
+                  onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+                  className="aspect-[4/3] w-full object-cover object-top" />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element -- local file route
+                <img src={`/api/files/${asset.file}`} alt={asset.label ?? asset.role} loading="lazy"
+                  className="aspect-[4/3] w-full object-cover object-top" />
+              )}
             </button>
             <figcaption className="flex items-center gap-1 px-2 py-1 text-[10px] text-faint">
               <span className="truncate">{asset.label ?? asset.role}</span>
-              <span className="ltr ms-auto shrink-0">{asset.width}×{asset.height}</span>
+              <span className="ltr ms-auto shrink-0">
+                {asset.width && asset.height
+                  ? `${asset.width}×${asset.height}`
+                  : `${Math.max(1, Math.round(asset.bytes / 1024))} KB`}
+              </span>
             </figcaption>
             <button type="button" onClick={() => void removeAsset(reference.id, asset.id)}
               className="absolute rounded-full p-1 text-white opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100"

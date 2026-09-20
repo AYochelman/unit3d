@@ -3,7 +3,7 @@
 import { useStudio } from "@/lib/store";
 import { PURPOSE_LABELS } from "@/lib/types";
 import type { Reference } from "@/lib/types";
-import { coverOf } from "@/lib/cover";
+import { coverOf, motionOf } from "@/lib/cover";
 import { Icon, Spinner } from "./ui";
 
 export { coverOf as thumbOf } from "@/lib/cover";
@@ -19,6 +19,7 @@ export function RefCard({ reference, selected }: { reference: Reference; selecte
   const busy = useStudio((s) => s.busy[reference.id]);
   const lang = useStudio((s) => s.settings?.uiLanguage ?? "en");
   const asset = coverOf(reference);
+  const motion = motionOf(reference);
   const failed = reference.source?.status === "failed";
 
   return (
@@ -37,7 +38,23 @@ export function RefCard({ reference, selected }: { reference: Reference; selecte
         className="block w-full text-start"
       >
         <div className="checker relative aspect-[4/3] w-full overflow-hidden" style={{ background: "rgb(var(--raised))" }}>
-          {asset ? (
+          {motion ? (
+            // The clip only loads once the card is pointed at: a wall of
+            // references should not fetch and decode thirty videos to be
+            // scrolled past. Until then it is the poster, exactly as before.
+            <video
+              src={`/api/files/${motion.file}`}
+              poster={asset ? `/api/files/${asset.file}` : undefined}
+              muted
+              loop
+              playsInline
+              preload="none"
+              aria-label={reference.title || "Reference"}
+              onMouseEnter={(e) => { void e.currentTarget.play().catch(() => {}); }}
+              onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+              className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            />
+          ) : asset ? (
             // eslint-disable-next-line @next/next/no-img-element -- local file route, no optimiser involved
             <img
               src={`/api/files/${asset.file}`}
@@ -60,6 +77,12 @@ export function RefCard({ reference, selected }: { reference: Reference; selecte
           <div className="absolute inset-inline-start-2 inset-block-start-2 flex gap-1" style={{ insetInlineStart: 8, insetBlockStart: 8 }}>
             {reference.kind === "url" && (
               <span className="rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">URL</span>
+            )}
+            {motion && (
+              <span className="rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm"
+                title="This reference has the motion the page itself plays. Point at it.">
+                motion
+              </span>
             )}
             {reference.analysis && (
               <span className="rounded px-1.5 py-0.5 text-[10px] font-medium backdrop-blur-sm"

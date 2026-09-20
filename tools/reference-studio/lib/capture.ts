@@ -5,6 +5,7 @@ import path from "node:path";
 import { FILES_DIR, ensureDirs } from "./paths";
 import { guardUrl, isBlockedAddress } from "./net-guard";
 import { inspectImage, MAX_UPLOAD_BYTES } from "./image-info";
+import { inspectVideo, MAX_VIDEO_BYTES } from "./video-info";
 import { pageProbe } from "./probe-script";
 import { newId } from "./ids";
 import type { Browser } from "playwright";
@@ -131,40 +132,51 @@ function saveShot(buf: Buffer, role: Asset["role"], label: string): Asset {
 }
 
 /**
- * Downloads a page's own preview image. Same rules as everything else the
- * browser is pointed at: public http(s) only, host resolved and checked, bytes
- * trusted over the declared type, and a failure is simply no artwork rather
- * than a failed capture.
+ * Downloads one file the page pointed at, under the same rules as everything
+ * else the browser is sent to: public http(s) only, host resolved and checked
+ * against the same guard, and the bytes decide what it is. A failure is simply
+ * no asset - never a failed capture.
  */
-async function fetchArtwork(
+async function fetchLinked(
   browser: Browser,
   rawUrl: string,
   hostCache: Map<string, boolean>,
   timeoutMs: number,
+  kind: "artwork" | "motion",
 ): Promise<Asset | null> {
   let url: URL;
   try { url = new URL(rawUrl); } catch { return null; }
   if (url.protocol !== "http:" && url.protocol !== "https:") return null;
   if (await isHostBlocked(url.hostname.replace(/^\[|\]$/g, ""), hostCache)) return null;
 
+  const limit = kind === "motion" ? MAX_VIDEO_BYTES : MAX_UPLOAD_BYTES;
   const context = await browser.newContext({ ignoreHTTPSErrors: insecureTls() });
   try {
     const response = await context.request.get(url.toString(), { timeout: timeoutMs });
     if (!response.ok()) return null;
     const buf = Buffer.from(await response.body());
-    if (!buf.length || buf.length > MAX_UPLOAD_BYTES) return null;
+    if (!buf.length || buf.length > limit) return null;
+
+    if (kind === "motion") {
+      const info = inspectVideo(buf);
+      if (!info) return null;
+      ensureDirs();
+      const file = `${newId("mot")}.${info.ext}`;
+      writeFileSync(path.join(FILES_DIR, file), buf);
+      return {
+        id: newId("as"), role: "motion", file, mime: info.mime, bytes: buf.length,
+        width: 0, height: 0, label: "The motion the page itself plays",
+      };
+    }
+
     const info = inspectImage(buf);
     if (!info) return null;
+    ensureDirs();
     const file = `${newId("art")}.${info.ext}`;
     writeFileSync(path.join(FILES_DIR, file), buf);
     return {
-      id: newId("as"),
-      role: "artwork",
-      file,
-      mime: info.mime,
-      bytes: buf.length,
-      width: info.width ?? 0,
-      height: info.height ?? 0,
+      id: newId("as"), role: "artwork", file, mime: info.mime, bytes: buf.length,
+      width: info.width ?? 0, height: info.height ?? 0,
       label: "The page's own preview image",
     };
   } catch {
@@ -217,6 +229,7 @@ export async function captureUrl(rawUrl: string, opts: CaptureOptions): Promise<
   let title: string | undefined;
   let httpStatus: number | undefined;
   let artworkUrl = "";
+  let motionUrl = "";
 
   try {
     const shoot = async (viewport: { width: number; height: number }, isMobile: boolean) => {
@@ -280,17 +293,51 @@ export async function captureUrl(rawUrl: string, opts: CaptureOptions): Promise<
       if (!isMobile) {
         title = await page.title().catch(() => undefined);
         observed = (await page.evaluate(pageProbe).catch(() => undefined)) as ObservedProbe | undefined;
-        artworkUrl = await page.evaluate(() => {
+        const linked = await page.evaluate(() => {
           const pick = (selector: string) =>
             document.querySelector<HTMLMetaElement>(selector)?.content?.trim() || "";
-          const raw =
+          const absolute = (raw: string) => {
+            if (!raw) return "";
+            try { return new URL(raw, document.baseURI).toString(); } catch { return ""; }
+          };
+
+          const image = absolute(
             pick('meta[property="og:image"]') ||
             pick('meta[name="og:image"]') ||
             pick('meta[name="twitter:image"]') ||
-            pick('meta[property="twitter:image"]');
-          if (!raw) return "";
-          try { return new URL(raw, document.baseURI).toString(); } catch { return ""; }
-        }).catch(() => "");
+            pick('meta[property="twitter:image"]'),
+          );
+
+          // What the page itself plays: its declared video, or failing that the
+          // largest <video> on the page - on a shot page that is the animation,
+          // and a still of frame one is not what the designer made.
+          let motion = absolute(
+            pick('meta[property="og:video:secure_url"]') ||
+            pick('meta[property="og:video:url"]') ||
+            pick('meta[property="og:video"]') ||
+            pick('meta[name="twitter:player:stream"]'),
+          );
+          if (!motion) {
+            const videos = [...document.querySelectorAll("video")];
+            let best: { src: string; area: number } | null = null;
+            for (const v of videos) {
+              const src = v.currentSrc || v.getAttribute("src") ||
+                v.querySelector("source")?.getAttribute("src") || "";
+              if (!src) continue;
+              const box = v.getBoundingClientRect();
+              const area = Math.max(box.width * box.height, 0);
+              if (!best || area > best.area) best = { src, area };
+            }
+            if (best) motion = absolute(best.src);
+          }
+          // A blob: or data: URL belongs to that page's session; there is
+          // nothing to fetch later.
+          if (/^(blob|data):/i.test(motion)) motion = "";
+
+          return { image, motion };
+        }).catch(() => ({ image: "", motion: "" }));
+        artworkUrl = linked.image;
+        motionUrl = linked.motion;
       }
       const buf = await page.screenshot({ fullPage: opts.fullPage, type: "png" });
       await context.close();
@@ -305,8 +352,15 @@ export async function captureUrl(rawUrl: string, opts: CaptureOptions): Promise<
     // preview image is the work itself, published by the site for exactly this
     // purpose, so keep it alongside and let the card lead with it.
     if (artworkUrl) {
-      const art = await fetchArtwork(browser, artworkUrl, hostCache, opts.timeoutMs);
+      const art = await fetchLinked(browser, artworkUrl, hostCache, opts.timeoutMs, "artwork");
       if (art) assets.push(art);
+    }
+
+    // And the motion itself where there is one, so an animated shot arrives as
+    // the animation rather than as a frame of it.
+    if (motionUrl) {
+      const motion = await fetchLinked(browser, motionUrl, hostCache, opts.timeoutMs, "motion");
+      if (motion) assets.push(motion);
     }
 
     // A screenshot of an error page is still a screenshot. Saying so beats

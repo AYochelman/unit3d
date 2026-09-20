@@ -15,6 +15,16 @@ import type { Asset, Reference } from "./types";
  */
 const ORDER: Asset["role"][] = ["manual", "artwork", "desktop", "image"];
 
+/**
+ * The clip the page itself plays, when it published one. Kept out of the cover
+ * order on purpose: a video is the card's content, but a still is what a grid
+ * of cards can render at once, so the card uses this one as the picture only
+ * while it is being looked at.
+ */
+export function motionOf(ref: Pick<Reference, "assets">): Asset | undefined {
+  return ref.assets.find((a) => a.role === "motion");
+}
+
 export function coverOf(ref: Pick<Reference, "assets">): Asset | undefined {
   for (const role of ORDER) {
     const found = ref.assets.find((a) => a.role === role);

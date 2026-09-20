@@ -112,7 +112,19 @@ export function Lightbox() {
         onPointerCancel={() => { grab.current = null; setDragging(false); }}
         onDoubleClick={() => (zoom > 1 ? reset() : setZoom(2.5))}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- local file route */}
+        {asset.role === "motion" ? (
+          <video
+            src={`/api/files/${asset.file}`}
+            controls
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-label={reference.title || "Reference"}
+            className="absolute left-1/2 top-1/2 max-h-full max-w-full -translate-x-1/2 -translate-y-1/2"
+          />
+        ) : (
+        // eslint-disable-next-line @next/next/no-img-element -- local file route
         <img
           src={`/api/files/${asset.file}`}
           alt={reference.title || "Reference"}
@@ -124,6 +136,7 @@ export function Lightbox() {
             transition: dragging ? "none" : "transform .12s ease-out",
           }}
         />
+        )}
 
         {assets.length > 1 && (
           <>
