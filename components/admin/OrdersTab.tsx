@@ -13,7 +13,8 @@ import {
   DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
   type Fulfilment, type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
-import { adminDecide, adminOrders, adminProgress, isConfigured, markLiveEmailSent, markReadyEmailSent, sendLiveEmail, sendOrderEmail, sendReadyEmail, shopConfig, type EmailResult, type ShopConfig } from "@/lib/orders-remote";
+import { adminDecide, adminOrders, adminProgress, isConfigured, markLiveEmailSent, markReadyEmailSent, saveShipment, sendLiveEmail, sendOrderEmail, sendReadyEmail, shopConfig, type EmailResult, type ShopConfig } from "@/lib/orders-remote";
+import { COURIERS, COURIER_BY_ID, courierName, trackUrl, type CourierId, type Shipment } from "@/lib/couriers";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -67,6 +68,7 @@ export default function OrdersTab() {
   const decideLocal = useAdminStore((s) => s.decideOrder);
   const removeLocal = useAdminStore((s) => s.removeOrder);
   const setOrderProgress = useAdminStore((s) => s.setOrderProgress);
+  const setOrderShipment = useAdminStore((s) => s.setOrderShipment);
 
   const params = useSearchParams();
 
@@ -229,6 +231,29 @@ export default function OrdersTab() {
   };
 
   /**
+   * The parcel has a carrier and a number now.
+   *
+   * Written before the "ready" letter goes out, so the letter can carry a link
+   * instead of a promise — which is why this is a save of its own and not a
+   * field on the email form. The order can be handed over today and the letter
+   * sent tomorrow, or the number corrected after the letter went, and neither
+   * has to wait for the other.
+   *
+   * A failed remote save reloads rather than leaving the screen showing a
+   * number the database does not have. The `shipment` column is added by hand
+   * (docs/supabase-orders.md), so "failed" here usually means "not added yet".
+   */
+  const ship = async (o: PlacedOrder, shipment: Shipment | null) => {
+    if (isRemote(o.ref) && token) {
+      setRemote((rows) => rows.map((r) => (r.ref === o.ref ? { ...r, shipment: shipment ?? undefined } : r)));
+      const ok = await saveShipment(token, o.ref, shipment);
+      if (!ok) { setLoadErr("פרטי המשלוח לא נשמרו. ודא שעמודת shipment קיימת בטבלה."); await load(token); }
+      return;
+    }
+    setOrderShipment(o.ref, shipment);
+  };
+
+  /**
    * The last tick is the one the customer has been waiting for.
    *
    * The confirmation email promised "מעדכן אותך כשהכל מוכן"; until now that
@@ -357,6 +382,7 @@ export default function OrdersTab() {
               onMarkLine={(i, done) => void markLine(o, i, done)}
               mailing={mailing === o.ref}
               mailed={mailed[o.ref]}
+              onShip={(sh) => void ship(o, sh)}
               onSendReady={() => void tellCustomer(o, true)}
               onSendLive={() => void tellLive(o, true)}
               onRemove={isRemote(o.ref) ? null : () => removeLocal(o.ref)}
@@ -425,8 +451,103 @@ const FULFIL: Record<Fulfilment, { label: string; tone: "good" | "flame" | "neut
   closed: { label: "סגורה", tone: "neutral" },
 };
 
+/**
+ * Carrier and tracking number, on an order that ships.
+ *
+ * Saved by a button and not on every keystroke: a tracking number is copied in
+ * one piece, and a save per character would write a dozen half-numbers to the
+ * database and mail none of them correctly.
+ *
+ * The URL field appears only for a carrier this shop cannot build a link for.
+ * Asking for it always would be asking him to paste something the code
+ * already knows, and lib/couriers.ts says which is which.
+ */
+function ShipmentBox({ order: o, onShip }: { order: PlacedOrder; onShip: (s: Shipment | null) => void }) {
+  const [courier, setCourier] = useState<CourierId>(o.shipment?.courier ?? "israel-post");
+  const [code, setCode] = useState(o.shipment?.code ?? "");
+  const [url, setUrl] = useState(o.shipment?.url ?? "");
+  const known = !!COURIER_BY_ID[courier]?.track;
+  const saved = o.shipment;
+  const link = trackUrl(saved);
+  const dirty =
+    courier !== (saved?.courier ?? "israel-post") ||
+    code.trim() !== (saved?.code ?? "") ||
+    url.trim() !== (saved?.url ?? "");
+
+  const save = () => {
+    if (!code.trim() && !url.trim()) { onShip(null); return; }
+    onShip({ courier, code: code.trim(), ...(url.trim() ? { url: url.trim() } : {}), at: new Date().toISOString() });
+  };
+
+  return (
+    <div className="rounded-lg border border-ink-800 p-2.5 space-y-2">
+      <div className="text-[11px] font-mono tracking-widest uppercase text-ink-500">משלוח</div>
+
+      <div className="flex flex-wrap gap-2">
+        <select
+          value={courier}
+          onChange={(e) => setCourier(e.target.value as CourierId)}
+          className="h-8 px-2 rounded-lg bg-ink-950 border border-ink-800 text-[12px] text-ink-100"
+        >
+          {COURIERS.map((c) => (
+            <option key={c.id} value={c.id}>{c.label}</option>
+          ))}
+        </select>
+        <input
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="מספר מעקב"
+          dir="ltr"
+          className="flex-1 min-w-[160px] h-8 px-2 rounded-lg bg-ink-950 border border-ink-800 text-[12px] font-mono text-ink-100 text-left placeholder:text-ink-600"
+        />
+      </div>
+
+      {!known && (
+        <input
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="קישור מעקב (אצל החברה הזו אין לי תבנית קישור)"
+          dir="ltr"
+          className="w-full h-8 px-2 rounded-lg bg-ink-950 border border-ink-800 text-[12px] text-ink-100 text-left placeholder:text-ink-600"
+        />
+      )}
+
+      <div className="flex flex-wrap items-center gap-2 text-[11px]">
+        {saved ? (
+          <span className="text-ink-400">
+            נשמר: {courierName(saved)}
+            {saved.code ? <> · <span dir="ltr" className="font-mono">{saved.code}</span></> : null}
+          </span>
+        ) : (
+          <span className="text-ink-500">עוד לא נשלח</span>
+        )}
+        {link && (
+          <a href={link} target="_blank" rel="noreferrer" className="text-flame hover:underline">
+            פתח מעקב ←
+          </a>
+        )}
+        <span className="flex-1" />
+        <button
+          type="button"
+          onClick={save}
+          disabled={!dirty}
+          className="px-2.5 h-7 rounded-lg border border-ink-700 text-ink-300 hover:border-ink-600 transition-colors disabled:opacity-40"
+        >
+          שמור
+        </button>
+      </div>
+
+      {saved && !link && (
+        <p className="text-[10px] text-ink-500">
+          אין קישור מעקב — המייל ללקוח יציג את המספר בלבד.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function OrderRow({
-  order: o, open, onToggle, note, onNote, onDecide, onMarkLine, onRemove, mailing, mailed, onSendReady, onSendLive,
+  order: o, open, onToggle, note, onNote, onDecide, onMarkLine, onRemove, mailing, mailed, onShip, onSendReady, onSendLive,
 }: {
   order: PlacedOrder;
   open: boolean;
@@ -439,6 +560,7 @@ function OrderRow({
   mailing: boolean;
   /** How the last attempt for this order went, this session. */
   mailed?: EmailResult;
+  onShip: (s: Shipment | null) => void;
   onSendReady: () => void;
   onSendLive: () => void;
   onRemove: (() => void) | null;
@@ -530,6 +652,14 @@ function OrderRow({
                   </button>
                 )}
               </div>
+            )}
+
+            {/* A parcel exists from the moment the order is approved, not only
+                when the last item is ticked: he books the courier while the
+                rest is still printing. So this shows from "active" onward,
+                and never for a pickup, which has nothing travelling. */}
+            {o.delivery !== "pickup" && (stage === "active" || stage === "ready") && (
+              <ShipmentBox order={o} onShip={onShip} />
             )}
 
             {stage === "ready" && (

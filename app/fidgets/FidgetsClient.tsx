@@ -248,6 +248,10 @@ export default function FidgetsClient() {
       // Sort/filter on the price the card actually shows (default variant).
       price: f.price + (f.variants?.[0]?.surcharge ?? 0),
       isNew: f.tag === "חדש",
+      // What the ranking reads. `shots` overrides the fidget's own `images`
+      // array, which is a list of URLs and not a count.
+      shelf: "fidget",
+      shots: f.images?.length ?? (f.thumbnail ? 1 : 0),
     }));
     return applyListing(withStats, listing);
   }, [pool, listing]);
