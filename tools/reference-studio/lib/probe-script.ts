@@ -34,15 +34,40 @@ export function pageProbe() {
 
   const elements = seen("body *").slice(0, 4000);
 
+  /**
+   * Is this element actually on screen for a reader?
+   *
+   * Pages routinely carry an h1 that exists only for search engines, clipped
+   * to nothing or shrunk to a pixel. Measuring it reports a 12px h1 on a page
+   * whose real headline is 80px - a number that is correct about an element
+   * nobody sees and wrong about the design.
+   */
+  const isVisible = (el: Element) => {
+    const cs = getComputedStyle(el);
+    if (cs.display === "none" || cs.visibility === "hidden") return false;
+    if (Number(cs.opacity) === 0) return false;
+    // The classic visually-hidden recipe: clipped to an empty box.
+    if (cs.clip === "rect(0px, 0px, 0px, 0px)") return false;
+    if (cs.clipPath === "inset(50%)") return false;
+    const r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) return false;
+    // Parked far off-canvas rather than hidden outright.
+    if (r.bottom < -2000 || r.right < -2000) return false;
+    return true;
+  };
+
   // ---- fonts actually applied, by how much text each one carries ----
-  const fontWeight = new Map<string, { usage: number; sample: string }>();
+  const fontWeight = new Map<string, { usage: number; sample: string; stack: string }>();
   for (const el of elements) {
     const text = (el.textContent ?? "").trim();
     if (!text || el.children.length > 0) continue;
     const family = getComputedStyle(el).fontFamily;
     if (!family) continue;
     const first = family.split(",")[0].replace(/["']/g, "").trim();
-    const entry = fontWeight.get(first) ?? { usage: 0, sample: "" };
+    // Keep the whole stack as well. A minified or self-hosted family can come
+    // back as a single letter, and on its own that reads as a parsing bug;
+    // beside its fallbacks it reads as what the page really declares.
+    const entry = fontWeight.get(first) ?? { usage: 0, sample: "", stack: family };
     entry.usage += Math.min(text.length, 400);
     if (!entry.sample) entry.sample = text.slice(0, 60);
     fontWeight.set(first, entry);
@@ -50,7 +75,7 @@ export function pageProbe() {
   const fonts = [...fontWeight.entries()]
     .sort((a, b) => b[1].usage - a[1].usage)
     .slice(0, 8)
-    .map(([family, v]) => ({ family, usage: v.usage, sample: v.sample }));
+    .map(([family, v]) => ({ family, usage: v.usage, sample: v.sample, stack: v.stack }));
 
   // ---- colours, weighted by painted area ----
   const colorArea = new Map<string, { area: number; where: string }>();
@@ -77,7 +102,7 @@ export function pageProbe() {
 
   // ---- heading ladder ----
   const headings = ["h1", "h2", "h3", "h4"].flatMap((tag) =>
-    seen(tag).slice(0, 2).map((el) => {
+    seen(tag).filter(isVisible).slice(0, 2).map((el) => {
       const cs = getComputedStyle(el);
       return {
         tag,
@@ -89,13 +114,27 @@ export function pageProbe() {
     }),
   );
 
-  const bodyStyle = getComputedStyle(document.body);
+  /* A reset usually sets line-height on <body> and the real reading size lives
+   * on paragraphs, so measuring <body> reports 22.5px/22.5px - a ratio no one
+   * would set for prose. Measure the visible run of text that carries the most
+   * characters instead, and fall back to <body> only when there is none. */
+  let readingEl: Element | null = null;
+  let mostText = 0;
+  for (const el of elements) {
+    if (el.children.length > 0) continue;
+    const len = (el.textContent ?? "").trim().length;
+    if (len < 40 || len <= mostText) continue;
+    if (!isVisible(el)) continue;
+    mostText = len;
+    readingEl = el;
+  }
+  const bodyStyle = getComputedStyle(readingEl ?? document.body);
   const body = {
     fontSize: bodyStyle.fontSize,
     lineHeight: bodyStyle.lineHeight,
     fontFamily: bodyStyle.fontFamily.split(",")[0].replace(/["']/g, "").trim(),
     color: toHex(bodyStyle.color) ?? bodyStyle.color,
-    background: toHex(bodyStyle.backgroundColor) ?? bodyStyle.backgroundColor,
+    background: toHex(getComputedStyle(document.body).backgroundColor) ?? "",
   };
 
   // ---- buttons and call-to-action shapes ----

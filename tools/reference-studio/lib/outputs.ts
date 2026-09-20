@@ -371,7 +371,8 @@ export function buildPrompt(ref: Reference): string {
   out.push("## Type");
   if (observed.fonts.length) {
     for (const f of observed.fonts.slice(0, 4)) {
-      out.push(`- \`${f.family}\` — carries roughly ${f.usage} characters of text on the page.`);
+      const stack = f.stack && f.stack.replace(/["']/g, "").trim() !== f.family ? ` (declared as \`${f.stack}\`)` : "";
+      out.push(`- \`${f.family}\`${stack} — carries roughly ${f.usage} characters of text on the page.`);
     }
   }
   if (b?.fontSources.length) out.push(`- Loaded from: ${b.fontSources.join(", ")}.`);
@@ -392,7 +393,11 @@ export function buildPrompt(ref: Reference): string {
 
   /* ---- layout ---- */
   out.push("## Layout");
-  if (observed.containerWidths.length) out.push(`- Content is held to about ${observed.containerWidths[0]}px.`);
+  out.push(
+    observed.containerWidths.length
+      ? `- Content is held to about ${observed.containerWidths[0]}px.`
+      : "- No capped, centred container was found: the layout runs full-bleed, sized by its sections rather than by one measure.",
+  );
   if (observed.radii.length) out.push(`- Corner radii in use: ${observed.radii.join(", ")}.`);
   if (observed.breakpoints.length) out.push(`- Breakpoints declared in its own stylesheets: ${observed.breakpoints.join(", ")}.`);
   if (observed.viewportMeta) out.push(`- Viewport meta: \`${observed.viewportMeta}\`.`);

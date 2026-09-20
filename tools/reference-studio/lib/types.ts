@@ -63,7 +63,7 @@ export interface ObservedProbe {
   title?: string;
   lang?: string;
   dir?: string;
-  fonts: { family: string; usage: number; sample: string; role?: string }[];
+  fonts: { family: string; usage: number; sample: string; role?: string; stack?: string }[];
   colors: { hex: string; usage: number; where: string }[];
   headings: { tag: string; fontSize: string; fontWeight: string; fontFamily: string; text: string }[];
   body: { fontSize: string; lineHeight: string; fontFamily: string; color: string; background: string };
