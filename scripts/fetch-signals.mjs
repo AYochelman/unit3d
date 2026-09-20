@@ -84,6 +84,10 @@ async function withRetry(id, tries = 3) {
   for (let i = 1; i <= tries; i++) {
     const res = await getJson(API(id)).catch((e) => ({ ok: false, error: e.message }));
     if (res?.ok && res.body?.id) return { model: res.body };
+    // A model taken down answers 200 with an empty record - id 0, no title, all
+    // counts zero. That IS an answer, and retrying it, then calling it a rate
+    // limit, was three wrong things about one model in a row.
+    if (res?.ok && res.body && Number(res.body.id) === 0) return { gone: true };
     why = res?.status ? `HTTP ${res.status}` : res?.error || "no answer";
     if (i < tries) await sleep(1200 * i + Math.random() * 600);
   }
@@ -150,10 +154,14 @@ async function main() {
 
   const out = { ...have };
   let ok = 0, failed = 0, streak = 0;
+  const removed = [];
 
   for (const [i, id] of todo.entries()) {
-    const { model: j, why } = await withRetry(id);
-    if (!j) {
+    const { model: j, why, gone } = await withRetry(id);
+    if (gone) {
+      removed.push(id);
+      console.log(`  ${c.y("—")} ${id} ${c.d("כבר לא קיים במייקרוורלד")}`);
+    } else if (!j) {
       streak++; failed++;
       // The reason, not just the verdict: a rate limit, a block and a bug in
       // this script all printed the same three words before.
@@ -170,10 +178,19 @@ async function main() {
 
   if (!DRY && ok) write(out);
 
-  console.log(c.b(`\n  ${ok} נקראו · ${failed} נכשלו · ${Object.keys(out).length} בקובץ\n`));
+  const tally = [`${ok} נקראו`, `${failed} נכשלו`];
+  if (removed.length) tally.push(`${removed.length} ירדו מהאתר`);
+  console.log(c.b(`\n  ${tally.join(" · ")} · ${Object.keys(out).length} בקובץ\n`));
   if (DRY) console.log(c.y("  ריצה יבשה — הקובץ לא נגע.\n"));
   else if (ok) console.log("  קומיט של lib/signals.generated.ts, וכל המדפים מסתדרים מחדש.\n");
-  if (failed) console.log(c.y(`  ${failed} לא נענו — הגבלת קצב. הריצה הבאה מתחילה מהם.\n`));
+  // Not "rate limit" any more. That was asserted over every failure, including
+  // the two that were models taken off MakerWorld, and a wrong reason sends the
+  // next person looking in the wrong place.
+  if (failed) console.log(c.y(`  ${failed} לא נענו. הסיבה כתובה ליד כל אחד; הריצה הבאה מתחילה מהם.\n`));
+  if (removed.length) {
+    console.log(c.y(`  ${removed.length} כבר לא קיימים במייקרוורלד: ${removed.join(", ")}`));
+    console.log(c.d("  הם עדיין בחנות — האתר מחזיק תמונות ונתונים משלו — אבל אין להם יותר מקור.\n"));
+  }
 
   // Some failing is the API throttling, not a broken run. Only a run that got
   // nothing at all is worth failing a nightly job over.
