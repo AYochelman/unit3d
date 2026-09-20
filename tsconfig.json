@@ -39,6 +39,8 @@
     "node_modules",
     "handoff",
     "_recovered-newest",
-    ".next"
+    ".next",
+    "data",
+    "out"
   ]
 }
