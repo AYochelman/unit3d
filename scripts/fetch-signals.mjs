@@ -74,12 +74,20 @@ function existing() {
  * is what turns that from 157 lost models into none.
  */
 async function withRetry(id, tries = 3) {
+  // getJson answers with an envelope, { ok, body }, the way every other
+  // caller in scripts/ reads it. This one tested the ENVELOPE for `.id`, which
+  // a design object has and an envelope never does, so every model came back
+  // as no answer no matter what the API said. 484 of 484 failed on a run where
+  // the network was fine, which is why lib/signals.generated.ts stayed empty
+  // and every shelf kept ordering on downloads alone.
+  let why = "no answer";
   for (let i = 1; i <= tries; i++) {
-    const j = await getJson(API(id)).catch(() => null);
-    if (j && j.id) return j;
+    const res = await getJson(API(id)).catch((e) => ({ ok: false, error: e.message }));
+    if (res?.ok && res.body?.id) return { model: res.body };
+    why = res?.status ? `HTTP ${res.status}` : res?.error || "no answer";
     if (i < tries) await sleep(1200 * i + Math.random() * 600);
   }
-  return null;
+  return { why };
 }
 
 const signalsOf = (j) => ({
@@ -144,10 +152,12 @@ async function main() {
   let ok = 0, failed = 0, streak = 0;
 
   for (const [i, id] of todo.entries()) {
-    const j = await withRetry(id);
+    const { model: j, why } = await withRetry(id);
     if (!j) {
       streak++; failed++;
-      console.log(`  ${c.r("✗")} ${id} — לא נענה`);
+      // The reason, not just the verdict: a rate limit, a block and a bug in
+      // this script all printed the same three words before.
+      console.log(`  ${c.r("✗")} ${id} — לא נענה ${c.d(`(${why})`)}`);
     } else {
       streak = 0; ok++;
       out[id] = signalsOf(j);
