@@ -84,7 +84,18 @@ if (!found.length) {
 const have = new Set();
 try {
   const res = await fetch(`${SB}/rest/v1/printer_timelapses?select=file`, { headers: sbHeaders, cache: "no-store" });
-  if (res.ok) for (const row of await res.json()) have.add(row.file);
+  if (!res.ok) {
+    // A refusal here used to be swallowed: the set stayed empty, the run said
+    // "the site already has 0", uploaded everything, and every upload was
+    // refused by the same key for the same reason. One clear stop instead.
+    const why = (await res.text()).slice(0, 200);
+    bad(`the site refused the request (${res.status})`,
+        res.status === 401 || res.status === 403
+          ? "the serviceKey in agent/config.json is wrong or expired — run settings.bat."
+          : why);
+    process.exit(1);
+  }
+  for (const row of await res.json()) have.add(row.file);
   ok(`the site already has ${have.size}`);
 } catch (e) {
   bad(`could not ask the site what it has (${e.message})`,
@@ -117,6 +128,11 @@ if (!picked.length) {
   process.exit(0);
 }
 
+// Counted, because "it finished" and "it worked" are different sentences and
+// this used to print the same closing line either way.
+let saved = 0;
+const failures = [];
+
 for (const f of picked.slice(0, DRY ? 40 : picked.length)) {
   if (DRY) { console.log(`  · ${f.name}  ${f.mb.toFixed(1)} MB  ${f.at.toLocaleDateString("he-IL")}`); continue; }
   process.stdout.write(`  ${f.name} ... `);
@@ -127,8 +143,17 @@ for (const f of picked.slice(0, DRY ? 40 : picked.length)) {
       headers: { apikey: KEY, ...(legacy ? { Authorization: `Bearer ${KEY}` } : {}), "Content-Type": "video/mp4", "x-upsert": "true" },
       body,
     });
-    if (!up.ok) { console.log(`upload refused (${up.status})`); continue; }
-    await fetch(`${SB}/rest/v1/printer_timelapses?on_conflict=file`, {
+    if (!up.ok) {
+      // The body, not just the number: 400 alone could be the bucket, the key
+      // or the file, and those are three different fixes.
+      const why = (await up.text()).slice(0, 160);
+      console.log(`upload refused (${up.status})`);
+      failures.push(`${f.name} — upload ${up.status}: ${why}`);
+      continue;
+    }
+    // The row is what puts it on the site. An upload with no row is a file
+    // nobody will ever see, so a failure here is a failure of the whole item.
+    const row = await fetch(`${SB}/rest/v1/printer_timelapses?on_conflict=file`, {
       method: "POST",
       headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify({
@@ -140,9 +165,17 @@ for (const f of picked.slice(0, DRY ? 40 : picked.length)) {
         recorded_at: f.at.toISOString(),
       }),
     });
+    if (!row.ok) {
+      const why = (await row.text()).slice(0, 160);
+      console.log(`uploaded, but the site did not record it (${row.status})`);
+      failures.push(`${f.name} — row ${row.status}: ${why}`);
+      continue;
+    }
+    saved++;
     console.log(`saved (${f.mb.toFixed(1)} MB)`);
   } catch (e) {
     console.log(`failed - ${e.message}`);
+    failures.push(`${f.name} — ${e.message}`);
   }
 }
 
@@ -152,9 +185,24 @@ if (DRY) {
 
   To upload them, run the same command without --dry.
 `);
-} else {
+} else if (saved === picked.length) {
   console.log(`
-  Done. They appear at the bottom of unit-3d.com/livestream
+  ${saved} uploaded. They appear at the bottom of unit-3d.com/livestream
+`);
+} else {
+  // Never "Done" over a pile of failures. This script used to close with the
+  // same cheerful line whether it had uploaded everything or nothing, which is
+  // how a run that saved zero files was read as a run that worked.
+  console.log(`
+  ${saved} of ${picked.length} uploaded. ${picked.length - saved} did not.
+`);
+  for (const why of failures.slice(0, 10)) console.log(`    ${why}`);
+  if (failures.length > 10) console.log(`    ... and ${failures.length - 10} more`);
+  console.log(`
+  Send this window as a screenshot — the reason above says which of the
+  bucket, the key or the file is the problem.
 `);
 }
-process.exit(0);
+// A run that saved nothing while having work to do is a failure, and the
+// window should not close green on it.
+process.exit(!DRY && picked.length && saved === 0 ? 1 : 0);
