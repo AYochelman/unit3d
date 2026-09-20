@@ -324,7 +324,9 @@ export function pageProbe() {
   const IGNORED_LINK_HOSTS = [
     "dribbble.com", "behance.net", "pinterest.com", "pin.it", "instagram.com",
     "x.com", "twitter.com", "facebook.com", "linkedin.com", "youtube.com",
-    "youtu.be", "tiktok.com", "threads.net", "medium.com", "github.com",
+    "youtu.be", "tiktok.com", "threads.net", "threads.com", "medium.com",
+    "github.com", "dribbble.co", "producthunt.com", "awwwards.com", "webflow.io",
+    "framer.website", "substack.com", "patreon.com", "gumroad.com", "discord.gg",
     "google.com", "gstatic.com", "googleapis.com", "apple.com", "microsoft.com",
     "cloudflare.com", "gravatar.com", "paypal.com", "adobe.com", "figma.com",
     "notion.so", "calendly.com", "mailchi.mp", "bit.ly", "t.co", "wa.me",
