@@ -40,6 +40,8 @@
     "handoff",
     "_recovered-newest",
     ".next",
-    "tools"
+    "tools",
+    "data",
+    "out"
   ]
 }

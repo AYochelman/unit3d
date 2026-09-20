@@ -115,12 +115,38 @@ const cookieHeader = () =>
 const NO_BROWSER = !!(process.env.MAKERWORLD_NO_BROWSER || "").trim();
 let ctx = null;
 let tab = null;
-let tried = false;
+/** Set only when no browser could be started at all, so we stop trying. */
+let unavailable = false;
+/** Said once per process, not once per reopen. */
+let announced = false;
+
+/**
+ * Close the browser once nothing has used it for a while.
+ *
+ * An open browser is a live child process and node will not exit while one is
+ * running, so a script that reads the API and forgets to close it does not
+ * finish — it sits there, silent, looking exactly like a slow run. That is
+ * what happened to the nightly job: six of the scripts that read this API
+ * never called closeBrowser, and the first one to open a browser hung the
+ * whole chain.
+ *
+ * Remembering to call it in every script is the kind of rule that holds until
+ * someone writes the seventh script. So the browser closes itself: every API
+ * call through it pushes this timer out, and twenty seconds after the last one
+ * it shuts down and lets the process end. A later call simply opens a new one.
+ * unref, so the timer itself never keeps node alive.
+ */
+const IDLE_MS = 20_000;
+let idle = null;
+function touchIdle() {
+  if (idle) clearTimeout(idle);
+  idle = setTimeout(() => { void closeBrowser(); }, IDLE_MS);
+  idle.unref?.();
+}
 
 async function browserTab() {
   if (tab) return tab;
-  if (tried || NO_BROWSER) return null;
-  tried = true;
+  if (unavailable || NO_BROWSER) return null;
   const { chromium } = await import("playwright").catch(() => ({ chromium: null }));
   if (!chromium) return null;
   const exe = (process.env.PLAYWRIGHT_CHROMIUM || "").trim();
@@ -142,13 +168,17 @@ async function browserTab() {
       tab = await ctx.newPage();
       // Said out loud: a run that silently changed how it reaches the API is a
       // run whose timings and failures mean something different.
-      console.log(c.d(`  (ה-API דוחה בקשות רגילות — עובר דרך ${name})`));
+      if (!announced) {
+        console.log(c.d(`  (ה-API דוחה בקשות רגילות — עובר דרך ${name})`));
+        announced = true;
+      }
       return tab;
     } catch (e) {
       why.push(`${name}: ${e.message.split("\n")[0]}`);
     }
   }
   ctx = null;
+  unavailable = true;
   console.log(c.y("  ה-API דוחה בקשות רגילות ולא נמצא דפדפן להחליף אותן:"));
   for (const line of why) console.log(c.d(`    ${line}`));
   console.log(c.d("    התקנה:  npm i -D playwright   (או PLAYWRIGHT_CHROMIUM=<נתיב ל-chrome.exe>)"));
@@ -171,14 +201,21 @@ async function viaBrowser(url) {
     return { ok: true, body: JSON.parse(text) };
   } catch (e) {
     return { ok: false, status: 0, error: e.message };
+  } finally {
+    touchIdle();
   }
 }
 
 /**
- * Scripts that read the API must call this before they finish: an open browser
- * is a live child process, and node will not exit while one is running.
+ * Shut the browser now, rather than waiting out the idle timer above.
+ *
+ * Worth calling at the end of a script that has just finished with the API —
+ * it saves the twenty seconds — but no longer required for the process to
+ * exit, which is the point: the six scripts that never called it used to hang
+ * forever, and the seventh would have too.
  */
 export async function closeBrowser() {
+  if (idle) { clearTimeout(idle); idle = null; }
   if (!ctx) return;
   await ctx.close().catch(() => {});
   ctx = null;

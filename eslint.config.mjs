@@ -11,6 +11,10 @@ const eslintConfig = [
       "_recovered-newest/**",
       "next-env.d.ts",
       "out/**",
+      // Caches, and the signed-in MakerWorld browser profile. A Chrome profile
+      // is thousands of files of someone else's JavaScript sitting inside the
+      // repo, and nothing here is ours to lint or type-check.
+      "data/**",
       // Throw-away Playwright checks run by hand; not part of the site.
       "*.cjs",
       // Reference Studio is a separate local tool with its own tsconfig and
