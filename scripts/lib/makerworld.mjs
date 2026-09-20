@@ -57,11 +57,56 @@ function snapshot(url) {
   }
 }
 
+/**
+ * Cloudflare's bot cookie, kept for the life of the process.
+ *
+ * The first request to makerworld.com comes back with
+ * `set-cookie: __cf_bm=...` — Cloudflare's bot-management token, which every
+ * browser then sends back on the next request. node's fetch has no cookie jar,
+ * so it never did, and the edge saw a client that would not hold the token it
+ * had just been handed. One request answered; every one after it was 403.
+ *
+ * That is exactly the shape the signals run had: 1 model read, 483 refused, on
+ * a connection that was fine. Checked against a real browser on the same API
+ * at the same moment — seven ids, seven 200s — so the address was never the
+ * problem and neither was a rate limit.
+ *
+ * A Map rather than a string because more than one cookie may arrive, and the
+ * last value for a name wins, which is what a jar is.
+ */
+const jar = new Map();
+
+function remember(res) {
+  // getSetCookie keeps the headers separate; the joined string cannot be split
+  // safely, since Expires= carries a comma of its own.
+  const all = typeof res.headers.getSetCookie === "function"
+    ? res.headers.getSetCookie()
+    : [res.headers.get("set-cookie")].filter(Boolean);
+  for (const line of all) {
+    const [pair] = String(line).split(";");
+    const i = pair.indexOf("=");
+    if (i > 0) jar.set(pair.slice(0, i).trim(), pair.slice(i + 1).trim());
+  }
+}
+
+const cookieHeader = () =>
+  jar.size ? [...jar].map(([k, v]) => `${k}=${v}`).join("; ") : undefined;
+
 export async function getJson(url, timeoutMs = 25_000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": UA, accept: "application/json" } });
+    const cookie = cookieHeader();
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        "user-agent": UA,
+        accept: "application/json",
+        "accept-language": "en-US,en;q=0.9",
+        ...(cookie ? { cookie } : {}),
+      },
+    });
+    remember(res);
     if (!res.ok) {
       const snap = snapshot(url);
       return snap ? { ok: true, body: snap } : { ok: false, status: res.status };
