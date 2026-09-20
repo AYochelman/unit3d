@@ -88,17 +88,25 @@ async function main() {
 
   // Re-capturing what is already in the library, rather than adding it again:
   // a second run of the same file would otherwise duplicate every reference.
+  //
+  // "failed" is not the only shape an unsuccessful capture leaves behind. A
+  // request that died before the result was written leaves the reference on
+  // "pending" - the status it was created with - so retry anything with a URL
+  // that is not captured and has no screenshot uploaded by hand.
   if (opts.retryFailed) {
     const library = await api(opts.base, "/api/library", { method: "GET" });
-    const failed = (library?.references ?? []).filter(
-      (r) => r.source?.status === "failed" && (!opts.only || (r.source?.url ?? "").includes(opts.only)),
-    );
-    if (!failed.length) {
+    const pending = (library?.references ?? []).filter((r) => {
+      if (!r.source?.url) return false;
+      if (r.source.status === "captured" || r.source.status === "manual") return false;
+      return !opts.only || r.source.url.includes(opts.only);
+    });
+    if (!pending.length) {
       console.log(`Nothing to retry${opts.only ? ` matching "${opts.only}"` : ""}.`);
+      console.log("Every link with a URL is either captured or has a screenshot of its own.");
       return;
     }
-    console.log(`Retrying ${failed.length} reference${failed.length === 1 ? "" : "s"} that failed to capture.\n`);
-    await captureAll(opts, failed);
+    console.log(`Retrying ${pending.length} reference${pending.length === 1 ? "" : "s"} that have not been captured.\n`);
+    await captureAll(opts, pending);
     return;
   }
 
