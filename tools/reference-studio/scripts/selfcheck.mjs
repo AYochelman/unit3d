@@ -28,6 +28,7 @@ const section = (title) => console.log(`\n${title}`);
 const { visibleReferences, allTags } = await import(`${lib}/filters.ts`);
 const { isBlockedAddress, guardUrl } = await import(`${lib}/net-guard.ts`);
 const { makeZip } = await import(`${lib}/zip.ts`);
+const { cleanTitle, titleFromUrl } = await import(`${lib}/titles.ts`);
 const { contrastRatio, describeColor, parseCssColor } = await import(`${lib}/color.ts`);
 const { inspectImage } = await import(`${lib}/image-info.ts`);
 
@@ -92,6 +93,23 @@ ok("contrast, black on white", contrastRatio("#000000", "#ffffff") === 21);
 ok("contrast is symmetric", contrastRatio("#101418", "#faf7f2") === contrastRatio("#faf7f2", "#101418"));
 ok("near-white is not called orange", describeColor("#faf7f2") === "warm near-white", describeColor("#faf7f2"));
 ok("near-black keeps its cast", describeColor("#101418") === "cool near-black", describeColor("#101418"));
+
+section("Titles");
+{
+  const d = "https://dribbble.com/shots/25571331-etail";
+  ok("drops a trailing byline and site name",
+    cleanTitle("Etail landing page web design 3D animation by Halo Lab on Dribbble", d)
+      === "Etail landing page web design 3D animation",
+    cleanTitle("Etail landing page web design 3D animation by Halo Lab on Dribbble", d));
+  ok("drops a separator and site name",
+    cleanTitle("Shiny Button | 21st.dev", "https://21st.dev/@a/components/shiny-button") === "Shiny Button");
+  ok("leaves a title that does not name its site",
+    cleanTitle("A title with no site name at all", "https://example.com/x") === "A title with no site name at all");
+  ok("never empties a title that is only the site name", cleanTitle("Dribbble", d) === "Dribbble");
+  ok("caps an overlong title", cleanTitle("x".repeat(200), d).length <= 70);
+  ok("a URL placeholder is not the page title",
+    titleFromUrl(d) === "dribbble.com / 25571331-etail", titleFromUrl(d));
+}
 
 section("Image sniffing");
 const png = Buffer.concat([

@@ -72,6 +72,9 @@ the actual pixels as it uploads.
 a real browser and you get:
 
 - a desktop screenshot and a mobile screenshot,
+- **the page's own preview image** (`og:image`) where it publishes one. On a
+  gallery or portfolio page the screenshot is the site's furniture wrapped
+  around the work, and this is the work; the card leads with it,
 - and, more useful than either, **what the live page is actually doing**: the font
   families really applied, colours weighted by painted area, the heading ladder,
   button fills and radii, the measured container width, CSS transition and

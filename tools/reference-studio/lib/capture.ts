@@ -4,9 +4,10 @@ import net from "node:net";
 import path from "node:path";
 import { FILES_DIR, ensureDirs } from "./paths";
 import { guardUrl, isBlockedAddress } from "./net-guard";
-import { inspectImage } from "./image-info";
+import { inspectImage, MAX_UPLOAD_BYTES } from "./image-info";
 import { pageProbe } from "./probe-script";
 import { newId } from "./ids";
+import type { Browser } from "playwright";
 import type { Asset, ObservedProbe } from "./types";
 
 export interface CaptureOptions {
@@ -130,6 +131,50 @@ function saveShot(buf: Buffer, role: Asset["role"], label: string): Asset {
 }
 
 /**
+ * Downloads a page's own preview image. Same rules as everything else the
+ * browser is pointed at: public http(s) only, host resolved and checked, bytes
+ * trusted over the declared type, and a failure is simply no artwork rather
+ * than a failed capture.
+ */
+async function fetchArtwork(
+  browser: Browser,
+  rawUrl: string,
+  hostCache: Map<string, boolean>,
+  timeoutMs: number,
+): Promise<Asset | null> {
+  let url: URL;
+  try { url = new URL(rawUrl); } catch { return null; }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+  if (await isHostBlocked(url.hostname.replace(/^\[|\]$/g, ""), hostCache)) return null;
+
+  const context = await browser.newContext({ ignoreHTTPSErrors: insecureTls() });
+  try {
+    const response = await context.request.get(url.toString(), { timeout: timeoutMs });
+    if (!response.ok()) return null;
+    const buf = Buffer.from(await response.body());
+    if (!buf.length || buf.length > MAX_UPLOAD_BYTES) return null;
+    const info = inspectImage(buf);
+    if (!info) return null;
+    const file = `${newId("art")}.${info.ext}`;
+    writeFileSync(path.join(FILES_DIR, file), buf);
+    return {
+      id: newId("as"),
+      role: "artwork",
+      file,
+      mime: info.mime,
+      bytes: buf.length,
+      width: info.width ?? 0,
+      height: info.height ?? 0,
+      label: "The page's own preview image",
+    };
+  } catch {
+    return null;
+  } finally {
+    await context.close().catch(() => {});
+  }
+}
+
+/**
  * Opens the URL in a real browser, reads what the live page is actually doing,
  * and saves a desktop and a mobile screenshot. Anything that fails here is
  * reported, never thrown away - the reference keeps the link and the user can
@@ -171,6 +216,7 @@ export async function captureUrl(rawUrl: string, opts: CaptureOptions): Promise<
   let observed: ObservedProbe | undefined;
   let title: string | undefined;
   let httpStatus: number | undefined;
+  let artworkUrl = "";
 
   try {
     const shoot = async (viewport: { width: number; height: number }, isMobile: boolean) => {
@@ -234,6 +280,17 @@ export async function captureUrl(rawUrl: string, opts: CaptureOptions): Promise<
       if (!isMobile) {
         title = await page.title().catch(() => undefined);
         observed = (await page.evaluate(pageProbe).catch(() => undefined)) as ObservedProbe | undefined;
+        artworkUrl = await page.evaluate(() => {
+          const pick = (selector: string) =>
+            document.querySelector<HTMLMetaElement>(selector)?.content?.trim() || "";
+          const raw =
+            pick('meta[property="og:image"]') ||
+            pick('meta[name="og:image"]') ||
+            pick('meta[name="twitter:image"]') ||
+            pick('meta[property="twitter:image"]');
+          if (!raw) return "";
+          try { return new URL(raw, document.baseURI).toString(); } catch { return ""; }
+        }).catch(() => "");
       }
       const buf = await page.screenshot({ fullPage: opts.fullPage, type: "png" });
       await context.close();
@@ -242,6 +299,15 @@ export async function captureUrl(rawUrl: string, opts: CaptureOptions): Promise<
 
     const desktopShot = await shoot(opts.desktop, false);
     assets.push(saveShot(desktopShot, "desktop", `Desktop ${opts.desktop.width}x${opts.desktop.height}`));
+
+    // On a gallery or portfolio page the screenshot is the site's furniture -
+    // header, sidebar, comment box - wrapped around the work. The page's own
+    // preview image is the work itself, published by the site for exactly this
+    // purpose, so keep it alongside and let the card lead with it.
+    if (artworkUrl) {
+      const art = await fetchArtwork(browser, artworkUrl, hostCache, opts.timeoutMs);
+      if (art) assets.push(art);
+    }
 
     // A screenshot of an error page is still a screenshot. Saying so beats
     // letting someone build a brief out of "403 Forbidden".

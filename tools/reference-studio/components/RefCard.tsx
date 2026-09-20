@@ -6,7 +6,14 @@ import type { Reference } from "@/lib/types";
 import { Icon, Spinner } from "./ui";
 
 export function thumbOf(ref: Reference) {
-  return ref.assets.find((a) => a.role === "desktop") ?? ref.assets.find((a) => a.role === "image") ?? ref.assets[0];
+  // Artwork first: on a gallery or portfolio page the screenshot is the site's
+  // furniture around the work, and the page's own preview image is the work.
+  return (
+    ref.assets.find((a) => a.role === "artwork") ??
+    ref.assets.find((a) => a.role === "desktop") ??
+    ref.assets.find((a) => a.role === "image") ??
+    ref.assets[0]
+  );
 }
 
 /**

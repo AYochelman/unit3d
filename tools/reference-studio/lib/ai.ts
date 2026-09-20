@@ -41,8 +41,9 @@ export async function analyzeWithAi(ref: Reference, apiKey: string, model: strin
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Send at most three images: desktop, mobile, then anything else.
-  const order = { desktop: 0, image: 1, manual: 2, mobile: 3 } as const;
+  // Send at most three images. The page's own preview leads: on a gallery page
+  // it is the work, while the screenshot is the site wrapped around it.
+  const order = { artwork: 0, desktop: 1, image: 2, manual: 3, mobile: 4 } as const;
   const assets = [...ref.assets].sort((a, b) => order[a.role] - order[b.role]).slice(0, 3);
   if (!assets.length) {
     return { ok: false, errors: ["This reference has no image to analyse. Capture the URL or upload a screenshot first."], warnings };

@@ -2,7 +2,7 @@ import { ok, fail } from "@/lib/api";
 import { readDb, withDb } from "@/lib/db";
 import { captureUrl } from "@/lib/capture";
 import { analysisFromProbe } from "@/lib/analysis";
-import { titleFromUrl } from "@/lib/reference-factory";
+import { cleanTitle, titleFromUrl } from "@/lib/reference-factory";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,6 +46,8 @@ async function capture(ctx: { params: Promise<{ id: string }> }) {
     if (!target || !target.source) return null;
 
     if (result.ok) {
+      // What the last capture read off the page, before this one overwrites it.
+      const lastPageTitle = target.source.title;
       // Replace previous captures, keep anything uploaded by hand.
       target.assets = [...target.assets.filter((a) => a.role === "manual" || a.role === "image"), ...result.assets];
       target.source = {
@@ -59,11 +61,15 @@ async function capture(ctx: { params: Promise<{ id: string }> }) {
       };
       // A reference starts out named after its URL, because that is all there
       // is before the page has been opened. Once the page has been read, its
-      // own title is the better name - but only while the placeholder is still
-      // in place, so a name typed by hand is never overwritten.
-      const placeholder = titleFromUrl(target.source.url);
-      if (result.title && (!target.title || target.title === placeholder || /^https?:/.test(target.title))) {
-        target.title = result.title;
+      // own title is the better name. Replace only a name this route wrote
+      // itself - the URL placeholder, or what the last capture derived - so a
+      // name typed by hand is never overwritten.
+      const ours = new Set(
+        [titleFromUrl(target.source.url), lastPageTitle, lastPageTitle && cleanTitle(lastPageTitle, target.source.url)]
+          .filter((t): t is string => Boolean(t)),
+      );
+      if (result.title && (!target.title || ours.has(target.title) || /^https?:/.test(target.title))) {
+        target.title = cleanTitle(result.title, target.source.url);
       }
       // Measurements from the live page are an analysis in their own right -
       // and they are the only place a font can be named as fact.
