@@ -17,10 +17,11 @@ import { readFileSync } from "node:fs";
 const ADD_BATCH = 20; // the API's own per-request ceiling
 
 function parseArgs(argv) {
-  const opts = { file: "", base: "http://localhost:3100", collection: "", capture: true, only: "" };
+  const opts = { file: "", base: "http://localhost:3100", collection: "", capture: true, only: "", retryFailed: false };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
-    if (a === "--no-capture") opts.capture = false;
+    if (a === "--retry-failed") opts.retryFailed = true;
+    else if (a === "--no-capture") opts.capture = false;
     else if (a === "--collection") opts.collection = argv[++i] ?? "";
     else if (a === "--port") opts.base = `http://localhost:${argv[++i] ?? "3100"}`;
     else if (a === "--base") opts.base = argv[++i] ?? opts.base;
@@ -69,15 +70,10 @@ async function api(base, path, init) {
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
-  if (!opts.file) {
+  if (!opts.file && !opts.retryFailed) {
     console.error("Usage: node tools/reference-studio/scripts/add-links.mjs <file-of-urls> [--collection NAME] [--no-capture] [--only dribbble.com] [--port 3100]");
+    console.error("       node tools/reference-studio/scripts/add-links.mjs --retry-failed [--only dribbble.com]");
     process.exit(2);
-  }
-
-  const urls = readLinks(opts.file, opts.only);
-  if (!urls.length) {
-    console.error(`No http(s) links found in ${opts.file}${opts.only ? ` matching "${opts.only}"` : ""}.`);
-    process.exit(1);
   }
 
   // Fail early and clearly when the studio is not running, rather than
@@ -87,6 +83,28 @@ async function main() {
   } catch (err) {
     console.error(`The studio is not answering on ${opts.base} — start it with "npm run studio" first.`);
     console.error(`  (${err.message})`);
+    process.exit(1);
+  }
+
+  // Re-capturing what is already in the library, rather than adding it again:
+  // a second run of the same file would otherwise duplicate every reference.
+  if (opts.retryFailed) {
+    const library = await api(opts.base, "/api/library", { method: "GET" });
+    const failed = (library?.references ?? []).filter(
+      (r) => r.source?.status === "failed" && (!opts.only || (r.source?.url ?? "").includes(opts.only)),
+    );
+    if (!failed.length) {
+      console.log(`Nothing to retry${opts.only ? ` matching "${opts.only}"` : ""}.`);
+      return;
+    }
+    console.log(`Retrying ${failed.length} reference${failed.length === 1 ? "" : "s"} that failed to capture.\n`);
+    await captureAll(opts, failed);
+    return;
+  }
+
+  const urls = readLinks(opts.file, opts.only);
+  if (!urls.length) {
+    console.error(`No http(s) links found in ${opts.file}${opts.only ? ` matching "${opts.only}"` : ""}.`);
     process.exit(1);
   }
 
@@ -117,11 +135,16 @@ async function main() {
     return;
   }
 
-  console.log(`\nCapturing ${added.length} — each one opens a real browser, so this takes a while.\n`);
+  console.log("");
+  await captureAll(opts, added);
+}
+
+async function captureAll(opts, refs) {
+  console.log(`Capturing ${refs.length} — each one opens a real browser, so this takes a while.\n`);
   let okCount = 0;
   let failCount = 0;
-  for (const [i, ref] of added.entries()) {
-    const label = `[${i + 1}/${added.length}] ${ref.source?.url ?? ref.id}`;
+  for (const [i, ref] of refs.entries()) {
+    const label = `[${i + 1}/${refs.length}] ${ref.source?.url ?? ref.id}`;
     try {
       const body = await api(opts.base, `/api/references/${ref.id}/capture`, { method: "POST" });
       // Every capture would fail the same way, so say it once and stop.

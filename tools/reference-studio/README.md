@@ -39,11 +39,15 @@ node tools/reference-studio/scripts/add-links.mjs links.txt
 node tools/reference-studio/scripts/add-links.mjs links.txt --collection "Dribbble"
 node tools/reference-studio/scripts/add-links.mjs links.txt --only dribbble.com
 node tools/reference-studio/scripts/add-links.mjs links.txt --no-capture
+node tools/reference-studio/scripts/add-links.mjs --retry-failed
 ```
 
 One URL per line; blank lines, `#` comments and duplicates are skipped. It adds
 them all, then captures them one at a time and prints which succeeded. A link
 that fails to capture keeps its reason, exactly as it would from the UI.
+
+`--retry-failed` takes no file: it re-captures the references already in the
+library whose capture failed, so a second attempt does not add every link twice.
 
 Reference Studio is a **separate Next.js app on purpose**. The shop deploys as a
 static export to GitHub Pages, which cannot host API routes — so the studio keeps

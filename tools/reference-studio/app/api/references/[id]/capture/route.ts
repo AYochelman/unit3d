@@ -15,6 +15,17 @@ export const maxDuration = 120;
  * the UI offers a manual screenshot upload instead.
  */
 export async function POST(_req: Request, ctx: { params: Promise<{ id: string }> }) {
+  // Anything that escapes here would reach the caller as Next's bare
+  // "Internal Server Error" page, which names neither the link nor the cause -
+  // and a bulk import would repeat it once per link with nothing to act on.
+  try {
+    return await capture(ctx);
+  } catch (err) {
+    return fail(`The capture could not be completed: ${(err as Error).message.split("\n")[0]}`, 500);
+  }
+}
+
+async function capture(ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;
   const db = readDb();
   const ref = db.references.find((r) => r.id === id);
