@@ -31,6 +31,7 @@ const { makeZip } = await import(`${lib}/zip.ts`);
 const { cleanTitle, titleFromUrl } = await import(`${lib}/titles.ts`);
 const { coverOf, byCoverOrder, motionOf } = await import(`${lib}/cover.ts`);
 const { inspectVideo } = await import(`${lib}/video-info.ts`);
+const { isGalleryHost, hostOf } = await import(`${lib}/host-kind.ts`);
 const { contrastRatio, describeColor, parseCssColor } = await import(`${lib}/color.ts`);
 const { inspectImage } = await import(`${lib}/image-info.ts`);
 
@@ -129,6 +130,18 @@ section("Video sniffing");
   ok("a clip alone is still shown rather than nothing", coverOf({ assets: [clip] })?.role === "motion");
   ok("motionOf finds the clip", motionOf({ assets: [still, clip] })?.file === "m.mp4");
   ok("motionOf is empty when there is no clip", motionOf({ assets: [still] }) === undefined);
+}
+
+section("Gallery hosts");
+{
+  ok("dribbble is a gallery", isGalleryHost("https://dribbble.com/shots/1-x"));
+  ok("a pin.it short link is a gallery", isGalleryHost("https://pin.it/abc"));
+  ok("behance is a gallery", isGalleryHost("https://www.behance.net/gallery/1/x"));
+  ok("a subdomain of a gallery counts", isGalleryHost("https://cdn.dribbble.com/x"));
+  ok("an ordinary site is not a gallery", isGalleryHost("https://stripe.com/") === false);
+  ok("a lookalike host is not a gallery", isGalleryHost("https://notdribbble.com/") === false);
+  ok("rubbish is not a gallery", isGalleryHost("not a url") === false);
+  ok("hostOf drops www", hostOf("https://www.behance.net/x") === "behance.net");
 }
 
 section("Titles");

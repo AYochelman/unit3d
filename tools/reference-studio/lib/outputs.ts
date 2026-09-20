@@ -1,5 +1,6 @@
 import { contrastRatio, describeColor } from "./color";
 import { PURPOSE_LABELS } from "./types";
+import { isGalleryHost, hostOf } from "./host-kind";
 import type { Analysis, Reference, Swatch } from "./types";
 
 /* Every generated artefact carries the reference it came from. That link is
@@ -304,8 +305,25 @@ export function buildPrompt(ref: Reference): string {
   }
 
   const b = observed.build;
+  const gallery = isGalleryHost(ref.source?.url ?? "");
+  const host = hostOf(ref.source?.url ?? "");
 
-  out.push("Everything below was read off the live page with a browser: applied styles, loaded scripts, computed values. It is what the page does, not an impression of how it looks.");
+  if (gallery) {
+    // The single most misleading thing this tool could do is hand over a
+    // precise description of the wrong page.
+    out.push(`> **These measurements describe ${host}, not the work shown on it.**`);
+    out.push(">");
+    out.push("> A gallery page displays a picture or a video that someone made in a design tool. That artwork has no CSS, no fonts and no breakpoints of its own — everything measured below belongs to the site that is showing it: its interface font, its brand colours, its container width, its own responsive rules.");
+    out.push(">");
+    out.push("> Use this reference for how the work **looks** — the image and, where there is one, the motion. For how a page is **built**, capture the live site itself, where the CSS is the design.");
+    out.push("");
+  }
+
+  out.push(
+    gallery
+      ? `With that said, everything below was read off ${host} with a browser: applied styles, loaded scripts, computed values.`
+      : "Everything below was read off the live page with a browser: applied styles, loaded scripts, computed values. It is what the page does, not an impression of how it looks.",
+  );
   out.push("");
 
   /* ---- type ---- */
@@ -363,6 +381,14 @@ export function buildPrompt(ref: Reference): string {
     out.push("");
   }
 
+  // A capture taken before the build probe existed has none of this. Saying so
+  // beats an empty space, which reads as "this page uses no techniques".
+  if (!b) {
+    out.push("## Techniques and libraries");
+    out.push("Not recorded. This reference was captured before the studio measured what builds a page, so the absence here says nothing about the page — only about when it was read. Re-capture it to fill this in.");
+    out.push("");
+  }
+
   /* ---- motion ---- */
   out.push("## Motion");
   const m = observed.motion;
@@ -387,7 +413,20 @@ export function buildPrompt(ref: Reference): string {
   }
 
   out.push("## To reproduce this");
-  out.push("Take the values above literally — the type scale, the container width, the radii, the breakpoints — and the techniques as the vocabulary. Where a value is absent above it was not measured, so decide it yourself rather than assuming it matched.");
+  if (gallery) {
+    out.push(`Not from the numbers above — they are ${host}'s. What this reference gives you is the picture, and the motion if it was captured. Describe those, or open the designer's own site and capture that instead.`);
+    out.push("");
+    if (ref.use.length) out.push(`Keep: ${ref.use.join("; ")}.`);
+    if (ref.avoid.length) out.push(`Do not copy: ${ref.avoid.join("; ")}.`);
+    out.push("");
+    out.push(provenance(ref));
+    return out.join("\n");
+  }
+  out.push(
+    b
+      ? "Take the values above literally — the type scale, the container width, the radii, the breakpoints — and the techniques as the vocabulary. Where a value is absent above it was not measured, so decide it yourself rather than assuming it matched."
+      : "Take the values above literally — the type scale, the container width, the radii, the breakpoints. Where a value is absent above it was not measured, so decide it yourself rather than assuming it matched.",
+  );
   if (ref.use.length) {
     out.push("");
     out.push(`Keep: ${ref.use.join("; ")}.`);

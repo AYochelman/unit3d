@@ -163,7 +163,19 @@ the rest — each named with the evidence that found it.
 Nothing there is inferred from how a picture looks. A library is listed because
 its script is on the page or its global is defined; a technique because a
 computed style uses it. A reference that was never captured gets a paragraph
-saying so rather than a description of a screenshot.
+saying so rather than a description of a screenshot, and one captured before
+this probe existed is told to re-capture rather than left with a blank space
+that reads as "this page uses no techniques".
+
+**A gallery link is the exception, and it says so at the top.** A Dribbble or
+Pinterest page displays a picture someone made in a design tool; that artwork
+has no CSS, no fonts and no breakpoints. Measuring the page reads the gallery's
+own interface — its font, its brand colour, its container width — and handing
+that over as "how this design is built" would be precise about the wrong page.
+Such a reference opens with a warning and refuses to tell you to copy the
+numbers: use it for how the work *looks* (the image, and the motion where there
+is one), and capture the designer's live site when you want to know how a page
+is *built*.
 
 Five buttons on every reference, always live:
 
