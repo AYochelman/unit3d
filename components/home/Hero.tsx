@@ -19,26 +19,26 @@ export default function Hero() {
           />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-10 pt-16 md:pt-20 pb-12 md:pb-16 text-center">
-          <HeroLogo className="u3d-hero mx-auto w-[240px] md:w-[340px] h-auto mb-6 md:mb-8" />
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/30 bg-flame/10 text-flame text-xs font-mono uppercase tracking-widest mb-8">
+        <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-6 md:px-10 pt-8 sm:pt-16 md:pt-20 pb-10 sm:pb-12 md:pb-16 text-center">
+          <HeroLogo className="u3d-hero mx-auto w-[168px] sm:w-[240px] md:w-[340px] h-auto mb-4 sm:mb-6 md:mb-8" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/30 bg-flame/10 text-flame text-[10px] sm:text-xs font-mono uppercase tracking-widest mb-5 sm:mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-flame live-dot" />
             <span>המדפסת רצה עכשיו</span>
             <span className="text-ink-400">·</span>
             <span>שידור חי מהסטודיו</span>
           </div>
-          <h1 className="text-[44px] md:text-[88px] leading-[0.95] font-black tracking-tightest text-ink-50">
+          <h1 className="text-[40px] xs:text-[44px] md:text-[88px] leading-[0.95] font-black tracking-tightest text-ink-50">
             כל רעיון.
             <br />
             מודפס.
             <br />
             <span className="text-flame">בידיים שלך.</span>
           </h1>
-          <p className="mt-8 text-ink-200 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-5 sm:mt-8 text-ink-200 text-[15px] sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed sm:leading-relaxed">
             מדפסת תלת מימד מקצועית שעובדת עבורך — סמלי יחידות, מתנות לעובדים,
             פידג&apos;טים, או כל קובץ שתעלה. ישירות מהסטודיו אליך.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
             <Btn as="a" href="/configurator" size="lg" icon="sparkles">
               התחל להזמין
             </Btn>
@@ -46,20 +46,20 @@ export default function Hero() {
               צפה במדפסת בלייב
             </Btn>
           </div>
-          <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-300">
-            <li className="inline-flex items-center gap-2">
+          <ul className="mt-6 sm:mt-10 grid grid-cols-2 gap-x-3 gap-y-2 text-[13px] sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:text-sm text-ink-300">
+            <li className="inline-flex items-center gap-2 justify-start sm:justify-center">
               <span className="w-1 h-1 rounded-full bg-flame" />
               הדפסה לפי הזמנה
             </li>
-            <li className="inline-flex items-center gap-2">
+            <li className="inline-flex items-center gap-2 justify-start sm:justify-center">
               <span className="w-1 h-1 rounded-full bg-flame" />
               משלוח לכל הארץ
             </li>
-            <li className="inline-flex items-center gap-2">
+            <li className="inline-flex items-center gap-2 justify-start sm:justify-center">
               <span className="w-1 h-1 rounded-full bg-flame" />
               תוצאות תוך 3-5 ימים
             </li>
-            <li className="inline-flex items-center gap-2">
+            <li className="inline-flex items-center gap-2 justify-start sm:justify-center">
               <span className="w-1 h-1 rounded-full bg-flame" />
               חשבונית מס לעסקים
             </li>
@@ -70,7 +70,7 @@ export default function Hero() {
       <HeroCarousel />
 
       {/* Machine readout — replaces the missing hero video with live printer data */}
-      <div className="max-w-6xl mx-auto px-6 md:px-10 pb-20 md:pb-28">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pb-12 sm:pb-20 md:pb-28">
         <PrinterPanel />
       </div>
 

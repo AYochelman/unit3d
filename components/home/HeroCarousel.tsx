@@ -228,7 +228,7 @@ export default function HeroCarousel() {
           type="button"
           onClick={() => go(at - 1)}
           aria-label="השקופית הקודמת"
-          className="h-9 w-9 rounded-full border border-ink-700 text-ink-300 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
+          className="h-11 w-11 sm:h-9 sm:w-9 rounded-full border border-ink-700 text-ink-300 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
         >
           <Icon name="arrowRight" size={16} />
         </button>
@@ -241,17 +241,31 @@ export default function HeroCarousel() {
             aria-label={s.title}
             aria-current={i === at}
             className={cn(
-              "h-2 rounded-full transition-all",
-              i === at ? "w-7 bg-flame" : "w-2 bg-ink-700 hover:bg-ink-600",
+              "group inline-flex items-center justify-center",
+              // On a phone the dot itself was an 8×8 target — the smallest
+              // thing on the page and the one a thumb misses. The button is
+              // now 24 wide and 44 tall with the dot centred inside it, which
+              // clears WCAG 2.5.8 and does not overlap its neighbour (24 + the
+              // row's 12px gap). From `sm` up the button IS the dot again, at
+              // the exact size it has always been, so the desktop row does not
+              // move by a pixel.
+              "h-11 w-6 sm:h-2 sm:w-auto",
             )}
-          />
+          >
+            <span
+              className={cn(
+                "block h-2 rounded-full transition-all",
+                i === at ? "w-7 bg-flame" : "w-2 bg-ink-700 group-hover:bg-ink-600",
+              )}
+            />
+          </button>
         ))}
 
         <button
           type="button"
           onClick={() => go(at + 1)}
           aria-label="השקופית הבאה"
-          className="h-9 w-9 rounded-full border border-ink-700 text-ink-300 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
+          className="h-11 w-11 sm:h-9 sm:w-9 rounded-full border border-ink-700 text-ink-300 hover:border-flame hover:text-flame transition-colors inline-flex items-center justify-center"
         >
           <Icon name="arrowLeft" size={16} />
         </button>

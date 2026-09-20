@@ -34,7 +34,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           className={cn(
-            "inline-flex items-center gap-2 h-9 px-3.5 rounded-full text-sm font-semibold border transition-colors",
+            "inline-flex items-center gap-2 h-11 px-4 rounded-full text-sm font-semibold border transition-colors",
             dirty ? "bg-flame/15 text-flame border-flame/50" : "bg-ink-900 text-ink-200 border-ink-700",
           )}
         >
@@ -55,7 +55,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
             type="button"
             onClick={() => set("sort", s.id)}
             className={cn(
-              "px-3 py-1.5 rounded-full text-sm font-medium border transition-colors",
+              "px-3.5 h-10 sm:h-auto sm:px-3 sm:py-1.5 inline-flex items-center rounded-full text-sm font-medium border transition-colors",
               state.sort === s.id ? "bg-flame-600 text-white border-flame" : "bg-ink-900 text-ink-300 border-ink-700 hover:border-ink-600",
             )}
           >
@@ -72,7 +72,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
               type="button"
               onClick={() => set("colors", f.id)}
               className={cn(
-                "px-2.5 h-7 rounded-full text-xs font-medium transition-colors",
+                "px-3 h-9 sm:px-2.5 sm:h-7 rounded-full text-xs font-medium transition-colors",
                 state.colors === f.id ? "bg-cyan2/20 text-cyan2" : "text-ink-300 hover:text-ink-50",
               )}
             >
@@ -87,7 +87,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
               type="button"
               onClick={() => set("price", f.id)}
               className={cn(
-                "px-2.5 h-7 rounded-full text-xs font-medium transition-colors",
+                "px-3 h-9 sm:px-2.5 sm:h-7 rounded-full text-xs font-medium transition-colors",
                 state.price === f.id ? "bg-cyan2/20 text-cyan2" : "text-ink-300 hover:text-ink-50",
               )}
             >
@@ -102,7 +102,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
           <button
             type="button"
             onClick={() => onChange(DEFAULT_LISTING)}
-            className="inline-flex items-center gap-1 text-xs text-ink-400 hover:text-bad transition-colors"
+            className="inline-flex items-center gap-1 h-9 px-2 sm:h-auto sm:px-0 text-xs text-ink-400 hover:text-bad transition-colors"
           >
             <Icon name="x" size={11} />
             נקה
