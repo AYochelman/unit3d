@@ -1,3 +1,4 @@
+import { rankScore } from "./ranking";
 // Shared filter / sort model for every product listing (pets, home & office,
 // trendy, fidgets). Pages map their items onto ListingStats and call applyListing.
 
@@ -33,6 +34,12 @@ export type ListingStats = {
   /** Max colours the item is offered in (1 = single colour, 2-4 = AMS). */
   colors: number;
   isNew?: boolean;
+  /** The shelf it is sitting on, so the ranking can ask whether it belongs. */
+  shelf?: string;
+  /** How many photographs the product page can show. */
+  shots?: number;
+  /** Matched against the shelf when the model carries no tags. */
+  name?: string;
 };
 
 export type SortId = "popular" | "priceDesc" | "priceAsc" | "newest";
@@ -117,7 +124,24 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
    * page to count, and they belong after everything that does — not tangled
    * among models that were published and downloaded zero times.
    */
-  const rank = (it: ListingStats) => it.downloads ?? -1;
+  /**
+   * The score lib/ranking.ts builds from five signals, not the download count.
+   *
+   * `-Infinity` for the shop's own designs: they have no source page and no
+   * signals, so a score would be built out of nothing and drop them somewhere
+   * arbitrary in the middle. They belong after everything that was measured —
+   * except the pinned ones, which are decided above and never reach here.
+   */
+  const rank = (it: ListingStats) =>
+    it.downloads == null && !(it.itemId ?? it.id).startsWith("mw-")
+      ? -Infinity
+      : rankScore({
+        id: it.itemId ?? it.id,
+        shelf: it.shelf,
+        downloads: it.downloads,
+        shots: it.shots,
+        name: it.name,
+      });
   out = [...out].sort((a, b) => {
     switch (s.sort) {
       case "priceDesc":

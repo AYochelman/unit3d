@@ -181,7 +181,28 @@
   const line = list.join(" ");
   try { await navigator.clipboard.writeText(line); } catch { /* printed below anyway */ }
 
-  const blob = new Blob([JSON.stringify({ readAt: new Date().toISOString(), ids: list }, null, 2)], { type: "application/json" });
+  // Which collection each model came from, not only that it was seen.
+  //
+  // The file used to carry the flat list alone, and the shop cannot act on
+  // that: a model saved to a collection is approved on the spot, while a
+  // model that was merely LIKED waits for him — and a flat list cannot tell
+  // the two apart. 82 models arrived that way and all of them had to queue,
+  // including the ones he had already decided on by saving them.
+  //
+  // `all` has known the answer the whole time. It just was not written down.
+  const groups = {};
+  for (const [mid, from] of all) (groups[from] ??= []).push(mid);
+  const pending = Object.entries(groups)
+    .filter(([from]) => from !== "likes")
+    .map(([collection, ids]) => ({ collection, ids }));
+
+  const blob = new Blob([JSON.stringify({
+    readAt: new Date().toISOString(),
+    ids: list,
+    likes: groups.likes ?? [],
+    // Paste this straight into data/pending-models.json.
+    pending,
+  }, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "makerworld-ids.json";

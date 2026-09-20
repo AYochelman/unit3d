@@ -98,6 +98,23 @@
     bottom: var(--fab-bottom);
     transition: bottom 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
+  /*
+   * A long shelf, one screenful at a time — on a phone only.
+   *
+   * /fidgets renders 144 cards. In a two-column phone grid that is 27,514px of
+   * grid: forty screens of scrolling, and forty screens' worth of layout and
+   * lazy-loaded images for someone who wanted to see what a fidget costs. The
+   * cards stay in the markup, so nothing changes for a crawler or for anyone
+   * without JavaScript; they are simply not laid out until asked for.
+   *
+   * The cap ends at 640px, where the grid widens and the desktop page is
+   * whatever it always was — every card, in the order it always had.
+   */
+  @media (max-width: 639.98px) {
+    .mobile-cap > :nth-child(n + 25) {
+      display: none;
+    }
+  }
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

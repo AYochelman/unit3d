@@ -1,6 +1,7 @@
 import { DELIVERY_BY_ID, SITE_URL, needsAddress, orderTotal, type OrderLine, type PlacedOrder } from "./orders";
 import { CONTACT } from "./contact";
 import { fmtILS } from "./format";
+import { courierName, trackUrl } from "./couriers";
 
 /**
  * The confirmation the customer gets.
@@ -276,6 +277,27 @@ const READY: Record<PlacedOrder["delivery"], { title: string; lead: string; subj
   },
 };
 
+/**
+ * The carrier, the number, and a link to follow it — when there is one.
+ *
+ * The number is printed either way: a customer who has it can find the parcel
+ * on the carrier's own site even when this shop does not know the address of
+ * that page. Printing a number is useful; inventing a link that 404s is not.
+ */
+function trackingRow(o: PlacedOrder): string {
+  const s = o.shipment;
+  if (!s) return "";
+  const url = trackUrl(s);
+  // dir="ltr" on the code alone, not on the row: a tracking number is Latin
+  // and digits, and letting it inherit RTL reorders it. The label beside it
+  // stays Hebrew, which is why only the code is isolated.
+  const code = `<span dir="ltr" style="font-family:ui-monospace,monospace;">${esc(s.code)}</span>`;
+  const body = url
+    ? `${esc(courierName(s))} &middot; ${code}<div style="margin-top:4px;"><a href="${esc(url)}" style="color:${GREEN};font:700 13px/1.6 ${FONT};">מעקב אחרי המשלוח &larr;</a></div>`
+    : `${esc(courierName(s))} &middot; ${code}`;
+  return infoRow("מספר מעקב", body);
+}
+
 export function readyEmailHtml(o: PlacedOrder): string {
   const d = DELIVERY_BY_ID[o.delivery];
   const r = READY[o.delivery] ?? READY.pickup;
@@ -304,6 +326,7 @@ export function readyEmailHtml(o: PlacedOrder): string {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       ${infoRow(pickup ? "איסוף" : "משלוח", `${esc(d.label)}<div style="font:400 12px/1.6 ${FONT};color:${MUTED};">${esc(d.note)}</div>`, true)}
       ${needsAddress(o.delivery) && o.customer.address ? infoRow("כתובת", esc(o.customer.address)) : ""}
+      ${trackingRow(o)}
       ${total == null ? "" : infoRow("סה\"כ", esc(fmtILS(total)), true)}
     </table>
   </td></tr>

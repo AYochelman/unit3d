@@ -51,9 +51,13 @@ export type ListingCard = {
   pieces?: number;
   rating: number;
   orders: number;
-  /** Downloads on the source platform — what orders every shelf. */
+  /** Downloads on the source platform — one of the signals every shelf is ordered by. */
   downloads?: number;
   isNew?: boolean;
+  /** The shelf it sits on, so the ranking can ask whether it belongs there. */
+  shelf?: string;
+  /** How many photographs the product page can show. */
+  shots?: number;
 };
 
 export function productToCard(p: Product): ListingCard {
@@ -82,6 +86,12 @@ export function productToCard(p: Product): ListingCard {
     orders: p.orders ?? 0,
     downloads: p.downloads,
     isNew: p.isNew,
+    // The three the ranking needs and the card itself never shows: which
+    // shelf it is on, how many photographs it has, and its name for matching
+    // when the model carries no tags. Set here so every shelf gets them from
+    // the one function they all build their cards with.
+    shelf: p.category,
+    shots: p.images?.length ?? (p.image ? 1 : 0),
   };
 }
 

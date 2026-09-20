@@ -19,6 +19,15 @@ cd /d "%~dp0.."
 
 REM The signed-in browser profile. Created once by: npm run sync:collections -- --login
 set MAKERWORLD_PROFILE_DIR=%~dp0..\data\mw-profile
+
+REM  אין כאן דפדפן. עמודי האוספים מקבלים את האתגר של Cloudflare עם תיבה
+REM  לסימון, ודפדפן מנוהל לא יכול לסמן אותה - זה בדיוק מה שהתיבה בודקת.
+REM  נוסו: נסתר, גלוי, Chromium, כרום אמיתי, ופרופיל מחובר. כולם נעצרו שם.
+REM
+REM  לכן רשימת המספרים מגיעה מהדפדפן שלך: פותחים makerworld.com מחובר,
+REM  F12 ואז Console, מדביקים את scripts\collect-collections-in-browser.js,
+REM  והתוצאה נכנסת ל-data\pending-models.json. כל השאר - רישיון, מדף,
+REM  מספרים ותמונות - ממשיך דרך ה-API, שעונה תמיד.
 set LOG=%~dp0sync-daily.log
 
 REM ── איפה git ────────────────────────────────────────────────────────────────
@@ -42,10 +51,12 @@ if exist "%LOCALAPPDATA%\Programs\Git\cmd\git.exe" set "GIT=%LOCALAPPDATA%\Progr
 echo [%date% %time%] sync starting >> "%LOG%"
 
 call "%GIT%" pull --rebase origin main  >> "%LOG%" 2>&1
-REM --publish: a model the owner saved to his OWN collection is approved on the
-REM spot, because saving it was the yes. Likes, and anything with a licence or
-REM subject warning, still wait for him in /admin. See sync-collections.mjs.
-call npm run sync:collections -- --publish  >> "%LOG%" 2>&1
+REM  No --publish. Every new model waits for him in /admin, including ones he
+REM  saved to his own collection - he said so in as many words on 18.9, and it
+REM  overrides the exception that used to live here. What comes in from a
+REM  collection still arrives with its shelf already worked out; what it does
+REM  not arrive with is a decision.
+call npm run sync:collections -- --offline  >> "%LOG%" 2>&1
 
 REM Turn those answers - his own, and the ones just written above - into rows
 REM on the shelf. Reads public/model-decisions.json, which /admin also writes.
@@ -62,6 +73,10 @@ REM The designer's whole gallery for models that only ever got a cover. Touches
 REM only models with no gallery yet, so it shrinks to nothing after a few days
 REM and then costs one pass over the catalogue. Runs HERE and not on GitHub:
 REM makerworld.com answers a home connection and turns datacenters away.
+REM  המספרים שכל מדף מסודר לפיהם - הורדות, כמה שמרו, כמה הדפיסו, מתי פורסם.
+REM  --all בכוונה: המספרים זזים, ומודל שהיה חם במרץ הוא משהו אחר בספטמבר.
+call npm run fetch:signals -- --all  >> "%LOG%" 2>&1
+
 call npm run backfill:images  >> "%LOG%" 2>&1
 
 call npm run fetch:images  >> "%LOG%" 2>&1
@@ -73,14 +88,14 @@ if errorlevel 1 (
   exit /b 1
 )
 
-"%GIT%" add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts ^
+"%GIT%" add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts lib/signals.generated.ts ^
         public/model-decisions.json data/rejected-models.json ^
         data/makerworld-raw.json data/pending-models.json data/liked-models.json ^
         data/collections-status.json public/img/catalog  >> "%LOG%" 2>&1
 
 "%GIT%" diff --cached --quiet
 if errorlevel 1 (
-  "%GIT%" commit -m "MakerWorld: publish what was saved, queue what was liked"  >> "%LOG%" 2>&1
+  "%GIT%" commit -m "MakerWorld: queue what was found for approval"  >> "%LOG%" 2>&1
   "%GIT%" push origin main                                      >> "%LOG%" 2>&1
   echo [%date% %time%] pushed >> "%LOG%"
 ) else (

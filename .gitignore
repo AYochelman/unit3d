@@ -64,10 +64,15 @@ next-env.d.ts
 agent/config.json
 agent/node_modules/
 agent/.tmp.mp4
+# Which timelapses this machine has already dealt with — per-machine, not shared.
+agent/timelapse-state.json
 
 # The signed-in MakerWorld browser profile. Never leaves his machine.
 data/mw-profile/
 scripts/sync-daily.log
+
+# The Supabase service key on the owner PC, for the one-off folder import.
+agent/supabase-key.txt
 
 # Reference Studio keeps its library (uploads, notes, settings) out of git.
 tools/reference-studio/data/

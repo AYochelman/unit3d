@@ -117,12 +117,16 @@ export default function Categories() {
             sub="שמונה מדפים. כל אחד נפתח לרשימה מלאה עם מחיר, חומר וזמן הדפסה."
           />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Ten categories in ONE column was 3,357px of phone — four screens of
+            scrolling to see what the shop sells, before anything else on the
+            page. Two columns halve it, and every size from `sm` up keeps the
+            grid, padding, artwork and type it already had. */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
           {CATS.map((c) => (
             <Link
               key={c.index}
               href={c.href}
-              className="group relative flex flex-col p-6 bg-ink-900 border border-ink-800 rounded-2xl hover:border-ink-700 hover:-translate-y-1 transition-all duration-300 ease-smooth"
+              className="group relative flex flex-col p-4 sm:p-6 bg-ink-900 border border-ink-800 rounded-2xl hover:border-ink-700 sm:hover:-translate-y-1 transition-all duration-300 ease-smooth"
             >
               <div className="flex items-start justify-between mb-2">
                 <span className="font-mono text-[11px] tracking-widest text-ink-500">
@@ -130,21 +134,27 @@ export default function Categories() {
                 </span>
                 {c.popular && <Pill tone="flame">פופולרי</Pill>}
               </div>
-              <div className="flex justify-center my-4 h-32">
+              <div className="flex justify-center my-3 sm:my-4 h-20 sm:h-32">
+                {/* The width and height attributes stay 120; these classes
+                    override them on a phone and hand the size back at `sm`,
+                    so the drawing scales instead of being cropped. */}
                 <CategoryArt
                   art={c.art}
                   hue={c.hue}
                   size={120}
-                  className="transition-transform duration-500 group-hover:scale-105"
+                  className="h-20 w-20 sm:h-[120px] sm:w-[120px] transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <h3 className="text-base md:text-lg font-extrabold tracking-tight mb-1.5">
+              <h3 className="text-sm sm:text-base md:text-lg font-extrabold tracking-tight mb-1.5">
                 {c.title}
               </h3>
-              <p className="text-ink-400 text-sm leading-relaxed mb-4 flex-1">
+              {/* Two lines on a phone: the full sentence in a half-width card
+                  runs to six, and pushes the link people came to tap off the
+                  bottom of the card. */}
+              <p className="text-ink-400 text-xs sm:text-sm leading-relaxed sm:leading-relaxed mb-3 sm:mb-4 flex-1 line-clamp-2 sm:line-clamp-none">
                 {c.desc}
               </p>
-              <div className="inline-flex items-center gap-1.5 text-flame font-semibold text-sm">
+              <div className="inline-flex items-center gap-1.5 text-flame font-semibold text-xs sm:text-sm">
                 <span>פתח {c.cta}</span>
                 <Icon
                   name="arrowLeft"
