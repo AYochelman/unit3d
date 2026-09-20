@@ -227,6 +227,9 @@ function FidgetCard({
   );
 }
 
+/** How many cards a phone shows before asking. Mirrors .mobile-cap in globals.css. */
+const MOBILE_CAP = 24;
+
 export default function FidgetsClient() {
   const [listing, setListing] = useState<ListingState>(DEFAULT_LISTING);
   const [kind, setKind] = useState<FidgetKindFilter>("all");
@@ -240,6 +243,8 @@ export default function FidgetsClient() {
     const withPhoto = FIDGETS.filter((f) => !!(f.thumbnail ?? f.images?.[0]));
     return kind === "all" ? withPhoto : withPhoto.filter((f) => fidgetKind(f) === kind);
   }, [kind]);
+
+  const [showAll, setShowAll] = useState(false);
 
   const items = useMemo(() => {
     const withStats = pool.map((f) => ({
@@ -358,11 +363,29 @@ export default function FidgetsClient() {
       </Link>
 
       {/* Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div
+        className={cn(
+          "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4",
+          // Phones see the first 24 until they ask for the rest. See the
+          // .mobile-cap rule in globals.css for why, and note that it stops
+          // at 640px — the desktop grid is untouched.
+          !showAll && "mobile-cap",
+        )}
+      >
         {items.map((f) => (
           <FidgetCard key={f.id} f={f} onAdd={addToOrder} />
         ))}
       </div>
+
+      {!showAll && items.length > MOBILE_CAP && (
+        <button
+          type="button"
+          onClick={() => setShowAll(true)}
+          className="sm:hidden mt-5 w-full h-12 rounded-xl border border-ink-700 bg-ink-900 text-sm font-bold text-ink-100 active:scale-[0.99] transition-transform motion-reduce:transition-none"
+        >
+          הצג עוד {items.length - MOBILE_CAP} דגמים
+        </button>
+      )}
 
       {items.length === 0 && (
         <div className="text-center py-16 text-ink-400">
