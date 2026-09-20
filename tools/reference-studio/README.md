@@ -172,10 +172,13 @@ Pinterest page displays a picture someone made in a design tool; that artwork
 has no CSS, no fonts and no breakpoints. Measuring the page reads the gallery's
 own interface — its font, its brand colour, its container width — and handing
 that over as "how this design is built" would be precise about the wrong page.
-Such a reference opens with a warning and refuses to tell you to copy the
-numbers: use it for how the work *looks* (the image, and the motion where there
-is one), and capture the designer's live site when you want to know how a page
-is *built*.
+Such a reference gets a different, shorter document: what it actually holds
+(the artwork, the clip, a screenshot you uploaded), the colours counted from
+the work itself where there are any, and the two honest ways forward — describe
+the picture through the Analysis tab, or find the designer's live site and
+capture that, where the CSS *is* the design. It does not print the gallery's
+type scale and breakpoints under a warning not to use them; sixty lines of the
+wrong page is not made right by four lines saying so.
 
 Five buttons on every reference, always live:
 

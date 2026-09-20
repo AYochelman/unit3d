@@ -308,22 +308,47 @@ export function buildPrompt(ref: Reference): string {
   const gallery = isGalleryHost(ref.source?.url ?? "");
   const host = hostOf(ref.source?.url ?? "");
 
+  // The single most misleading thing this tool could do is hand over a precise
+  // description of the wrong page - and printing it under a warning not to use
+  // it is barely better, since the warning is then four lines against sixty.
+  // A gallery reference gets a short, true document instead of a long one.
   if (gallery) {
-    // The single most misleading thing this tool could do is hand over a
-    // precise description of the wrong page.
-    out.push(`> **These measurements describe ${host}, not the work shown on it.**`);
-    out.push(">");
-    out.push("> A gallery page displays a picture or a video that someone made in a design tool. That artwork has no CSS, no fonts and no breakpoints of its own — everything measured below belongs to the site that is showing it: its interface font, its brand colours, its container width, its own responsive rules.");
-    out.push(">");
-    out.push("> Use this reference for how the work **looks** — the image and, where there is one, the motion. For how a page is **built**, capture the live site itself, where the CSS is the design.");
+    out.push(`**There is nothing to measure here.** This is a page on ${host}, and what you were looking at is a picture or a video someone made in a design tool and uploaded. That artwork has no CSS, no fonts and no breakpoints of its own; the only styles on this page are ${host}'s own interface, which is not what you saved this for.`);
     out.push("");
+
+    const artwork = ref.assets.find((a) => a.role === "artwork");
+    const motion = ref.assets.find((a) => a.role === "motion");
+    const manual = ref.assets.find((a) => a.role === "manual");
+    out.push("## What this reference does hold");
+    if (manual) out.push(`- A screenshot you uploaded by hand${manual.width ? ` (${manual.width}×${manual.height})` : ""}.`);
+    if (artwork) out.push(`- The work itself, as the page published it${artwork.width ? ` (${artwork.width}×${artwork.height})` : ""}.`);
+    if (motion) out.push(`- The motion, as the page plays it (${Math.max(1, Math.round(motion.bytes / 1024))} KB of ${motion.mime}). Half of what this design is may be in how it moves.`);
+    if (!artwork && !motion && !manual) out.push("- Only a screenshot of the gallery page. Upload the work itself, or capture it again.");
+    if (observed.title) out.push(`- Its page title: ${observed.title}`);
+    out.push("");
+
+    if (ref.autoPalette?.length) {
+      out.push("## Colour, counted from the work itself");
+      for (const c of ref.autoPalette.slice(0, 8)) {
+        out.push(`- \`${c.hex}\` — ${describeColor(c.hex)}${c.share ? `, ${Math.round(c.share * 100)}% of the pixels` : ""}.`);
+      }
+      out.push("");
+    }
+
+    out.push("## To get something usable out of this");
+    out.push("1. **Describe the picture.** The Analysis tab reads the artwork itself — with an API key directly, or by exporting a package and running it in Claude Code. That is the only honest way to say anything about a still.");
+    out.push(`2. **Find the real site.** If the shot is a concept, there may be none. If it is work that shipped, the studio's own site is the thing worth capturing — there the CSS *is* the design, and this tool will tell you every library and technique it uses.`);
+    if (ref.use.length) {
+      out.push("");
+      out.push(`Keep: ${ref.use.join("; ")}.`);
+    }
+    if (ref.avoid.length) out.push(`Do not copy: ${ref.avoid.join("; ")}.`);
+    out.push("");
+    out.push(provenance(ref));
+    return out.join("\n");
   }
 
-  out.push(
-    gallery
-      ? `With that said, everything below was read off ${host} with a browser: applied styles, loaded scripts, computed values.`
-      : "Everything below was read off the live page with a browser: applied styles, loaded scripts, computed values. It is what the page does, not an impression of how it looks.",
-  );
+  out.push("Everything below was read off the live page with a browser: applied styles, loaded scripts, computed values. It is what the page does, not an impression of how it looks.");
   out.push("");
 
   /* ---- type ---- */
@@ -413,15 +438,6 @@ export function buildPrompt(ref: Reference): string {
   }
 
   out.push("## To reproduce this");
-  if (gallery) {
-    out.push(`Not from the numbers above — they are ${host}'s. What this reference gives you is the picture, and the motion if it was captured. Describe those, or open the designer's own site and capture that instead.`);
-    out.push("");
-    if (ref.use.length) out.push(`Keep: ${ref.use.join("; ")}.`);
-    if (ref.avoid.length) out.push(`Do not copy: ${ref.avoid.join("; ")}.`);
-    out.push("");
-    out.push(provenance(ref));
-    return out.join("\n");
-  }
   out.push(
     b
       ? "Take the values above literally — the type scale, the container width, the radii, the breakpoints — and the techniques as the vocabulary. Where a value is absent above it was not measured, so decide it yourself rather than assuming it matched."
