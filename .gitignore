@@ -70,3 +70,6 @@ agent/timelapse-state.json
 # The signed-in MakerWorld browser profile. Never leaves his machine.
 data/mw-profile/
 scripts/sync-daily.log
+
+# The Supabase service key on the owner PC, for the one-off folder import.
+agent/supabase-key.txt

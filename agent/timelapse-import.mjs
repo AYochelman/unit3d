@@ -31,21 +31,66 @@ import { fileURLToPath } from "node:url";
 import { banner } from "./version.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const cfg = JSON.parse(fs.readFileSync(path.join(HERE, "config.json"), "utf8"));
-const SB = String(cfg.supabase.url).replace(/\/$/, "");
-const KEY = cfg.supabase.serviceKey;
-const legacy = String(KEY).startsWith("ey");
-const sbHeaders = { apikey: KEY, ...(legacy ? { Authorization: `Bearer ${KEY}` } : {}), "Content-Type": "application/json" };
+
+const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch { return null; } };
+const cfg = readJson(path.join(HERE, "config.json"));
 
 const args = process.argv.slice(2);
 const DRY = args.includes("--dry");
 const minMb = Number((args.find((a) => a.startsWith("--min-mb=")) || "").split("=")[1]) || 1;
-const folder = args.find((a) => !a.startsWith("--")) || cfg.timelapse?.importFolder || "";
+const folder = args.find((a) => !a.startsWith("--")) || cfg?.timelapse?.importFolder || "";
 
 const ok = (m) => console.log(`  \x1b[32mok\x1b[0m    ${m}`);
 const bad = (m, fix) => { console.log(`  \x1b[31mFAIL\x1b[0m  ${m}`); if (fix) console.log(`        → ${fix}`); };
 
 banner("importing old timelapses from a folder");
+
+/**
+ * Where the database lives, and the key allowed to write to it.
+ *
+ * The agent runs on the Pi, so agent/config.json is on the Pi — and this
+ * script runs wherever the old folder is, which is the owner's PC. Requiring
+ * that file here meant the import could not run on the one machine that
+ * actually had the videos.
+ *
+ * So: config.json when it is there, otherwise the project URL out of
+ * public/shop.json (the shop already knows its own database) and the key from
+ * SUPABASE_KEY or agent/supabase-key.txt. Nothing is guessed — a missing key
+ * stops the run and names the one place to get it.
+ */
+function settings() {
+  if (cfg?.supabase?.url && cfg?.supabase?.serviceKey) {
+    return { url: cfg.supabase.url, key: cfg.supabase.serviceKey, from: "agent/config.json" };
+  }
+  const shop = readJson(path.join(HERE, "..", "public", "shop.json"));
+  const keyFile = path.join(HERE, "supabase-key.txt");
+  const url = (process.env.SUPABASE_URL || cfg?.supabase?.url || shop?.supabaseUrl || "").trim();
+  const key = (process.env.SUPABASE_KEY || "").trim()
+    || (fs.existsSync(keyFile) ? fs.readFileSync(keyFile, "utf8").trim() : "");
+  if (!url || !key) return { url, key, from: "", keyFile };
+  return { url, key, from: process.env.SUPABASE_KEY ? "SUPABASE_KEY" : "agent/supabase-key.txt" };
+}
+
+const conf = settings();
+if (!conf.url || !conf.key) {
+  bad("there is no database key on this machine",
+      "agent/config.json lives on the Pi, not here. Put the key in a file instead:");
+  console.log(`
+    1. https://supabase.com/dashboard  →  the project  →  Settings  →  API Keys
+    2. copy the service_role key (the secret one, not anon)
+    3. save it as a single line in:  ${conf.keyFile}
+    4. run this again
+
+  That file is git-ignored and never leaves this machine.
+`);
+  process.exit(1);
+}
+
+const SB = String(conf.url).replace(/\/$/, "");
+const KEY = conf.key;
+const legacy = String(KEY).startsWith("ey");
+const sbHeaders = { apikey: KEY, ...(legacy ? { Authorization: `Bearer ${KEY}` } : {}), "Content-Type": "application/json" };
+ok(`key from ${conf.from}`);
 
 if (!folder) {
   bad("no folder given",
