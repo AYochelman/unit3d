@@ -150,8 +150,25 @@ hand. Estimates are labelled in every export.
 
 ## Outputs
 
-Four buttons on every reference, always live:
+**How it is built** is the one that answers "what made this look?" — and it
+needs nothing from you. It is assembled from the live-page measurements alone:
+the fonts actually applied and where they were loaded from, colours by share of
+painted area, the heading scale, container width, radii, breakpoints, the CSS
+techniques the computed styles really use (frosted glass, blend modes, clipped
+shapes, masks, gradients, sticky sections, 3D transforms, canvas) with a count
+of how many elements carry each, and the libraries the page loads — GSAP,
+Three.js, Spline, Lottie, Framer Motion, Lenis, Swiper, Next.js, Webflow and
+the rest — each named with the evidence that found it.
 
+Nothing there is inferred from how a picture looks. A library is listed because
+its script is on the page or its global is defined; a technique because a
+computed style uses it. A reference that was never captured gets a paragraph
+saying so rather than a description of a screenshot.
+
+Five buttons on every reference, always live:
+
+- **Copy build prompt** — the objective account above, ready to paste at a
+  coding agent.
 - **Copy design brief** — the reference translated into implementation guidance,
   with a WCAG contrast check on the pairing it recorded.
 - **Copy image prompt** — composition, lighting, texture, mood, aspect ratio, and

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useStudio } from "@/lib/store";
-import { designBrief, imagePrompt, designTokens, provenance } from "@/lib/outputs";
+import { designBrief, imagePrompt, designTokens, buildPrompt, provenance } from "@/lib/outputs";
 import { PURPOSES, PURPOSE_LABELS } from "@/lib/types";
 import type { Purpose, Reference } from "@/lib/types";
 import { CopyButton, Icon } from "./ui";
@@ -16,17 +16,18 @@ const ASPECTS = ["16:9", "21:9", "4:3", "1:1", "3:4", "9:16"];
  */
 export function OutputsPanel({ reference }: { reference: Reference }) {
   const [aspect, setAspect] = useState("16:9");
-  const [tab, setTab] = useState<"brief" | "image" | "tokens">("brief");
+  const [tab, setTab] = useState<"build" | "brief" | "image" | "tokens">("build");
   const [tokenFormat, setTokenFormat] = useState<"json" | "css">("json");
 
   const brief = useMemo(() => designBrief(reference), [reference]);
+  const build = useMemo(() => buildPrompt(reference), [reference]);
   const prompt = useMemo(() => imagePrompt(reference, aspect), [reference, aspect]);
   const tokens = useMemo(() => designTokens(reference), [reference]);
   const tokenText = tokenFormat === "json" ? tokens.json : tokens.css;
-  const current = tab === "brief" ? brief : tab === "image" ? prompt : tokenText;
+  const current = tab === "build" ? build : tab === "brief" ? brief : tab === "image" ? prompt : tokenText;
 
   const download = () => {
-    const name = tab === "brief" ? "brief.md" : tab === "image" ? "image-prompt.txt" : tokenFormat === "json" ? "tokens.json" : "tokens.css";
+    const name = tab === "build" ? "how-it-is-built.md" : tab === "brief" ? "brief.md" : tab === "image" ? "image-prompt.txt" : tokenFormat === "json" ? "tokens.json" : "tokens.css";
     const blob = new Blob([current], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -38,6 +39,7 @@ export function OutputsPanel({ reference }: { reference: Reference }) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-2">
+        <CopyButton className="btn btn-sm justify-start" label="Copy build prompt" text={() => buildPrompt(reference)} />
         <CopyButton className="btn btn-sm justify-start" label="Copy design brief" text={() => designBrief(reference)} />
         <CopyButton className="btn btn-sm justify-start" label="Copy image prompt" text={() => imagePrompt(reference, aspect)} />
         <CopyButton className="btn btn-sm justify-start" label="Copy design tokens" text={() => (tokenFormat === "json" ? designTokens(reference).json : designTokens(reference).css)} />
@@ -55,7 +57,7 @@ export function OutputsPanel({ reference }: { reference: Reference }) {
       <div className="panel overflow-hidden">
         <div className="flex items-center gap-1 border-b px-2 py-1.5"
           style={{ borderColor: "rgb(var(--line) / var(--line-alpha))" }}>
-          {([["brief", "Brief"], ["image", "Image prompt"], ["tokens", "Tokens"]] as const).map(([key, label]) => (
+          {([["build", "How it is built"], ["brief", "Brief"], ["image", "Image prompt"], ["tokens", "Tokens"]] as const).map(([key, label]) => (
             <button key={key} type="button" onClick={() => setTab(key)}
               className="rounded-md px-2.5 py-1 text-xs transition-colors"
               aria-pressed={tab === key}

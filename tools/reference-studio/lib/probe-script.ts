@@ -178,6 +178,152 @@ export function pageProbe() {
     }),
   };
 
+
+  /* ---------- what built this ----------
+   * Named from evidence on the page, never guessed from how it looks: a
+   * library is reported because its script is loaded or its global is
+   * defined, and a CSS technique because a computed style uses it. The count
+   * is how many elements carry it, so "one blurred panel" and "the whole page
+   * is glass" do not read the same. */
+  const scriptUrls: string[] = [];
+  for (const el of Array.from(document.querySelectorAll("script[src]"))) {
+    const src = el.getAttribute("src") ?? "";
+    if (src) scriptUrls.push(src);
+  }
+  const styleUrls = Array.from(document.querySelectorAll('link[rel~="stylesheet"]'))
+    .map((el) => el.getAttribute("href") ?? "")
+    .filter(Boolean);
+  const allUrls = [...scriptUrls, ...styleUrls].join(" ").toLowerCase();
+  const w = window as unknown as Record<string, unknown>;
+
+  const LIBS: { name: string; url?: RegExp; global?: string; note: string }[] = [
+    { name: "GSAP", url: /gsap|greensock/, global: "gsap", note: "timeline animation, usually with ScrollTrigger" },
+    { name: "ScrollTrigger", url: /scrolltrigger/, global: "ScrollTrigger", note: "scroll-linked animation" },
+    { name: "Three.js", url: /three(\.min)?\.js|three@|\/three\//, global: "THREE", note: "WebGL 3D in a canvas" },
+    { name: "Spline", url: /spline/, global: "SPLINE", note: "hosted 3D scene" },
+    { name: "Lottie", url: /lottie/, global: "lottie", note: "vector animation exported from After Effects" },
+    { name: "Framer Motion", url: /framer-motion|framerusercontent/, note: "React layout and gesture animation" },
+    { name: "Lenis", url: /lenis/, global: "Lenis", note: "smooth scrolling" },
+    { name: "Locomotive Scroll", url: /locomotive-scroll/, global: "LocomotiveScroll", note: "smooth scrolling and parallax" },
+    { name: "Swiper", url: /swiper/, global: "Swiper", note: "sliders and carousels" },
+    { name: "Rive", url: /rive/, global: "rive", note: "interactive vector animation" },
+    { name: "Barba.js", url: /barba/, global: "barba", note: "animated page transitions" },
+    { name: "Next.js", url: /\/_next\//, global: "__NEXT_DATA__", note: "React framework" },
+    { name: "Nuxt", url: /\/_nuxt\//, global: "__NUXT__", note: "Vue framework" },
+    { name: "React", global: "React", note: "component UI" },
+    { name: "Vue", global: "Vue", note: "component UI" },
+    { name: "Webflow", url: /webflow/, global: "Webflow", note: "visual site builder" },
+    { name: "WordPress", url: /wp-content|wp-includes/, note: "CMS" },
+    { name: "Elementor", url: /elementor/, note: "WordPress page builder" },
+    { name: "Tailwind CSS", url: /tailwind/, note: "utility CSS" },
+    { name: "Bootstrap", url: /bootstrap/, note: "CSS framework" },
+  ];
+  const libraries: { name: string; evidence: string; note: string }[] = [];
+  for (const lib of LIBS) {
+    if (lib.url && lib.url.test(allUrls)) {
+      libraries.push({ name: lib.name, evidence: "a script or stylesheet on the page", note: lib.note });
+    } else if (lib.global && w[lib.global] !== undefined) {
+      libraries.push({ name: lib.name, evidence: `window.${lib.global} is defined`, note: lib.note });
+    }
+  }
+
+  // Where the type came from, which is the difference between "a font like
+  // this" and a name you can actually install.
+  const fontSources: string[] = [];
+  if (/fonts\.googleapis|fonts\.gstatic/.test(allUrls)) fontSources.push("Google Fonts");
+  if (/use\.typekit|adobe/.test(allUrls)) fontSources.push("Adobe Fonts");
+  if (/fonts\.bunny|fontshare|typeface/.test(allUrls)) fontSources.push("a hosted font service");
+  try {
+    for (const sheet of Array.from(document.styleSheets)) {
+      let rules: CSSRuleList | null = null;
+      try { rules = sheet.cssRules; } catch { continue; }
+      if (!rules) continue;
+      for (const rule of Array.from(rules)) {
+        if (rule.constructor.name === "CSSFontFaceRule" || rule.cssText.startsWith("@font-face")) {
+          fontSources.push("self-hosted @font-face");
+          break;
+        }
+      }
+    }
+  } catch { /* cross-origin sheets are simply not readable */ }
+
+  const techniques: { name: string; count: number; detail: string }[] = [];
+  const note = (name: string, count: number, detail: string) => {
+    if (count > 0) techniques.push({ name, count, detail });
+  };
+  let blur = 0, blend = 0, clip = 0, mask = 0, gradient = 0, shadow = 0;
+  let sticky = 0, grid = 0, flex = 0, transform3d = 0, outlineOnly = 0;
+  const gradientSamples: string[] = [];
+  const shadowSamples: string[] = [];
+  const sampled = Array.from(document.querySelectorAll<HTMLElement>("body *")).slice(0, 1500);
+  for (const el of sampled) {
+    const cs = getComputedStyle(el);
+    if (cs.backdropFilter && cs.backdropFilter !== "none") blur += 1;
+    if (cs.mixBlendMode && cs.mixBlendMode !== "normal") blend += 1;
+    if (cs.clipPath && cs.clipPath !== "none") clip += 1;
+    if ((cs.maskImage && cs.maskImage !== "none") || (cs.webkitMaskImage && cs.webkitMaskImage !== "none")) mask += 1;
+    if (cs.backgroundImage && cs.backgroundImage.includes("gradient")) {
+      gradient += 1;
+      if (gradientSamples.length < 3) gradientSamples.push(cs.backgroundImage.slice(0, 120));
+    }
+    if (cs.boxShadow && cs.boxShadow !== "none") {
+      shadow += 1;
+      if (shadowSamples.length < 3) shadowSamples.push(cs.boxShadow.slice(0, 80));
+    }
+    if (cs.position === "sticky") sticky += 1;
+    if (cs.display === "grid" || cs.display === "inline-grid") grid += 1;
+    if (cs.display === "flex" || cs.display === "inline-flex") flex += 1;
+    if (cs.transformStyle === "preserve-3d" || (cs.perspective && cs.perspective !== "none")) transform3d += 1;
+    if (cs.borderStyle !== "none" && cs.backgroundColor === "rgba(0, 0, 0, 0)" && cs.borderWidth !== "0px") outlineOnly += 1;
+  }
+  note("Frosted glass", blur, "backdrop-filter blurring what is behind a panel");
+  note("Blend modes", blend, "mix-blend-mode compositing layers into each other");
+  note("Clipped shapes", clip, "clip-path cutting elements to non-rectangular shapes");
+  note("Masks", mask, "mask-image fading or cutting content");
+  note("Gradients", gradient, gradientSamples[0] ? `for example ${gradientSamples[0]}` : "gradient backgrounds");
+  note("Soft shadows", shadow, shadowSamples[0] ? `for example ${shadowSamples[0]}` : "box-shadow depth");
+  note("Sticky sections", sticky, "position: sticky holding elements while the page scrolls past");
+  note("CSS grid", grid, "grid layout");
+  note("Flexbox", flex, "flex layout");
+  note("3D transforms", transform3d, "perspective or preserve-3d");
+  note("Outlined surfaces", outlineOnly, "bordered panels with no fill");
+
+  const canvases = Array.from(document.querySelectorAll("canvas"));
+  // Asking for a WebGL context would CREATE one, and then every canvas on
+  // earth answers yes. Ask for 2D instead: a canvas the page has already bound
+  // to WebGL refuses it, and that refusal is the evidence. A canvas nobody has
+  // touched simply answers, and is reported as a canvas and nothing more.
+  let webgl = false;
+  for (const c of canvases) {
+    const box = c.getBoundingClientRect();
+    if (box.width * box.height < 10000) continue;
+    try {
+      if (c.getContext("2d") === null) { webgl = true; break; }
+    } catch { webgl = true; break; }
+  }
+  if (canvases.length) {
+    techniques.push({
+      name: webgl ? "WebGL canvas" : "Canvas",
+      count: canvases.length,
+      detail: webgl
+        ? "a canvas already bound to a WebGL context - 3D or shader work rendered live in the page"
+        : "a canvas element; what it draws could not be told from the outside",
+    });
+  }
+  const videoBackdrops = Array.from(document.querySelectorAll("video")).filter((v) => {
+    const box = v.getBoundingClientRect();
+    return box.width > window.innerWidth * 0.6;
+  }).length;
+  note("Full-width video", videoBackdrops, "video used as a backdrop rather than as a player");
+
+  const build = {
+    libraries,
+    techniques: techniques.sort((a, b) => b.count - a.count).slice(0, 14),
+    fontSources: [...new Set(fontSources)],
+    colorScheme: getComputedStyle(document.documentElement).colorScheme || "",
+    sampledElements: sampled.length,
+  };
+
   return {
     title: document.title,
     lang: document.documentElement.lang,
@@ -192,6 +338,7 @@ export function pageProbe() {
     motion: { transitions, animations, prefersReducedMotionQuery, sample: motionSample },
     breakpoints: [...breakpoints].slice(0, 10),
     images,
+    build,
     viewportMeta: document.querySelector('meta[name="viewport"]')?.getAttribute("content") ?? undefined,
     capturedAt: new Date().toISOString(),
   };

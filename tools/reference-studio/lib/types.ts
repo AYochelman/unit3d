@@ -75,6 +75,19 @@ export interface ObservedProbe {
   /** Breakpoints found in the page's own stylesheets. */
   breakpoints: string[];
   images: { count: number; withObjectFit: number; sample: string[] };
+  /**
+   * What built the look, named from evidence rather than from appearance: a
+   * library because its script is loaded or its global is defined, a technique
+   * because a computed style uses it. Absent on references captured before
+   * this existed, so every reader must treat it as optional.
+   */
+  build?: {
+    libraries: { name: string; evidence: string; note: string }[];
+    techniques: { name: string; count: number; detail: string }[];
+    fontSources: string[];
+    colorScheme: string;
+    sampledElements: number;
+  };
   viewportMeta?: string;
   capturedAt: string;
 }

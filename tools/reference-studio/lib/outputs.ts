@@ -272,3 +272,130 @@ export function designTokens(ref: Reference): TokenBundle {
 
   return { json, css: cssLines.join("\n") };
 }
+
+/**
+ * How the look was built, as instructions rather than as appreciation.
+ *
+ * Everything here comes off the live page - the libraries it loads, the CSS
+ * features its computed styles use, the type it actually applied, the colours
+ * weighted by how much of the page they paint. Nothing is inferred from what a
+ * picture looks like, and nothing asks the reader what they liked: this is
+ * meant to be pasted at a coding agent and acted on.
+ *
+ * A reference that was never captured has none of this, and the text says so
+ * instead of inventing it.
+ */
+export function buildPrompt(ref: Reference): string {
+  const observed = ref.source?.observed;
+  const out: string[] = [];
+
+  out.push(`# How this design is built — ${ref.title || "untitled reference"}`);
+  out.push("");
+
+  if (!observed) {
+    out.push(
+      ref.source?.url
+        ? "This reference has not been captured, so nothing here was measured. Capture the URL first: every statement below would otherwise be a guess about a picture."
+        : "This reference is an image, not a captured page. A still cannot show which libraries, CSS features or fonts produced it — only a live page can. Add the site's URL and capture it to get this.",
+    );
+    out.push("");
+    out.push(provenance(ref));
+    return out.join("\n");
+  }
+
+  const b = observed.build;
+
+  out.push("Everything below was read off the live page with a browser: applied styles, loaded scripts, computed values. It is what the page does, not an impression of how it looks.");
+  out.push("");
+
+  /* ---- type ---- */
+  out.push("## Type");
+  if (observed.fonts.length) {
+    for (const f of observed.fonts.slice(0, 4)) {
+      out.push(`- \`${f.family}\` — carries roughly ${f.usage} characters of text on the page.`);
+    }
+  }
+  if (b?.fontSources.length) out.push(`- Loaded from: ${b.fontSources.join(", ")}.`);
+  if (observed.headings.length) {
+    out.push(`- Heading sizes as rendered: ${observed.headings.map((h) => `${h.tag} ${h.fontSize}/${h.fontWeight}`).join(", ")}.`);
+  }
+  out.push(`- Body: ${observed.body.fontSize} with line-height ${observed.body.lineHeight}.`);
+  out.push("");
+
+  /* ---- colour ---- */
+  out.push("## Colour");
+  out.push("By share of painted area, largest first:");
+  for (const c of observed.colors.slice(0, 8)) {
+    out.push(`- \`${c.hex}\` — ${describeColor(c.hex)}, ${Math.round(c.usage * 100)}% of sampled area${c.where === "text" ? ", used on text" : ""}.`);
+  }
+  if (b?.colorScheme) out.push(`- The page declares \`color-scheme: ${b.colorScheme}\`.`);
+  out.push("");
+
+  /* ---- layout ---- */
+  out.push("## Layout");
+  if (observed.containerWidths.length) out.push(`- Content is held to about ${observed.containerWidths[0]}px.`);
+  if (observed.radii.length) out.push(`- Corner radii in use: ${observed.radii.join(", ")}.`);
+  if (observed.breakpoints.length) out.push(`- Breakpoints declared in its own stylesheets: ${observed.breakpoints.join(", ")}.`);
+  if (observed.viewportMeta) out.push(`- Viewport meta: \`${observed.viewportMeta}\`.`);
+  if (observed.dir && observed.dir !== "ltr") out.push(`- Document direction: ${observed.dir}.`);
+  out.push("");
+
+  /* ---- the part that answers "how" ---- */
+  if (b?.techniques.length) {
+    out.push("## Techniques the CSS actually uses");
+    out.push(`Counted over ${b.sampledElements} elements — the count is how many carry it, so one blurred panel and a page made of glass do not read alike.`);
+    for (const t of b.techniques) {
+      out.push(`- **${t.name}** ×${t.count} — ${t.detail}`);
+    }
+    out.push("");
+  }
+
+  if (b?.libraries.length) {
+    out.push("## What it was built with");
+    out.push("Named because the page loads it, not because the design looks like it:");
+    for (const lib of b.libraries) {
+      out.push(`- **${lib.name}** — ${lib.note}. Found via ${lib.evidence}.`);
+    }
+    out.push("");
+  } else if (b) {
+    out.push("## What it was built with");
+    out.push("No known library was detected on the page. Either it is hand-written, or its bundle does not name itself in a way this probe can see — treat the techniques above as the reproducible part.");
+    out.push("");
+  }
+
+  /* ---- motion ---- */
+  out.push("## Motion");
+  const m = observed.motion;
+  if (m.transitions || m.animations) {
+    out.push(`- ${m.transitions} elements declare CSS transitions and ${m.animations} declare keyframe animations.`);
+    if (m.sample.length) out.push(`- For example: ${m.sample.slice(0, 3).join("; ")}.`);
+    out.push(
+      m.prefersReducedMotionQuery
+        ? "- It ships a `prefers-reduced-motion` query, so match that: give the same page a still version."
+        : "- It ships no `prefers-reduced-motion` query. Add one — this is a defect to copy deliberately, not to inherit.",
+    );
+  } else {
+    out.push("- No CSS transitions or keyframe animations were found on the loaded page. Any motion it has is scripted, or there is none.");
+  }
+  out.push("");
+
+  /* ---- images ---- */
+  if (observed.images.count) {
+    out.push("## Images");
+    out.push(`- ${observed.images.count} images, ${observed.images.withObjectFit} of them with an explicit \`object-fit\`.`);
+    out.push("");
+  }
+
+  out.push("## To reproduce this");
+  out.push("Take the values above literally — the type scale, the container width, the radii, the breakpoints — and the techniques as the vocabulary. Where a value is absent above it was not measured, so decide it yourself rather than assuming it matched.");
+  if (ref.use.length) {
+    out.push("");
+    out.push(`Keep: ${ref.use.join("; ")}.`);
+  }
+  if (ref.avoid.length) {
+    out.push(`Do not copy: ${ref.avoid.join("; ")}.`);
+  }
+  out.push("");
+  out.push(provenance(ref));
+  return out.join("\n");
+}
