@@ -92,6 +92,99 @@ function remember(res) {
 const cookieHeader = () =>
   jar.size ? [...jar].map(([k, v]) => `${k}=${v}`).join("; ") : undefined;
 
+/**
+ * A real browser, for the requests node is no longer allowed to make.
+ *
+ * makerworld.com's API used to answer plain node fetch, and the whole import
+ * was built on that. It now returns 403 to it and 200 to a browser, checked
+ * side by side on the same ids at the same minute. It is not the address (a
+ * datacenter browser gets 200), not a rate limit (seven in a row at 1.2s all
+ * answered), not the user-agent (a browser sending the literal string "node"
+ * still gets 200) and not a cookie. What is left is how the connection itself
+ * looks, which no header can change — so the request has to come from a
+ * browser.
+ *
+ * Opened only when a plain request has actually been refused, so a machine
+ * where fetch still works never starts one, and shared by every later call.
+ * No profile directory: this API needs no login, and pointing a second Chrome
+ * at the signed-in profile is what takes that profile hostage
+ * ("Opening in existing browser session").
+ *
+ * MAKERWORLD_NO_BROWSER=1 turns it off and restores the old behaviour.
+ */
+const NO_BROWSER = !!(process.env.MAKERWORLD_NO_BROWSER || "").trim();
+let ctx = null;
+let tab = null;
+let tried = false;
+
+async function browserTab() {
+  if (tab) return tab;
+  if (tried || NO_BROWSER) return null;
+  tried = true;
+  const { chromium } = await import("playwright").catch(() => ({ chromium: null }));
+  if (!chromium) return null;
+  const exe = (process.env.PLAYWRIGHT_CHROMIUM || "").trim();
+  // --enable-automation is the loudest thing a browser can say about itself,
+  // and it is said before any page loads. Playwright adds it unasked.
+  const opts = {
+    args: ["--disable-blink-features=AutomationControlled"],
+    ignoreDefaultArgs: ["--enable-automation"],
+  };
+  const ways = [
+    ["PLAYWRIGHT_CHROMIUM", () => (exe ? chromium.launch({ ...opts, executablePath: exe }) : Promise.reject(new Error("not set")))],
+    ["Chrome", () => chromium.launch({ ...opts, channel: "chrome" })],
+    ["Chromium", () => chromium.launch(opts)],
+  ];
+  const why = [];
+  for (const [name, launch] of ways) {
+    try {
+      ctx = await launch();
+      tab = await ctx.newPage();
+      // Said out loud: a run that silently changed how it reaches the API is a
+      // run whose timings and failures mean something different.
+      console.log(c.d(`  (ה-API דוחה בקשות רגילות — עובר דרך ${name})`));
+      return tab;
+    } catch (e) {
+      why.push(`${name}: ${e.message.split("\n")[0]}`);
+    }
+  }
+  ctx = null;
+  console.log(c.y("  ה-API דוחה בקשות רגילות ולא נמצא דפדפן להחליף אותן:"));
+  for (const line of why) console.log(c.d(`    ${line}`));
+  console.log(c.d("    התקנה:  npm i -D playwright   (או PLAYWRIGHT_CHROMIUM=<נתיב ל-chrome.exe>)"));
+  return null;
+}
+
+/**
+ * Navigating to the URL rather than fetching from inside the page: a fetch
+ * started by a script on about:blank is cross-origin and never leaves the
+ * browser, and Playwright's own request context is not the browser's network
+ * stack either. A navigation is.
+ */
+async function viaBrowser(url) {
+  const page = await browserTab();
+  if (!page) return null;
+  try {
+    const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 25_000 });
+    if (!res || !res.ok()) return { ok: false, status: res ? res.status() : 0 };
+    const text = await page.evaluate(() => document.body?.innerText || "");
+    return { ok: true, body: JSON.parse(text) };
+  } catch (e) {
+    return { ok: false, status: 0, error: e.message };
+  }
+}
+
+/**
+ * Scripts that read the API must call this before they finish: an open browser
+ * is a live child process, and node will not exit while one is running.
+ */
+export async function closeBrowser() {
+  if (!ctx) return;
+  await ctx.close().catch(() => {});
+  ctx = null;
+  tab = null;
+}
+
 export async function getJson(url, timeoutMs = 25_000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -108,11 +201,20 @@ export async function getJson(url, timeoutMs = 25_000) {
     });
     remember(res);
     if (!res.ok) {
+      // A browser before a snapshot: the snapshot is a frozen copy of one
+      // model from whenever it was saved, and answering with it hid the fact
+      // that the live API had stopped talking to us at all. One id in the
+      // signals run came back "read" for exactly that reason while the other
+      // 483 were refused, which read as a rate limit and was not one.
+      const live = await viaBrowser(url);
+      if (live?.ok) return live;
       const snap = snapshot(url);
       return snap ? { ok: true, body: snap } : { ok: false, status: res.status };
     }
     return { ok: true, body: await res.json() };
   } catch (e) {
+    const live = await viaBrowser(url);
+    if (live?.ok) return live;
     const snap = snapshot(url);
     if (snap) return { ok: true, body: snap };
     return { ok: false, status: 0, error: e.name === "AbortError" ? "timeout" : e.message };

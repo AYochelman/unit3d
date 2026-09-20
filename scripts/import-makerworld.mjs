@@ -35,7 +35,7 @@ import path from "node:path";
 // sync-collections.mjs, so the two importers cannot drift apart.
 import {
   ROOT, API, c, sleep, getJson, fetchDetails, classify, holdsFor,
-  readableTitle, fmtSize, ESTIMATE, HUE, ART, HE_DESC, SHELF_OVERRIDES,
+  readableTitle, fmtSize, ESTIMATE, HUE, ART, HE_DESC, SHELF_OVERRIDES, closeBrowser,
 } from "./lib/makerworld.mjs";
 
 const log = (...a) => console.log(...a);
@@ -261,7 +261,10 @@ export const IMPORTED_AT: string | null = ${JSON.stringify(new Date().toISOStrin
   log(c.d("  הרץ npm run build כדי לראות את זה באתר.\n"));
 }
 
-main().catch((e) => {
-  console.error(c.r(`\n  שגיאה: ${e.message}\n`));
-  process.exitCode = 1;
-});
+main()
+  .catch((e) => {
+    console.error(c.r(`\n  שגיאה: ${e.message}\n`));
+    process.exitCode = 1;
+  })
+  // Reading the API may have opened a browser; node stays alive while one is.
+  .finally(closeBrowser);

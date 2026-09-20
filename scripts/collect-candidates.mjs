@@ -20,7 +20,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, c, sleep, getJson, fetchDetails, classify, platesFrom, readableTitle } from "./lib/makerworld.mjs";
+import { ROOT, c, sleep, getJson, fetchDetails, classify, platesFrom, readableTitle, closeBrowser } from "./lib/makerworld.mjs";
 
 const OUT = path.join(ROOT, "lib", "candidates.generated.ts");
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
@@ -155,7 +155,10 @@ async function main() {
   log(c.g(`\n  נכתב lib/candidates.generated.ts\n`));
 }
 
-main().catch((e) => {
-  console.error(c.r(`\n  שגיאה: ${e.message}\n`));
-  process.exitCode = 1;
-});
+main()
+  .catch((e) => {
+    console.error(c.r(`\n  שגיאה: ${e.message}\n`));
+    process.exitCode = 1;
+  })
+  // Reading the API may have opened a browser; node stays alive while one is.
+  .finally(closeBrowser);

@@ -37,7 +37,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, c, sleep, getJson } from "./lib/makerworld.mjs";
+import { ROOT, c, sleep, getJson, closeBrowser } from "./lib/makerworld.mjs";
 
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
 const OUT = path.join(ROOT, "lib", "signals.generated.ts");
@@ -180,4 +180,6 @@ async function main() {
   process.exitCode = failed && !ok ? 1 : 0;
 }
 
-main();
+// closeBrowser, or the run never ends: reading the API may have opened a
+// browser, and node stays alive while one is running.
+main().finally(closeBrowser);
