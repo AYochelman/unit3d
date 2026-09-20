@@ -3,18 +3,10 @@
 import { useStudio } from "@/lib/store";
 import { PURPOSE_LABELS } from "@/lib/types";
 import type { Reference } from "@/lib/types";
+import { coverOf } from "@/lib/cover";
 import { Icon, Spinner } from "./ui";
 
-export function thumbOf(ref: Reference) {
-  // Artwork first: on a gallery or portfolio page the screenshot is the site's
-  // furniture around the work, and the page's own preview image is the work.
-  return (
-    ref.assets.find((a) => a.role === "artwork") ??
-    ref.assets.find((a) => a.role === "desktop") ??
-    ref.assets.find((a) => a.role === "image") ??
-    ref.assets[0]
-  );
-}
+export { coverOf as thumbOf } from "@/lib/cover";
 
 /**
  * A card is mostly the picture. Everything else - the badges, the title - sits
@@ -26,7 +18,7 @@ export function RefCard({ reference, selected }: { reference: Reference; selecte
   const patch = useStudio((s) => s.patchRef);
   const busy = useStudio((s) => s.busy[reference.id]);
   const lang = useStudio((s) => s.settings?.uiLanguage ?? "en");
-  const asset = thumbOf(reference);
+  const asset = coverOf(reference);
   const failed = reference.source?.status === "failed";
 
   return (

@@ -87,6 +87,12 @@ screenshot never can.
 If a site cannot be reached, **the link is never lost**. The reference keeps the
 URL and the reason it failed, and offers **Upload a screenshot instead**.
 
+**Upload a screenshot instead** is there on every reference, not only a failed
+one — some pages capture perfectly and are still worth nothing, like a component
+gallery that renders its previews in a sandboxed frame. A picture you upload
+becomes the card's cover and leads the images sent for analysis: nothing
+automatic outranks a choice you made by hand.
+
 **Then say what you like.** The note field is the one that matters — it is quoted
 straight into every brief. Label each reference by purpose (overall direction,
 hero, typography, colours, body layout, navigation, components, motion), and list

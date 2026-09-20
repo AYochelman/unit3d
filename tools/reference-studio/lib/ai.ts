@@ -5,6 +5,7 @@ import { prepareForVision } from "./vision-image";
 import { buildAnalysisInstruction } from "./analysis-prompt";
 import { normalizeAnalysis, analysisFromProbe, mergeObservedOver, enforceEvidence } from "./analysis";
 import type { Analysis, Reference } from "./types";
+import { byCoverOrder } from "./cover";
 
 export interface AiResult {
   ok: boolean;
@@ -41,10 +42,9 @@ export async function analyzeWithAi(ref: Reference, apiKey: string, model: strin
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Send at most three images. The page's own preview leads: on a gallery page
-  // it is the work, while the screenshot is the site wrapped around it.
-  const order = { artwork: 0, desktop: 1, image: 2, manual: 3, mobile: 4 } as const;
-  const assets = [...ref.assets].sort((a, b) => order[a.role] - order[b.role]).slice(0, 3);
+  // Send at most three images, in the same order the card picks its cover:
+  // what a person uploaded first, then the page's own preview, then shots.
+  const assets = byCoverOrder(ref.assets).slice(0, 3);
   if (!assets.length) {
     return { ok: false, errors: ["This reference has no image to analyse. Capture the URL or upload a screenshot first."], warnings };
   }

@@ -29,6 +29,7 @@ const { visibleReferences, allTags } = await import(`${lib}/filters.ts`);
 const { isBlockedAddress, guardUrl } = await import(`${lib}/net-guard.ts`);
 const { makeZip } = await import(`${lib}/zip.ts`);
 const { cleanTitle, titleFromUrl } = await import(`${lib}/titles.ts`);
+const { coverOf, byCoverOrder } = await import(`${lib}/cover.ts`);
 const { contrastRatio, describeColor, parseCssColor } = await import(`${lib}/color.ts`);
 const { inspectImage } = await import(`${lib}/image-info.ts`);
 
@@ -93,6 +94,23 @@ ok("contrast, black on white", contrastRatio("#000000", "#ffffff") === 21);
 ok("contrast is symmetric", contrastRatio("#101418", "#faf7f2") === contrastRatio("#faf7f2", "#101418"));
 ok("near-white is not called orange", describeColor("#faf7f2") === "warm near-white", describeColor("#faf7f2"));
 ok("near-black keeps its cast", describeColor("#101418") === "cool near-black", describeColor("#101418"));
+
+section("Cover image");
+{
+  const asset = (role) => ({ id: role, role, file: `${role}.png`, mime: "image/png", bytes: 1, width: 1, height: 1 });
+  ok("a hand-uploaded picture outranks every capture",
+    coverOf({ assets: [asset("desktop"), asset("artwork"), asset("manual")] }).role === "manual");
+  ok("the page's own preview outranks the screenshot",
+    coverOf({ assets: [asset("desktop"), asset("artwork")] }).role === "artwork");
+  ok("the screenshot is used when there is nothing better",
+    coverOf({ assets: [asset("mobile"), asset("desktop")] }).role === "desktop");
+  ok("an unranked role is still shown rather than nothing",
+    coverOf({ assets: [asset("mobile")] }).role === "mobile");
+  ok("no assets means no cover", coverOf({ assets: [] }) === undefined);
+  ok("the vision order matches the cover order",
+    byCoverOrder([asset("mobile"), asset("desktop"), asset("manual"), asset("artwork")])
+      .map((a) => a.role).join(",") === "manual,artwork,desktop,mobile");
+}
 
 section("Titles");
 {
