@@ -1,0 +1,202 @@
+#!/usr/bin/env node
+/**
+ * The numbers every shelf is ordered by, straight from the source pages.
+ *
+ *   npm run fetch:signals            # only models with no signals yet
+ *   npm run fetch:signals -- --all   # re-read everything (figures move)
+ *   npm run fetch:signals -- --dry   # say what would change, write nothing
+ *
+ * WHY THIS EXISTS
+ *
+ * The shop used to order its shelves by download count alone, because that was
+ * the only figure it had stored. Downloads answer "how many people took a
+ * copy", which is one question out of five the owner actually cares about:
+ * downloads, how the pictures look, how likely someone is to BUY it, whether
+ * it is hot right now, and whether it belongs on the shelf it is sitting on.
+ *
+ * Four of those have a real number behind them on the source page, and none of
+ * them was being kept:
+ *
+ *   collectionCount  how many people SAVED it — the closest thing to intent
+ *                    to own that a free model can produce
+ *   printCount       how many actually printed it, which is further still:
+ *                    they spent filament and six hours on it
+ *   createTime       when it was published, so "popular" can be told apart
+ *                    from "popular in 2023"
+ *   tags/categories  what the thing actually is, for the shelf it sits on
+ *
+ * A fifth, isStaffPicked, is MakerWorld's own editors saying it is good.
+ *
+ * Writes lib/signals.generated.ts. Until it exists, lib/ranking.ts falls back
+ * to the download count and every shelf keeps its old order — nothing breaks
+ * while this has not run.
+ *
+ * Runs against the same API as everything else (HANDOFF §17), which answers a
+ * home connection and turns datacenters away, so this belongs on his machine
+ * and runs from sync-daily.bat.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { ROOT, c, sleep, getJson, closeBrowser } from "./lib/makerworld.mjs";
+
+const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
+const OUT = path.join(ROOT, "lib", "signals.generated.ts");
+const ALL = process.argv.includes("--all");
+const DRY = process.argv.includes("--dry");
+
+const API = (id) => `https://makerworld.com/api/v1/design-service/design/${id}`;
+
+/** Every model id in the catalogue, without the mw- prefix. */
+function catalogueIds() {
+  const src = fs.readFileSync(CATALOGUE, "utf8");
+  return [...new Set([...src.matchAll(/"id": "mw-(\d+)"/g)].map((m) => m[1]))];
+}
+
+/** What is already known, so a re-run is cheap. */
+function existing() {
+  if (!fs.existsSync(OUT)) return {};
+  const src = fs.readFileSync(OUT, "utf8");
+  const start = src.indexOf("{", src.indexOf("SIGNALS"));
+  const end = src.lastIndexOf("}");
+  if (start === -1 || end <= start) return {};
+  try {
+    return JSON.parse(src.slice(start, end + 1));
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Ask once, with two retries.
+ *
+ * The API rate limits in streaks (HANDOFF §17): a run of consecutive refusals
+ * in the middle of a sweep that comes right by itself near the end. Retrying
+ * is what turns that from 157 lost models into none.
+ */
+async function withRetry(id, tries = 3) {
+  // getJson answers with an envelope, { ok, body }, the way every other
+  // caller in scripts/ reads it. This one tested the ENVELOPE for `.id`, which
+  // a design object has and an envelope never does, so every model came back
+  // as no answer no matter what the API said. 484 of 484 failed on a run where
+  // the network was fine, which is why lib/signals.generated.ts stayed empty
+  // and every shelf kept ordering on downloads alone.
+  let why = "no answer";
+  for (let i = 1; i <= tries; i++) {
+    const res = await getJson(API(id)).catch((e) => ({ ok: false, error: e.message }));
+    if (res?.ok && res.body?.id) return { model: res.body };
+    // A model taken down answers 200 with an empty record - id 0, no title, all
+    // counts zero. That IS an answer, and retrying it, then calling it a rate
+    // limit, was three wrong things about one model in a row.
+    if (res?.ok && res.body && Number(res.body.id) === 0) return { gone: true };
+    why = res?.status ? `HTTP ${res.status}` : res?.error || "no answer";
+    if (i < tries) await sleep(1200 * i + Math.random() * 600);
+  }
+  return { why };
+}
+
+const signalsOf = (j) => ({
+  downloads: j.downloadCount || 0,
+  likes: j.likeCount || 0,
+  prints: j.printCount || 0,
+  saves: j.collectionCount || 0,
+  comments: j.commentCount || 0,
+  picked: !!j.isStaffPicked,
+  // Date only: the hour a model was published has never decided anything, and
+  // a shorter string keeps the generated file readable.
+  published: (j.createTime || "").slice(0, 10),
+  tags: (j.tags || []).slice(0, 24).map((t) => String(t).toLowerCase()),
+  cats: (j.categories || []).map((x) => String(x?.name ?? x)),
+});
+
+function write(map) {
+  const body = JSON.stringify(map, null, 2);
+  const src = `// GENERATED by scripts/fetch-signals.mjs — do not edit by hand.
+//
+// What every shelf is ordered by. See lib/ranking.ts for how these become a
+// position on the page, and the script's header for why each one is here.
+//
+// Refreshed nightly: the figures move, and a model that was hot in March is a
+// different proposition in September.
+
+export type ModelSignals = {
+  downloads: number;
+  likes: number;
+  /** People who printed it — filament and hours, not a click. */
+  prints: number;
+  /** People who saved it to a collection — the closest thing to "I want this". */
+  saves: number;
+  comments: number;
+  /** MakerWorld's own editors picked it. */
+  picked: boolean;
+  /** YYYY-MM-DD, or "" when the source did not say. */
+  published: string;
+  tags: string[];
+  cats: string[];
+};
+
+export const SIGNALS: Record<string, ModelSignals> = ${body};
+
+export const SIGNALS_AT = ${JSON.stringify(new Date().toISOString())};
+`;
+  fs.writeFileSync(OUT, src, "utf8");
+}
+
+async function main() {
+  const ids = catalogueIds();
+  const have = existing();
+  const todo = ALL ? ids : ids.filter((id) => !have[id]);
+
+  console.log(c.b(`\n  ${ids.length} מודלים · ${todo.length} לקריאה${DRY ? c.y("  (יבש)") : ""}\n`));
+  if (!todo.length) {
+    console.log(c.g("  לכל מודל כבר יש נתונים. להרעון מלא:  npm run fetch:signals -- --all\n"));
+    return;
+  }
+
+  const out = { ...have };
+  let ok = 0, failed = 0, streak = 0;
+  const removed = [];
+
+  for (const [i, id] of todo.entries()) {
+    const { model: j, why, gone } = await withRetry(id);
+    if (gone) {
+      removed.push(id);
+      console.log(`  ${c.y("—")} ${id} ${c.d("כבר לא קיים במייקרוורלד")}`);
+    } else if (!j) {
+      streak++; failed++;
+      // The reason, not just the verdict: a rate limit, a block and a bug in
+      // this script all printed the same three words before.
+      console.log(`  ${c.r("✗")} ${id} — לא נענה ${c.d(`(${why})`)}`);
+    } else {
+      streak = 0; ok++;
+      out[id] = signalsOf(j);
+      const s = out[id];
+      console.log(`  ${c.g("✓")} ${id}  ${String(j.title || "").slice(0, 34).padEnd(34)} ${String(s.downloads).padStart(7)} הורדות · ${String(s.saves).padStart(6)} שמרו`);
+    }
+    // Slower while it is refusing, capped so a bad patch costs minutes.
+    if (i < todo.length - 1) await sleep(Math.min(6000, 250 * 2 ** Math.min(streak, 5)) + Math.random() * 500);
+  }
+
+  if (!DRY && ok) write(out);
+
+  const tally = [`${ok} נקראו`, `${failed} נכשלו`];
+  if (removed.length) tally.push(`${removed.length} ירדו מהאתר`);
+  console.log(c.b(`\n  ${tally.join(" · ")} · ${Object.keys(out).length} בקובץ\n`));
+  if (DRY) console.log(c.y("  ריצה יבשה — הקובץ לא נגע.\n"));
+  else if (ok) console.log("  קומיט של lib/signals.generated.ts, וכל המדפים מסתדרים מחדש.\n");
+  // Not "rate limit" any more. That was asserted over every failure, including
+  // the two that were models taken off MakerWorld, and a wrong reason sends the
+  // next person looking in the wrong place.
+  if (failed) console.log(c.y(`  ${failed} לא נענו. הסיבה כתובה ליד כל אחד; הריצה הבאה מתחילה מהם.\n`));
+  if (removed.length) {
+    console.log(c.y(`  ${removed.length} כבר לא קיימים במייקרוורלד: ${removed.join(", ")}`));
+    console.log(c.d("  הם עדיין בחנות — האתר מחזיק תמונות ונתונים משלו — אבל אין להם יותר מקור.\n"));
+  }
+
+  // Some failing is the API throttling, not a broken run. Only a run that got
+  // nothing at all is worth failing a nightly job over.
+  process.exitCode = failed && !ok ? 1 : 0;
+}
+
+// closeBrowser, or the run never ends: reading the API may have opened a
+// browser, and node stays alive while one is running.
+main().finally(closeBrowser);

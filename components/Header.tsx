@@ -9,6 +9,7 @@ import ThemeToggle from "./ThemeToggle";
 import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
+import { CONTACT } from "@/lib/contact";
 
 const NAV = [
   { href: "/", label: "בית" },
@@ -57,6 +58,39 @@ export default function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  /**
+   * While the sheet is open, the page behind it holds still.
+   *
+   * Without this the drawer scrolls, reaches its end, and the homepage keeps
+   * going underneath — so closing the menu leaves you somewhere you never
+   * meant to be. `position: fixed` on the body is the version that works on
+   * iOS Safari, where `overflow: hidden` alone does not, and the scroll
+   * position is put back by hand because fixing the body throws it away.
+   *
+   * Escape closes it too: a sheet that only closes by tapping exactly the
+   * right spot is a trap for anyone on a keyboard.
+   */
+  useEffect(() => {
+    if (!open) return;
+    const y = window.scrollY;
+    const { body } = document;
+    const prev = { position: body.style.position, top: body.style.top, width: body.style.width };
+    body.style.position = "fixed";
+    body.style.top = `-${y}px`;
+    body.style.width = "100%";
+
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+
+    return () => {
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.width = prev.width;
+      window.scrollTo(0, y);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname?.startsWith(href);
@@ -128,7 +162,7 @@ export default function Header() {
             <Link
               href="/contact"
               aria-label={`סל קנייה · ${cartCount} פריטים`}
-              className="relative inline-flex items-center justify-center h-10 w-10 rounded-lg border border-ink-700/60 text-ink-300 hover:text-ink-100 hover:border-ink-600 transition-colors"
+              className="relative inline-flex items-center justify-center h-11 w-11 md:h-10 md:w-10 rounded-lg border border-ink-700/60 text-ink-300 hover:text-ink-100 hover:border-ink-600 transition-colors"
             >
               <Icon name="package" size={18} />
               {cartCount > 0 && (
@@ -158,7 +192,7 @@ export default function Header() {
               type="button"
               onClick={() => setOpen(true)}
               aria-label="פתח תפריט"
-              className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-ink-700/60 text-ink-300"
+              className="lg:hidden inline-flex items-center justify-center h-11 w-11 rounded-lg border border-ink-700/60 text-ink-300"
             >
               <Icon name="menu" size={20} />
             </button>
@@ -174,16 +208,40 @@ export default function Header() {
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
           />
-          <div className="absolute bottom-0 inset-x-0 bg-ink-950 border-t border-ink-800 rounded-t-2xl p-6 pb-10 max-h-[85vh] overflow-y-auto">
+          <div className="absolute bottom-0 inset-x-0 bg-ink-950 border-t border-ink-800 rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto pb-[max(2rem,calc(1.5rem+env(safe-area-inset-bottom)))]">
             <div className="mx-auto mb-4 w-10 h-1 rounded-full bg-ink-700" />
+
+            {/* The two things someone opens this menu to do, at the top where
+                a thumb already is. They used to sit under twenty-one links,
+                which on a phone means below the fold of the sheet itself. */}
+            <div className="flex items-center gap-2">
+              <Btn as="a" href="/configurator" size="md" className="flex-1 h-12" onClick={() => setOpen(false)}>
+                התחל להזמין
+              </Btn>
+              <a
+                href={CONTACT.whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setOpen(false)}
+                aria-label="שלח הודעה בוואטסאפ"
+                className="inline-flex items-center justify-center h-12 w-12 rounded-xl border border-good/40 bg-good/10 text-good"
+              >
+                <Icon name="whatsapp" size={22} />
+              </a>
+            </div>
+
+            {/* Grouped, because a flat list of twenty-one is a wall. The
+                shelves are what people came for; everything else is the shop's
+                own pages and reads as a second tier. */}
+            <p className="mt-5 mb-2 font-mono text-[10px] tracking-widest uppercase text-ink-500">החנות</p>
             <div className="grid grid-cols-2 gap-2">
-              {[...NAV, ...SECONDARY].map((item) => (
+              {NAV.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "px-4 py-3 rounded-lg text-sm font-medium border border-ink-800",
+                    "min-h-12 px-4 flex items-center rounded-lg text-sm font-medium border border-ink-800",
                     isActive(item.href)
                       ? "text-flame border-flame/30 bg-flame/5"
                       : "text-ink-200 hover:bg-ink-900",
@@ -193,17 +251,29 @@ export default function Header() {
                 </Link>
               ))}
             </div>
+
+            <p className="mt-5 mb-2 font-mono text-[10px] tracking-widest uppercase text-ink-500">עוד</p>
+            <div className="grid grid-cols-2 gap-2">
+              {SECONDARY.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "min-h-12 px-4 flex items-center rounded-lg text-sm border border-ink-800",
+                    isActive(item.href)
+                      ? "text-flame border-flame/30 bg-flame/5"
+                      : "text-ink-300 hover:bg-ink-900",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
             <div className="mt-5 flex items-center gap-2">
               <ThemeToggle />
-              <Btn
-                as="a"
-                href="/configurator"
-                size="md"
-                className="flex-1"
-                onClick={() => setOpen(false)}
-              >
-                התחל להזמין
-              </Btn>
+              <span className="text-[11px] text-ink-500">מצב תצוגה</span>
             </div>
           </div>
         </div>

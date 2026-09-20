@@ -17,7 +17,8 @@ cd /d "%~dp0.."
 set MAKERWORLD_PROFILE_DIR=%~dp0..\data\mw-profile
 
 echo.
-echo   נפתח דפדפן. תתחבר למייקרוורלד, ואז תחזור לחלון הזה ותלחץ Enter.
+echo   נפתח כרום רגיל. תתחבר למייקרוורלד, תסגור את חלון הדפדפן,
+echo   ורק אז תחזור לחלון הזה ותלחץ Enter.
 echo.
 
 call npm run sync:collections -- --login

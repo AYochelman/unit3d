@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 0
-// Collected: 2026-09-14T18:44:47.260Z
+// Collected: 2026-09-20T09:19:47.360Z
 
 import type { Candidate } from "./candidates";
 

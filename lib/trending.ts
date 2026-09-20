@@ -54,6 +54,13 @@ export function trendingCards(): ListingCard[] {
         colors: st.colors,
         rating: st.rating,
         orders: st.orders,
+        // Downloads were missing here, so a fidget on /trendy was ranked on
+        // `orders` alone — an assigned number, against measured ones. With the
+        // shelf and the gallery size it now scores the same way as everything
+        // else on the page.
+        downloads: f.downloads,
+        shelf: "fidget",
+        shots: f.images?.length ?? (f.thumbnail ? 1 : 0),
       });
     } else if (p.kind === "product") {
       const pr = PRODUCT_BY_ID[p.id];

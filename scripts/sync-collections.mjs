@@ -39,6 +39,21 @@ const CANDIDATES = path.join(ROOT, "lib", "candidates.generated.ts");
 const DECISIONS = path.join(ROOT, "public", "model-decisions.json");
 const PROFILE = process.env.MAKERWORLD_PROFILE || "Erez.yoch";
 const LOGIN = process.argv.slice(2).includes("--login");
+// A visible window for the nightly run too, when MAKERWORLD_HEADFUL is set.
+// Headless is the more suspicious of the two to a challenge, and the escape
+// hatch costs nothing: on the one machine this runs on, a window opening at
+// 07:45 is a smaller problem than a run that quietly reads nothing.
+const HEADFUL = !!(process.env.MAKERWORLD_HEADFUL || "").trim();
+// No browser at all: work from data/pending-models.json and the details API.
+//
+// Cloudflare serves the collection pages the challenge with a box to tick, and
+// a driven browser cannot tick it — that is exactly what the box is checking,
+// and no flag, no real Chrome and no visible window changes the answer. The
+// ids come from his own browser instead (scripts/collect-collections-in-browser.js),
+// and everything after that — licence, shelf, figures, pictures — is the API,
+// which has never once refused us. So this mode is not a lesser fallback: it
+// is the whole job minus the one step a person does in three clicks.
+const OFFLINE = process.argv.slice(2).includes("--offline");
 
 const DRY = process.argv.includes("--dry");
 /**
@@ -112,21 +127,47 @@ async function browser() {
     // about itself, from his own home address, is a person as far as
     // Cloudflare can tell — which is what it is.
     const opts = {
-      headless: !LOGIN,
+      headless: !HEADFUL,
       args,
+      // Playwright adds --enable-automation of its own accord, and it was in
+      // every launch line while every page came back a challenge. It is the
+      // loudest thing a browser can say about itself, said before any page
+      // loads. Dropping it is not a disguise: this IS his browser, his
+      // profile and his address, and the flag was describing the wrapper
+      // rather than the person on the other end of it.
+      ignoreDefaultArgs: ["--enable-automation"],
       locale: "en-US",
       timezoneId: "Asia/Jerusalem",
       viewport: { width: 1440, height: 900 },
     };
-    const ctx = exe
-      ? await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, executablePath: exe })
-      // Installed Chrome first; Playwright's bundled Chromium is missing pieces
-      // a real Chrome has, and the challenge notices. Fall back to it anyway
-      // when Chrome is not installed — a challenge that might loop beats no
-      // browser at all.
-      : await chromium
-          .launchPersistentContext(PROFILE_DIR, { ...opts, channel: "chrome" })
-          .catch(() => chromium.launchPersistentContext(PROFILE_DIR, opts));
+    // Whatever opens this profile must be the browser that CREATED it. A
+    // profile written by real Chrome does not open in Playwright's Chromium:
+    // it closes on the spot. An earlier version fell back to Chromium when
+    // Chrome failed to start, which turned a clear error into "Target page,
+    // context or browser has been closed" and lost the reason with it. So no
+    // fallback here — if Chrome will not start, say why.
+    let ctx;
+    try {
+      ctx = exe
+        ? await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, executablePath: exe })
+        : await chromium.launchPersistentContext(PROFILE_DIR, { ...opts, channel: "chrome" });
+    } catch (e) {
+      // "Opening in existing browser session" is Chrome saying a process is
+      // ALREADY on this profile: it handed the request over and exited, which
+      // closes the pipe and surfaces as the unhelpful "Target page, context or
+      // browser has been closed". Closing the window does not always end that
+      // process, so say what to do about it rather than what it said.
+      if (/Opening in existing browser session/i.test(e.message)) {
+        log(c.r("\n  כבר רץ כרום על תיקיית הפרופיל הזו, והוא תפס אותה."));
+        log(c.y("  לסגור את כל חלונות כרום ואז:  taskkill /F /IM chrome.exe"));
+        log(c.d("  ואחר כך להריץ שוב.\n"));
+      } else {
+        log(c.r(`\n  כרום לא נפתח על הפרופיל: ${e.message.split("\n")[0]}`));
+        log(c.y("  לוודא שאין חלון כרום פתוח על אותה תיקייה, ואז להריץ שוב."));
+        log(c.d("  אפשר גם להצביע על כרום ידנית:  set PLAYWRIGHT_CHROMIUM=<נתיב ל-chrome.exe>\n"));
+      }
+      throw e;
+    }
     ctx.__persistent = true;
     log(c.d(`  פרופיל דפדפן שמור: ${PROFILE_DIR}`));
     return ctx;
@@ -141,28 +182,64 @@ async function browser() {
 /**
  * Sign in once, by hand, into the profile the nightly run will use.
  *
- * It opens a normal visible browser on the login page and waits. Nothing is
- * typed for him and no password is ever read here — he signs in himself, the
- * profile keeps the session, and the window closes when he presses Enter.
+ * This opens ORDINARY CHROME — not Playwright, not a driven browser, no flags
+ * beyond the profile directory — and waits while he signs in himself. Nothing
+ * is typed for him and no password is ever read here.
+ *
+ * It has to be ordinary Chrome, and that was learned the hard way. A driven
+ * browser cannot finish Cloudflare's challenge on the Bambu Lab sign-in at all:
+ * the "Verify you are human" box never ticks, however many times it is clicked,
+ * because the thing it is checking for is precisely that the browser is being
+ * driven. There is no flag that argues with that and there should not be — the
+ * honest answer is to let a person use a person's browser. He signs in, the
+ * profile keeps the cookies, and the nightly run inherits a session that was
+ * created by a human being, which is what it is.
  */
+function chromePath() {
+  const set = (process.env.CHROME_PATH || "").trim();
+  if (set) return set;
+  const env = (k) => process.env[k] || "";
+  const candidates = process.platform === "win32"
+    ? [
+        path.join(env("ProgramFiles"), "Google/Chrome/Application/chrome.exe"),
+        path.join(env("ProgramFiles(x86)"), "Google/Chrome/Application/chrome.exe"),
+        path.join(env("LOCALAPPDATA"), "Google/Chrome/Application/chrome.exe"),
+      ]
+    : process.platform === "darwin"
+      ? ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
+      : ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"];
+  return candidates.find((f) => f && fs.existsSync(f)) || null;
+}
+
 async function login() {
   if (!PROFILE_DIR) {
     log(c.r("\n  צריך MAKERWORLD_PROFILE_DIR כדי לשמור את ההתחברות.\n"));
     return;
   }
-  const ctx = await browser();
-  const page = ctx.pages()[0] || (await ctx.newPage());
+  const chrome = chromePath();
+  if (!chrome) {
+    log(c.r("\n  לא מצאתי את כרום."));
+    log("  אפשר להצביע עליו ידנית:  set CHROME_PATH=C:\\Path\\To\\chrome.exe\n");
+    return;
+  }
+
+  const { spawn } = await import("node:child_process");
+  fs.mkdirSync(PROFILE_DIR, { recursive: true });
   // The home page, not /en/login: that path 404s now, and a login URL is the
   // most likely thing on a site to move. The home page has carried a sign-in
   // link through every redesign so far, and a person can find it there even
   // when it moves again — which a hardcoded path cannot.
-  await page.goto("https://makerworld.com/en/", { waitUntil: "domcontentloaded" }).catch(() => {});
-  log(c.b("\n  נפתח דפדפן על מייקרוורלד."));
-  log("  ללחוץ Sign In בפינה ולהתחבר כרגיל.");
-  log(c.d("  אם נתקע על \"Verifying you are human\" — לרענן פעם אחת (F5)."));
-  log(c.b("  אחר כך לחזור לכאן וללחוץ Enter.\n"));
+  const child = spawn(chrome, [`--user-data-dir=${path.resolve(PROFILE_DIR)}`, "https://makerworld.com/en/"], {
+    detached: true,
+    stdio: "ignore",
+  });
+  child.unref();
+
+  log(c.b("\n  נפתח כרום רגיל — בלי שום אוטומציה, ולכן בדיקת Cloudflare תיגמר כרגיל."));
+  log("  ללחוץ Sign In בפינה ולהתחבר.");
+  log(c.y("\n  כשמסיימים: לסגור את חלון הדפדפן, ורק אז לחזור לכאן וללחוץ Enter."));
+  log(c.d("  (הסגירה היא מה שמוודא שהעוגיות נכתבו לדיסק.)\n"));
   await new Promise((res) => process.stdin.once("data", res));
-  await ctx.close();
   log(c.g("  ההתחברות נשמרה. מעכשיו כל הרצה כבר מחוברת.\n"));
 }
 
@@ -221,6 +298,27 @@ async function open(page, url, tries = 3) {
     log(c.d(`  אימות של Cloudflare (${i}/${tries}) — מנסה שוב`));
     await sleep(4000 * i);
   }
+
+  // Everything above is the browser trying by itself, and on the collection
+  // pages it does not get through: the challenge there is the one with a box
+  // to tick, and a driven browser cannot tick it — that IS what the box is
+  // asking. But the window is open in front of him, and he can. One click
+  // earns a clearance cookie for the whole domain, so the remaining
+  // collections sail past without asking again.
+  if (HEADFUL) {
+    await page.bringToFront().catch(() => {});
+    log(c.y("\n  יש אתגר בחלון הדפדפן. ללחוץ שם על התיבה \"Verify you are human\"."));
+    log(c.d("  לחיצה אחת מספיקה לכל השאר. מחכה עד 3 דקות...\n"));
+    for (let w = 0; w < 60; w++) {
+      const title = await page.title().catch(() => "");
+      if (!CHALLENGE.test(title)) {
+        log(c.g("  עבר. ממשיך.\n"));
+        return true;
+      }
+      await page.waitForTimeout(3000);
+    }
+    log(c.r("  האתגר לא נפתר. ממשיך הלאה.\n"));
+  }
   return false;
 }
 
@@ -237,6 +335,22 @@ const COLLECTION_HREF = /\/collections\/(\d+)-([a-z0-9-]+)/gi;
  * number of seconds, and falls back to reading the ids out of the HTML when the
  * anchors are rendered in a way the selector misses.
  */
+/**
+ * What to call a collection in the log.
+ *
+ * The slug, normally. The card's text used to be the title on its own line,
+ * and the first line was a fine name; the card now runs the whole thing
+ * together and the "first line" comes out "+63FollowOthers67 models0
+ * followers". The slug is the title MakerWorld itself derived from the name,
+ * it has not moved, and it is what the shelf rules match on anyway — so the
+ * text is only consulted when it looks like a title and not like a card.
+ */
+function nameOf(slug, text) {
+  const first = (text || "").split("\n")[0].trim();
+  const clean = first && first.length <= 40 && !/\d\s*(models|followers)|Follow/i.test(first);
+  return clean ? first : slug.replace(/-/g, " ");
+}
+
 async function readCollections(page) {
   const ok = await open(page, `https://makerworld.com/en/@${PROFILE}/collections`);
   if (!ok) { log(c.y("  הפרופיל חסום כרגע על ידי Cloudflare — משתמש ברשימה השמורה")); return []; }
@@ -249,7 +363,7 @@ async function readCollections(page) {
   );
   for (const { href, text } of found) {
     const m = /\/collections\/(\d+)-([a-z0-9-]+)/i.exec(href);
-    if (m) out.set(m[1], { id: m[1], slug: m[2], name: (text.split("\n")[0] || m[2]).slice(0, 40) });
+    if (m) out.set(m[1], { id: m[1], slug: m[2], name: nameOf(m[2], text) });
   }
   if (!out.size) {
     for (const m of (await page.content()).matchAll(COLLECTION_HREF)) {
@@ -602,6 +716,7 @@ function summary(rows, skipped) {
 
 async function main() {
   if (LOGIN) return login();
+  if (OFFLINE) return offline();
   log(c.b(`\n  קורא את הקולקציות של @${PROFILE}\n`));
   const b = await browser();
   const ctx = await context(b);
@@ -656,6 +771,17 @@ async function main() {
     log(c.d("  והערך: העוגיות של makerworld.com מהדפדפן שלך אחרי התחברות."));
   }
 
+  return queue(wanted, likedFresh, skipped, probes);
+}
+
+/**
+ * Everything after the ids are in hand: filter, look up, queue, publish.
+ *
+ * Split out of main() because there are now two ways to arrive here — a
+ * browser that read the collections, or a list his own browser collected —
+ * and from this point on they are the same job.
+ */
+async function queue(wanted, likedFresh, skipped, probes) {
   const queued = pendingIds();
   if (queued.length) log(c.d(`  ${queued.length} מודלים ממתינים ב-data/pending-models.json`));
 
@@ -726,6 +852,18 @@ async function main() {
   log(c.g(`\n  ${rows.length} מודלים נוספו לתור (${waiting} ממתינים להחלטה)`));
   if (waiting > 0) log(c.d(`  לאשר או לדחות: /admin ← "מודלים לאישור"\n`));
 }
+
+/**
+ * The run with no browser in it.
+ *
+ * Reads data/pending-models.json and nothing else. Likes are not read here:
+ * that tab needs a browser, and a like was never a decision anyway.
+ */
+async function offline() {
+  log(c.b("\n  מצב לא-מקוון: קורא רק את data/pending-models.json\n"));
+  return queue([], [], [], []);
+}
+
 
 // Only when run as a command. Importing this file — which a test does, to
 // exercise approveClean without opening a browser — must not start a sweep.

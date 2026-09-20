@@ -212,6 +212,11 @@ async function watchFinish() {
       layers: num(last.print?.total_layer_num),
     });
     log(s === "finished" ? "print finished - logged:" : "print stopped - logged:", name);
+    // The timelapse belongs to the print that just ended, and whether it is
+    // worth keeping is decided HERE, where the printer's own verdict is known.
+    // A finished print's video goes to the site; a failed or cancelled one is
+    // marked dealt-with and never uploaded.
+    pullTimelapseAfterPrint(s === "finished");
     wasPrinting = false;
     currentKey = "";
   }
@@ -922,10 +927,72 @@ async function liveTick() {
 // In LAN Only mode this is the ONLY way to reach them: the phone app and the
 // cloud cannot see the printer any more, so if the agent does not fetch them,
 // nothing does, and the card eventually overwrites the oldest.
-const seen = new Set();
+/**
+ * Which videos have been dealt with, and where "new" starts.
+ *
+ * Two facts, kept on disk next to the agent, because both were in memory and
+ * both were lost on every restart:
+ *
+ *   done    the file names already on the site. This used to be a Set that
+ *           started empty, so a restart re-downloaded and re-uploaded the whole
+ *           card. The database row was deduplicated by `on_conflict=file` and
+ *           looked fine — the waste was invisible, and it was several MB per
+ *           file per restart.
+ *
+ *   cutoff  the newest file this agent has DECIDED about, successful or not.
+ *           Anything older is settled and never looked at again.
+ */
+const STATE_FILE = path.join(HERE, "timelapse-state.json");
+
+function readState() {
+  try {
+    const j = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
+    return { done: new Set(j.done ?? []), cutoff: Number(j.cutoff) || 0 };
+  } catch {
+    return { done: new Set(), cutoff: 0 };
+  }
+}
+
+function writeState(st) {
+  try {
+    fs.writeFileSync(STATE_FILE, JSON.stringify({ done: [...st.done], cutoff: st.cutoff }, null, 2));
+  } catch (e) {
+    log("timelapse: could not save its own notes -", e instanceof Error ? e.message : String(e));
+  }
+}
+
+const tlState = readState();
 let timelapseFails = 0;
 
-async function pushTimelapses() {
+/**
+ * What the site already holds, asked once at startup.
+ *
+ * The local file is the fast path; this is what makes a fresh install, or a
+ * machine whose notes were deleted, not re-upload everything the site has had
+ * for months.
+ */
+async function seedFromSite() {
+  try {
+    const res = await fetch(`${SB}/rest/v1/printer_timelapses?select=file`, { headers: sbHeaders, cache: "no-store" });
+    if (!res.ok) return;
+    for (const row of await res.json()) tlState.done.add(row.file);
+    writeState(tlState);
+  } catch { /* the local notes are enough to work with */ }
+}
+
+/**
+ * Fetch the timelapses for a print that JUST SUCCEEDED.
+ *
+ * `keep` false means the opposite: the print failed or was cancelled, so its
+ * video is marked as dealt with and never uploaded. That is the whole of "only
+ * successful prints" — the file name is a timestamp and says nothing about how
+ * the print went, so the only thing that knows is the printer's own state at
+ * the moment it stopped, which is what calls this.
+ *
+ * Runs on the finish, not on a clock. The slow loop is still there as a safety
+ * net for a finish the agent was not awake to see.
+ */
+async function pushTimelapses(keep = true) {
   if (cfg.timelapse?.enabled === false) return;
   const { connectPrinterFtps } = await import("./ftps.mjs");
   let ftp;
@@ -936,9 +1003,20 @@ async function pushTimelapses() {
       .filter((f) => /\.(mp4|avi)$/i.test(f.name) && f.size > 100_000)
       .sort((a, b) => a.modifiedAt - b.modifiedAt);
 
-    const fresh = files.filter((f) => !seen.has(f.name));
-    if (fresh.length && timelapseFails === 0 && seen.size === 0) {
-      log(`timelapse: the printer's card holds ${files.length} - fetching them`);
+    const fresh = files.filter((f) => !tlState.done.has(f.name) && +f.modifiedAt > tlState.cutoff);
+    if (!fresh.length) return;
+
+    if (!keep) {
+      // A failed print's video is settled without being fetched: remembered so
+      // the safety-net loop does not pick it up later and put a failure on the
+      // website.
+      for (const f of fresh) {
+        tlState.done.add(f.name);
+        tlState.cutoff = Math.max(tlState.cutoff, +f.modifiedAt);
+      }
+      writeState(tlState);
+      log(`timelapse: ${fresh.length} from a print that did not finish - not uploaded`);
+      return;
     }
 
     // Oldest first, a few at a time: a card with a year of prints on it should
@@ -948,7 +1026,9 @@ async function pushTimelapses() {
       if (!body || body.length < 100_000) { log("timelapse: came back empty -", f.name); continue; }
       const ok = await upload("printer", `timelapse/${f.name}`, body, "video/mp4");
       if (!ok) continue;
-      seen.add(f.name);
+      tlState.done.add(f.name);
+      tlState.cutoff = Math.max(tlState.cutoff, +f.modifiedAt);
+      writeState(tlState);
       await fetch(`${SB}/rest/v1/printer_timelapses?on_conflict=file`, {
         method: "POST",
         headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
@@ -975,6 +1055,19 @@ async function pushTimelapses() {
   }
 }
 
+/**
+ * The printer needs a moment after FINISH to close the file it was writing.
+ *
+ * Asking immediately gets a half-written video or no file at all, so the pull
+ * waits. Two minutes is comfortably past the write and still soon enough that
+ * the video is on the site while the print is on the bed.
+ */
+function pullTimelapseAfterPrint(keep) {
+  setTimeout(() => {
+    pushTimelapses(keep).catch((e) => log("timelapse error:", e.message));
+  }, (cfg.timelapse?.afterPrintSeconds ?? 120) * 1000);
+}
+
 // ─── Loops ────────────────────────────────────────────────────────────────────
 const every = (ms, fn) => { fn(); return setInterval(fn, ms); };
 
@@ -986,7 +1079,14 @@ every(STATUS_EVERY, async () => {
 });
 every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)));
 every(1000, () => liveTick().catch((e) => log("live error:", e.message)));
-every(TL_EVERY, () => pushTimelapses().catch((e) => log("timelapse error:", e.message)));
+// A safety net, not the trigger. The print's own finish is what fetches its
+// timelapse (see watchFinish); this catches a finish the agent was asleep for —
+// a restart mid-print, a network drop — and it only ever KEEPS, because by the
+// time it runs the printer's verdict for that job is long gone. The cutoff in
+// timelapse-state.json is what stops it re-offering a failure it already
+// decided about.
+setInterval(() => pushTimelapses(true).catch((e) => log("timelapse error:", e.message)), TL_EVERY);
+void seedFromSite();
 // Cheap, and it means a policy fixed in the dashboard is noticed on its own
 // rather than needing the agent restarted to be believed.
 // setInterval, not every(): every() fires straight away, which ran this a
