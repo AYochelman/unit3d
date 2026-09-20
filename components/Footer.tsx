@@ -83,12 +83,12 @@ export default function Footer() {
             <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
               SHOP
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-0 sm:space-y-2.5 text-sm">
               {SHOP.map((it) => (
                 <li key={it.href}>
                   <Link
                     href={it.href}
-                    className="text-ink-200 hover:text-flame transition-colors"
+                    className="inline-flex items-center min-h-11 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
                   >
                     {it.label}
                   </Link>
@@ -101,12 +101,12 @@ export default function Footer() {
             <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
               SUPPORT
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-0 sm:space-y-2.5 text-sm">
               {SUPPORT.map((it) => (
                 <li key={it.href}>
                   <Link
                     href={it.href}
-                    className="text-ink-200 hover:text-flame transition-colors"
+                    className="inline-flex items-center min-h-11 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
                   >
                     {it.label}
                   </Link>
@@ -137,7 +137,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-6">
           <nav aria-label="מסמכים משפטיים" className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
             {LEGAL_PAGES.map((p) => (
-              <Link key={p.href} href={p.href} className="text-ink-300 hover:text-flame transition-colors">
+              <Link key={p.href} href={p.href} className="inline-flex items-center min-h-11 sm:min-h-0 text-ink-300 hover:text-flame transition-colors">
                 {p.label}
               </Link>
             ))}

@@ -1,4 +1,5 @@
 "use client";
+import type { Shipment } from "./couriers";
 import { CONTACT } from "./contact";
 import type { AppliedDiscount } from "./coupons";
 import { fmtILS } from "./format";
@@ -105,6 +106,14 @@ export type PlacedOrder = {
   liveEmailAt?: string;
   /** When the customer was told it is ready. Absent means they have not been. */
   readyEmailAt?: string;
+  /**
+   * The carrier and the number, once it is out of the door.
+   *
+   * Set in /admin when the parcel is handed over, so the "ready" letter can
+   * carry a link the customer follows instead of a promise. A pickup order
+   * never has one — there is nothing travelling.
+   */
+  shipment?: Shipment;
 };
 
 /** Is this line printed and ready? */

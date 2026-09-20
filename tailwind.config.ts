@@ -9,6 +9,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Added for the mobile pass, and used only by classes written after it.
+      // Tailwind's own scale starts at 640px, which is a tablet: there was no
+      // way to say "a roomy phone but not a narrow one" without inventing this
+      // one. Nothing that existed before uses `xs:`, so no desktop rule moves.
+      screens: { xs: "400px" },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],

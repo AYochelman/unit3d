@@ -24,7 +24,9 @@
     "audit:media": "node scripts/audit-media.mjs",
     "backfill:images": "node scripts/backfill-images.mjs",
     "embed:collector": "node scripts/embed-collector.mjs",
-    "ingest:collected": "node scripts/ingest-collected.mjs"
+    "ingest:collected": "node scripts/ingest-collected.mjs",
+    "fetch:signals": "node scripts/fetch-signals.mjs",
+    "audit:mobile": "node scripts/audit-mobile.mjs"
   },
   "dependencies": {
     "hls.js": "^1.7.2",

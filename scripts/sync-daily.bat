@@ -73,6 +73,10 @@ REM The designer's whole gallery for models that only ever got a cover. Touches
 REM only models with no gallery yet, so it shrinks to nothing after a few days
 REM and then costs one pass over the catalogue. Runs HERE and not on GitHub:
 REM makerworld.com answers a home connection and turns datacenters away.
+REM  המספרים שכל מדף מסודר לפיהם - הורדות, כמה שמרו, כמה הדפיסו, מתי פורסם.
+REM  --all בכוונה: המספרים זזים, ומודל שהיה חם במרץ הוא משהו אחר בספטמבר.
+call npm run fetch:signals -- --all  >> "%LOG%" 2>&1
+
 call npm run backfill:images  >> "%LOG%" 2>&1
 
 call npm run fetch:images  >> "%LOG%" 2>&1
@@ -84,7 +88,7 @@ if errorlevel 1 (
   exit /b 1
 )
 
-"%GIT%" add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts ^
+"%GIT%" add lib/imported.generated.ts lib/candidates.generated.ts lib/localImages.generated.ts lib/signals.generated.ts ^
         public/model-decisions.json data/rejected-models.json ^
         data/makerworld-raw.json data/pending-models.json data/liked-models.json ^
         data/collections-status.json public/img/catalog  >> "%LOG%" 2>&1
