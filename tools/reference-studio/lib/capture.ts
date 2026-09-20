@@ -220,6 +220,15 @@ export async function captureUrl(rawUrl: string, opts: CaptureOptions): Promise<
         }, 60);
         setTimeout(() => { clearInterval(timer); window.scrollTo(0, 0); done(); }, 3000);
       })).catch(() => {});
+      // The scroll above is what makes lazy images start loading, so the wait
+      // for them has to come after it. Without this a gallery screenshots as a
+      // page of empty grey boxes - the chrome around the work, not the work.
+      await page.waitForLoadState("networkidle", { timeout: Math.min(8000, opts.timeoutMs) }).catch(() => {});
+      await page.waitForFunction(
+        () => Array.from(document.images).every((img) => img.complete),
+        undefined,
+        { timeout: Math.min(8000, opts.timeoutMs) },
+      ).catch(() => {});
       await page.waitForTimeout(500);
 
       if (!isMobile) {

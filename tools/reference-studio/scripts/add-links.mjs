@@ -17,10 +17,15 @@ import { readFileSync } from "node:fs";
 const ADD_BATCH = 20; // the API's own per-request ceiling
 
 function parseArgs(argv) {
-  const opts = { file: "", base: "http://localhost:3100", collection: "", capture: true, only: "", retryFailed: false };
+  const opts = {
+    file: "", base: "http://localhost:3100", collection: "", capture: true, only: "",
+    retryFailed: false, recapture: false, remove: false,
+  };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === "--retry-failed") opts.retryFailed = true;
+    else if (a === "--recapture") opts.recapture = true;
+    else if (a === "--delete") opts.remove = true;
     else if (a === "--no-capture") opts.capture = false;
     else if (a === "--collection") opts.collection = argv[++i] ?? "";
     else if (a === "--port") opts.base = `http://localhost:${argv[++i] ?? "3100"}`;
@@ -70,9 +75,17 @@ async function api(base, path, init) {
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
-  if (!opts.file && !opts.retryFailed) {
+  if (!opts.file && !opts.retryFailed && !opts.recapture && !opts.remove) {
     console.error("Usage: node tools/reference-studio/scripts/add-links.mjs <file-of-urls> [--collection NAME] [--no-capture] [--only dribbble.com] [--port 3100]");
     console.error("       node tools/reference-studio/scripts/add-links.mjs --retry-failed [--only dribbble.com]");
+    console.error("       node tools/reference-studio/scripts/add-links.mjs --recapture --only dribbble.com");
+    console.error("       node tools/reference-studio/scripts/add-links.mjs --delete --only pin.it");
+    process.exit(2);
+  }
+  // Deleting is the one action with nothing to undo it, so it never runs
+  // across the whole library: --only has to name what is going.
+  if (opts.remove && !opts.only) {
+    console.error("--delete needs --only <text>, so it can never take the whole library at once.");
     process.exit(2);
   }
 
@@ -93,6 +106,37 @@ async function main() {
   // request that died before the result was written leaves the reference on
   // "pending" - the status it was created with - so retry anything with a URL
   // that is not captured and has no screenshot uploaded by hand.
+  if (opts.remove || opts.recapture) {
+    const library = await api(opts.base, "/api/library", { method: "GET" });
+    const matching = (library?.references ?? []).filter(
+      (r) => r.source?.url && (!opts.only || r.source.url.includes(opts.only)),
+    );
+    if (!matching.length) {
+      console.log(`Nothing matches "${opts.only}".`);
+      return;
+    }
+
+    if (opts.remove) {
+      console.log(`Deleting ${matching.length} reference${matching.length === 1 ? "" : "s"} matching "${opts.only}":\n`);
+      let gone = 0;
+      for (const ref of matching) {
+        try {
+          await api(opts.base, `/api/references/${ref.id}`, { method: "DELETE" });
+          gone += 1;
+          console.log(`  deleted  ${ref.source.url}`);
+        } catch (err) {
+          console.log(`  kept     ${ref.source.url} — ${err.message}`);
+        }
+      }
+      console.log(`\nDeleted ${gone} of ${matching.length}.`);
+      return;
+    }
+
+    console.log(`Re-capturing ${matching.length} reference${matching.length === 1 ? "" : "s"}${opts.only ? ` matching "${opts.only}"` : ""}.\n`);
+    await captureAll(opts, matching);
+    return;
+  }
+
   if (opts.retryFailed) {
     const library = await api(opts.base, "/api/library", { method: "GET" });
     const pending = (library?.references ?? []).filter((r) => {

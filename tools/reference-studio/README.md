@@ -40,6 +40,8 @@ node tools/reference-studio/scripts/add-links.mjs links.txt --collection "Dribbb
 node tools/reference-studio/scripts/add-links.mjs links.txt --only dribbble.com
 node tools/reference-studio/scripts/add-links.mjs links.txt --no-capture
 node tools/reference-studio/scripts/add-links.mjs --retry-failed
+node tools/reference-studio/scripts/add-links.mjs --recapture --only dribbble.com
+node tools/reference-studio/scripts/add-links.mjs --delete --only pin.it
 ```
 
 One URL per line; blank lines, `#` comments and duplicates are skipped. It adds
@@ -48,6 +50,9 @@ that fails to capture keeps its reason, exactly as it would from the UI.
 
 `--retry-failed` takes no file: it re-captures the references already in the
 library whose capture failed, so a second attempt does not add every link twice.
+`--recapture` does the same for links that did capture, which is what you want
+after a capture fix. `--delete` removes matching references and always requires
+`--only`, so it can never take the whole library at once.
 
 Reference Studio is a **separate Next.js app on purpose**. The shop deploys as a
 static export to GitHub Pages, which cannot host API routes — so the studio keeps
