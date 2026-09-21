@@ -1,4 +1,3 @@
-import { IMPORTED } from "./imported";
 import { CONFIG_PRODUCT_BY_ID } from "./products";
 import type { MaterialId, ProductArtId } from "./types";
 
@@ -54,8 +53,10 @@ export type UnitForm = {
    *
    * A drawing says what the body IS; a photograph says what it looks like
    * printed, which is the question someone choosing between five of them is
-   * actually asking. Only the bodies that exist elsewhere in the shop have one,
-   * and the drawing stays as the fallback for the rest.
+   * actually asking. Two sources: a shelf product's own catalogue image, and a
+   * path under public/studio for the bodies Ariel has printed and photographed
+   * himself — those are the better ones, because they show the emblem ON the
+   * body, which is what this screen is for. The drawing stays as the fallback.
    */
   photo?: string;
   /**
@@ -70,9 +71,6 @@ export type UnitForm = {
   /** Catalogue price — the fallback when automatic pricing is off. */
   price: number;
 };
-
-/** The catalogue photo of a shelf model, when it has one. */
-const shelfPhoto = (id: string): string | undefined => IMPORTED.find((m) => m.id === id)?.image;
 
 export const UNIT_FORMS: UnitForm[] = [
   {
@@ -210,7 +208,10 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "everyday",
     art: "round",
-    photo: shelfPhoto("mw-2019559"),
+    // Ariel's own print, like the case above: the designer's catalogue shot is
+    // a plain grinder, and this screen exists to show the emblem ON the body.
+    // Native 4:3, so the aspect-[4/3] tile crops nothing.
+    photo: "/studio/grinder-emblem.webp",
     price: 55,
   },
 ];
