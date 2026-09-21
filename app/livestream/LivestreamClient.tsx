@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Btn from "@/components/ui/Btn";
 import LiveVideo from "@/components/LiveVideo";
 import { useSteadyImage } from "@/lib/steady-image";
@@ -34,7 +35,9 @@ const when = (iso: string) =>
 export default function LivestreamClient() {
   const { live, camera, stream, liveWhy, liveAgent, ready, online } = usePrinterLive();
   const jobs = usePrinterJobs();
-  const clips = useTimelapses();
+  // Five. Someone who opened this page to see the printer should not scroll
+  // past a hundred videos to reach it; the whole archive is at /timelapses.
+  const clips = useTimelapses(5);
   const stats = jobStats(jobs);
 
   // The camera URL is assembled from the shop's config, so it exists whether or
@@ -483,7 +486,16 @@ export default function LivestreamClient() {
       {clips.length > 0 && (
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">TIMELAPSE</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">שעות בתוך חצי דקה.</h2>
+          <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
+            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">שעות בתוך חצי דקה.</h2>
+            <Link
+              href="/timelapses"
+              className="inline-flex items-center gap-1 text-[13px] font-semibold text-flame hover:text-flame-400 shrink-0"
+            >
+              לראות הכל
+              <Icon name="chevLeft" size={14} />
+            </Link>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {clips.map((c) => (
               <figure key={c.file} className="rounded-2xl overflow-hidden bg-ink-900 border border-ink-800">

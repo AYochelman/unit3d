@@ -29,7 +29,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
-  ROOT, UA, c, sleep, fetchDetails, classify, holdsFor, platesFrom,
+  ROOT, UA, c, sleep, fetchDetails, classify, holdsFor, isRealWeapon, platesFrom,
   readableTitle, SHELF_OVERRIDES,
 } from "./lib/makerworld.mjs";
 
@@ -825,13 +825,23 @@ async function queue(wanted, likedFresh, skipped, probes) {
     return;
   }
 
-  const rows = [];
+  let rows = [];
   for (const { id, shelf } of fresh) {
     const d = await fetchDetails(id);
     if (!d) { log(c.y(`  ${id}: ה-API לא ענה, מדולג`)); continue; }
     const row = buildCandidate(id, d, shelf, shelf ? "collection" : "like");
     if (row) rows.push(row);
     await sleep(250); // be a polite guest
+  }
+  if (!rows.length) { log(c.y("  שום דבר לא נוסף.")); summary([], skipped); return; }
+
+  // The owner's line: a toy or a prop is fine, a real weapon never reaches
+  // him. Named out loud rather than dropped in silence — a wrong match here
+  // removes a model he would never know existed.
+  const real = rows.filter((r) => isRealWeapon(`${r.title} ${r.tags}`));
+  if (real.length) {
+    for (const r of real) log(c.r(`  [נשק אמיתי — לא נכנס] ${r.title}`));
+    rows = rows.filter((r) => !real.includes(r));
   }
   if (!rows.length) { log(c.y("  שום דבר לא נוסף.")); summary([], skipped); return; }
 
