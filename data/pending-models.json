@@ -8,13 +8,5 @@
     "`collection` is only a hint: it decides the shelf when its name is explicit",
     "(flexi, fidget, statue). Anything else is classified from the model itself."
   ],
-  "pending": [
-    {
-      "collection": "",
-      "note": "נאסף מהדפדפן של הבעלים 18.9. הרשימה שירדה שטוחה - לייקים ואוספים מעורבים בלי הפרדה - ולכן אין רמז מדף ואין אישור אוטומטי: הכל ממתין ב-/admin.",
-      "ids": [
-        "2094802"
-      ]
-    }
-  ]
+  "pending": []
 }

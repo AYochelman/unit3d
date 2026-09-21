@@ -87,3 +87,6 @@ agent/supabase-key.txt
 .impeccable/history/
 .impeccable/critique/*
 !.impeccable/critique/ignore.md
+
+# Which sweep this machine already folded in — per-machine, not shared.
+data/collected-state.json
