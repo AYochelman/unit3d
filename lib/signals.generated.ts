@@ -123,10 +123,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "13849": {
-    "downloads": 108547,
-    "likes": 24320,
+    "downloads": 108548,
+    "likes": 24321,
     "prints": 92068,
-    "saves": 72039,
+    "saves": 72040,
     "comments": 11068,
     "picked": true,
     "published": "2023-08-28",
@@ -595,7 +595,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "35697": {
     "downloads": 13301,
     "likes": 2591,
-    "prints": 11620,
+    "prints": 11621,
     "saves": 7809,
     "comments": 1452,
     "picked": false,
@@ -634,7 +634,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "38255": {
     "downloads": 86783,
     "likes": 18547,
-    "prints": 47360,
+    "prints": 47361,
     "saves": 53520,
     "comments": 4861,
     "picked": false,
@@ -692,9 +692,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "40146": {
-    "downloads": 406091,
+    "downloads": 406097,
     "likes": 12787,
-    "prints": 302493,
+    "prints": 302504,
     "saves": 27330,
     "comments": 11253,
     "picked": false,
@@ -708,7 +708,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "40644": {
-    "downloads": 1605,
+    "downloads": 1606,
     "likes": 339,
     "prints": 1316,
     "saves": 1229,
@@ -915,7 +915,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 75310,
     "likes": 12466,
     "prints": 37273,
-    "saves": 28173,
+    "saves": 28175,
     "comments": 5500,
     "picked": false,
     "published": "2023-10-27",
@@ -936,8 +936,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "55289": {
     "downloads": 222340,
     "likes": 35464,
-    "prints": 141452,
-    "saves": 82079,
+    "prints": 141456,
+    "saves": 82081,
     "comments": 12281,
     "picked": true,
     "published": "2023-11-01",
@@ -1052,10 +1052,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "65426": {
-    "downloads": 182489,
-    "likes": 30332,
-    "prints": 160707,
-    "saves": 80545,
+    "downloads": 182494,
+    "likes": 30333,
+    "prints": 160714,
+    "saves": 80552,
     "comments": 11149,
     "picked": false,
     "published": "2023-11-15",
@@ -1135,7 +1135,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "90174": {
     "downloads": 32355,
     "likes": 5022,
-    "prints": 26968,
+    "prints": 26969,
     "saves": 11840,
     "comments": 3122,
     "picked": false,
@@ -1155,9 +1155,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "95207": {
     "downloads": 23432,
     "likes": 7377,
-    "prints": 18653,
-    "saves": 25176,
-    "comments": 2166,
+    "prints": 18654,
+    "saves": 25178,
+    "comments": 2167,
     "picked": false,
     "published": "2023-12-16",
     "tags": [
@@ -1171,7 +1171,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "96585": {
     "downloads": 6604,
     "likes": 1753,
-    "prints": 3257,
+    "prints": 3258,
     "saves": 4474,
     "comments": 383,
     "picked": false,
@@ -1203,10 +1203,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "103266": {
-    "downloads": 68167,
+    "downloads": 68168,
     "likes": 23443,
-    "prints": 46083,
-    "saves": 68990,
+    "prints": 46084,
+    "saves": 68992,
     "comments": 5574,
     "picked": false,
     "published": "2023-12-22",
@@ -1229,7 +1229,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 15619,
     "likes": 9053,
     "prints": 11973,
-    "saves": 20713,
+    "saves": 20714,
     "comments": 1529,
     "picked": true,
     "published": "2023-12-30",
@@ -1249,10 +1249,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "119995": {
-    "downloads": 93447,
-    "likes": 13372,
+    "downloads": 93448,
+    "likes": 13373,
     "prints": 82240,
-    "saves": 33420,
+    "saves": 33421,
     "comments": 10719,
     "picked": false,
     "published": "2024-01-02",
@@ -1309,10 +1309,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "129872": {
-    "downloads": 81971,
+    "downloads": 81972,
     "likes": 19280,
-    "prints": 58515,
-    "saves": 44800,
+    "prints": 58516,
+    "saves": 44801,
     "comments": 7379,
     "picked": false,
     "published": "2024-01-08",
@@ -1341,7 +1341,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 13962,
     "likes": 6221,
     "prints": 4382,
-    "saves": 15752,
+    "saves": 15754,
     "comments": 602,
     "picked": false,
     "published": "2024-01-16",
@@ -1369,7 +1369,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "154218": {
-    "downloads": 89557,
+    "downloads": 89559,
     "likes": 20970,
     "prints": 41622,
     "saves": 66177,
@@ -1390,10 +1390,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "171580": {
-    "downloads": 65415,
+    "downloads": 65416,
     "likes": 19467,
-    "prints": 53074,
-    "saves": 57077,
+    "prints": 53076,
+    "saves": 57078,
     "comments": 5577,
     "picked": false,
     "published": "2024-02-04",
@@ -1452,9 +1452,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "198362": {
-    "downloads": 69921,
+    "downloads": 69924,
     "likes": 18269,
-    "prints": 57830,
+    "prints": 57831,
     "saves": 55720,
     "comments": 7070,
     "picked": true,
@@ -1482,7 +1482,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "202312": {
     "downloads": 5451,
     "likes": 702,
-    "prints": 4213,
+    "prints": 4215,
     "saves": 1721,
     "comments": 284,
     "picked": false,
@@ -1497,7 +1497,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 82600,
     "likes": 14034,
     "prints": 67035,
-    "saves": 40686,
+    "saves": 40685,
     "comments": 9715,
     "picked": false,
     "published": "2024-03-02",
@@ -1559,9 +1559,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "253687": {
-    "downloads": 93524,
+    "downloads": 93525,
     "likes": 19311,
-    "prints": 62676,
+    "prints": 62677,
     "saves": 50222,
     "comments": 6421,
     "picked": true,
@@ -1616,9 +1616,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "420924": {
-    "downloads": 79883,
+    "downloads": 79884,
     "likes": 11966,
-    "prints": 59123,
+    "prints": 59126,
     "saves": 28278,
     "comments": 4349,
     "picked": false,
@@ -1634,9 +1634,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "427080": {
-    "downloads": 40798,
+    "downloads": 40799,
     "likes": 5484,
-    "prints": 35665,
+    "prints": 35666,
     "saves": 16582,
     "comments": 2946,
     "picked": false,
@@ -1656,10 +1656,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "463778": {
-    "downloads": 109829,
+    "downloads": 109832,
     "likes": 21165,
     "prints": 88284,
-    "saves": 50706,
+    "saves": 50710,
     "comments": 8963,
     "picked": true,
     "published": "2024-05-14",
@@ -1677,7 +1677,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "469275": {
-    "downloads": 40444,
+    "downloads": 40447,
     "likes": 12798,
     "prints": 23953,
     "saves": 29946,
@@ -1728,7 +1728,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 14871,
     "likes": 6841,
     "prints": 6800,
-    "saves": 13741,
+    "saves": 13742,
     "comments": 1101,
     "picked": true,
     "published": "2024-05-21",
@@ -1756,7 +1756,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "476243": {
-    "downloads": 51138,
+    "downloads": 51140,
     "likes": 23508,
     "prints": 35021,
     "saves": 70849,
@@ -1814,10 +1814,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "482093": {
-    "downloads": 36224,
+    "downloads": 36226,
     "likes": 7733,
     "prints": 15820,
-    "saves": 17485,
+    "saves": 17486,
     "comments": 1578,
     "picked": false,
     "published": "2024-06-02",
@@ -1906,7 +1906,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "498558": {
     "downloads": 72446,
     "likes": 13024,
-    "prints": 53148,
+    "prints": 53151,
     "saves": 30653,
     "comments": 5281,
     "picked": false,
@@ -1932,10 +1932,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "515356": {
-    "downloads": 43994,
+    "downloads": 43995,
     "likes": 11053,
     "prints": 27609,
-    "saves": 32566,
+    "saves": 32567,
     "comments": 2236,
     "picked": false,
     "published": "2024-06-28",
@@ -1966,7 +1966,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "520956": {
     "downloads": 67202,
     "likes": 23085,
-    "prints": 45005,
+    "prints": 45006,
     "saves": 72862,
     "comments": 6654,
     "picked": false,
@@ -2005,7 +2005,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "521944": {
     "downloads": 98464,
     "likes": 12609,
-    "prints": 75431,
+    "prints": 75432,
     "saves": 29759,
     "comments": 8964,
     "picked": false,
@@ -2049,7 +2049,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 61667,
     "likes": 23997,
     "prints": 39587,
-    "saves": 66746,
+    "saves": 66745,
     "comments": 4839,
     "picked": false,
     "published": "2024-07-15",
@@ -2139,9 +2139,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "574787": {
-    "downloads": 23868,
+    "downloads": 23869,
     "likes": 5511,
-    "prints": 19244,
+    "prints": 19246,
     "saves": 14177,
     "comments": 1013,
     "picked": false,
@@ -2161,10 +2161,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "583017": {
-    "downloads": 148471,
+    "downloads": 148473,
     "likes": 19464,
-    "prints": 102763,
-    "saves": 46025,
+    "prints": 102765,
+    "saves": 46027,
     "comments": 11195,
     "picked": false,
     "published": "2024-08-11",
@@ -2216,9 +2216,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "587584": {
     "downloads": 87185,
-    "likes": 19660,
+    "likes": 19661,
     "prints": 62755,
-    "saves": 46878,
+    "saves": 46879,
     "comments": 8288,
     "picked": false,
     "published": "2024-08-14",
@@ -2273,10 +2273,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "616565": {
-    "downloads": 24523,
-    "likes": 12932,
+    "downloads": 24524,
+    "likes": 12933,
     "prints": 11870,
-    "saves": 31675,
+    "saves": 31676,
     "comments": 1129,
     "picked": false,
     "published": "2024-09-01",
@@ -2296,10 +2296,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "620207": {
-    "downloads": 161028,
+    "downloads": 161029,
     "likes": 19071,
     "prints": 126599,
-    "saves": 42715,
+    "saves": 42716,
     "comments": 11310,
     "picked": false,
     "published": "2024-09-03",
@@ -2310,10 +2310,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "624571": {
-    "downloads": 10664,
-    "likes": 2876,
-    "prints": 8966,
-    "saves": 6259,
+    "downloads": 10665,
+    "likes": 2877,
+    "prints": 8967,
+    "saves": 6261,
     "comments": 635,
     "picked": false,
     "published": "2024-09-05",
@@ -2333,10 +2333,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "638587": {
-    "downloads": 137589,
+    "downloads": 137590,
     "likes": 37463,
-    "prints": 107026,
-    "saves": 76339,
+    "prints": 107031,
+    "saves": 76341,
     "comments": 15156,
     "picked": false,
     "published": "2024-09-13",
@@ -2378,10 +2378,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "654785": {
-    "downloads": 161302,
-    "likes": 23136,
-    "prints": 119497,
-    "saves": 65206,
+    "downloads": 161304,
+    "likes": 23137,
+    "prints": 119498,
+    "saves": 65207,
     "comments": 10988,
     "picked": false,
     "published": "2024-09-21",
@@ -2418,10 +2418,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "679352": {
-    "downloads": 109465,
+    "downloads": 109466,
     "likes": 19985,
-    "prints": 71939,
-    "saves": 50552,
+    "prints": 71941,
+    "saves": 50553,
     "comments": 9796,
     "picked": false,
     "published": "2024-10-03",
@@ -2528,7 +2528,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 19175,
     "likes": 9884,
     "prints": 9667,
-    "saves": 29864,
+    "saves": 29865,
     "comments": 465,
     "picked": false,
     "published": "2024-10-17",
@@ -2677,9 +2677,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "716803": {
-    "downloads": 54071,
+    "downloads": 54072,
     "likes": 9107,
-    "prints": 41498,
+    "prints": 41500,
     "saves": 23245,
     "comments": 3381,
     "picked": false,
@@ -2707,8 +2707,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "719725": {
     "downloads": 106012,
-    "likes": 16641,
-    "prints": 89555,
+    "likes": 16642,
+    "prints": 89556,
     "saves": 42092,
     "comments": 7839,
     "picked": false,
@@ -2838,7 +2838,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "766336": {
     "downloads": 44698,
     "likes": 9935,
-    "prints": 34713,
+    "prints": 34716,
     "saves": 26966,
     "comments": 3814,
     "picked": false,
@@ -2865,9 +2865,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "771439": {
     "downloads": 19693,
     "likes": 7173,
-    "prints": 10416,
+    "prints": 10417,
     "saves": 14677,
-    "comments": 1344,
+    "comments": 1345,
     "picked": false,
     "published": "2024-11-09",
     "tags": [
@@ -2887,10 +2887,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "799571": {
-    "downloads": 51627,
-    "likes": 29487,
+    "downloads": 51629,
+    "likes": 29489,
     "prints": 24478,
-    "saves": 108142,
+    "saves": 108145,
     "comments": 1418,
     "picked": true,
     "published": "2024-11-18",
@@ -2928,7 +2928,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 13514,
     "likes": 3217,
     "prints": 7205,
-    "saves": 6733,
+    "saves": 6734,
     "comments": 995,
     "picked": false,
     "published": "2024-11-20",
@@ -2953,7 +2953,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "819327": {
     "downloads": 78271,
     "likes": 14434,
-    "prints": 56894,
+    "prints": 56896,
     "saves": 36605,
     "comments": 5472,
     "picked": false,
@@ -2975,9 +2975,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "824320": {
-    "downloads": 76475,
+    "downloads": 76476,
     "likes": 18492,
-    "prints": 52633,
+    "prints": 52634,
     "saves": 48460,
     "comments": 9289,
     "picked": false,
@@ -2997,9 +2997,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "825671": {
     "downloads": 4092,
-    "likes": 3576,
+    "likes": 3577,
     "prints": 1267,
-    "saves": 10014,
+    "saves": 10015,
     "comments": 238,
     "picked": false,
     "published": "2024-11-26",
@@ -3017,10 +3017,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "844154": {
     "downloads": 51888,
-    "likes": 21141,
-    "prints": 47451,
-    "saves": 75416,
-    "comments": 10076,
+    "likes": 21142,
+    "prints": 47453,
+    "saves": 75417,
+    "comments": 10077,
     "picked": false,
     "published": "2024-12-03",
     "tags": [
@@ -3106,10 +3106,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "849620": {
-    "downloads": 13162,
+    "downloads": 13163,
     "likes": 2683,
-    "prints": 10873,
-    "saves": 7446,
+    "prints": 10874,
+    "saves": 7447,
     "comments": 943,
     "picked": false,
     "published": "2024-12-04",
@@ -3215,10 +3215,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "860190": {
-    "downloads": 35876,
+    "downloads": 35877,
     "likes": 18885,
     "prints": 21010,
-    "saves": 49970,
+    "saves": 49971,
     "comments": 3972,
     "picked": false,
     "published": "2024-12-08",
@@ -3254,10 +3254,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "878180": {
-    "downloads": 58328,
-    "likes": 21376,
+    "downloads": 58329,
+    "likes": 21377,
     "prints": 45298,
-    "saves": 66846,
+    "saves": 66847,
     "comments": 4967,
     "picked": false,
     "published": "2024-12-14",
@@ -3284,7 +3284,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "881223": {
     "downloads": 59026,
     "likes": 14100,
-    "prints": 36391,
+    "prints": 36392,
     "saves": 33466,
     "comments": 3631,
     "picked": false,
@@ -3361,10 +3361,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "899478": {
-    "downloads": 43976,
+    "downloads": 43977,
     "likes": 22233,
-    "prints": 25638,
-    "saves": 64256,
+    "prints": 25639,
+    "saves": 64259,
     "comments": 2868,
     "picked": true,
     "published": "2024-12-21",
@@ -3390,7 +3390,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 16464,
     "likes": 7509,
     "prints": 13676,
-    "saves": 24206,
+    "saves": 24207,
     "comments": 1350,
     "picked": false,
     "published": "2024-12-21",
@@ -3409,9 +3409,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "900903": {
-    "downloads": 61175,
-    "likes": 18527,
-    "prints": 33411,
+    "downloads": 61176,
+    "likes": 18529,
+    "prints": 33412,
     "saves": 44741,
     "comments": 4340,
     "picked": false,
@@ -3469,10 +3469,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "919124": {
-    "downloads": 75703,
-    "likes": 16488,
+    "downloads": 75704,
+    "likes": 16487,
     "prints": 60680,
-    "saves": 38742,
+    "saves": 38743,
     "comments": 7725,
     "picked": false,
     "published": "2024-12-27",
@@ -3499,7 +3499,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 1287,
     "likes": 570,
     "prints": 1137,
-    "saves": 1414,
+    "saves": 1415,
     "comments": 87,
     "picked": false,
     "published": "2024-12-29",
@@ -3519,9 +3519,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "927520": {
-    "downloads": 111332,
-    "likes": 15907,
-    "prints": 101604,
+    "downloads": 111336,
+    "likes": 15908,
+    "prints": 101605,
     "saves": 47045,
     "comments": 7505,
     "picked": false,
@@ -3573,7 +3573,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "942697": {
-    "downloads": 15099,
+    "downloads": 15100,
     "likes": 9091,
     "prints": 8045,
     "saves": 23326,
@@ -3611,10 +3611,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "953502": {
-    "downloads": 37050,
+    "downloads": 37051,
     "likes": 19477,
     "prints": 21562,
-    "saves": 57788,
+    "saves": 57790,
     "comments": 2667,
     "picked": false,
     "published": "2025-01-05",
@@ -3651,9 +3651,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "961340": {
     "downloads": 86624,
-    "likes": 20833,
+    "likes": 20832,
     "prints": 62077,
-    "saves": 55041,
+    "saves": 55043,
     "comments": 6063,
     "picked": false,
     "published": "2025-01-07",
@@ -3689,7 +3689,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "964016": {
-    "downloads": 56192,
+    "downloads": 56195,
     "likes": 19644,
     "prints": 30988,
     "saves": 65439,
@@ -3717,10 +3717,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "969468": {
-    "downloads": 27177,
+    "downloads": 27180,
     "likes": 7907,
-    "prints": 23138,
-    "saves": 17907,
+    "prints": 23142,
+    "saves": 17909,
     "comments": 2117,
     "picked": false,
     "published": "2025-01-09",
@@ -3745,7 +3745,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 65727,
     "likes": 23924,
     "prints": 34163,
-    "saves": 70614,
+    "saves": 70613,
     "comments": 3510,
     "picked": false,
     "published": "2025-01-11",
@@ -3764,10 +3764,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1002706": {
-    "downloads": 143714,
+    "downloads": 143719,
     "likes": 17967,
-    "prints": 117253,
-    "saves": 54892,
+    "prints": 117258,
+    "saves": 54893,
     "comments": 9114,
     "picked": false,
     "published": "2025-01-17",
@@ -3822,11 +3822,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1024791": {
-    "downloads": 31483,
-    "likes": 18101,
-    "prints": 24050,
-    "saves": 57981,
-    "comments": 2931,
+    "downloads": 31485,
+    "likes": 18103,
+    "prints": 24051,
+    "saves": 57984,
+    "comments": 2932,
     "picked": false,
     "published": "2025-01-22",
     "tags": [
@@ -3886,10 +3886,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1029890": {
-    "downloads": 94819,
+    "downloads": 94825,
     "likes": 27181,
     "prints": 67792,
-    "saves": 68557,
+    "saves": 68560,
     "comments": 6517,
     "picked": false,
     "published": "2025-01-23",
@@ -3922,10 +3922,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1032328": {
-    "downloads": 21685,
-    "likes": 11895,
+    "downloads": 21686,
+    "likes": 11897,
     "prints": 10747,
-    "saves": 33759,
+    "saves": 33763,
     "comments": 1057,
     "picked": false,
     "published": "2025-01-24",
@@ -3949,7 +3949,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1037541": {
-    "downloads": 37105,
+    "downloads": 37106,
     "likes": 23304,
     "prints": 15259,
     "saves": 66758,
@@ -4025,7 +4025,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1047815": {
-    "downloads": 31525,
+    "downloads": 31527,
     "likes": 13435,
     "prints": 28477,
     "saves": 40878,
@@ -4065,7 +4065,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1074963": {
     "downloads": 19793,
-    "likes": 11021,
+    "likes": 11022,
     "prints": 15154,
     "saves": 26786,
     "comments": 2155,
@@ -4103,7 +4103,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1076262": {
-    "downloads": 6251,
+    "downloads": 6252,
     "likes": 3611,
     "prints": 3893,
     "saves": 9607,
@@ -4126,10 +4126,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1087279": {
-    "downloads": 79464,
-    "likes": 20457,
-    "prints": 66931,
-    "saves": 56351,
+    "downloads": 79473,
+    "likes": 20459,
+    "prints": 66942,
+    "saves": 56357,
     "comments": 5650,
     "picked": false,
     "published": "2025-02-08",
@@ -4163,7 +4163,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1087329": {
-    "downloads": 29642,
+    "downloads": 29643,
     "likes": 10810,
     "prints": 17094,
     "saves": 26744,
@@ -4191,10 +4191,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1087625": {
-    "downloads": 36470,
-    "likes": 30950,
+    "downloads": 36473,
+    "likes": 30951,
     "prints": 10438,
-    "saves": 86683,
+    "saves": 86689,
     "comments": 1943,
     "picked": false,
     "published": "2025-02-08",
@@ -4221,7 +4221,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 63802,
     "likes": 23710,
     "prints": 34103,
-    "saves": 59371,
+    "saves": 59372,
     "comments": 4919,
     "picked": false,
     "published": "2025-02-09",
@@ -4244,8 +4244,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1099461": {
     "downloads": 67953,
     "likes": 37469,
-    "prints": 41098,
-    "saves": 115875,
+    "prints": 41100,
+    "saves": 115876,
     "comments": 12041,
     "picked": false,
     "published": "2025-02-12",
@@ -4264,10 +4264,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1101226": {
-    "downloads": 135965,
+    "downloads": 135970,
     "likes": 29172,
-    "prints": 121548,
-    "saves": 89536,
+    "prints": 121555,
+    "saves": 89538,
     "comments": 10082,
     "picked": false,
     "published": "2025-02-12",
@@ -4339,8 +4339,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1125088": {
     "downloads": 61193,
-    "likes": 22154,
-    "prints": 50843,
+    "likes": 22155,
+    "prints": 50844,
     "saves": 82500,
     "comments": 6366,
     "picked": false,
@@ -4379,7 +4379,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1132819": {
     "downloads": 9426,
     "likes": 2721,
-    "prints": 7727,
+    "prints": 7728,
     "saves": 9654,
     "comments": 475,
     "picked": false,
@@ -4464,9 +4464,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1160355": {
-    "downloads": 9253,
+    "downloads": 9254,
     "likes": 2780,
-    "prints": 6542,
+    "prints": 6543,
     "saves": 6595,
     "comments": 806,
     "picked": false,
@@ -4484,7 +4484,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1163767": {
-    "downloads": 88516,
+    "downloads": 88517,
     "likes": 16957,
     "prints": 58227,
     "saves": 43645,
@@ -4553,9 +4553,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1203450": {
-    "downloads": 19979,
+    "downloads": 19981,
     "likes": 4086,
-    "prints": 15786,
+    "prints": 15787,
     "saves": 7865,
     "comments": 935,
     "picked": false,
@@ -4568,9 +4568,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1209712": {
     "downloads": 24540,
-    "likes": 9422,
-    "prints": 19673,
-    "saves": 32826,
+    "likes": 9423,
+    "prints": 19674,
+    "saves": 32828,
     "comments": 1963,
     "picked": false,
     "published": "2025-03-14",
@@ -4605,8 +4605,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1212943": {
     "downloads": 12086,
     "likes": 6553,
-    "prints": 8669,
-    "saves": 16251,
+    "prints": 8670,
+    "saves": 16252,
     "comments": 1630,
     "picked": false,
     "published": "2025-03-15",
@@ -4683,9 +4683,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1259184": {
     "downloads": 4073,
-    "likes": 5908,
+    "likes": 5910,
     "prints": 2608,
-    "saves": 14592,
+    "saves": 14593,
     "comments": 510,
     "picked": false,
     "published": "2025-03-28",
@@ -4705,10 +4705,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1261340": {
-    "downloads": 20637,
-    "likes": 9512,
+    "downloads": 20639,
+    "likes": 9513,
     "prints": 15518,
-    "saves": 25338,
+    "saves": 25341,
     "comments": 1221,
     "picked": false,
     "published": "2025-03-29",
@@ -4731,9 +4731,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1261408": {
     "downloads": 10194,
-    "likes": 7380,
+    "likes": 7381,
     "prints": 4737,
-    "saves": 20261,
+    "saves": 20260,
     "comments": 880,
     "picked": false,
     "published": "2025-03-29",
@@ -4758,7 +4758,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1271221": {
     "downloads": 6334,
     "likes": 3099,
-    "prints": 3932,
+    "prints": 3933,
     "saves": 8077,
     "comments": 409,
     "picked": false,
@@ -4786,7 +4786,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 8906,
     "likes": 4926,
     "prints": 6216,
-    "saves": 18333,
+    "saves": 18334,
     "comments": 1001,
     "picked": false,
     "published": "2025-04-04",
@@ -4824,7 +4824,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1288965": {
     "downloads": 12099,
     "likes": 3664,
-    "prints": 10640,
+    "prints": 10641,
     "saves": 11497,
     "comments": 840,
     "picked": false,
@@ -4882,7 +4882,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 3576,
     "likes": 2461,
     "prints": 1991,
-    "saves": 7746,
+    "saves": 7747,
     "comments": 233,
     "picked": false,
     "published": "2025-04-08",
@@ -4910,7 +4910,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 1819,
     "likes": 581,
     "prints": 1407,
-    "saves": 1369,
+    "saves": 1371,
     "comments": 209,
     "picked": false,
     "published": "2025-04-20",
@@ -4922,9 +4922,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1341349": {
     "downloads": 21684,
-    "likes": 4820,
-    "prints": 19537,
-    "saves": 14910,
+    "likes": 4821,
+    "prints": 19538,
+    "saves": 14911,
     "comments": 1815,
     "picked": false,
     "published": "2025-04-21",
@@ -4982,10 +4982,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1376675": {
-    "downloads": 15420,
+    "downloads": 15421,
     "likes": 4731,
     "prints": 12183,
-    "saves": 15659,
+    "saves": 15661,
     "comments": 1903,
     "picked": false,
     "published": "2025-05-02",
@@ -5056,10 +5056,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1397623": {
-    "downloads": 12074,
-    "likes": 3508,
-    "prints": 10219,
-    "saves": 10546,
+    "downloads": 12075,
+    "likes": 3509,
+    "prints": 10220,
+    "saves": 10548,
     "comments": 596,
     "picked": false,
     "published": "2025-05-08",
@@ -5081,7 +5081,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1400361": {
     "downloads": 3040,
     "likes": 907,
-    "prints": 1696,
+    "prints": 1697,
     "saves": 2257,
     "comments": 148,
     "picked": false,
@@ -5098,7 +5098,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1414821": {
     "downloads": 17649,
     "likes": 4381,
-    "prints": 14262,
+    "prints": 14263,
     "saves": 10031,
     "comments": 799,
     "picked": false,
@@ -5128,9 +5128,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1453243": {
     "downloads": 82906,
-    "likes": 13106,
+    "likes": 13107,
     "prints": 56881,
-    "saves": 31339,
+    "saves": 31340,
     "comments": 5565,
     "picked": false,
     "published": "2025-05-25",
@@ -5159,7 +5159,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 3562,
     "likes": 2288,
     "prints": 1782,
-    "saves": 6920,
+    "saves": 6922,
     "comments": 154,
     "picked": false,
     "published": "2025-05-25",
@@ -5184,9 +5184,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1484481": {
     "downloads": 1535,
-    "likes": 2875,
-    "prints": 938,
-    "saves": 12197,
+    "likes": 2877,
+    "prints": 939,
+    "saves": 12200,
     "comments": 143,
     "picked": false,
     "published": "2025-06-03",
@@ -5234,10 +5234,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1507073": {
-    "downloads": 87659,
+    "downloads": 87660,
     "likes": 33677,
-    "prints": 40119,
-    "saves": 107402,
+    "prints": 40122,
+    "saves": 107406,
     "comments": 2947,
     "picked": false,
     "published": "2025-06-10",
@@ -5276,7 +5276,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 1249,
     "likes": 483,
     "prints": 944,
-    "saves": 1426,
+    "saves": 1427,
     "comments": 75,
     "picked": false,
     "published": "2025-06-11",
@@ -5312,10 +5312,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1509676": {
-    "downloads": 24301,
+    "downloads": 24303,
     "likes": 6794,
-    "prints": 18258,
-    "saves": 23585,
+    "prints": 18259,
+    "saves": 23587,
     "comments": 1606,
     "picked": false,
     "published": "2025-06-11",
@@ -5351,8 +5351,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1515698": {
-    "downloads": 48006,
-    "likes": 28253,
+    "downloads": 48007,
+    "likes": 28254,
     "prints": 8190,
     "saves": 72513,
     "comments": 1934,
@@ -5429,10 +5429,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1520536": {
-    "downloads": 60513,
-    "likes": 21842,
-    "prints": 50033,
-    "saves": 70809,
+    "downloads": 60519,
+    "likes": 21843,
+    "prints": 50036,
+    "saves": 70813,
     "comments": 4377,
     "picked": false,
     "published": "2025-06-15",
@@ -5490,9 +5490,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1535220": {
-    "downloads": 32931,
+    "downloads": 32932,
     "likes": 7549,
-    "prints": 23347,
+    "prints": 23348,
     "saves": 23271,
     "comments": 1602,
     "picked": false,
@@ -5663,9 +5663,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1600675": {
-    "downloads": 21981,
+    "downloads": 21983,
     "likes": 3560,
-    "prints": 20489,
+    "prints": 20490,
     "saves": 7978,
     "comments": 1193,
     "picked": false,
@@ -5718,8 +5718,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1608147": {
     "downloads": 5032,
     "likes": 3408,
-    "prints": 2660,
-    "saves": 8639,
+    "prints": 2661,
+    "saves": 8641,
     "comments": 236,
     "picked": false,
     "published": "2025-07-15",
@@ -5738,8 +5738,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1615239": {
     "downloads": 3581,
     "likes": 2440,
-    "prints": 3697,
-    "saves": 9284,
+    "prints": 3698,
+    "saves": 9288,
     "comments": 263,
     "picked": false,
     "published": "2025-07-17",
@@ -5777,8 +5777,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1616971": {
     "downloads": 20916,
     "likes": 4871,
-    "prints": 20115,
-    "saves": 10966,
+    "prints": 20116,
+    "saves": 10967,
     "comments": 1063,
     "picked": false,
     "published": "2025-07-18",
@@ -5818,9 +5818,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1634871": {
     "downloads": 101393,
-    "likes": 21950,
-    "prints": 76832,
-    "saves": 58022,
+    "likes": 21952,
+    "prints": 76833,
+    "saves": 58024,
     "comments": 7245,
     "picked": false,
     "published": "2025-07-24",
@@ -5847,7 +5847,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 15032,
     "likes": 11073,
     "prints": 9436,
-    "saves": 32148,
+    "saves": 32150,
     "comments": 1096,
     "picked": false,
     "published": "2025-07-24",
@@ -5978,8 +5978,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1702633": {
-    "downloads": 30420,
-    "likes": 18866,
+    "downloads": 30421,
+    "likes": 18867,
     "prints": 11773,
     "saves": 59451,
     "comments": 1833,
@@ -6036,11 +6036,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1755208": {
-    "downloads": 137258,
-    "likes": 22839,
-    "prints": 122901,
-    "saves": 60931,
-    "comments": 9811,
+    "downloads": 137266,
+    "likes": 22841,
+    "prints": 122910,
+    "saves": 60940,
+    "comments": 9812,
     "picked": false,
     "published": "2025-09-01",
     "tags": [
@@ -6099,7 +6099,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 2447,
     "likes": 2783,
     "prints": 1625,
-    "saves": 7341,
+    "saves": 7343,
     "comments": 231,
     "picked": false,
     "published": "2025-09-03",
@@ -6125,10 +6125,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1764475": {
-    "downloads": 10967,
+    "downloads": 10968,
     "likes": 4563,
     "prints": 9764,
-    "saves": 14036,
+    "saves": 14037,
     "comments": 786,
     "picked": false,
     "published": "2025-09-04",
@@ -6160,8 +6160,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1764712": {
     "downloads": 15028,
     "likes": 9079,
-    "prints": 11201,
-    "saves": 20925,
+    "prints": 11203,
+    "saves": 20926,
     "comments": 1253,
     "picked": false,
     "published": "2025-09-04",
@@ -6217,10 +6217,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1772809": {
-    "downloads": 79566,
+    "downloads": 79567,
     "likes": 20233,
     "prints": 57466,
-    "saves": 46829,
+    "saves": 46830,
     "comments": 4459,
     "picked": false,
     "published": "2025-09-07",
@@ -6246,7 +6246,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 425,
     "likes": 2027,
     "prints": 149,
-    "saves": 6959,
+    "saves": 6960,
     "comments": 78,
     "picked": false,
     "published": "2025-09-15",
@@ -6267,10 +6267,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1806217": {
-    "downloads": 19374,
+    "downloads": 19376,
     "likes": 10900,
     "prints": 11242,
-    "saves": 26303,
+    "saves": 26304,
     "comments": 1400,
     "picked": false,
     "published": "2025-09-18",
@@ -6299,7 +6299,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1823071": {
     "downloads": 983,
     "likes": 889,
-    "prints": 496,
+    "prints": 497,
     "saves": 2146,
     "comments": 76,
     "picked": false,
@@ -6336,9 +6336,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1835046": {
-    "downloads": 6789,
+    "downloads": 6790,
     "likes": 1571,
-    "prints": 4764,
+    "prints": 4765,
     "saves": 4053,
     "comments": 274,
     "picked": false,
@@ -6361,10 +6361,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1841781": {
-    "downloads": 24303,
-    "likes": 6649,
-    "prints": 20212,
-    "saves": 17770,
+    "downloads": 24304,
+    "likes": 6650,
+    "prints": 20213,
+    "saves": 17773,
     "comments": 930,
     "picked": false,
     "published": "2025-09-30",
@@ -6388,9 +6388,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1842643": {
-    "downloads": 26876,
+    "downloads": 26879,
     "likes": 6753,
-    "prints": 20936,
+    "prints": 20938,
     "saves": 17260,
     "comments": 839,
     "picked": false,
@@ -6455,7 +6455,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 13358,
     "likes": 7676,
     "prints": 8748,
-    "saves": 25771,
+    "saves": 25772,
     "comments": 664,
     "picked": false,
     "published": "2025-10-15",
@@ -6492,7 +6492,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1900215": {
     "downloads": 1008,
-    "likes": 406,
+    "likes": 405,
     "prints": 607,
     "saves": 967,
     "comments": 97,
@@ -6595,9 +6595,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1914756": {
     "downloads": 3012,
-    "likes": 1177,
-    "prints": 3681,
-    "saves": 3680,
+    "likes": 1178,
+    "prints": 3683,
+    "saves": 3681,
     "comments": 185,
     "picked": false,
     "published": "2025-10-22",
@@ -6619,7 +6619,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1935027": {
     "downloads": 1350,
-    "likes": 348,
+    "likes": 347,
     "prints": 800,
     "saves": 930,
     "comments": 42,
@@ -6637,10 +6637,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1954658": {
-    "downloads": 33817,
-    "likes": 8034,
+    "downloads": 33819,
+    "likes": 8035,
     "prints": 28469,
-    "saves": 24801,
+    "saves": 24804,
     "comments": 1299,
     "picked": false,
     "published": "2025-11-03",
@@ -6665,7 +6665,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "likes": 706,
     "prints": 788,
     "saves": 1640,
-    "comments": 52,
+    "comments": 53,
     "picked": false,
     "published": "2025-11-07",
     "tags": [
@@ -6696,9 +6696,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1971172": {
     "downloads": 100268,
-    "likes": 25995,
-    "prints": 75466,
-    "saves": 92676,
+    "likes": 25996,
+    "prints": 75470,
+    "saves": 92677,
     "comments": 7871,
     "picked": false,
     "published": "2025-11-08",
@@ -6735,7 +6735,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1994253": {
     "downloads": 5002,
-    "likes": 1845,
+    "likes": 1846,
     "prints": 2355,
     "saves": 4492,
     "comments": 197,
@@ -6762,7 +6762,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 3160,
     "likes": 1642,
     "prints": 2740,
-    "saves": 4212,
+    "saves": 4213,
     "comments": 127,
     "picked": false,
     "published": "2025-11-14",
@@ -6784,8 +6784,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2000966": {
     "downloads": 24511,
-    "likes": 3442,
-    "prints": 24407,
+    "likes": 3443,
+    "prints": 24408,
     "saves": 9048,
     "comments": 1232,
     "picked": false,
@@ -6815,10 +6815,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2002935": {
-    "downloads": 27129,
+    "downloads": 27132,
     "likes": 11160,
-    "prints": 24133,
-    "saves": 23525,
+    "prints": 24137,
+    "saves": 23526,
     "comments": 1680,
     "picked": false,
     "published": "2025-11-16",
@@ -6923,7 +6923,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2029248": {
     "downloads": 25474,
     "likes": 6855,
-    "prints": 23012,
+    "prints": 23013,
     "saves": 18432,
     "comments": 1733,
     "picked": false,
@@ -6961,7 +6961,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2112117": {
-    "downloads": 99518,
+    "downloads": 99519,
     "likes": 14991,
     "prints": 71588,
     "saves": 39304,
@@ -6986,10 +6986,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2121218": {
-    "downloads": 7815,
-    "likes": 6248,
+    "downloads": 7816,
+    "likes": 6249,
     "prints": 5600,
-    "saves": 14903,
+    "saves": 14906,
     "comments": 421,
     "picked": false,
     "published": "2025-12-15",
@@ -7140,9 +7140,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2160924": {
-    "downloads": 21881,
-    "likes": 12582,
-    "prints": 14061,
+    "downloads": 21882,
+    "likes": 12583,
+    "prints": 14062,
     "saves": 37803,
     "comments": 681,
     "picked": false,
@@ -7175,8 +7175,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2169245": {
     "downloads": 18566,
     "likes": 5534,
-    "prints": 15459,
-    "saves": 13450,
+    "prints": 15461,
+    "saves": 13452,
     "comments": 1028,
     "picked": false,
     "published": "2025-12-28",
@@ -7262,10 +7262,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2196193": {
-    "downloads": 32092,
+    "downloads": 32093,
     "likes": 7521,
-    "prints": 35575,
-    "saves": 23179,
+    "prints": 35576,
+    "saves": 23182,
     "comments": 1937,
     "picked": false,
     "published": "2026-01-03",
@@ -7304,7 +7304,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 2416,
     "likes": 1665,
     "prints": 1645,
-    "saves": 5096,
+    "saves": 5098,
     "comments": 168,
     "picked": false,
     "published": "2026-01-05",
@@ -7323,10 +7323,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2207601": {
-    "downloads": 35682,
-    "likes": 6562,
-    "prints": 30179,
-    "saves": 20046,
+    "downloads": 35684,
+    "likes": 6563,
+    "prints": 30182,
+    "saves": 20049,
     "comments": 1858,
     "picked": false,
     "published": "2026-01-06",
@@ -7349,10 +7349,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2211015": {
-    "downloads": 8363,
+    "downloads": 8364,
     "likes": 6278,
-    "prints": 4932,
-    "saves": 18446,
+    "prints": 4933,
+    "saves": 18447,
     "comments": 541,
     "picked": false,
     "published": "2026-01-07",
@@ -7380,7 +7380,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 4244,
     "likes": 1651,
     "prints": 2810,
-    "saves": 4741,
+    "saves": 4742,
     "comments": 134,
     "picked": false,
     "published": "2026-01-08",
@@ -7414,7 +7414,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2227274": {
     "downloads": 10003,
     "likes": 1816,
-    "prints": 8170,
+    "prints": 8171,
     "saves": 5037,
     "comments": 528,
     "picked": false,
@@ -7565,9 +7565,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2268549": {
     "downloads": 36449,
-    "likes": 17562,
-    "prints": 27282,
-    "saves": 69527,
+    "likes": 17564,
+    "prints": 27286,
+    "saves": 69532,
     "comments": 2981,
     "picked": false,
     "published": "2026-01-19",
@@ -7626,10 +7626,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2291285": {
-    "downloads": 13664,
-    "likes": 4959,
-    "prints": 14549,
-    "saves": 19030,
+    "downloads": 13667,
+    "likes": 4960,
+    "prints": 14550,
+    "saves": 19032,
     "comments": 658,
     "picked": false,
     "published": "2026-01-24",
@@ -7667,7 +7667,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2325060": {
     "downloads": 18109,
     "likes": 6326,
-    "prints": 15460,
+    "prints": 15462,
     "saves": 17591,
     "comments": 1247,
     "picked": false,
@@ -7734,7 +7734,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2336776": {
     "downloads": 11154,
     "likes": 2007,
-    "prints": 11855,
+    "prints": 11858,
     "saves": 7007,
     "comments": 684,
     "picked": false,
@@ -7771,10 +7771,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2341542": {
-    "downloads": 3475,
+    "downloads": 3476,
     "likes": 4717,
     "prints": 2535,
-    "saves": 16748,
+    "saves": 16749,
     "comments": 230,
     "picked": false,
     "published": "2026-02-02",
@@ -7805,7 +7805,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2358777": {
     "downloads": 14793,
     "likes": 11439,
-    "prints": 7824,
+    "prints": 7825,
     "saves": 35536,
     "comments": 1487,
     "picked": false,
@@ -7873,9 +7873,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2401127": {
-    "downloads": 5769,
-    "likes": 1770,
-    "prints": 5082,
+    "downloads": 5770,
+    "likes": 1771,
+    "prints": 5083,
     "saves": 3860,
     "comments": 322,
     "picked": false,
@@ -7976,10 +7976,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2409022": {
-    "downloads": 70531,
-    "likes": 25758,
-    "prints": 69096,
-    "saves": 66687,
+    "downloads": 70535,
+    "likes": 25761,
+    "prints": 69104,
+    "saves": 66693,
     "comments": 3021,
     "picked": false,
     "published": "2026-02-17",
@@ -8040,7 +8040,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 75125,
     "likes": 15706,
     "prints": 57973,
-    "saves": 45982,
+    "saves": 45984,
     "comments": 4137,
     "picked": false,
     "published": "2026-02-22",
@@ -8067,10 +8067,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2454367": {
-    "downloads": 15171,
-    "likes": 4217,
-    "prints": 14066,
-    "saves": 12798,
+    "downloads": 15172,
+    "likes": 4216,
+    "prints": 14067,
+    "saves": 12800,
     "comments": 709,
     "picked": false,
     "published": "2026-02-27",
@@ -8106,11 +8106,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2459711": {
-    "downloads": 47306,
-    "likes": 19421,
-    "prints": 36076,
-    "saves": 56784,
-    "comments": 2313,
+    "downloads": 47311,
+    "likes": 19422,
+    "prints": 36078,
+    "saves": 56794,
+    "comments": 2314,
     "picked": false,
     "published": "2026-02-28",
     "tags": [
@@ -8165,7 +8165,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 7856,
     "likes": 5241,
     "prints": 5785,
-    "saves": 18282,
+    "saves": 18284,
     "comments": 375,
     "picked": false,
     "published": "2026-03-02",
@@ -8207,10 +8207,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2478859": {
-    "downloads": 2080,
+    "downloads": 2083,
     "likes": 1411,
     "prints": 1884,
-    "saves": 4304,
+    "saves": 4305,
     "comments": 110,
     "picked": false,
     "published": "2026-03-04",
@@ -8230,9 +8230,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2506482": {
-    "downloads": 18754,
+    "downloads": 18755,
     "likes": 9482,
-    "prints": 13613,
+    "prints": 13614,
     "saves": 24454,
     "comments": 799,
     "picked": true,
@@ -8260,11 +8260,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2506630": {
-    "downloads": 97439,
-    "likes": 20022,
-    "prints": 82675,
-    "saves": 58792,
-    "comments": 4570,
+    "downloads": 97444,
+    "likes": 20023,
+    "prints": 82679,
+    "saves": 58794,
+    "comments": 4571,
     "picked": false,
     "published": "2026-03-10",
     "tags": [
@@ -8303,9 +8303,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2520704": {
     "downloads": 1943,
-    "likes": 1894,
+    "likes": 1895,
     "prints": 2113,
-    "saves": 5970,
+    "saves": 5972,
     "comments": 72,
     "picked": false,
     "published": "2026-03-14",
@@ -8455,10 +8455,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2544759": {
-    "downloads": 7807,
-    "likes": 4059,
-    "prints": 6081,
-    "saves": 11977,
+    "downloads": 7809,
+    "likes": 4060,
+    "prints": 6082,
+    "saves": 11976,
     "comments": 512,
     "picked": false,
     "published": "2026-03-19",
@@ -8490,10 +8490,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2547003": {
-    "downloads": 12760,
-    "likes": 4854,
-    "prints": 11488,
-    "saves": 18744,
+    "downloads": 12761,
+    "likes": 4855,
+    "prints": 11489,
+    "saves": 18745,
     "comments": 1651,
     "picked": false,
     "published": "2026-03-19",
@@ -8565,7 +8565,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2560145": {
     "downloads": 6349,
     "likes": 3633,
-    "prints": 4215,
+    "prints": 4216,
     "saves": 11418,
     "comments": 267,
     "picked": false,
@@ -8586,10 +8586,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2563578": {
-    "downloads": 24419,
-    "likes": 6350,
+    "downloads": 24420,
+    "likes": 6351,
     "prints": 21236,
-    "saves": 14678,
+    "saves": 14679,
     "comments": 1320,
     "picked": false,
     "published": "2026-03-23",
@@ -8612,8 +8612,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2565168": {
-    "downloads": 35331,
-    "likes": 11903,
+    "downloads": 35332,
+    "likes": 11904,
     "prints": 30595,
     "saves": 34794,
     "comments": 2580,
@@ -8667,7 +8667,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2602664": {
     "downloads": 3910,
     "likes": 2208,
-    "prints": 3193,
+    "prints": 3194,
     "saves": 8244,
     "comments": 534,
     "picked": false,
@@ -8691,9 +8691,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2606112": {
     "downloads": 9790,
-    "likes": 4052,
-    "prints": 8934,
-    "saves": 12435,
+    "likes": 4053,
+    "prints": 8936,
+    "saves": 12438,
     "comments": 621,
     "picked": false,
     "published": "2026-04-02",
@@ -8729,10 +8729,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2608825": {
-    "downloads": 14789,
+    "downloads": 14792,
     "likes": 4640,
-    "prints": 14199,
-    "saves": 15065,
+    "prints": 14203,
+    "saves": 15066,
     "comments": 492,
     "picked": false,
     "published": "2026-04-02",
@@ -8756,8 +8756,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 17306,
     "likes": 4262,
     "prints": 14363,
-    "saves": 12241,
-    "comments": 793,
+    "saves": 12243,
+    "comments": 794,
     "picked": false,
     "published": "2026-04-04",
     "tags": [
@@ -8884,10 +8884,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2624902": {
-    "downloads": 27318,
-    "likes": 20366,
-    "prints": 17773,
-    "saves": 63046,
+    "downloads": 27321,
+    "likes": 20368,
+    "prints": 17775,
+    "saves": 63055,
     "comments": 1380,
     "picked": false,
     "published": "2026-04-06",
@@ -8923,10 +8923,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2630368": {
-    "downloads": 5709,
+    "downloads": 5710,
     "likes": 3872,
-    "prints": 5126,
-    "saves": 12703,
+    "prints": 5127,
+    "saves": 12705,
     "comments": 419,
     "picked": false,
     "published": "2026-04-07",
@@ -8965,7 +8965,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 1416,
     "likes": 2965,
     "prints": 919,
-    "saves": 6558,
+    "saves": 6559,
     "comments": 119,
     "picked": false,
     "published": "2026-04-07",
@@ -9001,7 +9001,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2633270": {
-    "downloads": 3609,
+    "downloads": 3610,
     "likes": 3849,
     "prints": 3152,
     "saves": 13474,
@@ -9084,7 +9084,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 1975,
     "likes": 2704,
     "prints": 362,
-    "saves": 7977,
+    "saves": 7979,
     "comments": 49,
     "picked": false,
     "published": "2026-04-11",
@@ -9142,9 +9142,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2661039": {
-    "downloads": 38880,
+    "downloads": 38881,
     "likes": 15352,
-    "prints": 33846,
+    "prints": 33848,
     "saves": 36353,
     "comments": 2555,
     "picked": true,
@@ -9164,10 +9164,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2667491": {
-    "downloads": 4345,
-    "likes": 1926,
+    "downloads": 4346,
+    "likes": 1927,
     "prints": 4546,
-    "saves": 4844,
+    "saves": 4845,
     "comments": 191,
     "picked": false,
     "published": "2026-04-16",
@@ -9194,7 +9194,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 3871,
     "likes": 4470,
     "prints": 2077,
-    "saves": 17283,
+    "saves": 17284,
     "comments": 183,
     "picked": false,
     "published": "2026-04-17",
@@ -9419,7 +9419,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2695931": {
-    "downloads": 752,
+    "downloads": 753,
     "likes": 746,
     "prints": 926,
     "saves": 2570,
@@ -9599,10 +9599,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2714054": {
-    "downloads": 3262,
-    "likes": 5537,
+    "downloads": 3263,
+    "likes": 5538,
     "prints": 3147,
-    "saves": 11624,
+    "saves": 11627,
     "comments": 799,
     "picked": false,
     "published": "2026-04-25",
@@ -9706,10 +9706,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2716330": {
-    "downloads": 33482,
-    "likes": 11036,
-    "prints": 37567,
-    "saves": 35381,
+    "downloads": 33489,
+    "likes": 11037,
+    "prints": 37574,
+    "saves": 35391,
     "comments": 2012,
     "picked": false,
     "published": "2026-04-25",
@@ -9758,10 +9758,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2734706": {
-    "downloads": 12828,
-    "likes": 3787,
-    "prints": 14399,
-    "saves": 10872,
+    "downloads": 12829,
+    "likes": 3789,
+    "prints": 14401,
+    "saves": 10874,
     "comments": 537,
     "picked": false,
     "published": "2026-04-29",
@@ -9780,7 +9780,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 390,
     "likes": 198,
     "prints": 353,
-    "saves": 670,
+    "saves": 669,
     "comments": 17,
     "picked": false,
     "published": "2026-04-29",
@@ -9797,7 +9797,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2745579": {
     "downloads": 6734,
     "likes": 2053,
-    "prints": 5817,
+    "prints": 5818,
     "saves": 5916,
     "comments": 289,
     "picked": false,
@@ -9866,9 +9866,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2760237": {
     "downloads": 1734,
-    "likes": 3551,
+    "likes": 3552,
     "prints": 1397,
-    "saves": 11269,
+    "saves": 11270,
     "comments": 114,
     "picked": false,
     "published": "2026-05-05",
@@ -9891,8 +9891,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2760406": {
     "downloads": 11158,
-    "likes": 5043,
-    "prints": 13162,
+    "likes": 5044,
+    "prints": 13164,
     "saves": 13862,
     "comments": 474,
     "picked": false,
@@ -9944,8 +9944,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2765603": {
     "downloads": 8789,
     "likes": 3501,
-    "prints": 6556,
-    "saves": 11918,
+    "prints": 6557,
+    "saves": 11919,
     "comments": 343,
     "picked": false,
     "published": "2026-05-06",
@@ -10032,8 +10032,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2772314": {
     "downloads": 4396,
     "likes": 1873,
-    "prints": 3378,
-    "saves": 5759,
+    "prints": 3379,
+    "saves": 5760,
     "comments": 268,
     "picked": false,
     "published": "2026-05-08",
@@ -10110,8 +10110,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2783407": {
     "downloads": 7731,
     "likes": 8655,
-    "prints": 6579,
-    "saves": 32457,
+    "prints": 6581,
+    "saves": 32464,
     "comments": 352,
     "picked": false,
     "published": "2026-05-10",
@@ -10145,10 +10145,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2783835": {
-    "downloads": 19719,
+    "downloads": 19720,
     "likes": 6334,
-    "prints": 20408,
-    "saves": 20207,
+    "prints": 20410,
+    "saves": 20210,
     "comments": 1488,
     "picked": false,
     "published": "2026-05-10",
@@ -10167,10 +10167,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2786539": {
-    "downloads": 5547,
-    "likes": 3349,
-    "prints": 3145,
-    "saves": 11158,
+    "downloads": 5548,
+    "likes": 3350,
+    "prints": 3146,
+    "saves": 11159,
     "comments": 129,
     "picked": false,
     "published": "2026-05-11",
@@ -10193,11 +10193,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2787704": {
-    "downloads": 9214,
-    "likes": 8187,
-    "prints": 11847,
-    "saves": 23998,
-    "comments": 642,
+    "downloads": 9215,
+    "likes": 8189,
+    "prints": 11851,
+    "saves": 24004,
+    "comments": 643,
     "picked": false,
     "published": "2026-05-11",
     "tags": [
@@ -10221,9 +10221,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2787968": {
     "downloads": 1900,
-    "likes": 2419,
+    "likes": 2420,
     "prints": 1409,
-    "saves": 7640,
+    "saves": 7641,
     "comments": 157,
     "picked": false,
     "published": "2026-05-11",
@@ -10259,9 +10259,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2801921": {
-    "downloads": 1653,
+    "downloads": 1654,
     "likes": 823,
-    "prints": 1691,
+    "prints": 1692,
     "saves": 2382,
     "comments": 112,
     "picked": false,
@@ -10301,7 +10301,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 7784,
     "likes": 8910,
     "prints": 3979,
-    "saves": 26537,
+    "saves": 26538,
     "comments": 271,
     "picked": true,
     "published": "2026-05-15",
@@ -10363,10 +10363,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2811814": {
-    "downloads": 6370,
+    "downloads": 6371,
     "likes": 3929,
     "prints": 2619,
-    "saves": 11735,
+    "saves": 11738,
     "comments": 67,
     "picked": false,
     "published": "2026-05-17",
@@ -10395,10 +10395,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2814241": {
-    "downloads": 13167,
-    "likes": 7972,
-    "prints": 12221,
-    "saves": 14236,
+    "downloads": 13171,
+    "likes": 7975,
+    "prints": 12225,
+    "saves": 14240,
     "comments": 573,
     "picked": false,
     "published": "2026-05-17",
@@ -10554,7 +10554,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2835386": {
     "downloads": 2179,
     "likes": 1174,
-    "prints": 2765,
+    "prints": 2767,
     "saves": 3113,
     "comments": 124,
     "picked": false,
@@ -10615,8 +10615,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2844257": {
     "downloads": 1928,
     "likes": 1679,
-    "prints": 1502,
-    "saves": 6146,
+    "prints": 1503,
+    "saves": 6145,
     "comments": 145,
     "picked": false,
     "published": "2026-05-24",
@@ -10653,7 +10653,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2845609": {
     "downloads": 11890,
-    "likes": 10115,
+    "likes": 10117,
     "prints": 5429,
     "saves": 29882,
     "comments": 929,
@@ -10715,7 +10715,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2861823": {
-    "downloads": 4182,
+    "downloads": 4184,
     "likes": 1521,
     "prints": 4968,
     "saves": 3704,
@@ -10758,7 +10758,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "likes": 145,
     "prints": 25,
     "saves": 454,
-    "comments": 0,
+    "comments": 1,
     "picked": false,
     "published": "2026-05-29",
     "tags": [
@@ -10820,7 +10820,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2868512": {
     "downloads": 1919,
     "likes": 3040,
-    "prints": 1496,
+    "prints": 1497,
     "saves": 8937,
     "comments": 119,
     "picked": false,
@@ -10857,7 +10857,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2868647": {
-    "downloads": 6610,
+    "downloads": 6612,
     "likes": 2825,
     "prints": 3321,
     "saves": 9902,
@@ -10888,9 +10888,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2869418": {
-    "downloads": 7134,
+    "downloads": 7135,
     "likes": 3435,
-    "prints": 6866,
+    "prints": 6867,
     "saves": 9181,
     "comments": 436,
     "picked": false,
@@ -10917,7 +10917,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 1035,
     "likes": 1571,
     "prints": 644,
-    "saves": 4482,
+    "saves": 4483,
     "comments": 75,
     "picked": false,
     "published": "2026-05-31",
@@ -10981,10 +10981,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2875932": {
-    "downloads": 9285,
+    "downloads": 9289,
     "likes": 2182,
-    "prints": 11625,
-    "saves": 6207,
+    "prints": 11627,
+    "saves": 6209,
     "comments": 639,
     "picked": false,
     "published": "2026-06-01",
@@ -11020,11 +11020,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2876996": {
-    "downloads": 11315,
-    "likes": 5278,
-    "prints": 5486,
-    "saves": 20419,
-    "comments": 238,
+    "downloads": 11316,
+    "likes": 5280,
+    "prints": 5489,
+    "saves": 20425,
+    "comments": 239,
     "picked": false,
     "published": "2026-06-01",
     "tags": [
@@ -11059,10 +11059,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2885863": {
-    "downloads": 21626,
-    "likes": 7446,
-    "prints": 24832,
-    "saves": 21110,
+    "downloads": 21632,
+    "likes": 7448,
+    "prints": 24835,
+    "saves": 21114,
     "comments": 1265,
     "picked": false,
     "published": "2026-06-03",
@@ -11091,7 +11091,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 14845,
     "likes": 9508,
     "prints": 13660,
-    "saves": 32301,
+    "saves": 32303,
     "comments": 1226,
     "picked": true,
     "published": "2026-06-09",
@@ -11162,10 +11162,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2919882": {
-    "downloads": 6214,
+    "downloads": 6215,
     "likes": 2488,
     "prints": 5383,
-    "saves": 7683,
+    "saves": 7685,
     "comments": 176,
     "picked": false,
     "published": "2026-06-11",
@@ -11221,9 +11221,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2944726": {
     "downloads": 11087,
-    "likes": 6482,
+    "likes": 6484,
     "prints": 9352,
-    "saves": 17232,
+    "saves": 17235,
     "comments": 388,
     "picked": false,
     "published": "2026-06-17",
@@ -11246,7 +11246,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 6255,
     "likes": 6753,
     "prints": 5643,
-    "saves": 25983,
+    "saves": 25984,
     "comments": 430,
     "picked": false,
     "published": "2026-06-20",
@@ -11315,7 +11315,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 2853,
     "likes": 1510,
     "prints": 2752,
-    "saves": 3417,
+    "saves": 3416,
     "comments": 121,
     "picked": false,
     "published": "2026-06-27",
@@ -11351,10 +11351,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2984861": {
-    "downloads": 12965,
-    "likes": 3301,
+    "downloads": 12966,
+    "likes": 3302,
     "prints": 15282,
-    "saves": 9516,
+    "saves": 9517,
     "comments": 803,
     "picked": false,
     "published": "2026-06-28",
@@ -11429,10 +11429,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2991458": {
-    "downloads": 4806,
+    "downloads": 4807,
     "likes": 3210,
-    "prints": 5054,
-    "saves": 12387,
+    "prints": 5055,
+    "saves": 12388,
     "comments": 180,
     "picked": false,
     "published": "2026-06-29",
@@ -11507,10 +11507,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3003734": {
-    "downloads": 5461,
-    "likes": 2221,
-    "prints": 6813,
-    "saves": 7092,
+    "downloads": 5462,
+    "likes": 2223,
+    "prints": 6817,
+    "saves": 7093,
     "comments": 300,
     "picked": false,
     "published": "2026-07-02",
@@ -11540,10 +11540,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3003957": {
-    "downloads": 3780,
-    "likes": 3606,
-    "prints": 3697,
-    "saves": 9541,
+    "downloads": 3782,
+    "likes": 3609,
+    "prints": 3700,
+    "saves": 9543,
     "comments": 135,
     "picked": false,
     "published": "2026-07-02",
@@ -11598,7 +11598,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 2567,
     "likes": 3886,
     "prints": 3716,
-    "saves": 10593,
+    "saves": 10598,
     "comments": 347,
     "picked": false,
     "published": "2026-07-06",
@@ -11614,10 +11614,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3025314": {
-    "downloads": 5815,
+    "downloads": 5816,
     "likes": 4570,
     "prints": 5575,
-    "saves": 18438,
+    "saves": 18439,
     "comments": 440,
     "picked": false,
     "published": "2026-07-08",
@@ -11640,7 +11640,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "3037751": {
     "downloads": 3371,
     "likes": 1527,
-    "prints": 4186,
+    "prints": 4187,
     "saves": 5395,
     "comments": 290,
     "picked": false,
@@ -11678,10 +11678,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3057768": {
     "downloads": 6891,
-    "likes": 3153,
-    "prints": 7694,
-    "saves": 9647,
-    "comments": 272,
+    "likes": 3154,
+    "prints": 7696,
+    "saves": 9648,
+    "comments": 273,
     "picked": false,
     "published": "2026-07-16",
     "tags": [
@@ -11713,7 +11713,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 549,
     "likes": 517,
     "prints": 509,
-    "saves": 1864,
+    "saves": 1865,
     "comments": 23,
     "picked": false,
     "published": "2026-07-20",
@@ -11735,11 +11735,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3075445": {
-    "downloads": 2683,
+    "downloads": 2684,
     "likes": 2446,
-    "prints": 3046,
+    "prints": 3048,
     "saves": 5967,
-    "comments": 182,
+    "comments": 183,
     "picked": false,
     "published": "2026-07-21",
     "tags": [
@@ -11757,10 +11757,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3076607": {
-    "downloads": 12314,
-    "likes": 8340,
-    "prints": 15612,
-    "saves": 21232,
+    "downloads": 12317,
+    "likes": 8341,
+    "prints": 15620,
+    "saves": 21246,
     "comments": 1729,
     "picked": false,
     "published": "2026-07-21",
@@ -11780,10 +11780,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3127131": {
-    "downloads": 17713,
-    "likes": 7690,
-    "prints": 20604,
-    "saves": 25877,
+    "downloads": 17722,
+    "likes": 7696,
+    "prints": 20612,
+    "saves": 25885,
     "comments": 713,
     "picked": false,
     "published": "2026-08-03",
@@ -11804,7 +11804,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 1167,
     "likes": 1931,
     "prints": 1311,
-    "saves": 6543,
+    "saves": 6544,
     "comments": 154,
     "picked": false,
     "published": "2026-08-05",
@@ -11827,9 +11827,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3146829": {
     "downloads": 4049,
-    "likes": 3693,
+    "likes": 3694,
     "prints": 5749,
-    "saves": 14514,
+    "saves": 14518,
     "comments": 546,
     "picked": false,
     "published": "2026-08-08",
@@ -11862,10 +11862,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3157560": {
-    "downloads": 1083,
+    "downloads": 1084,
     "likes": 1434,
-    "prints": 1583,
-    "saves": 5391,
+    "prints": 1585,
+    "saves": 5392,
     "comments": 76,
     "picked": false,
     "published": "2026-08-10",
@@ -11901,10 +11901,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3174552": {
-    "downloads": 5888,
-    "likes": 4087,
-    "prints": 7330,
-    "saves": 11820,
+    "downloads": 5892,
+    "likes": 4088,
+    "prints": 7331,
+    "saves": 11822,
     "comments": 297,
     "picked": false,
     "published": "2026-08-15",
@@ -11925,10 +11925,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3186647": {
-    "downloads": 4082,
+    "downloads": 4083,
     "likes": 2613,
-    "prints": 4738,
-    "saves": 8886,
+    "prints": 4739,
+    "saves": 8888,
     "comments": 168,
     "picked": false,
     "published": "2026-08-18",
@@ -11946,10 +11946,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3219173": {
-    "downloads": 414,
+    "downloads": 415,
     "likes": 828,
     "prints": 398,
-    "saves": 2830,
+    "saves": 2831,
     "comments": 22,
     "picked": false,
     "published": "2026-08-25",
@@ -11960,10 +11960,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3229032": {
-    "downloads": 2903,
-    "likes": 2027,
-    "prints": 3478,
-    "saves": 6636,
+    "downloads": 2906,
+    "likes": 2029,
+    "prints": 3480,
+    "saves": 6640,
     "comments": 431,
     "picked": false,
     "published": "2026-08-28",
@@ -12024,10 +12024,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3239344": {
-    "downloads": 1544,
+    "downloads": 1545,
     "likes": 1476,
-    "prints": 2039,
-    "saves": 4330,
+    "prints": 2040,
+    "saves": 4331,
     "comments": 95,
     "picked": false,
     "published": "2026-08-30",
@@ -12058,7 +12058,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 500,
     "likes": 1395,
     "prints": 506,
-    "saves": 3590,
+    "saves": 3592,
     "comments": 96,
     "picked": false,
     "published": "2026-08-31",
@@ -12110,10 +12110,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3242912": {
-    "downloads": 1091,
-    "likes": 864,
-    "prints": 1081,
-    "saves": 2624,
+    "downloads": 1092,
+    "likes": 865,
+    "prints": 1082,
+    "saves": 2625,
     "comments": 34,
     "picked": false,
     "published": "2026-08-31",
@@ -12135,7 +12135,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3243295": {
     "downloads": 549,
-    "likes": 549,
+    "likes": 550,
     "prints": 550,
     "saves": 1787,
     "comments": 43,
@@ -12163,11 +12163,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3243522": {
-    "downloads": 4630,
-    "likes": 7168,
-    "prints": 4898,
-    "saves": 21384,
-    "comments": 387,
+    "downloads": 4637,
+    "likes": 7182,
+    "prints": 4905,
+    "saves": 21403,
+    "comments": 388,
     "picked": false,
     "published": "2026-08-31",
     "tags": [
@@ -12185,10 +12185,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3244067": {
-    "downloads": 418,
+    "downloads": 419,
     "likes": 571,
     "prints": 140,
-    "saves": 2585,
+    "saves": 2588,
     "comments": 6,
     "picked": false,
     "published": "2026-08-31",
@@ -12207,10 +12207,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3245583": {
-    "downloads": 1383,
+    "downloads": 1385,
     "likes": 612,
-    "prints": 2150,
-    "saves": 1791,
+    "prints": 2151,
+    "saves": 1792,
     "comments": 106,
     "picked": false,
     "published": "2026-08-31",
@@ -12230,10 +12230,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3245667": {
-    "downloads": 1573,
-    "likes": 3289,
+    "downloads": 1577,
+    "likes": 3291,
     "prints": 2385,
-    "saves": 8706,
+    "saves": 8710,
     "comments": 188,
     "picked": false,
     "published": "2026-08-31",
@@ -12262,10 +12262,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3246572": {
-    "downloads": 1335,
+    "downloads": 1336,
     "likes": 1003,
     "prints": 1859,
-    "saves": 3163,
+    "saves": 3164,
     "comments": 60,
     "picked": false,
     "published": "2026-09-01",
@@ -12290,7 +12290,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "3246596": {
     "downloads": 1177,
     "likes": 990,
-    "prints": 1663,
+    "prints": 1664,
     "saves": 2585,
     "comments": 65,
     "picked": false,
@@ -12319,7 +12319,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 182,
     "likes": 708,
     "prints": 198,
-    "saves": 2656,
+    "saves": 2657,
     "comments": 7,
     "picked": false,
     "published": "2026-09-01",
@@ -12373,8 +12373,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3249292": {
     "downloads": 215,
-    "likes": 518,
-    "prints": 268,
+    "likes": 519,
+    "prints": 269,
     "saves": 1555,
     "comments": 19,
     "picked": false,
@@ -12411,10 +12411,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3251767": {
-    "downloads": 473,
+    "downloads": 475,
     "likes": 638,
     "prints": 650,
-    "saves": 2301,
+    "saves": 2302,
     "comments": 22,
     "picked": false,
     "published": "2026-09-02",
@@ -12440,10 +12440,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3251864": {
-    "downloads": 584,
+    "downloads": 586,
     "likes": 455,
-    "prints": 739,
-    "saves": 1238,
+    "prints": 740,
+    "saves": 1237,
     "comments": 49,
     "picked": false,
     "published": "2026-09-02",
@@ -12476,9 +12476,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3252105": {
     "downloads": 768,
-    "likes": 622,
+    "likes": 623,
     "prints": 1140,
-    "saves": 2617,
+    "saves": 2620,
     "comments": 50,
     "picked": false,
     "published": "2026-09-02",
@@ -12536,9 +12536,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3253910": {
     "downloads": 1795,
-    "likes": 1601,
-    "prints": 2215,
-    "saves": 5243,
+    "likes": 1604,
+    "prints": 2217,
+    "saves": 5244,
     "comments": 263,
     "picked": false,
     "published": "2026-09-02",
@@ -12575,9 +12575,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3258291": {
     "downloads": 596,
-    "likes": 1504,
+    "likes": 1507,
     "prints": 318,
-    "saves": 4762,
+    "saves": 4765,
     "comments": 45,
     "picked": false,
     "published": "2026-09-03",
@@ -12599,10 +12599,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3258601": {
-    "downloads": 345,
+    "downloads": 346,
     "likes": 797,
     "prints": 451,
-    "saves": 2917,
+    "saves": 2919,
     "comments": 32,
     "picked": false,
     "published": "2026-09-03",
@@ -12638,10 +12638,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3258776": {
-    "downloads": 1412,
-    "likes": 792,
-    "prints": 2300,
-    "saves": 2266,
+    "downloads": 1413,
+    "likes": 793,
+    "prints": 2303,
+    "saves": 2268,
     "comments": 110,
     "picked": false,
     "published": "2026-09-04",
@@ -12677,10 +12677,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3258780": {
-    "downloads": 1562,
+    "downloads": 1563,
     "likes": 910,
-    "prints": 2071,
-    "saves": 2426,
+    "prints": 2075,
+    "saves": 2428,
     "comments": 99,
     "picked": false,
     "published": "2026-09-04",
@@ -12719,8 +12719,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 509,
     "likes": 1012,
     "prints": 444,
-    "saves": 2957,
-    "comments": 169,
+    "saves": 2960,
+    "comments": 171,
     "picked": false,
     "published": "2026-09-04",
     "tags": [
@@ -12744,9 +12744,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3262485": {
     "downloads": 1089,
-    "likes": 1021,
-    "prints": 1314,
-    "saves": 3337,
+    "likes": 1022,
+    "prints": 1315,
+    "saves": 3339,
     "comments": 129,
     "picked": false,
     "published": "2026-09-04",
@@ -12783,9 +12783,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3265508": {
     "downloads": 671,
-    "likes": 663,
-    "prints": 865,
-    "saves": 2620,
+    "likes": 664,
+    "prints": 867,
+    "saves": 2625,
     "comments": 15,
     "picked": false,
     "published": "2026-09-05",
@@ -12814,9 +12814,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3266486": {
-    "downloads": 798,
-    "likes": 379,
-    "prints": 1289,
+    "downloads": 803,
+    "likes": 380,
+    "prints": 1290,
     "saves": 1079,
     "comments": 65,
     "picked": false,
@@ -12846,7 +12846,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 749,
     "likes": 1113,
     "prints": 487,
-    "saves": 3359,
+    "saves": 3360,
     "comments": 22,
     "picked": false,
     "published": "2026-09-05",
@@ -12921,10 +12921,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3268146": {
-    "downloads": 3301,
-    "likes": 1723,
-    "prints": 3094,
-    "saves": 5656,
+    "downloads": 3304,
+    "likes": 1725,
+    "prints": 3096,
+    "saves": 5659,
     "comments": 121,
     "picked": false,
     "published": "2026-09-06",
@@ -12943,9 +12943,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3268477": {
     "downloads": 471,
-    "likes": 746,
+    "likes": 748,
     "prints": 385,
-    "saves": 2239,
+    "saves": 2243,
     "comments": 37,
     "picked": false,
     "published": "2026-09-06",
@@ -12977,10 +12977,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3268920": {
-    "downloads": 919,
+    "downloads": 920,
     "likes": 1257,
-    "prints": 1068,
-    "saves": 3821,
+    "prints": 1070,
+    "saves": 3822,
     "comments": 49,
     "picked": false,
     "published": "2026-09-06",
@@ -13012,11 +13012,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3269395": {
-    "downloads": 849,
+    "downloads": 851,
     "likes": 622,
-    "prints": 1147,
+    "prints": 1150,
     "saves": 1430,
-    "comments": 222,
+    "comments": 223,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13091,9 +13091,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3270647": {
     "downloads": 639,
-    "likes": 709,
+    "likes": 710,
     "prints": 680,
-    "saves": 2612,
+    "saves": 2615,
     "comments": 33,
     "picked": false,
     "published": "2026-09-06",
@@ -13121,10 +13121,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271298": {
-    "downloads": 1084,
-    "likes": 704,
-    "prints": 910,
-    "saves": 1900,
+    "downloads": 1086,
+    "likes": 705,
+    "prints": 911,
+    "saves": 1901,
     "comments": 86,
     "picked": false,
     "published": "2026-09-06",
@@ -13143,8 +13143,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "3271358": {
     "downloads": 646,
     "likes": 1085,
-    "prints": 502,
-    "saves": 3717,
+    "prints": 503,
+    "saves": 3719,
     "comments": 19,
     "picked": false,
     "published": "2026-09-06",
@@ -13164,11 +13164,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271500": {
-    "downloads": 429,
+    "downloads": 430,
     "likes": 556,
-    "prints": 571,
+    "prints": 573,
     "saves": 1594,
-    "comments": 73,
+    "comments": 74,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13204,9 +13204,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3271827": {
     "downloads": 993,
-    "likes": 1619,
+    "likes": 1620,
     "prints": 798,
-    "saves": 4742,
+    "saves": 4748,
     "comments": 44,
     "picked": false,
     "published": "2026-09-06",
@@ -13225,10 +13225,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271845": {
-    "downloads": 425,
-    "likes": 977,
+    "downloads": 426,
+    "likes": 980,
     "prints": 324,
-    "saves": 2940,
+    "saves": 2944,
     "comments": 18,
     "picked": false,
     "published": "2026-09-06",
@@ -13267,7 +13267,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 121,
     "likes": 326,
     "prints": 118,
-    "saves": 1050,
+    "saves": 1051,
     "comments": 4,
     "picked": false,
     "published": "2026-09-07",
@@ -13285,9 +13285,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3272331": {
     "downloads": 303,
-    "likes": 732,
+    "likes": 733,
     "prints": 106,
-    "saves": 1826,
+    "saves": 1828,
     "comments": 26,
     "picked": false,
     "published": "2026-09-07",
@@ -13312,10 +13312,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3273571": {
-    "downloads": 1269,
-    "likes": 1371,
-    "prints": 1105,
-    "saves": 5628,
+    "downloads": 1273,
+    "likes": 1373,
+    "prints": 1107,
+    "saves": 5636,
     "comments": 37,
     "picked": false,
     "published": "2026-09-07",
@@ -13351,7 +13351,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "3273702": {
     "downloads": 265,
     "likes": 359,
-    "prints": 293,
+    "prints": 294,
     "saves": 1169,
     "comments": 29,
     "picked": false,
@@ -13415,9 +13415,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3275194": {
     "downloads": 614,
-    "likes": 885,
+    "likes": 886,
     "prints": 590,
-    "saves": 2380,
+    "saves": 2382,
     "comments": 46,
     "picked": false,
     "published": "2026-09-07",
@@ -13440,7 +13440,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "3279889": {
     "downloads": 194,
     "likes": 170,
-    "prints": 155,
+    "prints": 156,
     "saves": 557,
     "comments": 10,
     "picked": false,
@@ -13460,9 +13460,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "3286307": {
     "downloads": 165,
-    "likes": 262,
+    "likes": 263,
     "prints": 124,
-    "saves": 754,
+    "saves": 755,
     "comments": 14,
     "picked": false,
     "published": "2026-09-10",
@@ -13488,7 +13488,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 82,
     "likes": 123,
     "prints": 81,
-    "saves": 344,
+    "saves": 345,
     "comments": 11,
     "picked": false,
     "published": "2026-09-10",
@@ -13564,8 +13564,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "3286545": {
     "downloads": 87,
     "likes": 191,
-    "prints": 72,
-    "saves": 463,
+    "prints": 73,
+    "saves": 464,
     "comments": 25,
     "picked": false,
     "published": "2026-09-10",
@@ -13636,10 +13636,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3290052": {
-    "downloads": 828,
-    "likes": 1896,
-    "prints": 877,
-    "saves": 6600,
+    "downloads": 830,
+    "likes": 1897,
+    "prints": 878,
+    "saves": 6604,
     "comments": 75,
     "picked": false,
     "published": "2026-09-10",
@@ -13730,4 +13730,4 @@ export const SIGNALS: Record<string, ModelSignals> = {
   }
 };
 
-export const SIGNALS_AT = "2026-09-21T16:12:11.432Z";
+export const SIGNALS_AT = "2026-09-21T16:32:20.557Z";
