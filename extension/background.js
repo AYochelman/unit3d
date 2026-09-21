@@ -131,14 +131,37 @@ async function sweep() {
 /**
  * Put it where the nightly job looks.
  *
- * A data: URL rather than a Blob, because URL.createObjectURL does not exist
- * in a service worker. `overwrite` keeps this to one file instead of the
- * makerworld-ids (1), (2), (3) that a daily download would otherwise leave
- * behind.
+ * IT USED TO BE A DOWNLOAD, AND THAT IS WHY THE QUEUE STAYED EMPTY
+ *
+ * chrome.downloads.download with saveAs:false asks for a silent write, and
+ * Chrome's "Ask where to save each file" setting overrides it — every sweep
+ * that ran while nobody was at the screen opened a Save As dialog and died
+ * there. The setting is the browser's, not the extension's, so no amount of
+ * code here could reach it.
+ *
+ * So the ids go to the shop's own database instead. One row, id 1, upserted:
+ * the table holds the latest sweep and nothing accumulates. The key below is
+ * the publishable one the site already ships in public/shop.json — it is meant
+ * to be public, and the row it writes only reaches the approval queue, which
+ * is still a person deciding model by model.
  */
+const SB = "https://cdofuziwdmerbfivivpl.supabase.co";
+const SB_KEY = "sb_publishable_cBFI-BB4t3ERdVGKbKx9BQ_zKDC1KSG";
+
 async function save(doc) {
-  const url = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(doc, null, 2));
-  await chrome.downloads.download({ url, filename: "unit3d/makerworld-ids.json", conflictAction: "overwrite", saveAs: false });
+  const res = await fetch(`${SB}/rest/v1/collected_models?on_conflict=id`, {
+    method: "POST",
+    headers: {
+      apikey: SB_KEY,
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=minimal",
+    },
+    body: JSON.stringify({ id: 1, read_at: doc.readAt, doc }),
+  });
+  // Thrown, not swallowed: run() turns it into a red badge with the reason on
+  // hover. A sweep that collected 80 models and failed to hand them over is a
+  // failure, and the old version reported it as a success.
+  if (!res.ok) throw new Error(`Supabase ${res.status}: ${(await res.text()).slice(0, 120)}`);
 }
 
 async function run(force = false) {
