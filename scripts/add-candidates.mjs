@@ -19,18 +19,13 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, c, sleep, fetchDetails, classify, platesFrom, readableTitle } from "./lib/makerworld.mjs";
+import { ROOT, c, sleep, fetchDetails, classify, platesFrom, readableTitle, isWeapon, isRealWeapon } from "./lib/makerworld.mjs";
 
 const OUT = path.join(ROOT, "lib", "candidates.generated.ts");
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
 const DECISIONS = path.join(ROOT, "public", "model-decisions.json");
 const SOURCES = path.join(ROOT, "scripts", "makerworld-sources.json");
 
-const WEAPON =
-  /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|airsoft|pistol|shotgun|rifle|\bgun\b|ammo|bullet|nunchaku|taser|crossbow|spear)/i;
-// A knife block, a knife holder, a sharpener stand: kitchen storage that the
-// word "knife" alone would have thrown away. The blade is not what is printed.
-const NOT_A_WEAPON = /(block|holder|stand|rack|organi[sz]|storage|sharpen|dock|drawer|magnet)/i;
 const BRAND =
   /(kaws|bearbrick|smiski|hello kitty|spider[- ]?man|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|nintendo|star wars|mandalorian|jujutsu|demon slayer|one piece|naruto|dragon ball|warhammer|lego|ferrari|nike|adidas|panda by bambu)/i;
 
@@ -112,8 +107,11 @@ async function main() {
 
     const title = readableTitle((d.title || "").trim(), d.slug);
     const text = `${title} ${d.tags.join(" ")}`;
-    if ((WEAPON.test(text) && !NOT_A_WEAPON.test(text)) || /(^|-)NC(-|$)/i.test(d.license)) {
-      log(c.y(`  ${title} — לא ניתן למכירה (נשק / רישיון NC), לא נוסף`));
+    // A toy or a prop is the owner's line, and an NC licence is his call with
+    // the warning in front of him — both used to be dropped here, so he never
+    // saw them at all.
+    if (isRealWeapon(text)) {
+      log(c.r(`  ${title} — נשק אמיתי, לא נוסף`));
       continue;
     }
 
@@ -122,6 +120,8 @@ async function main() {
     const hours = Math.max(0.2, p?.base.h ?? (d.seconds ? d.seconds / 3600 : 2));
     const warnings = [];
     if (BRAND.test(text)) warnings.push("מותג");
+    if (isWeapon(text)) warnings.push("נשק");
+    if (/(^|-)NC(-|$)/i.test(d.license)) warnings.push("רישיון NC — לא למכירה");
     if (/exclusive/i.test(d.license)) warnings.push("רישיון בלעדי");
     if (grams > 250) warnings.push("הדפסה ארוכה");
 

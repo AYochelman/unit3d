@@ -335,6 +335,27 @@ const NOT_A_WEAPON = /\b(block|holder|stand|rack|organi[sz]\w*|storage|sharpen\w
 /** The one place that decides. Three copies of this regex disagreed before. */
 export const isWeapon = (text) => WEAPON_RE.test(text) && !NOT_A_WEAPON.test(text);
 
+/**
+ * The line the owner drew: a toy or a prop is fine, a real weapon is not.
+ *
+ * Everything this shop prints is PLA, so a katana, a butterfly knife and a
+ * banana sword are props — and nineteen of them are already on his shelves,
+ * selling. A blanket "weapon" block would have deleted them.
+ *
+ * What is left is the narrow set that is not a toy in any reading: a firearm
+ * or one of its parts, ammunition, and the things built to launch or shock.
+ * These are also the only ones with real legal weight, which is the point.
+ */
+const NOT_A_TOY =
+  /\b(airsoft|crossbow|taser|stun\s?gun|ammunition|live\s+round|broadhead|arrowhead|suppressor|silencer|firearm|receiver|glock|ar[-\s]?15|ak[-\s]?47|sten|luger|derringer)\b/i;
+
+/**
+ * Never queued, never sold. `isWeapon` only marks a card for a second look;
+ * this is the one that removes a model from the owner's choices, so it stays
+ * as small as the reason for it.
+ */
+export const isRealWeapon = (text) => NOT_A_TOY.test(text);
+
 const BRAND_RE =
   /(kaws|bearbrick|be@rbrick|smiski|hello kitty|spider[- ]?man|spiderman|spider noir|miles morales|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|master sword|nintendo|star wars|mandalorian|jujutsu|mahoraga|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|naruto|dragon ball|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go|cheburashka|tscheburaschka)/i;
 

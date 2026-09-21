@@ -18,7 +18,7 @@
  * The titles below are real: the ones that must match are from the shop's own
  * shelves, and the ones that must not are the traps found in the catalogue.
  */
-import { isWeapon } from "./lib/makerworld.mjs";
+import { isWeapon, isRealWeapon } from "./lib/makerworld.mjs";
 
 const MUST_NOT = [
   "AMS Schublade für X1C, X2D, P1S, P2S",
@@ -47,10 +47,27 @@ const MUST = [
   "High-Speed BB Blowgun (Modular)",
 ];
 
+/**
+ * The owner's line, and the only test that removes a model from his choices:
+ * a toy or a prop reaches him, a real weapon never does. Every title in
+ * PROPS is on his shelves and selling.
+ */
+const PROPS = [...MUST];
+const REAL = [
+  "Airsoft magazine holder",
+  "Crossbow bolt jig",
+  "Taser grip shell",
+  "AR-15 lower receiver",
+  "Glock frame",
+  "Ammunition tray for live rounds",
+  "Suppressor baffle",
+];
+
 let bad = 0;
 for (const t of MUST_NOT) if (isWeapon(t)) { console.log(`  \x1b[31mfalse positive\x1b[0m  ${t}`); bad++; }
 for (const t of MUST) if (!isWeapon(t)) { console.log(`  \x1b[31mmissed\x1b[0m          ${t}`); bad++; }
-console.log(bad
-  ? `\n  \x1b[31m${bad} wrong\x1b[0m of ${MUST.length + MUST_NOT.length}\n`
-  : `\n  \x1b[32mall ${MUST.length + MUST_NOT.length} correct\x1b[0m\n`);
+for (const t of PROPS) if (isRealWeapon(t)) { console.log(`  \x1b[31mprop dropped\x1b[0m    ${t}`); bad++; }
+for (const t of REAL) if (!isRealWeapon(t)) { console.log(`  \x1b[31mreal weapon let through\x1b[0m  ${t}`); bad++; }
+const total = MUST.length + MUST_NOT.length + PROPS.length + REAL.length;
+console.log(bad ? `\n  \x1b[31m${bad} wrong\x1b[0m of ${total}\n` : `\n  \x1b[32mall ${total} correct\x1b[0m\n`);
 process.exitCode = bad ? 1 : 0;
