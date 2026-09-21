@@ -1,10 +1,22 @@
 {
   "manifest_version": 3,
   "name": "Unit 3D · איסוף אוספים ממייקרוורלד",
-  "version": "1.0.0",
-  "description": "אוסף פעם ביום את המודלים מהאוספים שלך במייקרוורלד, ומוריד קובץ שהסנכרון היומי קורא לבד.",
-  "permissions": ["tabs", "scripting", "downloads", "storage", "alarms"],
-  "host_permissions": ["https://makerworld.com/*"],
-  "background": { "service_worker": "background.js" },
-  "action": { "default_title": "Unit 3D — לאסוף עכשיו" }
+  "version": "1.1.0",
+  "description": "אוסף פעם ביום את המודלים מהאוספים שלך במייקרוורלד, וכותב אותם למסד של החנות שהסנכרון היומי קורא.",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://makerworld.com/*",
+    "https://cdofuziwdmerbfivivpl.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Unit 3D — לאסוף עכשיו"
+  }
 }

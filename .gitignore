@@ -78,3 +78,6 @@ agent/supabase-key.txt
 tools/reference-studio/data/
 tools/reference-studio/.next/
 tools/reference-studio/node_modules/
+
+# Which sweep this machine already folded in — per-machine, not shared.
+data/collected-state.json
