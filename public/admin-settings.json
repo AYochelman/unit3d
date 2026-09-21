@@ -26,7 +26,6 @@
     "pla:orange": false,
     "pla:red": false,
     "pla:cyan": false,
-    "pla:green": false,
     "pla:gold": false,
     "pla:silver": false,
     "pla:purple": false,
@@ -102,7 +101,9 @@
     "abs:glow": false,
     "tpu:white": false,
     "pla:black": false,
-    "pla_matte:white": false
+    "pla_matte:white": false,
+    "pla:white": false,
+    "pla:green": false
   },
   "shelves": {},
   "materials": [],
@@ -165,6 +166,16 @@
       "id": "custom_אפור",
       "name": "אפור",
       "hex": "#818381",
+      "kind": "solid",
+      "materials": [
+        "pla"
+      ],
+      "desc": "רגיל"
+    },
+    {
+      "id": "custom_ירוק",
+      "name": "ירוק",
+      "hex": "#04dc16",
       "kind": "solid",
       "materials": [
         "pla"
