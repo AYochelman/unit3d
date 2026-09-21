@@ -24,9 +24,17 @@ import { ROOT, c } from "./lib/makerworld.mjs";
 
 const PENDING = path.join(ROOT, "data", "pending-models.json");
 const KEEP = process.argv.includes("--keep");
+/** The last sweep this machine already folded in — so a re-run is a no-op. */
+const STATE = path.join(ROOT, "data", "collected-state.json");
 
 /**
- * Where Chrome put it.
+ * Where Chrome put it, back when it put it anywhere.
+ *
+ * The extension no longer downloads: Chrome's "Ask where to save each file"
+ * overrode its request for a silent write, so every unattended sweep opened a
+ * dialog and died. It writes to the database now. This path stays as the
+ * fallback, because a file saved by hand from collect-models.html still lands
+ * here and should still work.
  *
  * DOWNLOADS_DIR covers a moved Downloads folder, which Windows allows and
  * people do. Otherwise the default, which is where it is for almost everyone.
@@ -38,19 +46,77 @@ function source() {
   return path.join(dir, "unit3d", "makerworld-ids.json");
 }
 
-function main() {
-  const file = source();
-  if (!fs.existsSync(file)) {
-    console.log(c.d(`\n  אין קובץ מהתוסף (${file}) — מדלג.\n`));
-    return;
-  }
+const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch { return null; } };
 
-  let doc;
+/**
+ * The latest sweep, from the shop's own database.
+ *
+ * One row, id 1, replaced by every sweep — so this is always "the collections
+ * as they were last read", never a backlog to work through. The publishable
+ * key is the one the site already ships; reading this table needs nothing
+ * more.
+ *
+ * Returns null for every reason it might not answer — no table yet, no
+ * network, nothing collected — and says which, because "no models" and "the
+ * database refused me" are different problems and looked identical before.
+ */
+async function fromDatabase() {
+  const shop = readJson(path.join(ROOT, "public", "shop.json"));
+  const url = String(shop?.supabaseUrl || "").replace(/\/$/, "");
+  const key = shop?.supabaseAnonKey;
+  if (!url || !key) return null;
+  let res;
   try {
-    doc = JSON.parse(fs.readFileSync(file, "utf8"));
+    res = await fetch(`${url}/rest/v1/collected_models?select=read_at,doc&id=eq.1`, {
+      headers: { apikey: key, accept: "application/json" },
+      cache: "no-store",
+    });
   } catch (e) {
-    console.error(c.r(`\n  הקובץ מהתוסף לא נקרא: ${e.message}\n`));
-    process.exitCode = 1;
+    console.log(c.y(`  המסד לא נענה (${e.message}) — בודק אם יש קובץ מקומי.`));
+    return null;
+  }
+  if (res.status === 404 || res.status === 406) {
+    console.log(c.y("  הטבלה collected_models לא קיימת — צריך להריץ את ה-SQL פעם אחת."));
+    return null;
+  }
+  if (!res.ok) {
+    console.log(c.y(`  המסד סירב (${res.status}) — בודק אם יש קובץ מקומי.`));
+    return null;
+  }
+  const rows = await res.json();
+  if (!rows.length) return null;
+  const { read_at: readAt, doc } = rows[0];
+  const last = readJson(STATE)?.lastReadAt;
+  if (last && last === readAt) {
+    console.log(c.d(`\n  הסריקה האחרונה (${new Date(readAt).toLocaleString("he-IL")}) כבר נקלטה — אין חדש.\n`));
+    return "done";
+  }
+  return { doc, readAt, from: "database" };
+}
+
+async function main() {
+  // The database first, a downloaded file second. Both carry the same shape,
+  // so everything below this point is the same work either way.
+  const live = await fromDatabase();
+  if (live === "done") return;
+
+  const file = source();
+  let doc, from, readAt;
+  if (live) {
+    ({ doc, readAt } = live);
+    from = "המסד";
+  } else if (fs.existsSync(file)) {
+    try {
+      doc = JSON.parse(fs.readFileSync(file, "utf8"));
+    } catch (e) {
+      console.error(c.r(`\n  הקובץ מהתוסף לא נקרא: ${e.message}\n`));
+      process.exitCode = 1;
+      return;
+    }
+    from = "קובץ";
+    readAt = doc.readAt;
+  } else {
+    console.log(c.d(`\n  אין סריקה במסד ואין קובץ מקומי (${file}) — מדלג.\n`));
     return;
   }
 
@@ -87,12 +153,20 @@ function main() {
   out.pending = next;
   fs.writeFileSync(PENDING, JSON.stringify(out, null, 2) + "\n", "utf8");
 
-  const when = doc.readAt ? new Date(doc.readAt).toLocaleString("he-IL") : "—";
-  console.log(c.b(`\n  נקרא מהתוסף (${when}): ${(doc.ids ?? []).length} מודלים · ${added} חדשים לתור`));
+  const when = readAt ? new Date(readAt).toLocaleString("he-IL") : "—";
+  console.log(c.b(`\n  נקרא מ${from} (${when}): ${(doc.ids ?? []).length} מודלים · ${added} חדשים לתור`));
   if (doc.likes?.length) console.log(c.d(`  ${doc.likes.length} לייקים — נשארים לייקים, לא נכנסים כהחלטה`));
 
   if (KEEP) {
-    console.log(c.d(`  --keep: הקובץ נשאר ב-${file}\n`));
+    console.log(c.d("  --keep: המקור נשאר כפי שהוא.\n"));
+    return;
+  }
+  if (live) {
+    // The row stays — it is the latest sweep, not a queue — and this machine
+    // records that it has taken it. A second run says "nothing new" instead of
+    // re-reading the same models and reporting 0 as if something had changed.
+    fs.writeFileSync(STATE, JSON.stringify({ lastReadAt: readAt }, null, 2) + "\n", "utf8");
+    console.log(c.d("  נרשם שהסריקה הזו נקלטה — הריצה הבאה תחכה לחדשה.\n"));
   } else {
     fs.rmSync(file, { force: true });
     console.log(c.d("  הקובץ נמחק — הריצה הבאה תחכה לאיסוף חדש.\n"));
