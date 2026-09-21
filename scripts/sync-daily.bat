@@ -56,6 +56,13 @@ REM  saved to his own collection - he said so in as many words on 18.9, and it
 REM  overrides the exception that used to live here. What comes in from a
 REM  collection still arrives with its shelf already worked out; what it does
 REM  not arrive with is a decision.
+REM  What the Chrome extension collected overnight. It drops the ids in
+REM  Downloads\unit3d\makerworld-ids.json and nothing here ever read them, so
+REM  the approval queue could only be fed by likes - a model saved to a
+REM  collection reached the file and stopped there. This folds it into
+REM  data\pending-models.json, which the line below already reads.
+call npm run ingest:collected       >> "%LOG%" 2>&1
+
 call npm run sync:collections -- --offline  >> "%LOG%" 2>&1
 
 REM Turn those answers - his own, and the ones just written above - into rows
