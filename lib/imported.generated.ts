@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-09-08T21:09:18.180Z
-// Items: 484
+// Items: 485
 
 import type { ImportedModel } from "./imported";
 
@@ -15817,6 +15817,39 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "https://makerworld.bblmw.com/makerworld/model/US6806404daa288a/design/dd5295e524476000.png",
       "https://makerworld.bblmw.com/makerworld/model/US6806404daa288a/design/462048822cc0b4dc.png",
       "https://makerworld.bblmw.com/makerworld/model/US6806404daa288a/design/07be156e391144b7.jpg"
+    ]
+  },
+  {
+    "id": "mw-2094802",
+    "name": "Cat Phone Stand",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.34,
+    "grams": 38,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_ae834e3585ba1.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Hazel",
+    "sourceUrl": "https://makerworld.com/en/models/2094802-cat-phone-stand",
+    "license": "Standard Digital File License",
+    "downloads": 12191,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "plates": [
+      {
+        "g": 38,
+        "h": 1.34
+      },
+      {
+        "g": 106,
+        "h": 2.71
+      }
     ]
   }
 ];
