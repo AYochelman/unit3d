@@ -201,7 +201,12 @@ export const UNIT_FORMS: UnitForm[] = [
   {
     id: "grinder",
     label: "גריינדר",
-    desc: "דו-חלקי עם שיניים מודפסות, הסמל על המכסה.",
+    // Both marks, and which is where: the photograph shows the unit's name
+    // raised on the lid and the emblem in the base, and the old line said only
+    // "הסמל על המכסה" — a card whose words and picture disagree. Measured in
+    // every font the build ships, at 11px in the 176px column: two lines, 30px,
+    // inside the 32px the desc box gives it.
+    desc: "דו-חלקי עם שיניים מודפסות. השם על המכסה, הסמל בפנים.",
     dim: "Ø60mm",
     grams: 67,
     hours: 2.2,
