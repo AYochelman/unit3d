@@ -15850,6 +15850,16 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
         "g": 106,
         "h": 2.71
       }
+    ],
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_ae834e3585ba1.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_ac1a64a6148e2.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_37be03946e178.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_0d211d2d0a6f8.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_a624213976459.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_0925974441fdf.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_ceab70c355227.jpg",
+      "https://makerworld.bblmw.com/makerworld/model/DSM00000002094802/design/2025-12-09_6e2f1953433a4.jpg"
     ]
   }
 ];
