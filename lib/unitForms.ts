@@ -175,7 +175,12 @@ export const UNIT_FORMS: UnitForm[] = [
     recommends: { material: "petg", why: "לא מתעוות ברכב בשמש" },
     group: "everyday",
     art: "cigcase",
-    photo: shelfPhoto("mw-713529"),
+    // Ariel's own print, and the only photo on this screen that answers the
+    // question the screen is asking: the designer's catalogue shot is a bare
+    // sleeve, and someone choosing a body for their unit emblem wants to see
+    // the emblem ON it. Stored as shot, 3:4 — the tile is aspect-[4/3] with
+    // object-cover, which lands on the front face, the emblem and the open lid.
+    photo: "/studio/cigcase-emblem.webp",
     price: 60,
   },
   {
