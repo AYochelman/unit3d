@@ -26,8 +26,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "13122": {
     "downloads": 3244,
     "likes": 1165,
-    "prints": 1824,
-    "saves": 2707,
+    "prints": 1825,
+    "saves": 2708,
     "comments": 295,
     "picked": false,
     "published": "2023-08-14",
@@ -54,11 +54,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "13127": {
-    "downloads": 3821,
-    "likes": 2133,
-    "prints": 2628,
-    "saves": 5240,
-    "comments": 369,
+    "downloads": 3824,
+    "likes": 2136,
+    "prints": 2629,
+    "saves": 5245,
+    "comments": 370,
     "picked": true,
     "published": "2023-08-14",
     "tags": [
@@ -93,10 +93,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "13801": {
-    "downloads": 7860,
+    "downloads": 7861,
     "likes": 2282,
     "prints": 6513,
-    "saves": 4567,
+    "saves": 4568,
     "comments": 1096,
     "picked": true,
     "published": "2023-08-27",
@@ -123,10 +123,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "13849": {
-    "downloads": 108517,
-    "likes": 24311,
-    "prints": 92031,
-    "saves": 72001,
+    "downloads": 108546,
+    "likes": 24319,
+    "prints": 92065,
+    "saves": 72038,
     "comments": 11068,
     "picked": true,
     "published": "2023-08-28",
@@ -150,10 +150,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "14913": {
-    "downloads": 3401,
+    "downloads": 3403,
     "likes": 758,
-    "prints": 2358,
-    "saves": 1701,
+    "prints": 2363,
+    "saves": 1707,
     "comments": 315,
     "picked": false,
     "published": "2023-09-19",
@@ -164,10 +164,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "15083": {
-    "downloads": 8779,
-    "likes": 1558,
-    "prints": 7558,
-    "saves": 3824,
+    "downloads": 8780,
+    "likes": 1559,
+    "prints": 7559,
+    "saves": 3825,
     "comments": 1155,
     "picked": false,
     "published": "2023-09-20",
@@ -196,10 +196,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "16632": {
-    "downloads": 3038,
-    "likes": 468,
-    "prints": 2492,
-    "saves": 1313,
+    "downloads": 3040,
+    "likes": 469,
+    "prints": 2493,
+    "saves": 1314,
     "comments": 263,
     "picked": false,
     "published": "2023-09-22",
@@ -214,10 +214,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "17927": {
-    "downloads": 907,
+    "downloads": 909,
     "likes": 122,
-    "prints": 715,
-    "saves": 357,
+    "prints": 716,
+    "saves": 359,
     "comments": 57,
     "picked": false,
     "published": "2023-09-23",
@@ -235,10 +235,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "18145": {
-    "downloads": 2908,
-    "likes": 772,
+    "downloads": 2909,
+    "likes": 774,
     "prints": 2263,
-    "saves": 1460,
+    "saves": 1462,
     "comments": 331,
     "picked": false,
     "published": "2023-09-23",
@@ -272,10 +272,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "18624": {
-    "downloads": 16332,
-    "likes": 4653,
-    "prints": 10228,
-    "saves": 14449,
+    "downloads": 16334,
+    "likes": 4650,
+    "prints": 10230,
+    "saves": 14450,
     "comments": 1311,
     "picked": false,
     "published": "2023-09-24",
@@ -397,7 +397,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 760,
     "likes": 314,
     "prints": 442,
-    "saves": 799,
+    "saves": 800,
     "comments": 48,
     "picked": false,
     "published": "2023-09-26",
@@ -420,10 +420,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "26009": {
-    "downloads": 2205,
+    "downloads": 2207,
     "likes": 665,
     "prints": 1922,
-    "saves": 1697,
+    "saves": 1698,
     "comments": 200,
     "picked": false,
     "published": "2023-09-27",
@@ -456,9 +456,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "26806": {
-    "downloads": 1573,
-    "likes": 615,
-    "prints": 1169,
+    "downloads": 1575,
+    "likes": 616,
+    "prints": 1170,
     "saves": 1507,
     "comments": 108,
     "picked": false,
@@ -501,7 +501,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 435,
     "likes": 141,
     "prints": 134,
-    "saves": 279,
+    "saves": 280,
     "comments": 8,
     "picked": false,
     "published": "2023-09-30",
@@ -517,10 +517,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "30796": {
-    "downloads": 13500,
-    "likes": 5228,
-    "prints": 7175,
-    "saves": 13798,
+    "downloads": 13503,
+    "likes": 5229,
+    "prints": 7177,
+    "saves": 13802,
     "comments": 723,
     "picked": false,
     "published": "2023-10-01",
@@ -546,10 +546,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "31430": {
-    "downloads": 4281,
-    "likes": 1483,
-    "prints": 2093,
-    "saves": 5220,
+    "downloads": 4285,
+    "likes": 1496,
+    "prints": 2096,
+    "saves": 5240,
     "comments": 144,
     "picked": false,
     "published": "2023-10-02",
@@ -566,10 +566,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "35620": {
-    "downloads": 1206,
-    "likes": 223,
+    "downloads": 1207,
+    "likes": 225,
     "prints": 483,
-    "saves": 685,
+    "saves": 687,
     "comments": 38,
     "picked": false,
     "published": "2023-10-06",
@@ -593,10 +593,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "35697": {
-    "downloads": 13297,
-    "likes": 2590,
-    "prints": 11610,
-    "saves": 7806,
+    "downloads": 13300,
+    "likes": 2591,
+    "prints": 11619,
+    "saves": 7809,
     "comments": 1451,
     "picked": false,
     "published": "2023-10-06",
@@ -632,10 +632,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "38255": {
-    "downloads": 86749,
-    "likes": 18534,
-    "prints": 47330,
-    "saves": 53473,
+    "downloads": 86781,
+    "likes": 18547,
+    "prints": 47358,
+    "saves": 53520,
     "comments": 4861,
     "picked": false,
     "published": "2023-10-10",
@@ -651,7 +651,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "38661": {
     "downloads": 1359,
     "likes": 290,
-    "prints": 839,
+    "prints": 840,
     "saves": 607,
     "comments": 89,
     "picked": false,
@@ -672,10 +672,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "40121": {
-    "downloads": 1984,
-    "likes": 886,
-    "prints": 1593,
-    "saves": 2143,
+    "downloads": 1985,
+    "likes": 888,
+    "prints": 1595,
+    "saves": 2147,
     "comments": 218,
     "picked": false,
     "published": "2023-10-13",
@@ -692,11 +692,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "40146": {
-    "downloads": 405704,
-    "likes": 12767,
-    "prints": 301910,
-    "saves": 27270,
-    "comments": 11250,
+    "downloads": 406078,
+    "likes": 12786,
+    "prints": 302466,
+    "saves": 27325,
+    "comments": 11253,
     "picked": false,
     "published": "2023-10-13",
     "tags": [
@@ -708,10 +708,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "40644": {
-    "downloads": 1603,
+    "downloads": 1605,
     "likes": 339,
     "prints": 1316,
-    "saves": 1228,
+    "saves": 1229,
     "comments": 75,
     "picked": false,
     "published": "2023-10-13",
@@ -731,7 +731,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 248,
     "likes": 119,
     "prints": 242,
-    "saves": 258,
+    "saves": 259,
     "comments": 49,
     "picked": false,
     "published": "2023-10-15",
@@ -764,8 +764,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "42516": {
     "downloads": 651,
     "likes": 278,
-    "prints": 425,
-    "saves": 802,
+    "prints": 426,
+    "saves": 801,
     "comments": 58,
     "picked": false,
     "published": "2023-10-16",
@@ -808,10 +808,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "44198": {
-    "downloads": 1138,
+    "downloads": 1139,
     "likes": 136,
-    "prints": 960,
-    "saves": 471,
+    "prints": 961,
+    "saves": 472,
     "comments": 84,
     "picked": false,
     "published": "2023-10-18",
@@ -884,9 +884,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "50369": {
-    "downloads": 806,
-    "likes": 157,
-    "prints": 551,
+    "downloads": 807,
+    "likes": 158,
+    "prints": 552,
     "saves": 445,
     "comments": 55,
     "picked": false,
@@ -912,10 +912,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "50835": {
-    "downloads": 75291,
-    "likes": 12460,
-    "prints": 37257,
-    "saves": 28157,
+    "downloads": 75310,
+    "likes": 12465,
+    "prints": 37272,
+    "saves": 28173,
     "comments": 5500,
     "picked": false,
     "published": "2023-10-27",
@@ -934,11 +934,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "55289": {
-    "downloads": 222261,
-    "likes": 35440,
-    "prints": 141370,
-    "saves": 82000,
-    "comments": 12283,
+    "downloads": 222336,
+    "likes": 35462,
+    "prints": 141452,
+    "saves": 82075,
+    "comments": 12281,
     "picked": true,
     "published": "2023-11-01",
     "tags": [
@@ -983,11 +983,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "59737": {
-    "downloads": 40632,
-    "likes": 7096,
-    "prints": 27083,
-    "saves": 17064,
-    "comments": 3511,
+    "downloads": 40644,
+    "likes": 7098,
+    "prints": 27089,
+    "saves": 17072,
+    "comments": 3513,
     "picked": false,
     "published": "2023-11-08",
     "tags": [
@@ -1020,8 +1020,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "64384": {
     "downloads": 4477,
     "likes": 701,
-    "prints": 2859,
-    "saves": 1807,
+    "prints": 2860,
+    "saves": 1808,
     "comments": 336,
     "picked": false,
     "published": "2023-11-14",
@@ -1052,11 +1052,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "65426": {
-    "downloads": 182290,
-    "likes": 30264,
-    "prints": 160409,
-    "saves": 80346,
-    "comments": 11147,
+    "downloads": 182476,
+    "likes": 30327,
+    "prints": 160697,
+    "saves": 80536,
+    "comments": 11149,
     "picked": false,
     "published": "2023-11-15",
     "tags": [
@@ -1088,11 +1088,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "74959": {
-    "downloads": 91516,
-    "likes": 27661,
-    "prints": 56512,
-    "saves": 60663,
-    "comments": 8121,
+    "downloads": 91539,
+    "likes": 27673,
+    "prints": 56527,
+    "saves": 60699,
+    "comments": 8122,
     "picked": true,
     "published": "2023-11-26",
     "tags": [
@@ -1114,10 +1114,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "80875": {
-    "downloads": 1204,
-    "likes": 595,
-    "prints": 381,
-    "saves": 1425,
+    "downloads": 1205,
+    "likes": 596,
+    "prints": 382,
+    "saves": 1430,
     "comments": 30,
     "picked": false,
     "published": "2023-12-02",
@@ -1133,11 +1133,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "90174": {
-    "downloads": 32343,
-    "likes": 5021,
-    "prints": 26955,
-    "saves": 11827,
-    "comments": 3121,
+    "downloads": 32354,
+    "likes": 5022,
+    "prints": 26968,
+    "saves": 11840,
+    "comments": 3122,
     "picked": false,
     "published": "2023-12-11",
     "tags": [
@@ -1153,10 +1153,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "95207": {
-    "downloads": 23401,
-    "likes": 7369,
-    "prints": 18628,
-    "saves": 25124,
+    "downloads": 23431,
+    "likes": 7377,
+    "prints": 18653,
+    "saves": 25175,
     "comments": 2166,
     "picked": false,
     "published": "2023-12-16",
@@ -1169,10 +1169,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "96585": {
-    "downloads": 6596,
-    "likes": 1747,
-    "prints": 3249,
-    "saves": 4460,
+    "downloads": 6604,
+    "likes": 1752,
+    "prints": 3257,
+    "saves": 4473,
     "comments": 383,
     "picked": false,
     "published": "2023-12-17",
@@ -1203,11 +1203,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "103266": {
-    "downloads": 68134,
-    "likes": 23437,
-    "prints": 46051,
-    "saves": 68940,
-    "comments": 5571,
+    "downloads": 68166,
+    "likes": 23442,
+    "prints": 46082,
+    "saves": 68991,
+    "comments": 5574,
     "picked": false,
     "published": "2023-12-22",
     "tags": [
@@ -1226,10 +1226,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "115260": {
-    "downloads": 15615,
-    "likes": 9049,
-    "prints": 11969,
-    "saves": 20700,
+    "downloads": 15619,
+    "likes": 9053,
+    "prints": 11972,
+    "saves": 20711,
     "comments": 1529,
     "picked": true,
     "published": "2023-12-30",
@@ -1249,11 +1249,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "119995": {
-    "downloads": 93405,
-    "likes": 13358,
-    "prints": 82172,
-    "saves": 33387,
-    "comments": 10713,
+    "downloads": 93444,
+    "likes": 13371,
+    "prints": 82237,
+    "saves": 33419,
+    "comments": 10719,
     "picked": false,
     "published": "2024-01-02",
     "tags": [
@@ -1284,9 +1284,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "128570": {
     "downloads": 11339,
-    "likes": 6206,
-    "prints": 10300,
-    "saves": 14985,
+    "likes": 6209,
+    "prints": 10302,
+    "saves": 14988,
     "comments": 1548,
     "picked": true,
     "published": "2024-01-07",
@@ -1309,11 +1309,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "129872": {
-    "downloads": 81939,
-    "likes": 19270,
-    "prints": 58480,
-    "saves": 44764,
-    "comments": 7374,
+    "downloads": 81970,
+    "likes": 19279,
+    "prints": 58514,
+    "saves": 44800,
+    "comments": 7379,
     "picked": false,
     "published": "2024-01-08",
     "tags": [
@@ -1338,11 +1338,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "141620": {
-    "downloads": 13943,
-    "likes": 6190,
-    "prints": 4369,
-    "saves": 15652,
-    "comments": 601,
+    "downloads": 13960,
+    "likes": 6221,
+    "prints": 4382,
+    "saves": 15749,
+    "comments": 602,
     "picked": false,
     "published": "2024-01-16",
     "tags": [
@@ -1369,11 +1369,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "154218": {
-    "downloads": 89531,
-    "likes": 20963,
-    "prints": 41607,
-    "saves": 66152,
-    "comments": 4929,
+    "downloads": 89557,
+    "likes": 20968,
+    "prints": 41622,
+    "saves": 66178,
+    "comments": 4930,
     "picked": false,
     "published": "2024-01-23",
     "tags": [
@@ -1390,11 +1390,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "171580": {
-    "downloads": 65383,
-    "likes": 19459,
-    "prints": 53033,
-    "saves": 57047,
-    "comments": 5573,
+    "downloads": 65413,
+    "likes": 19467,
+    "prints": 53073,
+    "saves": 57075,
+    "comments": 5577,
     "picked": false,
     "published": "2024-02-04",
     "tags": [
@@ -1417,10 +1417,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "186199": {
-    "downloads": 24753,
-    "likes": 4496,
-    "prints": 14329,
-    "saves": 10295,
+    "downloads": 24756,
+    "likes": 4495,
+    "prints": 14335,
+    "saves": 10296,
     "comments": 1676,
     "picked": false,
     "published": "2024-02-14",
@@ -1452,11 +1452,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "198362": {
-    "downloads": 69848,
-    "likes": 18251,
-    "prints": 57713,
-    "saves": 55642,
-    "comments": 7057,
+    "downloads": 69919,
+    "likes": 18269,
+    "prints": 57828,
+    "saves": 55718,
+    "comments": 7070,
     "picked": true,
     "published": "2024-02-22",
     "tags": [
@@ -1480,11 +1480,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "202312": {
-    "downloads": 5435,
-    "likes": 700,
-    "prints": 4204,
-    "saves": 1713,
-    "comments": 283,
+    "downloads": 5450,
+    "likes": 702,
+    "prints": 4213,
+    "saves": 1721,
+    "comments": 284,
     "picked": false,
     "published": "2024-02-24",
     "tags": [],
@@ -1494,10 +1494,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "219200": {
-    "downloads": 82599,
-    "likes": 14031,
-    "prints": 67034,
-    "saves": 40683,
+    "downloads": 82600,
+    "likes": 14034,
+    "prints": 67035,
+    "saves": 40687,
     "comments": 9715,
     "picked": false,
     "published": "2024-03-02",
@@ -1525,11 +1525,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "239395": {
-    "downloads": 26422,
-    "likes": 7556,
-    "prints": 12900,
-    "saves": 16850,
-    "comments": 1633,
+    "downloads": 26426,
+    "likes": 7559,
+    "prints": 12903,
+    "saves": 16861,
+    "comments": 1634,
     "picked": false,
     "published": "2024-03-09",
     "tags": [
@@ -1559,10 +1559,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "253687": {
-    "downloads": 93483,
-    "likes": 19295,
-    "prints": 62620,
-    "saves": 50176,
+    "downloads": 93524,
+    "likes": 19308,
+    "prints": 62676,
+    "saves": 50220,
     "comments": 6421,
     "picked": true,
     "published": "2024-03-14",
@@ -1585,10 +1585,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "415825": {
-    "downloads": 9096,
-    "likes": 3073,
-    "prints": 3278,
-    "saves": 7428,
+    "downloads": 9100,
+    "likes": 3074,
+    "prints": 3282,
+    "saves": 7429,
     "comments": 807,
     "picked": false,
     "published": "2024-04-06",
@@ -1616,11 +1616,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "420924": {
-    "downloads": 79843,
-    "likes": 11959,
-    "prints": 59077,
-    "saves": 28230,
-    "comments": 4348,
+    "downloads": 79880,
+    "likes": 11966,
+    "prints": 59120,
+    "saves": 28275,
+    "comments": 4349,
     "picked": false,
     "published": "2024-04-09",
     "tags": [
@@ -1634,10 +1634,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "427080": {
-    "downloads": 40775,
-    "likes": 5481,
-    "prints": 35620,
-    "saves": 16572,
+    "downloads": 40796,
+    "likes": 5484,
+    "prints": 35664,
+    "saves": 16581,
     "comments": 2945,
     "picked": false,
     "published": "2024-04-13",
@@ -1656,11 +1656,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "463778": {
-    "downloads": 109753,
-    "likes": 21137,
-    "prints": 88196,
-    "saves": 50627,
-    "comments": 8959,
+    "downloads": 109826,
+    "likes": 21163,
+    "prints": 88279,
+    "saves": 50705,
+    "comments": 8963,
     "picked": true,
     "published": "2024-05-14",
     "tags": [
@@ -1677,11 +1677,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "469275": {
-    "downloads": 40416,
-    "likes": 12789,
-    "prints": 23918,
-    "saves": 29922,
-    "comments": 3805,
+    "downloads": 40444,
+    "likes": 12798,
+    "prints": 23951,
+    "saves": 29946,
+    "comments": 3808,
     "picked": false,
     "published": "2024-05-19",
     "tags": [
@@ -1704,10 +1704,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "470355": {
-    "downloads": 10938,
+    "downloads": 10941,
     "likes": 2092,
-    "prints": 6521,
-    "saves": 4601,
+    "prints": 6526,
+    "saves": 4605,
     "comments": 777,
     "picked": false,
     "published": "2024-05-20",
@@ -1725,11 +1725,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "471428": {
-    "downloads": 14865,
-    "likes": 6833,
-    "prints": 6794,
-    "saves": 13720,
-    "comments": 1100,
+    "downloads": 14871,
+    "likes": 6841,
+    "prints": 6800,
+    "saves": 13741,
+    "comments": 1101,
     "picked": true,
     "published": "2024-05-21",
     "tags": [
@@ -1756,11 +1756,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "476243": {
-    "downloads": 51079,
-    "likes": 23482,
-    "prints": 34975,
-    "saves": 70729,
-    "comments": 5463,
+    "downloads": 51135,
+    "likes": 23508,
+    "prints": 35020,
+    "saves": 70849,
+    "comments": 5465,
     "picked": true,
     "published": "2024-05-27",
     "tags": [
@@ -1795,11 +1795,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "477964": {
-    "downloads": 20090,
-    "likes": 3733,
-    "prints": 11792,
-    "saves": 8276,
-    "comments": 1227,
+    "downloads": 20099,
+    "likes": 3735,
+    "prints": 11803,
+    "saves": 8288,
+    "comments": 1228,
     "picked": false,
     "published": "2024-05-28",
     "tags": [
@@ -1814,10 +1814,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "482093": {
-    "downloads": 36217,
+    "downloads": 36224,
     "likes": 7733,
-    "prints": 15809,
-    "saves": 17479,
+    "prints": 15820,
+    "saves": 17485,
     "comments": 1578,
     "picked": false,
     "published": "2024-06-02",
@@ -1840,11 +1840,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "490385": {
-    "downloads": 4206,
-    "likes": 3073,
-    "prints": 1838,
-    "saves": 8781,
-    "comments": 235,
+    "downloads": 4208,
+    "likes": 3076,
+    "prints": 1841,
+    "saves": 8788,
+    "comments": 236,
     "picked": false,
     "published": "2024-06-10",
     "tags": [
@@ -1868,7 +1868,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 5940,
     "likes": 1107,
     "prints": 4414,
-    "saves": 3193,
+    "saves": 3194,
     "comments": 293,
     "picked": false,
     "published": "2024-06-11",
@@ -1904,11 +1904,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "498558": {
-    "downloads": 72422,
-    "likes": 13020,
-    "prints": 53114,
-    "saves": 30627,
-    "comments": 5280,
+    "downloads": 72445,
+    "likes": 13024,
+    "prints": 53148,
+    "saves": 30653,
+    "comments": 5281,
     "picked": false,
     "published": "2024-06-16",
     "tags": [
@@ -1932,11 +1932,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "515356": {
-    "downloads": 43970,
-    "likes": 11043,
-    "prints": 27578,
-    "saves": 32548,
-    "comments": 2234,
+    "downloads": 43993,
+    "likes": 11051,
+    "prints": 27608,
+    "saves": 32566,
+    "comments": 2235,
     "picked": false,
     "published": "2024-06-28",
     "tags": [
@@ -1964,10 +1964,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "520956": {
-    "downloads": 67161,
-    "likes": 23064,
-    "prints": 44945,
-    "saves": 72784,
+    "downloads": 67200,
+    "likes": 23083,
+    "prints": 45002,
+    "saves": 72861,
     "comments": 6654,
     "picked": false,
     "published": "2024-07-02",
@@ -2003,11 +2003,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "521944": {
-    "downloads": 98446,
+    "downloads": 98462,
     "likes": 12609,
-    "prints": 75406,
-    "saves": 29754,
-    "comments": 8962,
+    "prints": 75429,
+    "saves": 29759,
+    "comments": 8964,
     "picked": false,
     "published": "2024-07-02",
     "tags": [
@@ -2021,10 +2021,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "524091": {
-    "downloads": 5135,
-    "likes": 2992,
-    "prints": 3960,
-    "saves": 8385,
+    "downloads": 5138,
+    "likes": 2994,
+    "prints": 3974,
+    "saves": 8409,
     "comments": 364,
     "picked": false,
     "published": "2024-07-04",
@@ -2046,11 +2046,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "541722": {
-    "downloads": 61655,
-    "likes": 23986,
-    "prints": 39559,
-    "saves": 66716,
-    "comments": 4837,
+    "downloads": 61665,
+    "likes": 23997,
+    "prints": 39587,
+    "saves": 66744,
+    "comments": 4839,
     "picked": false,
     "published": "2024-07-15",
     "tags": [
@@ -2073,9 +2073,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "550723": {
     "downloads": 2236,
-    "likes": 906,
-    "prints": 562,
-    "saves": 2098,
+    "likes": 907,
+    "prints": 563,
+    "saves": 2099,
     "comments": 43,
     "picked": false,
     "published": "2024-07-21",
@@ -2097,10 +2097,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "567166": {
     "downloads": 5172,
-    "likes": 3992,
-    "prints": 3244,
-    "saves": 7617,
-    "comments": 374,
+    "likes": 3999,
+    "prints": 3247,
+    "saves": 7632,
+    "comments": 376,
     "picked": false,
     "published": "2024-08-01",
     "tags": [
@@ -2120,11 +2120,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "568279": {
-    "downloads": 38859,
-    "likes": 6663,
-    "prints": 29780,
-    "saves": 18051,
-    "comments": 4831,
+    "downloads": 38861,
+    "likes": 6664,
+    "prints": 29783,
+    "saves": 18055,
+    "comments": 4832,
     "picked": true,
     "published": "2024-08-01",
     "tags": [
@@ -2139,11 +2139,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "574787": {
-    "downloads": 23835,
-    "likes": 5504,
-    "prints": 19180,
-    "saves": 14142,
-    "comments": 1011,
+    "downloads": 23868,
+    "likes": 5511,
+    "prints": 19241,
+    "saves": 14174,
+    "comments": 1013,
     "picked": false,
     "published": "2024-08-06",
     "tags": [
@@ -2161,11 +2161,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "583017": {
-    "downloads": 148398,
-    "likes": 19442,
-    "prints": 102638,
-    "saves": 45952,
-    "comments": 11194,
+    "downloads": 148468,
+    "likes": 19463,
+    "prints": 102761,
+    "saves": 46021,
+    "comments": 11195,
     "picked": false,
     "published": "2024-08-11",
     "tags": [
@@ -2179,11 +2179,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "585144": {
-    "downloads": 93415,
-    "likes": 22722,
-    "prints": 61478,
-    "saves": 52940,
-    "comments": 8100,
+    "downloads": 93421,
+    "likes": 22723,
+    "prints": 61482,
+    "saves": 52947,
+    "comments": 8101,
     "picked": false,
     "published": "2024-08-12",
     "tags": [
@@ -2215,11 +2215,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "587584": {
-    "downloads": 87176,
-    "likes": 19657,
-    "prints": 62745,
-    "saves": 46870,
-    "comments": 8287,
+    "downloads": 87185,
+    "likes": 19660,
+    "prints": 62755,
+    "saves": 46878,
+    "comments": 8288,
     "picked": false,
     "published": "2024-08-14",
     "tags": [
@@ -2238,10 +2238,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "614282": {
-    "downloads": 2131,
+    "downloads": 2134,
     "likes": 651,
-    "prints": 1306,
-    "saves": 1598,
+    "prints": 1308,
+    "saves": 1600,
     "comments": 172,
     "picked": false,
     "published": "2024-08-30",
@@ -2257,10 +2257,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "615735": {
-    "downloads": 18412,
-    "likes": 1766,
-    "prints": 12378,
-    "saves": 3358,
+    "downloads": 18421,
+    "likes": 1773,
+    "prints": 12397,
+    "saves": 3365,
     "comments": 986,
     "picked": false,
     "published": "2024-08-31",
@@ -2273,10 +2273,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "616565": {
-    "downloads": 24497,
-    "likes": 12917,
-    "prints": 11851,
-    "saves": 31620,
+    "downloads": 24523,
+    "likes": 12932,
+    "prints": 11870,
+    "saves": 31674,
     "comments": 1129,
     "picked": false,
     "published": "2024-09-01",
@@ -2296,11 +2296,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "620207": {
-    "downloads": 160961,
-    "likes": 19062,
-    "prints": 126513,
-    "saves": 42686,
-    "comments": 11309,
+    "downloads": 161024,
+    "likes": 19070,
+    "prints": 126594,
+    "saves": 42714,
+    "comments": 11310,
     "picked": false,
     "published": "2024-09-03",
     "tags": [],
@@ -2310,11 +2310,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "624571": {
-    "downloads": 10643,
-    "likes": 2860,
-    "prints": 8942,
-    "saves": 6235,
-    "comments": 634,
+    "downloads": 10662,
+    "likes": 2876,
+    "prints": 8964,
+    "saves": 6259,
+    "comments": 635,
     "picked": false,
     "published": "2024-09-05",
     "tags": [
@@ -2333,11 +2333,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "638587": {
-    "downloads": 137513,
-    "likes": 37435,
-    "prints": 106917,
-    "saves": 76245,
-    "comments": 15154,
+    "downloads": 137588,
+    "likes": 37463,
+    "prints": 107021,
+    "saves": 76337,
+    "comments": 15155,
     "picked": false,
     "published": "2024-09-13",
     "tags": [
@@ -2354,9 +2354,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "641029": {
     "downloads": 3853,
-    "likes": 2530,
-    "prints": 1193,
-    "saves": 4745,
+    "likes": 2533,
+    "prints": 1194,
+    "saves": 4750,
     "comments": 311,
     "picked": false,
     "published": "2024-09-14",
@@ -2378,10 +2378,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "654785": {
-    "downloads": 161199,
-    "likes": 23115,
-    "prints": 119339,
-    "saves": 65115,
+    "downloads": 161299,
+    "likes": 23135,
+    "prints": 119492,
+    "saves": 65201,
     "comments": 10988,
     "picked": false,
     "published": "2024-09-21",
@@ -2418,11 +2418,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "679352": {
-    "downloads": 109381,
-    "likes": 19952,
-    "prints": 71800,
-    "saves": 50473,
-    "comments": 9785,
+    "downloads": 109463,
+    "likes": 19981,
+    "prints": 71938,
+    "saves": 50550,
+    "comments": 9796,
     "picked": false,
     "published": "2024-10-03",
     "tags": [
@@ -2435,11 +2435,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "681033": {
-    "downloads": 19037,
-    "likes": 5333,
-    "prints": 13743,
-    "saves": 13380,
-    "comments": 1603,
+    "downloads": 19040,
+    "likes": 5335,
+    "prints": 13748,
+    "saves": 13384,
+    "comments": 1604,
     "picked": false,
     "published": "2024-10-02",
     "tags": [
@@ -2456,10 +2456,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "697819": {
-    "downloads": 7080,
-    "likes": 893,
-    "prints": 5715,
-    "saves": 2056,
+    "downloads": 7086,
+    "likes": 894,
+    "prints": 5725,
+    "saves": 2061,
     "comments": 328,
     "picked": false,
     "published": "2024-10-12",
@@ -2494,11 +2494,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "707208": {
-    "downloads": 84448,
-    "likes": 12874,
-    "prints": 68708,
-    "saves": 29186,
-    "comments": 5978,
+    "downloads": 84464,
+    "likes": 12880,
+    "prints": 68730,
+    "saves": 29196,
+    "comments": 5979,
     "picked": false,
     "published": "2024-10-16",
     "tags": [
@@ -2525,10 +2525,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "710726": {
-    "downloads": 19153,
-    "likes": 9880,
-    "prints": 9650,
-    "saves": 29839,
+    "downloads": 19175,
+    "likes": 9884,
+    "prints": 9666,
+    "saves": 29864,
     "comments": 465,
     "picked": false,
     "published": "2024-10-17",
@@ -2556,10 +2556,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "713529": {
-    "downloads": 2182,
-    "likes": 496,
-    "prints": 836,
-    "saves": 1190,
+    "downloads": 2183,
+    "likes": 497,
+    "prints": 837,
+    "saves": 1194,
     "comments": 77,
     "picked": false,
     "published": "2024-10-19",
@@ -2591,9 +2591,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "714302": {
     "downloads": 7843,
-    "likes": 2468,
-    "prints": 5597,
-    "saves": 5632,
+    "likes": 2467,
+    "prints": 5600,
+    "saves": 5634,
     "comments": 699,
     "picked": false,
     "published": "2024-10-19",
@@ -2614,7 +2614,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 253,
     "likes": 74,
     "prints": 129,
-    "saves": 160,
+    "saves": 161,
     "comments": 11,
     "picked": false,
     "published": "2024-10-19",
@@ -2632,10 +2632,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "715812": {
-    "downloads": 1451,
-    "likes": 679,
+    "downloads": 1452,
+    "likes": 678,
     "prints": 555,
-    "saves": 1611,
+    "saves": 1614,
     "comments": 71,
     "picked": false,
     "published": "2024-10-19",
@@ -2652,10 +2652,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "716663": {
-    "downloads": 7072,
-    "likes": 5464,
-    "prints": 2575,
-    "saves": 17420,
+    "downloads": 7091,
+    "likes": 5478,
+    "prints": 2586,
+    "saves": 17481,
     "comments": 236,
     "picked": false,
     "published": "2024-10-20",
@@ -2677,11 +2677,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "716803": {
-    "downloads": 54058,
-    "likes": 9103,
-    "prints": 41471,
-    "saves": 23234,
-    "comments": 3379,
+    "downloads": 54071,
+    "likes": 9107,
+    "prints": 41498,
+    "saves": 23245,
+    "comments": 3381,
     "picked": false,
     "published": "2024-10-20",
     "tags": [
@@ -2706,11 +2706,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "719725": {
-    "downloads": 105968,
-    "likes": 16635,
-    "prints": 89489,
-    "saves": 42062,
-    "comments": 7835,
+    "downloads": 106010,
+    "likes": 16641,
+    "prints": 89551,
+    "saves": 42089,
+    "comments": 7839,
     "picked": false,
     "published": "2024-10-21",
     "tags": [
@@ -2736,11 +2736,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "731832": {
-    "downloads": 20982,
+    "downloads": 20983,
     "likes": 5419,
-    "prints": 10602,
-    "saves": 11434,
-    "comments": 1057,
+    "prints": 10605,
+    "saves": 11436,
+    "comments": 1058,
     "picked": true,
     "published": "2024-10-26",
     "tags": [
@@ -2761,9 +2761,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "740269": {
     "downloads": 2158,
-    "likes": 3494,
-    "prints": 1111,
-    "saves": 6761,
+    "likes": 3495,
+    "prints": 1113,
+    "saves": 6759,
     "comments": 144,
     "picked": false,
     "published": "2024-10-29",
@@ -2785,10 +2785,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "741443": {
-    "downloads": 4301,
-    "likes": 1081,
-    "prints": 797,
-    "saves": 2780,
+    "downloads": 4308,
+    "likes": 1083,
+    "prints": 799,
+    "saves": 2783,
     "comments": 76,
     "picked": false,
     "published": "2024-10-29",
@@ -2809,11 +2809,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "762990": {
-    "downloads": 91731,
+    "downloads": 91752,
     "likes": 15595,
-    "prints": 59154,
-    "saves": 34734,
-    "comments": 7742,
+    "prints": 59176,
+    "saves": 34745,
+    "comments": 7745,
     "picked": false,
     "published": "2024-11-06",
     "tags": [
@@ -2836,11 +2836,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "766336": {
-    "downloads": 44668,
-    "likes": 9929,
-    "prints": 34678,
-    "saves": 26918,
-    "comments": 3813,
+    "downloads": 44697,
+    "likes": 9935,
+    "prints": 34711,
+    "saves": 26964,
+    "comments": 3814,
     "picked": false,
     "published": "2024-11-07",
     "tags": [
@@ -2863,11 +2863,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "771439": {
-    "downloads": 19665,
-    "likes": 7153,
-    "prints": 10376,
-    "saves": 14618,
-    "comments": 1343,
+    "downloads": 19693,
+    "likes": 7172,
+    "prints": 10415,
+    "saves": 14675,
+    "comments": 1344,
     "picked": false,
     "published": "2024-11-09",
     "tags": [
@@ -2887,11 +2887,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "799571": {
-    "downloads": 51554,
-    "likes": 29442,
-    "prints": 24431,
-    "saves": 107975,
-    "comments": 1415,
+    "downloads": 51621,
+    "likes": 29484,
+    "prints": 24474,
+    "saves": 108134,
+    "comments": 1418,
     "picked": true,
     "published": "2024-11-18",
     "tags": [
@@ -2925,10 +2925,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "805546": {
-    "downloads": 13507,
-    "likes": 3216,
-    "prints": 7200,
-    "saves": 6732,
+    "downloads": 13514,
+    "likes": 3217,
+    "prints": 7205,
+    "saves": 6733,
     "comments": 995,
     "picked": false,
     "published": "2024-11-20",
@@ -2951,11 +2951,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "819327": {
-    "downloads": 78222,
-    "likes": 14420,
-    "prints": 56835,
-    "saves": 36567,
-    "comments": 5468,
+    "downloads": 78271,
+    "likes": 14433,
+    "prints": 56890,
+    "saves": 36604,
+    "comments": 5471,
     "picked": false,
     "published": "2024-11-24",
     "tags": [
@@ -2975,11 +2975,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "824320": {
-    "downloads": 76437,
-    "likes": 18483,
-    "prints": 52581,
-    "saves": 48411,
-    "comments": 9283,
+    "downloads": 76473,
+    "likes": 18492,
+    "prints": 52632,
+    "saves": 48461,
+    "comments": 9288,
     "picked": false,
     "published": "2024-11-26",
     "tags": [
@@ -2996,11 +2996,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "825671": {
-    "downloads": 4087,
-    "likes": 3568,
-    "prints": 1263,
-    "saves": 9978,
-    "comments": 237,
+    "downloads": 4092,
+    "likes": 3576,
+    "prints": 1267,
+    "saves": 10011,
+    "comments": 238,
     "picked": false,
     "published": "2024-11-26",
     "tags": [
@@ -3016,11 +3016,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "844154": {
-    "downloads": 51845,
-    "likes": 21097,
-    "prints": 47365,
-    "saves": 75260,
-    "comments": 10066,
+    "downloads": 51886,
+    "likes": 21139,
+    "prints": 47448,
+    "saves": 75413,
+    "comments": 10075,
     "picked": false,
     "published": "2024-12-03",
     "tags": [
@@ -3047,10 +3047,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "844346": {
-    "downloads": 21642,
-    "likes": 7797,
-    "prints": 18394,
-    "saves": 21605,
+    "downloads": 21649,
+    "likes": 7802,
+    "prints": 18406,
+    "saves": 21614,
     "comments": 2555,
     "picked": true,
     "published": "2024-12-03",
@@ -3076,11 +3076,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "847695": {
-    "downloads": 9432,
-    "likes": 5377,
-    "prints": 8194,
-    "saves": 13038,
-    "comments": 812,
+    "downloads": 9456,
+    "likes": 5397,
+    "prints": 8221,
+    "saves": 13080,
+    "comments": 814,
     "picked": false,
     "published": "2024-12-04",
     "tags": [
@@ -3106,11 +3106,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "849620": {
-    "downloads": 13148,
-    "likes": 2679,
-    "prints": 10845,
-    "saves": 7430,
-    "comments": 942,
+    "downloads": 13162,
+    "likes": 2683,
+    "prints": 10871,
+    "saves": 7446,
+    "comments": 943,
     "picked": false,
     "published": "2024-12-04",
     "tags": [
@@ -3131,10 +3131,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "850834": {
-    "downloads": 21836,
-    "likes": 14492,
-    "prints": 9019,
-    "saves": 32612,
+    "downloads": 21847,
+    "likes": 14520,
+    "prints": 9029,
+    "saves": 32708,
     "comments": 1155,
     "picked": false,
     "published": "2024-12-05",
@@ -3158,8 +3158,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "851444": {
     "downloads": 6233,
     "likes": 3430,
-    "prints": 4141,
-    "saves": 7394,
+    "prints": 4142,
+    "saves": 7397,
     "comments": 565,
     "picked": false,
     "published": "2024-12-05",
@@ -3176,10 +3176,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "856029": {
-    "downloads": 94851,
+    "downloads": 94857,
     "likes": 20359,
-    "prints": 67191,
-    "saves": 48026,
+    "prints": 67201,
+    "saves": 48041,
     "comments": 5961,
     "picked": false,
     "published": "2024-12-07",
@@ -3215,11 +3215,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "860190": {
-    "downloads": 35865,
-    "likes": 18876,
-    "prints": 20995,
-    "saves": 49954,
-    "comments": 3971,
+    "downloads": 35876,
+    "likes": 18884,
+    "prints": 21009,
+    "saves": 49970,
+    "comments": 3972,
     "picked": false,
     "published": "2024-12-08",
     "tags": [
@@ -3254,11 +3254,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "878180": {
-    "downloads": 58287,
-    "likes": 21363,
-    "prints": 45241,
-    "saves": 66804,
-    "comments": 4961,
+    "downloads": 58326,
+    "likes": 21376,
+    "prints": 45298,
+    "saves": 66843,
+    "comments": 4966,
     "picked": false,
     "published": "2024-12-14",
     "tags": [
@@ -3282,10 +3282,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "881223": {
-    "downloads": 59011,
-    "likes": 14097,
-    "prints": 36371,
-    "saves": 33441,
+    "downloads": 59025,
+    "likes": 14100,
+    "prints": 36391,
+    "saves": 33467,
     "comments": 3631,
     "picked": false,
     "published": "2024-12-15",
@@ -3321,10 +3321,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "883429": {
-    "downloads": 3482,
+    "downloads": 3485,
     "likes": 1193,
-    "prints": 1589,
-    "saves": 3268,
+    "prints": 1591,
+    "saves": 3272,
     "comments": 172,
     "picked": false,
     "published": "2024-12-15",
@@ -3340,10 +3340,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "896722": {
-    "downloads": 455,
-    "likes": 417,
+    "downloads": 458,
+    "likes": 423,
     "prints": 207,
-    "saves": 887,
+    "saves": 892,
     "comments": 28,
     "picked": false,
     "published": "2024-12-20",
@@ -3361,11 +3361,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "899478": {
-    "downloads": 43945,
-    "likes": 22214,
-    "prints": 25588,
-    "saves": 64178,
-    "comments": 2865,
+    "downloads": 43975,
+    "likes": 22232,
+    "prints": 25637,
+    "saves": 64258,
+    "comments": 2867,
     "picked": true,
     "published": "2024-12-21",
     "tags": [
@@ -3387,11 +3387,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "900743": {
-    "downloads": 16452,
-    "likes": 7501,
-    "prints": 13657,
-    "saves": 24152,
-    "comments": 1349,
+    "downloads": 16463,
+    "likes": 7510,
+    "prints": 13674,
+    "saves": 24206,
+    "comments": 1350,
     "picked": false,
     "published": "2024-12-21",
     "tags": [
@@ -3409,11 +3409,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "900903": {
-    "downloads": 61146,
-    "likes": 18517,
-    "prints": 33373,
-    "saves": 44692,
-    "comments": 4339,
+    "downloads": 61173,
+    "likes": 18527,
+    "prints": 33410,
+    "saves": 44737,
+    "comments": 4340,
     "picked": false,
     "published": "2024-12-21",
     "tags": [
@@ -3448,10 +3448,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "906972": {
-    "downloads": 8209,
+    "downloads": 8213,
     "likes": 3341,
-    "prints": 5143,
-    "saves": 7789,
+    "prints": 5146,
+    "saves": 7795,
     "comments": 542,
     "picked": false,
     "published": "2024-12-23",
@@ -3469,11 +3469,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "919124": {
-    "downloads": 75635,
-    "likes": 16470,
-    "prints": 60569,
-    "saves": 38673,
-    "comments": 7716,
+    "downloads": 75701,
+    "likes": 16488,
+    "prints": 60674,
+    "saves": 38738,
+    "comments": 7725,
     "picked": false,
     "published": "2024-12-27",
     "tags": [
@@ -3497,9 +3497,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "926328": {
     "downloads": 1287,
-    "likes": 569,
-    "prints": 1136,
-    "saves": 1412,
+    "likes": 570,
+    "prints": 1137,
+    "saves": 1414,
     "comments": 87,
     "picked": false,
     "published": "2024-12-29",
@@ -3519,11 +3519,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "927520": {
-    "downloads": 111245,
-    "likes": 15880,
-    "prints": 101400,
-    "saves": 46959,
-    "comments": 7499,
+    "downloads": 111330,
+    "likes": 15907,
+    "prints": 101597,
+    "saves": 47043,
+    "comments": 7505,
     "picked": false,
     "published": "2024-12-30",
     "tags": [
@@ -3545,7 +3545,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 828,
     "likes": 584,
     "prints": 376,
-    "saves": 1560,
+    "saves": 1561,
     "comments": 55,
     "picked": false,
     "published": "2024-12-31",
@@ -3573,11 +3573,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "942697": {
-    "downloads": 15086,
-    "likes": 9079,
-    "prints": 8039,
-    "saves": 23286,
-    "comments": 1338,
+    "downloads": 15098,
+    "likes": 9090,
+    "prints": 8045,
+    "saves": 23325,
+    "comments": 1339,
     "picked": false,
     "published": "2025-01-02",
     "tags": [
@@ -3611,11 +3611,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "953502": {
-    "downloads": 37036,
-    "likes": 19473,
-    "prints": 21548,
-    "saves": 57746,
-    "comments": 2665,
+    "downloads": 37050,
+    "likes": 19477,
+    "prints": 21561,
+    "saves": 57787,
+    "comments": 2667,
     "picked": false,
     "published": "2025-01-05",
     "tags": [
@@ -3650,11 +3650,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "961340": {
-    "downloads": 86556,
-    "likes": 20809,
-    "prints": 61946,
-    "saves": 54958,
-    "comments": 6057,
+    "downloads": 86622,
+    "likes": 20833,
+    "prints": 62075,
+    "saves": 55034,
+    "comments": 6063,
     "picked": false,
     "published": "2025-01-07",
     "tags": [
@@ -3689,11 +3689,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "964016": {
-    "downloads": 56162,
-    "likes": 19633,
-    "prints": 30964,
-    "saves": 65397,
-    "comments": 3630,
+    "downloads": 56188,
+    "likes": 19644,
+    "prints": 30988,
+    "saves": 65439,
+    "comments": 3631,
     "picked": false,
     "published": "2025-01-07",
     "tags": [
@@ -3717,11 +3717,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "969468": {
-    "downloads": 27115,
-    "likes": 7892,
-    "prints": 23059,
-    "saves": 17854,
-    "comments": 2116,
+    "downloads": 27174,
+    "likes": 7907,
+    "prints": 23136,
+    "saves": 17905,
+    "comments": 2117,
     "picked": false,
     "published": "2025-01-09",
     "tags": [
@@ -3742,11 +3742,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "978372": {
-    "downloads": 65706,
-    "likes": 23915,
-    "prints": 34138,
-    "saves": 70578,
-    "comments": 3509,
+    "downloads": 65727,
+    "likes": 23924,
+    "prints": 34162,
+    "saves": 70613,
+    "comments": 3510,
     "picked": false,
     "published": "2025-01-11",
     "tags": [
@@ -3764,11 +3764,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1002706": {
-    "downloads": 143511,
-    "likes": 17930,
-    "prints": 117027,
-    "saves": 54734,
-    "comments": 9104,
+    "downloads": 143696,
+    "likes": 17966,
+    "prints": 117244,
+    "saves": 54886,
+    "comments": 9113,
     "picked": false,
     "published": "2025-01-17",
     "tags": [
@@ -3797,10 +3797,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1003010": {
-    "downloads": 6971,
-    "likes": 4102,
-    "prints": 4325,
-    "saves": 9604,
+    "downloads": 6977,
+    "likes": 4108,
+    "prints": 4332,
+    "saves": 9634,
     "comments": 511,
     "picked": false,
     "published": "2025-01-17",
@@ -3822,11 +3822,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1024791": {
-    "downloads": 31453,
-    "likes": 18064,
-    "prints": 23984,
-    "saves": 57839,
-    "comments": 2925,
+    "downloads": 31480,
+    "likes": 18100,
+    "prints": 24045,
+    "saves": 57975,
+    "comments": 2931,
     "picked": false,
     "published": "2025-01-22",
     "tags": [
@@ -3850,10 +3850,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1025259": {
-    "downloads": 8088,
-    "likes": 3633,
-    "prints": 4073,
-    "saves": 11463,
+    "downloads": 8098,
+    "likes": 3635,
+    "prints": 4089,
+    "saves": 11491,
     "comments": 316,
     "picked": false,
     "published": "2025-01-22",
@@ -3886,11 +3886,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1029890": {
-    "downloads": 94673,
-    "likes": 27129,
-    "prints": 67613,
-    "saves": 68376,
-    "comments": 6509,
+    "downloads": 94811,
+    "likes": 27180,
+    "prints": 67786,
+    "saves": 68549,
+    "comments": 6517,
     "picked": false,
     "published": "2025-01-23",
     "tags": [
@@ -3922,10 +3922,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1032328": {
-    "downloads": 21656,
-    "likes": 11877,
-    "prints": 10717,
-    "saves": 33691,
+    "downloads": 21685,
+    "likes": 11894,
+    "prints": 10746,
+    "saves": 33758,
     "comments": 1057,
     "picked": false,
     "published": "2025-01-24",
@@ -3949,11 +3949,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1037541": {
-    "downloads": 37017,
-    "likes": 23270,
-    "prints": 15214,
-    "saves": 66621,
-    "comments": 973,
+    "downloads": 37099,
+    "likes": 23302,
+    "prints": 15258,
+    "saves": 66749,
+    "comments": 975,
     "picked": false,
     "published": "2025-01-25",
     "tags": [
@@ -3987,10 +3987,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1041258": {
-    "downloads": 2424,
-    "likes": 694,
-    "prints": 1666,
-    "saves": 2233,
+    "downloads": 2429,
+    "likes": 693,
+    "prints": 1668,
+    "saves": 2243,
     "comments": 115,
     "picked": false,
     "published": "2025-01-26",
@@ -4008,10 +4008,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1045499": {
-    "downloads": 4812,
+    "downloads": 4817,
     "likes": 1442,
-    "prints": 2923,
-    "saves": 3642,
+    "prints": 2927,
+    "saves": 3652,
     "comments": 335,
     "picked": false,
     "published": "2025-01-27",
@@ -4025,11 +4025,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1047815": {
-    "downloads": 31495,
-    "likes": 13421,
-    "prints": 28431,
-    "saves": 40823,
-    "comments": 4175,
+    "downloads": 31525,
+    "likes": 13436,
+    "prints": 28476,
+    "saves": 40874,
+    "comments": 4178,
     "picked": false,
     "published": "2025-01-28",
     "tags": [
@@ -4064,11 +4064,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1074963": {
-    "downloads": 19780,
-    "likes": 11010,
-    "prints": 15140,
-    "saves": 26749,
-    "comments": 2154,
+    "downloads": 19793,
+    "likes": 11021,
+    "prints": 15153,
+    "saves": 26785,
+    "comments": 2155,
     "picked": false,
     "published": "2025-02-05",
     "tags": [
@@ -4103,11 +4103,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1076262": {
-    "downloads": 6248,
-    "likes": 3604,
-    "prints": 3885,
-    "saves": 9588,
-    "comments": 348,
+    "downloads": 6251,
+    "likes": 3610,
+    "prints": 3893,
+    "saves": 9606,
+    "comments": 349,
     "picked": false,
     "published": "2025-02-05",
     "tags": [
@@ -4126,11 +4126,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1087279": {
-    "downloads": 79055,
-    "likes": 20355,
-    "prints": 66410,
-    "saves": 55996,
-    "comments": 5626,
+    "downloads": 79447,
+    "likes": 20454,
+    "prints": 66910,
+    "saves": 56337,
+    "comments": 5648,
     "picked": false,
     "published": "2025-02-08",
     "tags": [
@@ -4163,11 +4163,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1087329": {
-    "downloads": 29626,
-    "likes": 10800,
-    "prints": 17076,
-    "saves": 26706,
-    "comments": 1785,
+    "downloads": 29641,
+    "likes": 10810,
+    "prints": 17093,
+    "saves": 26743,
+    "comments": 1787,
     "picked": false,
     "published": "2025-02-08",
     "tags": [
@@ -4191,11 +4191,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1087625": {
-    "downloads": 36418,
-    "likes": 30877,
-    "prints": 10418,
-    "saves": 86466,
-    "comments": 1942,
+    "downloads": 36469,
+    "likes": 30949,
+    "prints": 10436,
+    "saves": 86673,
+    "comments": 1943,
     "picked": false,
     "published": "2025-02-08",
     "tags": [
@@ -4218,11 +4218,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1090887": {
-    "downloads": 63791,
-    "likes": 23700,
-    "prints": 34087,
-    "saves": 59347,
-    "comments": 4918,
+    "downloads": 63801,
+    "likes": 23709,
+    "prints": 34103,
+    "saves": 59369,
+    "comments": 4919,
     "picked": false,
     "published": "2025-02-09",
     "tags": [
@@ -4242,11 +4242,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1099461": {
-    "downloads": 67910,
-    "likes": 37453,
-    "prints": 41043,
-    "saves": 115774,
-    "comments": 12031,
+    "downloads": 67950,
+    "likes": 37468,
+    "prints": 41095,
+    "saves": 115873,
+    "comments": 12039,
     "picked": false,
     "published": "2025-02-12",
     "tags": [
@@ -4264,11 +4264,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1101226": {
-    "downloads": 135745,
-    "likes": 29103,
-    "prints": 121210,
-    "saves": 89338,
-    "comments": 10066,
+    "downloads": 135954,
+    "likes": 29170,
+    "prints": 121536,
+    "saves": 89525,
+    "comments": 10081,
     "picked": false,
     "published": "2025-02-12",
     "tags": [
@@ -4300,11 +4300,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1107929": {
-    "downloads": 8870,
-    "likes": 6103,
-    "prints": 5977,
-    "saves": 16435,
-    "comments": 568,
+    "downloads": 8882,
+    "likes": 6122,
+    "prints": 5993,
+    "saves": 16492,
+    "comments": 571,
     "picked": false,
     "published": "2025-02-14",
     "tags": [
@@ -4320,11 +4320,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1122798": {
-    "downloads": 17692,
-    "likes": 4677,
-    "prints": 14438,
-    "saves": 10634,
-    "comments": 1127,
+    "downloads": 17708,
+    "likes": 4682,
+    "prints": 14457,
+    "saves": 10651,
+    "comments": 1128,
     "picked": false,
     "published": "2025-02-18",
     "tags": [
@@ -4338,11 +4338,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1125088": {
-    "downloads": 61156,
-    "likes": 22139,
-    "prints": 50775,
-    "saves": 82363,
-    "comments": 6359,
+    "downloads": 61191,
+    "likes": 22154,
+    "prints": 50841,
+    "saves": 82499,
+    "comments": 6366,
     "picked": false,
     "published": "2025-02-18",
     "tags": [
@@ -4377,11 +4377,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1132819": {
-    "downloads": 9419,
-    "likes": 2719,
-    "prints": 7717,
-    "saves": 9637,
-    "comments": 474,
+    "downloads": 9426,
+    "likes": 2721,
+    "prints": 7727,
+    "saves": 9653,
+    "comments": 475,
     "picked": false,
     "published": "2025-02-21",
     "tags": [
@@ -4416,10 +4416,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1149725": {
-    "downloads": 1591,
-    "likes": 1149,
-    "prints": 891,
-    "saves": 3695,
+    "downloads": 1596,
+    "likes": 1152,
+    "prints": 897,
+    "saves": 3706,
     "comments": 108,
     "picked": false,
     "published": "2025-02-25",
@@ -4430,10 +4430,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1159179": {
-    "downloads": 2272,
-    "likes": 2618,
-    "prints": 1650,
-    "saves": 9513,
+    "downloads": 2275,
+    "likes": 2634,
+    "prints": 1657,
+    "saves": 9594,
     "comments": 92,
     "picked": false,
     "published": "2025-02-28",
@@ -4464,10 +4464,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1160355": {
-    "downloads": 9247,
-    "likes": 2775,
-    "prints": 6531,
-    "saves": 6578,
+    "downloads": 9253,
+    "likes": 2780,
+    "prints": 6542,
+    "saves": 6595,
     "comments": 806,
     "picked": false,
     "published": "2025-02-28",
@@ -4484,11 +4484,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1163767": {
-    "downloads": 88501,
-    "likes": 16954,
-    "prints": 58199,
-    "saves": 43626,
-    "comments": 6975,
+    "downloads": 88516,
+    "likes": 16957,
+    "prints": 58226,
+    "saves": 43645,
+    "comments": 6982,
     "picked": false,
     "published": "2025-03-01",
     "tags": [
@@ -4513,11 +4513,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1167297": {
-    "downloads": 20443,
+    "downloads": 20451,
     "likes": 6310,
-    "prints": 12913,
-    "saves": 14644,
-    "comments": 1406,
+    "prints": 12923,
+    "saves": 14651,
+    "comments": 1407,
     "picked": false,
     "published": "2025-03-02",
     "tags": [
@@ -4537,8 +4537,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1197949": {
     "downloads": 288,
     "likes": 128,
-    "prints": 170,
-    "saves": 276,
+    "prints": 171,
+    "saves": 277,
     "comments": 25,
     "picked": false,
     "published": "2025-03-11",
@@ -4553,11 +4553,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1203450": {
-    "downloads": 19953,
-    "likes": 4071,
-    "prints": 15752,
-    "saves": 7849,
-    "comments": 934,
+    "downloads": 19976,
+    "likes": 4085,
+    "prints": 15784,
+    "saves": 7865,
+    "comments": 935,
     "picked": false,
     "published": "2025-03-12",
     "tags": [],
@@ -4567,11 +4567,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1209712": {
-    "downloads": 24514,
-    "likes": 9403,
-    "prints": 19632,
-    "saves": 32726,
-    "comments": 1961,
+    "downloads": 24540,
+    "likes": 9421,
+    "prints": 19670,
+    "saves": 32825,
+    "comments": 1963,
     "picked": false,
     "published": "2025-03-14",
     "tags": [
@@ -4603,11 +4603,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1212943": {
-    "downloads": 12080,
-    "likes": 6544,
-    "prints": 8658,
-    "saves": 16234,
-    "comments": 1629,
+    "downloads": 12086,
+    "likes": 6552,
+    "prints": 8667,
+    "saves": 16252,
+    "comments": 1630,
     "picked": false,
     "published": "2025-03-15",
     "tags": [
@@ -4637,10 +4637,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1227919": {
-    "downloads": 1585,
-    "likes": 421,
-    "prints": 1010,
-    "saves": 1115,
+    "downloads": 1587,
+    "likes": 423,
+    "prints": 1011,
+    "saves": 1117,
     "comments": 96,
     "picked": false,
     "published": "2025-03-19",
@@ -4665,11 +4665,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1253219": {
-    "downloads": 27209,
-    "likes": 4025,
-    "prints": 18210,
-    "saves": 8938,
-    "comments": 2050,
+    "downloads": 27235,
+    "likes": 4029,
+    "prints": 18233,
+    "saves": 8951,
+    "comments": 2052,
     "picked": false,
     "published": "2025-03-27",
     "tags": [
@@ -4682,11 +4682,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1259184": {
-    "downloads": 4067,
-    "likes": 5872,
-    "prints": 2599,
-    "saves": 14534,
-    "comments": 501,
+    "downloads": 4073,
+    "likes": 5907,
+    "prints": 2608,
+    "saves": 14590,
+    "comments": 510,
     "picked": false,
     "published": "2025-03-28",
     "tags": [
@@ -4705,11 +4705,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1261340": {
-    "downloads": 20583,
-    "likes": 9463,
-    "prints": 15453,
-    "saves": 25233,
-    "comments": 1213,
+    "downloads": 20633,
+    "likes": 9507,
+    "prints": 15515,
+    "saves": 25335,
+    "comments": 1221,
     "picked": false,
     "published": "2025-03-29",
     "tags": [
@@ -4730,10 +4730,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1261408": {
-    "downloads": 10191,
-    "likes": 7374,
-    "prints": 4734,
-    "saves": 20229,
+    "downloads": 10194,
+    "likes": 7380,
+    "prints": 4737,
+    "saves": 20260,
     "comments": 880,
     "picked": false,
     "published": "2025-03-29",
@@ -4756,10 +4756,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1271221": {
-    "downloads": 6330,
-    "likes": 3094,
-    "prints": 3926,
-    "saves": 8054,
+    "downloads": 6334,
+    "likes": 3099,
+    "prints": 3932,
+    "saves": 8077,
     "comments": 409,
     "picked": false,
     "published": "2025-03-31",
@@ -4783,11 +4783,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1284791": {
-    "downloads": 8898,
-    "likes": 4917,
-    "prints": 6201,
-    "saves": 18284,
-    "comments": 1000,
+    "downloads": 8906,
+    "likes": 4926,
+    "prints": 6215,
+    "saves": 18332,
+    "comments": 1001,
     "picked": false,
     "published": "2025-04-04",
     "tags": [
@@ -4822,11 +4822,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1288965": {
-    "downloads": 12089,
-    "likes": 3659,
-    "prints": 10617,
-    "saves": 11473,
-    "comments": 837,
+    "downloads": 12098,
+    "likes": 3664,
+    "prints": 10639,
+    "saves": 11496,
+    "comments": 840,
     "picked": false,
     "published": "2025-04-05",
     "tags": [
@@ -4846,10 +4846,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1292618": {
-    "downloads": 3713,
-    "likes": 3018,
-    "prints": 1284,
-    "saves": 7997,
+    "downloads": 3718,
+    "likes": 3027,
+    "prints": 1285,
+    "saves": 8020,
     "comments": 187,
     "picked": false,
     "published": "2025-04-06",
@@ -4879,10 +4879,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1298742": {
-    "downloads": 3574,
+    "downloads": 3576,
     "likes": 2461,
-    "prints": 1987,
-    "saves": 7742,
+    "prints": 1991,
+    "saves": 7746,
     "comments": 233,
     "picked": false,
     "published": "2025-04-08",
@@ -4907,11 +4907,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1338377": {
-    "downloads": 1816,
-    "likes": 580,
-    "prints": 1405,
-    "saves": 1364,
-    "comments": 208,
+    "downloads": 1819,
+    "likes": 581,
+    "prints": 1406,
+    "saves": 1369,
+    "comments": 209,
     "picked": false,
     "published": "2025-04-20",
     "tags": [],
@@ -4921,11 +4921,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1341349": {
-    "downloads": 21665,
-    "likes": 4810,
-    "prints": 19498,
-    "saves": 14885,
-    "comments": 1811,
+    "downloads": 21684,
+    "likes": 4817,
+    "prints": 19536,
+    "saves": 14910,
+    "comments": 1815,
     "picked": false,
     "published": "2025-04-21",
     "tags": [
@@ -4960,11 +4960,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1369010": {
-    "downloads": 4063,
-    "likes": 1594,
-    "prints": 2146,
-    "saves": 3288,
-    "comments": 257,
+    "downloads": 4067,
+    "likes": 1599,
+    "prints": 2156,
+    "saves": 3303,
+    "comments": 258,
     "picked": false,
     "published": "2025-04-29",
     "tags": [
@@ -4982,11 +4982,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1376675": {
-    "downloads": 15402,
-    "likes": 4720,
-    "prints": 12158,
-    "saves": 15633,
-    "comments": 1900,
+    "downloads": 15419,
+    "likes": 4730,
+    "prints": 12182,
+    "saves": 15659,
+    "comments": 1903,
     "picked": false,
     "published": "2025-05-02",
     "tags": [
@@ -5017,10 +5017,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1379807": {
-    "downloads": 3051,
-    "likes": 1697,
-    "prints": 2346,
-    "saves": 4310,
+    "downloads": 3057,
+    "likes": 1701,
+    "prints": 2350,
+    "saves": 4317,
     "comments": 235,
     "picked": false,
     "published": "2025-05-03",
@@ -5056,11 +5056,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1397623": {
-    "downloads": 12050,
-    "likes": 3494,
-    "prints": 10190,
-    "saves": 10497,
-    "comments": 595,
+    "downloads": 12073,
+    "likes": 3507,
+    "prints": 10219,
+    "saves": 10545,
+    "comments": 596,
     "picked": false,
     "published": "2025-05-08",
     "tags": [
@@ -5079,10 +5079,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1400361": {
-    "downloads": 3038,
-    "likes": 906,
-    "prints": 1693,
-    "saves": 2252,
+    "downloads": 3040,
+    "likes": 907,
+    "prints": 1696,
+    "saves": 2257,
     "comments": 148,
     "picked": false,
     "published": "2025-05-09",
@@ -5096,11 +5096,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1414821": {
-    "downloads": 17629,
-    "likes": 4367,
-    "prints": 14219,
-    "saves": 10014,
-    "comments": 795,
+    "downloads": 17649,
+    "likes": 4381,
+    "prints": 14261,
+    "saves": 10031,
+    "comments": 799,
     "picked": false,
     "published": "2025-05-14",
     "tags": [
@@ -5127,11 +5127,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1453243": {
-    "downloads": 82892,
-    "likes": 13101,
-    "prints": 56868,
-    "saves": 31329,
-    "comments": 5560,
+    "downloads": 82905,
+    "likes": 13106,
+    "prints": 56881,
+    "saves": 31339,
+    "comments": 5564,
     "picked": false,
     "published": "2025-05-25",
     "tags": [
@@ -5156,10 +5156,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1454252": {
-    "downloads": 3549,
-    "likes": 2280,
-    "prints": 1773,
-    "saves": 6861,
+    "downloads": 3561,
+    "likes": 2288,
+    "prints": 1782,
+    "saves": 6919,
     "comments": 154,
     "picked": false,
     "published": "2025-05-25",
@@ -5183,11 +5183,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1484481": {
-    "downloads": 1528,
-    "likes": 2850,
-    "prints": 931,
-    "saves": 12109,
-    "comments": 142,
+    "downloads": 1535,
+    "likes": 2874,
+    "prints": 938,
+    "saves": 12192,
+    "comments": 143,
     "picked": false,
     "published": "2025-06-03",
     "tags": [
@@ -5212,8 +5212,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1487479": {
     "downloads": 234,
     "likes": 99,
-    "prints": 168,
-    "saves": 292,
+    "prints": 169,
+    "saves": 293,
     "comments": 6,
     "picked": false,
     "published": "2025-06-04",
@@ -5234,11 +5234,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1507073": {
-    "downloads": 87589,
-    "likes": 33642,
-    "prints": 40055,
-    "saves": 107208,
-    "comments": 2944,
+    "downloads": 87656,
+    "likes": 33677,
+    "prints": 40118,
+    "saves": 107391,
+    "comments": 2947,
     "picked": false,
     "published": "2025-06-10",
     "tags": [
@@ -5273,10 +5273,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1509282": {
-    "downloads": 1247,
-    "likes": 482,
-    "prints": 940,
-    "saves": 1423,
+    "downloads": 1249,
+    "likes": 483,
+    "prints": 944,
+    "saves": 1426,
     "comments": 75,
     "picked": false,
     "published": "2025-06-11",
@@ -5312,11 +5312,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1509676": {
-    "downloads": 24255,
-    "likes": 6777,
-    "prints": 18200,
-    "saves": 23499,
-    "comments": 1605,
+    "downloads": 24298,
+    "likes": 6791,
+    "prints": 18256,
+    "saves": 23584,
+    "comments": 1606,
     "picked": false,
     "published": "2025-06-11",
     "tags": [
@@ -5351,10 +5351,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1515698": {
-    "downloads": 47970,
-    "likes": 28208,
-    "prints": 8174,
-    "saves": 72391,
+    "downloads": 48004,
+    "likes": 28252,
+    "prints": 8189,
+    "saves": 72510,
     "comments": 1934,
     "picked": true,
     "published": "2025-06-13",
@@ -5390,10 +5390,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1517687": {
-    "downloads": 12393,
-    "likes": 3696,
-    "prints": 5416,
-    "saves": 10238,
+    "downloads": 12412,
+    "likes": 3699,
+    "prints": 5436,
+    "saves": 10266,
     "comments": 532,
     "picked": false,
     "published": "2025-06-14",
@@ -5429,11 +5429,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1520536": {
-    "downloads": 60383,
-    "likes": 21722,
-    "prints": 49839,
-    "saves": 70444,
-    "comments": 4366,
+    "downloads": 60508,
+    "likes": 21840,
+    "prints": 50022,
+    "saves": 70795,
+    "comments": 4376,
     "picked": false,
     "published": "2025-06-15",
     "tags": [
@@ -5466,10 +5466,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1532701": {
-    "downloads": 17646,
+    "downloads": 17649,
     "likes": 7673,
-    "prints": 11388,
-    "saves": 18517,
+    "prints": 11398,
+    "saves": 18526,
     "comments": 942,
     "picked": false,
     "published": "2025-06-19",
@@ -5490,11 +5490,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1535220": {
-    "downloads": 32875,
-    "likes": 7535,
-    "prints": 23284,
-    "saves": 23221,
-    "comments": 1597,
+    "downloads": 32930,
+    "likes": 7547,
+    "prints": 23346,
+    "saves": 23268,
+    "comments": 1602,
     "picked": false,
     "published": "2025-06-20",
     "tags": [
@@ -5529,10 +5529,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1543681": {
-    "downloads": 20024,
-    "likes": 4950,
-    "prints": 12027,
-    "saves": 11173,
+    "downloads": 20030,
+    "likes": 4953,
+    "prints": 12034,
+    "saves": 11177,
     "comments": 920,
     "picked": false,
     "published": "2025-06-23",
@@ -5556,11 +5556,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1545342": {
-    "downloads": 978,
-    "likes": 1189,
-    "prints": 957,
-    "saves": 2472,
-    "comments": 380,
+    "downloads": 981,
+    "likes": 1195,
+    "prints": 963,
+    "saves": 2481,
+    "comments": 381,
     "picked": false,
     "published": "2025-06-23",
     "tags": [
@@ -5580,10 +5580,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1553865": {
-    "downloads": 7989,
+    "downloads": 7992,
     "likes": 1138,
-    "prints": 6257,
-    "saves": 2772,
+    "prints": 6259,
+    "saves": 2773,
     "comments": 197,
     "picked": false,
     "published": "2025-06-26",
@@ -5615,10 +5615,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1556315": {
-    "downloads": 458,
+    "downloads": 459,
     "likes": 148,
-    "prints": 314,
-    "saves": 440,
+    "prints": 316,
+    "saves": 442,
     "comments": 18,
     "picked": false,
     "published": "2025-06-27",
@@ -5663,11 +5663,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1600675": {
-    "downloads": 21910,
-    "likes": 3533,
-    "prints": 20370,
-    "saves": 7922,
-    "comments": 1185,
+    "downloads": 21981,
+    "likes": 3559,
+    "prints": 20484,
+    "saves": 7975,
+    "comments": 1193,
     "picked": false,
     "published": "2025-07-12",
     "tags": [
@@ -5692,10 +5692,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1602658": {
-    "downloads": 1278,
-    "likes": 543,
-    "prints": 532,
-    "saves": 1285,
+    "downloads": 1279,
+    "likes": 544,
+    "prints": 534,
+    "saves": 1288,
     "comments": 70,
     "picked": false,
     "published": "2025-07-13",
@@ -5716,10 +5716,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1608147": {
-    "downloads": 5022,
-    "likes": 3397,
-    "prints": 2651,
-    "saves": 8610,
+    "downloads": 5031,
+    "likes": 3407,
+    "prints": 2659,
+    "saves": 8638,
     "comments": 236,
     "picked": false,
     "published": "2025-07-15",
@@ -5736,11 +5736,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1615239": {
-    "downloads": 3547,
-    "likes": 2403,
-    "prints": 3660,
-    "saves": 9134,
-    "comments": 258,
+    "downloads": 3580,
+    "likes": 2439,
+    "prints": 3695,
+    "saves": 9277,
+    "comments": 262,
     "picked": false,
     "published": "2025-07-17",
     "tags": [
@@ -5775,10 +5775,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1616971": {
-    "downloads": 20905,
-    "likes": 4866,
-    "prints": 20085,
-    "saves": 10934,
+    "downloads": 20916,
+    "likes": 4871,
+    "prints": 20114,
+    "saves": 10964,
     "comments": 1063,
     "picked": false,
     "published": "2025-07-18",
@@ -5796,11 +5796,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1623709": {
-    "downloads": 40780,
-    "likes": 9667,
-    "prints": 23806,
-    "saves": 20693,
-    "comments": 2450,
+    "downloads": 40812,
+    "likes": 9675,
+    "prints": 23842,
+    "saves": 20726,
+    "comments": 2451,
     "picked": false,
     "published": "2025-07-20",
     "tags": [
@@ -5817,11 +5817,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1634871": {
-    "downloads": 101285,
-    "likes": 21917,
-    "prints": 76658,
-    "saves": 57895,
-    "comments": 7232,
+    "downloads": 101389,
+    "likes": 21949,
+    "prints": 76826,
+    "saves": 58015,
+    "comments": 7244,
     "picked": false,
     "published": "2025-07-24",
     "tags": [
@@ -5844,11 +5844,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1636314": {
-    "downloads": 14993,
-    "likes": 11021,
-    "prints": 9398,
-    "saves": 31981,
-    "comments": 1095,
+    "downloads": 15032,
+    "likes": 11069,
+    "prints": 9436,
+    "saves": 32141,
+    "comments": 1096,
     "picked": false,
     "published": "2025-07-24",
     "tags": [
@@ -5869,10 +5869,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1645081": {
-    "downloads": 4486,
-    "likes": 2307,
-    "prints": 2814,
-    "saves": 6261,
+    "downloads": 4490,
+    "likes": 2309,
+    "prints": 2818,
+    "saves": 6270,
     "comments": 346,
     "picked": false,
     "published": "2025-07-27",
@@ -5896,11 +5896,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1645161": {
-    "downloads": 4111,
-    "likes": 1396,
-    "prints": 3150,
-    "saves": 5490,
-    "comments": 178,
+    "downloads": 4123,
+    "likes": 1402,
+    "prints": 3162,
+    "saves": 5518,
+    "comments": 180,
     "picked": false,
     "published": "2025-07-27",
     "tags": [
@@ -5924,11 +5924,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1663289": {
-    "downloads": 28671,
-    "likes": 9159,
-    "prints": 21621,
-    "saves": 22229,
-    "comments": 1856,
+    "downloads": 28686,
+    "likes": 9169,
+    "prints": 21648,
+    "saves": 22252,
+    "comments": 1858,
     "picked": false,
     "published": "2025-08-02",
     "tags": [
@@ -5958,9 +5958,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1694714": {
     "downloads": 473,
-    "likes": 147,
-    "prints": 242,
-    "saves": 352,
+    "likes": 148,
+    "prints": 243,
+    "saves": 353,
     "comments": 25,
     "picked": false,
     "published": "2025-08-12",
@@ -5978,11 +5978,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1702633": {
-    "downloads": 30396,
-    "likes": 18842,
-    "prints": 11758,
-    "saves": 59361,
-    "comments": 1828,
+    "downloads": 30420,
+    "likes": 18866,
+    "prints": 11773,
+    "saves": 59449,
+    "comments": 1833,
     "picked": true,
     "published": "2025-08-15",
     "tags": [
@@ -6011,11 +6011,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1706306": {
-    "downloads": 8898,
-    "likes": 3773,
-    "prints": 7138,
-    "saves": 8574,
-    "comments": 638,
+    "downloads": 8911,
+    "likes": 3774,
+    "prints": 7159,
+    "saves": 8593,
+    "comments": 640,
     "picked": false,
     "published": "2025-08-17",
     "tags": [
@@ -6036,11 +6036,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1755208": {
-    "downloads": 136856,
-    "likes": 22724,
-    "prints": 122253,
-    "saves": 60635,
-    "comments": 9771,
+    "downloads": 137239,
+    "likes": 22832,
+    "prints": 122876,
+    "saves": 60925,
+    "comments": 9811,
     "picked": false,
     "published": "2025-09-01",
     "tags": [
@@ -6075,10 +6075,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1759945": {
-    "downloads": 6463,
+    "downloads": 6472,
     "likes": 1290,
-    "prints": 4187,
-    "saves": 2580,
+    "prints": 4196,
+    "saves": 2583,
     "comments": 292,
     "picked": false,
     "published": "2025-09-03",
@@ -6096,11 +6096,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1761373": {
-    "downloads": 2431,
-    "likes": 2759,
-    "prints": 1617,
-    "saves": 7293,
-    "comments": 221,
+    "downloads": 2445,
+    "likes": 2782,
+    "prints": 1624,
+    "saves": 7337,
+    "comments": 225,
     "picked": false,
     "published": "2025-09-03",
     "tags": [
@@ -6125,10 +6125,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1764475": {
-    "downloads": 10939,
-    "likes": 4545,
-    "prints": 9712,
-    "saves": 13980,
+    "downloads": 10965,
+    "likes": 4562,
+    "prints": 9761,
+    "saves": 14034,
     "comments": 786,
     "picked": false,
     "published": "2025-09-04",
@@ -6158,10 +6158,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1764712": {
-    "downloads": 15015,
-    "likes": 9068,
-    "prints": 11184,
-    "saves": 20902,
+    "downloads": 15028,
+    "likes": 9080,
+    "prints": 11201,
+    "saves": 20925,
     "comments": 1253,
     "picked": false,
     "published": "2025-09-04",
@@ -6195,7 +6195,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "likes": 2557,
     "prints": 2289,
     "saves": 7347,
-    "comments": 1052,
+    "comments": 1055,
     "picked": false,
     "published": "2025-09-06",
     "tags": [
@@ -6217,11 +6217,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1772809": {
-    "downloads": 79495,
-    "likes": 20200,
-    "prints": 57372,
-    "saves": 46746,
-    "comments": 4455,
+    "downloads": 79562,
+    "likes": 20231,
+    "prints": 57464,
+    "saves": 46826,
+    "comments": 4459,
     "picked": false,
     "published": "2025-09-07",
     "tags": [
@@ -6244,9 +6244,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1797688": {
     "downloads": 425,
-    "likes": 2025,
-    "prints": 147,
-    "saves": 6936,
+    "likes": 2027,
+    "prints": 149,
+    "saves": 6958,
     "comments": 78,
     "picked": false,
     "published": "2025-09-15",
@@ -6267,11 +6267,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1806217": {
-    "downloads": 19357,
-    "likes": 10883,
-    "prints": 11225,
-    "saves": 26235,
-    "comments": 1398,
+    "downloads": 19373,
+    "likes": 10900,
+    "prints": 11241,
+    "saves": 26301,
+    "comments": 1400,
     "picked": false,
     "published": "2025-09-18",
     "tags": [
@@ -6297,10 +6297,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1823071": {
-    "downloads": 982,
-    "likes": 887,
+    "downloads": 983,
+    "likes": 889,
     "prints": 496,
-    "saves": 2142,
+    "saves": 2146,
     "comments": 76,
     "picked": false,
     "published": "2025-09-24",
@@ -6336,11 +6336,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1835046": {
-    "downloads": 6779,
-    "likes": 1568,
-    "prints": 4746,
-    "saves": 4034,
-    "comments": 271,
+    "downloads": 6789,
+    "likes": 1571,
+    "prints": 4764,
+    "saves": 4052,
+    "comments": 274,
     "picked": false,
     "published": "2025-09-28",
     "tags": [
@@ -6361,11 +6361,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1841781": {
-    "downloads": 24279,
-    "likes": 6637,
-    "prints": 20164,
-    "saves": 17710,
-    "comments": 928,
+    "downloads": 24303,
+    "likes": 6648,
+    "prints": 20210,
+    "saves": 17765,
+    "comments": 930,
     "picked": false,
     "published": "2025-09-30",
     "tags": [
@@ -6388,11 +6388,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1842643": {
-    "downloads": 26763,
-    "likes": 6720,
-    "prints": 20778,
-    "saves": 17159,
-    "comments": 835,
+    "downloads": 26872,
+    "likes": 6753,
+    "prints": 20932,
+    "saves": 17260,
+    "comments": 839,
     "picked": false,
     "published": "2025-09-30",
     "tags": [
@@ -6413,11 +6413,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1876976": {
-    "downloads": 14753,
-    "likes": 5016,
-    "prints": 10888,
-    "saves": 16022,
-    "comments": 931,
+    "downloads": 14769,
+    "likes": 5027,
+    "prints": 10922,
+    "saves": 16068,
+    "comments": 934,
     "picked": false,
     "published": "2025-10-11",
     "tags": [
@@ -6452,11 +6452,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1889932": {
-    "downloads": 13345,
-    "likes": 7645,
-    "prints": 8723,
-    "saves": 25661,
-    "comments": 663,
+    "downloads": 13358,
+    "likes": 7675,
+    "prints": 8748,
+    "saves": 25770,
+    "comments": 664,
     "picked": false,
     "published": "2025-10-15",
     "tags": [
@@ -6491,10 +6491,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1900215": {
-    "downloads": 1007,
-    "likes": 405,
+    "downloads": 1008,
+    "likes": 406,
     "prints": 606,
-    "saves": 963,
+    "saves": 967,
     "comments": 97,
     "picked": false,
     "published": "2025-10-18",
@@ -6511,10 +6511,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1903673": {
-    "downloads": 1140,
-    "likes": 581,
-    "prints": 812,
-    "saves": 1486,
+    "downloads": 1142,
+    "likes": 583,
+    "prints": 814,
+    "saves": 1491,
     "comments": 41,
     "picked": false,
     "published": "2025-10-19",
@@ -6529,9 +6529,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1909628": {
     "downloads": 7945,
-    "likes": 4605,
-    "prints": 3702,
-    "saves": 11657,
+    "likes": 4608,
+    "prints": 3703,
+    "saves": 11671,
     "comments": 368,
     "picked": false,
     "published": "2025-10-21",
@@ -6567,10 +6567,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1910419": {
-    "downloads": 980,
-    "likes": 810,
-    "prints": 687,
-    "saves": 1893,
+    "downloads": 982,
+    "likes": 811,
+    "prints": 689,
+    "saves": 1901,
     "comments": 40,
     "picked": false,
     "published": "2025-10-21",
@@ -6594,10 +6594,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1914756": {
-    "downloads": 2982,
-    "likes": 1155,
-    "prints": 3628,
-    "saves": 3611,
+    "downloads": 3011,
+    "likes": 1177,
+    "prints": 3680,
+    "saves": 3679,
     "comments": 185,
     "picked": false,
     "published": "2025-10-22",
@@ -6620,7 +6620,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "1935027": {
     "downloads": 1350,
     "likes": 348,
-    "prints": 799,
+    "prints": 800,
     "saves": 930,
     "comments": 42,
     "picked": false,
@@ -6637,11 +6637,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1954658": {
-    "downloads": 33775,
-    "likes": 8020,
-    "prints": 28396,
-    "saves": 24722,
-    "comments": 1295,
+    "downloads": 33812,
+    "likes": 8033,
+    "prints": 28467,
+    "saves": 24797,
+    "comments": 1299,
     "picked": false,
     "published": "2025-11-03",
     "tags": [
@@ -6662,9 +6662,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "1970508": {
     "downloads": 1111,
-    "likes": 704,
-    "prints": 787,
-    "saves": 1639,
+    "likes": 706,
+    "prints": 788,
+    "saves": 1640,
     "comments": 52,
     "picked": false,
     "published": "2025-11-07",
@@ -6695,11 +6695,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1971172": {
-    "downloads": 100084,
-    "likes": 25894,
-    "prints": 75245,
-    "saves": 92325,
-    "comments": 7855,
+    "downloads": 100260,
+    "likes": 25990,
+    "prints": 75456,
+    "saves": 92663,
+    "comments": 7871,
     "picked": false,
     "published": "2025-11-08",
     "tags": [
@@ -6734,11 +6734,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1994253": {
-    "downloads": 4995,
-    "likes": 1843,
-    "prints": 2347,
-    "saves": 4475,
-    "comments": 194,
+    "downloads": 5002,
+    "likes": 1845,
+    "prints": 2355,
+    "saves": 4491,
+    "comments": 196,
     "picked": false,
     "published": "2025-11-13",
     "tags": [
@@ -6759,10 +6759,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "1994754": {
-    "downloads": 3151,
-    "likes": 1637,
-    "prints": 2728,
-    "saves": 4191,
+    "downloads": 3160,
+    "likes": 1642,
+    "prints": 2740,
+    "saves": 4212,
     "comments": 127,
     "picked": false,
     "published": "2025-11-14",
@@ -6783,11 +6783,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2000966": {
-    "downloads": 24448,
-    "likes": 3432,
-    "prints": 24289,
-    "saves": 9022,
-    "comments": 1227,
+    "downloads": 24510,
+    "likes": 3441,
+    "prints": 24405,
+    "saves": 9047,
+    "comments": 1232,
     "picked": false,
     "published": "2025-11-15",
     "tags": [
@@ -6815,11 +6815,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2002935": {
-    "downloads": 27054,
-    "likes": 11103,
-    "prints": 24005,
-    "saves": 23368,
-    "comments": 1670,
+    "downloads": 27129,
+    "likes": 11157,
+    "prints": 24128,
+    "saves": 23521,
+    "comments": 1680,
     "picked": false,
     "published": "2025-11-16",
     "tags": [
@@ -6835,10 +6835,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2019559": {
-    "downloads": 1174,
-    "likes": 449,
-    "prints": 962,
-    "saves": 1249,
+    "downloads": 1176,
+    "likes": 451,
+    "prints": 970,
+    "saves": 1254,
     "comments": 48,
     "picked": false,
     "published": "2025-11-20",
@@ -6862,7 +6862,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2020460": {
     "downloads": 70,
-    "likes": 43,
+    "likes": 44,
     "prints": 41,
     "saves": 92,
     "comments": 5,
@@ -6882,9 +6882,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2027619": {
-    "downloads": 10102,
+    "downloads": 10108,
     "likes": 2018,
-    "prints": 7224,
+    "prints": 7233,
     "saves": 5617,
     "comments": 598,
     "picked": false,
@@ -6921,11 +6921,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2029248": {
-    "downloads": 25443,
-    "likes": 6843,
-    "prints": 22970,
-    "saves": 18393,
-    "comments": 1728,
+    "downloads": 25469,
+    "likes": 6855,
+    "prints": 23010,
+    "saves": 18431,
+    "comments": 1733,
     "picked": false,
     "published": "2025-11-23",
     "tags": [
@@ -6939,12 +6939,33 @@ export const SIGNALS: Record<string, ModelSignals> = {
       "Toys & Games"
     ]
   },
+  "2094802": {
+    "downloads": 12193,
+    "likes": 3984,
+    "prints": 9461,
+    "saves": 11341,
+    "comments": 479,
+    "picked": false,
+    "published": "2025-12-09",
+    "tags": [
+      "猫",
+      "手机支架",
+      "办公室",
+      "办公桌",
+      "家用",
+      "好用"
+    ],
+    "cats": [
+      "Other House Models",
+      "Household"
+    ]
+  },
   "2112117": {
-    "downloads": 99490,
-    "likes": 14989,
-    "prints": 71543,
-    "saves": 39297,
-    "comments": 7169,
+    "downloads": 99518,
+    "likes": 14990,
+    "prints": 71586,
+    "saves": 39305,
+    "comments": 7172,
     "picked": false,
     "published": "2025-12-13",
     "tags": [
@@ -6965,11 +6986,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2121218": {
-    "downloads": 7783,
-    "likes": 6203,
-    "prints": 5566,
-    "saves": 14826,
-    "comments": 417,
+    "downloads": 7813,
+    "likes": 6245,
+    "prints": 5600,
+    "saves": 14895,
+    "comments": 420,
     "picked": false,
     "published": "2025-12-15",
     "tags": [
@@ -6988,10 +7009,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2125984": {
-    "downloads": 571,
-    "likes": 254,
-    "prints": 315,
-    "saves": 844,
+    "downloads": 572,
+    "likes": 256,
+    "prints": 317,
+    "saves": 847,
     "comments": 30,
     "picked": false,
     "published": "2025-12-17",
@@ -7022,11 +7043,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2131460": {
-    "downloads": 3491,
+    "downloads": 3492,
     "likes": 2172,
     "prints": 2235,
-    "saves": 5218,
-    "comments": 266,
+    "saves": 5221,
+    "comments": 267,
     "picked": false,
     "published": "2025-12-18",
     "tags": [
@@ -7040,11 +7061,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2134683": {
-    "downloads": 13934,
+    "downloads": 13937,
     "likes": 3227,
-    "prints": 8743,
-    "saves": 8738,
-    "comments": 509,
+    "prints": 8746,
+    "saves": 8742,
+    "comments": 510,
     "picked": false,
     "published": "2025-12-19",
     "tags": [
@@ -7064,11 +7085,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2142966": {
-    "downloads": 34001,
-    "likes": 7838,
-    "prints": 21196,
-    "saves": 21066,
-    "comments": 1724,
+    "downloads": 34021,
+    "likes": 7845,
+    "prints": 21230,
+    "saves": 21095,
+    "comments": 1725,
     "picked": false,
     "published": "2025-12-21",
     "tags": [
@@ -7093,10 +7114,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2149525": {
-    "downloads": 311,
-    "likes": 177,
-    "prints": 166,
-    "saves": 654,
+    "downloads": 312,
+    "likes": 180,
+    "prints": 167,
+    "saves": 663,
     "comments": 9,
     "picked": false,
     "published": "2025-12-23",
@@ -7119,11 +7140,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2160924": {
-    "downloads": 21804,
-    "likes": 12542,
-    "prints": 14009,
-    "saves": 37675,
-    "comments": 679,
+    "downloads": 21876,
+    "likes": 12582,
+    "prints": 14060,
+    "saves": 37799,
+    "comments": 681,
     "picked": false,
     "published": "2025-12-26",
     "tags": [
@@ -7152,11 +7173,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2169245": {
-    "downloads": 18511,
-    "likes": 5519,
-    "prints": 15372,
-    "saves": 13393,
-    "comments": 1026,
+    "downloads": 18566,
+    "likes": 5534,
+    "prints": 15455,
+    "saves": 13451,
+    "comments": 1028,
     "picked": false,
     "published": "2025-12-28",
     "tags": [
@@ -7173,11 +7194,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2172202": {
-    "downloads": 4685,
-    "likes": 2973,
-    "prints": 2817,
-    "saves": 8543,
-    "comments": 271,
+    "downloads": 4690,
+    "likes": 2983,
+    "prints": 2825,
+    "saves": 8571,
+    "comments": 272,
     "picked": false,
     "published": "2025-12-29",
     "tags": [
@@ -7202,10 +7223,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2193499": {
-    "downloads": 5740,
-    "likes": 1246,
-    "prints": 4621,
-    "saves": 3376,
+    "downloads": 5747,
+    "likes": 1251,
+    "prints": 4627,
+    "saves": 3384,
     "comments": 287,
     "picked": false,
     "published": "2026-01-03",
@@ -7241,11 +7262,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2196193": {
-    "downloads": 32012,
-    "likes": 7475,
-    "prints": 35382,
-    "saves": 23058,
-    "comments": 1933,
+    "downloads": 32088,
+    "likes": 7518,
+    "prints": 35570,
+    "saves": 23172,
+    "comments": 1936,
     "picked": false,
     "published": "2026-01-03",
     "tags": [
@@ -7280,11 +7301,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2205355": {
-    "downloads": 2397,
-    "likes": 1652,
-    "prints": 1626,
-    "saves": 5024,
-    "comments": 167,
+    "downloads": 2413,
+    "likes": 1665,
+    "prints": 1643,
+    "saves": 5094,
+    "comments": 168,
     "picked": false,
     "published": "2026-01-05",
     "tags": [
@@ -7302,11 +7323,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2207601": {
-    "downloads": 35581,
-    "likes": 6541,
-    "prints": 30036,
-    "saves": 19970,
-    "comments": 1854,
+    "downloads": 35676,
+    "likes": 6559,
+    "prints": 30172,
+    "saves": 20041,
+    "comments": 1858,
     "picked": false,
     "published": "2026-01-06",
     "tags": [
@@ -7328,10 +7349,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2211015": {
-    "downloads": 8336,
-    "likes": 6268,
-    "prints": 4914,
-    "saves": 18376,
+    "downloads": 8361,
+    "likes": 6278,
+    "prints": 4932,
+    "saves": 18441,
     "comments": 540,
     "picked": false,
     "published": "2026-01-07",
@@ -7356,10 +7377,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2217842": {
-    "downloads": 4234,
-    "likes": 1646,
-    "prints": 2801,
-    "saves": 4724,
+    "downloads": 4243,
+    "likes": 1651,
+    "prints": 2810,
+    "saves": 4740,
     "comments": 134,
     "picked": false,
     "published": "2026-01-08",
@@ -7391,10 +7412,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2227274": {
-    "downloads": 9992,
-    "likes": 1812,
-    "prints": 8155,
-    "saves": 5029,
+    "downloads": 10003,
+    "likes": 1817,
+    "prints": 8170,
+    "saves": 5037,
     "comments": 528,
     "picked": false,
     "published": "2026-01-10",
@@ -7430,11 +7451,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2249212": {
-    "downloads": 5197,
-    "likes": 1996,
-    "prints": 3080,
-    "saves": 5194,
-    "comments": 248,
+    "downloads": 5212,
+    "likes": 2003,
+    "prints": 3093,
+    "saves": 5226,
+    "comments": 249,
     "picked": false,
     "published": "2026-01-15",
     "tags": [
@@ -7454,11 +7475,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2253620": {
-    "downloads": 2651,
-    "likes": 5711,
-    "prints": 1253,
-    "saves": 15351,
-    "comments": 516,
+    "downloads": 2652,
+    "likes": 5712,
+    "prints": 1254,
+    "saves": 15352,
+    "comments": 517,
     "picked": true,
     "published": "2026-01-16",
     "tags": [
@@ -7522,8 +7543,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2257373": {
     "downloads": 1437,
     "likes": 709,
-    "prints": 1006,
-    "saves": 1864,
+    "prints": 1007,
+    "saves": 1869,
     "comments": 73,
     "picked": false,
     "published": "2026-01-17",
@@ -7543,11 +7564,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2268549": {
-    "downloads": 36338,
-    "likes": 17486,
-    "prints": 27144,
-    "saves": 69195,
-    "comments": 2967,
+    "downloads": 36441,
+    "likes": 17559,
+    "prints": 27275,
+    "saves": 69514,
+    "comments": 2979,
     "picked": false,
     "published": "2026-01-19",
     "tags": [
@@ -7582,11 +7603,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2286601": {
-    "downloads": 4091,
-    "likes": 2843,
-    "prints": 2383,
-    "saves": 9388,
-    "comments": 221,
+    "downloads": 4107,
+    "likes": 2856,
+    "prints": 2397,
+    "saves": 9440,
+    "comments": 222,
     "picked": false,
     "published": "2026-01-23",
     "tags": [
@@ -7605,11 +7626,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2291285": {
-    "downloads": 13603,
-    "likes": 4941,
-    "prints": 14460,
-    "saves": 18923,
-    "comments": 656,
+    "downloads": 13660,
+    "likes": 4959,
+    "prints": 14545,
+    "saves": 19027,
+    "comments": 658,
     "picked": false,
     "published": "2026-01-24",
     "tags": [
@@ -7644,10 +7665,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2325060": {
-    "downloads": 18075,
-    "likes": 6315,
-    "prints": 15417,
-    "saves": 17545,
+    "downloads": 18107,
+    "likes": 6326,
+    "prints": 15456,
+    "saves": 17590,
     "comments": 1247,
     "picked": false,
     "published": "2026-01-30",
@@ -7683,10 +7704,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2335039": {
-    "downloads": 1171,
+    "downloads": 1173,
     "likes": 568,
-    "prints": 617,
-    "saves": 1599,
+    "prints": 619,
+    "saves": 1606,
     "comments": 47,
     "picked": false,
     "published": "2026-02-01",
@@ -7711,11 +7732,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2336776": {
-    "downloads": 11121,
-    "likes": 1993,
-    "prints": 11794,
-    "saves": 6995,
-    "comments": 679,
+    "downloads": 11153,
+    "likes": 2007,
+    "prints": 11851,
+    "saves": 7006,
+    "comments": 684,
     "picked": false,
     "published": "2026-02-02",
     "tags": [
@@ -7750,11 +7771,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2341542": {
-    "downloads": 3466,
-    "likes": 4698,
-    "prints": 2525,
-    "saves": 16666,
-    "comments": 228,
+    "downloads": 3475,
+    "likes": 4717,
+    "prints": 2535,
+    "saves": 16746,
+    "comments": 230,
     "picked": false,
     "published": "2026-02-02",
     "tags": [
@@ -7782,11 +7803,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2358777": {
-    "downloads": 14763,
-    "likes": 11415,
-    "prints": 7799,
-    "saves": 35449,
-    "comments": 1486,
+    "downloads": 14793,
+    "likes": 11438,
+    "prints": 7823,
+    "saves": 35531,
+    "comments": 1487,
     "picked": false,
     "published": "2026-02-06",
     "tags": [],
@@ -7796,11 +7817,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2373430": {
-    "downloads": 7296,
-    "likes": 2746,
-    "prints": 7070,
-    "saves": 6581,
-    "comments": 291,
+    "downloads": 7324,
+    "likes": 2756,
+    "prints": 7109,
+    "saves": 6604,
+    "comments": 293,
     "picked": false,
     "published": "2026-02-09",
     "tags": [
@@ -7819,10 +7840,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2375134": {
-    "downloads": 1331,
-    "likes": 1607,
-    "prints": 384,
-    "saves": 4718,
+    "downloads": 1334,
+    "likes": 1615,
+    "prints": 386,
+    "saves": 4742,
     "comments": 95,
     "picked": false,
     "published": "2026-02-09",
@@ -7852,11 +7873,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2401127": {
-    "downloads": 5739,
-    "likes": 1754,
-    "prints": 5030,
-    "saves": 3826,
-    "comments": 320,
+    "downloads": 5769,
+    "likes": 1771,
+    "prints": 5076,
+    "saves": 3860,
+    "comments": 322,
     "picked": false,
     "published": "2026-02-15",
     "tags": [
@@ -7879,11 +7900,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2402555": {
-    "downloads": 8235,
-    "likes": 7635,
-    "prints": 4787,
-    "saves": 23468,
-    "comments": 450,
+    "downloads": 8237,
+    "likes": 7640,
+    "prints": 4795,
+    "saves": 23483,
+    "comments": 453,
     "picked": true,
     "published": "2026-02-15",
     "tags": [
@@ -7918,10 +7939,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2403804": {
-    "downloads": 4093,
-    "likes": 2741,
-    "prints": 1971,
-    "saves": 7821,
+    "downloads": 4098,
+    "likes": 2746,
+    "prints": 1972,
+    "saves": 7831,
     "comments": 291,
     "picked": false,
     "published": "2026-02-15",
@@ -7955,11 +7976,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2409022": {
-    "downloads": 70273,
-    "likes": 25661,
-    "prints": 68797,
-    "saves": 66419,
-    "comments": 3003,
+    "downloads": 70520,
+    "likes": 25749,
+    "prints": 69086,
+    "saves": 66682,
+    "comments": 3021,
     "picked": false,
     "published": "2026-02-17",
     "tags": [
@@ -7988,10 +8009,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2426234": {
-    "downloads": 3842,
-    "likes": 2599,
-    "prints": 2642,
-    "saves": 7212,
+    "downloads": 3847,
+    "likes": 2604,
+    "prints": 2651,
+    "saves": 7234,
     "comments": 220,
     "picked": false,
     "published": "2026-02-21",
@@ -8016,11 +8037,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2433278": {
-    "downloads": 75071,
-    "likes": 15668,
-    "prints": 57868,
-    "saves": 45892,
-    "comments": 4132,
+    "downloads": 75123,
+    "likes": 15701,
+    "prints": 57968,
+    "saves": 45979,
+    "comments": 4136,
     "picked": false,
     "published": "2026-02-22",
     "tags": [
@@ -8046,11 +8067,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2454367": {
-    "downloads": 15118,
-    "likes": 4194,
-    "prints": 13997,
-    "saves": 12743,
-    "comments": 704,
+    "downloads": 15171,
+    "likes": 4216,
+    "prints": 14065,
+    "saves": 12798,
+    "comments": 709,
     "picked": false,
     "published": "2026-02-27",
     "tags": [
@@ -8085,11 +8106,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2459711": {
-    "downloads": 47151,
-    "likes": 19336,
-    "prints": 35899,
-    "saves": 56497,
-    "comments": 2305,
+    "downloads": 47299,
+    "likes": 19417,
+    "prints": 36069,
+    "saves": 56774,
+    "comments": 2313,
     "picked": false,
     "published": "2026-02-28",
     "tags": [
@@ -8117,10 +8138,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2467622": {
-    "downloads": 106,
+    "downloads": 107,
     "likes": 93,
-    "prints": 53,
-    "saves": 303,
+    "prints": 54,
+    "saves": 304,
     "comments": 2,
     "picked": false,
     "published": "2026-03-02",
@@ -8141,11 +8162,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2469109": {
-    "downloads": 7827,
-    "likes": 5213,
-    "prints": 5754,
-    "saves": 18191,
-    "comments": 371,
+    "downloads": 7854,
+    "likes": 5239,
+    "prints": 5784,
+    "saves": 18278,
+    "comments": 375,
     "picked": false,
     "published": "2026-03-02",
     "tags": [
@@ -8166,10 +8187,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2472655": {
-    "downloads": 4133,
-    "likes": 1068,
-    "prints": 3631,
-    "saves": 3254,
+    "downloads": 4136,
+    "likes": 1069,
+    "prints": 3634,
+    "saves": 3257,
     "comments": 222,
     "picked": false,
     "published": "2026-03-03",
@@ -8186,11 +8207,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2478859": {
-    "downloads": 2072,
-    "likes": 1397,
-    "prints": 1868,
-    "saves": 4271,
-    "comments": 108,
+    "downloads": 2080,
+    "likes": 1411,
+    "prints": 1883,
+    "saves": 4303,
+    "comments": 110,
     "picked": false,
     "published": "2026-03-04",
     "tags": [
@@ -8209,11 +8230,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2506482": {
-    "downloads": 18728,
-    "likes": 9460,
-    "prints": 13571,
-    "saves": 24409,
-    "comments": 798,
+    "downloads": 18753,
+    "likes": 9482,
+    "prints": 13612,
+    "saves": 24452,
+    "comments": 799,
     "picked": true,
     "published": "2026-03-10",
     "tags": [
@@ -8239,11 +8260,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2506630": {
-    "downloads": 97242,
-    "likes": 19958,
-    "prints": 82411,
-    "saves": 58598,
-    "comments": 4559,
+    "downloads": 97430,
+    "likes": 20017,
+    "prints": 82662,
+    "saves": 58783,
+    "comments": 4570,
     "picked": false,
     "published": "2026-03-10",
     "tags": [
@@ -8267,10 +8288,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2513782": {
-    "downloads": 1086,
-    "likes": 1511,
-    "prints": 560,
-    "saves": 4013,
+    "downloads": 1089,
+    "likes": 1512,
+    "prints": 562,
+    "saves": 4024,
     "comments": 136,
     "picked": false,
     "published": "2026-03-12",
@@ -8281,11 +8302,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2520704": {
-    "downloads": 1928,
-    "likes": 1872,
-    "prints": 2081,
-    "saves": 5904,
-    "comments": 70,
+    "downloads": 1942,
+    "likes": 1894,
+    "prints": 2112,
+    "saves": 5968,
+    "comments": 72,
     "picked": false,
     "published": "2026-03-14",
     "tags": [
@@ -8301,10 +8322,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2525116": {
-    "downloads": 3168,
-    "likes": 3015,
-    "prints": 2374,
-    "saves": 8273,
+    "downloads": 3171,
+    "likes": 3019,
+    "prints": 2383,
+    "saves": 8291,
     "comments": 134,
     "picked": false,
     "published": "2026-03-15",
@@ -8340,10 +8361,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2530037": {
-    "downloads": 490,
-    "likes": 697,
-    "prints": 690,
-    "saves": 2246,
+    "downloads": 493,
+    "likes": 702,
+    "prints": 692,
+    "saves": 2257,
     "comments": 40,
     "picked": false,
     "published": "2026-03-16",
@@ -8366,7 +8387,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 753,
     "likes": 766,
     "prints": 409,
-    "saves": 2459,
+    "saves": 2458,
     "comments": 18,
     "picked": false,
     "published": "2026-03-16",
@@ -8395,10 +8416,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2532701": {
-    "downloads": 1372,
-    "likes": 390,
-    "prints": 976,
-    "saves": 1138,
+    "downloads": 1374,
+    "likes": 391,
+    "prints": 980,
+    "saves": 1140,
     "comments": 70,
     "picked": false,
     "published": "2026-03-16",
@@ -8434,11 +8455,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2544759": {
-    "downloads": 7783,
-    "likes": 4049,
-    "prints": 6048,
-    "saves": 11922,
-    "comments": 509,
+    "downloads": 7806,
+    "likes": 4058,
+    "prints": 6078,
+    "saves": 11974,
+    "comments": 512,
     "picked": false,
     "published": "2026-03-19",
     "tags": [
@@ -8469,10 +8490,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2547003": {
-    "downloads": 12741,
-    "likes": 4846,
-    "prints": 11454,
-    "saves": 18703,
+    "downloads": 12758,
+    "likes": 4854,
+    "prints": 11488,
+    "saves": 18743,
     "comments": 1651,
     "picked": false,
     "published": "2026-03-19",
@@ -8508,11 +8529,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2554479": {
-    "downloads": 3740,
-    "likes": 1870,
-    "prints": 2977,
-    "saves": 5144,
-    "comments": 133,
+    "downloads": 3750,
+    "likes": 1875,
+    "prints": 3004,
+    "saves": 5161,
+    "comments": 134,
     "picked": false,
     "published": "2026-03-21",
     "tags": [
@@ -8542,11 +8563,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2560145": {
-    "downloads": 6329,
-    "likes": 3622,
-    "prints": 4190,
-    "saves": 11388,
-    "comments": 265,
+    "downloads": 6349,
+    "likes": 3633,
+    "prints": 4213,
+    "saves": 11418,
+    "comments": 267,
     "picked": false,
     "published": "2026-03-22",
     "tags": [
@@ -8565,11 +8586,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2563578": {
-    "downloads": 24363,
-    "likes": 6328,
-    "prints": 21147,
-    "saves": 14623,
-    "comments": 1315,
+    "downloads": 24417,
+    "likes": 6350,
+    "prints": 21233,
+    "saves": 14679,
+    "comments": 1319,
     "picked": false,
     "published": "2026-03-23",
     "tags": [
@@ -8591,11 +8612,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2565168": {
-    "downloads": 35319,
-    "likes": 11905,
-    "prints": 30583,
-    "saves": 34778,
-    "comments": 2575,
+    "downloads": 35329,
+    "likes": 11903,
+    "prints": 30594,
+    "saves": 34794,
+    "comments": 2580,
     "picked": false,
     "published": "2026-03-23",
     "tags": [
@@ -8622,10 +8643,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2578419": {
-    "downloads": 129,
-    "likes": 107,
-    "prints": 95,
-    "saves": 270,
+    "downloads": 131,
+    "likes": 106,
+    "prints": 96,
+    "saves": 272,
     "comments": 12,
     "picked": false,
     "published": "2026-03-27",
@@ -8644,11 +8665,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2602664": {
-    "downloads": 3901,
-    "likes": 2196,
-    "prints": 3179,
-    "saves": 8226,
-    "comments": 532,
+    "downloads": 3910,
+    "likes": 2208,
+    "prints": 3192,
+    "saves": 8244,
+    "comments": 534,
     "picked": false,
     "published": "2026-04-01",
     "tags": [
@@ -8669,11 +8690,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2606112": {
-    "downloads": 9734,
-    "likes": 4029,
-    "prints": 8876,
-    "saves": 12369,
-    "comments": 619,
+    "downloads": 9788,
+    "likes": 4051,
+    "prints": 8932,
+    "saves": 12431,
+    "comments": 621,
     "picked": false,
     "published": "2026-04-02",
     "tags": [
@@ -8708,11 +8729,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2608825": {
-    "downloads": 14739,
-    "likes": 4614,
-    "prints": 14134,
-    "saves": 15002,
-    "comments": 491,
+    "downloads": 14786,
+    "likes": 4639,
+    "prints": 14194,
+    "saves": 15063,
+    "comments": 492,
     "picked": false,
     "published": "2026-04-02",
     "tags": [
@@ -8732,10 +8753,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2614414": {
-    "downloads": 17284,
-    "likes": 4259,
-    "prints": 14332,
-    "saves": 12202,
+    "downloads": 17306,
+    "likes": 4261,
+    "prints": 14362,
+    "saves": 12239,
     "comments": 793,
     "picked": false,
     "published": "2026-04-04",
@@ -8759,11 +8780,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2615261": {
-    "downloads": 5267,
-    "likes": 5342,
-    "prints": 3556,
-    "saves": 17681,
-    "comments": 469,
+    "downloads": 5272,
+    "likes": 5350,
+    "prints": 3568,
+    "saves": 17697,
+    "comments": 470,
     "picked": true,
     "published": "2026-04-04",
     "tags": [
@@ -8786,9 +8807,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2616913": {
     "downloads": 917,
-    "likes": 270,
-    "prints": 889,
-    "saves": 681,
+    "likes": 269,
+    "prints": 891,
+    "saves": 687,
     "comments": 77,
     "picked": false,
     "published": "2026-04-04",
@@ -8824,10 +8845,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2619092": {
-    "downloads": 2160,
-    "likes": 2211,
-    "prints": 829,
-    "saves": 6180,
+    "downloads": 2166,
+    "likes": 2217,
+    "prints": 834,
+    "saves": 6210,
     "comments": 120,
     "picked": false,
     "published": "2026-04-05",
@@ -8863,11 +8884,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2624902": {
-    "downloads": 27215,
-    "likes": 20222,
-    "prints": 17644,
-    "saves": 62571,
-    "comments": 1372,
+    "downloads": 27315,
+    "likes": 20356,
+    "prints": 17766,
+    "saves": 63033,
+    "comments": 1378,
     "picked": false,
     "published": "2026-04-06",
     "tags": [
@@ -8902,11 +8923,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2630368": {
-    "downloads": 5688,
-    "likes": 3861,
-    "prints": 5098,
-    "saves": 12664,
-    "comments": 418,
+    "downloads": 5707,
+    "likes": 3872,
+    "prints": 5126,
+    "saves": 12701,
+    "comments": 419,
     "picked": false,
     "published": "2026-04-07",
     "tags": [
@@ -8941,11 +8962,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2630726": {
-    "downloads": 1414,
-    "likes": 2945,
-    "prints": 914,
-    "saves": 6509,
-    "comments": 117,
+    "downloads": 1416,
+    "likes": 2965,
+    "prints": 919,
+    "saves": 6555,
+    "comments": 119,
     "picked": false,
     "published": "2026-04-07",
     "tags": [
@@ -8980,11 +9001,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2633270": {
-    "downloads": 3599,
-    "likes": 3834,
-    "prints": 3138,
-    "saves": 13418,
-    "comments": 154,
+    "downloads": 3609,
+    "likes": 3849,
+    "prints": 3152,
+    "saves": 13472,
+    "comments": 155,
     "picked": false,
     "published": "2026-04-08",
     "tags": [
@@ -9007,9 +9028,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2634318": {
     "downloads": 1761,
-    "likes": 2005,
+    "likes": 2006,
     "prints": 1033,
-    "saves": 5043,
+    "saves": 5051,
     "comments": 100,
     "picked": true,
     "published": "2026-04-08",
@@ -9060,10 +9081,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2647425": {
-    "downloads": 1969,
-    "likes": 2675,
-    "prints": 359,
-    "saves": 7932,
+    "downloads": 1975,
+    "likes": 2703,
+    "prints": 362,
+    "saves": 7975,
     "comments": 49,
     "picked": false,
     "published": "2026-04-11",
@@ -9082,10 +9103,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2660713": {
-    "downloads": 2414,
-    "likes": 1904,
-    "prints": 1931,
-    "saves": 5806,
+    "downloads": 2425,
+    "likes": 1915,
+    "prints": 1949,
+    "saves": 5841,
     "comments": 171,
     "picked": false,
     "published": "2026-04-14",
@@ -9121,11 +9142,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2661039": {
-    "downloads": 38836,
-    "likes": 15327,
-    "prints": 33761,
-    "saves": 36281,
-    "comments": 2551,
+    "downloads": 38879,
+    "likes": 15352,
+    "prints": 33844,
+    "saves": 36352,
+    "comments": 2555,
     "picked": true,
     "published": "2026-04-14",
     "tags": [
@@ -9143,10 +9164,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2667491": {
-    "downloads": 4315,
-    "likes": 1912,
-    "prints": 4477,
-    "saves": 4781,
+    "downloads": 4345,
+    "likes": 1926,
+    "prints": 4546,
+    "saves": 4839,
     "comments": 191,
     "picked": false,
     "published": "2026-04-16",
@@ -9170,11 +9191,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2673148": {
-    "downloads": 3863,
-    "likes": 4457,
-    "prints": 2065,
-    "saves": 17225,
-    "comments": 181,
+    "downloads": 3871,
+    "likes": 4468,
+    "prints": 2077,
+    "saves": 17280,
+    "comments": 183,
     "picked": false,
     "published": "2026-04-17",
     "tags": [
@@ -9201,11 +9222,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2681824": {
-    "downloads": 13628,
-    "likes": 8157,
-    "prints": 10308,
-    "saves": 23852,
-    "comments": 539,
+    "downloads": 13667,
+    "likes": 8190,
+    "prints": 10351,
+    "saves": 23955,
+    "comments": 540,
     "picked": false,
     "published": "2026-04-19",
     "tags": [
@@ -9227,10 +9248,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2688702": {
-    "downloads": 2353,
-    "likes": 1710,
-    "prints": 1948,
-    "saves": 5059,
+    "downloads": 2359,
+    "likes": 1714,
+    "prints": 1953,
+    "saves": 5068,
     "comments": 99,
     "picked": false,
     "published": "2026-04-20",
@@ -9253,7 +9274,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     "downloads": 78,
     "likes": 66,
     "prints": 63,
-    "saves": 196,
+    "saves": 197,
     "comments": 11,
     "picked": false,
     "published": "2026-04-20",
@@ -9289,10 +9310,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2692124": {
-    "downloads": 68,
+    "downloads": 69,
     "likes": 27,
     "prints": 71,
-    "saves": 66,
+    "saves": 67,
     "comments": 4,
     "picked": false,
     "published": "2026-04-21",
@@ -9309,9 +9330,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2693476": {
     "downloads": 98,
-    "likes": 56,
-    "prints": 69,
-    "saves": 163,
+    "likes": 57,
+    "prints": 70,
+    "saves": 164,
     "comments": 1,
     "picked": false,
     "published": "2026-04-21",
@@ -9336,10 +9357,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2694968": {
-    "downloads": 1964,
+    "downloads": 1966,
     "likes": 866,
-    "prints": 1704,
-    "saves": 2616,
+    "prints": 1705,
+    "saves": 2619,
     "comments": 92,
     "picked": false,
     "published": "2026-04-21",
@@ -9359,10 +9380,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2695546": {
-    "downloads": 116,
+    "downloads": 117,
     "likes": 79,
-    "prints": 108,
-    "saves": 208,
+    "prints": 109,
+    "saves": 210,
     "comments": 6,
     "picked": false,
     "published": "2026-04-21",
@@ -9398,11 +9419,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2695931": {
-    "downloads": 719,
-    "likes": 724,
-    "prints": 891,
-    "saves": 2501,
-    "comments": 86,
+    "downloads": 750,
+    "likes": 746,
+    "prints": 925,
+    "saves": 2568,
+    "comments": 90,
     "picked": false,
     "published": "2026-04-21",
     "tags": [
@@ -9424,7 +9445,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2700974": {
     "downloads": 25,
     "likes": 39,
-    "prints": 26,
+    "prints": 27,
     "saves": 108,
     "comments": 2,
     "picked": false,
@@ -9461,7 +9482,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2700993": {
-    "downloads": 66,
+    "downloads": 67,
     "likes": 76,
     "prints": 56,
     "saves": 197,
@@ -9502,9 +9523,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2701014": {
     "downloads": 389,
     "likes": 227,
-    "prints": 275,
-    "saves": 683,
-    "comments": 31,
+    "prints": 279,
+    "saves": 684,
+    "comments": 32,
     "picked": false,
     "published": "2026-04-23",
     "tags": [
@@ -9539,10 +9560,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2711074": {
-    "downloads": 320,
+    "downloads": 323,
     "likes": 231,
-    "prints": 297,
-    "saves": 755,
+    "prints": 301,
+    "saves": 759,
     "comments": 27,
     "picked": false,
     "published": "2026-04-24",
@@ -9578,11 +9599,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2714054": {
-    "downloads": 3222,
-    "likes": 5491,
-    "prints": 3118,
-    "saves": 11511,
-    "comments": 796,
+    "downloads": 3260,
+    "likes": 5534,
+    "prints": 3147,
+    "saves": 11618,
+    "comments": 798,
     "picked": false,
     "published": "2026-04-25",
     "tags": [
@@ -9607,10 +9628,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2715471": {
-    "downloads": 2236,
-    "likes": 2186,
-    "prints": 1651,
-    "saves": 8356,
+    "downloads": 2240,
+    "likes": 2187,
+    "prints": 1656,
+    "saves": 8369,
     "comments": 112,
     "picked": false,
     "published": "2026-04-25",
@@ -9647,9 +9668,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2716073": {
     "downloads": 294,
-    "likes": 364,
+    "likes": 366,
     "prints": 217,
-    "saves": 1025,
+    "saves": 1029,
     "comments": 25,
     "picked": false,
     "published": "2026-04-25",
@@ -9685,11 +9706,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2716330": {
-    "downloads": 33271,
-    "likes": 10937,
-    "prints": 37189,
-    "saves": 35055,
-    "comments": 1989,
+    "downloads": 33472,
+    "likes": 11033,
+    "prints": 37547,
+    "saves": 35369,
+    "comments": 2011,
     "picked": false,
     "published": "2026-04-25",
     "tags": [
@@ -9704,10 +9725,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2722217": {
-    "downloads": 2767,
-    "likes": 1692,
-    "prints": 2388,
-    "saves": 5828,
+    "downloads": 2773,
+    "likes": 1697,
+    "prints": 2402,
+    "saves": 5842,
     "comments": 150,
     "picked": false,
     "published": "2026-04-26",
@@ -9737,11 +9758,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2734706": {
-    "downloads": 12753,
-    "likes": 3758,
-    "prints": 14251,
-    "saves": 10764,
-    "comments": 531,
+    "downloads": 12825,
+    "likes": 3786,
+    "prints": 14392,
+    "saves": 10872,
+    "comments": 537,
     "picked": false,
     "published": "2026-04-29",
     "tags": [
@@ -9756,10 +9777,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2735060": {
-    "downloads": 383,
+    "downloads": 389,
     "likes": 198,
-    "prints": 345,
-    "saves": 662,
+    "prints": 353,
+    "saves": 670,
     "comments": 17,
     "picked": false,
     "published": "2026-04-29",
@@ -9774,11 +9795,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2745579": {
-    "downloads": 6703,
-    "likes": 2048,
-    "prints": 5779,
-    "saves": 5896,
-    "comments": 286,
+    "downloads": 6733,
+    "likes": 2053,
+    "prints": 5815,
+    "saves": 5915,
+    "comments": 289,
     "picked": false,
     "published": "2026-05-02",
     "tags": [
@@ -9797,10 +9818,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2748570": {
-    "downloads": 35,
+    "downloads": 36,
     "likes": 53,
     "prints": 16,
-    "saves": 111,
+    "saves": 112,
     "comments": 7,
     "picked": false,
     "published": "2026-05-02",
@@ -9824,10 +9845,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2759820": {
-    "downloads": 1902,
-    "likes": 615,
-    "prints": 1627,
-    "saves": 1895,
+    "downloads": 1904,
+    "likes": 616,
+    "prints": 1628,
+    "saves": 1897,
     "comments": 72,
     "picked": false,
     "published": "2026-05-05",
@@ -9844,10 +9865,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2760237": {
-    "downloads": 1706,
-    "likes": 3505,
-    "prints": 1379,
-    "saves": 11137,
+    "downloads": 1734,
+    "likes": 3549,
+    "prints": 1397,
+    "saves": 11262,
     "comments": 114,
     "picked": false,
     "published": "2026-05-05",
@@ -9869,11 +9890,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2760406": {
-    "downloads": 11109,
-    "likes": 5009,
-    "prints": 13057,
-    "saves": 13795,
-    "comments": 473,
+    "downloads": 11158,
+    "likes": 5041,
+    "prints": 13155,
+    "saves": 13859,
+    "comments": 474,
     "picked": false,
     "published": "2026-05-05",
     "tags": [
@@ -9895,10 +9916,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2760721": {
-    "downloads": 9300,
-    "likes": 5609,
-    "prints": 5722,
-    "saves": 17137,
+    "downloads": 9333,
+    "likes": 5630,
+    "prints": 5751,
+    "saves": 17188,
     "comments": 389,
     "picked": false,
     "published": "2026-05-05",
@@ -9921,11 +9942,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2765603": {
-    "downloads": 8749,
-    "likes": 3481,
-    "prints": 6509,
-    "saves": 11846,
-    "comments": 340,
+    "downloads": 8786,
+    "likes": 3499,
+    "prints": 6556,
+    "saves": 11916,
+    "comments": 343,
     "picked": false,
     "published": "2026-05-06",
     "tags": [
@@ -9946,11 +9967,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2768774": {
-    "downloads": 3804,
-    "likes": 4192,
-    "prints": 2625,
-    "saves": 13178,
-    "comments": 183,
+    "downloads": 3813,
+    "likes": 4210,
+    "prints": 2634,
+    "saves": 13229,
+    "comments": 184,
     "picked": false,
     "published": "2026-05-07",
     "tags": [
@@ -9970,10 +9991,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2771293": {
-    "downloads": 6384,
-    "likes": 2414,
-    "prints": 5554,
-    "saves": 7343,
+    "downloads": 6396,
+    "likes": 2429,
+    "prints": 5574,
+    "saves": 7370,
     "comments": 250,
     "picked": false,
     "published": "2026-05-08",
@@ -10009,10 +10030,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2772314": {
-    "downloads": 4372,
-    "likes": 1870,
-    "prints": 3359,
-    "saves": 5724,
+    "downloads": 4396,
+    "likes": 1873,
+    "prints": 3377,
+    "saves": 5759,
     "comments": 268,
     "picked": false,
     "published": "2026-05-08",
@@ -10048,10 +10069,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2774013": {
-    "downloads": 1045,
-    "likes": 1361,
-    "prints": 386,
-    "saves": 4926,
+    "downloads": 1046,
+    "likes": 1362,
+    "prints": 388,
+    "saves": 4940,
     "comments": 91,
     "picked": false,
     "published": "2026-05-08",
@@ -10087,11 +10108,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2783407": {
-    "downloads": 7680,
-    "likes": 8597,
-    "prints": 6513,
-    "saves": 32153,
-    "comments": 350,
+    "downloads": 7730,
+    "likes": 8653,
+    "prints": 6578,
+    "saves": 32443,
+    "comments": 352,
     "picked": false,
     "published": "2026-05-10",
     "tags": [
@@ -10124,11 +10145,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2783835": {
-    "downloads": 19637,
-    "likes": 6292,
-    "prints": 20277,
-    "saves": 20093,
-    "comments": 1481,
+    "downloads": 19716,
+    "likes": 6331,
+    "prints": 20404,
+    "saves": 20202,
+    "comments": 1488,
     "picked": false,
     "published": "2026-05-10",
     "tags": [
@@ -10146,10 +10167,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2786539": {
-    "downloads": 5507,
-    "likes": 3333,
-    "prints": 3121,
-    "saves": 11087,
+    "downloads": 5545,
+    "likes": 3348,
+    "prints": 3144,
+    "saves": 11155,
     "comments": 129,
     "picked": false,
     "published": "2026-05-11",
@@ -10172,11 +10193,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2787704": {
-    "downloads": 9087,
-    "likes": 8060,
-    "prints": 11691,
-    "saves": 23674,
-    "comments": 636,
+    "downloads": 9206,
+    "likes": 8182,
+    "prints": 11834,
+    "saves": 23981,
+    "comments": 640,
     "picked": false,
     "published": "2026-05-11",
     "tags": [
@@ -10199,10 +10220,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2787968": {
-    "downloads": 1895,
-    "likes": 2412,
-    "prints": 1402,
-    "saves": 7603,
+    "downloads": 1900,
+    "likes": 2418,
+    "prints": 1409,
+    "saves": 7639,
     "comments": 157,
     "picked": false,
     "published": "2026-05-11",
@@ -10238,10 +10259,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2801921": {
-    "downloads": 1648,
-    "likes": 821,
-    "prints": 1680,
-    "saves": 2367,
+    "downloads": 1653,
+    "likes": 823,
+    "prints": 1691,
+    "saves": 2379,
     "comments": 112,
     "picked": false,
     "published": "2026-05-14",
@@ -10277,10 +10298,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2802730": {
-    "downloads": 7762,
-    "likes": 8857,
-    "prints": 3965,
-    "saves": 26412,
+    "downloads": 7781,
+    "likes": 8908,
+    "prints": 3978,
+    "saves": 26534,
     "comments": 271,
     "picked": true,
     "published": "2026-05-15",
@@ -10305,7 +10326,7 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "2810709": {
     "downloads": 248,
     "likes": 278,
-    "prints": 149,
+    "prints": 150,
     "saves": 702,
     "comments": 18,
     "picked": false,
@@ -10342,10 +10363,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2811814": {
-    "downloads": 6317,
-    "likes": 3906,
-    "prints": 2595,
-    "saves": 11638,
+    "downloads": 6366,
+    "likes": 3928,
+    "prints": 2617,
+    "saves": 11731,
     "comments": 67,
     "picked": false,
     "published": "2026-05-17",
@@ -10374,11 +10395,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2814241": {
-    "downloads": 13077,
-    "likes": 7897,
-    "prints": 12092,
-    "saves": 14116,
-    "comments": 569,
+    "downloads": 13165,
+    "likes": 7969,
+    "prints": 12218,
+    "saves": 14231,
+    "comments": 573,
     "picked": false,
     "published": "2026-05-17",
     "tags": [
@@ -10396,10 +10417,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2815953": {
-    "downloads": 3665,
-    "likes": 1765,
-    "prints": 2597,
-    "saves": 6255,
+    "downloads": 3673,
+    "likes": 1764,
+    "prints": 2607,
+    "saves": 6273,
     "comments": 182,
     "picked": false,
     "published": "2026-05-18",
@@ -10435,10 +10456,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2821771": {
-    "downloads": 3753,
-    "likes": 500,
-    "prints": 2601,
-    "saves": 1089,
+    "downloads": 3761,
+    "likes": 501,
+    "prints": 2609,
+    "saves": 1088,
     "comments": 98,
     "picked": false,
     "published": "2026-05-19",
@@ -10454,11 +10475,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2822595": {
-    "downloads": 5630,
-    "likes": 4769,
-    "prints": 4618,
-    "saves": 16047,
-    "comments": 335,
+    "downloads": 5647,
+    "likes": 4772,
+    "prints": 4644,
+    "saves": 16071,
+    "comments": 336,
     "picked": false,
     "published": "2026-05-19",
     "tags": [
@@ -10493,10 +10514,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2833854": {
-    "downloads": 1885,
-    "likes": 1953,
+    "downloads": 1886,
+    "likes": 1956,
     "prints": 958,
-    "saves": 5527,
+    "saves": 5534,
     "comments": 133,
     "picked": false,
     "published": "2026-05-22",
@@ -10531,11 +10552,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2835386": {
-    "downloads": 2139,
-    "likes": 1154,
-    "prints": 2711,
-    "saves": 3051,
-    "comments": 121,
+    "downloads": 2177,
+    "likes": 1172,
+    "prints": 2763,
+    "saves": 3111,
+    "comments": 124,
     "picked": false,
     "published": "2026-05-22",
     "tags": [
@@ -10568,10 +10589,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2835851": {
-    "downloads": 565,
-    "likes": 723,
-    "prints": 189,
-    "saves": 2199,
+    "downloads": 567,
+    "likes": 727,
+    "prints": 191,
+    "saves": 2217,
     "comments": 19,
     "picked": false,
     "published": "2026-05-22",
@@ -10592,10 +10613,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2844257": {
-    "downloads": 1918,
-    "likes": 1668,
-    "prints": 1490,
-    "saves": 6121,
+    "downloads": 1927,
+    "likes": 1678,
+    "prints": 1501,
+    "saves": 6145,
     "comments": 145,
     "picked": false,
     "published": "2026-05-24",
@@ -10631,11 +10652,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2845609": {
-    "downloads": 11839,
-    "likes": 10075,
-    "prints": 5391,
-    "saves": 29731,
-    "comments": 923,
+    "downloads": 11885,
+    "likes": 10115,
+    "prints": 5429,
+    "saves": 29876,
+    "comments": 929,
     "picked": true,
     "published": "2026-05-25",
     "tags": [
@@ -10670,11 +10691,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2845840": {
-    "downloads": 8787,
-    "likes": 4818,
-    "prints": 9425,
-    "saves": 14403,
-    "comments": 691,
+    "downloads": 8805,
+    "likes": 4834,
+    "prints": 9463,
+    "saves": 14467,
+    "comments": 695,
     "picked": false,
     "published": "2026-05-25",
     "tags": [
@@ -10694,11 +10715,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2861823": {
-    "downloads": 4147,
-    "likes": 1514,
-    "prints": 4919,
-    "saves": 3671,
-    "comments": 223,
+    "downloads": 4180,
+    "likes": 1520,
+    "prints": 4965,
+    "saves": 3703,
+    "comments": 228,
     "picked": false,
     "published": "2026-05-29",
     "tags": [
@@ -10734,9 +10755,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
   },
   "2863365": {
     "downloads": 49,
-    "likes": 143,
+    "likes": 145,
     "prints": 25,
-    "saves": 451,
+    "saves": 454,
     "comments": 0,
     "picked": false,
     "published": "2026-05-29",
@@ -10766,11 +10787,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2864973": {
-    "downloads": 2630,
-    "likes": 2196,
-    "prints": 1606,
-    "saves": 5817,
-    "comments": 197,
+    "downloads": 2631,
+    "likes": 2199,
+    "prints": 1608,
+    "saves": 5823,
+    "comments": 198,
     "picked": false,
     "published": "2026-05-30",
     "tags": [
@@ -10797,10 +10818,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2868512": {
-    "downloads": 1901,
-    "likes": 3031,
-    "prints": 1476,
-    "saves": 8892,
+    "downloads": 1919,
+    "likes": 3040,
+    "prints": 1496,
+    "saves": 8937,
     "comments": 119,
     "picked": false,
     "published": "2026-05-30",
@@ -10836,11 +10857,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2868647": {
-    "downloads": 6573,
-    "likes": 2818,
-    "prints": 3297,
-    "saves": 9884,
-    "comments": 47,
+    "downloads": 6610,
+    "likes": 2824,
+    "prints": 3320,
+    "saves": 9902,
+    "comments": 49,
     "picked": false,
     "published": "2026-05-30",
     "tags": [
@@ -10867,11 +10888,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2869418": {
-    "downloads": 7111,
-    "likes": 3417,
-    "prints": 6838,
-    "saves": 9129,
-    "comments": 433,
+    "downloads": 7133,
+    "likes": 3435,
+    "prints": 6866,
+    "saves": 9181,
+    "comments": 435,
     "picked": false,
     "published": "2026-05-31",
     "tags": [
@@ -10893,10 +10914,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2870508": {
-    "downloads": 1033,
-    "likes": 1572,
-    "prints": 641,
-    "saves": 4475,
+    "downloads": 1035,
+    "likes": 1571,
+    "prints": 644,
+    "saves": 4482,
     "comments": 75,
     "picked": false,
     "published": "2026-05-31",
@@ -10921,10 +10942,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2872917": {
-    "downloads": 214,
-    "likes": 309,
-    "prints": 80,
-    "saves": 811,
+    "downloads": 215,
+    "likes": 310,
+    "prints": 82,
+    "saves": 817,
     "comments": 19,
     "picked": false,
     "published": "2026-05-31",
@@ -10960,11 +10981,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2875932": {
-    "downloads": 9234,
-    "likes": 2162,
-    "prints": 11528,
-    "saves": 6155,
-    "comments": 635,
+    "downloads": 9282,
+    "likes": 2181,
+    "prints": 11623,
+    "saves": 6207,
+    "comments": 639,
     "picked": false,
     "published": "2026-06-01",
     "tags": [
@@ -10999,11 +11020,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2876996": {
-    "downloads": 11139,
-    "likes": 5175,
-    "prints": 5403,
-    "saves": 20002,
-    "comments": 230,
+    "downloads": 11311,
+    "likes": 5272,
+    "prints": 5482,
+    "saves": 20402,
+    "comments": 237,
     "picked": false,
     "published": "2026-06-01",
     "tags": [
@@ -11038,11 +11059,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2885863": {
-    "downloads": 21295,
-    "likes": 7318,
-    "prints": 24359,
-    "saves": 20739,
-    "comments": 1243,
+    "downloads": 21613,
+    "likes": 7443,
+    "prints": 24817,
+    "saves": 21099,
+    "comments": 1263,
     "picked": false,
     "published": "2026-06-03",
     "tags": [
@@ -11067,11 +11088,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2909692": {
-    "downloads": 14835,
-    "likes": 9504,
-    "prints": 13654,
-    "saves": 32272,
-    "comments": 1221,
+    "downloads": 14845,
+    "likes": 9508,
+    "prints": 13660,
+    "saves": 32303,
+    "comments": 1225,
     "picked": true,
     "published": "2026-06-09",
     "tags": [
@@ -11141,11 +11162,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2919882": {
-    "downloads": 6162,
-    "likes": 2474,
-    "prints": 5325,
-    "saves": 7615,
-    "comments": 174,
+    "downloads": 6209,
+    "likes": 2488,
+    "prints": 5382,
+    "saves": 7683,
+    "comments": 176,
     "picked": false,
     "published": "2026-06-11",
     "tags": [
@@ -11169,10 +11190,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2927155": {
-    "downloads": 713,
-    "likes": 493,
-    "prints": 879,
-    "saves": 1851,
+    "downloads": 733,
+    "likes": 501,
+    "prints": 899,
+    "saves": 1867,
     "comments": 49,
     "picked": false,
     "published": "2026-06-13",
@@ -11199,11 +11220,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2944726": {
-    "downloads": 11006,
-    "likes": 6432,
-    "prints": 9258,
-    "saves": 17114,
-    "comments": 382,
+    "downloads": 11085,
+    "likes": 6476,
+    "prints": 9349,
+    "saves": 17225,
+    "comments": 387,
     "picked": false,
     "published": "2026-06-17",
     "tags": [
@@ -11222,10 +11243,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2955037": {
-    "downloads": 6223,
-    "likes": 6727,
-    "prints": 5612,
-    "saves": 25886,
+    "downloads": 6255,
+    "likes": 6753,
+    "prints": 5643,
+    "saves": 25982,
     "comments": 430,
     "picked": false,
     "published": "2026-06-20",
@@ -11252,9 +11273,9 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2956325": {
-    "downloads": 1308,
+    "downloads": 1311,
     "likes": 365,
-    "prints": 1190,
+    "prints": 1194,
     "saves": 968,
     "comments": 86,
     "picked": false,
@@ -11291,11 +11312,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2983933": {
-    "downloads": 2845,
-    "likes": 1501,
-    "prints": 2741,
-    "saves": 3409,
-    "comments": 120,
+    "downloads": 2853,
+    "likes": 1510,
+    "prints": 2751,
+    "saves": 3416,
+    "comments": 121,
     "picked": false,
     "published": "2026-06-27",
     "tags": [
@@ -11330,11 +11351,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2984861": {
-    "downloads": 12912,
-    "likes": 3282,
-    "prints": 15191,
-    "saves": 9454,
-    "comments": 800,
+    "downloads": 12963,
+    "likes": 3300,
+    "prints": 15278,
+    "saves": 9514,
+    "comments": 802,
     "picked": false,
     "published": "2026-06-28",
     "tags": [
@@ -11369,10 +11390,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2989019": {
-    "downloads": 1128,
-    "likes": 276,
-    "prints": 1139,
-    "saves": 650,
+    "downloads": 1132,
+    "likes": 280,
+    "prints": 1144,
+    "saves": 652,
     "comments": 82,
     "picked": false,
     "published": "2026-06-29",
@@ -11408,11 +11429,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "2991458": {
-    "downloads": 4759,
-    "likes": 3187,
-    "prints": 5005,
-    "saves": 12279,
-    "comments": 178,
+    "downloads": 4804,
+    "likes": 3210,
+    "prints": 5052,
+    "saves": 12385,
+    "comments": 180,
     "picked": false,
     "published": "2026-06-29",
     "tags": [
@@ -11486,11 +11507,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3003734": {
-    "downloads": 5393,
-    "likes": 2188,
-    "prints": 6685,
-    "saves": 6986,
-    "comments": 294,
+    "downloads": 5456,
+    "likes": 2221,
+    "prints": 6810,
+    "saves": 7089,
+    "comments": 300,
     "picked": false,
     "published": "2026-07-02",
     "tags": [
@@ -11519,11 +11540,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3003957": {
-    "downloads": 3717,
-    "likes": 3514,
-    "prints": 3607,
-    "saves": 9306,
-    "comments": 133,
+    "downloads": 3776,
+    "likes": 3602,
+    "prints": 3692,
+    "saves": 9528,
+    "comments": 135,
     "picked": false,
     "published": "2026-07-02",
     "tags": [
@@ -11546,10 +11567,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3005569": {
-    "downloads": 373,
-    "likes": 258,
-    "prints": 406,
-    "saves": 622,
+    "downloads": 380,
+    "likes": 263,
+    "prints": 416,
+    "saves": 630,
     "comments": 11,
     "picked": false,
     "published": "2026-07-03",
@@ -11574,10 +11595,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3017754": {
-    "downloads": 2557,
-    "likes": 3864,
-    "prints": 3690,
-    "saves": 10533,
+    "downloads": 2566,
+    "likes": 3886,
+    "prints": 3715,
+    "saves": 10591,
     "comments": 347,
     "picked": false,
     "published": "2026-07-06",
@@ -11593,11 +11614,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3025314": {
-    "downloads": 5799,
-    "likes": 4561,
-    "prints": 5558,
-    "saves": 18385,
-    "comments": 439,
+    "downloads": 5814,
+    "likes": 4569,
+    "prints": 5575,
+    "saves": 18436,
+    "comments": 440,
     "picked": false,
     "published": "2026-07-08",
     "tags": [
@@ -11617,11 +11638,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3037751": {
-    "downloads": 3350,
-    "likes": 1518,
-    "prints": 4158,
-    "saves": 5365,
-    "comments": 287,
+    "downloads": 3371,
+    "likes": 1527,
+    "prints": 4186,
+    "saves": 5394,
+    "comments": 290,
     "picked": false,
     "published": "2026-07-11",
     "tags": [
@@ -11656,11 +11677,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3057768": {
-    "downloads": 6760,
-    "likes": 3085,
-    "prints": 7507,
-    "saves": 9448,
-    "comments": 269,
+    "downloads": 6888,
+    "likes": 3150,
+    "prints": 7685,
+    "saves": 9638,
+    "comments": 272,
     "picked": false,
     "published": "2026-07-16",
     "tags": [
@@ -11689,10 +11710,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3073391": {
-    "downloads": 540,
-    "likes": 502,
-    "prints": 501,
-    "saves": 1821,
+    "downloads": 549,
+    "likes": 517,
+    "prints": 509,
+    "saves": 1862,
     "comments": 23,
     "picked": false,
     "published": "2026-07-20",
@@ -11714,11 +11735,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3075445": {
-    "downloads": 2639,
-    "likes": 2405,
-    "prints": 2993,
-    "saves": 5875,
-    "comments": 176,
+    "downloads": 2681,
+    "likes": 2442,
+    "prints": 3044,
+    "saves": 5963,
+    "comments": 181,
     "picked": false,
     "published": "2026-07-21",
     "tags": [
@@ -11736,11 +11757,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3076607": {
-    "downloads": 12151,
-    "likes": 8240,
-    "prints": 15351,
-    "saves": 20891,
-    "comments": 1701,
+    "downloads": 12312,
+    "likes": 8337,
+    "prints": 15604,
+    "saves": 21221,
+    "comments": 1727,
     "picked": false,
     "published": "2026-07-21",
     "tags": [
@@ -11759,11 +11780,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3127131": {
-    "downloads": 17357,
-    "likes": 7539,
-    "prints": 20049,
-    "saves": 25389,
-    "comments": 697,
+    "downloads": 17701,
+    "likes": 7688,
+    "prints": 20587,
+    "saves": 25860,
+    "comments": 712,
     "picked": false,
     "published": "2026-08-03",
     "tags": [
@@ -11780,11 +11801,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3138323": {
-    "downloads": 1163,
-    "likes": 1921,
-    "prints": 1304,
-    "saves": 6517,
-    "comments": 153,
+    "downloads": 1167,
+    "likes": 1931,
+    "prints": 1311,
+    "saves": 6542,
+    "comments": 154,
     "picked": false,
     "published": "2026-08-05",
     "tags": [
@@ -11805,11 +11826,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3146829": {
-    "downloads": 3989,
-    "likes": 3655,
-    "prints": 5640,
-    "saves": 14298,
-    "comments": 528,
+    "downloads": 4047,
+    "likes": 3693,
+    "prints": 5747,
+    "saves": 14497,
+    "comments": 539,
     "picked": false,
     "published": "2026-08-08",
     "tags": [
@@ -11841,11 +11862,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3157560": {
-    "downloads": 1055,
-    "likes": 1404,
-    "prints": 1536,
-    "saves": 5255,
-    "comments": 71,
+    "downloads": 1082,
+    "likes": 1434,
+    "prints": 1582,
+    "saves": 5385,
+    "comments": 76,
     "picked": false,
     "published": "2026-08-10",
     "tags": [
@@ -11880,11 +11901,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3174552": {
-    "downloads": 5783,
-    "likes": 4012,
-    "prints": 7187,
-    "saves": 11579,
-    "comments": 289,
+    "downloads": 5881,
+    "likes": 4084,
+    "prints": 7327,
+    "saves": 11813,
+    "comments": 296,
     "picked": false,
     "published": "2026-08-15",
     "tags": [
@@ -11904,11 +11925,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3186647": {
-    "downloads": 4024,
-    "likes": 2578,
-    "prints": 4665,
-    "saves": 8761,
-    "comments": 165,
+    "downloads": 4081,
+    "likes": 2612,
+    "prints": 4737,
+    "saves": 8882,
+    "comments": 168,
     "picked": false,
     "published": "2026-08-18",
     "tags": [
@@ -11925,11 +11946,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3219173": {
-    "downloads": 411,
-    "likes": 818,
-    "prints": 395,
-    "saves": 2790,
-    "comments": 21,
+    "downloads": 414,
+    "likes": 828,
+    "prints": 398,
+    "saves": 2829,
+    "comments": 22,
     "picked": false,
     "published": "2026-08-25",
     "tags": [],
@@ -11939,11 +11960,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3229032": {
-    "downloads": 2819,
-    "likes": 1969,
-    "prints": 3350,
-    "saves": 6430,
-    "comments": 411,
+    "downloads": 2901,
+    "likes": 2026,
+    "prints": 3476,
+    "saves": 6629,
+    "comments": 431,
     "picked": false,
     "published": "2026-08-28",
     "tags": [
@@ -11964,11 +11985,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3237023": {
-    "downloads": 1326,
-    "likes": 573,
-    "prints": 1693,
-    "saves": 1392,
-    "comments": 103,
+    "downloads": 1346,
+    "likes": 580,
+    "prints": 1717,
+    "saves": 1411,
+    "comments": 108,
     "picked": false,
     "published": "2026-08-30",
     "tags": [
@@ -12003,11 +12024,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3239344": {
-    "downloads": 1489,
-    "likes": 1420,
-    "prints": 1964,
-    "saves": 4164,
-    "comments": 91,
+    "downloads": 1539,
+    "likes": 1474,
+    "prints": 2036,
+    "saves": 4326,
+    "comments": 95,
     "picked": false,
     "published": "2026-08-30",
     "tags": [
@@ -12034,10 +12055,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3242119": {
-    "downloads": 492,
-    "likes": 1366,
-    "prints": 483,
-    "saves": 3525,
+    "downloads": 500,
+    "likes": 1393,
+    "prints": 504,
+    "saves": 3589,
     "comments": 96,
     "picked": false,
     "published": "2026-08-31",
@@ -12056,11 +12077,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3242523": {
-    "downloads": 157,
-    "likes": 422,
-    "prints": 215,
-    "saves": 1416,
-    "comments": 12,
+    "downloads": 165,
+    "likes": 428,
+    "prints": 234,
+    "saves": 1469,
+    "comments": 13,
     "picked": false,
     "published": "2026-08-31",
     "tags": [
@@ -12089,11 +12110,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3242912": {
-    "downloads": 1071,
-    "likes": 830,
-    "prints": 1036,
-    "saves": 2549,
-    "comments": 33,
+    "downloads": 1091,
+    "likes": 864,
+    "prints": 1080,
+    "saves": 2620,
+    "comments": 34,
     "picked": false,
     "published": "2026-08-31",
     "tags": [
@@ -12113,10 +12134,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3243295": {
-    "downloads": 532,
-    "likes": 540,
-    "prints": 537,
-    "saves": 1731,
+    "downloads": 547,
+    "likes": 549,
+    "prints": 550,
+    "saves": 1783,
     "comments": 43,
     "picked": false,
     "published": "2026-08-31",
@@ -12142,11 +12163,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3243522": {
-    "downloads": 4275,
-    "likes": 6792,
-    "prints": 4439,
-    "saves": 20292,
-    "comments": 360,
+    "downloads": 4614,
+    "likes": 7155,
+    "prints": 4891,
+    "saves": 21356,
+    "comments": 386,
     "picked": false,
     "published": "2026-08-31",
     "tags": [
@@ -12164,10 +12185,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3244067": {
-    "downloads": 396,
-    "likes": 532,
-    "prints": 128,
-    "saves": 2424,
+    "downloads": 418,
+    "likes": 571,
+    "prints": 140,
+    "saves": 2585,
     "comments": 6,
     "picked": false,
     "published": "2026-08-31",
@@ -12186,11 +12207,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3245583": {
-    "downloads": 1338,
-    "likes": 593,
-    "prints": 2075,
-    "saves": 1725,
-    "comments": 98,
+    "downloads": 1382,
+    "likes": 611,
+    "prints": 2147,
+    "saves": 1790,
+    "comments": 106,
     "picked": false,
     "published": "2026-08-31",
     "tags": [
@@ -12209,11 +12230,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3245667": {
-    "downloads": 1518,
-    "likes": 3174,
-    "prints": 2262,
-    "saves": 8448,
-    "comments": 182,
+    "downloads": 1572,
+    "likes": 3286,
+    "prints": 2377,
+    "saves": 8700,
+    "comments": 188,
     "picked": false,
     "published": "2026-08-31",
     "tags": [
@@ -12241,11 +12262,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3246572": {
-    "downloads": 1275,
-    "likes": 958,
-    "prints": 1739,
-    "saves": 3024,
-    "comments": 58,
+    "downloads": 1333,
+    "likes": 1003,
+    "prints": 1857,
+    "saves": 3157,
+    "comments": 60,
     "picked": false,
     "published": "2026-09-01",
     "tags": [
@@ -12267,11 +12288,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3246596": {
-    "downloads": 1145,
-    "likes": 965,
-    "prints": 1612,
-    "saves": 2530,
-    "comments": 64,
+    "downloads": 1176,
+    "likes": 989,
+    "prints": 1662,
+    "saves": 2582,
+    "comments": 65,
     "picked": false,
     "published": "2026-09-01",
     "tags": [
@@ -12295,10 +12316,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3247731": {
-    "downloads": 180,
-    "likes": 685,
-    "prints": 190,
-    "saves": 2582,
+    "downloads": 182,
+    "likes": 707,
+    "prints": 198,
+    "saves": 2651,
     "comments": 7,
     "picked": false,
     "published": "2026-09-01",
@@ -12334,11 +12355,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3248460": {
-    "downloads": 328,
-    "likes": 690,
-    "prints": 124,
-    "saves": 2048,
-    "comments": 34,
+    "downloads": 330,
+    "likes": 702,
+    "prints": 130,
+    "saves": 2072,
+    "comments": 35,
     "picked": false,
     "published": "2026-09-01",
     "tags": [
@@ -12351,11 +12372,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3249292": {
-    "downloads": 209,
-    "likes": 505,
-    "prints": 263,
-    "saves": 1529,
-    "comments": 18,
+    "downloads": 215,
+    "likes": 518,
+    "prints": 268,
+    "saves": 1553,
+    "comments": 19,
     "picked": false,
     "published": "2026-09-01",
     "tags": [
@@ -12390,11 +12411,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3251767": {
-    "downloads": 464,
-    "likes": 618,
-    "prints": 635,
-    "saves": 2230,
-    "comments": 19,
+    "downloads": 472,
+    "likes": 637,
+    "prints": 650,
+    "saves": 2300,
+    "comments": 22,
     "picked": false,
     "published": "2026-09-02",
     "tags": [
@@ -12419,11 +12440,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3251864": {
-    "downloads": 558,
-    "likes": 435,
-    "prints": 700,
-    "saves": 1190,
-    "comments": 48,
+    "downloads": 582,
+    "likes": 455,
+    "prints": 738,
+    "saves": 1234,
+    "comments": 49,
     "picked": false,
     "published": "2026-09-02",
     "tags": [
@@ -12454,11 +12475,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3252105": {
-    "downloads": 738,
-    "likes": 588,
-    "prints": 1079,
-    "saves": 2507,
-    "comments": 48,
+    "downloads": 767,
+    "likes": 620,
+    "prints": 1140,
+    "saves": 2616,
+    "comments": 50,
     "picked": false,
     "published": "2026-09-02",
     "tags": [
@@ -12475,10 +12496,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3252367": {
-    "downloads": 369,
-    "likes": 786,
-    "prints": 395,
-    "saves": 2183,
+    "downloads": 381,
+    "likes": 804,
+    "prints": 416,
+    "saves": 2244,
     "comments": 47,
     "picked": false,
     "published": "2026-09-02",
@@ -12514,11 +12535,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3253910": {
-    "downloads": 1692,
-    "likes": 1519,
-    "prints": 2055,
-    "saves": 5009,
-    "comments": 240,
+    "downloads": 1792,
+    "likes": 1601,
+    "prints": 2207,
+    "saves": 5234,
+    "comments": 263,
     "picked": false,
     "published": "2026-09-02",
     "tags": [
@@ -12553,10 +12574,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3258291": {
-    "downloads": 573,
-    "likes": 1418,
-    "prints": 301,
-    "saves": 4471,
+    "downloads": 596,
+    "likes": 1500,
+    "prints": 318,
+    "saves": 4753,
     "comments": 45,
     "picked": false,
     "published": "2026-09-03",
@@ -12578,11 +12599,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3258601": {
-    "downloads": 330,
-    "likes": 750,
-    "prints": 418,
-    "saves": 2755,
-    "comments": 30,
+    "downloads": 345,
+    "likes": 794,
+    "prints": 451,
+    "saves": 2909,
+    "comments": 32,
     "picked": false,
     "published": "2026-09-03",
     "tags": [
@@ -12617,11 +12638,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3258776": {
-    "downloads": 1350,
-    "likes": 757,
-    "prints": 2191,
-    "saves": 2155,
-    "comments": 103,
+    "downloads": 1410,
+    "likes": 791,
+    "prints": 2297,
+    "saves": 2262,
+    "comments": 110,
     "picked": false,
     "published": "2026-09-04",
     "tags": [
@@ -12656,11 +12677,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3258780": {
-    "downloads": 1478,
-    "likes": 877,
-    "prints": 1967,
-    "saves": 2324,
-    "comments": 93,
+    "downloads": 1560,
+    "likes": 909,
+    "prints": 2066,
+    "saves": 2425,
+    "comments": 99,
     "picked": false,
     "published": "2026-09-04",
     "tags": [
@@ -12695,11 +12716,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3260310": {
-    "downloads": 492,
-    "likes": 978,
-    "prints": 422,
-    "saves": 2825,
-    "comments": 166,
+    "downloads": 508,
+    "likes": 1012,
+    "prints": 442,
+    "saves": 2953,
+    "comments": 169,
     "picked": false,
     "published": "2026-09-04",
     "tags": [
@@ -12722,11 +12743,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3262485": {
-    "downloads": 1043,
-    "likes": 994,
-    "prints": 1250,
-    "saves": 3211,
-    "comments": 120,
+    "downloads": 1089,
+    "likes": 1020,
+    "prints": 1313,
+    "saves": 3334,
+    "comments": 129,
     "picked": false,
     "published": "2026-09-04",
     "tags": [
@@ -12761,11 +12782,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3265508": {
-    "downloads": 634,
-    "likes": 616,
-    "prints": 791,
-    "saves": 2434,
-    "comments": 14,
+    "downloads": 668,
+    "likes": 660,
+    "prints": 864,
+    "saves": 2615,
+    "comments": 15,
     "picked": false,
     "published": "2026-09-05",
     "tags": [
@@ -12793,11 +12814,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3266486": {
-    "downloads": 766,
-    "likes": 364,
-    "prints": 1256,
-    "saves": 1033,
-    "comments": 59,
+    "downloads": 795,
+    "likes": 379,
+    "prints": 1285,
+    "saves": 1078,
+    "comments": 65,
     "picked": false,
     "published": "2026-09-05",
     "tags": [
@@ -12822,11 +12843,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3267283": {
-    "downloads": 723,
-    "likes": 1066,
-    "prints": 462,
-    "saves": 3241,
-    "comments": 21,
+    "downloads": 747,
+    "likes": 1110,
+    "prints": 486,
+    "saves": 3351,
+    "comments": 22,
     "picked": false,
     "published": "2026-09-05",
     "tags": [
@@ -12861,11 +12882,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3267559": {
-    "downloads": 527,
-    "likes": 160,
-    "prints": 721,
-    "saves": 428,
-    "comments": 81,
+    "downloads": 539,
+    "likes": 169,
+    "prints": 751,
+    "saves": 434,
+    "comments": 83,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -12900,11 +12921,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3268146": {
-    "downloads": 3108,
-    "likes": 1609,
-    "prints": 2852,
-    "saves": 5328,
-    "comments": 119,
+    "downloads": 3297,
+    "likes": 1717,
+    "prints": 3086,
+    "saves": 5645,
+    "comments": 121,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -12921,11 +12942,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3268477": {
-    "downloads": 448,
-    "likes": 709,
-    "prints": 356,
-    "saves": 2111,
-    "comments": 34,
+    "downloads": 471,
+    "likes": 744,
+    "prints": 384,
+    "saves": 2235,
+    "comments": 37,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -12956,11 +12977,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3268920": {
-    "downloads": 888,
-    "likes": 1204,
-    "prints": 1026,
-    "saves": 3657,
-    "comments": 48,
+    "downloads": 915,
+    "likes": 1257,
+    "prints": 1066,
+    "saves": 3816,
+    "comments": 49,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -12991,11 +13012,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3269395": {
-    "downloads": 786,
-    "likes": 584,
-    "prints": 1063,
-    "saves": 1342,
-    "comments": 203,
+    "downloads": 845,
+    "likes": 620,
+    "prints": 1143,
+    "saves": 1426,
+    "comments": 222,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13030,11 +13051,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3270009": {
-    "downloads": 371,
-    "likes": 707,
-    "prints": 297,
-    "saves": 2209,
-    "comments": 33,
+    "downloads": 378,
+    "likes": 731,
+    "prints": 312,
+    "saves": 2310,
+    "comments": 35,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13069,11 +13090,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3270647": {
-    "downloads": 600,
-    "likes": 676,
-    "prints": 625,
-    "saves": 2483,
-    "comments": 29,
+    "downloads": 637,
+    "likes": 708,
+    "prints": 680,
+    "saves": 2609,
+    "comments": 32,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13100,11 +13121,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271298": {
-    "downloads": 1052,
-    "likes": 684,
-    "prints": 879,
-    "saves": 1852,
-    "comments": 84,
+    "downloads": 1084,
+    "likes": 704,
+    "prints": 910,
+    "saves": 1900,
+    "comments": 86,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13120,10 +13141,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271358": {
-    "downloads": 623,
-    "likes": 1041,
-    "prints": 475,
-    "saves": 3541,
+    "downloads": 646,
+    "likes": 1084,
+    "prints": 500,
+    "saves": 3715,
     "comments": 19,
     "picked": false,
     "published": "2026-09-06",
@@ -13143,11 +13164,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271500": {
-    "downloads": 405,
-    "likes": 536,
-    "prints": 549,
-    "saves": 1535,
-    "comments": 67,
+    "downloads": 423,
+    "likes": 556,
+    "prints": 568,
+    "saves": 1592,
+    "comments": 73,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13182,11 +13203,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271827": {
-    "downloads": 931,
-    "likes": 1528,
-    "prints": 719,
-    "saves": 4456,
-    "comments": 37,
+    "downloads": 992,
+    "likes": 1618,
+    "prints": 794,
+    "saves": 4739,
+    "comments": 44,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13204,11 +13225,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3271845": {
-    "downloads": 391,
-    "likes": 914,
-    "prints": 293,
-    "saves": 2724,
-    "comments": 17,
+    "downloads": 425,
+    "likes": 975,
+    "prints": 324,
+    "saves": 2935,
+    "comments": 18,
     "picked": false,
     "published": "2026-09-06",
     "tags": [
@@ -13243,11 +13264,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3272219": {
-    "downloads": 117,
-    "likes": 316,
-    "prints": 114,
-    "saves": 1001,
-    "comments": 2,
+    "downloads": 121,
+    "likes": 326,
+    "prints": 118,
+    "saves": 1049,
+    "comments": 4,
     "picked": false,
     "published": "2026-09-07",
     "tags": [
@@ -13263,10 +13284,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3272331": {
-    "downloads": 296,
-    "likes": 712,
-    "prints": 100,
-    "saves": 1768,
+    "downloads": 303,
+    "likes": 732,
+    "prints": 106,
+    "saves": 1824,
     "comments": 26,
     "picked": false,
     "published": "2026-09-07",
@@ -13291,11 +13312,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3273571": {
-    "downloads": 1169,
-    "likes": 1233,
-    "prints": 986,
-    "saves": 5089,
-    "comments": 29,
+    "downloads": 1263,
+    "likes": 1366,
+    "prints": 1100,
+    "saves": 5617,
+    "comments": 36,
     "picked": false,
     "published": "2026-09-07",
     "tags": [
@@ -13328,11 +13349,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3273702": {
-    "downloads": 243,
-    "likes": 342,
-    "prints": 271,
-    "saves": 1117,
-    "comments": 25,
+    "downloads": 264,
+    "likes": 359,
+    "prints": 292,
+    "saves": 1168,
+    "comments": 29,
     "picked": false,
     "published": "2026-09-07",
     "tags": [
@@ -13367,11 +13388,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3275036": {
-    "downloads": 117,
-    "likes": 379,
-    "prints": 84,
-    "saves": 935,
-    "comments": 28,
+    "downloads": 120,
+    "likes": 397,
+    "prints": 91,
+    "saves": 978,
+    "comments": 31,
     "picked": false,
     "published": "2026-09-07",
     "tags": [
@@ -13393,11 +13414,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3275194": {
-    "downloads": 589,
-    "likes": 840,
-    "prints": 564,
-    "saves": 2261,
-    "comments": 44,
+    "downloads": 613,
+    "likes": 882,
+    "prints": 589,
+    "saves": 2375,
+    "comments": 46,
     "picked": false,
     "published": "2026-09-07",
     "tags": [
@@ -13417,10 +13438,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3279889": {
-    "downloads": 193,
-    "likes": 171,
-    "prints": 154,
-    "saves": 558,
+    "downloads": 194,
+    "likes": 170,
+    "prints": 155,
+    "saves": 557,
     "comments": 10,
     "picked": false,
     "published": "2026-09-08",
@@ -13438,10 +13459,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3286307": {
-    "downloads": 154,
-    "likes": 247,
-    "prints": 111,
-    "saves": 711,
+    "downloads": 165,
+    "likes": 261,
+    "prints": 124,
+    "saves": 754,
     "comments": 14,
     "picked": false,
     "published": "2026-09-10",
@@ -13464,11 +13485,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3286365": {
-    "downloads": 78,
-    "likes": 120,
-    "prints": 77,
-    "saves": 326,
-    "comments": 10,
+    "downloads": 81,
+    "likes": 123,
+    "prints": 81,
+    "saves": 344,
+    "comments": 11,
     "picked": false,
     "published": "2026-09-10",
     "tags": [
@@ -13505,8 +13526,8 @@ export const SIGNALS: Record<string, ModelSignals> = {
   "3286439": {
     "downloads": 7,
     "likes": 29,
-    "prints": 8,
-    "saves": 61,
+    "prints": 9,
+    "saves": 62,
     "comments": 2,
     "picked": false,
     "published": "2026-09-10",
@@ -13541,11 +13562,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3286545": {
-    "downloads": 79,
-    "likes": 186,
-    "prints": 65,
-    "saves": 441,
-    "comments": 24,
+    "downloads": 87,
+    "likes": 191,
+    "prints": 71,
+    "saves": 463,
+    "comments": 25,
     "picked": false,
     "published": "2026-09-10",
     "tags": [
@@ -13580,10 +13601,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3287399": {
-    "downloads": 115,
-    "likes": 159,
-    "prints": 103,
-    "saves": 569,
+    "downloads": 117,
+    "likes": 160,
+    "prints": 108,
+    "saves": 573,
     "comments": 25,
     "picked": false,
     "published": "2026-09-10",
@@ -13615,11 +13636,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3290052": {
-    "downloads": 785,
-    "likes": 1778,
-    "prints": 807,
-    "saves": 6220,
-    "comments": 64,
+    "downloads": 827,
+    "likes": 1890,
+    "prints": 875,
+    "saves": 6591,
+    "comments": 75,
     "picked": false,
     "published": "2026-09-10",
     "tags": [
@@ -13649,11 +13670,11 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3290414": {
-    "downloads": 77,
-    "likes": 142,
-    "prints": 50,
-    "saves": 317,
-    "comments": 16,
+    "downloads": 80,
+    "likes": 154,
+    "prints": 53,
+    "saves": 350,
+    "comments": 19,
     "picked": false,
     "published": "2026-09-11",
     "tags": [
@@ -13688,10 +13709,10 @@ export const SIGNALS: Record<string, ModelSignals> = {
     ]
   },
   "3297872": {
-    "downloads": 28,
+    "downloads": 29,
     "likes": 15,
     "prints": 39,
-    "saves": 37,
+    "saves": 38,
     "comments": 0,
     "picked": false,
     "published": "2026-09-12",
@@ -13709,4 +13730,4 @@ export const SIGNALS: Record<string, ModelSignals> = {
   }
 };
 
-export const SIGNALS_AT = "2026-09-20T17:26:42.829Z";
+export const SIGNALS_AT = "2026-09-21T15:27:04.596Z";
