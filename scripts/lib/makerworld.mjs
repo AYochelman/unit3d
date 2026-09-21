@@ -311,15 +311,36 @@ export function classify(title, tags = [], cats = []) {
 }
 
 // ── what we import but do NOT put on sale ────────────────────────────────────
+/**
+ * Every term is word-bounded, and that is not tidying.
+ *
+ * Without \b, "blade" matches inside SCHUBLADE — German for drawer — and an
+ * AMS drawer for a Bambu printer came through the sweep tagged as a weapon.
+ * The same hole catches "crossword" and "password" on `sword`, "Shakespeare"
+ * and "spearmint" on `spear`, "ammonia" on `ammo`. A wrong tag was noise while
+ * these only warned; now that a weapon is dropped, a wrong tag deletes a good
+ * model, so the boundaries are load-bearing.
+ *
+ * `throwing` alone was too broad for the same reason, and now needs its noun.
+ */
 const WEAPON_RE =
-  /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|bb (launcher|gun)|airsoft|pistol|shotgun|rifle|\bgun\b|ammo|bullet|throwing|nunchaku|taser|crossbow|spear)/i;
+  /\b(knife|knives|katana|sword|swords|blade|blades|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|airsoft|pistol|shotgun|rifle|gun|guns|ammo|ammunition|bullet|bullets|nunchaku|taser|crossbow|spear)\b|\bbb\s+(launcher|gun)\b|\bthrowing\s+(knife|knives|star|stars|axe|card|cards|dart|darts)\b/i;
+
+/**
+ * A knife block, a katana stand, a drawer: storage that the weapon word alone
+ * would have thrown away. What is printed is not the blade.
+ */
+const NOT_A_WEAPON = /\b(block|holder|stand|rack|organi[sz]\w*|storage|sharpen\w*|dock|drawer|schublade|magnet|mount|case|sheath)\b/i;
+
+/** The one place that decides. Three copies of this regex disagreed before. */
+export const isWeapon = (text) => WEAPON_RE.test(text) && !NOT_A_WEAPON.test(text);
 
 const BRAND_RE =
   /(kaws|bearbrick|be@rbrick|smiski|hello kitty|spider[- ]?man|spiderman|spider noir|miles morales|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|master sword|nintendo|star wars|mandalorian|jujutsu|mahoraga|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|naruto|dragon ball|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go|cheburashka|tscheburaschka)/i;
 
 export function holdsFor(text, license) {
   const holds = [];
-  if (WEAPON_RE.test(text)) holds.push("weapon");
+  if (isWeapon(text)) holds.push("weapon");
   if (BRAND_RE.test(text)) holds.push("brand");
   // A CC "NC" licence is the designer stating in writing that the model may not
   // be used commercially. That is not a judgement call like the two above.
