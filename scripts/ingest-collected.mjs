@@ -94,6 +94,59 @@ async function fromDatabase() {
   return { doc, readAt, from: "database" };
 }
 
+/**
+ * Nothing from the sweep is trusted on its way in.
+ *
+ * The row this reads is writable by anyone holding the publishable key, which
+ * is public by design — it ships in public/shop.json. So the document here is
+ * input from the open internet, and it feeds a chain that ends in the shop:
+ * ingest writes data/pending-models.json, sync-collections reads the ids
+ * straight into a URL, and what comes back becomes a row in the catalogue.
+ *
+ * An id is a MakerWorld design number and nothing else. Left unchecked it is
+ * interpolated into `.../design/${id}`, where a value carrying `/`, `?`, `#`
+ * or `..` stops being an id and becomes a different request — pointed wherever
+ * the writer likes. That is the hole worth closing, and it closes with a
+ * pattern: digits, three to nine of them.
+ *
+ * The collection name is only a shelf hint, but it is written into a JSON file
+ * and printed, so it is stripped to letters, digits, dash and space and cut to
+ * something a person would actually name a collection.
+ *
+ * The caps are there so one bad document cannot make the queue unusable: the
+ * owner reviews this list by hand, and a hundred thousand rows is a denial of
+ * his attention even when every row is harmless.
+ */
+const ID_RE = /^[0-9]{3,9}$/;
+const MAX_GROUPS = 40;
+const MAX_IDS = 2000;
+const MAX_NAME = 60;
+
+function clean(raw) {
+  const rejected = [];
+  const groups = [];
+  let kept = 0;
+
+  for (const g of raw.slice(0, MAX_GROUPS)) {
+    if (!g || typeof g !== "object") { rejected.push("קבוצה שאינה אובייקט"); continue; }
+    const name = String(g.collection ?? "")
+      .replace(/[^\p{L}\p{N}\s-]/gu, "")
+      .trim()
+      .slice(0, MAX_NAME);
+    const ids = [];
+    for (const v of Array.isArray(g.ids) ? g.ids : []) {
+      if (kept >= MAX_IDS) { rejected.push(`מעל ${MAX_IDS} מזהים — השאר נחתך`); break; }
+      const id = String(v);
+      if (!ID_RE.test(id)) { rejected.push(`מזהה לא תקין: ${JSON.stringify(id).slice(0, 40)}`); continue; }
+      ids.push(id);
+      kept++;
+    }
+    if (ids.length) groups.push({ collection: name, ...(g.note ? { note: String(g.note).slice(0, 200) } : {}), ids });
+    if (kept >= MAX_IDS) break;
+  }
+  return { groups, rejected };
+}
+
 async function main() {
   // The database first, a downloaded file second. Both carry the same shape,
   // so everything below this point is the same work either way.
@@ -123,14 +176,21 @@ async function main() {
   // `pending` is the grouped form the extension writes. An older file, or one
   // saved by hand from collect-models.html, carries only a flat `ids` list —
   // take it, but with no collection name, so nothing in it is auto-approved.
-  const groups = Array.isArray(doc.pending) && doc.pending.length
+  const raw = Array.isArray(doc.pending) && doc.pending.length
     ? doc.pending
     : Array.isArray(doc.ids) && doc.ids.length
       ? [{ collection: "", note: "רשימה שטוחה — בלי שיוך לאוסף, ולכן הכל ממתין לאישור", ids: doc.ids }]
       : [];
 
+  const { groups, rejected } = clean(raw);
+  if (rejected.length) {
+    console.log(c.y(`  ${rejected.length} ערכים נפסלו לפני שנגעו בכלום:`));
+    for (const r of rejected.slice(0, 8)) console.log(c.d(`    ${r}`));
+    if (rejected.length > 8) console.log(c.d(`    ... ועוד ${rejected.length - 8}`));
+  }
+
   if (!groups.length) {
-    console.log(c.y("\n  הקובץ מהתוסף ריק — לא שונה כלום.\n"));
+    console.log(c.y("\n  אין מה לקלוט — לא שונה כלום.\n"));
     return;
   }
 
