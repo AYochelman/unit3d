@@ -37,11 +37,18 @@ export const businessJsonLd = () => ({
   email: CONTACT.email,
   priceRange: "₪₪",
   areaServed: { "@type": "Country", name: "IL" },
+  // Word for word what the Google Business Profile says. Google matches the
+  // two, and a street here that differs from the one there -- or is missing --
+  // is a weaker match, which is a weaker place on the map.
   address: {
     "@type": "PostalAddress",
+    streetAddress: "סירקין 20",
     addressLocality: "גבעתיים",
+    postalCode: "5325501",
     addressCountry: "IL",
   },
+  // Every profile that is this business. The Google Business Profile's share
+  // link belongs here too, once its verification is through.
   sameAs: [CONTACT.instagram],
 });
 
