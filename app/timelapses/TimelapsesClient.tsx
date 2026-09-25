@@ -13,7 +13,7 @@ const when = (iso: string) =>
 /**
  * Every timelapse, newest first.
  *
- * The live page shows the last five and nothing more: someone who opened it to
+ * The live page shows the last six and nothing more: someone who opened it to
  * see what the printer is doing now should not scroll past a hundred videos to
  * reach the machine. The whole archive lives here instead.
  *

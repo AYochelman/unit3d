@@ -37,7 +37,7 @@ export default function LivestreamClient() {
   const jobs = usePrinterJobs();
   // Five. Someone who opened this page to see the printer should not scroll
   // past a hundred videos to reach it; the whole archive is at /timelapses.
-  const clips = useTimelapses(5);
+  const clips = useTimelapses(6);
   const stats = jobStats(jobs);
 
   // The camera URL is assembled from the shop's config, so it exists whether or

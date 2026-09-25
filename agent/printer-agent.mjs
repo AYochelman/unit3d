@@ -939,8 +939,15 @@ async function liveTick() {
  *           looked fine — the waste was invisible, and it was several MB per
  *           file per restart.
  *
- *   cutoff  the newest file this agent has DECIDED about, successful or not.
- *           Anything older is settled and never looked at again.
+ *   cutoff  the newest file this agent has decided about. It used to be a
+ *           gate as well -- "anything older is settled" -- and that gate is
+ *           what lost prints. It compared the card's listing times, which
+ *           are minute-precision, in the printer's zone, with a year guessed
+ *           from THIS machine's clock (see parseList in ftps.mjs): a clip the
+ *           printer stamped later than the agent's own clock is dated a year
+ *           back, lands under the cutoff, and is never offered again. Nothing
+ *           in the log says so, because it was "settled". The set of names is
+ *           the record now; the cutoff is only written, for older state files.
  */
 const STATE_FILE = path.join(HERE, "timelapse-state.json");
 
@@ -994,28 +1001,35 @@ async function seedFromSite() {
  */
 async function pushTimelapses(keep = true) {
   if (cfg.timelapse?.enabled === false) return;
-  const { connectPrinterFtps } = await import("./ftps.mjs");
+  const { connectPrinterFtps, recordedAt } = await import("./ftps.mjs");
   let ftp;
   try {
     ftp = await connectPrinterFtps({ host, password: accessCode });
     const dir = cfg.timelapse?.folder || "/timelapse";
+    // Ordered by the time in each clip's own name, which is the printer's
+    // clock at second precision -- not the listing time, which is neither.
     const files = (await ftp.list(dir))
       .filter((f) => /\.(mp4|avi)$/i.test(f.name) && f.size > 100_000)
-      .sort((a, b) => a.modifiedAt - b.modifiedAt);
+      .map((f) => ({ ...f, at: recordedAt(f.name, f.modifiedAt) }))
+      .sort((a, b) => a.at - b.at);
 
-    const fresh = files.filter((f) => !tlState.done.has(f.name) && +f.modifiedAt > tlState.cutoff);
+    // New means "not on the site and not already ruled out", by name. No
+    // time-based gate: a name is either in the set or it is not.
+    const fresh = files.filter((f) => !tlState.done.has(f.name));
     if (!fresh.length) return;
+    log(`timelapse: card holds ${files.length}, ${fresh.length} not on the site yet`);
 
     if (!keep) {
-      // A failed print's video is settled without being fetched: remembered so
-      // the safety-net loop does not pick it up later and put a failure on the
-      // website.
-      for (const f of fresh) {
-        tlState.done.add(f.name);
-        tlState.cutoff = Math.max(tlState.cutoff, +f.modifiedAt);
-      }
+      // The print that just failed made the NEWEST clip on the card. That one
+      // is settled without being fetched, so the safety-net loop does not put
+      // a failure on the website. Only that one: anything older that is still
+      // waiting belonged to a print this agent never ruled on, and the loop
+      // will fetch it as a success -- which is what an unknown outcome gets.
+      const failed = fresh[fresh.length - 1];
+      tlState.done.add(failed.name);
+      tlState.cutoff = Math.max(tlState.cutoff, +failed.at);
       writeState(tlState);
-      log(`timelapse: ${fresh.length} from a print that did not finish - not uploaded`);
+      log(`timelapse: ${failed.name} is from a print that did not finish - not uploaded`);
       return;
     }
 
@@ -1027,7 +1041,7 @@ async function pushTimelapses(keep = true) {
       const ok = await upload("printer", `timelapse/${f.name}`, body, "video/mp4");
       if (!ok) continue;
       tlState.done.add(f.name);
-      tlState.cutoff = Math.max(tlState.cutoff, +f.modifiedAt);
+      tlState.cutoff = Math.max(tlState.cutoff, +f.at);
       writeState(tlState);
       await fetch(`${SB}/rest/v1/printer_timelapses?on_conflict=file`, {
         method: "POST",
@@ -1036,7 +1050,7 @@ async function pushTimelapses(keep = true) {
           file: f.name,
           url: `${SB}/storage/v1/object/public/printer/timelapse/${encodeURIComponent(f.name)}`,
           size_mb: Math.round((body.length / 1048576) * 10) / 10,
-          recorded_at: (f.modifiedAt ?? new Date()).toISOString(),
+          recorded_at: f.at.toISOString(),
         }),
       });
       log(`timelapse saved: ${f.name} (${Math.round(body.length / 1048576)} MB)`);
