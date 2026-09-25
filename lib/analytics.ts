@@ -32,7 +32,9 @@ export type EventName =
   | "configurator_open"
   | "review_sent"
   | "live_open"
-  | "search";
+  | "search"
+  | "finder_open"
+  | "finder_done";
 
 type Props = Record<string, string | number | boolean | null | undefined>;
 
