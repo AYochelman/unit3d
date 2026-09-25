@@ -3,7 +3,7 @@ import "./fonts.css";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import FloatingWA from "@/components/FloatingWA";
+import FinderPrompt from "@/components/FinderPrompt";
 import HelpBot from "@/components/HelpBot";
 import AdminSettingsBoot from "@/components/AdminSettingsBoot";
 import AdminUnlockBoot from "@/components/AdminUnlockBoot";
@@ -79,7 +79,7 @@ export default function RootLayout({
         <AnalyticsBoot />
         <OrdersBoot />
         <CouponsBoot />
-        <FloatingWA />
+        <FinderPrompt />
         <HelpBot />
         <GoogleTag />
       </body>
