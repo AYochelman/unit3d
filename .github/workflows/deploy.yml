@@ -89,9 +89,6 @@ jobs:
         with:
           enablement: true
 
-      - name: Which config the build will read
-        run: ls -la next.config* 2>&1
-
       - name: Build static export
         env:
           STATIC_EXPORT: "1"
@@ -146,37 +143,44 @@ jobs:
             echo "Publish it with: Actions -> Deploy site -> Run workflow (on main)." >> "$GITHUB_STEP_SUMMARY"
           fi
 
+      # A publish that is missing its pages must not reach the live site.
+      #
+      # This is what went out on 25.9: configure-pages had replaced
+      # next.config.ts, `trailingSlash: true` stopped being read, the export
+      # wrote catalog.html instead of catalog/index.html, and unit-3d.com
+      # answered 404 on every shelf. Every gate above stayed green -- tsc,
+      # lint and the build itself have no opinion about which filename a page
+      # is written under.
+      #
+      # So the last gate asks the only question that matters to a visitor: is
+      # the file there that a link on this site points at. Four shelves are
+      # enough; whatever breaks this breaks all of them at once.
+      - name: The shelves must exist
+        run: |
+          echo "index.html files: $(find ./out -name index.html | wc -l)"
+          missing=0
+          for p in index.html 404.html sitemap.xml robots.txt \
+                   catalog/index.html fidgets/index.html \
+                   trendy/index.html configurator/index.html; do
+            if [ -f "./out/$p" ]; then
+              echo "  ok       $p"
+            else
+              echo "  MISSING  $p"
+              missing=1
+            fi
+          done
+          if [ "$missing" = "1" ]; then
+            echo
+            echo "Refusing to publish: the export is missing pages the site links to."
+            echo "Check that next.config.ts is the config being read, and that"
+            echo "trailingSlash is still on."
+            exit 1
+          fi
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
-      # What was actually in ./out when Pages took it.
-      #
-      # AFTER the upload on purpose: upload-pages-artifact lists all 8,000
-      # files as it tars them, so a step before it puts this where no tail of
-      # the log can reach.
-      #
-      # The live site answers 200 for /, /sitemap.xml, /robots.txt and
-      # /404.html but 404 for every page directory, while /preview/catalog/
-      # -- copied in after the main build -- answers 200. That pattern says
-      # the directories the main build wrote are missing by upload time, and
-      # this is the only place that can show it.
-      - name: What was uploaded
-        run: |
-          echo "=== TOP LEVEL OF ./out ==="
-          ls -la ./out | head -40
-          echo
-          echo "directories at top level: $(find ./out -maxdepth 1 -type d | wc -l)"
-          echo "files in total:           $(find ./out -type f | wc -l)"
-          echo "size:                     $(du -sh ./out | cut -f1)"
-          echo "index.html files:         $(find ./out -name index.html | wc -l)"
-          for p in index.html 404.html sitemap.xml catalog/index.html \
-                   fidgets/index.html trendy/index.html reviews/index.html \
-                   preview/catalog/index.html; do
-            [ -f "./out/$p" ] && echo "  present  $p" || echo "  MISSING  $p"
-          done
-          echo "=== ./out/catalog ==="
-          ls -la ./out/catalog 2>&1 | head -10
 
   deploy:
     needs: build
