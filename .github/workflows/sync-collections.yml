@@ -46,9 +46,30 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
+      # What his own Chrome already read, before this job tries the browser.
+      #
+      # This is the path that actually works. Every run since 22.9 reported
+      # success and added nothing: the profile page loads and names the eight
+      # collections, then Cloudflare challenges each collection page three
+      # times and the run gives up on all eight, every night, in silence.
+      # A driven browser cannot answer that challenge -- answering it is what
+      # the challenge tests.
+      #
+      # The extension in his own Chrome is never challenged. It upserts the
+      # sweep to `collected_models` in the shop's database, and this reads it
+      # back. No secret: the url and the publishable key are in
+      # public/shop.json, which the site already ships.
+      - name: Take what the extension collected
+        run: npm run ingest:collected
+        continue-on-error: true
+
       # Optional. Without it the job reads only the public collections, and
       # Cloudflare turns a server away more often than not; with it the session
       # is trusted and the private collections are readable too.
+      #
+      # Kept even though it currently brings back nothing: the ids from the
+      # step above still need it to become rows, and it reads
+      # data/pending-models.json whether or not the browser half succeeded.
       - name: Read the collections
         env:
           MAKERWORLD_COOKIE: ${{ secrets.MAKERWORLD_COOKIE }}
