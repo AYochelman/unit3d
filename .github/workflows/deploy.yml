@@ -126,6 +126,26 @@ jobs:
             echo "Publish it with: Actions -> Deploy site -> Run workflow (on main)." >> "$GITHUB_STEP_SUMMARY"
           fi
 
+      # What is actually in ./out at the moment it is handed to Pages.
+      #
+      # The live site answers 200 for /, /sitemap.xml, /robots.txt and
+      # /404.html but 404 for every page directory, while /preview/catalog/
+      # -- copied in after the main build -- answers 200. That pattern says
+      # the directories the main build wrote are missing by upload time, and
+      # this is the only place that can show it.
+      - name: What is being uploaded
+        run: |
+          echo "top level of ./out:"
+          ls -la ./out | head -40
+          echo
+          echo "directories at top level: $(find ./out -maxdepth 1 -type d | wc -l)"
+          echo "files in total:           $(find ./out -type f | wc -l)"
+          echo "size:                     $(du -sh ./out | cut -f1)"
+          for p in index.html 404.html sitemap.xml catalog/index.html \
+                   fidgets/index.html preview/catalog/index.html; do
+            [ -f "./out/$p" ] && echo "  present  $p" || echo "  MISSING  $p"
+          done
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
