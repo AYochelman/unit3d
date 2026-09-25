@@ -10,6 +10,7 @@ import AdminUnlockBoot from "@/components/AdminUnlockBoot";
 import AnalyticsBoot from "@/components/AnalyticsBoot";
 import OrdersBoot from "@/components/OrdersBoot";
 import CouponsBoot from "@/components/CouponsBoot";
+import GoogleTag from "@/components/GoogleTag";
 
 const heebo = Heebo({
   subsets: ["latin", "hebrew"],
@@ -103,6 +104,7 @@ export default function RootLayout({
         <CouponsBoot />
         <FloatingWA />
         <HelpBot />
+        <GoogleTag />
       </body>
     </html>
   );

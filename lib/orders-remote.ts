@@ -123,6 +123,36 @@ export async function adminRefresh(refresh: string): Promise<Session | null> {
   return authRequest("refresh_token", { refresh_token: refresh });
 }
 
+/**
+ * End the session at Supabase, not only in this browser.
+ *
+ * Signing out used to delete the refresh token from the device and stop there.
+ * The token itself stayed valid: anyone who had already copied it out of
+ * localStorage could keep trading it for fresh access tokens, and "I signed
+ * out" meant nothing to the server.
+ *
+ * `scope=local` revokes this device's refresh token and leaves his other
+ * devices signed in, which is what the button has always appeared to do. The
+ * access token already issued is short-lived and dies on its own — a logout
+ * cannot recall it, and saying otherwise would be the same false comfort.
+ *
+ * Returns whether the server confirmed. The caller forgets the session either
+ * way: a logout that cannot reach the network must still clear the device.
+ */
+export async function adminSignOut(access: string): Promise<boolean> {
+  const c = await shopConfig();
+  if (!isConfigured(c) || !access) return false;
+  try {
+    const res = await fetch(`${c.supabaseUrl}/auth/v1/logout?scope=local`, {
+      method: "POST",
+      headers: { apikey: c.supabaseAnonKey, Authorization: `Bearer ${access}` },
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function authRequest(grant: string, body: Record<string, string>): Promise<Session | null> {
   const c = await shopConfig();
   if (!isConfigured(c)) return null;
