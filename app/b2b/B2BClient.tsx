@@ -311,6 +311,7 @@ export default function B2BClient() {
                   <Select required defaultValue="">
                     <option value="">בחר…</option>
                     <option>מחזיקי מפתחות</option>
+                    <option>כרטיסי ביקור</option>
                     <option>פסלי שולחן</option>
                     <option>פרסים</option>
                     <option>Welcome kits</option>
