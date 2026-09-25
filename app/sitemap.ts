@@ -24,7 +24,7 @@ const BROWSE = [
 const TOOLS = ["/configurator", "/personalize", "/upload"];
 
 /** Everything else a customer reads before buying. */
-const INFO = ["/shipping", "/faq", "/reviews", "/gallery", "/livestream", "/contact"];
+const INFO = ["/shipping", "/faq", "/reviews", "/gallery", "/livestream", "/timelapses", "/contact"];
 
 /** The legal set. Low priority, but they must be findable and indexable. */
 const LEGAL = ["/terms", "/privacy", "/cookies", "/returns", "/accessibility"];
