@@ -39,7 +39,7 @@ export default function Hero() {
             פידג&apos;טים, או כל קובץ שתעלה. ישירות מהסטודיו אליך.
           </p>
           <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-            <Btn as="a" href="/configurator" size="lg" icon="sparkles">
+            <Btn as="a" href="/trendy" size="lg" icon="sparkles">
               התחל להזמין
             </Btn>
             <Btn as="a" href="/livestream" size="lg" variant="outline" icon="play">

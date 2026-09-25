@@ -178,11 +178,11 @@ export default function Header() {
             {/* Between lg and xl the eleven nav links, four icon buttons and
                 this CTA do not fit on one row — that is what was squeezing the
                 label onto two lines. At those widths the nav itself carries
-                "מעצב", which goes to the same place, so the button steps out
+                "טרנדי", which goes to the same place, so the button steps out
                 rather than being crushed. */}
             <Btn
               as="a"
-              href="/configurator"
+              href="/trendy"
               size="md"
               className="hidden md:inline-flex lg:hidden xl:inline-flex"
             >
@@ -215,7 +215,7 @@ export default function Header() {
                 a thumb already is. They used to sit under twenty-one links,
                 which on a phone means below the fold of the sheet itself. */}
             <div className="flex items-center gap-2">
-              <Btn as="a" href="/configurator" size="md" className="flex-1 h-12" onClick={() => setOpen(false)}>
+              <Btn as="a" href="/trendy" size="md" className="flex-1 h-12" onClick={() => setOpen(false)}>
                 התחל להזמין
               </Btn>
               <a

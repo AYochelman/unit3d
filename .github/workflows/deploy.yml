@@ -66,11 +66,28 @@ jobs:
         run: npm run fetch:images
         continue-on-error: true
 
+      # NOT `static_site_generator: next`.
+      #
+      # That input makes the action write its own next.config.js to set the
+      # base path for you. Next resolves next.config.js BEFORE next.config.ts,
+      # so from that moment the repository's own config -- and with it
+      # `trailingSlash: true` -- stops being read.
+      #
+      # What that produced: out/catalog.html plus an out/catalog/ holding only
+      # the __next.*.txt segment files, instead of out/catalog/index.html. The
+      # site links to /catalog/ with the slash, GitHub Pages had nothing to
+      # serve there, and unit-3d.com answered 404 on every shelf while the
+      # homepage, sitemap.xml and robots.txt -- files at the root either way --
+      # were fine. /preview/catalog/ worked because that build runs in
+      # .preview-src, which the action never touched.
+      #
+      # The base path is ours to pass anyway: the step still outputs it and the
+      # build step below puts it in NEXT_PUBLIC_BASE_PATH, which next.config.ts
+      # reads. Nothing is lost by leaving this out.
       - uses: actions/configure-pages@v5
         id: pages
         with:
           enablement: true
-          static_site_generator: next
 
       - name: Build static export
         env:
@@ -126,29 +143,44 @@ jobs:
             echo "Publish it with: Actions -> Deploy site -> Run workflow (on main)." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      # What is actually in ./out at the moment it is handed to Pages.
+      # A publish that is missing its pages must not reach the live site.
       #
-      # The live site answers 200 for /, /sitemap.xml, /robots.txt and
-      # /404.html but 404 for every page directory, while /preview/catalog/
-      # -- copied in after the main build -- answers 200. That pattern says
-      # the directories the main build wrote are missing by upload time, and
-      # this is the only place that can show it.
-      - name: What is being uploaded
+      # This is what went out on 25.9: configure-pages had replaced
+      # next.config.ts, `trailingSlash: true` stopped being read, the export
+      # wrote catalog.html instead of catalog/index.html, and unit-3d.com
+      # answered 404 on every shelf. Every gate above stayed green -- tsc,
+      # lint and the build itself have no opinion about which filename a page
+      # is written under.
+      #
+      # So the last gate asks the only question that matters to a visitor: is
+      # the file there that a link on this site points at. Four shelves are
+      # enough; whatever breaks this breaks all of them at once.
+      - name: The shelves must exist
         run: |
-          echo "top level of ./out:"
-          ls -la ./out | head -40
-          echo
-          echo "directories at top level: $(find ./out -maxdepth 1 -type d | wc -l)"
-          echo "files in total:           $(find ./out -type f | wc -l)"
-          echo "size:                     $(du -sh ./out | cut -f1)"
-          for p in index.html 404.html sitemap.xml catalog/index.html \
-                   fidgets/index.html preview/catalog/index.html; do
-            [ -f "./out/$p" ] && echo "  present  $p" || echo "  MISSING  $p"
+          echo "index.html files: $(find ./out -name index.html | wc -l)"
+          missing=0
+          for p in index.html 404.html sitemap.xml robots.txt \
+                   catalog/index.html fidgets/index.html \
+                   trendy/index.html configurator/index.html; do
+            if [ -f "./out/$p" ]; then
+              echo "  ok       $p"
+            else
+              echo "  MISSING  $p"
+              missing=1
+            fi
           done
+          if [ "$missing" = "1" ]; then
+            echo
+            echo "Refusing to publish: the export is missing pages the site links to."
+            echo "Check that next.config.ts is the config being read, and that"
+            echo "trailingSlash is still on."
+            exit 1
+          fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
+
 
   deploy:
     needs: build
