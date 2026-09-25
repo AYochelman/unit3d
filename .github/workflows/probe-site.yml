@@ -1,0 +1,30 @@
+# Asks the live site, from outside, what it actually serves.
+#
+# Diagnostic only, run by hand. The shop reported 404 on pages that exist in
+# the build and are listed in the sitemap, and nothing inside the repository
+# can tell the difference between "the file was never published" and "the file
+# is there and something else is wrong". This fetches the real URLs over the
+# real network and prints the status code for each.
+#
+# Delete it once the question it answers is closed.
+name: Probe the live site
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch every page that should exist
+        run: |
+          for p in / /catalog/ /fidgets/ /reviews/ /configurator/ /smoke/ \
+                   /privacy/ /timelapses/ /sitemap.xml /robots.txt /404.html \
+                   /preview/ /preview/catalog/; do
+            code=$(curl -s -o /tmp/body -w '%{http_code}' -L "https://unit-3d.com$p")
+            bytes=$(wc -c < /tmp/body)
+            note=""
+            grep -q "This page could not be found" /tmp/body && note="  <-- Next 404 body"
+            grep -q "הדף הזה לא קיים" /tmp/body && note="  <-- Hebrew 404 body"
+            printf '%-22s %s  %8s bytes%s\n' "$p" "$code" "$bytes" "$note"
+          done
