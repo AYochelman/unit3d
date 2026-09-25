@@ -10,8 +10,10 @@
  * Everything the owner will want to tune is in this file and nowhere else:
  * the questions, the wording of every option, which shelves an answer
  * favours and by how much, and what the result page says about each shelf.
- * The UI in app/finder/FinderClient.tsx only renders what is here.
+ * The UI in app/finder/FinderClient.tsx only renders what is here. Prices
+ * and the product suggestions come from the catalogue (lib/finder-cards.ts).
  */
+import { shelfPriceText } from "./finder-cards";
 
 export type ShelfId =
   | "catalog" | "configurator" | "b2b" | "fidgets" | "pets" | "statues"
@@ -23,21 +25,19 @@ export type Shelf = {
   title: string;
   /** One line under the title on the result card. */
   blurb: string;
-  /** What most things on this shelf cost, in the words a person would use. */
-  price: string;
 };
 
 export const SHELVES: Record<ShelfId, Shelf> = {
-  catalog:      { id: "catalog",      href: "/catalog/",      title: "סמלי יחידות",        blurb: "100 סמלי יחידות צה\"ל, מוכנים להדפסה ואפשר להוסיף שם.", price: "₪40–90" },
-  configurator: { id: "configurator", href: "/configurator/", title: "המעצב האישי",         blurb: "מחזיק מפתחות, שלט, מגן — כותבים שם או לוגו ורואים מחיר מיד.", price: "₪35–120" },
-  b2b:          { id: "b2b",          href: "/b2b/",          title: "מתנות לעובדים",       blurb: "הזמנה לחברה או ליחידה, עם הלוגו שלכם ומחיר לכמות.", price: "לפי כמות" },
-  fidgets:      { id: "fidgets",      href: "/fidgets/",      title: "פידג'טים ופלקסי",     blurb: "144 דגמים — דרקונים שמתקפלים, מפרקי לחץ, צעצועי שולחן.", price: "₪25–80" },
-  pets:         { id: "pets",         href: "/pets/",         title: "תגים לחיות",          blurb: "תג שם עם טלפון לכלב או לחתול, ב-PETG שלא נשבר.", price: "₪30–50" },
-  statues:      { id: "statues",      href: "/statues/",      title: "פסלים ודמויות",       blurb: "באסטים, דמויות ופסלי שולחן — לאספנים ולמתנה שמרשימה.", price: "₪80–250" },
-  screen:       { id: "screen",       href: "/screen/",       title: "סרטים וסדרות",        blurb: "דמויות ואביזרים מהסרטים והסדרות שאתם אוהבים.", price: "₪50–200" },
-  smoke:        { id: "smoke",        href: "/smoke/",        title: "מוצרי עישון",         blurb: "קופסאות סיגריות, מאפרות, גריינדרים — אפשר עם שם.", price: "₪40–120" },
-  "home-office":{ id: "home-office",  href: "/home-office/",  title: "לבית ולמשרד",         blurb: "מארגנים, מעמדים, מתלים — דברים שמסדרים לך את השולחן.", price: "₪30–150" },
-  upload:       { id: "upload",       href: "/upload/",       title: "הדפסה מהקובץ שלך",    blurb: "יש לך כבר STL? שולחים, מקבלים מחיר, מדפיסים.", price: "לפי הקובץ" },
+  catalog:      { id: "catalog",      href: "/catalog/",      title: "סמלי יחידות",        blurb: "100 סמלי יחידות צה\"ל, מוכנים להדפסה ואפשר להוסיף שם." },
+  configurator: { id: "configurator", href: "/configurator/", title: "המעצב האישי",         blurb: "מחזיק מפתחות, שלט, מגן — כותבים שם או לוגו ורואים מחיר מיד." },
+  b2b:          { id: "b2b",          href: "/b2b/",          title: "מתנות לעובדים",       blurb: "הזמנה לחברה או ליחידה, עם הלוגו שלכם ומחיר לכמות." },
+  fidgets:      { id: "fidgets",      href: "/fidgets/",      title: "פידג'טים ופלקסי",     blurb: "144 דגמים — דרקונים שמתקפלים, מפרקי לחץ, צעצועי שולחן." },
+  pets:         { id: "pets",         href: "/pets/",         title: "תגים לחיות",          blurb: "תג שם עם טלפון לכלב או לחתול, ב-PETG שלא נשבר." },
+  statues:      { id: "statues",      href: "/statues/",      title: "פסלים ודמויות",       blurb: "באסטים, דמויות ופסלי שולחן — לאספנים ולמתנה שמרשימה." },
+  screen:       { id: "screen",       href: "/screen/",       title: "סרטים וסדרות",        blurb: "דמויות ואביזרים מהסרטים והסדרות שאתם אוהבים." },
+  smoke:        { id: "smoke",        href: "/smoke/",        title: "מוצרי עישון",         blurb: "קופסאות סיגריות, מאפרות, גריינדרים — אפשר עם שם." },
+  "home-office":{ id: "home-office",  href: "/home-office/",  title: "לבית ולמשרד",         blurb: "מארגנים, מעמדים, מתלים — דברים שמסדרים לך את השולחן." },
+  upload:       { id: "upload",       href: "/upload/",       title: "הדפסה מהקובץ שלך",    blurb: "יש לך כבר STL? שולחים, מקבלים מחיר, מדפיסים." },
 };
 
 export type Option = {
@@ -88,6 +88,12 @@ export const QUESTIONS: Question[] = [
 ];
 
 export type Answers = Record<string, string[]>;
+
+/**
+ * What a shelf really costs — read off its products, not typed in here.
+ * The middle 80% of the catalogue prices, rounded to ₪5 (lib/finder-cards.ts).
+ */
+export const shelfPrice = (id: ShelfId): string => shelfPriceText(id);
 
 /** The shelves in order of fit. The first is the recommendation. */
 export function recommend(answers: Answers): Shelf[] {

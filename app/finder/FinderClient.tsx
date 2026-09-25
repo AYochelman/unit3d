@@ -4,7 +4,10 @@ import Link from "next/link";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { CONTACT } from "@/lib/contact";
-import { QUESTIONS, recommend, type Answers } from "@/lib/finder";
+import ProductGrid from "@/components/ProductGrid";
+import { useAdminStore } from "@/lib/admin-store";
+import { QUESTIONS, recommend, shelfPrice, type Answers } from "@/lib/finder";
+import { suggestions, type BudgetId } from "@/lib/finder-cards";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
@@ -36,6 +39,12 @@ export default function FinderClient() {
   const results = useMemo(() => (done ? recommend(answers) : []), [done, answers]);
   const top = results[0];
   const rest = results.slice(1, 3);
+  // Real products for the top shelf, honouring the owner's live shelf moves
+  // the same way the shelf pages do. Empty for the shelves that are a flow
+  // rather than a list (the emblem catalogue, the file upload).
+  const moves = useAdminStore((st) => st.shelves);
+  const budget = ((answers.budget ?? [])[0] ?? "any") as BudgetId;
+  const picks = useMemo(() => (top ? suggestions(top.id, budget, moves) : []), [top, budget, moves]);
 
   const finish = () => {
     setStep(QUESTIONS.length);
@@ -121,12 +130,31 @@ export default function FinderClient() {
             <div className="text-2xl font-black">{top.title}</div>
             <p className="mt-2 text-ink-200 leading-relaxed">{top.blurb}</p>
             <div className="mt-4 flex items-center justify-between">
-              <span className="font-mono text-sm text-ink-300" dir="ltr">{top.price}</span>
+              <span className="font-mono text-sm text-ink-300" dir="ltr">{shelfPrice(top.id)}</span>
               <span className="inline-flex items-center gap-1.5 font-semibold text-flame">
                 למדף <Icon name="chevLeft" size={16} />
               </span>
             </div>
           </Link>
+
+          {picks.length > 0 ? (
+            <>
+              <div className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mt-10 mb-3">
+                כמה מוצרים שמתאימים לבחירה שלך
+              </div>
+              <ProductGrid cards={picks} />
+              <div className="mt-3 text-sm">
+                <Link href={top.href} className="text-flame font-semibold inline-flex items-center gap-1">
+                  כל המדף <Icon name="chevLeft" size={14} />
+                </Link>
+              </div>
+            </>
+          ) : top.id === "catalog" || top.id === "upload" ? null : (
+            <div className="mt-8 p-4 rounded-2xl border border-ink-800 bg-ink-900 text-sm text-ink-300">
+              לא מצאנו התאמה מדויקת לבחירה הזו —{" "}
+              <Link href="/trendy/" className="text-flame font-semibold">הנה הקטלוג הכללי</Link>.
+            </div>
+          )}
 
           {rest.length > 0 && (
             <>
