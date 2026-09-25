@@ -66,11 +66,31 @@ jobs:
         run: npm run fetch:images
         continue-on-error: true
 
+      # NOT `static_site_generator: next`.
+      #
+      # That input makes the action write its own next.config.js to set the
+      # base path for you. Next resolves next.config.js BEFORE next.config.ts,
+      # so from that moment the repository's own config -- and with it
+      # `trailingSlash: true` -- stops being read.
+      #
+      # What that produced: out/catalog.html plus an out/catalog/ holding only
+      # the __next.*.txt segment files, instead of out/catalog/index.html. The
+      # site links to /catalog/ with the slash, GitHub Pages had nothing to
+      # serve there, and unit-3d.com answered 404 on every shelf while the
+      # homepage, sitemap.xml and robots.txt -- files at the root either way --
+      # were fine. /preview/catalog/ worked because that build runs in
+      # .preview-src, which the action never touched.
+      #
+      # The base path is ours to pass anyway: the step still outputs it and the
+      # build step below puts it in NEXT_PUBLIC_BASE_PATH, which next.config.ts
+      # reads. Nothing is lost by leaving this out.
       - uses: actions/configure-pages@v5
         id: pages
         with:
           enablement: true
-          static_site_generator: next
+
+      - name: Which config the build will read
+        run: ls -la next.config* 2>&1
 
       - name: Build static export
         env:
