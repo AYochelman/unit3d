@@ -14,7 +14,7 @@ export default function FinalCTA() {
           אליכם בוואטסאפ תוך שעה.
         </p>
         <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
-          <Btn as="a" href="/configurator" size="lg" icon="sparkles">
+          <Btn as="a" href="/trendy" size="lg" icon="sparkles">
             התחל להזמין
           </Btn>
           <Btn as="a" href="/contact" size="lg" variant="ghost" icon="whatsapp">
