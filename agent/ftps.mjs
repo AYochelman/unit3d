@@ -391,3 +391,25 @@ function parseList(text) {
   }
   return out;
 }
+
+/**
+ * When a timelapse was recorded, read off its name.
+ *
+ * Bambu names every clip after the moment it started:
+ *   video_2026-09-20_21-34-14.mp4
+ * That is the printer's own clock, written by the printer, at second
+ * precision. The listing's modification time is none of those things: it is
+ * minute precision, it is in whatever zone the printer reports, and parseList
+ * has to guess its year from the machine running the agent — a clip stamped
+ * later than that machine's clock is dated a year back. One clip on the site
+ * shows 21:05 for a file named 21-34-14, which is that guesswork in public.
+ *
+ * So the name wins, and the listing time is only for a file that is not named
+ * that way.
+ */
+export function recordedAt(name, fallback) {
+  const m = /(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})/.exec(name);
+  if (!m) return fallback instanceof Date && !isNaN(fallback) ? fallback : new Date();
+  const [, y, mo, d, h, mi, sec] = m.map(Number);
+  return new Date(y, mo - 1, d, h, mi, sec);
+}
