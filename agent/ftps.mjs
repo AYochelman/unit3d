@@ -301,20 +301,38 @@ export async function connectPrinterFtps({ host, password, user = "bblp", port =
       return parseList(await this.listRaw(dir));
     },
 
-    /** The listing exactly as the printer wrote it — for when nothing matches. */
+    /**
+     * The listing exactly as the printer wrote it — for when nothing matches.
+     *
+     * An EMPTY answer is not accepted from the first form that gives one. On
+     * 25.9 the card answered LIST with zero bytes for every folder including
+     * the root, the script concluded "no card in the printer", and the owner
+     * said the card had never left the slot. A server that has stopped
+     * answering one form of the question with anything at all looks exactly
+     * like an empty disk, so every form is asked before an empty answer is
+     * believed: LIST, NLST, MLSD (the one modern servers prefer), and LIST
+     * from inside the folder.
+     */
     async listRaw(dir) {
       const problems = [];
-      for (const form of ["LIST", "NLST", "CWD"]) {
+      let empty = null;
+      for (const form of ["LIST", "NLST", "MLSD", "CWD"]) {
         try {
+          let text;
           if (form === "CWD") {
             await say(`CWD ${dir}`, [250]);
-            return (await transfer("LIST")).toString("utf8");
+            text = (await transfer("LIST")).toString("utf8");
+          } else {
+            text = (await transfer(`${form} ${dir}`)).toString("utf8");
           }
-          return (await transfer(`${form} ${dir}`)).toString("utf8");
+          if (text.trim()) return text;
+          empty = text;
+          problems.push(`${form} — empty`);
         } catch (e) {
           problems.push(`${form} — ${e.message}`);
         }
       }
+      if (empty !== null) return empty;
       throw new Error(problems.join(" | "));
     },
 
@@ -373,9 +391,26 @@ function parseList(text) {
   const out = [];
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
-    if (!line || line.startsWith("d") || line.startsWith("total")) continue;
+    if (!line || line.startsWith("total")) continue;
+    // MLSD: "type=file;size=4194304;modify=20260920213414; video_1.mp4"
+    if (/^(type|size|modify)=/i.test(line)) {
+      const facts = Object.fromEntries(line.split(";").map((f) => f.trim().split("=")));
+      const name = line.slice(line.lastIndexOf(";") + 1).trim();
+      if (!name || (facts.type && facts.type !== "file")) continue;
+      const mod = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/.exec(facts.modify || "");
+      const when = mod ? new Date(Date.UTC(+mod[1], +mod[2] - 1, +mod[3], +mod[4], +mod[5], +mod[6])) : new Date();
+      out.push({ name, size: Number(facts.size) || 0, modifiedAt: when });
+      continue;
+    }
+    if (line.startsWith("d")) continue;
     const m = /^\S+\s+\d+\s+\S+\s+\S+\s+(\d+)\s+(\w{3})\s+(\d+)\s+(\S+)\s+(.+)$/.exec(line);
-    if (!m) continue;
+    if (!m) {
+      // NLST: a bare name per line, no size and no time. The size is unknown,
+      // so it must not fail the "bigger than 100 KB" filter here -- the
+      // download itself still throws away anything that comes back short.
+      if (/\.(mp4|avi)$/i.test(line) && !/\s/.test(line)) out.push({ name: line, size: Infinity, modifiedAt: new Date() });
+      continue;
+    }
     const [, size, mon, day, timeOrYear, name] = m;
     const month = MONTHS.indexOf(mon);
     const now = new Date();
