@@ -23,11 +23,11 @@ const NAV = [
   { href: "/home", label: "לבית" },
   { href: "/office", label: "למשרד" },
   { href: "/configurator", label: "מעצב" },
+  { href: "/upload", label: "העלאת קובץ" },
   { href: "/b2b", label: "עסקים" },
 ];
 
 const SECONDARY = [
-  { href: "/upload", label: "העלאת קובץ" },
   { href: "/shipping", label: "משלוחים" },
   { href: "/livestream", label: "לייב" },
   { href: "/gallery", label: "גלריה" },
