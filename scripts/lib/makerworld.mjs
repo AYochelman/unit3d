@@ -356,8 +356,11 @@ const NOT_A_TOY =
  */
 export const isRealWeapon = (text) => NOT_A_TOY.test(text);
 
+// Word-bounded: "Link Cable Clip" is not Zelda, "Overengineered" is not Eren,
+// and "Ultrasonic" is not Sonic. Each name here is a trademark someone
+// enforces, which is a different and dearer complaint than a designer's.
 const BRAND_RE =
-  /(kaws|bearbrick|be@rbrick|smiski|hello kitty|spider[- ]?man|spiderman|spider noir|miles morales|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|master sword|nintendo|star wars|mandalorian|jujutsu|mahoraga|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|naruto|dragon ball|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go|cheburashka|tscheburaschka)/i;
+  /\b(kaws|bearbrick|be@rbrick|smiski|hello kitty|sanrio|labubu|spider[- ]?man|spider noir|miles morales|marvel|iron ?man|hulk|thor|captain america|deadpool|venom|groot|batman|superman|joker|disney|mickey mouse|lilo and stitch|grinch|pokemon|pikachu|mario|zelda|master sword|kirby|nintendo|star wars|mandalorian|grogu|baby yoda|x-?wing|tie fighter|millennium falcon|jujutsu|mahoraga|gojo|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|luffy|naruto|dragon ball|goku|attack on titan|aot titan|eren yeager|totoro|ghibli|toothless|night fury|how to train your dragon|harry potter|hogwarts|aperture science|portal turret|minecraft|creeper|among us|sonic the hedgehog|squid game|fortnite|roblox|master chief|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go|cheburashka|tscheburaschka)\b/i;
 
 export function holdsFor(text, license) {
   const holds = [];
