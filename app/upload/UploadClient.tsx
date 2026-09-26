@@ -7,6 +7,7 @@ import Icon from "@/components/ui/Icon";
 import { useFilaments } from "@/lib/palette";
 import { useOrderStore } from "@/lib/order-store";
 import { cn } from "@/lib/cn";
+import { inspectModelFile } from "@/lib/upload-check";
 
 type UploadedFile = { name: string; size: number; ext: string };
 
@@ -37,9 +38,15 @@ export default function UploadClient() {
 
   const colorObj = FILAMENTS.find((f) => f.id === color)!;
 
+  const [error, setError] = useState<string | null>(null);
+  // Checked before it is accepted: the bytes have to be the model the
+  // extension claims, and the name is cleaned (lib/upload-check.ts).
   const accept = (f: File) => {
-    const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
-    setFile({ name: f.name, size: f.size, ext });
+    void inspectModelFile(f).then((r) => {
+      if (!r.ok) { setFile(null); setError(r.reason); return; }
+      setError(null);
+      setFile({ name: r.name, size: f.size, ext: r.ext });
+    });
   };
 
   const proceed = () => {
@@ -172,6 +179,11 @@ export default function UploadClient() {
           </div>
         )}
       </div>
+      {error && (
+        <p role="alert" className="mt-3 text-sm text-bad">
+          {error}
+        </p>
+      )}
 
       {file && (
         <div className="mt-8 grid lg:grid-cols-2 gap-6">
