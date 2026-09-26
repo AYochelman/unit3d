@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ *
+ * Theme
+ *
+ * Both themes exist because the job is judging images. A palette that
+ * reads well on a dark canvas can fall apart on a light one, and you
+ * cannot tell which you are looking at unless you can switch.
+ * ------------------------------------------------------------------ */
+:root,
+[data-theme="dark"] {
+  --canvas: 11 11 12;
+  --surface: 22 22 24;
+  --raised: 31 31 34;
+  --line: 255 255 255;
+  --line-alpha: 0.10;
+  --ink: 243 241 239;
+  --muted: 147 144 139;
+  --faint: 111 108 104;
+  --accent: 232 102 74;
+  --accent-ink: 26 13 8;
+  --ok: 94 189 133;
+  --warn: 226 176 84;
+  --bad: 232 92 92;
+  --shade: 0 0 0;
+
+  --font-sans: "Assistant", "Segoe UI", "Arial Hebrew", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --canvas: 243 242 240;
+  --surface: 255 255 255;
+  --raised: 249 248 246;
+  --line: 12 12 14;
+  --line-alpha: 0.12;
+  --ink: 23 24 26;
+  --muted: 103 100 95;
+  --faint: 138 135 130;
+  --accent: 199 71 43;
+  --accent-ink: 255 255 255;
+  --ok: 32 130 79;
+  --warn: 160 111 15;
+  --bad: 189 46 46;
+  --shade: 90 88 84;
+
+  color-scheme: light;
+}
+
+@layer base {
+  * { border-color: rgb(var(--line) / var(--line-alpha)); }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: rgb(var(--canvas));
+    color: rgb(var(--ink));
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Visible focus everywhere. A design tool that hides focus is not one. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Mixed-direction content: a Hebrew note inside an English chrome must
+     still read right-to-left, and an English URL inside a Hebrew note must
+     not drag its punctuation across. `dir="auto"` on the field plus bdi on
+     the inline bits is what does it. */
+  [dir="auto"] { text-align: start; }
+
+  code, kbd, samp, .tabular { font-family: var(--font-mono); }
+
+  /* Numbers, hex values, URLs and model names stay left-to-right in both
+     chrome languages. */
+  .ltr { direction: ltr; unicode-bidi: isolate; text-align: start; }
+
+  ul, ol { padding-inline-start: 1.25rem; }
+
+  ::selection { background: rgb(var(--accent) / 0.28); }
+
+  /* Scrollbars that do not shout. */
+  * { scrollbar-width: thin; scrollbar-color: rgb(var(--line) / 0.22) transparent; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line) / 0.18);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--line) / 0.3); background-clip: padding-box; }
+}
+
+@layer components {
+  .field {
+    @apply w-full rounded-lg bg-canvas/60 px-3 py-2 text-sm text-ink placeholder:text-faint;
+    border: 1px solid rgb(var(--line) / var(--line-alpha));
+    transition: border-color .15s ease, background-color .15s ease;
+  }
+  .field:hover { border-color: rgb(var(--line) / 0.2); }
+  .field:focus { border-color: rgb(var(--accent) / 0.6); background: rgb(var(--canvas) / 0.9); }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium;
+    border: 1px solid rgb(var(--line) / var(--line-alpha));
+    transition: background-color .15s ease, border-color .15s ease, opacity .15s ease;
+  }
+  .btn:hover:not(:disabled) { background: rgb(var(--line) / 0.07); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary {
+    background: rgb(var(--accent));
+    color: rgb(var(--accent-ink));
+    border-color: rgb(var(--accent));
+  }
+  .btn-primary:hover:not(:disabled) { background: rgb(var(--accent) / 0.88); }
+  .btn-ghost { border-color: transparent; }
+  .btn-sm { @apply px-2.5 py-1.5 text-xs; }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs;
+    border: 1px solid rgb(var(--line) / var(--line-alpha));
+    color: rgb(var(--muted));
+  }
+  .chip-on {
+    background: rgb(var(--accent) / 0.14);
+    border-color: rgb(var(--accent) / 0.5);
+    color: rgb(var(--accent));
+  }
+
+  .panel {
+    @apply rounded-xl bg-surface;
+    border: 1px solid rgb(var(--line) / var(--line-alpha));
+  }
+
+  .label { @apply mb-1.5 block text-xs font-medium uppercase tracking-wide text-faint; }
+
+  /* The checkerboard behind a transparent reference image. */
+  .checker {
+    background-image:
+      linear-gradient(45deg, rgb(var(--line) / .06) 25%, transparent 25%),
+      linear-gradient(-45deg, rgb(var(--line) / .06) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgb(var(--line) / .06) 75%),
+      linear-gradient(-45deg, transparent 75%, rgb(var(--line) / .06) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
