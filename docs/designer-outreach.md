@@ -19,9 +19,9 @@
 | 12 | Easter bunny | SabreDesign | Standard Digital File License | statues | [קישור](https://makerworld.com/en/models/219200-easter-bunny) |
 | 13 | The source - Dynamic Sculpture by Luo Li Rong | Krizia88cK | MakerWorld Exclusive License | statues | [קישור](https://makerworld.com/en/models/2845609-the-source-dynamic-sculpture-by-luo-li-rong) |
 | 14 | Death Whistle | Geadas11 | Standard Digital File License | statues | [קישור](https://makerworld.com/en/models/1842643-death-whistle) |
-| 15 | Sitting Darth Vader - Shelf & Desk Edge Sitter | Lynns | Standard Digital File License | screen | [קישור](https://makerworld.com/en/models/2815953-sitting-darth-vader-shelf-desk-edge-sitter) |
-| 16 | One Wish Willow | AutoRefill | Standard Digital File License - Community Use | screen | [קישור](https://makerworld.com/en/models/2821771-one-wish-willow) |
-| 17 | Articulated Legendary Lugia - Flexi Fidget Toy | Lynns | Standard Digital File License | screen | [קישור](https://makerworld.com/en/models/3267283-articulated-legendary-lugia-flexi-fidget-toy) |
+| 15 | One Wish Willow | AutoRefill | Standard Digital File License - Community Use | screen | [קישור](https://makerworld.com/en/models/2821771-one-wish-willow) |
+| 16 | Titan God Atlas - Gaming Controller Stand-Xbox/PS5 | ShapeShift 3D Creations | Standard Digital File License | screen | [קישור](https://makerworld.com/en/models/3271845-titan-god-atlas-gaming-controller-stand-xbox-ps5) |
+| 17 | Rickroll music box / No supports | mrtr | Standard Digital File License | trendy | [קישור](https://makerworld.com/en/models/3251864-rickroll-music-box-no-supports) |
 | 18 | Fully Custom Pet Tag with Phone Number | AlexFixLab | Standard Digital File License | pets | [קישור](https://makerworld.com/en/models/2868647-fully-custom-pet-tag-with-phone-number) |
 | 19 | Funny Dog Teeth | Little Mac Designs | Standard Digital File License | pets | [קישור](https://makerworld.com/en/models/1545342-funny-dog-teeth) |
 | 20 | Cat bowl print in place | bladow | Standard Digital File License | pets | [קישור](https://makerworld.com/en/models/38661-cat-bowl-print-in-place) |
