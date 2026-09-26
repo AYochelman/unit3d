@@ -221,16 +221,19 @@ export const UNIT_FORMS: UnitForm[] = [
     photo: "/studio/grinder-emblem.webp",
     price: 55,
   },
-  // The two cases print in TPU like the designer's cases do (lib/products.ts):
-  // a hard case cracks at the corners the first time the phone is dropped.
+  // Both cases print in PLA. The designer's cases are TPU, but TPU is what
+  // the shop is out of, and a form whose only filament is out of stock reads
+  // "בהזמנה · הגליל אינו במלאי" on every card. The phone case is the shop's
+  // own catalogue model, mw-1835046 -- a rigid, modular PLA case -- with its
+  // real weight and time; that is also where the photograph comes from.
   {
     id: "phonecase",
     label: "קייס לטלפון",
-    desc: "TPU גמיש, הסמל על הגב. את דגם הטלפון כותבים בטופס.",
+    desc: "קייס קשיח מודולרי, הסמל על הגב. את דגם הטלפון כותבים בטופס.",
     dim: "70×145mm",
-    grams: 45,
-    hours: 3.5,
-    material: "tpu",
+    grams: 91,
+    hours: 4,
+    material: "pla",
     group: "everyday",
     art: "phonecase",
     photo: CONFIG_PRODUCT_BY_ID.phone_case.image,
@@ -239,11 +242,11 @@ export const UNIT_FORMS: UnitForm[] = [
   {
     id: "airpods",
     label: "קייס לאיירפודס",
-    desc: "נרתיק TPU לנרתיק הטעינה, הסמל על המכסה. מתאים ל-AirPods 2/3/Pro — כותבים בטופס.",
+    desc: "נרתיק קשיח לנרתיק הטעינה, הסמל על המכסה. AirPods 2/3/Pro — כותבים בטופס.",
     dim: "55×48mm",
-    grams: 18,
-    hours: 1.6,
-    material: "tpu",
+    grams: 22,
+    hours: 1.8,
+    material: "pla",
     group: "everyday",
     art: "headphones",
     price: 60,
