@@ -22,7 +22,9 @@ export type UnitFormId =
   | "lighter"
   | "cigcase"
   | "ashtray"
-  | "grinder";
+  | "grinder"
+  | "phonecase"
+  | "airpods";
 
 /** The two questions are different: is this the emblem, or a thing wearing it. */
 export type UnitFormGroup = "emblem" | "everyday";
@@ -218,6 +220,33 @@ export const UNIT_FORMS: UnitForm[] = [
     // Native 4:3, so the aspect-[4/3] tile crops nothing.
     photo: "/studio/grinder-emblem.webp",
     price: 55,
+  },
+  // The two cases print in TPU like the designer's cases do (lib/products.ts):
+  // a hard case cracks at the corners the first time the phone is dropped.
+  {
+    id: "phonecase",
+    label: "קייס לטלפון",
+    desc: "TPU גמיש, הסמל על הגב. את דגם הטלפון כותבים בטופס.",
+    dim: "70×145mm",
+    grams: 45,
+    hours: 3.5,
+    material: "tpu",
+    group: "everyday",
+    art: "phonecase",
+    photo: CONFIG_PRODUCT_BY_ID.phone_case.image,
+    price: 120,
+  },
+  {
+    id: "airpods",
+    label: "קייס לאיירפודס",
+    desc: "נרתיק TPU לנרתיק הטעינה, הסמל על המכסה. מתאים ל-AirPods 2/3/Pro — כותבים בטופס.",
+    dim: "55×48mm",
+    grams: 18,
+    hours: 1.6,
+    material: "tpu",
+    group: "everyday",
+    art: "headphones",
+    price: 60,
   },
 ];
 
