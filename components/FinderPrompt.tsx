@@ -26,27 +26,40 @@ export default function FinderPrompt() {
   const { gone, dismiss } = useDismissed();
   if (gone || path?.startsWith("/finder") || path?.startsWith("/admin")) return null;
   return (
-    <div className="fab fixed left-4 sm:left-6 z-30 max-w-[calc(100vw-2rem)] sm:max-w-xs rounded-2xl border border-ink-700 bg-ink-900/95 backdrop-blur shadow-soft p-4">
-      <button
-        type="button"
-        onClick={dismiss}
-        aria-label="סגור"
-        className="absolute top-2 left-2 h-7 w-7 inline-flex items-center justify-center rounded-full text-ink-400 hover:text-ink-100"
-      >
-        <Icon name="x" size={14} />
-      </button>
-      <p className="text-sm leading-snug pl-6">
-        יש לנו מבחר גדול, אנחנו יודעים.
-        <br />
-        <span className="text-ink-300">בוא נעזור לך לבחור.</span>
-      </p>
+    <>
+      {/* Phones: one line, the height of the button this replaced. The full
+          card at this width sat on top of "המשך לטופס" on /upload and on the
+          contact box on /catalog -- a corner card that hides the page's own
+          button is worse than no card. */}
       <Link
         href="/finder/"
         onClick={() => track("finder_open", { from: path ?? "" })}
-        className="mt-3 inline-flex items-center gap-1.5 font-semibold text-sm text-flame"
+        className="fab fixed left-4 z-30 sm:hidden inline-flex items-center gap-1.5 h-11 pr-4 pl-3 rounded-full border border-ink-700 bg-ink-900/95 backdrop-blur shadow-soft text-sm font-semibold text-flame"
       >
-        למעבר לשאלון לחץ פה <Icon name="chevLeft" size={16} />
+        בוא נעזור לך לבחור <Icon name="chevLeft" size={16} />
       </Link>
-    </div>
+      <div className="fab fixed left-6 z-30 hidden sm:block max-w-xs rounded-2xl border border-ink-700 bg-ink-900/95 backdrop-blur shadow-soft p-4">
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="סגור"
+          className="absolute top-2 left-2 h-7 w-7 inline-flex items-center justify-center rounded-full text-ink-400 hover:text-ink-100"
+        >
+          <Icon name="x" size={14} />
+        </button>
+        <p className="text-sm leading-snug pl-6">
+          יש לנו מבחר גדול, אנחנו יודעים.
+          <br />
+          <span className="text-ink-300">בוא נעזור לך לבחור.</span>
+        </p>
+        <Link
+          href="/finder/"
+          onClick={() => track("finder_open", { from: path ?? "" })}
+          className="mt-3 inline-flex items-center gap-1.5 font-semibold text-sm text-flame"
+        >
+          למעבר לשאלון לחץ פה <Icon name="chevLeft" size={16} />
+        </Link>
+      </div>
+    </>
   );
 }
