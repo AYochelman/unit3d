@@ -22,7 +22,9 @@ export type UnitFormId =
   | "lighter"
   | "cigcase"
   | "ashtray"
-  | "grinder";
+  | "grinder"
+  | "phonecase"
+  | "airpods";
 
 /** The two questions are different: is this the emblem, or a thing wearing it. */
 export type UnitFormGroup = "emblem" | "everyday";
@@ -218,6 +220,36 @@ export const UNIT_FORMS: UnitForm[] = [
     // Native 4:3, so the aspect-[4/3] tile crops nothing.
     photo: "/studio/grinder-emblem.webp",
     price: 55,
+  },
+  // Both cases print in PLA. The designer's cases are TPU, but TPU is what
+  // the shop is out of, and a form whose only filament is out of stock reads
+  // "בהזמנה · הגליל אינו במלאי" on every card. The phone case is the shop's
+  // own catalogue model, mw-1835046 -- a rigid, modular PLA case -- with its
+  // real weight and time; that is also where the photograph comes from.
+  {
+    id: "phonecase",
+    label: "קייס לטלפון",
+    desc: "קייס קשיח מודולרי, הסמל על הגב. את דגם הטלפון כותבים בטופס.",
+    dim: "70×145mm",
+    grams: 91,
+    hours: 4,
+    material: "pla",
+    group: "everyday",
+    art: "phonecase",
+    photo: CONFIG_PRODUCT_BY_ID.phone_case.image,
+    price: 120,
+  },
+  {
+    id: "airpods",
+    label: "קייס לאיירפודס",
+    desc: "נרתיק קשיח לנרתיק הטעינה, הסמל על המכסה. AirPods 2/3/Pro — כותבים בטופס.",
+    dim: "55×48mm",
+    grams: 22,
+    hours: 1.8,
+    material: "pla",
+    group: "everyday",
+    art: "headphones",
+    price: 60,
   },
 ];
 
