@@ -240,12 +240,15 @@ export const UNIT_FORMS: UnitForm[] = [
     price: 120,
   },
   {
+    // MakerWorld 2699477 ("AirPods Pro 2 Case - Crystal Pattern"), the model
+    // the owner chose: 24 g and 2.06 h are its own plate figures. In the
+    // approval queue until he rules on it; the body is offered meanwhile.
     id: "airpods",
     label: "קייס לאיירפודס",
-    desc: "נרתיק קשיח לנרתיק הטעינה, הסמל על המכסה. AirPods 2/3/Pro — כותבים בטופס.",
-    dim: "55×48mm",
-    grams: 22,
-    hours: 1.8,
+    desc: "נרתיק קשיח לנרתיק הטעינה של AirPods Pro 2, הסמל על המכסה.",
+    dim: "62×48mm",
+    grams: 24,
+    hours: 2.1,
     material: "pla",
     group: "everyday",
     art: "headphones",
