@@ -1,4 +1,5 @@
 import type { ConfigProductId, Product, ProductArtId } from "./types";
+import { standingFor } from "./permissions";
 
 // Everything on the site can be taken into the designer (/configurator).
 //
@@ -147,6 +148,10 @@ export function designBaseFor(p: Pick<Product, "id" | "art" | "engraving" | "nam
 
 /** True when the product is sold with the customer's own text on it. */
 export function isPersonalizable(p: Pick<Product, "id" | "engraving" | "name" | "nameEn">): boolean {
+  // A CC BY-ND model may be sold as it is and not with a name or an emblem
+  // added to it -- that is what "no derivatives" means. The card leads to the
+  // product page, not the designer, however personal its title sounds.
+  if (standingFor(p.id) === "no-derivatives") return false;
   if (p.engraving || PERSONAL_IDS.has(p.id)) return true;
   const t = textOf(p);
   return PERSONAL_EN.test(t) || PERSONAL_HE.test(t);

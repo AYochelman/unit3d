@@ -15,7 +15,8 @@ import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
 import AdminUnlock from "@/components/AdminUnlock";
 import ShelfMover from "@/components/admin/ShelfMover";
-import { CATEGORY_TO_SHELF } from "@/lib/imported";
+import { CATEGORY_TO_SHELF, IMPORTED } from "@/lib/imported";
+import DesignerCredit from "@/components/DesignerCredit";
 import ShippingEstimate from "@/components/ShippingEstimate";
 import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
@@ -296,6 +297,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
           <div>
             <h1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</h1>
             <p className="mt-2 text-ink-300 text-sm leading-relaxed">{p.desc}</p>
+            {(() => {
+              const src = IMPORTED.find((m) => m.id === p.id);
+              return src ? <DesignerCredit creator={src.creator} license={src.license} sourceUrl={src.sourceUrl} /> : null;
+            })()}
 
             {/* Credit for an imported design. CC-BY asks for the designer's
                 name next to the work, and the link is also how you check the
