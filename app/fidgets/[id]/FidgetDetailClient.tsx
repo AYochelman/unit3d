@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FIDGETS } from "@/lib/data";
+import { IMPORTED } from "@/lib/imported";
+import DesignerCredit from "@/components/DesignerCredit";
 import { useFilaments } from "@/lib/palette";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
@@ -327,6 +329,12 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               {f.name}
             </h1>
             <p className="mt-2 text-ink-300 text-sm leading-relaxed">{f.desc}</p>
+            {(() => {
+              const src = IMPORTED.find((m) => m.id === f.id);
+              return (src || f.creator)
+                ? <DesignerCredit creator={src?.creator ?? f.creator} license={src?.license} sourceUrl={src?.sourceUrl} source={f.source} />
+                : null;
+            })()}
 
             {/* Credit for an imported design, in the same place the shelf
                 products carry it. CC-BY asks for the designer's name next to
