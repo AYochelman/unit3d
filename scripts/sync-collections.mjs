@@ -32,6 +32,7 @@ import {
   ROOT, UA, c, sleep, fetchDetails, classify, holdsFor, isRealWeapon, platesFrom,
   readableTitle, SHELF_OVERRIDES,
 } from "./lib/makerworld.mjs";
+import { patchStatus } from "./lib/sync-status.mjs";
 
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 const PENDING = path.join(ROOT, "data", "pending-models.json");
@@ -819,6 +820,13 @@ async function queue(wanted, likedFresh, skipped, probes) {
       }, null, 2)}\n`,
     );
   } catch { /* a status file is never worth failing the run for */ }
+  patchStatus("nightly", {
+    ranAt: new Date().toISOString(),
+    blockedCollections: skipped.length,
+    collections: (collections ?? []).length,
+    newForApproval: fresh.length,
+    alreadyHandled: nominated.length - fresh.length,
+  });
   if (!fresh.length) {
     log(c.d("  אין מה להוסיף לתור — הכל כבר בחנות או כבר הוכרע.\n"));
     summary([], skipped);

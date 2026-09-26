@@ -21,6 +21,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { ROOT, c } from "./lib/makerworld.mjs";
+import { patchStatus } from "./lib/sync-status.mjs";
 
 const PENDING = path.join(ROOT, "data", "pending-models.json");
 const KEEP = process.argv.includes("--keep");
@@ -89,6 +90,7 @@ async function fromDatabase() {
   const last = readJson(STATE)?.lastReadAt;
   if (last && last === readAt) {
     console.log(c.d(`\n  הסריקה האחרונה (${new Date(readAt).toLocaleString("he-IL")}) כבר נקלטה — אין חדש.\n`));
+    patchStatus("sweep", { readAt, checkedAt: new Date().toISOString() });
     return "done";
   }
   return { doc, readAt, from: "database" };
@@ -213,6 +215,13 @@ async function main() {
   out.pending = next;
   fs.writeFileSync(PENDING, JSON.stringify(out, null, 2) + "\n", "utf8");
 
+  patchStatus("sweep", {
+    readAt: readAt ?? null,
+    checkedAt: new Date().toISOString(),
+    models: (doc.ids ?? []).length,
+    likes: doc.likes?.length ?? 0,
+    newToQueue: added,
+  });
   const when = readAt ? new Date(readAt).toLocaleString("he-IL") : "—";
   console.log(c.b(`\n  נקרא מ${from} (${when}): ${(doc.ids ?? []).length} מודלים · ${added} חדשים לתור`));
   if (doc.likes?.length) console.log(c.d(`  ${doc.likes.length} לייקים — נשארים לייקים, לא נכנסים כהחלטה`));

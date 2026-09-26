@@ -6,6 +6,7 @@ import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { CANDIDATES } from "@/lib/candidates.generated";
+import SyncStatus from "./SyncStatus";
 import { SHELF_LABEL, SHELVES, type Decision, type DecisionsFile } from "@/lib/candidates";
 import { suggestPrice, type ImportedShelf } from "@/lib/imported";
 import { photoSrc } from "@/lib/assets";
@@ -94,11 +95,14 @@ export default function ApprovalsTab() {
 
   if (!CANDIDATES.length) {
     return (
-      <div className="max-w-3xl p-6 rounded-2xl border border-ink-800 bg-ink-900 text-center">
-        <h2 className="font-black text-lg mb-1">אין מודלים שממתינים</h2>
-        <p className="text-sm text-ink-400">
-          הסריקות מוסיפות לכאן. כשיימצא משהו חדש — הוא יופיע כאן לפני שהוא נכנס לחנות.
-        </p>
+      <div className="space-y-4">
+        <div className="max-w-3xl p-6 rounded-2xl border border-ink-800 bg-ink-900 text-center">
+          <h2 className="font-black text-lg mb-1">אין מודלים שממתינים</h2>
+          <p className="text-sm text-ink-400">
+            התור מתמלא מהסריקה של התוסף בכרום, פעם ביום. למטה — מתי זה קרה לאחרונה ומה יצא מזה.
+          </p>
+        </div>
+        <SyncStatus />
       </div>
     );
   }
