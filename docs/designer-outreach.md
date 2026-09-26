@@ -19,9 +19,9 @@
 | 12 | Easter bunny | SabreDesign | Standard Digital File License | statues | [קישור](https://makerworld.com/en/models/219200-easter-bunny) |
 | 13 | The source - Dynamic Sculpture by Luo Li Rong | Krizia88cK | MakerWorld Exclusive License | statues | [קישור](https://makerworld.com/en/models/2845609-the-source-dynamic-sculpture-by-luo-li-rong) |
 | 14 | Death Whistle | Geadas11 | Standard Digital File License | statues | [קישור](https://makerworld.com/en/models/1842643-death-whistle) |
-| 15 | Casper – Ghost Through the Window | Stag 3D | Standard Digital File License | screen | [קישור](https://makerworld.com/en/models/3243522-casper-ghost-through-the-window) |
-| 16 | The Noir Web-Slinger: 1930s Pulp Mystery (10 cm) | mjrko84 | MakerWorld Exclusive License | screen | [קישור](https://makerworld.com/en/models/2403804-the-noir-web-slinger-1930s-pulp-mystery-10-cm) |
-| 17 | Cute Mini Articulated Xenomorph | gobotoru | Standard Digital File License | screen | [קישור](https://makerworld.com/en/models/3239344-cute-mini-articulated-xenomorph) |
+| 15 | Sitting Darth Vader - Shelf & Desk Edge Sitter | Lynns | Standard Digital File License | screen | [קישור](https://makerworld.com/en/models/2815953-sitting-darth-vader-shelf-desk-edge-sitter) |
+| 16 | One Wish Willow | AutoRefill | Standard Digital File License - Community Use | screen | [קישור](https://makerworld.com/en/models/2821771-one-wish-willow) |
+| 17 | Articulated Legendary Lugia - Flexi Fidget Toy | Lynns | Standard Digital File License | screen | [קישור](https://makerworld.com/en/models/3267283-articulated-legendary-lugia-flexi-fidget-toy) |
 | 18 | Fully Custom Pet Tag with Phone Number | AlexFixLab | Standard Digital File License | pets | [קישור](https://makerworld.com/en/models/2868647-fully-custom-pet-tag-with-phone-number) |
 | 19 | Funny Dog Teeth | Little Mac Designs | Standard Digital File License | pets | [קישור](https://makerworld.com/en/models/1545342-funny-dog-teeth) |
 | 20 | Cat bowl print in place | bladow | Standard Digital File License | pets | [קישור](https://makerworld.com/en/models/38661-cat-bowl-print-in-place) |
