@@ -98,6 +98,7 @@ jobs:
                    lib/localImages.generated.ts lib/localVideos.generated.ts \
                    data/model-videos.json data/makerworld-raw.json \
                    data/rejected-models.json public/model-decisions.json \
+                   public/sync-status.json \
                    public/img/catalog public/img/catalog-video; do
             if [ -e "$p" ]; then git add "$p"; fi
           done

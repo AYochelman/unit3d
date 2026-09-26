@@ -14,6 +14,7 @@
  * re-sliced it since.
  */
 import fs from "node:fs";
+import { patchStatus } from "./lib/sync-status.mjs";
 import path from "node:path";
 import {
   ROOT, c, sleep, fetchDetails, holdsFor, platesFrom, readableTitle,
@@ -129,6 +130,7 @@ async function main() {
   fs.writeFileSync(DECISIONS, JSON.stringify({ version: 1, decisions: [] }, null, 2) + "\n", "utf8");
 
   summary(rows, rejected.length);
+  patchStatus("decisions", { appliedAt: new Date().toISOString(), approved: rows.length, rejected: rejected.length });
   log(c.g(`\n  נוספו ${rows.length} מודלים, נרשמו ${rejected.length} דחיות\n`));
 }
 

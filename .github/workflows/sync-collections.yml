@@ -105,7 +105,8 @@ jobs:
           for p in lib/imported.generated.ts lib/localImages.generated.ts \
                    lib/candidates.generated.ts data/makerworld-raw.json \
                    data/pending-models.json data/liked-models.json \
-                   data/collections-status.json public/img/catalog; do
+                   data/collections-status.json public/sync-status.json \
+                   public/img/catalog; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
           if git diff --cached --quiet; then
