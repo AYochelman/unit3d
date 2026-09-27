@@ -83,6 +83,7 @@ export default function AdminSaveToSite({
   path = DEFAULT_FILE,
   title = "שמירה לאתר (מהטלפון)",
   what = "המחירים",
+  onSaved,
 }: {
   json: () => string;
   /** Which file in the repository this button writes. */
@@ -90,6 +91,8 @@ export default function AdminSaveToSite({
   title?: string;
   /** What the owner is saving, for the confirmation line. */
   what?: string;
+  /** Called once GitHub accepted the write. */
+  onSaved?: () => void;
 }) {
   const [repo, setRepo] = useState(DEFAULT_REPO);
   const [branch, setBranch] = useState("main");
@@ -151,6 +154,7 @@ export default function AdminSaveToSite({
         });
 
         if (put.ok) {
+          onSaved?.();
           return setMsg({
             ok: true,
             text: "נשמר. האתר נבנה מחדש עכשיו — תוך כדקה ההגדרות יחולו על כל מי שנכנס.",
