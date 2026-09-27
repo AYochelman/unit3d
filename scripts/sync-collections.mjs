@@ -810,7 +810,6 @@ async function queue(wanted, likedFresh, skipped, probes) {
       `${JSON.stringify({
         readAt: new Date().toISOString(),
         signedIn: Boolean((process.env.MAKERWORLD_COOKIE || "").trim()),
-        collections: (collections ?? []).map((x) => x.name),
         blocked: skipped,
         probes,
         inCollections: wanted.length,
@@ -823,7 +822,6 @@ async function queue(wanted, likedFresh, skipped, probes) {
   patchStatus("nightly", {
     ranAt: new Date().toISOString(),
     blockedCollections: skipped.length,
-    collections: (collections ?? []).length,
     newForApproval: fresh.length,
     alreadyHandled: nominated.length - fresh.length,
   });

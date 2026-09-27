@@ -148,6 +148,13 @@ try {
 } catch { /* an empty set just means everything is fetched */ }
 
 const todo = files.filter((f) => !have.has(f.name)).sort((a, b) => recordedAt(a.name, a.modifiedAt) - recordedAt(b.name, b.modifiedAt));
+// What is on the card, newest first, with the time in each name. "Already on
+// the site" answered nothing about the question that was really being asked
+// -- is the printer recording at all -- and the dates answer it at a glance.
+for (const f of [...files].sort((a, b) => recordedAt(b.name, b.modifiedAt) - recordedAt(a.name, a.modifiedAt))) {
+  const at = recordedAt(f.name, f.modifiedAt);
+  console.log(`      ${at.toLocaleString("he-IL")}  ${f.name}${have.has(f.name) ? "  (באתר)" : ""}`);
+}
 if (todo.length === 0) {
   console.log("\n  All of them are already on the site. Nothing to do.\n");
   ftp.close();

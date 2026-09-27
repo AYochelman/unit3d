@@ -164,12 +164,51 @@ async function save(doc) {
   if (!res.ok) throw new Error(`Supabase ${res.status}: ${(await res.text()).slice(0, 120)}`);
 }
 
-async function run(force = false) {
-  const { lastRun = 0, running = false } = await chrome.storage.local.get(["lastRun", "running"]);
-  if (running) return;
-  if (!force && Date.now() - lastRun < EVERY_MS) return;
+/**
+ * A line in the shop's database saying the extension is alive and how its
+ * last attempt went -- row 2 of collected_models, beside the sweep in row 1.
+ *
+ * The admin tab reads it. Without it "no new models" had three causes that
+ * looked the same from the site: Chrome was closed, the extension ran and
+ * failed (signed out, a Cloudflare page, a network error), or it ran and
+ * found nothing new. Every attempt writes one of those, success or not.
+ * Never throws: a heartbeat that fails must not turn into a failed sweep.
+ */
+async function heartbeat(state, extra = {}) {
+  try {
+    await fetch(`${SB}/rest/v1/collected_models?on_conflict=id`, {
+      method: "POST",
+      headers: { apikey: SB_KEY, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({
+        id: 2,
+        read_at: new Date().toISOString(),
+        doc: { kind: "heartbeat", state, at: new Date().toISOString(), version: chrome.runtime.getManifest().version, ...extra },
+      }),
+    });
+  } catch { /* the badge still says it */ }
+}
 
-  await chrome.storage.local.set({ running: true });
+/**
+ * How long a "running" flag is believed.
+ *
+ * Chrome stops an extension's service worker when it has been idle a while,
+ * and a sweep that opens tabs and waits on MakerWorld is exactly the kind of
+ * work that gets cut off. When that happened, the `finally` below never ran,
+ * `running` stayed true in storage, and every later call -- the hourly alarm
+ * AND a click on the icon -- returned at the first line, silently, forever.
+ * A sweep takes a few minutes; twenty means it is not one any more.
+ */
+const STALE_MS = 20 * 60 * 1000;
+
+async function run(force = false) {
+  const { lastRun = 0, running = false, runningSince = 0 } = await chrome.storage.local.get(["lastRun", "running", "runningSince"]);
+  if (running && Date.now() - runningSince < STALE_MS) return;
+  if (!force && Date.now() - lastRun < EVERY_MS) {
+    await heartbeat("idle", { lastRun: lastRun ? new Date(lastRun).toISOString() : null });
+    return;
+  }
+
+  await chrome.storage.local.set({ running: true, runningSince: Date.now() });
   await chrome.action.setBadgeText({ text: "..." });
   try {
     const doc = await sweep();
@@ -179,6 +218,7 @@ async function run(force = false) {
       await chrome.action.setBadgeText({ text: "?" });
       await chrome.action.setBadgeBackgroundColor({ color: "#b8860b" });
       await chrome.action.setTitle({ title: "לא נמצאו אוספים — כנראה לא מחובר למייקרוורלד" });
+      await heartbeat("signed-out");
       return;
     }
     await save(doc);
@@ -186,12 +226,14 @@ async function run(force = false) {
     await chrome.action.setBadgeText({ text: String(doc.ids.length) });
     await chrome.action.setBadgeBackgroundColor({ color: "#089a47" });
     await chrome.action.setTitle({ title: `${doc.ids.length} מודלים נאספו · ${new Date().toLocaleString("he-IL")}` });
+    await heartbeat("swept", { count: doc.ids.length });
   } catch (e) {
     await chrome.action.setBadgeText({ text: "!" });
     await chrome.action.setBadgeBackgroundColor({ color: "#b03030" });
     await chrome.action.setTitle({ title: `שגיאה: ${e.message}` });
+    await heartbeat("error", { error: String(e.message).slice(0, 200) });
   } finally {
-    await chrome.storage.local.set({ running: false });
+    await chrome.storage.local.set({ running: false, runningSince: 0 });
   }
 }
 
