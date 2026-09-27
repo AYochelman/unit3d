@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Unit 3D · איסוף אוספים ממייקרוורלד",
-  "version": "1.1.0",
-  "description": "אוסף פעם ביום את המודלים מהאוספים שלך במייקרוורלד, וכותב אותם למסד של החנות שהסנכרון היומי קורא.",
+  "version": "1.2.0",
+  "description": "אוסף פעם ביום את המודלים מהאוספים שלך במייקרוורלד וכותב אותם למסד של החנות. רץ ברקע גם כשכל חלונות כרום סגורים.",
   "permissions": [
     "tabs",
     "scripting",
     "storage",
-    "alarms"
+    "alarms",
+    "background"
   ],
   "host_permissions": [
     "https://makerworld.com/*",
