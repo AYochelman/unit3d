@@ -236,7 +236,8 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "everyday",
     art: "phonecase",
-    photo: CONFIG_PRODUCT_BY_ID.phone_case.image,
+    // The owner's photograph of the real case with an emblem on the back.
+    photo: "/studio/phonecase-emblem.webp",
     price: 120,
   },
   {
