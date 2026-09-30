@@ -1,4 +1,115 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "15784",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "226667",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "421037",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "580825",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "737254",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "757088",
+      "decision": "approved",
+      "shelf": "pets",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "761480",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "951493",
+      "decision": "approved",
+      "shelf": "trendy",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "1255869",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.373Z"
+    },
+    {
+      "id": "1400050",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "1506167",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "2559326",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "2830160",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "2841172",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "2850640",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "2851979",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "2868821",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "2934729",
+      "decision": "approved",
+      "shelf": "office",
+      "also": [
+        "pets",
+        "trendy"
+      ],
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "3116911",
+      "decision": "rejected",
+      "at": "2026-09-30T15:53:52.374Z"
+    },
+    {
+      "id": "3256235",
+      "decision": "approved",
+      "shelf": "trendy",
+      "at": "2026-09-30T15:53:52.374Z"
+    }
+  ]
 }
