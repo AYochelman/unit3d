@@ -1,16 +1,16 @@
 {
   "sweep": {
-    "readAt": "2026-09-30T15:38:31.546+00:00",
-    "checkedAt": "2026-10-01T11:18:28.128Z",
-    "models": 295,
+    "readAt": "2026-10-01T11:42:06.542+00:00",
+    "checkedAt": "2026-10-01T12:23:13.476Z",
+    "models": 269,
     "likes": 20,
-    "newToQueue": 44
+    "newToQueue": 16
   },
   "nightly": {
-    "ranAt": "2026-10-01T11:37:46.579Z",
+    "ranAt": "2026-10-01T12:42:31.574Z",
     "blockedCollections": 8,
     "collections": 8,
-    "newForApproval": 38,
+    "newForApproval": 17,
     "alreadyHandled": 275
   },
   "decisions": {
