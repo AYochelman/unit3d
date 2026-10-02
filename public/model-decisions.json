@@ -1,4 +1,221 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "15784",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "197157",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "226667",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "421037",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "467045",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "580825",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "664923",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "737254",
+      "decision": "approved",
+      "shelf": "trendy",
+      "also": [
+        "home"
+      ],
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "761480",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "934236",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1161943",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1245501",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1255869",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1336871",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1400050",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1408486",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1455867",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1506167",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1913325",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "1970110",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2013980",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2031712",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2065760",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2238259",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2287355",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2423715",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2425884",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2436731",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2559326",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2587390",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2766872",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2798524",
+      "decision": "approved",
+      "shelf": "screen",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2834707",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2841172",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2850640",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2868821",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "2898245",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "3085857",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "3098156",
+      "decision": "rejected",
+      "at": "2026-10-02T11:09:06.470Z"
+    },
+    {
+      "id": "3233606",
+      "decision": "approved",
+      "shelf": "screen",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-10-02T11:09:06.470Z"
+    }
+  ]
 }
