@@ -153,7 +153,8 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "everyday",
     art: "lighter",
-    photo: CONFIG_PRODUCT_BY_ID.lighter_case.image,
+    // The owner's photograph of two printed cases, an emblem on each.
+    photo: "/studio/lighter-emblem.webp",
     price: 45,
   },
   {

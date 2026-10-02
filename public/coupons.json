@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "code": "חיר",
+    "kind": "percent",
+    "value": 10,
+    "minTotal": 20,
+    "note": "הודעה של גניגר",
+    "active": true,
+    "createdAt": "2026-10-02T11:07:43.503Z"
+  }
+]
