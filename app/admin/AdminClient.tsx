@@ -26,12 +26,13 @@ import ExpensesTab from "@/components/admin/ExpensesTab";
 import ChangelogTab from "@/components/admin/ChangelogTab";
 import ReviewsTab from "@/components/admin/ReviewsTab";
 import TrafficTab from "@/components/admin/TrafficTab";
+import CalculatorTab from "@/components/admin/CalculatorTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "orders" | "traffic" | "reviews" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
+type Tab = "calc" | "orders" | "traffic" | "reviews" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "orders", label: "הזמנות" },
@@ -40,6 +41,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "coupons", label: "קודי הנחה" },
   { id: "expenses", label: "הוצאות" },
   { id: "products", label: "מוצרים" },
+  { id: "calc", label: "מחשבון עלות" },
   { id: "names", label: "מוצרים · שמות" },
   { id: "approvals", label: "מודלים לאישור" },
   { id: "stock", label: "מלאי" },
@@ -169,6 +171,7 @@ export default function AdminClient() {
       </div>
 
       {tab === "products" && <ProductsTab />}
+      {tab === "calc" && <CalculatorTab />}
       {tab === "orders" && <OrdersTab />}
       {tab === "traffic" && <TrafficTab />}
       {tab === "reviews" && <ReviewsTab />}
