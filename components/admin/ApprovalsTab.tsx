@@ -85,7 +85,7 @@ export default function ApprovalsTab() {
   );
 
   const set = (id: string, decision: Decision, shelves: ImportedShelf[]) =>
-    setChoices((c) => ({ ...c, [id]: { ...c[id], decision, shelves } }));
+    setChoices((c) => ({ ...c, [id]: { ...c[id], decision, shelves } }));   // keeps `he`
 
   /**
    * Clicking a shelf adds it, clicking it again removes it, and the last one
@@ -118,7 +118,11 @@ export default function ApprovalsTab() {
         id,
         decision: c.decision as Decision,
         ...(c.decision === "approved"
-          ? { shelf: c.shelves[0], ...(c.shelves.length > 1 ? { also: c.shelves.slice(1) } : {}) }
+          ? {
+              shelf: c.shelves[0],
+              ...(c.shelves.length > 1 ? { also: c.shelves.slice(1) } : {}),
+              ...(c.he?.trim() ? { he: c.he.trim() } : {}),
+            }
           : {}),
         at: new Date().toISOString(),
       }))],
@@ -245,6 +249,18 @@ export default function ApprovalsTab() {
                     </button>
                   ))}
                 </div>
+                <label className="block mb-2.5">
+                  <span className="text-[11px] text-ink-400">שם בעברית לחנות</span>
+                  <input
+                    value={chosen?.he ?? ""}
+                    onChange={(e) => {
+                      const he = e.target.value;
+                      setChoices((prev) => ({ ...prev, [c.id]: { ...prev[c.id], shelves: prev[c.id]?.shelves ?? shelves, he } }));
+                    }}
+                    placeholder="אם ריק — השם באנגלית, ואפשר לתקן אחר כך בלשונית שמות"
+                    className="mt-1 w-full h-9 px-2.5 rounded-lg bg-ink-950 border border-ink-800 text-sm focus:border-flame outline-none"
+                  />
+                </label>
                 <div className="flex gap-2">
                   <Btn
                     size="sm"

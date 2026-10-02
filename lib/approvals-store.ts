@@ -11,7 +11,7 @@ import type { ImportedShelf } from "./imported";
  * any tab switch for the whole visit (no localStorage — project rule; a real
  * page leave is still guarded by the beforeunload warning).
  */
-export type Choice = { decision?: Decision; shelves: ImportedShelf[]; touched?: boolean };
+export type Choice = { decision?: Decision; shelves: ImportedShelf[]; touched?: boolean; he?: string };
 
 type ApprovalsState = {
   choices: Record<string, Choice>;
