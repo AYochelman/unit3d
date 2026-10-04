@@ -391,3 +391,50 @@
   .btn-primary::before,
   .btn-shiny::before { animation: none; }
 }
+
+/*
+ * Hero video and its scroll reaction (components/home/HeroVideo.tsx).
+ *
+ * The clip is dimmed here and shaded in Hero.tsx so the headline keeps 4.5:1
+ * on its brightest frame. As the hero scrolls away the printer "stays behind":
+ * the clip grows and sinks, the headline and logo fade and lift, and an extra
+ * shade comes in. Only transform and opacity move. The buttons are outside
+ * .hero-copy on purpose, so they never fade.
+ *
+ * One set of keyframes, two drivers: a scroll-driven timeline where the
+ * browser has one, and elsewhere a paused animation scrubbed by --hp, which
+ * HeroVideo writes once per frame. Nothing moves under reduced motion.
+ */
+.hero-video {
+  filter: brightness(0.38) saturate(0.85);
+  transform-origin: 50% 40%;
+}
+.hero-shade { opacity: 0; }
+.hero-banner { view-timeline-name: --hero; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-video { animation: hero-video 1s linear both; }
+  .hero-copy { animation: hero-copy 1s linear both; }
+  .hero-shade { animation: hero-shade 1s linear both; }
+
+  @supports (animation-timeline: view()) {
+    .hero-video,
+    .hero-copy,
+    .hero-shade {
+      animation-timeline: --hero;
+      animation-range: exit 0% exit 100%;
+    }
+  }
+  @supports not (animation-timeline: view()) {
+    .hero-video,
+    .hero-copy,
+    .hero-shade {
+      animation-play-state: paused;
+      animation-delay: calc(var(--hp, 0) * -1s);
+    }
+  }
+}
+
+@keyframes hero-video { to { transform: scale(1.12) translateY(8%); } }
+@keyframes hero-copy { to { opacity: 0.25; transform: translateY(-24px); } }
+@keyframes hero-shade { to { opacity: 1; } }
