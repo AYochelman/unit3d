@@ -17,11 +17,11 @@ import { create } from "zustand";
  * those need real component work if a direction is chosen.
  */
 
-export type DesignId = "qclay-a" | "qclay-b" | "qclay-c" | "island-a" | "island-b" | "island-c" | "ovia-a" | "ovia-b" | "ovia-c";
+export type DesignId = "qclay-a" | "qclay-b" | "qclay-c" | "island-a" | "island-b" | "island-c" | "ovia-a" | "ovia-b" | "ovia-c" | "zajno-a" | "zajno-b" | "zajno-c";
 
 export type DesignTheme = {
   id: DesignId;
-  brief: "QClay" | "Island" | "Ovia";
+  brief: "QClay" | "Island" | "Ovia" | "Zajno";
   label: string;
   note: string;
   /** Page background and text, for html/body. */
@@ -52,6 +52,8 @@ const flameMap = (base: string, d600: string, d700: string, l300: string, soft: 
 
 const PILL = { lg: "9999px", xl: "9999px", xxl: "40px", xxxl: "50px", button: "9999px" };
 const OVIA = { lg: "8px", xl: "12px", xxl: "12px", xxxl: "16px", button: "9999px" };
+// Zajno: square everything except what is round on purpose.
+const SQUARE = { lg: "0px", xl: "0px", xxl: "0px", xxxl: "0px", button: "0px" };
 const CALM = { lg: "8px", xl: "8px", xxl: "16px", xxxl: "20px", button: "8px" };
 
 export const DESIGNS: DesignTheme[] = [
@@ -162,6 +164,41 @@ export const DESIGNS: DesignTheme[] = [
     font: '"Heebo", system-ui, sans-serif', headingWeight: 700, headingTracking: "-0.02em",
     radius: OVIA, swatch: ["#ffffff", "#f3f3f4", "#089a47", "#0d0c22"],
   },
+  {
+    id: "zajno-a", brief: "Zajno", label: "א · אפור גלריה",
+    note: "רקע אפור בהיר, כרטיסים עם קו מתאר בלי מילוי, טקסט שחור במשקל רגיל, פינות ישרות ואדום כהדגשה.",
+    bg: "#ebebeb", fg: "#1a1a1a",
+    map: {
+      ...inkMap(["#ebebeb", "#ebebeb", "#cfcfcf", "#b2b2b2", "#9a9a9a", "#5f5f5f", "#444444", "#2e2e2e", "#1a1a1a", "#1a1a1a", "#000000"]),
+      [BODY_FG]: "#1a1a1a",
+      ...flameMap("#c8281a", "#b8241a", "#9e1f16", "#b8241a", "#f6dcd9"),
+    },
+    font: '"Heebo", system-ui, sans-serif', headingWeight: 400, headingTracking: "-0.01em",
+    radius: SQUARE, swatch: ["#ebebeb", "#ffffff", "#c8281a", "#1a1a1a"],
+  },
+  {
+    id: "zajno-b", brief: "Zajno", label: "ב · שחור",
+    note: "רקע שחור מלא, כרטיסים עם קו מתאר, טקסט אפור בהיר, פינות ישרות ואדום בוהק כהדגשה.",
+    bg: "#000000", fg: "#ebebeb",
+    map: {
+      ...inkMap(["#000000", "#000000", "#2b2b2b", "#3a3a3a", "#4a4a4a", "#8a8a8a", "#b2b2b2", "#cfcfcf", "#e2e2e2", "#ebebeb", "#ffffff"]),
+      [BODY_FG]: "#ebebeb",
+      ...flameMap("#e0301f", "#c8281a", "#b8241a", "#ff3928", "#2a0d0a"),
+    },
+    font: '"Heebo", system-ui, sans-serif', headingWeight: 400, headingTracking: "-0.01em",
+    radius: SQUARE, swatch: ["#000000", "#1a1a1a", "#ff3928", "#ebebeb"],
+  },
+  {
+    id: "zajno-c", brief: "Zajno", label: "ג · היברידי עם הירוק",
+    note: "הצבעים של האתר נשארים. מ-Zajno נלקחים הכרטיסים עם קו מתאר בלי מילוי, כותרות במשקל רגיל ופינות ישרות.",
+    bg: "#04110b", fg: "#eef4f0",
+    map: {
+      ...inkMap(["#04110b", "#04110b", "#16402a", "#1d5236", "#256644", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"]),
+      [BODY_FG]: "#eef4f0",
+    },
+    font: '"Heebo", system-ui, sans-serif', headingWeight: 400, headingTracking: "-0.01em",
+    radius: SQUARE, swatch: ["#04110b", "#16402a", "#089a47", "#eef4f0"],
+  },
 ];
 
 export const DESIGN_BY_ID = Object.fromEntries(DESIGNS.map((d) => [d.id, d])) as Record<DesignId, DesignTheme>;
@@ -184,7 +221,9 @@ const toRgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16
  */
 /** Swaps the site's colours for a direction's in any CSS text; null when nothing matched. */
 export function makeRecolor(theme: DesignTheme): (text: string) => string | null {
-  const map = theme.map;
+  // The logo and a few drawings are painted in the old near-white #F5F5F7;
+  // it follows the direction's text colour, or the logo vanishes on a light page.
+  const map: Record<string, string> = { "#f5f5f7": theme.fg, ...theme.map };
   const fromRgb = new Map(Object.entries(map).map(([from, to]) => [toRgb(from), toRgb(to)]));
   const hexRe = new RegExp(`#(${Object.keys(map).map((k) => k.slice(1)).join("|")})([0-9a-f]{2})?\\b`, "gi");
   // The CSSOM hands colours back as rgb(10, 10, 11), rgba(10, 10, 11, 0.4)
@@ -246,10 +285,14 @@ export function buildPreviewCss(theme: DesignTheme): string {
     for (const rule of Array.from(rules)) {
       if (rule instanceof CSSStyleRule) {
         const sel = rule.selectorText;
-        // Pseudo-elements cannot sit inside :is(); html/body get their own rule below.
-        if (/::|(^|[\s,>+~])(html|body)\b|:root/.test(sel)) continue;
+        // html/body get their own rule below.
+        if (/(^|[\s,>+~])(html|body)\b|:root/.test(sel)) continue;
         const body = recolor(rule.style.cssText);
-        if (body) css += `${scope} :is(${sel}){${body}}\n`;
+        if (!body) continue;
+        // A pseudo-element cannot sit inside :is() — the action buttons' edge
+        // light is drawn by ::before/::after — so those are scoped one by one.
+        if (sel.includes("::")) css += `${sel.split(",").map((part) => `${scope} ${part.trim()}`).join(", ")}{${body}}\n`;
+        else css += `${scope} :is(${sel}){${body}}\n`;
       } else if (rule instanceof CSSMediaRule) {
         const inner = walk(rule.cssRules);
         if (inner) css += `@media ${rule.conditionText}{${inner}}\n`;
@@ -280,6 +323,7 @@ ${scope} .rounded-xl { border-radius: ${r.xl}; }
 ${scope} .rounded-2xl { border-radius: ${r.xxl}; }
 ${scope} .rounded-3xl { border-radius: ${r.xxxl}; }
 ${scope} :is(a, button):is(.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-md) { border-radius: ${r.button}; }
+${scope} :is(.btn-primary, .btn-shiny, a.rounded-full.font-semibold, button.rounded-full.font-semibold) { border-radius: ${r.button}; }
 ${scope} ::selection { background: ${map[FLAME.base] ?? FLAME.base}; color: #fff; }
 `;
   return css;

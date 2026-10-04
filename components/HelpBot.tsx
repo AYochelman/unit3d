@@ -83,7 +83,7 @@ export default function HelpBot() {
         aria-expanded={open}
         className={cn(
           "fab fixed right-6 z-40 inline-flex items-center justify-center h-14 w-14 rounded-full shadow-soft transition-all duration-200 hover:-translate-y-0.5",
-          open ? "bg-ink-800 text-ink-100" : "bg-flame-600 text-white hover:shadow-glow",
+          open ? "bg-ink-800 text-ink-100" : "btn-shiny",
         )}
       >
         <Icon name={open ? "x" : "sparkles"} size={24} />

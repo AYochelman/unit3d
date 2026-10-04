@@ -152,13 +152,50 @@
    * top stop #0fae54 was 2.92:1: the button read as green-on-green at the top
    * edge. These three are 5.05, 6.13 and 7.52.
    */
-  .btn-primary {
-    background: linear-gradient(180deg, #07803c 0%, #067138 60%, #055a2d 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  /*
+   * Every action button wears "ב · מסלול" from the Shiny Button reference
+   * (4.10): a dark pill with a mint light running around its edge. The face
+   * is solid #0D2117 under near-white text (15:1), so the moving light is
+   * decoration only. .btn-primary is Btn's primary variant; .btn-shiny is the
+   * same look for hand-written buttons. Selected filters, chosen options and
+   * badges stay plain green on purpose: they show state, not an action.
+   */
+  .btn-primary,
+  .btn-shiny {
+    position: relative;
+    isolation: isolate;
+    color: #eef4f0;
+    background: #0d2117;
+    border: 0;
+    box-shadow: 0 8px 24px -10px rgba(95, 227, 154, 0.5);
   }
-  .btn-primary:hover {
-    background: linear-gradient(180deg, #078641 0%, #055a2d 100%);
+  .btn-primary::before,
+  .btn-shiny::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    border-radius: inherit;
+    background: conic-gradient(from var(--sb-angle), #16402a 0 65%, #5fe39a 82%, #089a47 90%, #16402a 100%);
+    animation: btn-orbit 3s linear infinite;
+  }
+  .btn-primary::after,
+  .btn-shiny::after {
+    content: "";
+    position: absolute;
+    inset: 1.5px;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(120% 140% at 50% 120%, rgba(8, 154, 71, 0.35), transparent 60%), #0d2117;
+    transition: background-color 0.2s ease;
+  }
+  .btn-primary:hover,
+  .btn-shiny:hover {
     transform: translateY(-1px);
+  }
+  .btn-primary:hover::after,
+  .btn-shiny:hover::after {
+    background: radial-gradient(120% 140% at 50% 120%, rgba(8, 154, 71, 0.55), transparent 65%), #10291c;
   }
   .printer-grid {
     background-image:
@@ -340,3 +377,17 @@
 .swatch-input::-webkit-color-swatch-wrapper { padding: 0; }
 .swatch-input::-webkit-color-swatch { border: 1px solid rgba(255,255,255,0.22); border-radius: 9999px; }
 .swatch-input::-moz-color-swatch { border: 1px solid rgba(255,255,255,0.22); border-radius: 9999px; }
+
+/* The angle the action buttons' edge light runs around (see .btn-primary). */
+@property --sb-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes btn-orbit {
+  to { --sb-angle: 360deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::before,
+  .btn-shiny::before { animation: none; }
+}
