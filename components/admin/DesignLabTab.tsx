@@ -40,7 +40,7 @@ export default function DesignLabTab() {
         </span>
       </div>
 
-      {(["QClay", "Island", "Ovia"] as const).map((brief) => (
+      {(["QClay", "Island", "Ovia", "Zajno"] as const).map((brief) => (
         <section key={brief} className="grid gap-3">
           <h2 className="font-black text-lg">{brief}</h2>
           <div className="grid gap-3 md:grid-cols-3">
