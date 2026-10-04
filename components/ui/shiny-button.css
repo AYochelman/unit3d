@@ -1,0 +1,94 @@
+/*
+ * ShinyButton (components/ui/shiny-button.tsx) — three takes on the
+ * "shiny button" reference, in the shop's colours. Every effect rests on a
+ * plain, readable button: the shine is decoration over it, and it stops for
+ * anyone who asked their system for less motion.
+ */
+@property --sb-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.sb {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3rem;
+  padding-inline: 1.75rem;
+  border: 0;
+  border-radius: 9999px;
+  overflow: hidden;
+  font: 600 15px/1 var(--font-sans), system-ui, sans-serif;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sb:hover { transform: translateY(-1px); }
+.sb:active { transform: translateY(0); }
+.sb:focus-visible { outline: 2px solid #5fe39a; outline-offset: 3px; }
+
+/* 1 · sweep — a band of light crosses the green every few seconds. */
+.sb-sweep {
+  background: linear-gradient(180deg, #0bb257, #089a47 55%, #067138);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 8px 24px -8px rgb(8 154 71 / 0.7);
+}
+.sb-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.45) 48%, rgb(255 255 255 / 0.1) 56%, transparent 70%);
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  animation: sb-sweep 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.sb-sweep > * { position: relative; z-index: 1; }
+
+/* 2 · orbit — a mint light runs around a dark pill's edge. */
+.sb-orbit {
+  background: #0d2117;
+  color: #eef4f0;
+  box-shadow: 0 8px 24px -10px rgb(95 227 154 / 0.5);
+}
+.sb-orbit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  background: conic-gradient(from var(--sb-angle), #16402a 0 65%, #5fe39a 82%, #089a47 90%, #16402a 100%);
+  animation: sb-orbit 3s linear infinite;
+}
+.sb-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(120% 140% at 50% 120%, rgb(8 154 71 / 0.35), transparent 60%), #0d2117;
+}
+
+/* 3 · metal — brushed, lit from above; the shine follows the pointer. */
+.sb-metal {
+  color: #04110b;
+  background:
+    radial-gradient(120px 60px at var(--sb-x, 50%) 0%, rgb(255 255 255 / 0.85), transparent 70%),
+    linear-gradient(180deg, #f7faf8 0%, #c9d6ce 48%, #a8b8ae 52%, #e2ebe5 100%);
+  box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgb(0 0 0 / 0.15), 0 8px 22px -10px rgb(0 0 0 / 0.6);
+}
+
+@keyframes sb-sweep {
+  0% { background-position: 150% 0; }
+  45%, 100% { background-position: -100% 0; }
+}
+@keyframes sb-orbit { to { --sb-angle: 360deg; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sb, .sb:hover { transition: none; transform: none; }
+  .sb-sweep::after, .sb-orbit::before { animation: none; }
+}

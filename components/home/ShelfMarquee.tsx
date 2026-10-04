@@ -16,14 +16,19 @@ const SHELVES: { label: string; href: string }[] = [
   { label: "הדפסה מהקובץ שלך", href: "/upload" },
 ];
 
+// Each copy holds the list twice, so one copy is always wider than the widest
+// screen and the band never shows an empty stretch.
+const LOOP = [...SHELVES, ...SHELVES];
+
 function Row({ copy }: { copy: boolean }) {
   return (
     <ul className="flex shrink-0 items-center" aria-hidden={copy || undefined}>
-      {SHELVES.map((s) => (
-        <li key={s.href} className="flex items-center">
+      {LOOP.map((s, i) => (
+        <li key={`${s.href}-${i}`} className="flex items-center">
           <Link
             href={s.href}
-            tabIndex={copy ? -1 : undefined}
+            tabIndex={copy || i >= SHELVES.length ? -1 : undefined}
+            aria-hidden={!copy && i >= SHELVES.length ? true : undefined}
             className="px-5 sm:px-8 py-3 sm:py-4 font-[family-name:var(--font-rubik)] font-extrabold text-lg sm:text-2xl md:text-3xl tracking-tight text-ink-500 hover:text-flame-300 transition-colors whitespace-nowrap"
           >
             {s.label}
@@ -38,7 +43,7 @@ function Row({ copy }: { copy: boolean }) {
 export default function ShelfMarquee() {
   return (
     <nav aria-label="כל המדפים" className="relative overflow-hidden border-y border-ink-800 bg-ink-950">
-      <div className="flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none">
+      <div className="flex w-max animate-marquee-rtl hover:[animation-play-state:paused] motion-reduce:animate-none">
         <Row copy={false} />
         <Row copy />
       </div>

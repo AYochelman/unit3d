@@ -2,6 +2,8 @@
 import { useRouter } from "next/navigation";
 import { DESIGNS, inkOn, useDesignPreview, type DesignId } from "@/lib/design-preview";
 import { cn } from "@/lib/cn";
+import OrbDemo from "./OrbDemo";
+import ShinyButton from "@/components/ui/shiny-button";
 
 const PAGES: { href: string; label: string }[] = [
   { href: "/", label: "דף הבית" },
@@ -87,6 +89,37 @@ export default function DesignLabTab() {
           </div>
         </section>
       ))}
+
+      <section className="grid gap-3">
+        <h2 className="font-black text-lg">רכיב: כפתור מבריק</h2>
+        <p className="text-sm text-ink-400 leading-relaxed">
+          שלוש גרסאות לכפתור &quot;התחל להזמין&quot;, בהשראת Shiny Button. עדיין לא מופיעות לגולשים.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {([
+            ["sweep", "א · פס אור", "פס אור עובר על הירוק כל כמה שניות."],
+            ["orbit", "ב · מסלול", "אור מנטה רץ סביב כפתור כהה."],
+            ["metal", "ג · מתכת", "כפתור מתכתי, והברק זז אחרי העכבר."],
+          ] as const).map(([v, label, note]) => (
+            <div key={v} className="rounded-2xl border border-ink-800 bg-ink-900 p-5 grid gap-4 justify-items-center text-center">
+              <ShinyButton variant={v}>התחל להזמין</ShinyButton>
+              <div>
+                <div className="font-bold text-sm">{label}</div>
+                <p className="text-xs text-ink-400 mt-1">{note}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-3">
+        <h2 className="font-black text-lg">רכיב: כדור חשיבה</h2>
+        <p className="text-sm text-ink-400 leading-relaxed">
+          שדה שאלה שהופך לכדור חושב ונפתח לכרטיס תשובה. התשובות מגיעות מהבוט של האתר, כך שהוא עונה רק על מה שכבר כתוב באתר.
+          עדיין לא מופיע לגולשים.
+        </p>
+        <OrbDemo />
+      </section>
 
       {design && (
         <button
