@@ -93,12 +93,6 @@ const config: Config = {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-50%)" },
         },
-        // The RTL loop runs the other way: the track starts at the right edge
-        // and its second copy waits to the LEFT, so it has to move right.
-        "marquee-rtl": {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(50%)" },
-        },
         fillgrow: {
           from: { width: "0%" },
         },
@@ -107,8 +101,7 @@ const config: Config = {
         livepulse: "livepulse 1.6s ease-in-out infinite",
         slowspin: "slowspin 5s linear infinite",
         fadeup: "fadeup .6s cubic-bezier(0.4,0,0.2,1) both",
-        marquee: "marquee 40s linear infinite",
-        "marquee-rtl": "marquee-rtl 60s linear infinite",
+        marquee: "marquee 60s linear infinite",
         fillgrow: "fillgrow 2s ease-out",
       },
     },

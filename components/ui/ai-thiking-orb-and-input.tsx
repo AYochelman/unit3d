@@ -10,7 +10,7 @@
 //   works inside a section and not only full screen;
 // - the answer card grows to fit the answer (it was a fixed 108px, which cut
 //   any answer longer than two lines), up to MAX_CARD_H and then scrolls.
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
 import "./ai-thiking-orb-and-input.css";
 
 /* ───────────────────────────── copy ───────────────────────────── */
@@ -48,7 +48,16 @@ export interface MorphOrbProps {
   /** Focus the field on mount. Off by default: a page should not steal focus. */
   autoFocus?: boolean;
   className?: string;
+  /** Tallest the answer card may open to before it scrolls. */
+  maxCardHeight?: number;
+  /** Told whenever the orb moves between idle, thinking and answered. */
+  onPhaseChange?: (phase: Phase) => void;
+  /** Lets a parent ask a question (a suggestion chip, say) as if it were typed. */
+  apiRef?: React.Ref<MorphOrbApi>;
 }
+
+export type MorphOrbPhase = Phase;
+export type MorphOrbApi = { ask: (text: string) => void };
 
 /* ─────────────────────────── geometry ─────────────────────────── */
 const PILL_H = 60, BALL_SMALL = 60, ORB_D = 132, ORB_R = 66, CANVAS = 220;
@@ -888,7 +897,7 @@ export default function MorphOrb(props: MorphOrbProps) {
       getSpeed: () => speedRef.current,
       isReduced: () => reducedRef.current,
       ui: {
-        setPhase: (p) => { phaseRef.current = p; setPhaseState(p); },
+        setPhase: (p) => { phaseRef.current = p; setPhaseState(p); propsRef.current.onPhaseChange?.(p); },
         swapLabel: (name) => setLbl((l) => (l.cur === name ? l : { cur: name, prev: l.cur, n: l.n + 1 })),
         resetLabel: () => setLbl((l) => ({ cur: copyRef.current.labels[0], prev: null, n: l.n + 1 })),
         setAnswer: (s) => setAnswer(s),
@@ -898,7 +907,7 @@ export default function MorphOrb(props: MorphOrbProps) {
           const el = sizerRef.current;
           if (!el) return CARD_H;
           el.style.width = `${width}px`;
-          return Math.max(CARD_H, Math.min(MAX_CARD_H, Math.ceil(el.scrollHeight)));
+          return Math.max(CARD_H, Math.min(propsRef.current.maxCardHeight ?? MAX_CARD_H, Math.ceil(el.scrollHeight)));
         },
         clearInput: () => setValue(""),
         live: (s) => { if (liveRef.current) liveRef.current.textContent = s; },
@@ -977,6 +986,20 @@ export default function MorphOrb(props: MorphOrbProps) {
     if (!text) { shake(); return; }
     rt.start(text, makeCfg());
   };
+
+  // A parent's question goes through exactly the path a typed one does.
+  useImperativeHandle(props.apiRef, () => ({
+    ask: (text: string) => {
+      const rt = rtRef.current;
+      const q = text.trim();
+      if (!rt || !q || rt.busy() || phaseRef.current !== "idle") return;
+      setValue(q);
+      rt.start(q, {
+        onSubmit: propsRef.current.onSubmit ?? defaultSubmit,
+        minThink: propsRef.current.minThinkMs ?? 3450,
+      });
+    },
+  }));
 
   const onReset = () => {
     if (phaseRef.current === "answered") rtRef.current?.reset();

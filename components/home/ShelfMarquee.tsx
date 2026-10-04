@@ -27,6 +27,7 @@ function Row({ copy }: { copy: boolean }) {
         <li key={`${s.href}-${i}`} className="flex items-center">
           <Link
             href={s.href}
+            dir="rtl"
             tabIndex={copy || i >= SHELVES.length ? -1 : undefined}
             aria-hidden={!copy && i >= SHELVES.length ? true : undefined}
             className="px-5 sm:px-8 py-3 sm:py-4 font-[family-name:var(--font-rubik)] font-extrabold text-lg sm:text-2xl md:text-3xl tracking-tight text-ink-500 hover:text-flame-300 transition-colors whitespace-nowrap"
@@ -42,8 +43,11 @@ function Row({ copy }: { copy: boolean }) {
 
 export default function ShelfMarquee() {
   return (
-    <nav aria-label="כל המדפים" className="relative overflow-hidden border-y border-ink-800 bg-ink-950">
-      <div className="flex w-max animate-marquee-rtl hover:[animation-play-state:paused] motion-reduce:animate-none">
+    // The track is laid out left-to-right on purpose: an LTR overflow is
+    // anchored at the left edge in every browser, so the classic -50% loop
+    // is seamless everywhere. Each label keeps its own RTL direction.
+    <nav aria-label="כל המדפים" dir="ltr" className="relative overflow-hidden border-y border-ink-800 bg-ink-950">
+      <div className="flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none">
         <Row copy={false} />
         <Row copy />
       </div>
