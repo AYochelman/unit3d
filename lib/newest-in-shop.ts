@@ -8,7 +8,7 @@ import { sellableModels } from "./imported";
  * of eight studio photographs on a loop under "הזמנות אמיתיות שנשלחו ללקוחות":
  * real prints, but the same eight forever, tied to nothing a visitor could buy,
  * and clicking one did nothing. Then it was going to be driven by the order
- * book — Ariel would publish which products had actually been printed — and
+ * book — Erez would publish which products had actually been printed — and
  * that was dropped: it needed a button pressed to stay true, and a home page
  * that rots the week nobody presses it is worse than one that does not claim
  * anything about orders at all.

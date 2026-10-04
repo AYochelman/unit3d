@@ -7,7 +7,7 @@ import type { Coupon } from "@/lib/coupons";
  * The discount codes, loaded on every page.
  *
  * A code only means something if the checkout can check it, and the checkout
- * runs in the customer's browser — so the list Ariel saved from /admin is read
+ * runs in the customer's browser — so the list Erez saved from /admin is read
  * here, once, for everyone. It is public by design: a code is a public thing.
  */
 export default function CouponsBoot() {

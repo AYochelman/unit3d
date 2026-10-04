@@ -40,7 +40,7 @@ const when = (iso: string) => {
  * The orders customers placed.
  *
  * They arrive here on their own: the customer's browser writes the order to the
- * shop's table as it sends the WhatsApp message, so by the time Ariel sits down
+ * shop's table as it sends the WhatsApp message, so by the time Erez sits down
  * the queue is already waiting. He answers the customer from his phone and
  * decides here — open an order by its number, read what it actually is, and
  * approve, reject or mark refunded with a note. The decision goes back to the
@@ -254,7 +254,7 @@ export default function OrdersTab() {
    * The last tick is the one the customer has been waiting for.
    *
    * The confirmation email promised "מעדכן אותך כשהכל מוכן"; until now that
-   * update happened only if Ariel remembered to write. Ticking the final item
+   * update happened only if Erez remembered to write. Ticking the final item
    * is exactly the moment it becomes true, so that is where the letter is sent
    * from — and only once, which is what `readyEmailAt` is for. A re-tick of an
    * item, or a correction, must not mail the customer again.

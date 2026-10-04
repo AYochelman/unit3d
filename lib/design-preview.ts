@@ -215,7 +215,7 @@ export const DESIGN_BY_ID = Object.fromEntries(DESIGNS.map((d) => [d.id, d])) as
 export type ProductLook = "gift-a" | "gift-b" | "gift-c";
 export const PRODUCT_LOOKS: { id: ProductLook; label: string; note: string; swatch: string[] }[] = [
   { id: "gift-a", label: "א · נאמן לעיצוב", note: "רקע בהיר, צ'יפים עם מילוי צהוב רך, כפתור הוספה שחור ועגול, אריח תמונה בגוון חם.", swatch: ["#f6f6f6", "#ffffff", "#f3dc8f", "#1a1a1a"] },
-  { id: "gift-b", label: "ב · כהה עם הירוק", note: "אותם רכיבים בצבעי האתר: צ'יפים עם מילוי ירוק רך, כפתור הוספה בהיר, אריח תמונה ירוק-כהה.", swatch: ["#04110b", "#0d2117", "#5fe39a", "#eef4f0"] },
+  { id: "gift-b", label: "ב · כהה עם הירוק (באתר)", note: "אותם רכיבים בצבעי האתר: צ'יפים עם מילוי ירוק רך, כפתור הוספה בהיר, אריח תמונה ירוק-כהה.", swatch: ["#04110b", "#0d2117", "#5fe39a", "#eef4f0"] },
   { id: "gift-c", label: "ג · בהיר עם הירוק", note: "רקע בהיר כמו בעיצוב, והירוק של המותג לבחירות ולכפתור ההוספה.", swatch: ["#f6f6f6", "#ffffff", "#e8f6ee", "#089a47"] },
 ];
 

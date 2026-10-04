@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 import Btn from "./ui/Btn";
-import ThemeToggle from "./ThemeToggle";
 import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
@@ -147,7 +146,6 @@ export default function Header() {
             {/* Search sits before the settings and the cart: on a catalogue of
                 this size it is the most-wanted control in the bar. */}
             <QuickSearch />
-            <ThemeToggle />
 
             <Link
               href="/admin"
@@ -271,10 +269,6 @@ export default function Header() {
               ))}
             </div>
 
-            <div className="mt-5 flex items-center gap-2">
-              <ThemeToggle />
-              <span className="text-[11px] text-ink-500">מצב תצוגה</span>
-            </div>
           </div>
         </div>
       )}

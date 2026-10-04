@@ -48,7 +48,7 @@ export const BUSINESS = {
    * Both are the owner here; the accessibility regulations require the
    * coordinator's name and a way to reach them.
    */
-  contactPerson: "אריאל",
+  contactPerson: "ארז",
 
   /** Last time the legal pages were reviewed. Shown on each of them. */
   legalUpdated: "2026-09-11",

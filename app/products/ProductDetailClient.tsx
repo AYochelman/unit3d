@@ -37,7 +37,6 @@ import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
-import { useDesignPreview } from "@/lib/design-preview";
 import CheaperOptions from "@/components/CheaperOptions";
 
 /** MakerWorld plates have no names, so sizes are named by their order. */
@@ -57,11 +56,6 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const addItem = useOrderStore((s) => s.addItem);
   const cartCount = useOrderStore((s) => s.items.length);
   const adminUnlocked = useAdminStore((s) => s.unlocked);
-  // The "Gift Shop" product-page preview (/admin → תצוגת עיצוב). Only the
-  // owner can switch it on, so for every visitor `look` is null and the page
-  // renders exactly as before.
-  const productLook = useDesignPreview((s) => s.productLook);
-  const look = adminUnlocked ? productLook : null;
   const override = useAdminStore((s) => s.overrides[id]);
 
   // The colour the model's own photograph was printed in, matched to the
@@ -301,7 +295,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
         {/* Config panel */}
         <div className="flex flex-col gap-5">
           <div>
-            {look && <div className="pd-eyebrow text-xs font-semibold tracking-wider text-ink-400 mb-1.5">{CATEGORY_LABEL[p.category]}</div>}
+            <div className="pd-eyebrow text-xs font-semibold tracking-wider text-ink-400 mb-1.5">{CATEGORY_LABEL[p.category]}</div>
             <h1 className="pd-title text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</h1>
             <p className="mt-2 text-ink-300 text-body">{p.desc}</p>
             {(() => {
@@ -555,7 +549,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 <>
                   <div className="pd-price text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
                   {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(unitPrice)} ליחידה</div>}
-                  {look && <div className="pd-price-note text-xs text-ink-400 mt-1">כולל מע&quot;מ · משלוח מ-₪25, חינם מעל ₪200</div>}
+                  <div className="pd-price-note text-xs text-ink-400 mt-1">כולל מע&quot;מ · משלוח מ-₪25, חינם מעל ₪200</div>
                 </>
               )}
             </div>
@@ -637,7 +631,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <button
               type="button"
               onClick={handleAdd}
-              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : cn("btn-shiny", look && "pd-cta"))}
+              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "pd-cta")}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
             </button>
@@ -662,14 +656,12 @@ export default function ProductDetailClient({ id }: { id: string }) {
             </div>
           )}
 
-          {/* Three facts, each true for every product, in the "Gift Shop" look. */}
-          {look && (
-            <ul className="pd-benefits grid gap-2.5 text-sm text-ink-300">
-              <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="pin" size={15} /></span>מודפס אצלנו בסטודיו בגבעתיים</li>
-              <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="truck" size={15} /></span>משלוח עד הבית תוך 3-5 ימי עסקים</li>
-              <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="layers" size={15} /></span>{mat.name} · {mat.desc}</li>
-            </ul>
-          )}
+          {/* Three facts, each true for every product ("Gift Shop" treatment). */}
+          <ul className="pd-benefits grid gap-2.5 text-sm text-ink-300">
+            <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="pin" size={15} /></span>מודפס אצלנו בסטודיו בגבעתיים</li>
+            <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="truck" size={15} /></span>משלוח עד הבית תוך 3-5 ימי עסקים</li>
+            <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="layers" size={15} /></span>{mat.name} · {mat.desc}</li>
+          </ul>
 
           {/* Every product offers the same thing on the same terms: your text
               on it, on one shared page that arrives already knowing which
@@ -737,7 +729,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 "flex-1 h-12 rounded-xl font-black text-base flex items-center justify-center gap-2",
                 "transition-[background-color,transform] duration-200 active:scale-[0.98]",
                 "motion-reduce:transition-none motion-reduce:active:scale-100",
-                added ? "bg-good text-ink-950" : "btn-shiny",
+                added ? "bg-good text-ink-950" : "pd-cta",
               )}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}

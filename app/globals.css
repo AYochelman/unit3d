@@ -8,11 +8,6 @@
     background: #04110b;
     color: #eef4f0;
   }
-  html.light,
-  html.light body {
-    background: #f7faf8;
-    color: #04110b;
-  }
   /* Typography (4.10): one face, Assistant, for Hebrew and Latin alike.
      Headings at natural spacing and a line height that leaves room between
      lines; running text at 1.6. A leading-* or font-* utility still wins. */
@@ -140,12 +135,6 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #1d5236;
   }
-  html.light ::-webkit-scrollbar-track {
-    background: #eef4f0;
-  }
-  html.light ::-webkit-scrollbar-thumb {
-    background: #c9d6ce;
-  }
 }
 
 /* ─── Custom utilities (rebuilt: the originals were lost with the source) ─── */
@@ -206,11 +195,6 @@
       linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 24px 24px;
-  }
-  html.light .printer-grid {
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
   }
   .stripes {
     background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.035) 0 8px, transparent 8px 16px);
@@ -444,48 +428,48 @@
 @keyframes hero-shade { to { opacity: 1; } }
 
 /*
- * "Gift Shop" product-page preview (lib/design-preview.ts → PRODUCT_LOOKS).
- * Applies only under html[data-product-look], which only the owner's browser
- * ever carries, so visitors see the product page unchanged. Each look sets a
- * handful of tokens; the components read them.
+ * Product page, "Gift Shop" treatment (4.10). Look ב — the site's dark greens —
+ * is the live page: its tokens sit on .pd-root. Looks א and ג stay previews
+ * in /admin → "תצוגת עיצוב": html[data-product-look] (owner's browser only)
+ * swaps the tokens. The components read the tokens, nothing else.
  */
-html[data-product-look="gift-a"] {
+html[data-product-look="gift-a"] .pd-root {
   --pd-page: #f4f4f5; --pd-card: #ffffff; --pd-ink: #1a1a1a; --pd-ink-2: #3f3f46; --pd-ink-3: #5f5f68; --pd-line: #e4e4e7;
   --pd-hero: #ebe3d6; --pd-chip: #eeeeef; --pd-chip-fg: #4a4a52; --pd-on: #f3dc8f; --pd-on-fg: #1a1a1a;
   --pd-qty: #f3dc8f; --pd-qty-fg: #1a1a1a; --pd-cta: #1a1a1a; --pd-cta-fg: #ffffff; --pd-icon: #efeaff; --pd-icon-fg: #5b43c9;
 }
-html[data-product-look="gift-b"] {
+.pd-root {
   --pd-hero: #0d2117; --pd-chip: #0d2117; --pd-chip-fg: #a8b8ae; --pd-on: rgba(95, 227, 154, 0.16); --pd-on-fg: #5fe39a;
   --pd-qty: #16402a; --pd-qty-fg: #eef4f0; --pd-cta: #eef4f0; --pd-cta-fg: #04110b; --pd-icon: #0d2117; --pd-icon-fg: #5fe39a;
   --pd-ink: #eef4f0;
 }
-html[data-product-look="gift-c"] {
+html[data-product-look="gift-c"] .pd-root {
   --pd-page: #f4f4f5; --pd-card: #ffffff; --pd-ink: #1a1a1a; --pd-ink-2: #3f3f46; --pd-ink-3: #5f5f68; --pd-line: #e4e4e7;
   --pd-hero: #e8f1ec; --pd-chip: #eeeeef; --pd-chip-fg: #4a4a52; --pd-on: #dff3e7; --pd-on-fg: #055a2d;
   --pd-qty: #dff3e7; --pd-qty-fg: #055a2d; --pd-cta: #067138; --pd-cta-fg: #ffffff; --pd-icon: #dff3e7; --pd-icon-fg: #055a2d;
 }
 
 /* Shared shape, every look */
-html[data-product-look] .pd-hero { border: 0; border-radius: 28px; background: var(--pd-hero) !important; }
-html[data-product-look] .pd-thumb { border-radius: 18px; height: 4.5rem; width: 4.5rem; }
-html[data-product-look] .pd-title { font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; font-weight: 700; color: var(--pd-ink); }
-html[data-product-look] .pd-chip {
+.pd-root .pd-hero { border: 0; border-radius: 28px; background: var(--pd-hero) !important; }
+.pd-root .pd-thumb { border-radius: 18px; height: 4.5rem; width: 4.5rem; }
+.pd-root .pd-title { font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; font-weight: 700; color: var(--pd-ink); }
+.pd-root .pd-chip {
   border-radius: 9999px; border-color: transparent; background: var(--pd-chip); color: var(--pd-chip-fg);
   padding: 0.5rem 1rem; font-family: var(--font-sans); font-weight: 600;
 }
-html[data-product-look] .pd-chip[data-on] { background: var(--pd-on); color: var(--pd-on-fg); border-color: transparent; }
-html[data-product-look] .pd-qty { border: 0; border-radius: 9999px; background: var(--pd-qty); color: var(--pd-qty-fg); height: 2.25rem; width: 2.25rem; }
-html[data-product-look] .pd-price { font-family: var(--font-sans); font-weight: 700; color: var(--pd-ink); font-size: clamp(2rem, 3.5vw, 2.75rem); }
-html[data-product-look] .pd-cta { background: var(--pd-cta); color: var(--pd-cta-fg); border-radius: 9999px; height: 3.25rem; box-shadow: none; }
-html[data-product-look] .pd-cta::before,
-html[data-product-look] .pd-cta::after { display: none; }
-html[data-product-look] .pd-benefit-icon {
+.pd-root .pd-chip[data-on] { background: var(--pd-on); color: var(--pd-on-fg); border-color: transparent; }
+.pd-root .pd-qty { border: 0; border-radius: 9999px; background: var(--pd-qty); color: var(--pd-qty-fg); height: 2.25rem; width: 2.25rem; }
+.pd-root .pd-price { font-family: var(--font-sans); font-weight: 700; color: var(--pd-ink); font-size: clamp(2rem, 3.5vw, 2.75rem); }
+.pd-root .pd-cta { background: var(--pd-cta); color: var(--pd-cta-fg); border-radius: 9999px; height: 3.25rem; box-shadow: none; }
+.pd-root .pd-cta::before,
+.pd-root .pd-cta::after { display: none; }
+.pd-root .pd-benefit-icon {
   display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; flex: none;
   border-radius: 9999px; background: var(--pd-icon); color: var(--pd-icon-fg);
 }
 
 /* Light looks: the product area turns light; header and footer stay as they are. */
-html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) body { background: var(--pd-page); }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) body { background: #f4f4f5; }
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root { color: var(--pd-ink); }
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is(.text-ink-50, .text-ink-100, .text-ink-200) { color: var(--pd-ink); }
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root .text-ink-300 { color: var(--pd-ink-2); }
@@ -495,7 +479,7 @@ html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is(.bg-ink-900, .bg-ink-900\/40, .bg-ink-950\/92, .bg-ink-800) { background-color: var(--pd-card); }
 /* Grid columns may shrink below their content's natural width, so wider chips
    wrap instead of pushing the page sideways on a phone. */
-html[data-product-look] .pd-root .grid > * { min-width: 0; }
+.pd-root .grid > * { min-width: 0; }
 /* The header is see-through and the footer has no fill of its own: on the
    light page they keep the site's dark ground so their light text stays legible. */
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) :is(body > header, header.sticky, footer) { background-color: #04110b; }

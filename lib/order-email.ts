@@ -6,7 +6,7 @@ import { courierName, trackUrl } from "./couriers";
 /**
  * The confirmation the customer gets.
  *
- * A WhatsApp message goes to Ariel; the customer, until now, got a thank-you
+ * A WhatsApp message goes to Erez; the customer, until now, got a thank-you
  * screen that vanished on the next click and nothing they could keep. This is
  * the record they keep: their order number, exactly what they configured, in
  * which filament, what it costs and how it reaches them.
@@ -179,14 +179,14 @@ export const orderEmailSubject = (o: PlacedOrder): string =>
 
 // ─── "It is on the printer" ──────────────────────────────────────────────────
 /**
- * What the customer gets the moment Ariel approves the order.
+ * What the customer gets the moment Erez approves the order.
  *
  * Between "קיבלתי" and "מוכנה" there was silence, and it is the longest part
  * of the wait. Approval is the moment the order stops being a request and
  * becomes a job on the bench, and the shop has a live camera on that bench —
  * so this letter says both: it is happening, and here is where to watch.
  *
- * It goes out from the admin, once, at the click that approves; the note Ariel
+ * It goes out from the admin, once, at the click that approves; the note Erez
  * typed with the decision rides along, because that is where he says "the
  * blue is out, printing it in black" and the customer should hear it.
  */
@@ -251,7 +251,7 @@ export const liveEmailSubject = (o: PlacedOrder): string =>
  * What the customer gets the moment the last item comes off the bench.
  *
  * The confirmation promised "מעדכן אותך כשהכל מוכן" and, until now, nothing
- * kept that promise automatically — the update happened when Ariel remembered
+ * kept that promise automatically — the update happened when Erez remembered
  * to write. This is step 3 of that same letter, sent by itself.
  *
  * It says two different things depending on how the order travels, because

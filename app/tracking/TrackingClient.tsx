@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
 
 const STEPS = [
-  { key: "received", label: "פנייה התקבלה", sub: "אריאל קרא את הבקשה ויחזור אליך תוך 24 שעות.", date: "12.10 · 14:22" },
+  { key: "received", label: "פנייה התקבלה", sub: "ארז קרא את הבקשה ויחזור אליך תוך 24 שעות.", date: "12.10 · 14:22" },
   { key: "approved", label: "עיצוב אושר", sub: "Render סופי אישרת ושילמת.", date: "13.10 · 09:08" },
   { key: "printing", label: "במדפסת", sub: "ה-G-code נטען. תוכל לצפות בלייב.", date: "13.10 · 11:30" },
   { key: "shipped", label: "נשלח", sub: "מספר מעקב יישלח בוואטסאפ.", date: "" },

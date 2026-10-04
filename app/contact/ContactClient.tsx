@@ -91,7 +91,7 @@ export default function ContactClient() {
   // on an order nobody is posting anything to.
   const wantsAddress = needsAddress(delivery);
 
-  // A discount code is checked against the list Ariel wrote in /admin, which
+  // A discount code is checked against the list Erez wrote in /admin, which
   // every browser loads at boot (CouponsBoot) — so the customer sees the money
   // come off here, not in a WhatsApp negotiation afterwards.
   const codes = useAdminStore((s) => s.coupons);
@@ -116,7 +116,7 @@ export default function ContactClient() {
   // cannot say that.
   const [ordered, setOrdered] = useState<CartItem[]>([]);
   const [coupon, setCoupon] = useState("");
-  // Whether the order reached the shop's own queue, or only Ariel's phone.
+  // Whether the order reached the shop's own queue, or only Erez's phone.
   const [filed, setFiled] = useState<"pending" | "saved" | "failed">("pending");
   // And whether the customer got their own copy.
   const [mailed, setMailed] = useState<"pending" | "sent" | "no-address" | "not-configured" | "failed">("pending");
@@ -330,7 +330,7 @@ export default function ContactClient() {
             window.open(orderWhatsapp(order), "_blank", "noopener,noreferrer");
 
             // And the same order is written to the shop's queue, so it is
-            // already waiting on Ariel's screen instead of being carried there
+            // already waiting on Erez's screen instead of being carried there
             // by hand. If that write fails the message still holds everything.
             // The end of the funnel. Page views only mean something next to
             // this number.
