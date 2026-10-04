@@ -29,6 +29,8 @@ export default function CalculatorTab() {
   const [colors, setColors] = useState("1");
   const [qty, setQty] = useState("1");
   const [price, setPrice] = useState("");
+  const [file, setFile] = useState("");
+  const [spread, setSpread] = useState("");
 
   const num = (v: string) => Math.max(0, parseFloat(v) || 0);
   const hours = num(hrs) + num(mins) / 60;
@@ -39,14 +41,28 @@ export default function CalculatorTab() {
     { grams: num(grams), hours, material, colors: Math.max(1, Math.round(num(colors)) || 1), qty: q, price: sale },
     settings,
   );
+  // A bought file is paid once. Its cost lands on the units it is spread
+  // over — this order by default, or as many sales as the owner expects.
+  const filePrice = num(file);
+  const spreadOver = Math.max(1, Math.round(num(spread)) || q);
+  const fileShare = filePrice / spreadOver;
+  const unitCost = r.unitCost + fileShare;
+  const totalCost = unitCost * q;
+  const profit = sale != null ? sale - unitCost : null;
+  const margin = sale != null && sale > 0 ? (sale - unitCost) / sale : null;
+
   const step = Math.max(1, Math.round(pricing.round) || 1);
-  const suggested = Math.ceil(r.recommendedPrice / step) * step;
+  const target = Math.min(0.95, Math.max(0, settings.targetMargin));
+  const suggested = Math.ceil(Math.ceil(unitCost / (1 - target)) / step) * step;
 
   const rows: [string, number][] = [
     [`חומר · ${r.gramsUsed} גרם${r.gramsUsed !== num(grams) ? " כולל פחת החלפת צבעים" : ""}`, r.materialCost],
     ["זמן מכונה", r.machineCost],
     ["חשמל", r.electricityCost],
     ["עבודה", r.laborCost],
+    ...(filePrice > 0
+      ? [[spreadOver > 1 ? `קובץ / מודל · ${fmtILS(filePrice)} חלקי ${spreadOver}` : "קובץ / מודל", fileShare] as [string, number]]
+      : []),
   ];
 
   return (
@@ -80,6 +96,14 @@ export default function CalculatorTab() {
             <Input type="number" inputMode="numeric" min={1} value={qty} onChange={(e) => setQty(e.target.value)} dir="ltr" />
           </Field>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="מחיר הקובץ / המודל (₪)" hint="אם קנית אותו">
+            <Input type="number" inputMode="decimal" min={0} value={file} onChange={(e) => setFile(e.target.value)} placeholder="0" dir="ltr" />
+          </Field>
+          <Field label="לחלק על כמה יחידות" hint="ריק = כמות ההזמנה">
+            <Input type="number" inputMode="numeric" min={1} value={spread} onChange={(e) => setSpread(e.target.value)} placeholder={String(q)} dir="ltr" />
+          </Field>
+        </div>
         <Field label="מחיר מכירה (לא חובה)" hint="כדי לראות כמה נשאר לך">
           <Input type="number" inputMode="decimal" min={0} value={price} onChange={(e) => setPrice(e.target.value)} placeholder="₪" dir="ltr" />
         </Field>
@@ -99,12 +123,12 @@ export default function CalculatorTab() {
         </div>
         <div className="border-t border-ink-800 pt-3 flex justify-between items-baseline">
           <span className="font-bold">עלות ליחידה</span>
-          <bdi className="font-mono text-xl font-black">{fmtILS(r.unitCost)}</bdi>
+          <bdi className="font-mono text-xl font-black">{fmtILS(unitCost)}</bdi>
         </div>
         {q > 1 && (
           <div className="flex justify-between text-sm">
             <span className="text-ink-300">עלות ל-<bdi>{q}</bdi> יחידות</span>
-            <bdi className="font-mono">{fmtILS(r.totalCost)}</bdi>
+            <bdi className="font-mono">{fmtILS(totalCost)}</bdi>
           </div>
         )}
         <div className="rounded-xl bg-ink-900 border border-ink-800 p-3 flex justify-between items-baseline">
@@ -116,12 +140,12 @@ export default function CalculatorTab() {
           </span>
           <bdi className="font-mono text-2xl font-black text-flame">{fmtILS(suggested)}</bdi>
         </div>
-        {r.profit != null && (
-          <div className={cn("rounded-xl p-3 flex justify-between items-baseline border", r.profit >= 0 ? "border-good/40 bg-good/10 text-good" : "border-bad/40 bg-bad/10 text-bad")}>
-            <span>{r.profit >= 0 ? "רווח ליחידה" : "הפסד ליחידה"}</span>
+        {profit != null && (
+          <div className={cn("rounded-xl p-3 flex justify-between items-baseline border", profit >= 0 ? "border-good/40 bg-good/10 text-good" : "border-bad/40 bg-bad/10 text-bad")}>
+            <span>{profit >= 0 ? "רווח ליחידה" : "הפסד ליחידה"}</span>
             <span className="font-mono font-bold">
-              <bdi>{fmtILS(Math.abs(r.profit))}</bdi>
-              {r.margin != null && <> · <bdi>{Math.round(r.margin * 100)}%</bdi></>}
+              <bdi>{fmtILS(Math.abs(profit))}</bdi>
+              {margin != null && <> · <bdi>{Math.round(margin * 100)}%</bdi></>}
             </span>
           </div>
         )}
