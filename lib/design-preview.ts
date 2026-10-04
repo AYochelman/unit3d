@@ -51,7 +51,7 @@ const flameMap = (base: string, d600: string, d700: string, l300: string, soft: 
 });
 
 const PILL = { lg: "9999px", xl: "9999px", xxl: "40px", xxxl: "50px", button: "9999px" };
-const OVIA = { lg: "8px", xl: "12px", xxl: "12px", xxxl: "16px", button: "9999px" };
+const OVIA = { lg: "10px", xl: "12px", xxl: "16px", xxxl: "20px", button: "9999px" };
 // Zajno: square everything except what is round on purpose.
 const SQUARE = { lg: "0px", xl: "0px", xxl: "0px", xxxl: "0px", button: "0px" };
 const CALM = { lg: "8px", xl: "8px", xxl: "16px", xxxl: "20px", button: "8px" };
@@ -128,41 +128,44 @@ export const DESIGNS: DesignTheme[] = [
     font: '"Heebo", system-ui, sans-serif', headingWeight: 500, headingTracking: "-0.02em",
     radius: CALM, swatch: ["#04110b", "#089a47", "#5fe39a", "#eef4f0"],
   },
+  // Ovia, read from the shot itself (4.10): near-black, electric-blue glass
+  // spheres, hairline geometry, thin two-tone headlines, pill buttons. The
+  // first Ovia directions were built from the Dribbble page's own interface
+  // colours (white, pale magenta) and did not describe the work at all.
   {
-    id: "ovia-a", brief: "Ovia", label: "א · לבן נקי",
-    note: "אתר לבן, טקסט כמעט שחור, כרטיסים באפור קריר ונגיעה של ורוד חיוור. כפתורים כהים.",
-    bg: "#ffffff", fg: "#0d0c22",
+    id: "ovia-a", brief: "Ovia", label: "א · שחור-כחול נאמן",
+    note: "שחור כמעט מלא, כחול חשמלי לכפתורים, תכלת-לילך להדגשות, כותרות דקות וכפתורי גלולה.",
+    bg: "#05060b", fg: "#e8eaf5",
     map: {
-      ...inkMap(["#ffffff", "#f3f3f4", "#ecebf0", "#e7e7e9", "#d6d5dd", "#66647c", "#4a4860", "#3a3546", "#1c1a33", "#0d0c22", "#0d0c22"]),
-      [BODY_FG]: "#0d0c22",
-      ...flameMap("#0d0c22", "#1c1a33", "#000000", "#9a4697", "#f4d7f3"),
+      ...inkMap(["#05060b", "#090b14", "#0d1020", "#1c2038", "#272c4a", "#8a8fae", "#a9aed0", "#c9cde6", "#e1e3f2", "#e8eaf5", "#f4f5fb"]),
+      [BODY_FG]: "#e8eaf5",
+      ...flameMap("#4f60ff", "#3b4bff", "#2f3cd6", "#8b9cff", "#1a1f4d"),
     },
-    font: '"Heebo", system-ui, sans-serif', headingWeight: 700, headingTracking: "-0.02em",
-    radius: OVIA, swatch: ["#ffffff", "#f3f3f4", "#f4d7f3", "#0d0c22"],
+    font: '"Assistant", system-ui, sans-serif', headingWeight: 300, headingTracking: "0em",
+    radius: OVIA, swatch: ["#05060b", "#0d1020", "#4f60ff", "#8b9cff"],
   },
   {
-    id: "ovia-b", brief: "Ovia", label: "ב · סטודיו אפור",
-    note: "רקע אפור-סגול בהיר, כרטיסים לבנים, טקסט כהה וורוד חיוור להדגשה.",
-    bg: "#ecebf0", fg: "#0d0c22",
+    id: "ovia-b", brief: "Ovia", label: "ב · שחור עם הירוק",
+    note: "המבנה של Ovia (שחור, קווים דקים, כותרות דקות, גלולות) עם הירוק של המותג במקום הכחול.",
+    bg: "#04070a", fg: "#e8f0ec",
     map: {
-      ...inkMap(["#ecebf0", "#ffffff", "#f3f3f4", "#dcdbe3", "#c9c8d2", "#66647c", "#4a4860", "#3a3546", "#1c1a33", "#0d0c22", "#0d0c22"]),
-      [BODY_FG]: "#0d0c22",
-      ...flameMap("#0d0c22", "#1c1a33", "#000000", "#9a4697", "#f4d7f3"),
+      ...inkMap(["#04070a", "#080d10", "#0d1418", "#1b2a2a", "#26383a", "#8a9a98", "#a9b9b6", "#c9d6d3", "#e1ebe8", "#e8f0ec", "#f4f8f6"]),
+      [BODY_FG]: "#e8f0ec",
     },
-    font: '"Heebo", system-ui, sans-serif', headingWeight: 700, headingTracking: "-0.02em",
-    radius: OVIA, swatch: ["#ecebf0", "#ffffff", "#f4d7f3", "#0d0c22"],
+    font: '"Assistant", system-ui, sans-serif', headingWeight: 300, headingTracking: "0em",
+    radius: OVIA, swatch: ["#04070a", "#0d1418", "#089a47", "#5fe39a"],
   },
   {
-    id: "ovia-c", brief: "Ovia", label: "ג · היברידי עם הירוק",
-    note: "האתר כולו בהיר כמו Ovia, עם הירוק של המותג לכפתורים. החלוקה לחלק עליון כהה ותחתון בהיר דורשת קוד, ולכן לא מוצגת כאן.",
-    bg: "#ffffff", fg: "#0d0c22",
+    id: "ovia-c", brief: "Ovia", label: "ג · היברידי",
+    note: "הצבעים של האתר נשארים; מ-Ovia נלקחים הכותרות הדקות, כפתורי הגלולה ותכלת-לילך כצבע הדגשה שני.",
+    bg: "#04110b", fg: "#eef4f0",
     map: {
-      ...inkMap(["#ffffff", "#f3f3f4", "#ecebf0", "#e7e7e9", "#d6d5dd", "#66647c", "#4a4860", "#3a3546", "#1c1a33", "#0d0c22", "#0d0c22"]),
-      [BODY_FG]: "#0d0c22",
-      ...flameMap("#089a47", "#067138", "#055a2d", "#067138", "#e8f6ee"),
+      ...inkMap(["#04110b", "#06150e", "#0d2117", "#16402a", "#1d5236", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"]),
+      [BODY_FG]: "#eef4f0",
+      ...flameMap("#089a47", "#067138", "#055a2d", "#8b9cff", "#1a1f4d"),
     },
-    font: '"Heebo", system-ui, sans-serif', headingWeight: 700, headingTracking: "-0.02em",
-    radius: OVIA, swatch: ["#ffffff", "#f3f3f4", "#089a47", "#0d0c22"],
+    font: '"Assistant", system-ui, sans-serif', headingWeight: 300, headingTracking: "0em",
+    radius: OVIA, swatch: ["#04110b", "#089a47", "#8b9cff", "#eef4f0"],
   },
   {
     id: "zajno-a", brief: "Zajno", label: "א · אפור גלריה",

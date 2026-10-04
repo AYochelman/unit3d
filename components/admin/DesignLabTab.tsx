@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { DESIGNS, PRODUCT_LOOKS, inkOn, useDesignPreview, type DesignId, type ProductLook } from "@/lib/design-preview";
 import { cn } from "@/lib/cn";
 import OrbDemo from "./OrbDemo";
+import HeroVideoOptions from "./HeroVideoOptions";
 import ShinyButton from "@/components/ui/shiny-button";
 
 const PAGES: { href: string; label: string }[] = [
@@ -96,6 +97,8 @@ export default function DesignLabTab() {
           </div>
         </section>
       ))}
+
+      <HeroVideoOptions />
 
       <section className="grid gap-3">
         <h2 className="font-black text-lg">עמוד מוצר · Gift Shop</h2>
