@@ -2,6 +2,7 @@ import Btn from "@/components/ui/Btn";
 import HeroLogo from "./HeroLogo";
 import PrinterPanel from "./PrinterPanel";
 import HeroCarousel from "./HeroCarousel";
+import ShelfMarquee from "./ShelfMarquee";
 
 export default function Hero() {
   return (
@@ -65,6 +66,10 @@ export default function Hero() {
             </li>
           </ul>
         </div>
+      </div>
+
+      <div className="mb-8 sm:mb-12">
+        <ShelfMarquee />
       </div>
 
       <HeroCarousel />
