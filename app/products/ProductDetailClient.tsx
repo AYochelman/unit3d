@@ -614,7 +614,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <div className="space-y-2">
               <Link
                 href="/contact"
-                className="w-full h-12 rounded-xl font-black text-base flex items-center justify-center gap-2 bg-flame-600 text-white hover:bg-flame-700 transition-colors shadow-lg"
+                className="w-full h-12 rounded-xl font-black text-base flex items-center justify-center gap-2 btn-shiny transition-transform"
               >
                 <Icon name="whatsapp" size={18} />
                 בקש הצעת מחיר
@@ -628,7 +628,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <button
               type="button"
               onClick={handleAdd}
-              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "bg-flame-600 text-white hover:bg-flame-700")}
+              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "btn-shiny")}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
             </button>
@@ -719,7 +719,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 "flex-1 h-12 rounded-xl font-black text-base flex items-center justify-center gap-2",
                 "transition-[background-color,transform] duration-200 active:scale-[0.98]",
                 "motion-reduce:transition-none motion-reduce:active:scale-100",
-                added ? "bg-good text-ink-950" : "bg-flame-600 text-white hover:bg-flame-700",
+                added ? "bg-good text-ink-950" : "btn-shiny",
               )}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}

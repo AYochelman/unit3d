@@ -666,7 +666,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 "w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg",
                 added
                   ? "bg-good text-ink-950 shadow-good/20"
-                  : "bg-flame-600 text-white hover:bg-flame-700 shadow-flame/20",
+                  : "btn-shiny",
               )}
             >
               {added ? (
