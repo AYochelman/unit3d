@@ -88,7 +88,7 @@ export default function Footer() {
                 <li key={it.href}>
                   <Link
                     href={it.href}
-                    className="inline-flex items-center min-h-11 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
+                    className="inline-flex items-center min-h-11 min-w-6 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
                   >
                     {it.label}
                   </Link>
@@ -106,7 +106,7 @@ export default function Footer() {
                 <li key={it.href}>
                   <Link
                     href={it.href}
-                    className="inline-flex items-center min-h-11 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
+                    className="inline-flex items-center min-h-11 min-w-6 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
                   >
                     {it.label}
                   </Link>
@@ -147,9 +147,9 @@ export default function Footer() {
             {" · "}{BUSINESS.entityType} {orPending(BUSINESS.vatId)}
             {" · "}{addressLine()}
             {" · "}
-            <a href={`tel:${BUSINESS.phone}`} dir="ltr" className="hover:text-flame transition-colors">{BUSINESS.phoneDisplay}</a>
+            <a href={`tel:${BUSINESS.phone}`} dir="ltr" className="inline-flex items-center min-h-6 hover:text-flame transition-colors">{BUSINESS.phoneDisplay}</a>
             {" · "}
-            <a href={`mailto:${BUSINESS.email}`} dir="ltr" className="hover:text-flame transition-colors">{BUSINESS.email}</a>
+            <a href={`mailto:${BUSINESS.email}`} dir="ltr" className="inline-flex items-center min-h-6 hover:text-flame transition-colors">{BUSINESS.email}</a>
             {!businessDetailsComplete() && (
               <span className="block mt-1 text-ink-500">
                 פרטי העוסק יושלמו בקרוב. עד אז אפשר לקבל אותם בטלפון או במייל.

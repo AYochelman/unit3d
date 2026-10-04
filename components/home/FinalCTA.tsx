@@ -4,7 +4,7 @@ export default function FinalCTA() {
   return (
     <section className="py-16 md:py-24 text-center">
       <div className="max-w-3xl mx-auto px-6 md:px-10">
-        <h2 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05]">
+        <h2 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading">
           יש לכם רעיון?
           <br />
           <span className="text-flame">אנחנו מוכנים להפוך אותו למציאות.</span>

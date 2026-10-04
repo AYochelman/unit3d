@@ -20,7 +20,7 @@ export default function NewInShop() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
           NEW IN THE SHOP
         </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05]">
+        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-heading">
           מה נכנס לחנות <span className="text-flame">עכשיו</span>.
         </h2>
         <p className="text-ink-400 mt-3 max-w-2xl">

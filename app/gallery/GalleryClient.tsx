@@ -50,7 +50,7 @@ export default function GalleryClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           GALLERY · {GALLERY.length} ITEMS
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
+        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           ככה זה נראה.
         </h1>
         <p className="mt-3 text-ink-300 max-w-xl">

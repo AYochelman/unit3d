@@ -127,7 +127,7 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "whitespace-nowrap px-1.5 xl:px-2.5 py-2 rounded-md font-medium transition-colors",
+                    "whitespace-nowrap px-1.5 xl:px-2.5 py-2 rounded-md font-semibold transition-colors",
                     // The active item is marked twice — tint AND a rule beneath
                     // it — so it does not depend on colour alone.
                     "relative after:absolute after:inset-x-2 after:-bottom-px after:h-0.5 after:rounded-full after:bg-flame",

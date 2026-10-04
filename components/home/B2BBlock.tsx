@@ -44,7 +44,7 @@ export default function B2BBlock() {
             <Pill tone="flame" className="mb-4">
               B2B · BUSINESSES
             </Pill>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05]">
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-heading">
               מזמינים לחברה?
               <br />
               <span className="text-flame">קבלו דיל אחר.</span>
