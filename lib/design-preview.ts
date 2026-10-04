@@ -17,11 +17,11 @@ import { create } from "zustand";
  * those need real component work if a direction is chosen.
  */
 
-export type DesignId = "qclay-a" | "qclay-b" | "qclay-c" | "island-a" | "island-b" | "island-c";
+export type DesignId = "qclay-a" | "qclay-b" | "qclay-c" | "island-a" | "island-b" | "island-c" | "ovia-a" | "ovia-b" | "ovia-c";
 
 export type DesignTheme = {
   id: DesignId;
-  brief: "QClay" | "Island";
+  brief: "QClay" | "Island" | "Ovia";
   label: string;
   note: string;
   /** Page background and text, for html/body. */
@@ -37,11 +37,11 @@ export type DesignTheme = {
   swatch: string[];
 };
 
-// The site's palette as tailwind.config.ts defines it. `flame` and `brand`
+// The site's palette as tailwind.config.ts defines it (QClay ג + Island ג since 4.10). `flame` and `brand`
 // share these values, so one entry covers both.
-const INK = ["#0a0a0b", "#111114", "#1c1c1f", "#2a2a2e", "#3a3a3f", "#85858b", "#a5a5aa", "#c7c7cc", "#e5e5ea", "#f2f2f4", "#fafafa"] as const;
-const BODY_FG = "#f5f5f7";
-const FLAME = { base: "#089a47", d600: "#067138", d700: "#055a2d", l300: "#3fb872", soft: "#e8f6ee" };
+const INK = ["#04110b", "#06150e", "#0d2117", "#16402a", "#1d5236", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"] as const;
+const BODY_FG = "#eef4f0";
+const FLAME = { base: "#089a47", d600: "#067138", d700: "#055a2d", l300: "#5fe39a", soft: "#e8f6ee" };
 
 const inkMap = (to: readonly string[]) => Object.fromEntries(INK.map((c, i) => [c, to[i]]));
 const flameMap = (base: string, d600: string, d700: string, l300: string, soft: string) => ({
@@ -51,6 +51,7 @@ const flameMap = (base: string, d600: string, d700: string, l300: string, soft: 
 });
 
 const PILL = { lg: "9999px", xl: "9999px", xxl: "40px", xxxl: "50px", button: "9999px" };
+const OVIA = { lg: "8px", xl: "12px", xxl: "12px", xxxl: "16px", button: "9999px" };
 const CALM = { lg: "8px", xl: "8px", xxl: "16px", xxxl: "20px", button: "8px" };
 
 export const DESIGNS: DesignTheme[] = [
@@ -79,7 +80,7 @@ export const DESIGNS: DesignTheme[] = [
     radius: { ...PILL, xxl: "60px", xxxl: "60px" }, swatch: ["#f7f4f4", "#dad2f4", "#effbf9", "#000000"],
   },
   {
-    id: "qclay-c", brief: "QClay", label: "ג · היברידי עם הירוק",
+    id: "qclay-c", brief: "QClay", label: "ג · היברידי עם הירוק (חלקית באתר)",
     note: "הרקע הכהה והירוק נשארים; מ-QClay נלקחים כפתורי הגלולה, הפינות הגדולות והכותרות הכבדות.",
     bg: "#0b0d0c", fg: "#f2f5f3",
     map: {
@@ -114,16 +115,52 @@ export const DESIGNS: DesignTheme[] = [
     radius: { ...CALM, xxxl: "20px" }, swatch: ["#fcf9f7", "#f0edea", "#0a332c", "#50e8a8"],
   },
   {
-    id: "island-c", brief: "Island", label: "ג · היברידי עם הירוק",
+    id: "island-c", brief: "Island", label: "ג · היברידי עם הירוק (חלקית באתר)",
     note: "הירוק של המותג על רקע ירוק-כהה, טקסט רגוע במשקל 500 ופינות של 8-20px.",
-    bg: "#071a11", fg: "#eef4f0",
+    bg: "#04110b", fg: "#eef4f0",
     map: {
-      ...inkMap(["#071a11", "#0a2117", "#0c2619", "#16402a", "#1d5236", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"]),
+      ...inkMap(["#04110b", "#06150e", "#0c2619", "#16402a", "#1d5236", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"]),
       [BODY_FG]: "#eef4f0",
       ...flameMap("#089a47", "#067138", "#055a2d", "#5fe39a", "#e3f6ea"),
     },
     font: '"Heebo", system-ui, sans-serif', headingWeight: 500, headingTracking: "-0.02em",
-    radius: CALM, swatch: ["#071a11", "#089a47", "#5fe39a", "#eef4f0"],
+    radius: CALM, swatch: ["#04110b", "#089a47", "#5fe39a", "#eef4f0"],
+  },
+  {
+    id: "ovia-a", brief: "Ovia", label: "א · לבן נקי",
+    note: "אתר לבן, טקסט כמעט שחור, כרטיסים באפור קריר ונגיעה של ורוד חיוור. כפתורים כהים.",
+    bg: "#ffffff", fg: "#0d0c22",
+    map: {
+      ...inkMap(["#ffffff", "#f3f3f4", "#ecebf0", "#e7e7e9", "#d6d5dd", "#66647c", "#4a4860", "#3a3546", "#1c1a33", "#0d0c22", "#0d0c22"]),
+      [BODY_FG]: "#0d0c22",
+      ...flameMap("#0d0c22", "#1c1a33", "#000000", "#9a4697", "#f4d7f3"),
+    },
+    font: '"Heebo", system-ui, sans-serif', headingWeight: 700, headingTracking: "-0.02em",
+    radius: OVIA, swatch: ["#ffffff", "#f3f3f4", "#f4d7f3", "#0d0c22"],
+  },
+  {
+    id: "ovia-b", brief: "Ovia", label: "ב · סטודיו אפור",
+    note: "רקע אפור-סגול בהיר, כרטיסים לבנים, טקסט כהה וורוד חיוור להדגשה.",
+    bg: "#ecebf0", fg: "#0d0c22",
+    map: {
+      ...inkMap(["#ecebf0", "#ffffff", "#f3f3f4", "#dcdbe3", "#c9c8d2", "#66647c", "#4a4860", "#3a3546", "#1c1a33", "#0d0c22", "#0d0c22"]),
+      [BODY_FG]: "#0d0c22",
+      ...flameMap("#0d0c22", "#1c1a33", "#000000", "#9a4697", "#f4d7f3"),
+    },
+    font: '"Heebo", system-ui, sans-serif', headingWeight: 700, headingTracking: "-0.02em",
+    radius: OVIA, swatch: ["#ecebf0", "#ffffff", "#f4d7f3", "#0d0c22"],
+  },
+  {
+    id: "ovia-c", brief: "Ovia", label: "ג · היברידי עם הירוק",
+    note: "האתר כולו בהיר כמו Ovia, עם הירוק של המותג לכפתורים. החלוקה לחלק עליון כהה ותחתון בהיר דורשת קוד, ולכן לא מוצגת כאן.",
+    bg: "#ffffff", fg: "#0d0c22",
+    map: {
+      ...inkMap(["#ffffff", "#f3f3f4", "#ecebf0", "#e7e7e9", "#d6d5dd", "#66647c", "#4a4860", "#3a3546", "#1c1a33", "#0d0c22", "#0d0c22"]),
+      [BODY_FG]: "#0d0c22",
+      ...flameMap("#089a47", "#067138", "#055a2d", "#067138", "#e8f6ee"),
+    },
+    font: '"Heebo", system-ui, sans-serif', headingWeight: 700, headingTracking: "-0.02em",
+    radius: OVIA, swatch: ["#ffffff", "#f3f3f4", "#089a47", "#0d0c22"],
   },
 ];
 

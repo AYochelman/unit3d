@@ -1,4 +1,5 @@
 import { IMPORTED, type ImportedShelf } from "./imported";
+import { heName } from "./he-names";
 
 // Real photographs, from the models we import.
 //
@@ -30,7 +31,9 @@ const ranked = [...withImage].sort((a, b) => (b.downloads ?? 0) - (a.downloads ?
 const toPhoto = (m: (typeof ranked)[number]): Photo => ({
   id: m.id,
   src: m.image!,
-  name: m.name,
+  // Shown on the page, so the Hebrew name; photoFor() still matches the
+  // original title on the model itself.
+  name: heName(m.id, m.name),
   creator: m.creator,
   href: m.shelf === "flexi" || m.shelf === "fidget" ? `/fidgets/${m.id}` : `/products/${m.id}`,
   shelf: m.shelf,

@@ -4,97 +4,71 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import { helpBotNow, loadHelpBot, warmHelpBot } from "@/lib/helpbot-lazy";
+import MorphOrb, { type MorphOrbApi, type MorphOrbPhase } from "@/components/ui/ai-thiking-orb-and-input";
 import type { BotAnswer, BotLink } from "@/lib/helpbot";
 
-type Msg = {
-  id: number;
-  from: "bot" | "me";
-  text: string;
-  links?: BotLink[];
-};
-
 /**
- * The site's help bot. It answers from a fixed list of intents (lib/helpbot.ts)
- * that restate facts already published on the site, so it can't invent a price
- * or a delivery date; anything it doesn't recognise is handed to WhatsApp.
+ * The site's help bot, asked through the thinking orb.
  *
- * The conversation lives in component state only — the project forbids
- * localStorage, so closing the tab starts a fresh chat.
+ * Answers come from a fixed list of intents (lib/helpbot.ts) that restate facts
+ * already published on the site, so it can't invent a price or a delivery date;
+ * anything it doesn't recognise is handed to WhatsApp. The orb is the face; the
+ * links an answer carries (WhatsApp, the contact form, a shelf) are shown under
+ * it once the answer has opened, because every answer should lead somewhere.
+ *
+ * Nothing is stored — the project forbids localStorage, so closing the panel
+ * starts fresh.
  */
 export default function HelpBot() {
   const [open, setOpen] = useState(false);
-  // The greeting names the real size of the catalogue, so it cannot be written
-  // until the answer engine is here. It is only ever SEEN once the panel is
-  // open, and the engine is warmed long before that — see lib/helpbot-lazy.ts.
-  const [msgs, setMsgs] = useState<Msg[]>([]);
-  const [chips, setChips] = useState<string[]>([]);
-  const [draft, setDraft] = useState("");
   const [seenPrompt, setSeenPrompt] = useState(false);
-  const nextId = useRef(1);
-  const logRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [phase, setPhase] = useState<MorphOrbPhase>("idle");
+  const [links, setLinks] = useState<BotLink[]>([]);
+  const [chips, setChips] = useState<string[]>([]);
+  const orbApi = useRef<MorphOrbApi | null>(null);
   const titleId = useId();
 
-  // Keep the newest message in view as the thread grows.
-  useEffect(() => {
-    const el = logRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [msgs, open]);
-
-  useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
-
-  // Esc closes the panel.
+  // Esc closes the panel (the orb itself also uses Esc to stop thinking).
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape" && phase === "idle") setOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, phase]);
 
-  // Fetch it in the background as soon as the page is quiet, so the first click
-  // opens a panel that is already able to answer.
+  // Fetch the engine in the background as soon as the page is quiet, so the
+  // first question is answered without a wait.
   useEffect(() => { warmHelpBot(); }, []);
 
-  // …and make sure it is here the moment the panel is actually opened, greeting
-  // written, before anything can be typed.
   useEffect(() => {
     if (!open) return;
     let alive = true;
     void loadHelpBot().then((m) => {
-      if (!alive) return;
-      setMsgs((prev) => (prev.length ? prev : [{ id: nextId.current++, from: "bot", text: m.BOT_GREETING }]));
-      setChips((prev) => (prev.length ? prev : m.BOT_STARTERS));
+      if (alive) setChips((prev) => (prev.length ? prev : m.BOT_STARTERS));
     });
     return () => { alive = false; };
   }, [open]);
 
-  const push = (m: Omit<Msg, "id">) => setMsgs((prev) => [...prev, { ...m, id: nextId.current++ }]);
-
-  const reply = (m: NonNullable<ReturnType<typeof helpBotNow>>, a: BotAnswer) => {
-    push({ from: "bot", text: a.text, links: a.links });
+  const answer = async (text: string): Promise<string> => {
+    const m = await loadHelpBot();
+    const byChip = m.BOT_ANSWERS.find((a) => (a.chip ?? a.keys[0]) === text);
+    const a: BotAnswer = byChip ?? m.matchAnswer(text) ?? m.BOT_FALLBACK;
+    setLinks(a.links ?? []);
     setChips(a.next?.length ? a.next : m.BOT_STARTERS);
+    return a.text;
   };
 
-  const askById = (id: string) => {
-    void loadHelpBot().then((m) => {
-      const a = m.getAnswer(id);
-      if (!a) return;
-      push({ from: "me", text: a.chip ?? a.keys[0] ?? id });
-      reply(m, a);
-    });
+  const onPhase = (p: MorphOrbPhase) => {
+    setPhase(p);
+    if (p === "launch") setLinks([]);
   };
 
-  const send = (raw: string) => {
-    const text = raw.trim();
-    if (!text) return;
-    push({ from: "me", text });
-    setDraft("");
-    void loadHelpBot().then((m) => reply(m, m.matchAnswer(text) ?? m.BOT_FALLBACK));
-  };
+  const showLinks = phase === "answered" && links.length > 0;
+  // Chips only while the orb is waiting for a question; after an answer,
+  // its links take that place and "שאלה חדשה" brings the chips back.
+  const showChips = phase === "idle";
 
   return (
     <>
@@ -125,7 +99,7 @@ export default function HelpBot() {
           aria-modal="false"
           aria-labelledby={titleId}
           dir="rtl"
-          className="fixed right-4 left-4 sm:left-auto sm:w-[380px] z-40 bottom-[calc(var(--fab-bottom)+4.25rem)] rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(70vh,560px)]"
+          className="fixed right-4 left-4 sm:left-auto sm:w-[380px] z-40 bottom-[calc(var(--fab-bottom)+4.25rem)] rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(80vh,600px)]"
         >
           <header className="flex items-center gap-3 p-3.5 border-b border-ink-800 bg-ink-950/60">
             <span className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-flame/15 text-flame shrink-0">
@@ -148,93 +122,64 @@ export default function HelpBot() {
             </button>
           </header>
 
-          <div ref={logRef} className="flex-1 overflow-y-auto p-3.5 space-y-3">
-            {msgs.map((m) => (
-              <div key={m.id} className={cn("flex", m.from === "me" ? "justify-start" : "justify-end")}>
-                <div
-                  className={cn(
-                    "max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed",
-                    m.from === "me"
-                      ? "bg-flame-600 text-white rounded-br-sm"
-                      : "bg-ink-800 text-ink-100 rounded-bl-sm",
-                  )}
-                >
-                  {m.text}
-                  {m.links && m.links.length > 0 && (
-                    <div className="mt-2.5 flex flex-wrap gap-1.5">
-                      {m.links.map((l) =>
-                        l.href.startsWith("http") ? (
-                          <a
-                            key={l.href}
-                            href={l.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-ink-950/60 border border-ink-700 text-xs font-semibold text-cyan2 hover:border-cyan2/60 transition-colors"
-                          >
-                            {l.label}
-                            <Icon name="arrowLeft" size={11} />
-                          </a>
-                        ) : (
-                          <Link
-                            key={l.href}
-                            href={l.href}
-                            onClick={() => setOpen(false)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-ink-950/60 border border-ink-700 text-xs font-semibold text-cyan2 hover:border-cyan2/60 transition-colors"
-                          >
-                            {l.label}
-                            <Icon name="arrowLeft" size={11} />
-                          </Link>
-                        ),
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+          <div className="h-[380px] max-h-[48vh] min-h-[340px] shrink-0">
+            <MorphOrb
+              onSubmit={answer}
+              onPhaseChange={onPhase}
+              apiRef={orbApi}
+              autoFocus
+              maxCardHeight={220}
+              className="!rounded-none"
+              copy={{ placeholder: "כתוב שאלה…" }}
+            />
           </div>
 
-          {/* Suggested questions */}
-          <div className="px-3.5 pb-2 flex flex-wrap gap-1.5">
+          {showLinks && (
+            <div className="px-3.5 pt-3 flex flex-wrap gap-1.5">
+              {links.map((l) =>
+                l.href.startsWith("http") ? (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-ink-950/60 border border-ink-700 text-xs font-semibold text-cyan2 hover:border-cyan2/60 transition-colors"
+                  >
+                    {l.label}
+                    <Icon name="arrowLeft" size={11} />
+                  </a>
+                ) : (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-ink-950/60 border border-ink-700 text-xs font-semibold text-cyan2 hover:border-cyan2/60 transition-colors"
+                  >
+                    {l.label}
+                    <Icon name="arrowLeft" size={11} />
+                  </Link>
+                ),
+              )}
+            </div>
+          )}
+
+          {/* Suggested questions — asked through the orb, as if typed. */}
+          <div className={cn("px-3.5 pt-3 pb-2 flex flex-wrap gap-1.5", !showChips && "invisible")}>
             {chips
-              // The engine is loaded by the time chips exist — they come from it.
               .map((id) => helpBotNow()?.BOT_ANSWERS.find((a) => a.id === id))
               .filter((a): a is BotAnswer => !!a)
               .map((a) => (
                 <button
                   key={a.id}
                   type="button"
-                  onClick={() => askById(a.id)}
-                  className="px-2.5 py-1 rounded-full border border-ink-700 bg-ink-950/50 text-xs text-ink-300 hover:border-flame hover:text-flame transition-colors"
+                  disabled={phase !== "idle"}
+                  onClick={() => orbApi.current?.ask(a.chip ?? a.keys[0])}
+                  className="px-2.5 py-1 rounded-full border border-ink-700 bg-ink-950/50 text-xs text-ink-300 hover:border-flame hover:text-flame transition-colors disabled:opacity-40 disabled:hover:border-ink-700 disabled:hover:text-ink-300"
                 >
                   {a.chip ?? a.keys[0]}
                 </button>
               ))}
           </div>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              send(draft);
-            }}
-            className="p-3 border-t border-ink-800 flex items-center gap-2"
-          >
-            <input
-              ref={inputRef}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              placeholder="כתוב שאלה…"
-              aria-label="שאלה לעוזר"
-              className="flex-1 h-10 px-3 rounded-xl bg-ink-950 border border-ink-700 text-sm text-ink-100 placeholder:text-ink-600 focus:border-flame focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={!draft.trim()}
-              aria-label="שלח"
-              className="h-10 w-10 rounded-xl bg-flame-600 text-white inline-flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed hover:bg-flame-700 transition-colors"
-            >
-              <Icon name="arrowLeft" size={18} />
-            </button>
-          </form>
 
           <p className="px-3.5 pb-3 text-[10px] text-ink-600 leading-relaxed">
             העוזר עונה מתוך המידע שמופיע באתר. לשאלה שהוא לא מכיר — הוא יעביר אותך לאריאל.

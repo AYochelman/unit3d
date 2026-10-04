@@ -2,6 +2,7 @@ import Btn from "@/components/ui/Btn";
 import HeroLogo from "./HeroLogo";
 import PrinterPanel from "./PrinterPanel";
 import HeroCarousel from "./HeroCarousel";
+import ShelfMarquee from "./ShelfMarquee";
 
 export default function Hero() {
   return (
@@ -14,7 +15,7 @@ export default function Hero() {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse at center, rgba(17,184,89,0.12) 0%, transparent 60%), linear-gradient(180deg, #0A0A0B 0%, #0A0A0B 100%)",
+                "radial-gradient(ellipse at center, rgba(17,184,89,0.12) 0%, transparent 60%), linear-gradient(180deg, #04110B 0%, #04110B 100%)",
             }}
           />
         </div>
@@ -65,6 +66,10 @@ export default function Hero() {
             </li>
           </ul>
         </div>
+      </div>
+
+      <div className="mb-8 sm:mb-12">
+        <ShelfMarquee />
       </div>
 
       <HeroCarousel />

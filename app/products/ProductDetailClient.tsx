@@ -231,7 +231,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
         <div className="lg:sticky lg:top-24">
           <div
             className="relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
-            style={{ background: "#111114" }}
+            style={{ background: "#06150e" }}
           >
             {hero ? (
               // A photograph of the actual model beats a drawing of it. The

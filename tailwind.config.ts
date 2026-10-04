@@ -20,35 +20,35 @@ const config: Config = {
       },
       colors: {
         ink: {
-          950: "#0A0A0B",
-          900: "#111114",
-          800: "#1C1C1F",
-          700: "#2A2A2E",
-          600: "#3A3A3F",
+          950: "#04110B",
+          900: "#06150e",
+          800: "#0D2117",
+          700: "#16402A",
+          600: "#1D5236",
           // 500 and 400 are the muted text greys, and on a dark page a muted
           // grey has to be LIGHTER, not darker. #48484C gave 2.17:1 on the page
           // background — unreadable, and it was set as the text colour in 185
-          // places. #85858B is 4.63:1 at worst, which clears WCAG AA. 400 moved
+          // places. #8FA598 is 6.4:1 on ink-800 cards, which clears WCAG AA. 400 moved
           // with it so the two tones still read as two tones.
-          500: "#85858B",
-          400: "#A5A5AA",
-          300: "#C7C7CC",
-          200: "#E5E5EA",
-          100: "#F2F2F4",
-          50: "#FAFAFA",
+          500: "#8FA598",
+          400: "#A8B8AE",
+          300: "#C9D6CE",
+          200: "#E2EBE5",
+          100: "#EEF4F0",
+          50: "#F7FAF8",
         },
         flame: {
           DEFAULT: "#089a47",
           600: "#067138",
           700: "#055A2D",
-          300: "#3FB872",
+          300: "#5FE39A",
           soft: "#E8F6EE",
         },
         brand: {
           DEFAULT: "#089a47",
           600: "#067138",
           700: "#055A2D",
-          300: "#3FB872",
+          300: "#5FE39A",
           soft: "#E8F6EE",
         },
         cyan2: {
@@ -66,6 +66,12 @@ const config: Config = {
       },
       letterSpacing: {
         tightest: "-0.04em",
+      },
+      // QClay + Island direction (4.10): bigger corners on cards. Buttons are pills,
+      // set in components/ui/Btn.tsx.
+      borderRadius: {
+        "2xl": "1.5rem",
+        "3xl": "2rem",
       },
       transitionTimingFunction: {
         smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -95,7 +101,7 @@ const config: Config = {
         livepulse: "livepulse 1.6s ease-in-out infinite",
         slowspin: "slowspin 5s linear infinite",
         fadeup: "fadeup .6s cubic-bezier(0.4,0,0.2,1) both",
-        marquee: "marquee 40s linear infinite",
+        marquee: "marquee 60s linear infinite",
         fillgrow: "fillgrow 2s ease-out",
       },
     },
