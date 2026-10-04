@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-10-01T10:28:39.912Z
-// Items: 588
+// Items: 592
 
 import type { ImportedModel } from "./imported";
 
@@ -19797,6 +19797,114 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "https://makerworld.bblmw.com/makerworld/model/US98aa0e56f97ee2/design/41c0c0fb3505b4b1.jpeg"
     ],
     "colorHex": "#76D9F4"
+  },
+  {
+    "id": "mw-737254",
+    "name": "Cascade Connect - A Self Sorting Connect 4",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 25.27,
+    "grams": 511,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5725b46ea65cf/design/2024-10-27_12df08f9e0121.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "CyberYeti",
+    "sourceUrl": "https://makerworld.com/en/models/737254-cascade-connect-a-self-sorting-connect-4",
+    "license": "Standard Digital File License",
+    "downloads": 88030,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 7.88,
+    "gramsAms": 128,
+    "plates": [
+      {
+        "g": 511,
+        "h": 25.27
+      },
+      {
+        "g": 714,
+        "h": 33.43
+      }
+    ]
+  },
+  {
+    "id": "mw-2587390",
+    "name": "Sisyphus Controller holder- PS5",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 3.62,
+    "grams": 80,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US3e9766d96904f8/design/05818e2b868321a9.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Schlingen",
+    "sourceUrl": "https://makerworld.com/en/models/2587390-sisyphus-controller-holder-ps5",
+    "license": "Standard Digital File License",
+    "downloads": 455,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ]
+  },
+  {
+    "id": "mw-2798524",
+    "name": "Baki Hanma: Calisthenics Pose Ultra Dettagliato",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 3.33,
+    "grams": 55,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USae1849bbb05435/design/0c565fe1f13a6ea1.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Clean Studio",
+    "sourceUrl": "https://makerworld.com/en/models/2798524-baki-hanma-calisthenics-pose-ultra-detailed",
+    "license": "Standard Digital File License",
+    "downloads": 568,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ],
+    "hoursAms": 22.42,
+    "gramsAms": 270
+  },
+  {
+    "id": "mw-3233606",
+    "name": "Shadow Box Pokemon - #0004 - Charmander",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 8.89,
+    "grams": 273,
+    "size": "~160mm",
+    "colors": 8,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US61049f02d1890d/design/654f3e3f4df67d75.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "MorphForge3D",
+    "sourceUrl": "https://makerworld.com/en/models/3233606-shadow-box-pokemon-0004-charmander",
+    "license": "Standard Digital File License - Community Use",
+    "downloads": 22,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ]
   }
 ];
 
