@@ -11,6 +11,7 @@ import AnalyticsBoot from "@/components/AnalyticsBoot";
 import OrdersBoot from "@/components/OrdersBoot";
 import CouponsBoot from "@/components/CouponsBoot";
 import GoogleTag from "@/components/GoogleTag";
+import DesignPreview from "@/components/DesignPreview";
 
 export const metadata: Metadata = {
   title: "Unit 3D · הדפסות תלת מימד בהתאמה אישית",
@@ -80,6 +81,7 @@ export default function RootLayout({
         <OrdersBoot />
         <CouponsBoot />
         <FinderPrompt />
+        <DesignPreview />
         <HelpBot />
         <GoogleTag />
       </body>
