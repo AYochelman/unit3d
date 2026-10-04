@@ -22,11 +22,14 @@ import { assetSrc } from "@/lib/assets";
 //
 // The owner chose Bambu Lab's own P2S launch film (two cuts, 00:14-00:18 and
 // 00:23-00:33, 14s) over the studio's chamber footage, aware that it is Bambu
-// Lab's material. The studio clip (hero-p2s.*) stays in public/video: going
-// back is swapping these names.
+// Lab's material. After those come the clips he picked from the design tab
+// (spools 0:57-1:01, yellow print 1:12-1:15, shelves 1:17-1:19, then 6s of
+// the studio's own chamber camera), 28.6s in all. The 14s cut (hero-bambu.*)
+// and the studio clip (hero-p2s.*) stay in public/video: going back is
+// swapping these names.
 const CLIPS = {
-  mp4: { large: "/video/hero-bambu.mp4", small: "/video/hero-bambu-sm.mp4" },
-  webm: { large: "/video/hero-bambu.webm", small: "/video/hero-bambu-sm.webm" },
+  mp4: { large: "/video/hero-mix.mp4", small: "/video/hero-mix-sm.mp4" },
+  webm: { large: "/video/hero-mix.webm", small: "/video/hero-mix-sm.webm" },
 };
 const POSTER = "/video/hero-bambu.webp";
 
