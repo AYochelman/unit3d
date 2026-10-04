@@ -485,7 +485,7 @@ html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) :is(body > header, header.sticky, footer) { background-color: #04110b; }
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is([class*="bg-ink-950"], [class*="bg-ink-900"], [class*="bg-ink-800"]):not(.pd-hero) { background-color: var(--pd-card); }
 
-/* Search palette preview (components/admin/SearchPaletteDemo.tsx) */
+/* Header search window (components/SearchPalette.tsx) */
 @keyframes sp-in { from { opacity: 0; transform: translateY(-8px) scale(.985); } }
 @keyframes sp-pop { from { opacity: 0; transform: translateY(-4px) scale(.97); } }
 @keyframes sp-rise { from { opacity: 0; transform: translateY(6px); } }

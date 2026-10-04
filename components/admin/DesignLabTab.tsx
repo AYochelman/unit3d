@@ -4,7 +4,6 @@ import { DESIGNS, PRODUCT_LOOKS, inkOn, useDesignPreview, type DesignId, type Pr
 import { cn } from "@/lib/cn";
 import OrbDemo from "./OrbDemo";
 import HeroVideoOptions from "./HeroVideoOptions";
-import SearchPaletteDemo from "./SearchPaletteDemo";
 import ShinyButton from "@/components/ui/shiny-button";
 
 const PAGES: { href: string; label: string }[] = [
@@ -98,8 +97,6 @@ export default function DesignLabTab() {
           </div>
         </section>
       ))}
-
-      <SearchPaletteDemo />
 
       <HeroVideoOptions />
 

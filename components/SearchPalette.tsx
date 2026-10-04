@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { create } from "zustand";
 import { useRouter } from "next/navigation";
 import Icon from "@/components/ui/Icon";
@@ -13,8 +14,11 @@ import type { Found } from "@/lib/helpbot-catalog";
 import { helpBotNow, loadHelpBot } from "@/lib/helpbot-lazy";
 
 /**
- * Three takes on "Search Results Modal Interaction" (Dribbble) for the header
- * search, shown only here until the owner picks one.
+ * The header search, in the "glass" take on "Search Results Modal
+ * Interaction" (Dribbble) that the owner picked from three in the design tab.
+ *
+ * Loaded on demand by QuickSearch: it pulls in the photo index for the
+ * thumbnails, which has no business in every page's first load.
  *
  * What is kept from the shot: shelf chips you can remove and add back from a
  * checklist, a row menu, results grouped under headings with the typed words
@@ -22,29 +26,13 @@ import { helpBotNow, loadHelpBot } from "@/lib/helpbot-lazy";
  * What is not: the "1,210 Sales" pills. We have no sales numbers, so the pill
  * carries the price, and the shelf rows carry how many models really sit there.
  */
-export type PaletteLook = "light" | "dark" | "glass";
-
-const LOOKS: Record<PaletteLook, CSSProperties> = {
-  light: {
-    "--p-bg": "#ffffff", "--p-panel": "#f6f7f6", "--p-line": "#e7e9e7", "--p-fg": "#121614",
-    "--p-sub": "#69736d", "--p-chip": "#ffffff", "--p-hover": "#f1f4f2", "--p-mark": "#d6f5e2",
-    "--p-accent": "#089a47", "--p-ring": "#9fdcb9", "--p-shadow": "0 24px 60px -20px rgba(0,0,0,.35)",
-    "--p-backdrop": "rgba(4,17,11,.55)", "--p-radius": "16px",
-  } as CSSProperties,
-  dark: {
-    "--p-bg": "#06150e", "--p-panel": "#0d2117", "--p-line": "#16402a", "--p-fg": "#eef4f0",
-    "--p-sub": "#8fa598", "--p-chip": "#0d2117", "--p-hover": "rgba(8,154,71,.12)", "--p-mark": "rgba(95,227,154,.22)",
-    "--p-accent": "#5fe39a", "--p-ring": "rgba(95,227,154,.45)", "--p-shadow": "0 24px 60px -20px rgba(0,0,0,.7)",
-    "--p-backdrop": "rgba(4,17,11,.8)", "--p-radius": "16px",
-  } as CSSProperties,
-  glass: {
-    "--p-bg": "rgba(6,21,14,.72)", "--p-panel": "rgba(255,255,255,.04)", "--p-line": "rgba(255,255,255,.08)",
+const GLASS = {
+    "--p-bg": "rgba(6,21,14,.8)", "--p-panel": "rgba(255,255,255,.04)", "--p-line": "rgba(255,255,255,.08)",
     "--p-fg": "#f7faf8", "--p-sub": "#a8b8ae", "--p-chip": "rgba(255,255,255,.06)", "--p-hover": "rgba(255,255,255,.07)",
     "--p-mark": "rgba(95,227,154,.28)", "--p-accent": "#5fe39a", "--p-ring": "rgba(95,227,154,.6)",
     "--p-shadow": "0 0 0 1px rgba(95,227,154,.15), 0 30px 80px -20px rgba(8,154,71,.35)",
     "--p-backdrop": "rgba(4,17,11,.45)", "--p-radius": "22px",
-  } as CSSProperties,
-};
+  } as CSSProperties;
 
 const ACTIONS: { label: string; href: string; icon: Parameters<typeof Icon>[0]["name"] }[] = [
   { label: "מעצב אישי: טקסט, צורה וצבע", href: "/configurator", icon: "sparkles" },
@@ -98,7 +86,7 @@ function Thumb({ id, icon }: { id?: string; icon?: Parameters<typeof Icon>[0]["n
   );
 }
 
-export function SearchPalette({ look, onClose }: { look: PaletteLook; onClose: () => void }) {
+export default function SearchPalette({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [settled, setSettled] = useState(true);
@@ -200,14 +188,16 @@ export function SearchPalette({ look, onClose }: { look: PaletteLook; onClose: (
   };
 
   let n = -1;
-  return (
-    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={LOOKS[look]} onKeyDown={onKeyDown}>
+  // Portalled to <body>: the header has its own backdrop-filter, and a blur
+  // inside it can only see the header, so the page behind came through sharp.
+  return createPortal(
+    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={GLASS} onKeyDown={onKeyDown}>
       <button type="button" aria-label="סגור חיפוש" onClick={onClose} className="absolute inset-0 backdrop-blur-sm" style={{ background: "var(--p-backdrop)" }} />
       <div className="sp-in relative mx-auto mt-[8vh] w-[min(94vw,640px)] grid gap-2">
         {/* Search field: its own card, as in the shot */}
         <div
           className="flex items-center gap-3 px-4 h-14 border-2 transition-colors"
-          style={{ background: "var(--p-bg)", borderColor: "var(--p-ring)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)", backdropFilter: look === "glass" ? "blur(18px)" : undefined }}
+          style={{ background: "var(--p-bg)", borderColor: "var(--p-ring)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)", backdropFilter: "blur(18px)" }}
         >
           {loading ? (
             <span className="h-4 w-4 shrink-0 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "var(--p-accent)", borderTopColor: "transparent" }} />
@@ -235,7 +225,7 @@ export function SearchPalette({ look, onClose }: { look: PaletteLook; onClose: (
         {/* Results card */}
         <div
           className="overflow-hidden border"
-          style={{ background: "var(--p-bg)", borderColor: "var(--p-line)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)", backdropFilter: look === "glass" ? "blur(18px)" : undefined }}
+          style={{ background: "var(--p-bg)", borderColor: "var(--p-line)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)", backdropFilter: "blur(18px)" }}
         >
           <div className="px-4 pt-3 pb-2 relative">
             <div className="text-[11px] font-semibold mb-2" style={{ color: "var(--p-sub)" }}>מחפשים ב</div>
@@ -262,13 +252,13 @@ export function SearchPalette({ look, onClose }: { look: PaletteLook; onClose: (
               </button>
             </div>
             {picker && (
-              <div className="sp-pop absolute z-10 mt-1.5 start-4 w-56 p-1.5 border rounded-xl" style={{ background: look === "glass" ? "#0d2117" : "var(--p-bg)", borderColor: "var(--p-line)", boxShadow: "var(--p-shadow)" }}>
+              <div className="sp-pop absolute z-10 mt-1.5 start-4 w-56 p-1.5 border rounded-xl" style={{ background: "#0d2117", borderColor: "var(--p-line)", boxShadow: "var(--p-shadow)" }}>
                 <div className="text-[11px] font-semibold px-2 py-1.5" style={{ color: "var(--p-sub)" }}>לחפש רק ב…</div>
                 {SHELVES.filter((s) => s !== "trendy").map((s) => {
                   const on = shelves.includes(s);
                   return (
                     <button key={s} type="button" onClick={() => toggleShelf(s)} className="w-full flex items-center gap-2 px-2 h-8 rounded-lg text-sm text-right hover:[background:var(--p-hover)]">
-                      <span className="h-4 w-4 rounded border grid place-items-center" style={{ borderColor: on ? "var(--p-accent)" : "var(--p-line)", background: on ? "var(--p-accent)" : "transparent", color: look === "light" ? "#fff" : "#04110b" }}>
+                      <span className="h-4 w-4 rounded border grid place-items-center" style={{ borderColor: on ? "var(--p-accent)" : "var(--p-line)", background: on ? "var(--p-accent)" : "transparent", color: "#04110b" }}>
                         {on && <Icon name="check" size={11} />}
                       </span>
                       <span className="flex-1">{SHELF_LABEL[s]}</span>
@@ -356,7 +346,7 @@ export function SearchPalette({ look, onClose }: { look: PaletteLook; onClose: (
                           </button>
                         )}
                         {r.kind === "product" && menu === key && (
-                          <div className="sp-pop absolute z-10 top-11 left-2 w-48 p-1.5 border rounded-xl" style={{ background: look === "glass" ? "#0d2117" : "var(--p-bg)", borderColor: "var(--p-line)", boxShadow: "var(--p-shadow)" }}>
+                          <div className="sp-pop absolute z-10 top-11 left-2 w-48 p-1.5 border rounded-xl" style={{ background: "#0d2117", borderColor: "var(--p-line)", boxShadow: "var(--p-shadow)" }}>
                             {[
                               { label: "העתקת קישור", icon: "file" as const, run: () => void copy(r.f) },
                               { label: "לעמוד המוצר", icon: "arrowLeft" as const, run: () => open(r) },
@@ -389,44 +379,7 @@ export function SearchPalette({ look, onClose }: { look: PaletteLook; onClose: (
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-const OPTIONS: { look: PaletteLook; label: string; note: string; swatch: string[] }[] = [
-  { look: "light", label: "א · לבן, כמו בשוט", note: "חלון לבן ונקי מעל האתר הכהה. הכי קרוב למקור, והכי בולט כשנפתח.", swatch: ["#ffffff", "#f6f7f6", "#d6f5e2", "#089a47"] },
-  { look: "dark", label: "ב · ירוק כהה", note: "אותו מבנה בצבעי האתר: רקע ירוק עמוק, סימון מנטה. נראה כחלק מהאתר.", swatch: ["#06150e", "#0d2117", "#16402a", "#5fe39a"] },
-  { look: "glass", label: "ג · זכוכית", note: "שקוף ומטושטש, האתר נשאר נראה מאחור, הילה ירוקה ופינות עגולות יותר.", swatch: ["#0b1f15", "#1a2c22", "#2a4a38", "#5fe39a"] },
-];
-
-export default function SearchPaletteDemo() {
-  const [look, setLook] = useState<PaletteLook | null>(null);
-  return (
-    <section className="grid gap-3">
-      <h2 className="font-black text-lg">חלון חיפוש · Search Results Modal</h2>
-      <p className="text-sm text-ink-400 leading-relaxed">
-        שלוש גרסאות לחלון החיפוש שבכותרת, עם החיפוש האמיתי של החנות. צ&apos;יפים של מדפים (אפשר להסיר ולהוסיף), תוצאות מקובצות לפי מדף עם המילה מסומנת,
-        תפריט ⋮ לכל מוצר ומקשי מקלדת. במקום &quot;1,210 Sales&quot; מהשוט מופיע המחיר, כי אין לנו נתוני מכירות. כרגע מופיע רק כאן.
-      </p>
-      <div className="grid gap-3 md:grid-cols-3">
-        {OPTIONS.map((o) => (
-          <div key={o.look} className="rounded-2xl border border-ink-800 bg-ink-900 overflow-hidden grid">
-            <div className="flex h-12" aria-hidden>
-              {o.swatch.map((c) => <span key={c} className="flex-1" style={{ background: c }} />)}
-            </div>
-            <div className="p-4 grid gap-3">
-              <div>
-                <div className="font-bold">{o.label}</div>
-                <p className="text-xs text-ink-400 mt-1 leading-relaxed">{o.note}</p>
-              </div>
-              <button type="button" onClick={() => setLook(o.look)} className="h-10 rounded-xl bg-flame text-white font-bold text-sm hover:bg-flame-600">
-                לפתוח ולנסות
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-      {look && <SearchPalette key={look} look={look} onClose={() => setLook(null)} />}
-    </section>
+    </div>,
+    document.body,
   );
 }
