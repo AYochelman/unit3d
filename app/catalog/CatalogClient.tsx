@@ -192,7 +192,7 @@ export default function CatalogClient() {
         <Pill tone="flame" className="mb-4">
           לחיילים · קטלוג הסמלים
         </Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           לחיילים. הסמל שלכם, מודפס בדיוק.
         </h1>
         <p className="text-ink-300 max-w-2xl mb-4">

@@ -328,7 +328,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             <h1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">
               {f.name}
             </h1>
-            <p className="mt-2 text-ink-300 text-sm leading-relaxed">{f.desc}</p>
+            <p className="mt-2 text-ink-300 text-body">{f.desc}</p>
             {(() => {
               const src = IMPORTED.find((m) => m.id === f.id);
               return (src || f.creator)

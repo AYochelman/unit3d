@@ -13,12 +13,16 @@
     background: #f7faf8;
     color: #04110b;
   }
-  /* QClay + Island direction (4.10): headings in Rubik, a little tighter;
-     running text stays Heebo. A font-* or tracking-* utility on a heading
-     still wins over this. */
+  /* Typography (4.10): one face, Assistant, for Hebrew and Latin alike.
+     Headings at natural spacing and a line height that leaves room between
+     lines; running text at 1.6. A leading-* or font-* utility still wins. */
+  body {
+    line-height: 1.6;
+  }
   h1, h2, h3 {
-    font-family: var(--font-rubik), var(--font-sans), system-ui, sans-serif;
-    letter-spacing: -0.02em;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    letter-spacing: normal;
+    line-height: 1.15;
   }
   body {
     font-family: var(--font-sans), system-ui, sans-serif;
@@ -167,7 +171,7 @@
     color: #eef4f0;
     background: #0d2117;
     border: 0;
-    box-shadow: 0 8px 24px -10px rgba(95, 227, 154, 0.5);
+    box-shadow: 0 6px 16px -10px rgba(95, 227, 154, 0.28);
   }
   .btn-primary::before,
   .btn-shiny::before {

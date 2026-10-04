@@ -296,7 +296,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
         <div className="flex flex-col gap-5">
           <div>
             <h1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</h1>
-            <p className="mt-2 text-ink-300 text-sm leading-relaxed">{p.desc}</p>
+            <p className="mt-2 text-ink-300 text-body">{p.desc}</p>
             {(() => {
               const src = IMPORTED.find((m) => m.id === p.id);
               return src ? <DesignerCredit creator={src.creator} license={src.license} sourceUrl={src.sourceUrl} /> : null;
