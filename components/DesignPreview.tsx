@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DESIGNS, DESIGN_BY_ID, buildPreviewCss, recolorInline, restoreInline, useDesignPreview, type DesignId } from "@/lib/design-preview";
+import { DESIGNS, DESIGN_BY_ID, PRODUCT_LOOKS, buildPreviewCss, recolorInline, restoreInline, useDesignPreview, type DesignId, type ProductLook } from "@/lib/design-preview";
 import { useAdminStore } from "@/lib/admin-store";
 
 /**
@@ -18,6 +18,17 @@ export default function DesignPreview() {
   const unlocked = useAdminStore((s) => s.unlocked);
   const pathname = usePathname();
   const active = unlocked && design ? DESIGN_BY_ID[design] : null;
+  const productLook = useDesignPreview((s) => s.productLook);
+  const setProductLook = useDesignPreview((s) => s.setProductLook);
+  const look = unlocked ? productLook : null;
+
+  // The product-page treatment is plain CSS keyed on this attribute
+  // (globals.css, html[data-product-look]); nothing to rebuild.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (look) root.setAttribute("data-product-look", look);
+    else root.removeAttribute("data-product-look");
+  }, [look]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -51,7 +62,7 @@ export default function DesignPreview() {
     return () => { window.clearTimeout(t); mo.disconnect(); if (queued) window.cancelAnimationFrame(queued); };
   }, [active, pathname]);
 
-  if (!active) return null;
+  if (!active && !look) return null;
 
   return (
     <div
@@ -68,21 +79,35 @@ export default function DesignPreview() {
       }}
     >
       <span style={{ fontWeight: 700 }}>תצוגה מקדימה · רק אצלך</span>
-      <select
-        id="design-preview-pick"
-        value={active.id}
-        onChange={(e) => setDesign(e.target.value as DesignId)}
-        style={{ background: "#1c1c1f", color: "#fafafa", border: "1px solid #3a3a3f", borderRadius: 8, padding: "6px 8px", font: "inherit" }}
-      >
-        {DESIGNS.map((d) => (
-          <option key={d.id} value={d.id}>{d.brief} {d.label}</option>
-        ))}
-      </select>
+      {active && (
+        <select
+          id="design-preview-pick"
+          value={active.id}
+          onChange={(e) => setDesign(e.target.value as DesignId)}
+          style={{ background: "#1c1c1f", color: "#fafafa", border: "1px solid #3a3a3f", borderRadius: 8, padding: "6px 8px", font: "inherit" }}
+        >
+          {DESIGNS.map((d) => (
+            <option key={d.id} value={d.id}>{d.brief} {d.label}</option>
+          ))}
+        </select>
+      )}
+      {look && (
+        <select
+          id="product-look-pick"
+          value={look}
+          onChange={(e) => setProductLook(e.target.value as ProductLook)}
+          style={{ background: "#1c1c1f", color: "#fafafa", border: "1px solid #3a3a3f", borderRadius: 8, padding: "6px 8px", font: "inherit" }}
+        >
+          {PRODUCT_LOOKS.map((l) => (
+            <option key={l.id} value={l.id}>עמוד מוצר {l.label}</option>
+          ))}
+        </select>
+      )}
       <span style={{ flex: 1 }} />
       <Link href="/admin" style={{ color: "#c7c7cc", textDecoration: "underline" }}>לניהול</Link>
       <button
         type="button"
-        onClick={() => setDesign(null)}
+        onClick={() => { setDesign(null); setProductLook(null); }}
         style={{ background: "#fafafa", color: "#0a0a0b", border: 0, borderRadius: 8, padding: "6px 12px", font: "inherit", fontWeight: 700, cursor: "pointer" }}
       >
         חזרה לעיצוב הקיים

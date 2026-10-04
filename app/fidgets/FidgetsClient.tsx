@@ -297,7 +297,7 @@ export default function FidgetsClient() {
         <Pill tone="cyan" className="mb-4">
           פלקסי ופידג&apos;טים · ANTI-BOREDOM
         </Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           שני מדפים. אותה מדפסת.
         </h1>
         <p className="text-ink-300 max-w-2xl">

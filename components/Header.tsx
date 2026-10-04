@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 import Btn from "./ui/Btn";
-import ThemeToggle from "./ThemeToggle";
 import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
@@ -127,7 +126,7 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "whitespace-nowrap px-1.5 xl:px-2.5 py-2 rounded-md font-medium transition-colors",
+                    "whitespace-nowrap px-1.5 xl:px-2.5 py-2 rounded-md font-semibold transition-colors",
                     // The active item is marked twice — tint AND a rule beneath
                     // it — so it does not depend on colour alone.
                     "relative after:absolute after:inset-x-2 after:-bottom-px after:h-0.5 after:rounded-full after:bg-flame",
@@ -147,7 +146,6 @@ export default function Header() {
             {/* Search sits before the settings and the cart: on a catalogue of
                 this size it is the most-wanted control in the bar. */}
             <QuickSearch />
-            <ThemeToggle />
 
             <Link
               href="/admin"
@@ -271,10 +269,6 @@ export default function Header() {
               ))}
             </div>
 
-            <div className="mt-5 flex items-center gap-2">
-              <ThemeToggle />
-              <span className="text-[11px] text-ink-500">מצב תצוגה</span>
-            </div>
           </div>
         </div>
       )}

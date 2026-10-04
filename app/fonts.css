@@ -17,194 +17,61 @@
  *
  * Adding a weight means adding its file here. Nothing reaches the network at
  * build time any more, and that is the point.
+ *
+ * Every family here is a VARIABLE font, so each script (hebrew / latin) is one
+ * file and one @font-face whose font-weight is the font's whole range. Until
+ * 4.10 each weight had its own face pointing at its own copy of that same file
+ * — seven identical Heebo files per script — so a page using four weights
+ * downloaded the same font four times. Declaring the range also means every
+ * weight in it is real; nothing is synthesised.
+ *
+ * Assistant (200-800) is the site's face since 4.10. The others stay because
+ * the designer offers them to customers (lib/design.ts) and Rubik sets the
+ * shelf band; they download only on a page that uses them.
  */
 
 @font-face {
   font-family: "Heebo";
   font-style: normal;
-  font-weight: 300;
+  font-weight: 100 900;
   font-display: swap;
-  src: url("./fonts/heebo-300-hebrew.woff2") format("woff2");
+  src: url("./fonts/heebo-var-hebrew.woff2") format("woff2");
   unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
 }
 
 @font-face {
   font-family: "Heebo";
   font-style: normal;
-  font-weight: 300;
+  font-weight: 100 900;
   font-display: swap;
-  src: url("./fonts/heebo-300-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("./fonts/heebo-400-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("./fonts/heebo-400-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("./fonts/heebo-500-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("./fonts/heebo-500-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("./fonts/heebo-600-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("./fonts/heebo-600-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("./fonts/heebo-700-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("./fonts/heebo-700-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url("./fonts/heebo-800-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url("./fonts/heebo-800-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url("./fonts/heebo-900-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Heebo";
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url("./fonts/heebo-900-latin.woff2") format("woff2");
+  src: url("./fonts/heebo-var-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
   font-family: "JetBrains Mono";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 400 800;
   font-display: swap;
-  src: url("./fonts/jetbrains-mono-400-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "JetBrains Mono";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("./fonts/jetbrains-mono-500-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "JetBrains Mono";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("./fonts/jetbrains-mono-600-latin.woff2") format("woff2");
+  src: url("./fonts/jetbrains-mono-var-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
   font-family: "Assistant";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 200 800;
   font-display: swap;
-  src: url("./fonts/assistant-400-hebrew.woff2") format("woff2");
+  src: url("./fonts/assistant-var-hebrew.woff2") format("woff2");
   unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
 }
 
 @font-face {
   font-family: "Assistant";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 200 800;
   font-display: swap;
-  src: url("./fonts/assistant-400-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Assistant";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("./fonts/assistant-700-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Assistant";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("./fonts/assistant-700-latin.woff2") format("woff2");
+  src: url("./fonts/assistant-var-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -229,36 +96,18 @@
 @font-face {
   font-family: "Frank Ruhl Libre";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300 900;
   font-display: swap;
-  src: url("./fonts/frank-ruhl-libre-400-hebrew.woff2") format("woff2");
+  src: url("./fonts/frank-ruhl-libre-var-hebrew.woff2") format("woff2");
   unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
 }
 
 @font-face {
   font-family: "Frank Ruhl Libre";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300 900;
   font-display: swap;
-  src: url("./fonts/frank-ruhl-libre-400-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Frank Ruhl Libre";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("./fonts/frank-ruhl-libre-700-hebrew.woff2") format("woff2");
-  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-
-@font-face {
-  font-family: "Frank Ruhl Libre";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("./fonts/frank-ruhl-libre-700-latin.woff2") format("woff2");
+  src: url("./fonts/frank-ruhl-libre-var-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -322,8 +171,7 @@
  * :root they mean the same thing to Tailwind (tailwind.config.ts) and to the
  * designer's font list (lib/design.ts), which both read them by name.
  */
-/* Rubik as one variable font (300-900): every h1-h3 is set in it since the
-   QClay + Island direction (4.10), at whatever weight the heading asks for. */
+/* Rubik as one variable font (300-900), for the shelf band and the designer. */
 @font-face {
   font-family: "Rubik";
   font-style: normal;
@@ -343,7 +191,7 @@
 }
 
 :root {
-  --font-sans: "Heebo";
+  --font-sans: "Assistant";
   --font-mono: "JetBrains Mono";
   --font-rubik: "Rubik";
   --font-assistant: "Assistant";

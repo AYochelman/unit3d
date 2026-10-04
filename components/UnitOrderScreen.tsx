@@ -113,7 +113,7 @@ export default function UnitOrderScreen({
 
   // A product page offers only what can be printed today, and says so when the
   // shelf is empty. This is an enquiry, not a checkout — it ends in a message to
-  // Ariel — so when nothing in the family is in stock the customer still gets to
+  // Erez — so when nothing in the family is in stock the customer still gets to
   // say which colour they want, with every swatch struck through so the answer
   // is "that one is a few days out", not a promise.
   const family = useMemo(() => filamentsFor(palette, form.material), [palette, form.material]);

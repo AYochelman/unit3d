@@ -56,7 +56,7 @@ export type UnitForm = {
    * A drawing says what the body IS; a photograph says what it looks like
    * printed, which is the question someone choosing between five of them is
    * actually asking. Two sources: a shelf product's own catalogue image, and a
-   * path under public/studio for the bodies Ariel has printed and photographed
+   * path under public/studio for the bodies Erez has printed and photographed
    * himself — those are the better ones, because they show the emblem ON the
    * body, which is what this screen is for. The drawing stays as the fallback.
    */
@@ -129,7 +129,7 @@ export const UNIT_FORMS: UnitForm[] = [
     id: "wall",
     label: "סמל גדול לתלייה",
     desc: "מידה גדולה לקיר, עם תלייה מאחור.",
-    // Ariel's own photograph of one on a wall. It arrived named .jpg and is
+    // Erez's own photograph of one on a wall. It arrived named .jpg and is
     // actually a WebP — browsers sniff the bytes and render it either way, but
     // the server still labels it image/jpeg from the extension, and anything
     // that trusts that label rather than the content is then simply wrong.
@@ -176,7 +176,7 @@ export const UNIT_FORMS: UnitForm[] = [
     recommends: { material: "petg", why: "לא מתעוות ברכב בשמש" },
     group: "everyday",
     art: "cigcase",
-    // Ariel's own print, and the only photo on this screen that answers the
+    // Erez's own print, and the only photo on this screen that answers the
     // question the screen is asking: the designer's catalogue shot is a bare
     // sleeve, and someone choosing a body for their unit emblem wants to see
     // the emblem ON it. Stored as shot, 3:4 — the tile is aspect-[4/3] with
@@ -216,7 +216,7 @@ export const UNIT_FORMS: UnitForm[] = [
     material: "pla",
     group: "everyday",
     art: "round",
-    // Ariel's own print, like the case above: the designer's catalogue shot is
+    // Erez's own print, like the case above: the designer's catalogue shot is
     // a plain grinder, and this screen exists to show the emblem ON the body.
     // Native 4:3, so the aspect-[4/3] tile crops nothing.
     photo: "/studio/grinder-emblem.webp",

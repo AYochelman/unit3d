@@ -9,7 +9,7 @@ import { shopConfig, isConfigured, type ShopConfig } from "./orders-remote";
  * approval — and nobody asked for a queue. A review goes straight into the
  * same Supabase project the orders use: the customer's browser writes one row
  * with the anon key, and the next visitor's browser reads it back. No step in
- * between, no waiting for Ariel to be at his computer.
+ * between, no waiting for Erez to be at his computer.
  *
  * That trade is deliberate and it has a cost: anything written here is on the
  * site immediately, including something rude or something fake. The answer is
@@ -139,7 +139,7 @@ export async function submitReview(r: NewReview): Promise<SubmitResult> {
     const res = await insert(c, row);
     if (res.ok) return "published";
 
-    // Loud on purpose: this is the one failure a customer cannot see and Ariel
+    // Loud on purpose: this is the one failure a customer cannot see and Erez
     // cannot reproduce. `hidden` stays in — without it the insert policy fails.
     const why = await res.text().catch(() => "");
     console.warn("[reviews] insert failed", res.status, why);
@@ -170,7 +170,7 @@ export async function publicReviews(): Promise<Review[]> {
   }
 }
 
-// ─── Ariel's side ────────────────────────────────────────────────────────────
+// ─── Erez's side ────────────────────────────────────────────────────────────
 
 /**
  * Including the ones he took down, so he can put one back.

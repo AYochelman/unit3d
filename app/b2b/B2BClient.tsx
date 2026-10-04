@@ -94,7 +94,7 @@ export default function B2BClient() {
           <Pill tone="flame" className="mb-5">
             UNIT3D · BUSINESS
           </Pill>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-4">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-4">
             הדפסות בכמויות.
             <br />
             <span className="text-flame">עבור החברה שלך.</span>
@@ -158,7 +158,7 @@ export default function B2BClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             USE CASES
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-[1.05] mb-10">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
             למה חברות מזמינות אצלי.
           </h2>
           <div className="grid md:grid-cols-3 gap-5">
@@ -239,7 +239,7 @@ export default function B2BClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             WHAT&apos;S INCLUDED
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-[1.05] mb-10">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
             הכל כלול. אין סודות.
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">

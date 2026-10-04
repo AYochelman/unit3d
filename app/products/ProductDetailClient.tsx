@@ -209,7 +209,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
+    <div className="pd-root max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
       {added && (
         <div className="fixed top-20 inset-x-0 flex justify-center z-50 pointer-events-none">
           <div className="inline-flex items-center gap-2 bg-good text-ink-950 px-5 py-2.5 rounded-full shadow-xl font-semibold text-sm">
@@ -230,7 +230,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             the swatch, never painted over the picture. */}
         <div className="lg:sticky lg:top-24">
           <div
-            className="relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
+            className="pd-hero relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
             style={{ background: "#06150e" }}
           >
             {hero ? (
@@ -274,7 +274,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   aria-label={`תמונה ${i + 1}`}
                   aria-pressed={i === shot}
                   className={cn(
-                    "relative shrink-0 h-16 w-16 rounded-xl overflow-hidden border-2 transition-all",
+                    "pd-thumb relative shrink-0 h-16 w-16 rounded-xl overflow-hidden border-2 transition-all",
                     i === shot ? "border-flame" : "border-ink-800 hover:border-ink-700 opacity-70 hover:opacity-100",
                   )}
                 >
@@ -295,8 +295,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
         {/* Config panel */}
         <div className="flex flex-col gap-5">
           <div>
-            <h1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</h1>
-            <p className="mt-2 text-ink-300 text-sm leading-relaxed">{p.desc}</p>
+            <div className="pd-eyebrow text-xs font-semibold tracking-wider text-ink-400 mb-1.5">{CATEGORY_LABEL[p.category]}</div>
+            <h1 className="pd-title text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</h1>
+            <p className="mt-2 text-ink-300 text-body">{p.desc}</p>
             {(() => {
               const src = IMPORTED.find((m) => m.id === p.id);
               return src ? <DesignerCredit creator={src.creator} license={src.license} sourceUrl={src.sourceUrl} /> : null;
@@ -375,7 +376,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                     key={o.id}
                     type="button"
                     onClick={() => setOptionId(o.id)}
-                    className={cn("px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors", optionId === o.id ? "bg-flame-600 text-white border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500")}
+                    data-on={optionId === o.id || undefined} className={cn("pd-chip px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors", optionId === o.id ? "bg-flame-600 text-white border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500")}
                   >
                     {o.label}{o.priceAdd > 0 ? ` (+${fmtILS(o.priceAdd)})` : ""}
                   </button>
@@ -411,7 +412,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                   type="button"
                   onClick={() => setMaterial(m.id)}
                   title={m.desc}
-                  className={cn("px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-colors", material === m.id ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500")}
+                  data-on={material === m.id || undefined} className={cn("pd-chip px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-colors", material === m.id ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500")}
                   dir="ltr"
                 >
                   {m.short}{Math.max(0, m.priceAdd - baseMatAdd) > 0 ? ` +${Math.max(0, m.priceAdd - baseMatAdd)}` : ""}
@@ -474,8 +475,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
                     key={g}
                     type="button"
                     onClick={() => setScale(g)}
+                    data-on={scale === g || undefined}
                     className={cn(
-                      "px-3 py-2 rounded-xl text-xs font-semibold border transition-colors",
+                      "pd-chip px-3 py-2 rounded-xl text-xs font-semibold border transition-colors",
                       scale === g ? "bg-flame/15 text-flame border-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
                     )}
                   >
@@ -527,11 +529,11 @@ export default function ProductDetailClient({ id }: { id: string }) {
           <div>
             <div className="text-xs font-bold text-ink-300 mb-2.5">כמות</div>
             <div className="flex items-center gap-3">
-              <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} className="h-10 w-10 rounded-xl border border-ink-700 flex items-center justify-center text-ink-300 hover:border-ink-500 disabled:opacity-30">
+              <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} className="pd-qty h-10 w-10 rounded-xl border border-ink-700 flex items-center justify-center text-ink-300 hover:border-ink-500 disabled:opacity-30">
                 <Icon name="minus" size={16} />
               </button>
               <span className="font-mono text-xl font-black w-8 text-center">{qty}</span>
-              <button type="button" onClick={() => setQty((q) => Math.min(50, q + 1))} className="h-10 w-10 rounded-xl border border-ink-700 flex items-center justify-center text-ink-300 hover:border-ink-500">
+              <button type="button" onClick={() => setQty((q) => Math.min(50, q + 1))} className="pd-qty h-10 w-10 rounded-xl border border-ink-700 flex items-center justify-center text-ink-300 hover:border-ink-500">
                 <Icon name="plus" size={16} />
               </button>
             </div>
@@ -545,8 +547,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 <div className="text-2xl md:text-3xl font-black text-flame">לפי הזמנה</div>
               ) : (
                 <>
-                  <div className="text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
+                  <div className="pd-price text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
                   {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(unitPrice)} ליחידה</div>}
+                  <div className="pd-price-note text-xs text-ink-400 mt-1">כולל מע&quot;מ · משלוח מ-₪25, חינם מעל ₪200</div>
                 </>
               )}
             </div>
@@ -628,7 +631,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <button
               type="button"
               onClick={handleAdd}
-              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "btn-shiny")}
+              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "pd-cta")}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
             </button>
@@ -652,6 +655,13 @@ export default function ProductDetailClient({ id }: { id: string }) {
               </button>
             </div>
           )}
+
+          {/* Three facts, each true for every product ("Gift Shop" treatment). */}
+          <ul className="pd-benefits grid gap-2.5 text-sm text-ink-300">
+            <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="pin" size={15} /></span>מודפס אצלנו בסטודיו בגבעתיים</li>
+            <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="truck" size={15} /></span>משלוח עד הבית תוך 3-5 ימי עסקים</li>
+            <li className="flex items-center gap-2.5"><span className="pd-benefit-icon"><Icon name="layers" size={15} /></span>{mat.name} · {mat.desc}</li>
+          </ul>
 
           {/* Every product offers the same thing on the same terms: your text
               on it, on one shared page that arrives already knowing which
@@ -719,7 +729,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 "flex-1 h-12 rounded-xl font-black text-base flex items-center justify-center gap-2",
                 "transition-[background-color,transform] duration-200 active:scale-[0.98]",
                 "motion-reduce:transition-none motion-reduce:active:scale-100",
-                added ? "bg-good text-ink-950" : "btn-shiny",
+                added ? "bg-good text-ink-950" : "pd-cta",
               )}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}

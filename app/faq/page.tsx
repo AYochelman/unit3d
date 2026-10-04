@@ -21,7 +21,7 @@ export default function FAQPage() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           FAQ · 8 ANSWERS
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
+        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           שאלות. תשובות.
         </h1>
       </header>

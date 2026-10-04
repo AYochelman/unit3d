@@ -1,8 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { DESIGNS, inkOn, useDesignPreview, type DesignId } from "@/lib/design-preview";
+import { DESIGNS, PRODUCT_LOOKS, inkOn, useDesignPreview, type DesignId, type ProductLook } from "@/lib/design-preview";
 import { cn } from "@/lib/cn";
 import OrbDemo from "./OrbDemo";
+import HeroVideoOptions from "./HeroVideoOptions";
 import ShinyButton from "@/components/ui/shiny-button";
 
 const PAGES: { href: string; label: string }[] = [
@@ -23,6 +24,13 @@ export default function DesignLabTab() {
   const design = useDesignPreview((s) => s.design);
   const setDesign = useDesignPreview((s) => s.setDesign);
   const router = useRouter();
+
+  const productLook = useDesignPreview((s) => s.productLook);
+  const setProductLook = useDesignPreview((s) => s.setProductLook);
+  const showProduct = (id: ProductLook, href: string) => {
+    setProductLook(id);
+    router.push(href);
+  };
 
   const go = (id: DesignId, href = "/") => {
     setDesign(id);
@@ -89,6 +97,37 @@ export default function DesignLabTab() {
           </div>
         </section>
       ))}
+
+      <HeroVideoOptions />
+
+      <section className="grid gap-3">
+        <h2 className="font-black text-lg">עמוד מוצר · Gift Shop</h2>
+        <p className="text-sm text-ink-400 leading-relaxed">
+          מבוסס על &quot;Product Page - Gift Shop&quot; (Adrian Kuleszo): אריח תמונה רך, צ&apos;יפים עגולים לבחירה, מחיר גדול עם הערה,
+          כפתור הוספה מלא ושלוש עובדות אמיתיות עם אייקונים. בלי ה&quot;ג&apos;נט קנתה עכשיו&quot; וה&quot;13 אנשים קנו היום&quot; מהעיצוב, כי אין לנו נתונים כאלה.
+        </p>
+        <div className="grid gap-3 md:grid-cols-3">
+          {PRODUCT_LOOKS.map((l) => (
+            <div key={l.id} className={cn("rounded-2xl border bg-ink-900 overflow-hidden grid", productLook === l.id ? "border-flame" : "border-ink-800")}>
+              <div className="flex h-12" aria-hidden>
+                {l.swatch.map((c) => <span key={c} className="flex-1" style={{ background: c }} />)}
+              </div>
+              <div className="p-4 grid gap-3">
+                <div>
+                  <div className="font-bold">{l.label}</div>
+                  <p className="text-xs text-ink-400 mt-1 leading-relaxed">{l.note}</p>
+                </div>
+                <button type="button" onClick={() => showProduct(l.id, "/products/mw-3275194/")} className="h-10 rounded-xl bg-flame text-white font-bold text-sm hover:bg-flame-600">
+                  לראות על עמוד מוצר
+                </button>
+                <button type="button" onClick={() => showProduct(l.id, "/fidgets/")} className="text-[11px] px-2 py-1 rounded-lg border border-ink-700 text-ink-300 hover:border-ink-500 justify-self-start">
+                  לבחור מוצר אחר מהמדף
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="grid gap-3">
         <h2 className="font-black text-lg">רכיב: כפתור מבריק</h2>

@@ -62,10 +62,40 @@ const config: Config = {
       boxShadow: {
         soft: "0 8px 32px rgba(0,0,0,0.12)",
         softer: "0 4px 16px rgba(0,0,0,0.08)",
-        glow: "0 0 0 1px rgba(8,154,71,0.45), 0 8px 32px rgba(8,154,71,0.25)",
+        glow: "0 0 0 1px rgba(8,154,71,0.3), 0 6px 18px rgba(8,154,71,0.14)",
       },
+      // Assistant (4.10): Hebrew reads best at its natural spacing, so the
+      // tightening steps are neutral. Uppercase mono labels keep their
+      // tracking-wide/widest, which this does not touch.
       letterSpacing: {
-        tightest: "-0.04em",
+        tight: "0em",
+        tighter: "0em",
+        tightest: "0em",
+      },
+      // Assistant tops out at 800, and the studio voice is calmer than the old
+      // 900 headlines: the heaviest weight anywhere is 700. 600 and 700 are
+      // real weights of the variable font, never synthesised.
+      fontWeight: {
+        extrabold: "700",
+        black: "700",
+      },
+      lineHeight: {
+        // Headings: room for Hebrew ascenders and nikud-free descenders
+        // without two lines touching.
+        heading: "1.15",
+      },
+      fontSize: {
+        // Running text and product descriptions.
+        body: ["1.0625rem", { lineHeight: "1.6" }],
+        // Tailwind's display sizes carry line-height 1, and a size class set at
+        // a breakpoint (md:text-5xl) overrides any leading-* written beside it
+        // without that breakpoint — see CLAUDE.md. Giving the sizes themselves
+        // the heading line height keeps two-line Hebrew headlines from touching.
+        "5xl": ["3rem", { lineHeight: "1.15" }],
+        "6xl": ["3.75rem", { lineHeight: "1.15" }],
+        "7xl": ["4.5rem", { lineHeight: "1.15" }],
+        "8xl": ["6rem", { lineHeight: "1.15" }],
+        "9xl": ["8rem", { lineHeight: "1.15" }],
       },
       // QClay + Island direction (4.10): bigger corners on cards. Buttons are pills,
       // set in components/ui/Btn.tsx.

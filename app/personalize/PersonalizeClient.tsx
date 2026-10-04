@@ -85,7 +85,7 @@ export default function PersonalizeClient() {
   return (
     <div className="max-w-3xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <Pill tone="cyan" className="mb-4">טקסט אישי</Pill>
-      <h1 className="text-3xl md:text-5xl font-black tracking-tightest leading-[1.05] mb-3">
+      <h1 className="text-3xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
         מה לכתוב על זה?
       </h1>
       <p className="text-ink-300 mb-8">

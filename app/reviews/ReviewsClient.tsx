@@ -36,7 +36,7 @@ export default function ReviewsClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             REVIEWS{reviews.length ? ` · ${reviews.length}` : ""}
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
             לקוחות שדיברו.
           </h1>
           {/* The average is computed from what is actually here. The page used
