@@ -19,11 +19,16 @@ import { assetSrc } from "@/lib/assets";
  */
 // H.264 for Safari and most browsers; VP9 for builds without H.264 (open
 // Chromium, some Linux Firefox). Picked once, by what the browser says it plays.
+//
+// The owner chose Bambu Lab's own P2S launch film (two cuts, 00:14-00:18 and
+// 00:23-00:33, 14s) over the studio's chamber footage, aware that it is Bambu
+// Lab's material. The studio clip (hero-p2s.*) stays in public/video: going
+// back is swapping these names.
 const CLIPS = {
-  mp4: { large: "/video/hero-p2s.mp4", small: "/video/hero-p2s-sm.mp4" },
-  webm: { large: "/video/hero-p2s.webm", small: "/video/hero-p2s-sm.webm" },
+  mp4: { large: "/video/hero-bambu.mp4", small: "/video/hero-bambu-sm.mp4" },
+  webm: { large: "/video/hero-bambu.webm", small: "/video/hero-bambu-sm.webm" },
 };
-const POSTER = "/video/hero-p2s.webp";
+const POSTER = "/video/hero-bambu.webp";
 
 type NetInfo = { saveData?: boolean; effectiveType?: string };
 
