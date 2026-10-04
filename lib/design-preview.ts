@@ -37,11 +37,11 @@ export type DesignTheme = {
   swatch: string[];
 };
 
-// The site's palette as tailwind.config.ts defines it. `flame` and `brand`
+// The site's palette as tailwind.config.ts defines it (QClay ג + Island ג since 4.10). `flame` and `brand`
 // share these values, so one entry covers both.
-const INK = ["#0a0a0b", "#111114", "#1c1c1f", "#2a2a2e", "#3a3a3f", "#85858b", "#a5a5aa", "#c7c7cc", "#e5e5ea", "#f2f2f4", "#fafafa"] as const;
-const BODY_FG = "#f5f5f7";
-const FLAME = { base: "#089a47", d600: "#067138", d700: "#055a2d", l300: "#3fb872", soft: "#e8f6ee" };
+const INK = ["#04110b", "#06150e", "#0d2117", "#16402a", "#1d5236", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"] as const;
+const BODY_FG = "#eef4f0";
+const FLAME = { base: "#089a47", d600: "#067138", d700: "#055a2d", l300: "#5fe39a", soft: "#e8f6ee" };
 
 const inkMap = (to: readonly string[]) => Object.fromEntries(INK.map((c, i) => [c, to[i]]));
 const flameMap = (base: string, d600: string, d700: string, l300: string, soft: string) => ({
@@ -79,7 +79,7 @@ export const DESIGNS: DesignTheme[] = [
     radius: { ...PILL, xxl: "60px", xxxl: "60px" }, swatch: ["#f7f4f4", "#dad2f4", "#effbf9", "#000000"],
   },
   {
-    id: "qclay-c", brief: "QClay", label: "ג · היברידי עם הירוק",
+    id: "qclay-c", brief: "QClay", label: "ג · היברידי עם הירוק (חלקית באתר)",
     note: "הרקע הכהה והירוק נשארים; מ-QClay נלקחים כפתורי הגלולה, הפינות הגדולות והכותרות הכבדות.",
     bg: "#0b0d0c", fg: "#f2f5f3",
     map: {
@@ -114,16 +114,16 @@ export const DESIGNS: DesignTheme[] = [
     radius: { ...CALM, xxxl: "20px" }, swatch: ["#fcf9f7", "#f0edea", "#0a332c", "#50e8a8"],
   },
   {
-    id: "island-c", brief: "Island", label: "ג · היברידי עם הירוק",
+    id: "island-c", brief: "Island", label: "ג · היברידי עם הירוק (חלקית באתר)",
     note: "הירוק של המותג על רקע ירוק-כהה, טקסט רגוע במשקל 500 ופינות של 8-20px.",
-    bg: "#071a11", fg: "#eef4f0",
+    bg: "#04110b", fg: "#eef4f0",
     map: {
-      ...inkMap(["#071a11", "#0a2117", "#0c2619", "#16402a", "#1d5236", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"]),
+      ...inkMap(["#04110b", "#06150e", "#0c2619", "#16402a", "#1d5236", "#8fa598", "#a8b8ae", "#c9d6ce", "#e2ebe5", "#eef4f0", "#f7faf8"]),
       [BODY_FG]: "#eef4f0",
       ...flameMap("#089a47", "#067138", "#055a2d", "#5fe39a", "#e3f6ea"),
     },
     font: '"Heebo", system-ui, sans-serif', headingWeight: 500, headingTracking: "-0.02em",
-    radius: CALM, swatch: ["#071a11", "#089a47", "#5fe39a", "#eef4f0"],
+    radius: CALM, swatch: ["#04110b", "#089a47", "#5fe39a", "#eef4f0"],
   },
 ];
 

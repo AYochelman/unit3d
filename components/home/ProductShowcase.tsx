@@ -70,7 +70,7 @@ export default function ProductShowcase() {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 unoptimized
               />
-              <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-ink-950/95 via-ink-950/60 to-transparent">
+              <div className="absolute inset-x-0 bottom-0 px-4 pt-3 pb-4 bg-gradient-to-t from-ink-950/95 via-ink-950/60 to-transparent">
                 <div
                   className="text-sm font-bold leading-tight line-clamp-1"
                   dir={/[\u05d0-\u05ea]/.test(t.name) ? "rtl" : "ltr"}

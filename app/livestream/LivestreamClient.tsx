@@ -289,13 +289,13 @@ export default function LivestreamClient() {
               <>
                 <div className="absolute inset-0 printer-grid opacity-40" />
                 <svg viewBox="0 0 600 360" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
-                  <rect x="80" y="280" width="440" height="20" rx="2" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <rect x="80" y="280" width="440" height="20" rx="2" fill="#0D2117" stroke="#1D5236" />
                   <rect x="80" y="280" width="440" height="6" fill="#089a47" opacity="0.3" />
-                  <rect x="60" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
-                  <rect x="520" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
-                  <rect x="60" y="60" width="480" height="14" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <rect x="60" y="60" width="20" height="240" fill="#0D2117" stroke="#1D5236" />
+                  <rect x="520" y="60" width="20" height="240" fill="#0D2117" stroke="#1D5236" />
+                  <rect x="60" y="60" width="480" height="14" fill="#0D2117" stroke="#1D5236" />
                   <g transform="translate(300, 110)">
-                    <rect x="-30" y="-12" width="60" height="40" rx="4" fill="#2A2A2E" stroke="#3A3A3F" />
+                    <rect x="-30" y="-12" width="60" height="40" rx="4" fill="#16402A" stroke="#1D5236" />
                     <polygon points="-10,28 10,28 0,42" fill="#089a47" />
                   </g>
                 </svg>

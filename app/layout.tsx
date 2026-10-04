@@ -43,7 +43,7 @@ export const viewport: Viewport = {
   // No maximumScale. Capping it at 1 blocks pinch-zoom, which is how a lot of
   // people read a phone screen at all — and it is a WCAG 1.4.4 failure on
   // every page of the site.
-  themeColor: "#0A0A0B",
+  themeColor: "#04110B",
 };
 
 export default function RootLayout({

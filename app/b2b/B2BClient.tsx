@@ -140,7 +140,7 @@ export default function B2BClient() {
                 className="group relative aspect-square rounded-2xl overflow-hidden bg-ink-900 border border-ink-800 hover:border-ink-700 transition-colors"
               >
                 <Image src={ph.src} alt={ph.name} fill sizes="(max-width: 640px) 50vw, 20vw" className="object-cover transition-transform duration-500 group-hover:scale-105" unoptimized />
-                <div className="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-ink-950/95 to-transparent">
+                <div className="absolute inset-x-0 bottom-0 px-4 pt-2.5 pb-3.5 bg-gradient-to-t from-ink-950/95 to-transparent">
                   <div className="text-xs font-bold leading-tight line-clamp-2">{ph.name}</div>
                 </div>
               </Link>

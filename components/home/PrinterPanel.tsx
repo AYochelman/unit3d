@@ -166,9 +166,9 @@ export default function PrinterPanel() {
             >
               {/* nozzle head */}
               <g transform={`translate(${headX} ${headY})`} className="transition-transform duration-1000 ease-linear">
-                <rect x="-3.5" y="0" width="7" height="4" rx="1" fill="#C7C7CC" />
+                <rect x="-3.5" y="0" width="7" height="4" rx="1" fill="#C9D6CE" />
                 <path d="M-2.5 4 L2.5 4 L1 7.5 L-1 7.5 Z" fill="#8E8E93" />
-                <circle cx="0" cy="8.6" r="1" fill={printing ? "#3FB872" : "#3A3A3F"} />
+                <circle cx="0" cy="8.6" r="1" fill={printing ? "#3FB872" : "#1D5236"} />
               </g>
               {/* layer stack, newest on top */}
               {Array.from({ length: LAYER_COUNT }).map((_, i) => {
@@ -183,13 +183,13 @@ export default function PrinterPanel() {
                     width={48 - Math.abs(wobble) * 0.5}
                     height={1}
                     rx={0.5}
-                    fill={done ? "#089a47" : "#1C1C1F"}
+                    fill={done ? "#089a47" : "#0D2117"}
                     opacity={done ? (i > doneLayers - 3 ? 1 : 0.55) : 0.5}
                   />
                 );
               })}
               {/* plate */}
-              <rect x="14" y="44" width="72" height="2" rx="1" fill="#2A2A2E" />
+              <rect x="14" y="44" width="72" height="2" rx="1" fill="#16402A" />
             </svg>
           )}
         </div>
@@ -243,13 +243,13 @@ function ProgressRing({ pct, live }: { pct: number; live: boolean }) {
   return (
     <div className="relative shrink-0" style={{ width: 78, height: 78 }}>
       <svg viewBox="0 0 78 78" className="w-full h-full -rotate-90">
-        <circle cx="39" cy="39" r={r} fill="none" stroke="#1C1C1F" strokeWidth="7" />
+        <circle cx="39" cy="39" r={r} fill="none" stroke="#0D2117" strokeWidth="7" />
         <circle
           cx="39"
           cy="39"
           r={r}
           fill="none"
-          stroke={live ? "#089a47" : "#2A2A2E"}
+          stroke={live ? "#089a47" : "#16402A"}
           strokeWidth="7"
           strokeLinecap="round"
           strokeDasharray={c}
