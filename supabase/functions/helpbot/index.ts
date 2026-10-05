@@ -33,11 +33,15 @@ const SYSTEM = `אתה העוזר של Unit 3D, סטודיו קטן להדפסת
 LINK: <כיתוב קצר> | <נתיב שמתחיל ב-/ מהמידע, או ${"https://wa.me/972509300990"}>
 בלי קישורים אחרים ובלי markdown.`;
 
+class KnowledgeError extends Error {
+  constructor(readonly status: number) { super(`knowledge ${status}`); }
+}
+
 let knowledge: { text: string; at: number } | null = null;
 async function loadKnowledge(): Promise<string> {
   if (knowledge && Date.now() - knowledge.at < 10 * 60_000) return knowledge.text;
   const res = await fetch(`${SITE}/helpbot-knowledge.txt`);
-  if (!res.ok) throw new Error(`knowledge ${res.status}`);
+  if (!res.ok) throw new KnowledgeError(res.status);
   knowledge = { text: await res.text(), at: Date.now() };
   return knowledge.text;
 }
@@ -101,7 +105,7 @@ Deno.serve(async (req) => {
       messages: history,
     });
 
-    if (response.stop_reason === "refusal") return json({ text: null }, 200, headers);
+    if (response.stop_reason === "refusal") return json({ text: null, reason: "refusal" }, 200, headers);
     const raw = response.content.map((b) => (b.type === "text" ? b.text : "")).join("").trim();
 
     // Split the LINK lines off, and keep only links into the site or WhatsApp.
@@ -123,6 +127,15 @@ Deno.serve(async (req) => {
     return json({ text, links }, 200, headers);
   } catch (e) {
     console.error(e);
-    return json({ text: null }, 200, headers); // the site falls back to its built-in answers
+    // Only the kind of failure, never a message: enough to tell a missing key
+    // (anthropic_401), no credit (anthropic_400/402/403) or an unreachable
+    // site (knowledge_404) apart from the outside. The site then falls back
+    // to its built-in answers.
+    const reason =
+      e instanceof KnowledgeError ? `knowledge_${e.status}`
+      : e instanceof Anthropic.APIError ? `anthropic_${e.status ?? "network"}`
+      : !Deno.env.get("ANTHROPIC_API_KEY") ? "no_key"
+      : "error";
+    return json({ text: null, reason }, 200, headers);
   }
 });

@@ -36,6 +36,10 @@ jobs:
           const one = (s) => String(s).replace(/%/g, "%25").replace(/\r?\n/g, "%0A");
           (async () => {
             let failed = 0;
+            // What the function reads first: if this is not 200, nothing else can work.
+            const k = await fetch("https://unit-3d.com/helpbot-knowledge.txt").catch((e) => ({ status: e.message, text: async () => "" }));
+            const kt = await k.text();
+            console.log(`::notice title=knowledge file::HTTP ${k.status}, ${kt.length} chars, ${(kt.match(/₪/g) || []).length} prices`);
             for (const q of QUESTIONS) {
               const t = Date.now();
               try {
