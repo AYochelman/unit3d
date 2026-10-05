@@ -1,6 +1,7 @@
 "use client";
 import {
   Children,
+  Fragment,
   cloneElement,
   isValidElement,
   useEffect,
@@ -121,6 +122,10 @@ function lettersOf(text: string, key: string): ReactNode[] {
 function split(node: ReactNode, key = "v"): ReactNode {
   if (typeof node === "string" || typeof node === "number") return lettersOf(String(node), key);
   if (Array.isArray(node)) return Children.map(node, (n, i) => split(n, `${key}.${i}`));
+  // A fragment (a title passed as <>…</>) is only a wrapper: split what is in it.
+  if (isValidElement(node) && node.type === Fragment) {
+    return split((node.props as { children?: ReactNode }).children, key);
+  }
   if (isValidElement(node) && typeof node.type === "string") {
     const el = node as ReactElement<{ children?: ReactNode }>;
     return el.props.children === undefined ? el : cloneElement(el, undefined, split(el.props.children, key));
@@ -162,28 +167,35 @@ export function VariableFontCursorProximity({
 }
 
 /**
- * The page title, with the effect. A drop-in for <h1>: same props, same
+ * A heading with the effect: a drop-in for <h1>/<h2>/<h3>, same props, same
  * children. With a mouse it rests at 400 (in CSS, so the first paint has it)
  * and reaches 800 under the pointer; phones and reduced motion keep the
  * heading's own weight.
  */
-export function ProximityH1({
+function ProximityHeading({
+  as: Tag,
   children,
   className,
   radius = 110,
   ...rest
-}: ComponentPropsWithoutRef<"h1"> & { radius?: number }) {
+}: ComponentPropsWithoutRef<"h1"> & { as: "h1" | "h2" | "h3"; radius?: number }) {
   const ref = useRef<HTMLHeadingElement>(null);
   useProximity(ref, "'wght' 400", "'wght' 800", radius, "gaussian");
   const label = textOf(children).replace(/\s+/g, " ").trim();
   return (
-    <h1
+    <Tag
       ref={ref}
       aria-label={rest["aria-label"] ?? (label || undefined)}
       {...rest}
       className={cn(className, "[@media(hover:hover)_and_(prefers-reduced-motion:no-preference)]:font-normal")}
     >
       {split(children)}
-    </h1>
+    </Tag>
   );
 }
+
+type HeadingProps = ComponentPropsWithoutRef<"h1"> & { radius?: number };
+/** Page titles. */
+export const ProximityH1 = (p: HeadingProps) => <ProximityHeading as="h1" {...p} />;
+/** Section headings (SectionHead and the rest). */
+export const ProximityH2 = (p: HeadingProps) => <ProximityHeading as="h2" {...p} />;

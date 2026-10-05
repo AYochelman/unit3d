@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
@@ -122,9 +122,9 @@ export default function B2BClient() {
             <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
               WHAT COMPANIES ORDER
             </div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tightest mb-2">
+            <ProximityH2 className="text-3xl md:text-4xl font-black tracking-tightest mb-2">
               מוצרים שאפשר למתג.
-            </h2>
+            </ProximityH2>
             <p className="text-ink-300 max-w-2xl">
               כל אחד מאלה מודפס עם הלוגו או השם שלכם, בצבעי המותג, מ-10 יחידות ומעלה.
               מעל 5 יחידות יש 10% הנחת כמות אוטומטית.
@@ -159,9 +159,9 @@ export default function B2BClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             USE CASES
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
+          <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
             למה חברות מזמינות אצלי.
-          </h2>
+          </ProximityH2>
           <div className="grid md:grid-cols-3 gap-5">
             {USE_CASES.map((u) => (
               <article
@@ -189,9 +189,9 @@ export default function B2BClient() {
             <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
               VOLUME PRICING
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
+            <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
               ככל שיותר, יותר זול.
-            </h2>
+            </ProximityH2>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {TIERS.map((t) => (
@@ -240,9 +240,9 @@ export default function B2BClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             WHAT&apos;S INCLUDED
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
+          <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
             הכל כלול. אין סודות.
-          </h2>
+          </ProximityH2>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {INCLUDED.map((i) => (
               <div
@@ -267,9 +267,9 @@ export default function B2BClient() {
             <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
               REQUEST A QUOTE
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
+            <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
               קבל הצעת מחיר תוך 24 שעות.
-            </h2>
+            </ProximityH2>
           </div>
 
           {!submitted ? (

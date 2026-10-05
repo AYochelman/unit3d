@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -399,9 +399,9 @@ export default function FidgetsClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
           WHY FIDGETS
         </div>
-        <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">
+        <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">
           למה זה עובד.
-        </h2>
+        </ProximityH2>
         <div className="grid md:grid-cols-3 gap-5">
           {[
             { t: "הדפסה אחת", d: "כל פיגורה מודפסת בחתיכה אחת — בלי דבק, בלי הרכבה, בלי חלקים שנופלים." },

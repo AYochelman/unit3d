@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -364,9 +364,9 @@ export default function CatalogClient() {
                     />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <h2 className="text-2xl font-black tracking-tight truncate">
+                    <ProximityH2 className="text-2xl font-black tracking-tight truncate">
                       {branch.name}
-                    </h2>
+                    </ProximityH2>
                     {branch.desc && (
                       <p className="text-sm text-ink-400 truncate">
                         {branch.desc}

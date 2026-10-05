@@ -1,4 +1,4 @@
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { BUSINESS } from "@/lib/business";
@@ -22,10 +22,10 @@ export const LEGAL_PAGES = [
 export function Section({ n, title, children }: { n: string; title: string; children: ReactNode }) {
   return (
     <section className="mt-9 scroll-mt-24" id={`s${n}`}>
-      <h2 className="text-lg md:text-xl font-bold mb-3 flex items-baseline gap-2.5">
+      <ProximityH2 className="text-lg md:text-xl font-bold mb-3 flex items-baseline gap-2.5">
         <span className="font-mono text-flame-300 text-sm shrink-0">{n}.</span>
         <span>{title}</span>
-      </h2>
+      </ProximityH2>
       <div className="space-y-3 text-ink-300 leading-relaxed">{children}</div>
     </section>
   );

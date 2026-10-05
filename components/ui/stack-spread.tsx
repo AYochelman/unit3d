@@ -12,6 +12,7 @@
  * `!leading-none` for this project's Tailwind 3; and the <img> lint rule is
  * acknowledged where the card face draws its picture.
  */
+import { ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import {
   motion,
   useScroll,
@@ -165,8 +166,13 @@ function usePointerParallax(active: boolean, enabled: boolean) {
 }
 
 export interface StackSpreadItem {
+  /** The picture, or a video's poster frame when `video` is set. */
   src: string;
   alt?: string;
+  /** A muted loop that plays once the cards have spread (on touch: on tap). */
+  video?: string;
+  /** Small label on the card's corner. */
+  caption?: string;
 }
 
 export interface StackSpreadTarget {
@@ -204,6 +210,7 @@ function Card({
   cardRadius,
   pointer,
   depth,
+  live,
 }: {
   card: StackSpreadCard;
   progress: MotionValue<number>;
@@ -220,6 +227,8 @@ function Card({
   cardRadius: number;
   pointer: { x: MotionValue<number>; y: MotionValue<number> };
   depth: number;
+  /** Video cards play while true. */
+  live: boolean;
 }) {
   const { item, target } = card;
 
@@ -255,7 +264,7 @@ function Card({
 
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 will-change-transform"
+      className="pointer-events-auto absolute left-1/2 top-1/2 will-change-transform"
       style={{
         width: `${fixedCard ? fixedCard.w : target.w}vw`,
         height: `${fixedCard ? fixedCard.h : target.h}vh`,
@@ -265,7 +274,7 @@ function Card({
         scale,
       }}
     >
-      <CardFace item={item} cardRadius={cardRadius} />
+      <CardFace item={item} cardRadius={cardRadius} live={live} />
     </motion.div>
   );
 }
@@ -273,22 +282,58 @@ function Card({
 function CardFace({
   item,
   cardRadius,
+  live,
 }: {
   item: StackSpreadItem;
   cardRadius: number;
+  live: boolean;
 }) {
+  const video = useRef<HTMLVideoElement>(null);
+  const [tapped, setTapped] = useState(false);
+  const play = live || tapped;
+
+  // Nothing is fetched until the card is meant to play: the poster stands in
+  // while stacked, so eight clips never load on a page that never spreads.
+  useEffect(() => {
+    const v = video.current;
+    if (!v || !item.video) return;
+    if (play) {
+      if (!v.src) v.src = item.video;
+      void v.play().catch(() => {});
+    } else v.pause();
+  }, [play, item.video]);
+
   return (
     <div
       className="relative h-full w-full overflow-hidden max-md:rounded-[4vw]"
       style={{ borderRadius: `${cardRadius}px` }}
+      onClick={item.video ? () => setTapped((t) => !t) : undefined}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={item.src}
-        alt={item.alt ?? ""}
-        draggable={false}
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+      {item.video ? (
+        <video
+          ref={video}
+          poster={item.src}
+          muted
+          loop
+          playsInline
+          preload="none"
+          aria-label={item.alt}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={item.src}
+          alt={item.alt ?? ""}
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+      {item.caption && (
+        <span className="pointer-events-none absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 font-mono text-[10px] text-white backdrop-blur-sm">
+          {item.caption}
+        </span>
+      )}
     </div>
   );
 }
@@ -313,6 +358,8 @@ interface StackSpreadStageProps {
   title?: ReactNode;
   sub?: ReactNode;
   hintLabel?: string;
+  /** Links or buttons under the subtitle; they stay clickable through the cards' layer. */
+  actions?: ReactNode;
 }
 
 function StackSpreadStage({
@@ -328,6 +375,7 @@ function StackSpreadStage({
   title,
   sub = SUB,
   hintLabel = "Scroll",
+  actions,
 }: StackSpreadStageProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
@@ -377,8 +425,8 @@ function StackSpreadStage({
             scale: noScale ? 1 : copyScale,
           }}
         >
-          <h2
-            className="w-full whitespace-pre-line text-[4.5vw] font-normal !leading-none tracking-tight max-md:text-[10vw]"
+          <ProximityH2
+            className="pointer-events-auto w-full whitespace-pre-line text-[4.5vw] font-normal !leading-none tracking-tight max-md:text-[10vw]"
             style={{ color: textColor }}
           >
             {title ?? (
@@ -388,17 +436,18 @@ function StackSpreadStage({
                 Responds.
               </>
             )}
-          </h2>
+          </ProximityH2>
           <p
             className="mt-[1.2vw] w-full max-w-[42ch] text-[1.15vw] leading-relaxed tracking-tight max-md:mt-3 max-md:text-[3.6vw]"
             style={{ color: textColor, opacity: 0.6 }}
           >
             {sub}
           </p>
+          {actions && <div className="pointer-events-auto mt-6 flex flex-wrap items-center justify-center gap-3">{actions}</div>}
         </motion.div>
 
         {/* scattering cards */}
-        <div className="absolute inset-0 z-10">
+        <div className="pointer-events-none absolute inset-0 z-10">
           {cards.map((card, i) => (
             <Card
               key={i}
@@ -414,6 +463,7 @@ function StackSpreadStage({
               cardRadius={cardRadius}
               pointer={pointer}
               depth={parallaxEnabled ? parallaxDepth(i, cards.length) : 0}
+              live={spread && !isSmall}
             />
           ))}
         </div>
@@ -467,6 +517,7 @@ export interface StackSpreadProps {
   title?: ReactNode;
   sub?: ReactNode;
   hintLabel?: string;
+  actions?: ReactNode;
 }
 
 export default function StackSpread({
@@ -482,6 +533,7 @@ export default function StackSpread({
   title,
   sub,
   hintLabel,
+  actions,
 }: StackSpreadProps) {
   return (
     <StackSpreadStage
@@ -497,6 +549,7 @@ export default function StackSpread({
       title={title}
       sub={sub}
       hintLabel={hintLabel}
+      actions={actions}
     />
   );
 }

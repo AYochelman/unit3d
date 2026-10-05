@@ -1,6 +1,6 @@
 "use client";
 
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -751,7 +751,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
       {/* ── Rate what you bought ─────────────────────────────────────── */}
       <section className="mt-12 max-w-2xl">
-        <h2 className="text-xl font-extrabold tracking-tight mb-1">כבר הזמנת את זה?</h2>
+        <ProximityH2 className="text-xl font-extrabold tracking-tight mb-1">כבר הזמנת את זה?</ProximityH2>
         <p className="text-sm text-ink-400 mb-4">
           דירוג וביקורת עוזרים ללקוח הבא להחליט, ולי לדעת מה לשפר.
         </p>

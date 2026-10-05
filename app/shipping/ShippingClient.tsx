@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
@@ -196,7 +196,7 @@ export default function ShippingClient() {
 
           <div className="mt-6 grid md:grid-cols-2 gap-4">
             <section className="p-5 rounded-2xl bg-ink-900 border border-ink-800">
-              <h2 className="font-bold mb-2">מחירי האריזות</h2>
+              <ProximityH2 className="font-bold mb-2">מחירי האריזות</ProximityH2>
               <ul className="space-y-1 text-sm">
                 {PACKAGING.map((p) => (
                   <li key={p.id} className="flex justify-between gap-3">
@@ -215,7 +215,7 @@ export default function ShippingClient() {
             </section>
 
             <section className="p-5 rounded-2xl bg-ink-900 border border-ink-800">
-              <h2 className="font-bold mb-2">מאיפה המחירים</h2>
+              <ProximityH2 className="font-bold mb-2">מאיפה המחירים</ProximityH2>
               <p className="text-sm text-ink-300 leading-relaxed">
                 כל מחירי המשלוח לקוחים מ־<span className="text-ink-100">{RATES_SOURCE.title}</span>.
                 {" "}
