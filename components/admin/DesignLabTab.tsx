@@ -6,6 +6,7 @@ import OrbDemo from "./OrbDemo";
 import HeroVideoOptions from "./HeroVideoOptions";
 import ShinyButton from "@/components/ui/shiny-button";
 import MorphGalleryDemo from "./MorphGalleryDemo";
+import GlyphPortalDemo from "./GlyphPortalDemo";
 import { Signature } from "@/components/OwnerSignature";
 import VariableFontCursorProximityHero from "@/components/ui/m-variable-font-cursor-proximity-1";
 
@@ -133,6 +134,8 @@ export default function DesignLabTab() {
           ))}
         </div>
       </section>
+
+      <GlyphPortalDemo />
 
       <section className="grid gap-3">
         <h2 className="font-black text-lg">החותם שלך בתחתית האתר</h2>
