@@ -19,19 +19,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Each answer is printed as a notice: those show on the run's summary
+      # (and through the API), where plain logs need a separate download.
       - name: Ask the helper
         run: |
-          URL=$(node -e "console.log(require('./public/shop.json').supabaseUrl)")
-          KEY=$(node -e "console.log(require('./public/shop.json').supabaseAnonKey)")
-          ask() {
-            echo "=== Q: $1"
-            curl -sS -m 40 -w '\n[HTTP %{http_code} in %{time_total}s]\n' \
-              -X POST "$URL/functions/v1/helpbot" \
-              -H "content-type: application/json" -H "apikey: $KEY" \
-              -H "origin: https://unit-3d.com" \
-              --data "$(node -e 'console.log(JSON.stringify({messages:[{role:"user",content:process.argv[1]}]}))' "$1")"
-            echo
-          }
-          ask "יש לכם משהו לחתול שלי?"
-          ask "כמה עולה משלוח ותוך כמה זמן זה מגיע"
-          ask "אני רוצה 50 מחזיקי מפתחות עם הלוגו של החברה, אפשר?"
+          node - <<'JS'
+          const { supabaseUrl, supabaseAnonKey } = require("./public/shop.json");
+          const QUESTIONS = [
+            "יש לכם משהו לחתול שלי?",
+            "כמה עולה משלוח ותוך כמה זמן זה מגיע",
+            "אני רוצה 50 מחזיקי מפתחות עם הלוגו של החברה, אפשר?",
+          ];
+          const one = (s) => String(s).replace(/%/g, "%25").replace(/\r?\n/g, "%0A");
+          (async () => {
+            let failed = 0;
+            for (const q of QUESTIONS) {
+              const t = Date.now();
+              try {
+                const res = await fetch(`${supabaseUrl}/functions/v1/helpbot`, {
+                  method: "POST",
+                  headers: { "content-type": "application/json", apikey: supabaseAnonKey, origin: "https://unit-3d.com" },
+                  body: JSON.stringify({ messages: [{ role: "user", content: q }] }),
+                });
+                const body = await res.text();
+                const secs = ((Date.now() - t) / 1000).toFixed(1);
+                let shown = body;
+                try { const j = JSON.parse(body); shown = j.text ? `${j.text}\nקישורים: ${(j.links || []).map((l) => l.label + " " + l.href).join(" · ")}` : body; if (!j.text) failed++; } catch { failed++; }
+                if (!res.ok) failed++;
+                console.log(`::notice title=${one(q)} [HTTP ${res.status}, ${secs}s]::${one(shown)}`);
+              } catch (e) {
+                failed++;
+                console.log(`::error title=${one(q)}::${one(e.message)}`);
+              }
+            }
+            if (failed) process.exit(1);
+          })();
+          JS
