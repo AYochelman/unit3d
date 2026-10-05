@@ -24,6 +24,10 @@ export default function HomePage() {
       <JsonLd data={businessJsonLd()} />
       <JsonLd data={websiteJsonLd()} />
       <Hero />
+      {/* "התהליך" right after the hero, before the printer at work (the owner's
+          call). Not in a Reveal: its pin is position: sticky, and a
+          transformed ancestor while revealing would hold it. */}
+      <HowItWorks />
       {/* The printer itself, straight after the hero. Eight timelapses off the
           real build plate answer "are these people actually printing?" before
           a visitor has to take anyone's word for it — the reviews then land on
@@ -37,9 +41,6 @@ export default function HomePage() {
       */}
       <Reveal><AudienceSwitcher /></Reveal>
       <Reveal><Categories /></Reveal>
-      {/* Not in a Reveal: its pin is position: sticky, and a transformed
-          ancestor while revealing would hold it. */}
-      <HowItWorks />
       <Reveal><ProductShowcase /></Reveal>
       <Reveal><ReviewsRow /></Reveal>
       <Reveal><NewInShop /></Reveal>
