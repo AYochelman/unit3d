@@ -12,7 +12,9 @@
 import Anthropic from "npm:@anthropic-ai/sdk";
 
 const SITE = Deno.env.get("SITE_URL") ?? "https://unit-3d.com";
-const MODEL = "claude-opus-5-5";
+// The smallest current model: simple shop questions answered from a given
+// text need nothing bigger, and it is the cheapest and fastest (owner's call).
+const MODEL = "claude-haiku-4-5";
 const ALLOWED_ORIGINS = [SITE, "https://www.unit-3d.com", "http://localhost:3000"];
 
 const client = new Anthropic(); // ANTHROPIC_API_KEY from the function's secrets
@@ -87,14 +89,9 @@ Deno.serve(async (req) => {
 
   try {
     const info = await loadKnowledge();
-    const response = await client.beta.messages.create({
+    const response = await client.messages.create({
       model: MODEL,
-      max_tokens: 2000,
-      // Chat: short answers from given facts. Low effort keeps it quick.
-      output_config: { effort: "low" },
-      // If a safety classifier declines, the API retries on a fallback model.
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
+      max_tokens: 1024,
       // The instructions and the shop's facts are the same on every call:
       // cached, they cost a tenth after the first message.
       system: [
@@ -102,7 +99,7 @@ Deno.serve(async (req) => {
         { type: "text", text: info, cache_control: { type: "ephemeral" } },
       ],
       messages: history,
-    } as Anthropic.Beta.MessageCreateParamsNonStreaming);
+    });
 
     if (response.stop_reason === "refusal") return json({ text: null }, 200, headers);
     const raw = response.content.map((b) => (b.type === "text" ? b.text : "")).join("").trim();

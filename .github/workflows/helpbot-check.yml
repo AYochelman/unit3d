@@ -1,0 +1,37 @@
+# Asks the live AI helper three real questions and prints what it answered.
+# The Supabase function is not reachable from every machine; the runner is.
+# Run by hand (Actions → "Help bot check" → Run workflow) after changing the
+# function. Each run costs a fraction of a cent.
+name: Help bot check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/helpbot-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  ask:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ask the helper
+        run: |
+          URL=$(node -e "console.log(require('./public/shop.json').supabaseUrl)")
+          KEY=$(node -e "console.log(require('./public/shop.json').supabaseAnonKey)")
+          ask() {
+            echo "=== Q: $1"
+            curl -sS -m 40 -w '\n[HTTP %{http_code} in %{time_total}s]\n' \
+              -X POST "$URL/functions/v1/helpbot" \
+              -H "content-type: application/json" -H "apikey: $KEY" \
+              -H "origin: https://unit-3d.com" \
+              --data "$(node -e 'console.log(JSON.stringify({messages:[{role:"user",content:process.argv[1]}]}))' "$1")"
+            echo
+          }
+          ask "יש לכם משהו לחתול שלי?"
+          ask "כמה עולה משלוח ותוך כמה זמן זה מגיע"
+          ask "אני רוצה 50 מחזיקי מפתחות עם הלוגו של החברה, אפשר?"
