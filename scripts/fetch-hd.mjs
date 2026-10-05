@@ -25,6 +25,10 @@ const sharp = await import("sharp").then((m) => m.default).catch(() => null);
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = path.join(ROOT, "lib", "imported.generated.ts");
+const MOVES = path.join(ROOT, "lib", "shop-overrides.ts");
+// The same two the shop refuses to sell (BLOCKED_HOLDS in lib/imported.ts).
+// "brand" is not one of them: the leading pets model carries it and is sold.
+const BLOCKED = ["weapon", "license-nc"];
 const OUT_DIR = path.join(ROOT, "public", "img", "hd");
 const MANIFEST = path.join(ROOT, "lib", "hdImages.generated.ts");
 const ALL = process.argv.includes("--all");
@@ -42,20 +46,38 @@ function readCatalogue() {
   return JSON.parse(text.slice(start, end + 2));
 }
 
+/**
+ * Shelves the owner moved models to from /admin (lib/shop-overrides.ts).
+ * Without them the leader of a shelf that exists only by such a move (the
+ * business shelf's door stopper, moved from "home") was never fetched.
+ */
+function readMoves() {
+  const text = fs.readFileSync(MOVES, "utf8");
+  const at = text.indexOf("SHELF_MOVES");
+  const start = text.indexOf("{", text.indexOf("=", at));
+  const end = text.indexOf("\n};", start);
+  return JSON.parse(text.slice(start, end + 2).replace(/,(\s*})$/, "$1"));
+}
+
 /** The designer's original: the first gallery image, or the cover without its resize. */
 const originalOf = (m) => m.images?.[0] ?? (m.image ? m.image.split("?")[0] : null);
 
-function pick(models) {
+function pick(models, moves) {
   const byShelf = new Map();
   for (const m of models) {
-    if (m.holds?.length || !originalOf(m) || m.status === "removed") continue;
-    const list = byShelf.get(m.shelf) ?? [];
-    list.push(m);
-    byShelf.set(m.shelf, list);
+    if (m.holds?.some((h) => BLOCKED.includes(h)) || !originalOf(m) || m.status === "removed") continue;
+    // Counted on its own shelf and on every shelf it was moved to: a top
+    // three too many costs one photo, a missing leader costs the HD.
+    for (const shelf of new Set([m.shelf, ...(moves[m.id] ?? [])])) {
+      const list = byShelf.get(shelf) ?? [];
+      list.push(m);
+      byShelf.set(shelf, list);
+    }
   }
-  return [...byShelf.values()].flatMap((list) =>
-    list.sort((a, b) => (b.downloads ?? 0) - (a.downloads ?? 0)).slice(0, PER_SHELF),
-  );
+  const ids = new Map();
+  for (const list of byShelf.values())
+    for (const m of list.sort((a, b) => (b.downloads ?? 0) - (a.downloads ?? 0)).slice(0, PER_SHELF)) ids.set(m.id, m);
+  return [...ids.values()];
 }
 
 async function download(url) {
@@ -72,7 +94,7 @@ async function download(url) {
   }
 }
 
-const chosen = pick(readCatalogue());
+const chosen = pick(readCatalogue(), readMoves());
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const manifest = {};
 let fetched = 0;
