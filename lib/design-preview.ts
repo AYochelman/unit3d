@@ -225,7 +225,7 @@ export const PRODUCT_LOOKS: { id: ProductLook; label: string; note: string; swat
 /** How the owner's signature sits in the footer (components/OwnerSignature.tsx). */
 export type SignatureId = "text" | "script" | "seal" | "monogram";
 export const SIGNATURES: { id: SignatureId; label: string; note: string }[] = [
-  { id: "text", label: "א · שורת טקסט", note: "מה שבאתר עכשיו: משפט אחד ליד זכויות היוצרים, השם מודגש." },
+  { id: "text", label: "א · שורת טקסט", note: "משפט אחד ליד זכויות היוצרים, השם מודגש." },
   { id: "script", label: "ב · חתימה", note: "השם בגופן סריף עדין וגדול יותר, עם קו חתימה ירוק מתחתיו. נראה כמו חתימה על יצירה." },
   { id: "seal", label: "ג · חותמת", note: "חותמת עגולה עם ראשי התיבות במרכז והשם מסביב, כמו חותמת של בעל מקצוע." },
   { id: "monogram", label: "ד · מונוגרמה", note: "ריבוע קטן עם ראשי התיבות, ולידו \"עוצב ונבנה ע״י\" בכתב טכני, בסגנון של האתר." },
