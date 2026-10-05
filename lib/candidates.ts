@@ -42,6 +42,8 @@ export type ModelDecision = {
   shelf?: ImportedShelf;
   /** Any further shelves it is also listed on — a bust from a film is both. */
   also?: ImportedShelf[];
+  /** The Hebrew name the owner gave it on approval; lands in he-names.overrides.ts. */
+  he?: string;
   at: string;
 };
 

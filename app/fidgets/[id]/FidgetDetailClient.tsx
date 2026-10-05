@@ -1,9 +1,12 @@
 "use client";
 
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FIDGETS } from "@/lib/data";
+import { IMPORTED } from "@/lib/imported";
+import DesignerCredit from "@/components/DesignerCredit";
 import { useFilaments } from "@/lib/palette";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
@@ -323,10 +326,16 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
           {/* Heading */}
           <div>
-            <h1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">
+            <ProximityH1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">
               {f.name}
-            </h1>
-            <p className="mt-2 text-ink-300 text-sm leading-relaxed">{f.desc}</p>
+            </ProximityH1>
+            <p className="mt-2 text-ink-300 text-body">{f.desc}</p>
+            {(() => {
+              const src = IMPORTED.find((m) => m.id === f.id);
+              return (src || f.creator)
+                ? <DesignerCredit creator={src?.creator ?? f.creator} license={src?.license} sourceUrl={src?.sourceUrl} source={f.source} />
+                : null;
+            })()}
 
             {/* Credit for an imported design, in the same place the shelf
                 products carry it. CC-BY asks for the designer's name next to
@@ -658,7 +667,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 "w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg",
                 added
                   ? "bg-good text-ink-950 shadow-good/20"
-                  : "bg-flame-600 text-white hover:bg-flame-700 shadow-flame/20",
+                  : "btn-shiny",
               )}
             >
               {added ? (
@@ -742,7 +751,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
       {/* ── Rate what you bought ─────────────────────────────────────── */}
       <section className="mt-12 max-w-2xl">
-        <h2 className="text-xl font-extrabold tracking-tight mb-1">כבר הזמנת את זה?</h2>
+        <ProximityH2 className="text-xl font-extrabold tracking-tight mb-1">כבר הזמנת את זה?</ProximityH2>
         <p className="text-sm text-ink-400 mb-4">
           דירוג וביקורת עוזרים ללקוח הבא להחליט, ולי לדעת מה לשפר.
         </p>

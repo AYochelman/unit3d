@@ -2,24 +2,39 @@ import Btn from "@/components/ui/Btn";
 import HeroLogo from "./HeroLogo";
 import PrinterPanel from "./PrinterPanel";
 import HeroCarousel from "./HeroCarousel";
+import ShelfMarquee from "./ShelfMarquee";
+import HeroVideo from "./HeroVideo";
+import HeroTitle from "./HeroTitle";
 
 export default function Hero() {
   return (
-    <section className="relative isolate overflow-hidden" aria-label="Hero">
-      {/* Banner — text + CTAs (no video) */}
-      <div className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 printer-grid opacity-20" />
+    // overflow-clip, not -hidden: "hidden" makes a box a scroll container, and
+    // the hero's scroll timeline would then watch a box that never scrolls.
+    <section className="relative isolate overflow-clip" aria-label="Hero">
+      {/* Banner — the printer at work behind the text and CTAs */}
+      <div className="hero-banner relative isolate overflow-clip bg-ink-950">
+        <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+          <HeroVideo />
+          {/* Readability: the plate in the footage is bright, so the clip is
+              dimmed in CSS and shaded here until every frame holds the white
+              and the green headline at 4.5:1 or better. */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse at center, rgba(17,184,89,0.12) 0%, transparent 60%), linear-gradient(180deg, #0A0A0B 0%, #0A0A0B 100%)",
+                "radial-gradient(ellipse 55% 50% at 50% 52%, rgba(4,17,11,0.88) 0%, rgba(4,17,11,0.65) 55%, transparent 100%), linear-gradient(180deg, rgba(4,17,11,0.55) 0%, rgba(4,17,11,0.7) 55%, rgba(4,17,11,0.85) 100%)",
             }}
           />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at center, rgba(17,184,89,0.06) 0%, transparent 60%)" }}
+          />
+          <div className="hero-shade absolute inset-0 bg-ink-950/60" />
+          <div className="absolute inset-0 printer-grid opacity-10" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-6 md:px-10 pt-8 sm:pt-16 md:pt-20 pb-10 sm:pb-12 md:pb-16 text-center">
+          <div className="hero-copy">
           <HeroLogo className="u3d-hero mx-auto w-[168px] sm:w-[240px] md:w-[340px] h-auto mb-4 sm:mb-6 md:mb-8" />
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/30 bg-flame/10 text-flame text-[10px] sm:text-xs font-mono uppercase tracking-widest mb-5 sm:mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-flame live-dot" />
@@ -27,19 +42,14 @@ export default function Hero() {
             <span className="text-ink-400">·</span>
             <span>שידור חי מהסטודיו</span>
           </div>
-          <h1 className="text-[40px] xs:text-[44px] md:text-[88px] leading-[0.95] font-black tracking-tightest text-ink-50">
-            כל רעיון.
-            <br />
-            מודפס.
-            <br />
-            <span className="text-flame">בידיים שלך.</span>
-          </h1>
-          <p className="mt-5 sm:mt-8 text-ink-200 text-[15px] sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed sm:leading-relaxed">
+          <HeroTitle />
+          <p className="mt-5 sm:mt-8 text-ink-200 text-body md:text-lg md:leading-[1.6] max-w-2xl mx-auto">
             מדפסת תלת מימד מקצועית שעובדת עבורך — סמלי יחידות, מתנות לעובדים,
             פידג&apos;טים, או כל קובץ שתעלה. ישירות מהסטודיו אליך.
           </p>
+          </div>
           <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-            <Btn as="a" href="/configurator" size="lg" icon="sparkles">
+            <Btn as="a" href="/trendy" size="lg" icon="sparkles">
               התחל להזמין
             </Btn>
             <Btn as="a" href="/livestream" size="lg" variant="outline" icon="play">
@@ -65,6 +75,10 @@ export default function Hero() {
             </li>
           </ul>
         </div>
+      </div>
+
+      <div className="mb-8 sm:mb-12">
+        <ShelfMarquee />
       </div>
 
       <HeroCarousel />

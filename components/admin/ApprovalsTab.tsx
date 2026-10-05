@@ -6,7 +6,10 @@ import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { CANDIDATES } from "@/lib/candidates.generated";
-import { SHELF_LABEL, SHELVES, type Decision, type DecisionsFile } from "@/lib/candidates";
+import SyncStatus from "./SyncStatus";
+import { SHELF_LABEL, SHELVES, type Decision, type DecisionsFile, type ModelDecision } from "@/lib/candidates";
+import { fetchRepoQueue, useApprovalsStore } from "@/lib/approvals-store";
+import { useAdminStore } from "@/lib/admin-store";
 import { suggestPrice, type ImportedShelf } from "@/lib/imported";
 import { photoSrc } from "@/lib/assets";
 import { fmtILS } from "@/lib/format";
@@ -21,22 +24,45 @@ import { cn } from "@/lib/cn";
  * answers are saved to the repository exactly like the prices are, and the next
  * build turns the approved ones into real products.
  */
-/**
- * What the owner has said about one candidate so far.
- *
- * `decision` stays undefined while he is still picking shelves — a card must
- * not vanish from the list the moment he touches it, or he cannot pick a second
- * shelf, or see what he just chose. `shelves[0]` is the product's home.
- * `touched` remembers that the shelves are his choice and not the suggestion,
- * so his first pick REPLACES the suggested shelf instead of joining it.
- */
-type Choice = { decision?: Decision; shelves: ImportedShelf[]; touched?: boolean };
-
 export default function ApprovalsTab() {
-  const [choices, setChoices] = useState<Record<string, Choice>>({});
+  // In a store, not useState: switching admin tabs unmounts this one, and that
+  // used to throw away every answer given so far.
+  const choices = useApprovalsStore((s) => s.choices);
+  const setChoices = useApprovalsStore((s) => s.update);
+  const saved = useApprovalsStore((s) => s.saved);
+  const markSaved = useApprovalsStore((s) => s.markSaved);
+  const token = useAdminStore((s) => s.ghToken);
   const [onlyOpen, setOnlyOpen] = useState(true);
 
-  const decided = Object.values(choices).filter((c) => c.decision).length;
+  /**
+   * The repository's view of the queue. After a save the site takes about five
+   * minutes to rebuild, and until then this build still lists every model that
+   * was just answered — which read as "it did not save". So: a model gone from
+   * the repository's queue is done; one in model-decisions.json is saved and
+   * waiting for the bot. Neither is shown as open.
+   */
+  const [repo, setRepo] = useState<{ queued: Set<string>; pending: ModelDecision[] } | null>(null);
+  useEffect(() => {
+    let live = true;
+    const load = () => fetchRepoQueue(token || undefined).then((r) => { if (live && r) setRepo(r); });
+    load();
+    const t = setInterval(load, 60_000);
+    return () => { live = false; clearInterval(t); };
+  }, [token]);
+
+  const done = useMemo(() => {
+    const ids = new Set<string>(Object.keys(saved));
+    if (repo) {
+      for (const c of CANDIDATES) if (!repo.queued.has(c.id)) ids.add(c.id);
+      for (const d of repo.pending) ids.add(d.id);
+    }
+    return ids;
+  }, [repo, saved]);
+  const open = CANDIDATES.filter((c) => !done.has(c.id));
+  const doneHere = CANDIDATES.length - open.length;
+
+  const unsaved = Object.entries(choices).filter(([id, c]) => c.decision && !done.has(id));
+  const decided = unsaved.length;
 
   /**
    * Refusing to let an hour of answers disappear.
@@ -54,12 +80,12 @@ export default function ApprovalsTab() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [decided]);
   const list = useMemo(
-    () => (onlyOpen ? CANDIDATES.filter((c) => !choices[c.id]?.decision) : CANDIDATES),
-    [choices, onlyOpen],
+    () => (onlyOpen ? open.filter((c) => !choices[c.id]?.decision) : CANDIDATES),
+    [choices, onlyOpen, open],
   );
 
   const set = (id: string, decision: Decision, shelves: ImportedShelf[]) =>
-    setChoices((c) => ({ ...c, [id]: { ...c[id], decision, shelves } }));
+    setChoices((c) => ({ ...c, [id]: { ...c[id], decision, shelves } }));   // keeps `he`
 
   /**
    * Clicking a shelf adds it, clicking it again removes it, and the last one
@@ -75,30 +101,50 @@ export default function ApprovalsTab() {
       return { ...prev, [id]: { ...cur, shelves: shelves.length ? shelves : cur.shelves } };
     });
 
+  /**
+   * Everything answered and not yet applied — this visit's answers plus the
+   * ones already waiting in the repository. The bot empties the file after
+   * applying it, so a second save before it ran must carry the first one too,
+   * or it would overwrite it.
+   */
   const json = () => {
+    const mine = Object.entries(choices).filter(([, c]) => c.decision);
+    const mineIds = new Set(mine.map(([id]) => id));
+    const waiting = (repo?.pending ?? []).filter((d) => !mineIds.has(d.id) && repo?.queued.has(d.id));
     const file: DecisionsFile = {
       version: 1,
-      decisions: Object.entries(choices)
-        .filter(([, c]) => c.decision)
+      decisions: [...waiting, ...mine
         .map(([id, c]) => ({
         id,
         decision: c.decision as Decision,
         ...(c.decision === "approved"
-          ? { shelf: c.shelves[0], ...(c.shelves.length > 1 ? { also: c.shelves.slice(1) } : {}) }
+          ? {
+              shelf: c.shelves[0],
+              ...(c.shelves.length > 1 ? { also: c.shelves.slice(1) } : {}),
+              ...(c.he?.trim() ? { he: c.he.trim() } : {}),
+            }
           : {}),
         at: new Date().toISOString(),
-      })),
+      }))],
     };
     return JSON.stringify(file, null, 2);
   };
 
-  if (!CANDIDATES.length) {
+  if (!open.length && !decided) {
     return (
-      <div className="max-w-3xl p-6 rounded-2xl border border-ink-800 bg-ink-900 text-center">
-        <h2 className="font-black text-lg mb-1">אין מודלים שממתינים</h2>
-        <p className="text-sm text-ink-400">
-          הסריקות מוסיפות לכאן. כשיימצא משהו חדש — הוא יופיע כאן לפני שהוא נכנס לחנות.
-        </p>
+      <div className="space-y-4">
+        <div className="max-w-3xl p-6 rounded-2xl border border-ink-800 bg-ink-900 text-center">
+          <h2 className="font-black text-lg mb-1">
+            {CANDIDATES.length ? `כל ${CANDIDATES.length} המודלים הוכרעו ונשמרו` : "אין מודלים שממתינים"}
+          </h2>
+          <p className="text-sm text-ink-400">
+            {CANDIDATES.length
+              ? "האתר מתעדכן תוך כ-5 דקות, והמודלים שאישרת עוברים לחנות. "
+              : ""}
+            התור מתמלא מהסריקה של התוסף בכרום, פעם ביום. למטה — מתי זה קרה לאחרונה ומה יצא מזה.
+          </p>
+        </div>
+        <SyncStatus />
       </div>
     );
   }
@@ -108,7 +154,7 @@ export default function ApprovalsTab() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-black text-lg">
-            {CANDIDATES.length} מודלים ממתינים
+            {open.length} מודלים ממתינים
             {decided > 0 && <span className="text-flame"> · {decided} הוכרעו</span>}
           </h2>
           <p className="text-sm text-ink-400">כל מודל כאן עדיין לא בחנות. בחר עמודה ואשר, או דחה.</p>
@@ -122,13 +168,24 @@ export default function ApprovalsTab() {
         </button>
       </div>
 
+      {doneHere > 0 && (
+        <p className="text-sm rounded-xl border border-good/40 bg-good/10 text-good px-3 py-2 flex items-start gap-2">
+          <Icon name="check" size={15} className="mt-0.5 shrink-0" />
+          <span>
+            {doneHere} החלטות כבר נשמרו ב-GitHub. האתר מתעדכן לבד תוך כ-5 דקות, והמודלים שאישרת עוברים לחנות.
+            אין צורך לשמור אותן שוב.
+          </span>
+        </p>
+      )}
+
       {decided > 0 && (
         <div className="sticky top-2 z-20">
           <AdminSaveToSite
             json={json}
             path="public/model-decisions.json"
+            onSaved={() => markSaved(unsaved.map(([id]) => id))}
             title={`שמירת ${decided} החלטות`}
-            what="עד שלא תשמור, שום דבר מזה לא נכנס לאתר — ורענון ימחק את הכל"
+            what="ההחלטות נשמרות גם כשעוברים בין לשוניות; רק רענון של הדף לפני שמירה ימחק אותן"
           />
         </div>
       )}
@@ -192,6 +249,18 @@ export default function ApprovalsTab() {
                     </button>
                   ))}
                 </div>
+                <label className="block mb-2.5">
+                  <span className="text-[11px] text-ink-400">שם בעברית לחנות</span>
+                  <input
+                    value={chosen?.he ?? ""}
+                    onChange={(e) => {
+                      const he = e.target.value;
+                      setChoices((prev) => ({ ...prev, [c.id]: { ...prev[c.id], shelves: prev[c.id]?.shelves ?? shelves, he } }));
+                    }}
+                    placeholder="אם ריק — השם באנגלית, ואפשר לתקן אחר כך בלשונית שמות"
+                    className="mt-1 w-full h-9 px-2.5 rounded-lg bg-ink-950 border border-ink-800 text-sm focus:border-flame outline-none"
+                  />
+                </label>
                 <div className="flex gap-2">
                   <Btn
                     size="sm"

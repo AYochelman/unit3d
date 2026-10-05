@@ -32,7 +32,9 @@ export type EventName =
   | "configurator_open"
   | "review_sent"
   | "live_open"
-  | "search";
+  | "search"
+  | "finder_open"
+  | "finder_done";
 
 type Props = Record<string, string | number | boolean | null | undefined>;
 
@@ -159,18 +161,37 @@ export type SiteEvent = {
   props: Record<string, unknown> | null;
 };
 
+/**
+ * Why a read came back empty, in words the owner can act on. Until now every
+ * failure — a table never created, a policy that refuses him, an expired
+ * session — read as "no data", which is indistinguishable from "nobody came".
+ */
+export type ReadProblem = { kind: "missing" | "denied" | "session" | "other"; detail: string } | null;
+
 /** Everything in the window, newest first. Aggregated in the browser. */
-export async function readEvents(token: string, days = 30): Promise<SiteEvent[]> {
+export async function readEvents(token: string, days = 30): Promise<{ rows: SiteEvent[]; problem: ReadProblem }> {
   const c = await shopConfig();
-  if (!isConfigured(c)) return [];
+  if (!isConfigured(c)) return { rows: [], problem: { kind: "other", detail: "shop.json has no Supabase address or key" } };
   const since = new Date(Date.now() - days * 86_400_000).toISOString();
   try {
     const res = await fetch(
       `${c.supabaseUrl}/rest/v1/site_events?select=*&created_at=gte.${since}&order=created_at.desc&limit=20000`,
       { headers: { ...headers(c), Authorization: `Bearer ${token}` }, cache: "no-store" },
     );
-    return res.ok ? ((await res.json()) as SiteEvent[]) : [];
-  } catch {
-    return [];
+    if (res.ok) return { rows: (await res.json()) as SiteEvent[], problem: null };
+    const body = (await res.json().catch(() => ({}))) as { code?: string; message?: string };
+    const detail = `HTTP ${res.status}${body.code ? ` · ${body.code}` : ""}${body.message ? ` · ${body.message}` : ""}`;
+    // PGRST205 / 42P01: the table is not there. 42501: there, but this user may not read it.
+    const kind =
+      body.code === "PGRST205" || body.code === "42P01" || res.status === 404
+        ? "missing"
+        : body.code === "42501" || res.status === 403
+          ? "denied"
+          : res.status === 401 || body.code === "PGRST301" || body.code === "PGRST303"
+            ? "session"
+            : "other";
+    return { rows: [], problem: { kind, detail } };
+  } catch (e) {
+    return { rows: [], problem: { kind: "other", detail: e instanceof Error ? e.message : "network" } };
   }
 }

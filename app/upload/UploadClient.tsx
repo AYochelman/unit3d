@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Pill from "@/components/ui/Pill";
@@ -7,6 +8,7 @@ import Icon from "@/components/ui/Icon";
 import { useFilaments } from "@/lib/palette";
 import { useOrderStore } from "@/lib/order-store";
 import { cn } from "@/lib/cn";
+import { inspectModelFile } from "@/lib/upload-check";
 
 type UploadedFile = { name: string; size: number; ext: string };
 
@@ -37,9 +39,15 @@ export default function UploadClient() {
 
   const colorObj = FILAMENTS.find((f) => f.id === color)!;
 
+  const [error, setError] = useState<string | null>(null);
+  // Checked before it is accepted: the bytes have to be the model the
+  // extension claims, and the name is cleaned (lib/upload-check.ts).
   const accept = (f: File) => {
-    const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
-    setFile({ name: f.name, size: f.size, ext });
+    void inspectModelFile(f).then((r) => {
+      if (!r.ok) { setFile(null); setError(r.reason); return; }
+      setError(null);
+      setFile({ name: r.name, size: f.size, ext: r.ext });
+    });
   };
 
   const proceed = () => {
@@ -66,9 +74,9 @@ export default function UploadClient() {
         <Pill tone="cyan" className="mb-3">
           UPLOAD · STL · OBJ · 3MF
         </Pill>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05] mb-3">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
           יש קובץ. תעלה.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           STL, OBJ, או 3MF — עד 50MB. אני אסתכל ואחזור אליך עם הצעת מחיר תוך 24 שעות.
         </p>
@@ -172,6 +180,11 @@ export default function UploadClient() {
           </div>
         )}
       </div>
+      {error && (
+        <p role="alert" className="mt-3 text-sm text-bad">
+          {error}
+        </p>
+      )}
 
       {file && (
         <div className="mt-8 grid lg:grid-cols-2 gap-6">

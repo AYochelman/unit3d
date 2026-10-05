@@ -2,7 +2,7 @@ import { NEXT_ORDER_DISCOUNT, isValidCoupon } from "./coupon";
 import { fmtILS } from "./format";
 
 /**
- * Discount codes Ariel writes himself.
+ * Discount codes Erez writes himself.
  *
  * The 5%-off-your-next-order code (lib/coupon.ts) proves itself arithmetically
  * and needs no list. These are the opposite: a code he invents for a fair, a

@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { STANDING, standingCounts, standingFor } from "@/lib/permissions";
 import { useSearchParams } from "next/navigation";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
@@ -25,12 +26,14 @@ import ExpensesTab from "@/components/admin/ExpensesTab";
 import ChangelogTab from "@/components/admin/ChangelogTab";
 import ReviewsTab from "@/components/admin/ReviewsTab";
 import TrafficTab from "@/components/admin/TrafficTab";
+import CalculatorTab from "@/components/admin/CalculatorTab";
+import DesignLabTab from "@/components/admin/DesignLabTab";
 import { BRANCH_TREE } from "@/lib/units-hierarchy";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "orders" | "traffic" | "reviews" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
+type Tab = "design" | "calc" | "orders" | "traffic" | "reviews" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "orders", label: "הזמנות" },
@@ -39,6 +42,8 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "coupons", label: "קודי הנחה" },
   { id: "expenses", label: "הוצאות" },
   { id: "products", label: "מוצרים" },
+  { id: "calc", label: "מחשבון עלות" },
+  { id: "design", label: "תצוגת עיצוב" },
   { id: "names", label: "מוצרים · שמות" },
   { id: "approvals", label: "מודלים לאישור" },
   { id: "stock", label: "מלאי" },
@@ -168,6 +173,8 @@ export default function AdminClient() {
       </div>
 
       {tab === "products" && <ProductsTab />}
+      {tab === "calc" && <CalculatorTab />}
+      {tab === "design" && <DesignLabTab />}
       {tab === "orders" && <OrdersTab />}
       {tab === "traffic" && <TrafficTab />}
       {tab === "reviews" && <ReviewsTab />}
@@ -264,7 +271,7 @@ function ProductsTab() {
         <table className="w-full text-xs font-mono whitespace-nowrap" dir="rtl">
           <thead className="bg-ink-900 text-ink-400 text-[11px]">
             <tr>
-              <Th>מוצר</Th><Th>סוג</Th><Th>חומר</Th>
+              <Th>מוצר</Th><Th>סוג</Th><Th>רישיון</Th><Th>חומר</Th>
               <Th>זמן (h)</Th><Th>גרם</Th>
               <Th>חומר ₪</Th><Th>מכונה+חשמל ₪</Th><Th>עלות ₪</Th>
               <Th>מחיר ₪</Th><Th>רווח ₪</Th><Th>מרווח</Th><Th>מומלץ ₪</Th><Th></Th>
@@ -275,6 +282,15 @@ function ProductsTab() {
               <tr key={r.id} className={cn("hover:bg-ink-900/60", r.overridden && "bg-amber-500/5")}>
                 <td className="px-3 py-2 font-sans font-semibold text-ink-100 max-w-[220px] truncate" title={r.name}>{r.name}</td>
                 <td className="px-3 py-2 font-sans text-ink-400">{r.kind}</td>
+                <td className="px-3 py-2 font-sans">
+                  {(() => {
+                    const st = standingFor(r.id);
+                    if (!st) return <span className="text-ink-600">—</span>;
+                    const v = STANDING[st];
+                    const cls = { good: "text-emerald-400", cyan: "text-cyan2", flame: "text-flame", neutral: "text-ink-400", bad: "text-red-400" }[v.tone];
+                    return <span className={cls} title={v.hint}>{v.label}</span>;
+                  })()}
+                </td>
                 <td className="px-3 py-2 text-ink-300" dir="ltr">{MATERIAL_BY_ID[r.material].short}{r.colors > 1 ? ` ·${r.colors}C` : ""}</td>
                 <td className="px-2 py-1"><Cell value={r.hours} step={0.1} onChange={(v) => setOverride(r.id, { hours: v })} /></td>
                 <td className="px-2 py-1"><Cell value={r.grams} step={1} onChange={(v) => setOverride(r.id, { grams: v })} /></td>
@@ -297,6 +313,15 @@ function ProductsTab() {
           </tbody>
         </table>
       </div>
+      {(() => {
+        const c = standingCounts(rows.map((r) => r.id));
+        return (
+          <p className="mt-3 text-[11px] text-ink-400 leading-relaxed">
+            רישיונות בטבלה: <span className="text-emerald-400">{c.granted} עם הסכמה</span> · <span className="text-cyan2">{c.free} CC חופשי</span> · <span className="text-flame">{c["no-derivatives"]} ללא שינויים</span> · <span className="text-ink-300">{c.ask} לבקש הסכמה</span>.
+            הסכמה שהתקבלה נרשמת ב-<code>lib/permissions.ts</code> עם תאריך ומקור.
+          </p>
+        );
+      })()}
       <p className="mt-3 text-[11px] text-ink-500 leading-relaxed">
         זמן וגרם הם הערכות עד שיש נתונים מהסלייסר. שדה שנערך נצבע בענבר ואפשר לאפס אותו. &quot;מומלץ&quot; = המחיר שמגיע ליעד המרווח בלשונית פרמטרים.
       </p>

@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useMemo, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
@@ -113,7 +114,7 @@ export default function UnitOrderScreen({
 
   // A product page offers only what can be printed today, and says so when the
   // shelf is empty. This is an enquiry, not a checkout — it ends in a message to
-  // Ariel — so when nothing in the family is in stock the customer still gets to
+  // Erez — so when nothing in the family is in stock the customer still gets to
   // say which colour they want, with every swatch struck through so the answer
   // is "that one is a few days out", not a promise.
   const family = useMemo(() => filamentsFor(palette, form.material), [palette, form.material]);
@@ -187,7 +188,7 @@ export default function UnitOrderScreen({
             </div>
             <div className="min-w-0 lg:p-5 lg:border-t lg:border-ink-800">
               <Pill tone="flame" className="mb-2">הגדוד שבחרת</Pill>
-              <h2 className="text-lg lg:text-2xl font-black tracking-tight leading-tight truncate lg:whitespace-normal">{unit.title}</h2>
+              <ProximityH2 className="text-lg lg:text-2xl font-black tracking-tight leading-tight truncate lg:whitespace-normal">{unit.title}</ProximityH2>
               <dl className="mt-2 lg:mt-3 space-y-1 text-xs lg:text-sm">
                 <div className="flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">חטיבה</dt><dd className="text-ink-200 truncate">{unit.brigade}</dd></div>
                 <div className="hidden sm:flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">חיל</dt><dd className="text-ink-200 truncate">{unit.corps}</dd></div>
@@ -200,9 +201,9 @@ export default function UnitOrderScreen({
         {/* The choices */}
         <div className="lg:col-span-3 space-y-8">
           <header>
-            <h1 className="text-2xl md:text-4xl font-black tracking-tightest leading-tight">
+            <ProximityH1 className="text-2xl md:text-4xl font-black tracking-tightest leading-tight">
               אין בעיה. איפה אתה רוצה את הגדוד שלך?
-            </h1>
+            </ProximityH1>
             <p className="text-ink-400 mt-2">
               אותו סמל, על גוף אחר. בחר איפה הוא יושב ואיך הוא נגמר.
             </p>

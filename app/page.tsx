@@ -3,7 +3,7 @@ import AudienceSwitcher from "@/components/home/AudienceSwitcher";
 import Categories from "@/components/home/Categories";
 import ProductShowcase from "@/components/home/ProductShowcase";
 import HowItWorks from "@/components/home/HowItWorks";
-import LivePreview from "@/components/home/LivePreview";
+import LiveSpread from "@/components/home/LiveSpread";
 import NewInShop from "@/components/home/NewInShop";
 import B2BBlock from "@/components/home/B2BBlock";
 import ReviewsRow from "@/components/home/ReviewsRow";
@@ -24,11 +24,17 @@ export default function HomePage() {
       <JsonLd data={businessJsonLd()} />
       <JsonLd data={websiteJsonLd()} />
       <Hero />
+      {/* "התהליך" right after the hero, before the printer at work (the owner's
+          call). Not in a Reveal: its pin is position: sticky, and a
+          transformed ancestor while revealing would hold it. */}
+      <HowItWorks />
       {/* The printer itself, straight after the hero. Eight timelapses off the
           real build plate answer "are these people actually printing?" before
           a visitor has to take anyone's word for it — the reviews then land on
           someone already half convinced. */}
-      <LivePreview />
+      {/* The eight timelapses as a stack that spreads on scroll (the owner's
+          pick over the player-and-thumbnails LivePreview, kept in the repo). */}
+      <LiveSpread />
       {/*
         Everything below the fold settles in as it is reached.
         Hero and LivePreview are deliberately NOT wrapped: they are on screen
@@ -38,7 +44,6 @@ export default function HomePage() {
       <Reveal><AudienceSwitcher /></Reveal>
       <Reveal><Categories /></Reveal>
       <Reveal><ProductShowcase /></Reveal>
-      <Reveal><HowItWorks /></Reveal>
       <Reveal><ReviewsRow /></Reveal>
       <Reveal><NewInShop /></Reveal>
       <Reveal><B2BBlock /></Reveal>

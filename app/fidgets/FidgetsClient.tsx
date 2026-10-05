@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -297,9 +298,9 @@ export default function FidgetsClient() {
         <Pill tone="cyan" className="mb-4">
           פלקסי ופידג&apos;טים · ANTI-BOREDOM
         </Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           שני מדפים. אותה מדפסת.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           <strong className="text-ink-100">פלקסי</strong> — יצורים מפרקיים שיוצאים מהמדפסת כשהם כבר זזים, בלי דבק ובלי הרכבה.
           <strong className="text-ink-100"> פידג&apos;טים</strong> — ספינרים, קוביות אינסוף, סליידרים וכפתורים.
@@ -398,9 +399,9 @@ export default function FidgetsClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
           WHY FIDGETS
         </div>
-        <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">
+        <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">
           למה זה עובד.
-        </h2>
+        </ProximityH2>
         <div className="grid md:grid-cols-3 gap-5">
           {[
             { t: "הדפסה אחת", d: "כל פיגורה מודפסת בחתיכה אחת — בלי דבק, בלי הרכבה, בלי חלקים שנופלים." },

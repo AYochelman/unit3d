@@ -14,6 +14,7 @@
  * re-sliced it since.
  */
 import fs from "node:fs";
+import { patchStatus } from "./lib/sync-status.mjs";
 import path from "node:path";
 import {
   ROOT, c, sleep, fetchDetails, holdsFor, platesFrom, readableTitle,
@@ -23,6 +24,7 @@ import {
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 const RAW = path.join(ROOT, "data", "makerworld-raw.json");
 const DECISIONS = path.join(ROOT, "public", "model-decisions.json");
+const HE_OVERRIDES = path.join(ROOT, "lib", "he-names.overrides.ts");
 const SEEN = path.join(ROOT, "data", "rejected-models.json");
 
 const log = (...a) => console.log(...a);
@@ -97,6 +99,22 @@ function summary(added, rejected) {
   fs.appendFileSync(f, lines.join("\n") + "\n", "utf8");
 }
 
+/**
+ * The Hebrew name typed next to "אשר" goes where /admin → "שמות" writes its
+ * edits, so the model reaches the shelf already named in Hebrew.
+ */
+function saveHebrewNames(approved) {
+  const named = approved.filter((d) => typeof d.he === "string" && /[\u0590-\u05FF]/.test(d.he));
+  if (!named.length) return;
+  const text = fs.readFileSync(HE_OVERRIDES, "utf8");
+  const names = Object.fromEntries([...text.matchAll(/^\s*("mw-\d+"):\s*(".*"),\s*$/gm)].map((m) => [JSON.parse(m[1]), JSON.parse(m[2])]));
+  for (const d of named) names[`mw-${d.id}`] = d.he.trim();
+  const head = text.slice(0, text.indexOf("export const HE_NAME_OVERRIDES"));
+  const rows = Object.entries(names).sort(([a], [b]) => a.localeCompare(b)).map(([id, n]) => `  ${JSON.stringify(id)}: ${JSON.stringify(n)},`);
+  fs.writeFileSync(HE_OVERRIDES, `${head}export const HE_NAME_OVERRIDES: Record<string, string> = {\n${rows.join("\n")}\n};\n`, "utf8");
+  log(c.g(`  ${named.length} שמות בעברית נשמרו`));
+}
+
 async function main() {
   if (!fs.existsSync(DECISIONS)) { log(c.d("  אין החלטות לטפל בהן.")); return; }
   const doc = JSON.parse(fs.readFileSync(DECISIONS, "utf8"));
@@ -118,6 +136,7 @@ async function main() {
   }
 
   if (rows.length) append(rows);
+  saveHebrewNames(approved.filter((d) => rows.some((r) => r.id === `mw-${d.id}`)));
 
   // Remember the noes, so the next sweep offers something else.
   const seen = loadRejected();
@@ -129,6 +148,7 @@ async function main() {
   fs.writeFileSync(DECISIONS, JSON.stringify({ version: 1, decisions: [] }, null, 2) + "\n", "utf8");
 
   summary(rows, rejected.length);
+  patchStatus("decisions", { appliedAt: new Date().toISOString(), approved: rows.length, rejected: rejected.length });
   log(c.g(`\n  נוספו ${rows.length} מודלים, נרשמו ${rejected.length} דחיות\n`));
 }
 

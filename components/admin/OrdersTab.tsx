@@ -7,7 +7,6 @@ import ModelDownload from "./ModelDownload";
 import { modelSourceForLine } from "@/lib/model-source";
 import Pill from "@/components/ui/Pill";
 import { Input, Textarea } from "@/components/ui/Field";
-import AdminSaveToSite from "@/components/AdminSaveToSite";
 import { useAdminStore } from "@/lib/admin-store";
 import {
   DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
@@ -18,8 +17,6 @@ import { COURIERS, COURIER_BY_ID, courierName, trackUrl, type CourierId, type Sh
 import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
-
-const FILE = "public/orders.json";
 
 const DECISION: { id: OrderDecision; label: string; tone: string }[] = [
   { id: "approved", label: "אישור", tone: "border-good text-good bg-good/10" },
@@ -43,7 +40,7 @@ const when = (iso: string) => {
  * The orders customers placed.
  *
  * They arrive here on their own: the customer's browser writes the order to the
- * shop's table as it sends the WhatsApp message, so by the time Ariel sits down
+ * shop's table as it sends the WhatsApp message, so by the time Erez sits down
  * the queue is already waiting. He answers the customer from his phone and
  * decides here — open an order by its number, read what it actually is, and
  * approve, reject or mark refunded with a note. The decision goes back to the
@@ -257,7 +254,7 @@ export default function OrdersTab() {
    * The last tick is the one the customer has been waiting for.
    *
    * The confirmation email promised "מעדכן אותך כשהכל מוכן"; until now that
-   * update happened only if Ariel remembered to write. Ticking the final item
+   * update happened only if Erez remembered to write. Ticking the final item
    * is exactly the moment it becomes true, so that is where the letter is sent
    * from — and only once, which is what `readyEmailAt` is for. A re-tick of an
    * item, or a correction, must not mail the customer again.
@@ -284,7 +281,6 @@ export default function OrdersTab() {
   };
 
   const needsSetup = cfg !== null && !isConfigured(cfg);
-  const siteFile = () => `${JSON.stringify(localOrders, null, 2)}\n`;
 
   return (
     <div className="space-y-4">
@@ -434,7 +430,11 @@ export default function OrdersTab() {
               {pasteErr && <span className="text-xs text-bad">לא זוהתה הזמנה בהודעה הזו.</span>}
             </div>
             {localOrders.length > 0 && (
-              <AdminSaveToSite json={siteFile} path={FILE} title="שמירת הזמנות ידניות" what="ההזמנות שנקלטו ידנית" />
+              <p className="text-[11px] text-ink-500 leading-relaxed">
+                הזמנות שנקלטו ידנית נשארות בחלון הזה בלבד. הכפתור ששמר אותן ל-
+                <code dir="ltr">public/orders.json</code> הוסר: הקובץ הזה מוגש לכל מי שמבקר באתר
+                ויושב במאגר ציבורי, ושם היו נכתבים שם, טלפון וכתובת של לקוח.
+              </p>
             )}
           </div>
         )}

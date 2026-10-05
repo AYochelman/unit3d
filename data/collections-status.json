@@ -1,29 +1,19 @@
 {
-  "readAt": "2026-09-18T10:50:27.885Z",
+  "readAt": "2026-10-05T13:50:55.433Z",
   "signedIn": true,
-  "collections": [
-    "+20DefaultP2S24 models0 followers",
-    "+62ShareOthers66 models0 followers",
-    "+59ShareMine63 models0 followers",
-    "+36ShareStatue40 models0 followers",
-    "+60ShareFidget64 models0 followers",
-    "+12ShareGame16 models0 followers",
-    "+31ShareFlexi35 models0 followers",
-    "+33Buisness37 models0 followers"
-  ],
   "blocked": [
-    "+20DefaultP2S24 models0 followers (Cloudflare)",
-    "+62ShareOthers66 models0 followers (Cloudflare)",
-    "+59ShareMine63 models0 followers (Cloudflare)",
-    "+36ShareStatue40 models0 followers (Cloudflare)",
-    "+60ShareFidget64 models0 followers (Cloudflare)",
-    "+12ShareGame16 models0 followers (Cloudflare)",
-    "+31ShareFlexi35 models0 followers (Cloudflare)",
-    "+33Buisness37 models0 followers (Cloudflare)"
+    "p2s (Cloudflare)",
+    "mine (Cloudflare)",
+    "others (Cloudflare)",
+    "statue (Cloudflare)",
+    "fidget (Cloudflare)",
+    "flexi (Cloudflare)",
+    "buisness (Cloudflare)",
+    "game (Cloudflare)"
   ],
   "probes": [],
   "inCollections": 0,
   "likesNotInShop": 0,
-  "newForApproval": 0,
-  "alreadyHandled": 0
+  "newForApproval": 13,
+  "alreadyHandled": 279
 }

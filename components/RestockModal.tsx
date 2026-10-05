@@ -26,7 +26,7 @@ type Props = {
  *
  * Shown when someone taps a product we cannot print right now. It records the
  * request in the admin store — which is what feeds the buy-next advice in
- * /admin — and then sends it to Ariel over WhatsApp or e-mail, because a store
+ * /admin — and then sends it to Erez over WhatsApp or e-mail, because a store
  * that lives in one browser session cannot reach him on its own. The copy says
  * so rather than implying an automatic e-mail will arrive.
  */

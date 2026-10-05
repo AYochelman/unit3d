@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
@@ -7,7 +8,7 @@ import { Input } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
 
 const STEPS = [
-  { key: "received", label: "פנייה התקבלה", sub: "אריאל קרא את הבקשה ויחזור אליך תוך 24 שעות.", date: "12.10 · 14:22" },
+  { key: "received", label: "פנייה התקבלה", sub: "ארז קרא את הבקשה ויחזור אליך תוך 24 שעות.", date: "12.10 · 14:22" },
   { key: "approved", label: "עיצוב אושר", sub: "Render סופי אישרת ושילמת.", date: "13.10 · 09:08" },
   { key: "printing", label: "במדפסת", sub: "ה-G-code נטען. תוכל לצפות בלייב.", date: "13.10 · 11:30" },
   { key: "shipped", label: "נשלח", sub: "מספר מעקב יישלח בוואטסאפ.", date: "" },
@@ -24,9 +25,9 @@ export default function TrackingClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           ORDER TRACKING
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05] mb-3">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
           איפה ההזמנה שלי?
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300">הזן את מספר ההזמנה — דוגמה: <span className="num text-flame">#4781</span></p>
       </header>
 

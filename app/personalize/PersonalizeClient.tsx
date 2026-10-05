@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -85,9 +86,9 @@ export default function PersonalizeClient() {
   return (
     <div className="max-w-3xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <Pill tone="cyan" className="mb-4">טקסט אישי</Pill>
-      <h1 className="text-3xl md:text-5xl font-black tracking-tightest leading-[1.05] mb-3">
+      <ProximityH1 className="text-3xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
         מה לכתוב על זה?
-      </h1>
+      </ProximityH1>
       <p className="text-ink-300 mb-8">
         שם, תאריך, מספר אישי או משפט. כותבים, בוחרים צבע, והמחיר המעודכן מופיע למטה —
         ואני חוזר אליך עם תצוגה לפני שמתחילים להדפיס.

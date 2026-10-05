@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
@@ -63,9 +64,9 @@ export default function ShippingClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
         <Pill tone="cyan" className="mb-4">משלוחים · SHIPPING</Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           כמה עולה לשלוח את זה.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           המחשבון מחשב את מחיר המשלוח לפי המחירון הרשמי של דואר ישראל, ומוסיף עליו את עלות
           האריזה בפועל. דואר ישראל לא מתמחר לפי קילומטרים — המשקל קובע את המדרגה, והמרחק
@@ -195,7 +196,7 @@ export default function ShippingClient() {
 
           <div className="mt-6 grid md:grid-cols-2 gap-4">
             <section className="p-5 rounded-2xl bg-ink-900 border border-ink-800">
-              <h2 className="font-bold mb-2">מחירי האריזות</h2>
+              <ProximityH2 className="font-bold mb-2">מחירי האריזות</ProximityH2>
               <ul className="space-y-1 text-sm">
                 {PACKAGING.map((p) => (
                   <li key={p.id} className="flex justify-between gap-3">
@@ -214,7 +215,7 @@ export default function ShippingClient() {
             </section>
 
             <section className="p-5 rounded-2xl bg-ink-900 border border-ink-800">
-              <h2 className="font-bold mb-2">מאיפה המחירים</h2>
+              <ProximityH2 className="font-bold mb-2">מאיפה המחירים</ProximityH2>
               <p className="text-sm text-ink-300 leading-relaxed">
                 כל מחירי המשלוח לקוחים מ־<span className="text-ink-100">{RATES_SOURCE.title}</span>.
                 {" "}

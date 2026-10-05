@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
+import OwnerSignature from "./OwnerSignature";
 import { CONTACT } from "@/lib/contact";
 import { BUSINESS, addressLine, businessDetailsComplete, orPending } from "@/lib/business";
 import { LEGAL_PAGES } from "@/components/legal/LegalPage";
@@ -88,7 +89,7 @@ export default function Footer() {
                 <li key={it.href}>
                   <Link
                     href={it.href}
-                    className="inline-flex items-center min-h-11 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
+                    className="inline-flex items-center min-h-11 min-w-6 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
                   >
                     {it.label}
                   </Link>
@@ -106,7 +107,7 @@ export default function Footer() {
                 <li key={it.href}>
                   <Link
                     href={it.href}
-                    className="inline-flex items-center min-h-11 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
+                    className="inline-flex items-center min-h-11 min-w-6 sm:min-h-0 text-ink-200 hover:text-flame transition-colors"
                   >
                     {it.label}
                   </Link>
@@ -147,9 +148,9 @@ export default function Footer() {
             {" · "}{BUSINESS.entityType} {orPending(BUSINESS.vatId)}
             {" · "}{addressLine()}
             {" · "}
-            <a href={`tel:${BUSINESS.phone}`} dir="ltr" className="hover:text-flame transition-colors">{BUSINESS.phoneDisplay}</a>
+            <a href={`tel:${BUSINESS.phone}`} dir="ltr" className="inline-flex items-center min-h-6 hover:text-flame transition-colors">{BUSINESS.phoneDisplay}</a>
             {" · "}
-            <a href={`mailto:${BUSINESS.email}`} dir="ltr" className="hover:text-flame transition-colors">{BUSINESS.email}</a>
+            <a href={`mailto:${BUSINESS.email}`} dir="ltr" className="inline-flex items-center min-h-6 hover:text-flame transition-colors">{BUSINESS.email}</a>
             {!businessDetailsComplete() && (
               <span className="block mt-1 text-ink-500">
                 פרטי העוסק יושלמו בקרוב. עד אז אפשר לקבל אותם בטלפון או במייל.
@@ -158,6 +159,8 @@ export default function Footer() {
           </address>
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 border-t border-ink-800 flex flex-col md:flex-row items-center justify-between gap-3">
+          {/* The owner's signature: the shop and this site are his work. */}
+          <OwnerSignature />
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             © 2026 Unit3D · MADE IN GIVATAYIM · NOZZLE 0.4mm · v2.6
           </div>

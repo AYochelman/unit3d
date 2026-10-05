@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 import Btn from "./ui/Btn";
-import ThemeToggle from "./ThemeToggle";
 import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
@@ -23,11 +22,11 @@ const NAV = [
   { href: "/home", label: "לבית" },
   { href: "/office", label: "למשרד" },
   { href: "/configurator", label: "מעצב" },
+  { href: "/upload", label: "העלאת קובץ" },
   { href: "/b2b", label: "עסקים" },
 ];
 
 const SECONDARY = [
-  { href: "/upload", label: "העלאת קובץ" },
   { href: "/shipping", label: "משלוחים" },
   { href: "/livestream", label: "לייב" },
   { href: "/gallery", label: "גלריה" },
@@ -127,7 +126,7 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "whitespace-nowrap px-1.5 xl:px-2.5 py-2 rounded-md font-medium transition-colors",
+                    "whitespace-nowrap px-1.5 xl:px-2.5 py-2 rounded-md font-semibold transition-colors",
                     // The active item is marked twice — tint AND a rule beneath
                     // it — so it does not depend on colour alone.
                     "relative after:absolute after:inset-x-2 after:-bottom-px after:h-0.5 after:rounded-full after:bg-flame",
@@ -147,7 +146,6 @@ export default function Header() {
             {/* Search sits before the settings and the cart: on a catalogue of
                 this size it is the most-wanted control in the bar. */}
             <QuickSearch />
-            <ThemeToggle />
 
             <Link
               href="/admin"
@@ -178,11 +176,11 @@ export default function Header() {
             {/* Between lg and xl the eleven nav links, four icon buttons and
                 this CTA do not fit on one row — that is what was squeezing the
                 label onto two lines. At those widths the nav itself carries
-                "מעצב", which goes to the same place, so the button steps out
+                "טרנדי", which goes to the same place, so the button steps out
                 rather than being crushed. */}
             <Btn
               as="a"
-              href="/configurator"
+              href="/trendy"
               size="md"
               className="hidden md:inline-flex lg:hidden xl:inline-flex"
             >
@@ -215,7 +213,7 @@ export default function Header() {
                 a thumb already is. They used to sit under twenty-one links,
                 which on a phone means below the fold of the sheet itself. */}
             <div className="flex items-center gap-2">
-              <Btn as="a" href="/configurator" size="md" className="flex-1 h-12" onClick={() => setOpen(false)}>
+              <Btn as="a" href="/trendy" size="md" className="flex-1 h-12" onClick={() => setOpen(false)}>
                 התחל להזמין
               </Btn>
               <a
@@ -271,10 +269,6 @@ export default function Header() {
               ))}
             </div>
 
-            <div className="mt-5 flex items-center gap-2">
-              <ThemeToggle />
-              <span className="text-[11px] text-ink-500">מצב תצוגה</span>
-            </div>
           </div>
         </div>
       )}

@@ -311,15 +311,60 @@ export function classify(title, tags = [], cats = []) {
 }
 
 // ── what we import but do NOT put on sale ────────────────────────────────────
+/**
+ * Every term is word-bounded, and that is not tidying.
+ *
+ * Without \b, "blade" matches inside SCHUBLADE — German for drawer — and an
+ * AMS drawer for a Bambu printer came through the sweep tagged as a weapon.
+ * The same hole catches "crossword" and "password" on `sword`, "Shakespeare"
+ * and "spearmint" on `spear`, "ammonia" on `ammo`. A wrong tag was noise while
+ * these only warned; now that a weapon is dropped, a wrong tag deletes a good
+ * model, so the boundaries are load-bearing.
+ *
+ * `throwing` alone was too broad for the same reason, and now needs its noun.
+ */
 const WEAPON_RE =
-  /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|bb (launcher|gun)|airsoft|pistol|shotgun|rifle|\bgun\b|ammo|bullet|throwing|nunchaku|taser|crossbow|spear)/i;
+  /\b(knife|knives|katana|sword|swords|blade|blades|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|airsoft|pistol|shotgun|rifle|gun|guns|ammo|ammunition|bullet|bullets|nunchaku|taser|crossbow|spear)\b|\bbb\s+(launcher|gun)\b|\bthrowing\s+(knife|knives|star|stars|axe|card|cards|dart|darts)\b/i;
 
+/**
+ * A knife block, a katana stand, a drawer: storage that the weapon word alone
+ * would have thrown away. What is printed is not the blade.
+ */
+const NOT_A_WEAPON = /\b(block|holder|stand|rack|organi[sz]\w*|storage|sharpen\w*|dock|drawer|schublade|magnet|mount|case|sheath)\b/i;
+
+/** The one place that decides. Three copies of this regex disagreed before. */
+export const isWeapon = (text) => WEAPON_RE.test(text) && !NOT_A_WEAPON.test(text);
+
+/**
+ * The line the owner drew: a toy or a prop is fine, a real weapon is not.
+ *
+ * Everything this shop prints is PLA, so a katana, a butterfly knife and a
+ * banana sword are props — and nineteen of them are already on his shelves,
+ * selling. A blanket "weapon" block would have deleted them.
+ *
+ * What is left is the narrow set that is not a toy in any reading: a firearm
+ * or one of its parts, ammunition, and the things built to launch or shock.
+ * These are also the only ones with real legal weight, which is the point.
+ */
+const NOT_A_TOY =
+  /\b(airsoft|crossbow|taser|stun\s?gun|ammunition|live\s+round|broadhead|arrowhead|suppressor|silencer|firearm|receiver|glock|ar[-\s]?15|ak[-\s]?47|sten|luger|derringer)\b/i;
+
+/**
+ * Never queued, never sold. `isWeapon` only marks a card for a second look;
+ * this is the one that removes a model from the owner's choices, so it stays
+ * as small as the reason for it.
+ */
+export const isRealWeapon = (text) => NOT_A_TOY.test(text);
+
+// Word-bounded: "Link Cable Clip" is not Zelda, "Overengineered" is not Eren,
+// and "Ultrasonic" is not Sonic. Each name here is a trademark someone
+// enforces, which is a different and dearer complaint than a designer's.
 const BRAND_RE =
-  /(kaws|bearbrick|be@rbrick|smiski|hello kitty|spider[- ]?man|spiderman|spider noir|miles morales|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|master sword|nintendo|star wars|mandalorian|jujutsu|mahoraga|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|naruto|dragon ball|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go|cheburashka|tscheburaschka)/i;
+  /\b(kaws|bearbrick|be@rbrick|smiski|hello kitty|sanrio|labubu|casper|xenomorph|alien facehugger|spider[- ]?man|spider noir|web-?slinger|miles morales|marvel|iron ?man|hulk|thor|captain america|deadpool|venom|groot|batman|superman|joker|disney|mickey mouse|lilo and stitch|grinch|pokemon|pikachu|lugia|charizard|eevee|bulbasaur|squirtle|mewtwo|gengar|snorlax|mario|zelda|master sword|kirby|nintendo|star wars|darth vader|stormtrooper|yoda|lightsaber|boba fett|r2-?d2|mandalorian|grogu|baby yoda|x-?wing|tie fighter|millennium falcon|jujutsu|mahoraga|gojo|demon slayer|tanjiro|bleach|zangetsu|chainsaw man|pochita|black clover|asta|one piece|luffy|naruto|dragon ball|goku|attack on titan|aot titan|eren yeager|totoro|ghibli|toothless|night fury|how to train your dragon|harry potter|hogwarts|aperture science|portal turret|minecraft|creeper|among us|sonic the hedgehog|squid game|fortnite|roblox|master chief|subnautica|seraphon|warhammer|corvo|dishonored|panda by bambu|byd|stussy|nike|adidas|ferrari|lego|l3go|cheburashka|tscheburaschka)\b/i;
 
 export function holdsFor(text, license) {
   const holds = [];
-  if (WEAPON_RE.test(text)) holds.push("weapon");
+  if (isWeapon(text)) holds.push("weapon");
   if (BRAND_RE.test(text)) holds.push("brand");
   // A CC "NC" licence is the designer stating in writing that the model may not
   // be used commercially. That is not a judgement call like the two above.

@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
@@ -34,9 +35,9 @@ export default function HomeOfficeClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
         <Pill tone="cyan" className="mb-4">לבית ולמשרד · HOME & OFFICE</Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-[1.05] mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           דברים שימושיים. עם השם שלך עליהם.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           מעמדים, מארגנים, תחתיות, ווים ושלטים. כל מוצר אפשר להזמין עם טקסט או לוגו
           מובלט, בכל צבע שבמלאי. לעסקים: מ-10 יחידות עם הלוגו שלכם.

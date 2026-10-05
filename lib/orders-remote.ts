@@ -5,17 +5,17 @@ import { liveEmailHtml, liveEmailSubject, orderEmailHtml, orderEmailSubject, rea
 import { CONTACT } from "./contact";
 
 /**
- * Where an order lives between the customer's phone and Ariel's screen.
+ * Where an order lives between the customer's phone and Erez's screen.
  *
  * The shop is a static site: it has no server of its own, and it stores nothing
  * in the browser. So an order used to travel inside the message itself — first
- * as an 860-character link, then as text to paste back — and both asked Ariel
+ * as an 860-character link, then as text to paste back — and both asked Erez
  * to carry the data by hand. He shouldn't: he wants to answer on his phone and
  * decide on his computer, and the order should already be waiting there.
  *
  * A Supabase table is that waiting room. The customer's browser writes one row
  * with the anon key (the only thing it is allowed to do); reading those rows —
- * they carry a name, a phone and a mail — needs Ariel to sign in, so the table's
+ * they carry a name, a phone and a mail — needs Erez to sign in, so the table's
  * row-level security lets `anon` insert and only a signed-in user select and
  * update. Nothing here is a secret: the anon key is meant to be public, and the
  * data behind it is not.
@@ -103,7 +103,7 @@ export async function placeOrder(o: PlacedOrder): Promise<PlaceResult> {
   }
 }
 
-// ─── Ariel's side ────────────────────────────────────────────────────────────
+// ─── Erez's side ────────────────────────────────────────────────────────────
 export type Session = { access: string; refresh: string };
 
 /**
@@ -121,6 +121,36 @@ export async function adminSignIn(email: string, password: string): Promise<Sess
 /** Trade a stored refresh token for a fresh access token. */
 export async function adminRefresh(refresh: string): Promise<Session | null> {
   return authRequest("refresh_token", { refresh_token: refresh });
+}
+
+/**
+ * End the session at Supabase, not only in this browser.
+ *
+ * Signing out used to delete the refresh token from the device and stop there.
+ * The token itself stayed valid: anyone who had already copied it out of
+ * localStorage could keep trading it for fresh access tokens, and "I signed
+ * out" meant nothing to the server.
+ *
+ * `scope=local` revokes this device's refresh token and leaves his other
+ * devices signed in, which is what the button has always appeared to do. The
+ * access token already issued is short-lived and dies on its own — a logout
+ * cannot recall it, and saying otherwise would be the same false comfort.
+ *
+ * Returns whether the server confirmed. The caller forgets the session either
+ * way: a logout that cannot reach the network must still clear the device.
+ */
+export async function adminSignOut(access: string): Promise<boolean> {
+  const c = await shopConfig();
+  if (!isConfigured(c) || !access) return false;
+  try {
+    const res = await fetch(`${c.supabaseUrl}/auth/v1/logout?scope=local`, {
+      method: "POST",
+      headers: { apikey: c.supabaseAnonKey, Authorization: `Bearer ${access}` },
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 async function authRequest(grant: string, body: Record<string, string>): Promise<Session | null> {
@@ -245,7 +275,7 @@ export async function adminDecide(
  * here (lib/order-email.ts) where the shop's own palette lives.
  *
  * No address, no send. A failure is never fatal: the order is already on its
- * way to Ariel by WhatsApp, and the thank-you screen says what happened.
+ * way to Erez by WhatsApp, and the thank-you screen says what happened.
  */
 export type EmailResult = "sent" | "no-address" | "not-configured" | "failed";
 
@@ -289,7 +319,7 @@ export async function sendOrderEmail(o: PlacedOrder): Promise<EmailResult> {
 }
 
 /**
- * "It is on the printer", sent from Ariel's own browser at the click that
+ * "It is on the printer", sent from Erez's own browser at the click that
  * approves the order. Same pipe, the middle of the job.
  */
 export async function sendLiveEmail(o: PlacedOrder): Promise<EmailResult> {
@@ -297,7 +327,7 @@ export async function sendLiveEmail(o: PlacedOrder): Promise<EmailResult> {
 }
 
 /**
- * "It is ready", sent from Ariel's own browser when the last item is ticked.
+ * "It is ready", sent from Erez's own browser when the last item is ticked.
  *
  * Same pipe as the confirmation, opposite end of the job. It goes out from the
  * admin rather than from the customer's browser for the obvious reason: the

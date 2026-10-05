@@ -29,9 +29,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
-  ROOT, UA, c, sleep, fetchDetails, classify, holdsFor, platesFrom,
+  ROOT, UA, c, sleep, fetchDetails, classify, holdsFor, isRealWeapon, platesFrom,
   readableTitle, SHELF_OVERRIDES,
 } from "./lib/makerworld.mjs";
+import { patchStatus } from "./lib/sync-status.mjs";
 
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 const PENDING = path.join(ROOT, "data", "pending-models.json");
@@ -809,7 +810,6 @@ async function queue(wanted, likedFresh, skipped, probes) {
       `${JSON.stringify({
         readAt: new Date().toISOString(),
         signedIn: Boolean((process.env.MAKERWORLD_COOKIE || "").trim()),
-        collections: (collections ?? []).map((x) => x.name),
         blocked: skipped,
         probes,
         inCollections: wanted.length,
@@ -819,19 +819,35 @@ async function queue(wanted, likedFresh, skipped, probes) {
       }, null, 2)}\n`,
     );
   } catch { /* a status file is never worth failing the run for */ }
+  patchStatus("nightly", {
+    ranAt: new Date().toISOString(),
+    blockedCollections: skipped.length,
+    newForApproval: fresh.length,
+    alreadyHandled: nominated.length - fresh.length,
+  });
   if (!fresh.length) {
     log(c.d("  אין מה להוסיף לתור — הכל כבר בחנות או כבר הוכרע.\n"));
     summary([], skipped);
     return;
   }
 
-  const rows = [];
+  let rows = [];
   for (const { id, shelf } of fresh) {
     const d = await fetchDetails(id);
     if (!d) { log(c.y(`  ${id}: ה-API לא ענה, מדולג`)); continue; }
     const row = buildCandidate(id, d, shelf, shelf ? "collection" : "like");
     if (row) rows.push(row);
     await sleep(250); // be a polite guest
+  }
+  if (!rows.length) { log(c.y("  שום דבר לא נוסף.")); summary([], skipped); return; }
+
+  // The owner's line: a toy or a prop is fine, a real weapon never reaches
+  // him. Named out loud rather than dropped in silence — a wrong match here
+  // removes a model he would never know existed.
+  const real = rows.filter((r) => isRealWeapon(`${r.title} ${r.tags}`));
+  if (real.length) {
+    for (const r of real) log(c.r(`  [נשק אמיתי — לא נכנס] ${r.title}`));
+    rows = rows.filter((r) => !real.includes(r));
   }
   if (!rows.length) { log(c.y("  שום דבר לא נוסף.")); summary([], skipped); return; }
 

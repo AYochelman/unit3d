@@ -13,7 +13,7 @@ import { fmtILS } from "./format";
  * open.
  *
  * There is no server to post it to, and the shop stores nothing in the browser,
- * so an order travels the only road it has: a WhatsApp message to Ariel's phone.
+ * so an order travels the only road it has: a WhatsApp message to Erez's phone.
  * The message is written to be read AND to be read back — he pastes it into
  * /admin, `parseOrderMessage` turns it into this record again, and his decision
  * on it is saved with the same "סיים ועדכן" button as everything else here.
@@ -99,7 +99,7 @@ export type PlacedOrder = {
    */
   progress?: boolean[];
   decision?: OrderDecision;
-  /** Ariel's own note on the decision. */
+  /** Erez's own note on the decision. */
   decisionNote?: string;
   decidedAt?: string;
   /** When the customer was told it went on the printer. Absent means they have not been. */
@@ -189,7 +189,7 @@ export function siteOrigin(): string {
 /** The shop itself. The message ends on it — the way back to the catalogue. */
 export const SITE_URL = "https://unit-3d.com";
 
-/** Where Ariel reads his queue. Not in the message: it is his door, not theirs. */
+/** Where Erez reads his queue. Not in the message: it is his door, not theirs. */
 export const ADMIN_URL = `${SITE_URL}/admin`;
 
 /** The first summary line that opens with this label, without the label. */
@@ -220,7 +220,7 @@ const hoursOf = (l: OrderLine): string => pick(l.summary, "זמן הדפסה") ?
 
 /**
  * The whole order, written so it reads on a phone screen in one glance: who
- * ordered, then each product with the four things Ariel needs before he starts
+ * ordered, then each product with the four things Erez needs before he starts
  * printing — name, filament, price, time — and a plain link back to the shop.
  *
  * The message is also the record: /admin reads it back with `parseOrderMessage`,
@@ -282,7 +282,7 @@ const field = (line: string, label: string): string | null =>
  * The message, read back into an order.
  *
  * The link that used to carry the whole record was hundreds of characters long
- * on a phone screen, so the message carries nothing but the order itself: Ariel
+ * on a phone screen, so the message carries nothing but the order itself: Erez
  * pastes it into /admin and it files exactly as the link once did. It parses
  * only what `orderMessage` writes — anything else pasted here returns null
  * rather than a half-order.

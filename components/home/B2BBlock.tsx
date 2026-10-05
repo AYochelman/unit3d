@@ -1,3 +1,4 @@
+import { ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import Btn from "@/components/ui/Btn";
 import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
@@ -44,11 +45,11 @@ export default function B2BBlock() {
             <Pill tone="flame" className="mb-4">
               B2B · BUSINESSES
             </Pill>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-[1.05]">
+            <ProximityH2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-heading">
               מזמינים לחברה?
               <br />
               <span className="text-flame">קבלו דיל אחר.</span>
-            </h2>
+            </ProximityH2>
             <ul className="mt-6 grid gap-2.5">
               {PERKS.map((p) => (
                 <li key={p} className="flex items-center gap-2.5 text-ink-200">

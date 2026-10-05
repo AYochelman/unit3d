@@ -37,13 +37,24 @@ export const businessJsonLd = () => ({
   email: CONTACT.email,
   priceRange: "₪₪",
   areaServed: { "@type": "Country", name: "IL" },
+  // Word for word what the Google Business Profile says. Google matches the
+  // two, and a street here that differs from the one there -- or is missing --
+  // is a weaker match, which is a weaker place on the map.
   address: {
     "@type": "PostalAddress",
+    streetAddress: "סירקין 20",
     addressLocality: "גבעתיים",
+    postalCode: "5325501",
     addressCountry: "IL",
   },
+  // Every profile that is this business. The Google Business Profile's share
+  // link belongs here too, once its verification is through.
   sameAs: [CONTACT.instagram],
+  founder: { "@id": `${SITE_URL}/#owner` },
 });
+
+/** The person behind the shop and this site. */
+const OWNER = { "@type": "Person", "@id": `${SITE_URL}/#owner`, name: "ארז יוכלמן" } as const;
 
 export const websiteJsonLd = () => ({
   "@context": "https://schema.org",
@@ -53,6 +64,7 @@ export const websiteJsonLd = () => ({
   name: "Unit 3D",
   inLanguage: "he-IL",
   publisher: { "@id": `${SITE_URL}/#business` },
+  creator: OWNER,
 });
 
 /** A trail Google prints under the result instead of a raw URL. */

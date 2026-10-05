@@ -20,35 +20,35 @@ const config: Config = {
       },
       colors: {
         ink: {
-          950: "#0A0A0B",
-          900: "#111114",
-          800: "#1C1C1F",
-          700: "#2A2A2E",
-          600: "#3A3A3F",
+          950: "#04110B",
+          900: "#06150e",
+          800: "#0D2117",
+          700: "#16402A",
+          600: "#1D5236",
           // 500 and 400 are the muted text greys, and on a dark page a muted
           // grey has to be LIGHTER, not darker. #48484C gave 2.17:1 on the page
           // background — unreadable, and it was set as the text colour in 185
-          // places. #85858B is 4.63:1 at worst, which clears WCAG AA. 400 moved
+          // places. #8FA598 is 6.4:1 on ink-800 cards, which clears WCAG AA. 400 moved
           // with it so the two tones still read as two tones.
-          500: "#85858B",
-          400: "#A5A5AA",
-          300: "#C7C7CC",
-          200: "#E5E5EA",
-          100: "#F2F2F4",
-          50: "#FAFAFA",
+          500: "#8FA598",
+          400: "#A8B8AE",
+          300: "#C9D6CE",
+          200: "#E2EBE5",
+          100: "#EEF4F0",
+          50: "#F7FAF8",
         },
         flame: {
           DEFAULT: "#089a47",
           600: "#067138",
           700: "#055A2D",
-          300: "#3FB872",
+          300: "#5FE39A",
           soft: "#E8F6EE",
         },
         brand: {
           DEFAULT: "#089a47",
           600: "#067138",
           700: "#055A2D",
-          300: "#3FB872",
+          300: "#5FE39A",
           soft: "#E8F6EE",
         },
         cyan2: {
@@ -62,10 +62,46 @@ const config: Config = {
       boxShadow: {
         soft: "0 8px 32px rgba(0,0,0,0.12)",
         softer: "0 4px 16px rgba(0,0,0,0.08)",
-        glow: "0 0 0 1px rgba(8,154,71,0.45), 0 8px 32px rgba(8,154,71,0.25)",
+        glow: "0 0 0 1px rgba(8,154,71,0.3), 0 6px 18px rgba(8,154,71,0.14)",
       },
+      // Assistant (4.10): Hebrew reads best at its natural spacing, so the
+      // tightening steps are neutral. Uppercase mono labels keep their
+      // tracking-wide/widest, which this does not touch.
       letterSpacing: {
-        tightest: "-0.04em",
+        tight: "0em",
+        tighter: "0em",
+        tightest: "0em",
+      },
+      // Assistant tops out at 800, and the studio voice is calmer than the old
+      // 900 headlines: the heaviest weight anywhere is 700. 600 and 700 are
+      // real weights of the variable font, never synthesised.
+      fontWeight: {
+        extrabold: "700",
+        black: "700",
+      },
+      lineHeight: {
+        // Headings: room for Hebrew ascenders and nikud-free descenders
+        // without two lines touching.
+        heading: "1.15",
+      },
+      fontSize: {
+        // Running text and product descriptions.
+        body: ["1.0625rem", { lineHeight: "1.6" }],
+        // Tailwind's display sizes carry line-height 1, and a size class set at
+        // a breakpoint (md:text-5xl) overrides any leading-* written beside it
+        // without that breakpoint — see CLAUDE.md. Giving the sizes themselves
+        // the heading line height keeps two-line Hebrew headlines from touching.
+        "5xl": ["3rem", { lineHeight: "1.15" }],
+        "6xl": ["3.75rem", { lineHeight: "1.15" }],
+        "7xl": ["4.5rem", { lineHeight: "1.15" }],
+        "8xl": ["6rem", { lineHeight: "1.15" }],
+        "9xl": ["8rem", { lineHeight: "1.15" }],
+      },
+      // QClay + Island direction (4.10): bigger corners on cards. Buttons are pills,
+      // set in components/ui/Btn.tsx.
+      borderRadius: {
+        "2xl": "1.5rem",
+        "3xl": "2rem",
       },
       transitionTimingFunction: {
         smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -95,7 +131,7 @@ const config: Config = {
         livepulse: "livepulse 1.6s ease-in-out infinite",
         slowspin: "slowspin 5s linear infinite",
         fadeup: "fadeup .6s cubic-bezier(0.4,0,0.2,1) both",
-        marquee: "marquee 40s linear infinite",
+        marquee: "marquee 60s linear infinite",
         fillgrow: "fillgrow 2s ease-out",
       },
     },

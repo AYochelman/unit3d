@@ -1,0 +1,69 @@
+# HD photos for the home-page gallery.
+#
+# The gallery under "ככה זה נראה כשזה יוצא מהמדפסת" fills the width of the
+# page, and the catalogue's own copies stop at 900px. scripts/fetch-hd.mjs
+# keeps 1600px copies of the leading models on each shelf; this runs it where
+# the designers' CDNs answer, commits what changed, and republishes.
+name: HD gallery photos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "lib/imported.generated.ts"
+      - "scripts/fetch-hd.mjs"
+      - ".github/workflows/hd-images.yml"
+  schedule:
+    # Download counts move; the leaders are re-picked weekly.
+    - cron: "41 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: hd-images
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm ci
+
+      - name: Download the HD photos
+        run: npm run fetch:hd
+
+      - name: Commit what changed
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/img/hd lib/hdImages.generated.ts
+          if git diff --cached --quiet; then
+            echo "nothing new"
+            exit 0
+          fi
+          git commit -m "HD photos for the home-page gallery"
+          for i in 1 2 3 4 5; do
+            if git push; then break; fi
+            git pull --rebase origin main || exit 1
+            sleep $((i * 3))
+          done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not start another workflow, so the
+      # deploy has to be asked for by name.
+      - name: Publish the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main

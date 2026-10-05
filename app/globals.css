@@ -5,13 +5,19 @@
 @layer base {
   html,
   body {
-    background: #0a0a0b;
-    color: #f5f5f7;
+    background: #04110b;
+    color: #eef4f0;
   }
-  html.light,
-  html.light body {
-    background: #fafafa;
-    color: #0a0a0b;
+  /* Typography (4.10): one face, Assistant, for Hebrew and Latin alike.
+     Headings at natural spacing and a line height that leaves room between
+     lines; running text at 1.6. A leading-* or font-* utility still wins. */
+  body {
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    letter-spacing: normal;
+    line-height: 1.15;
   }
   body {
     font-family: var(--font-sans), system-ui, sans-serif;
@@ -42,8 +48,8 @@
     z-index: 100;
     padding: 0.65rem 1.1rem;
     border-radius: 0.5rem;
-    background: #0a0a0b;
-    color: #fafafa;
+    background: #04110b;
+    color: #f7faf8;
     border: 2px solid #089a47;
     font-weight: 600;
     transition: top 0.15s ease;
@@ -120,20 +126,14 @@
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #111114;
+    background: #06150e;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2a2a2e;
+    background: #16402a;
     border-radius: 8px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3a3a3f;
-  }
-  html.light ::-webkit-scrollbar-track {
-    background: #f2f2f4;
-  }
-  html.light ::-webkit-scrollbar-thumb {
-    background: #c7c7cc;
+    background: #1d5236;
   }
 }
 
@@ -145,24 +145,56 @@
    * top stop #0fae54 was 2.92:1: the button read as green-on-green at the top
    * edge. These three are 5.05, 6.13 and 7.52.
    */
-  .btn-primary {
-    background: linear-gradient(180deg, #07803c 0%, #067138 60%, #055a2d 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  /*
+   * Every action button wears "ב · מסלול" from the Shiny Button reference
+   * (4.10): a dark pill with a mint light running around its edge. The face
+   * is solid #0D2117 under near-white text (15:1), so the moving light is
+   * decoration only. .btn-primary is Btn's primary variant; .btn-shiny is the
+   * same look for hand-written buttons. Selected filters, chosen options and
+   * badges stay plain green on purpose: they show state, not an action.
+   */
+  .btn-primary,
+  .btn-shiny {
+    position: relative;
+    isolation: isolate;
+    color: #eef4f0;
+    background: #0d2117;
+    border: 0;
+    box-shadow: 0 6px 16px -10px rgba(95, 227, 154, 0.28);
   }
-  .btn-primary:hover {
-    background: linear-gradient(180deg, #078641 0%, #055a2d 100%);
+  .btn-primary::before,
+  .btn-shiny::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    border-radius: inherit;
+    background: conic-gradient(from var(--sb-angle), #16402a 0 65%, #5fe39a 82%, #089a47 90%, #16402a 100%);
+    animation: btn-orbit 3s linear infinite;
+  }
+  .btn-primary::after,
+  .btn-shiny::after {
+    content: "";
+    position: absolute;
+    inset: 1.5px;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(120% 140% at 50% 120%, rgba(8, 154, 71, 0.35), transparent 60%), #0d2117;
+    transition: background-color 0.2s ease;
+  }
+  .btn-primary:hover,
+  .btn-shiny:hover {
     transform: translateY(-1px);
+  }
+  .btn-primary:hover::after,
+  .btn-shiny:hover::after {
+    background: radial-gradient(120% 140% at 50% 120%, rgba(8, 154, 71, 0.55), transparent 65%), #10291c;
   }
   .printer-grid {
     background-image:
       linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 24px 24px;
-  }
-  html.light .printer-grid {
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
   }
   .stripes {
     background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.035) 0 8px, transparent 8px 16px);
@@ -178,7 +210,7 @@
     transform-style: preserve-3d;
   }
   .hero-tinted {
-    background: #0a0a0b;
+    background: #04110b;
   }
   .hero-video {
     filter: saturate(0.9) contrast(1.05);
@@ -333,3 +365,140 @@
 .swatch-input::-webkit-color-swatch-wrapper { padding: 0; }
 .swatch-input::-webkit-color-swatch { border: 1px solid rgba(255,255,255,0.22); border-radius: 9999px; }
 .swatch-input::-moz-color-swatch { border: 1px solid rgba(255,255,255,0.22); border-radius: 9999px; }
+
+/* The angle the action buttons' edge light runs around (see .btn-primary). */
+@property --sb-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes btn-orbit {
+  to { --sb-angle: 360deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::before,
+  .btn-shiny::before { animation: none; }
+}
+
+/*
+ * Hero video and its scroll reaction (components/home/HeroVideo.tsx).
+ *
+ * The clip is dimmed here and shaded in Hero.tsx so the headline keeps 4.5:1
+ * on its brightest frame. As the hero scrolls away the printer "stays behind":
+ * the clip grows and sinks, the headline and logo fade and lift, and an extra
+ * shade comes in. Only transform and opacity move. The buttons are outside
+ * .hero-copy on purpose, so they never fade.
+ *
+ * One set of keyframes, two drivers: a scroll-driven timeline where the
+ * browser has one, and elsewhere a paused animation scrubbed by --hp, which
+ * HeroVideo writes once per frame. Nothing moves under reduced motion.
+ */
+.hero-video {
+  filter: brightness(0.38) saturate(0.85);
+  transform-origin: 50% 40%;
+}
+.hero-shade { opacity: 0; }
+.hero-banner { view-timeline-name: --hero; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-video { animation: hero-video 1s linear both; }
+  .hero-copy { animation: hero-copy 1s linear both; }
+  .hero-shade { animation: hero-shade 1s linear both; }
+
+  @supports (animation-timeline: view()) {
+    .hero-video,
+    .hero-copy,
+    .hero-shade {
+      animation-timeline: --hero;
+      animation-range: exit 0% exit 100%;
+    }
+  }
+  @supports not (animation-timeline: view()) {
+    .hero-video,
+    .hero-copy,
+    .hero-shade {
+      animation-play-state: paused;
+      animation-delay: calc(var(--hp, 0) * -1s);
+    }
+  }
+}
+
+@keyframes hero-video { to { transform: scale(1.12) translateY(8%); } }
+@keyframes hero-copy { to { opacity: 0.25; transform: translateY(-24px); } }
+@keyframes hero-shade { to { opacity: 1; } }
+
+/*
+ * Product page, "Gift Shop" treatment (4.10). Look ב — the site's dark greens —
+ * is the live page: its tokens sit on .pd-root. Looks א and ג stay previews
+ * in /admin → "תצוגת עיצוב": html[data-product-look] (owner's browser only)
+ * swaps the tokens. The components read the tokens, nothing else.
+ */
+html[data-product-look="gift-a"] .pd-root {
+  --pd-page: #f4f4f5; --pd-card: #ffffff; --pd-ink: #1a1a1a; --pd-ink-2: #3f3f46; --pd-ink-3: #5f5f68; --pd-line: #e4e4e7;
+  --pd-hero: #ebe3d6; --pd-chip: #eeeeef; --pd-chip-fg: #4a4a52; --pd-on: #f3dc8f; --pd-on-fg: #1a1a1a;
+  --pd-qty: #f3dc8f; --pd-qty-fg: #1a1a1a; --pd-cta: #1a1a1a; --pd-cta-fg: #ffffff; --pd-icon: #efeaff; --pd-icon-fg: #5b43c9;
+}
+.pd-root {
+  --pd-hero: #0d2117; --pd-chip: #0d2117; --pd-chip-fg: #a8b8ae; --pd-on: rgba(95, 227, 154, 0.16); --pd-on-fg: #5fe39a;
+  --pd-qty: #16402a; --pd-qty-fg: #eef4f0; --pd-cta: #eef4f0; --pd-cta-fg: #04110b; --pd-icon: #0d2117; --pd-icon-fg: #5fe39a;
+  --pd-ink: #eef4f0;
+}
+html[data-product-look="gift-c"] .pd-root {
+  --pd-page: #f4f4f5; --pd-card: #ffffff; --pd-ink: #1a1a1a; --pd-ink-2: #3f3f46; --pd-ink-3: #5f5f68; --pd-line: #e4e4e7;
+  --pd-hero: #e8f1ec; --pd-chip: #eeeeef; --pd-chip-fg: #4a4a52; --pd-on: #dff3e7; --pd-on-fg: #055a2d;
+  --pd-qty: #dff3e7; --pd-qty-fg: #055a2d; --pd-cta: #067138; --pd-cta-fg: #ffffff; --pd-icon: #dff3e7; --pd-icon-fg: #055a2d;
+}
+
+/* Shared shape, every look */
+.pd-root .pd-hero { border: 0; border-radius: 28px; background: var(--pd-hero) !important; }
+.pd-root .pd-thumb { border-radius: 18px; height: 4.5rem; width: 4.5rem; }
+.pd-root .pd-title { font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; font-weight: 700; color: var(--pd-ink); }
+/* With a mouse the title rests at 400 and swells under the pointer (ProximityH1). */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .pd-root .pd-title { font-weight: 400; } }
+.pd-root .pd-chip {
+  border-radius: 9999px; border-color: transparent; background: var(--pd-chip); color: var(--pd-chip-fg);
+  padding: 0.5rem 1rem; font-family: var(--font-sans); font-weight: 600;
+}
+.pd-root .pd-chip[data-on] { background: var(--pd-on); color: var(--pd-on-fg); border-color: transparent; }
+.pd-root .pd-qty { border: 0; border-radius: 9999px; background: var(--pd-qty); color: var(--pd-qty-fg); height: 2.25rem; width: 2.25rem; }
+.pd-root .pd-price { font-family: var(--font-sans); font-weight: 700; color: var(--pd-ink); font-size: clamp(2rem, 3.5vw, 2.75rem); }
+.pd-root .pd-cta { background: var(--pd-cta); color: var(--pd-cta-fg); border-radius: 9999px; height: 3.25rem; box-shadow: none; }
+.pd-root .pd-cta::before,
+.pd-root .pd-cta::after { display: none; }
+.pd-root .pd-benefit-icon {
+  display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; flex: none;
+  border-radius: 9999px; background: var(--pd-icon); color: var(--pd-icon-fg);
+}
+
+/* Light looks: the product area turns light; header and footer stay as they are. */
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) body { background: #f4f4f5; }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root { color: var(--pd-ink); }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is(.text-ink-50, .text-ink-100, .text-ink-200) { color: var(--pd-ink); }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root .text-ink-300 { color: var(--pd-ink-2); }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is(.text-ink-400, .text-ink-500) { color: var(--pd-ink-3); }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root .text-flame { color: #055a2d; }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is(.border-ink-700, .border-ink-800, .border-ink-700\/50) { border-color: var(--pd-line); }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is(.bg-ink-900, .bg-ink-900\/40, .bg-ink-950\/92, .bg-ink-800) { background-color: var(--pd-card); }
+/* Grid columns may shrink below their content's natural width, so wider chips
+   wrap instead of pushing the page sideways on a phone. */
+.pd-root .grid > * { min-width: 0; }
+/* The header is see-through and the footer has no fill of its own: on the
+   light page they keep the site's dark ground so their light text stays legible. */
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) :is(body > header, header.sticky, footer) { background-color: #04110b; }
+html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is([class*="bg-ink-950"], [class*="bg-ink-900"], [class*="bg-ink-800"]):not(.pd-hero) { background-color: var(--pd-card); }
+
+/* Header search window (components/SearchPalette.tsx) */
+@keyframes sp-in { from { opacity: 0; transform: translateY(-8px) scale(.985); } }
+@keyframes sp-pop { from { opacity: 0; transform: translateY(-4px) scale(.97); } }
+@keyframes sp-rise { from { opacity: 0; transform: translateY(6px); } }
+@keyframes sp-shim { 50% { opacity: .45; } }
+.sp-in { animation: sp-in .22s cubic-bezier(.2,.8,.2,1); }
+.sp-pop { animation: sp-pop .16s cubic-bezier(.2,.8,.2,1); transform-origin: top left; }
+.sp-group { animation: sp-rise .24s cubic-bezier(.2,.8,.2,1) both; }
+.sp-group:nth-child(2) { animation-delay: 40ms; }
+.sp-group:nth-child(3) { animation-delay: 80ms; }
+.sp-chip { animation: sp-pop .16s ease-out; }
+.sp-shim { animation: sp-shim 1s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .sp-in, .sp-pop, .sp-group, .sp-chip, .sp-shim { animation: none; }
+}

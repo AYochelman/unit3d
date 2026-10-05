@@ -1,5 +1,7 @@
 "use client";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Btn from "@/components/ui/Btn";
 import LiveVideo from "@/components/LiveVideo";
 import { useSteadyImage } from "@/lib/steady-image";
@@ -34,7 +36,9 @@ const when = (iso: string) =>
 export default function LivestreamClient() {
   const { live, camera, stream, liveWhy, liveAgent, ready, online } = usePrinterLive();
   const jobs = usePrinterJobs();
-  const clips = useTimelapses();
+  // Five. Someone who opened this page to see the printer should not scroll
+  // past a hundred videos to reach it; the whole archive is at /timelapses.
+  const clips = useTimelapses(6);
   const stats = jobStats(jobs);
 
   // The camera URL is assembled from the shop's config, so it exists whether or
@@ -237,9 +241,9 @@ export default function LivestreamClient() {
           {online && <span className={`w-1.5 h-1.5 rounded-full ${printing ? "bg-bad live-dot" : "bg-good"}`} />}
           {online ? (printing ? "LIVE NOW" : "ONLINE") : "OFFLINE"}
         </Pill>
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">
+        <ProximityH1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">
           {printing ? "המדפסת רצה עכשיו." : online ? "המדפסת דלוקה." : "המדפסת כבויה כרגע."}
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300">
           שקוף, חי, ובלי פילטרים. הסטודיו בגבעתיים — {live?.model || "Bambu Lab P2S"}.
           {!online && " כשהיא נדלקת, כל מה שקורה בה מופיע כאן מעצמו."}
@@ -286,13 +290,13 @@ export default function LivestreamClient() {
               <>
                 <div className="absolute inset-0 printer-grid opacity-40" />
                 <svg viewBox="0 0 600 360" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
-                  <rect x="80" y="280" width="440" height="20" rx="2" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <rect x="80" y="280" width="440" height="20" rx="2" fill="#0D2117" stroke="#1D5236" />
                   <rect x="80" y="280" width="440" height="6" fill="#089a47" opacity="0.3" />
-                  <rect x="60" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
-                  <rect x="520" y="60" width="20" height="240" fill="#1C1C1F" stroke="#3A3A3F" />
-                  <rect x="60" y="60" width="480" height="14" fill="#1C1C1F" stroke="#3A3A3F" />
+                  <rect x="60" y="60" width="20" height="240" fill="#0D2117" stroke="#1D5236" />
+                  <rect x="520" y="60" width="20" height="240" fill="#0D2117" stroke="#1D5236" />
+                  <rect x="60" y="60" width="480" height="14" fill="#0D2117" stroke="#1D5236" />
                   <g transform="translate(300, 110)">
-                    <rect x="-30" y="-12" width="60" height="40" rx="4" fill="#2A2A2E" stroke="#3A3A3F" />
+                    <rect x="-30" y="-12" width="60" height="40" rx="4" fill="#16402A" stroke="#1D5236" />
                     <polygon points="-10,28 10,28 0,42" fill="#089a47" />
                   </g>
                 </svg>
@@ -382,9 +386,9 @@ export default function LivestreamClient() {
                   <div className="flex flex-wrap items-end justify-between gap-3">
                     <div className="min-w-0">
                       <div className="font-mono text-[10px] tracking-widest uppercase text-ink-500" dir="ltr">READY</div>
-                      <h2 className="font-extrabold text-lg md:text-xl mt-0.5">
+                      <ProximityH2 className="font-extrabold text-lg md:text-xl mt-0.5">
                         הפלטה פנויה — מחכים רק <span className="text-flame">להזמנה שלך</span>.
-                      </h2>
+                      </ProximityH2>
                     </div>
                     <Btn as="a" href="/contact" size="sm" icon="arrowLeft" className="shrink-0">
                       להזמנה
@@ -398,7 +402,7 @@ export default function LivestreamClient() {
               <div className="absolute inset-x-0 bottom-0 z-10">
                 <div className="bg-gradient-to-t from-ink-950 via-ink-950/80 to-transparent p-4 pt-12">
                   <div className="flex items-end justify-between gap-3">
-                    <h2 className="font-bold text-lg truncate">{live?.job_name || "הדפסה"}</h2>
+                    <ProximityH2 className="font-bold text-lg truncate">{live?.job_name || "הדפסה"}</ProximityH2>
                     <div className="font-mono text-3xl font-extrabold text-flame tabular-nums" dir="ltr">
                       {Math.round(progress)}%
                     </div>
@@ -460,7 +464,7 @@ export default function LivestreamClient() {
       {jobs.length > 0 && (
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">THE NUMBERS</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה יצא מהמדפסת הזאת.</h2>
+          <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה יצא מהמדפסת הזאת.</ProximityH2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { label: "הדפסות שהסתיימו", value: String(stats.ok) },
@@ -483,7 +487,16 @@ export default function LivestreamClient() {
       {clips.length > 0 && (
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">TIMELAPSE</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">שעות בתוך חצי דקה.</h2>
+          <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
+            <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight">שעות בתוך חצי דקה.</ProximityH2>
+            <Link
+              href="/timelapses"
+              className="inline-flex items-center gap-1 text-[13px] font-semibold text-flame hover:text-flame-400 shrink-0"
+            >
+              לראות הכל
+              <Icon name="chevLeft" size={14} />
+            </Link>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {clips.map((c) => (
               <figure key={c.file} className="rounded-2xl overflow-hidden bg-ink-900 border border-ink-800">
@@ -502,7 +515,7 @@ export default function LivestreamClient() {
       {jobs.length > 0 && (
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">RECENT</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה רץ כאן לאחרונה.</h2>
+          <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה רץ כאן לאחרונה.</ProximityH2>
           <div className="space-y-2">
             {jobs.slice(0, 8).map((j) => (
               <div key={j.key} className="flex flex-wrap items-center gap-3 px-4 py-3 rounded-xl bg-ink-900 border border-ink-800">

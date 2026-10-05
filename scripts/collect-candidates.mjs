@@ -20,7 +20,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, c, sleep, getJson, fetchDetails, classify, platesFrom, readableTitle, closeBrowser } from "./lib/makerworld.mjs";
+import { ROOT, c, sleep, getJson, fetchDetails, classify, platesFrom, readableTitle, closeBrowser, isWeapon, isRealWeapon } from "./lib/makerworld.mjs";
 
 const OUT = path.join(ROOT, "lib", "candidates.generated.ts");
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
@@ -41,8 +41,6 @@ const SORTS = ["trending", "new", "createTime", "downloadCount", "likeCount", "c
 const PAGES = [0, 20, 40, 60, 80];
 const LIMIT = Number(process.env.CANDIDATE_LIMIT || 140);
 
-const WEAPON =
-  /(knife|knives|katana|sword|blade|shuriken|kunai|karambit|balisong|dagger|machete|blowgun|airsoft|pistol|shotgun|rifle|\bgun\b|ammo|bullet|nunchaku|taser|crossbow|spear)/i;
 const BRAND =
   /(kaws|bearbrick|smiski|hello kitty|spider[- ]?man|marvel|batman|superman|disney|pokemon|pikachu|mario|zelda|nintendo|star wars|mandalorian|jujutsu|demon slayer|one piece|naruto|dragon ball|warhammer|lego|ferrari|nike|adidas|panda by bambu)/i;
 
@@ -107,14 +105,17 @@ async function main() {
 
     const title = readableTitle((d.title || "").trim(), d.slug);
     const text = `${title} ${d.tags.join(" ")}`;
-    // Not shown at all: they could not be sold whatever the answer was.
-    if (WEAPON.test(text) || /(^|-)NC(-|$)/i.test(d.license)) { dropped++; continue; }
+    // Only a real weapon is withheld. A prop and an NC licence both reach the
+    // queue carrying a warning, because both are the owner's decision.
+    if (isRealWeapon(text)) { dropped++; continue; }
 
     const p = platesFrom(d.instances, d.defaultInstanceId);
     const grams = Math.max(1, p?.base.g ?? d.grams ?? 40);
     const hours = Math.max(0.2, p?.base.h ?? (d.seconds ? d.seconds / 3600 : 2));
     const warnings = [];
     if (BRAND.test(text)) warnings.push("מותג");
+    if (isWeapon(text)) warnings.push("נשק");
+    if (/(^|-)NC(-|$)/i.test(d.license)) warnings.push("רישיון NC — לא למכירה");
     if (/exclusive/i.test(d.license)) warnings.push("רישיון בלעדי");
     if (grams > 250) warnings.push("הדפסה ארוכה");
 

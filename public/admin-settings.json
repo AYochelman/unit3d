@@ -103,7 +103,8 @@
     "pla:black": false,
     "pla_matte:white": false,
     "pla:white": false,
-    "pla:green": false
+    "pla:green": false,
+    "tpu:black": false
   },
   "shelves": {},
   "materials": [],

@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { adminRefresh, adminSignIn } from "./orders-remote";
+import { adminRefresh, adminSignIn, adminSignOut } from "./orders-remote";
 import { forgetSession, readSession, writeSession } from "./admin-session";
 import { useAdminStore } from "./admin-store";
 
@@ -53,10 +53,22 @@ export function useSupabaseSession() {
     return true;
   }, [setToken]);
 
+  /**
+   * Out here and at Supabase both.
+   *
+   * This used to clear the device and nothing else, which left the refresh
+   * token valid on the server: anyone holding a copy of it could go on trading
+   * it for access tokens after the owner had pressed "יציאה".
+   *
+   * The local clear happens whatever the server says. A logout that cannot
+   * reach the network still has to let go of the device.
+   */
   const signOut = useCallback(() => {
+    const access = token;
     forgetSession();
     setToken("");
-  }, [setToken]);
+    if (access) void adminSignOut(access);
+  }, [setToken, token]);
 
   return { token, email, setEmail, busy, error, setError, tried, signIn, signOut };
 }

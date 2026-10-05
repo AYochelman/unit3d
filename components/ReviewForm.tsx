@@ -32,7 +32,7 @@ type Props = {
  * Leave a rating and a review.
  *
  * Send puts it on the site. The review goes straight into the shop's table and
- * the next visitor reads it — nobody approves it first, which is what Ariel
+ * the next visitor reads it — nobody approves it first, which is what Erez
  * asked for. If the table is not reachable (not configured yet, or the network
  * is down), the form does not silently eat the text: it falls back to the old
  * route and opens WhatsApp with the review already written out, and says which

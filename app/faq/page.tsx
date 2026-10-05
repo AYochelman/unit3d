@@ -1,3 +1,4 @@
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import FAQClient from "./FAQClient";
 import JsonLd from "@/components/seo/JsonLd";
 import { faqJsonLd } from "@/lib/seo";
@@ -21,9 +22,9 @@ export default function FAQPage() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           FAQ · 8 ANSWERS
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           שאלות. תשובות.
-        </h1>
+        </ProximityH1>
       </header>
       <FAQClient />
       <div className="mt-12 p-5 rounded-2xl border border-ink-800 bg-ink-900 text-center">

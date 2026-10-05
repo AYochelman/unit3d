@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -91,7 +92,7 @@ export default function ContactClient() {
   // on an order nobody is posting anything to.
   const wantsAddress = needsAddress(delivery);
 
-  // A discount code is checked against the list Ariel wrote in /admin, which
+  // A discount code is checked against the list Erez wrote in /admin, which
   // every browser loads at boot (CouponsBoot) — so the customer sees the money
   // come off here, not in a WhatsApp negotiation afterwards.
   const codes = useAdminStore((s) => s.coupons);
@@ -116,7 +117,7 @@ export default function ContactClient() {
   // cannot say that.
   const [ordered, setOrdered] = useState<CartItem[]>([]);
   const [coupon, setCoupon] = useState("");
-  // Whether the order reached the shop's own queue, or only Ariel's phone.
+  // Whether the order reached the shop's own queue, or only Erez's phone.
   const [filed, setFiled] = useState<"pending" | "saved" | "failed">("pending");
   // And whether the customer got their own copy.
   const [mailed, setMailed] = useState<"pending" | "sent" | "no-address" | "not-configured" | "failed">("pending");
@@ -151,10 +152,10 @@ export default function ContactClient() {
           <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good mb-6">
             <Icon name="check" size={40} strokeWidth={2.5} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
+          <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
             {bought ? "תודה על הקנייה!" : "תודה! קיבלתי את הפנייה."}
-          </h1>
-          <p className="text-ink-300 text-base md:text-lg max-w-xl mx-auto mb-8">
+          </ProximityH1>
+          <p className="text-ink-300 text-body md:text-lg md:leading-[1.6] max-w-xl mx-auto mb-8">
             {bought
               ? "אנחנו מיד מתחילים לעבוד על זה. אני מעדכן אותך בוואטסאפ ברגע שההדפסה עולה על הפלטה."
               : cust === "b2b"
@@ -205,9 +206,9 @@ export default function ContactClient() {
 
         {bought && similar.length > 0 && (
           <section className="mb-10">
-            <h2 className="text-xl md:text-2xl font-black tracking-tightest mb-1">
+            <ProximityH2 className="text-xl md:text-2xl font-black tracking-tightest mb-1">
               דומים למה שבחרת
-            </h2>
+            </ProximityH2>
             <p className="text-sm text-ink-400 mb-5">
               מאותם מדפים. אם משהו מוצא חן — אפשר להוסיף אותו לאותה הדפסה.
             </p>
@@ -260,9 +261,9 @@ export default function ContactClient() {
         <Pill tone="flame" className="mb-3">
           CONTACT · 24H RESPONSE
         </Pill>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-[1.05]">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           ספר לי מה אתה צריך.
-        </h1>
+        </ProximityH1>
         <p className="mt-3 text-ink-300 max-w-2xl">
           הטופס הזה הולך ישר לוואטסאפ שלי. אני חוזר אליך תוך 24 שעות — בדרך כלל הרבה פחות.
         </p>
@@ -330,7 +331,7 @@ export default function ContactClient() {
             window.open(orderWhatsapp(order), "_blank", "noopener,noreferrer");
 
             // And the same order is written to the shop's queue, so it is
-            // already waiting on Ariel's screen instead of being carried there
+            // already waiting on Erez's screen instead of being carried there
             // by hand. If that write fails the message still holds everything.
             // The end of the funnel. Page views only mean something next to
             // this number.

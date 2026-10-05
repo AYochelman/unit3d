@@ -10,7 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { banner } from "./version.mjs";
-import { connectPrinterFtps } from "./ftps.mjs";
+import { connectPrinterFtps, recordedAt } from "./ftps.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const cfg = JSON.parse(fs.readFileSync(path.join(HERE, "config.json"), "utf8"));
@@ -147,7 +147,14 @@ try {
   if (res.ok) for (const row of await res.json()) have.add(row.file);
 } catch { /* an empty set just means everything is fetched */ }
 
-const todo = files.filter((f) => !have.has(f.name)).sort((a, b) => a.modifiedAt - b.modifiedAt);
+const todo = files.filter((f) => !have.has(f.name)).sort((a, b) => recordedAt(a.name, a.modifiedAt) - recordedAt(b.name, b.modifiedAt));
+// What is on the card, newest first, with the time in each name. "Already on
+// the site" answered nothing about the question that was really being asked
+// -- is the printer recording at all -- and the dates answer it at a glance.
+for (const f of [...files].sort((a, b) => recordedAt(b.name, b.modifiedAt) - recordedAt(a.name, a.modifiedAt))) {
+  const at = recordedAt(f.name, f.modifiedAt);
+  console.log(`      ${at.toLocaleString("he-IL")}  ${f.name}${have.has(f.name) ? "  (באתר)" : ""}`);
+}
 if (todo.length === 0) {
   console.log("\n  All of them are already on the site. Nothing to do.\n");
   ftp.close();
@@ -176,7 +183,7 @@ for (const f of todo) {
         file: f.name,
         url: `${SB}/storage/v1/object/public/printer/timelapse/${encodeURIComponent(f.name)}`,
         size_mb: Math.round((body.length / 1048576) * 10) / 10,
-        recorded_at: f.modifiedAt.toISOString(),
+        recorded_at: recordedAt(f.name, f.modifiedAt).toISOString(),
       }),
     });
     done++;
