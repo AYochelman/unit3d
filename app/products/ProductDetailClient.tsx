@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
@@ -296,7 +297,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
         <div className="flex flex-col gap-5">
           <div>
             <div className="pd-eyebrow text-xs font-semibold tracking-wider text-ink-400 mb-1.5">{CATEGORY_LABEL[p.category]}</div>
-            <h1 className="pd-title text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</h1>
+            <ProximityH1 className="pd-title text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</ProximityH1>
             <p className="mt-2 text-ink-300 text-body">{p.desc}</p>
             {(() => {
               const src = IMPORTED.find((m) => m.id === p.id);

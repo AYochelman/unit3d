@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Btn from "@/components/ui/Btn";
@@ -50,9 +51,9 @@ export default function GalleryClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           GALLERY · {GALLERY.length} ITEMS
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           ככה זה נראה.
-        </h1>
+        </ProximityH1>
         <p className="mt-3 text-ink-300 max-w-xl">
           עבודות מהזמן האחרון. לחץ על תמונה כדי לראות פרטים — או &quot;אני רוצה משהו דומה&quot;.
         </p>

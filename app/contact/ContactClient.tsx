@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -151,9 +152,9 @@ export default function ContactClient() {
           <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good mb-6">
             <Icon name="check" size={40} strokeWidth={2.5} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
+          <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
             {bought ? "תודה על הקנייה!" : "תודה! קיבלתי את הפנייה."}
-          </h1>
+          </ProximityH1>
           <p className="text-ink-300 text-body md:text-lg md:leading-[1.6] max-w-xl mx-auto mb-8">
             {bought
               ? "אנחנו מיד מתחילים לעבוד על זה. אני מעדכן אותך בוואטסאפ ברגע שההדפסה עולה על הפלטה."
@@ -260,9 +261,9 @@ export default function ContactClient() {
         <Pill tone="flame" className="mb-3">
           CONTACT · 24H RESPONSE
         </Pill>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           ספר לי מה אתה צריך.
-        </h1>
+        </ProximityH1>
         <p className="mt-3 text-ink-300 max-w-2xl">
           הטופס הזה הולך ישר לוואטסאפ שלי. אני חוזר אליך תוך 24 שעות — בדרך כלל הרבה פחות.
         </p>

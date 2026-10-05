@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
@@ -21,9 +22,9 @@ export default function OfficeClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
         <Pill tone="cyan" className="mb-4">למשרד · OFFICE</Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
 השולחן שאתה יושב מולו כל יום.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           מעמדים לטלפון ולאוזניות, מארגנים, קליפסים לכבלים ושלטי שם. אפשר עם טקסט או לוגו מובלט. לעסקים: מ-10 יחידות עם הלוגו שלכם.
         </p>

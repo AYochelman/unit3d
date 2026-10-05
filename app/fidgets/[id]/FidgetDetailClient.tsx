@@ -1,5 +1,6 @@
 "use client";
 
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -325,9 +326,9 @@ export default function FidgetDetailClient({ id }: { id: string }) {
 
           {/* Heading */}
           <div>
-            <h1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">
+            <ProximityH1 className="text-2xl md:text-3xl font-black tracking-tightest leading-tight">
               {f.name}
-            </h1>
+            </ProximityH1>
             <p className="mt-2 text-ink-300 text-body">{f.desc}</p>
             {(() => {
               const src = IMPORTED.find((m) => m.id === f.id);

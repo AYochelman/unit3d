@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
@@ -18,9 +19,9 @@ export default function StatuesClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
         <Pill tone="cyan" className="mb-4">פסלים · STATUES</Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           משהו למדף. לא עוד גאדג&apos;ט.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           פריטי תצוגה בהדפסה איטית ובשכבות דקות (0.12mm) — בוסטים, חיות לואו-פולי, גביעים
           ואגרטלים. אלה הדפסות של 5 עד 22 שעות, ולכן הן מוזמנות לפי תור ולא נשלחות למחרת.

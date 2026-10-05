@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -192,9 +193,9 @@ export default function CatalogClient() {
         <Pill tone="flame" className="mb-4">
           לחיילים · קטלוג הסמלים
         </Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           לחיילים. הסמל שלכם, מודפס בדיוק.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl mb-4">
           לוחמים, בוגרי קורסים, משפחות — כל סמל זמין במחזיק מפתחות, בפסל
           שולחני, או במידה גדולה לתלייה.

@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Pill from "@/components/ui/Pill";
@@ -73,9 +74,9 @@ export default function UploadClient() {
         <Pill tone="cyan" className="mb-3">
           UPLOAD · STL · OBJ · 3MF
         </Pill>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
           יש קובץ. תעלה.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           STL, OBJ, או 3MF — עד 50MB. אני אסתכל ואחזור אליך עם הצעת מחיר תוך 24 שעות.
         </p>

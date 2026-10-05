@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import Link from "next/link";
 import { useState } from "react";
 import Pill from "@/components/ui/Pill";
@@ -36,9 +37,9 @@ export default function ReviewsClient() {
           <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
             REVIEWS{reviews.length ? ` · ${reviews.length}` : ""}
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
+          <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
             לקוחות שדיברו.
-          </h1>
+          </ProximityH1>
           {/* The average is computed from what is actually here. The page used
               to print a hard-coded 4.9 — a number nobody had given. */}
           {reviews.length > 0 && (

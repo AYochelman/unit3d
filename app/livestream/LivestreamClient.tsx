@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
@@ -240,9 +241,9 @@ export default function LivestreamClient() {
           {online && <span className={`w-1.5 h-1.5 rounded-full ${printing ? "bg-bad live-dot" : "bg-good"}`} />}
           {online ? (printing ? "LIVE NOW" : "ONLINE") : "OFFLINE"}
         </Pill>
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">
+        <ProximityH1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">
           {printing ? "המדפסת רצה עכשיו." : online ? "המדפסת דלוקה." : "המדפסת כבויה כרגע."}
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300">
           שקוף, חי, ובלי פילטרים. הסטודיו בגבעתיים — {live?.model || "Bambu Lab P2S"}.
           {!online && " כשהיא נדלקת, כל מה שקורה בה מופיע כאן מעצמו."}
