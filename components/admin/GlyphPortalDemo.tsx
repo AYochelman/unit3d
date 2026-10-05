@@ -15,16 +15,26 @@ import GlyphPortal from "@/components/ui/glyph-portal";
  */
 const FAMILY = '"Assistant", Arial, sans-serif';
 
+/** Hebrew words to try, each with where it would sit and what opens inside. */
+const WORDS: { word: string; where: string; support: string }[] = [
+  { word: "מודפס", where: "דף הבית", support: "כל רעיון. מודפס. בידיים שלך." },
+  { word: "קובץ", where: "העלאת קובץ", support: "STL, OBJ או 3MF. גוללים פנימה ומעלים." },
+  { word: "אופס", where: "דף לא נמצא", support: "הדף הזה לא קיים. אבל יש הרבה שכן." },
+  { word: "יוניט", where: "כללי", support: "סטודיו הדפסת תלת מימד בגבעתיים." },
+];
+
 const FIELD =
   "radial-gradient(circle at 18% 10%, rgba(95,227,154,.45), transparent 34%), radial-gradient(circle at 82% 22%, rgba(247,250,248,.10), transparent 28%), radial-gradient(circle at 50% 80%, rgba(4,17,11,.55), transparent 46%), linear-gradient(135deg,#0D2117 0%,#089a47 52%,#06150e 100%)";
 
 export default function GlyphPortalDemo() {
   const [face, setFace] = useState<string | null>(null);
+  const [pick, setPick] = useState(0);
+  const w = WORDS[pick];
   useEffect(() => {
     let alive = true;
     const done = (f: string) => { if (alive) setFace(f); };
     const t = window.setTimeout(() => done("Arial, sans-serif"), 1600);
-    void document.fonts.load('800 100px "Assistant"', "U3D").then(() => done(FAMILY), () => done("Arial, sans-serif"));
+    void document.fonts.load('800 100px "Assistant"', WORDS.map((x) => x.word).join("")).then(() => done(FAMILY), () => done("Arial, sans-serif"));
     return () => { alive = false; clearTimeout(t); };
   }, []);
 
@@ -32,14 +42,26 @@ export default function GlyphPortalDemo() {
     <section className="grid gap-3">
       <h2 className="font-black text-lg">רכיב: כניסה דרך האות</h2>
       <p className="text-sm text-ink-400 leading-relaxed">
-        מגללים, והמצלמה צוללת לתוך אחת האותיות של U3D עד שהירוק שבתוכה ממלא את המסך, ושם נפתח התוכן הבא. אפשר לבחור לפני הגלילה
+        מגללים, והמצלמה צוללת לתוך אחת האותיות עד שהירוק שבתוכה ממלא את המסך, ושם נפתח התוכן הבא. אפשר לבחור לפני הגלילה
         דרך איזו אות להיכנס (מעבר עכבר או לחיצה). כאן הוא נגלל בתוך המסגרת. עדיין לא מופיע לגולשים.
       </p>
+      <div className="flex flex-wrap gap-2">
+        {WORDS.map((x, i) => (
+          <button
+            key={x.word}
+            type="button"
+            onClick={() => setPick(i)}
+            className={"px-3 h-9 rounded-full border text-sm " + (i === pick ? "border-flame bg-flame/15 text-ink-50" : "border-ink-700 text-ink-300 hover:border-ink-500")}
+          >
+            {x.word} <span className="text-[11px] text-ink-500">· {x.where}</span>
+          </button>
+        ))}
+      </div>
       <div
         data-gp-demo
         tabIndex={0}
         role="region"
-        aria-label="U3D. גלול כדי להיכנס."
+        aria-label={`${w.word}. גלול כדי להיכנס.`}
         className="relative w-full rounded-2xl border border-ink-800 overflow-y-auto"
         style={{ height: "min(640px, 80svh)", containerType: "inline-size" }}
       >
@@ -66,7 +88,8 @@ export default function GlyphPortalDemo() {
         `}</style>
         {face ? (
           <GlyphPortal
-            word="U3D"
+            key={w.word}
+            word={w.word}
             fontFamily={face}
             fontWeight={800}
             interactive
@@ -77,7 +100,7 @@ export default function GlyphPortalDemo() {
             front={
               <div dir="rtl">
                 <p data-u3d-eyebrow>STUDIO · GIVATAYIM</p>
-                <p data-u3d-support>כל רעיון. מודפס. בידיים שלך.</p>
+                <p data-u3d-support>{w.support}</p>
                 <span data-u3d-scroll>גללו פנימה ↓</span>
               </div>
             }
