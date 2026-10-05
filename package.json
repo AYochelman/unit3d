@@ -28,7 +28,8 @@
     "fetch:signals": "node scripts/fetch-signals.mjs",
     "audit:mobile": "node scripts/audit-mobile.mjs",
     "check:weapons": "node scripts/check-weapon-words.mjs",
-    "check:ingest": "node scripts/check-ingest-input.mjs"
+    "check:ingest": "node scripts/check-ingest-input.mjs",
+    "fetch:hd": "node scripts/fetch-hd.mjs"
   },
   "dependencies": {
     "hls.js": "^1.7.2",
