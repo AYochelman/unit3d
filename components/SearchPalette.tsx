@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { create } from "zustand";
 import { useRouter } from "next/navigation";
@@ -27,11 +27,11 @@ import { helpBotNow, loadHelpBot } from "@/lib/helpbot-lazy";
  * carries the price, and the shelf rows carry how many models really sit there.
  */
 const GLASS = {
-    "--p-bg": "rgba(6,21,14,.8)", "--p-panel": "rgba(255,255,255,.04)", "--p-line": "rgba(255,255,255,.08)",
+    "--p-bg": "rgba(8,26,17,.9)", "--p-panel": "rgba(255,255,255,.04)", "--p-line": "rgba(255,255,255,.08)",
     "--p-fg": "#f7faf8", "--p-sub": "#a8b8ae", "--p-chip": "rgba(255,255,255,.06)", "--p-hover": "rgba(255,255,255,.07)",
     "--p-mark": "rgba(95,227,154,.28)", "--p-accent": "#5fe39a", "--p-ring": "rgba(95,227,154,.6)",
     "--p-shadow": "0 0 0 1px rgba(95,227,154,.15), 0 30px 80px -20px rgba(8,154,71,.35)",
-    "--p-backdrop": "rgba(4,17,11,.45)", "--p-radius": "22px",
+    "--p-backdrop": "rgba(4,17,11,.86)", "--p-radius": "22px",
   } as CSSProperties;
 
 const ACTIONS: { label: string; href: string; icon: Parameters<typeof Icon>[0]["name"] }[] = [
@@ -72,8 +72,15 @@ function Marked({ text, q }: { text: string; q: string }) {
   );
 }
 
+/** photoById scans the whole import list; a result list asks for the same ids on every keystroke. */
+const thumbs = new Map<string, ReturnType<typeof photoById>>();
+const thumbOf = (id: string) => {
+  if (!thumbs.has(id)) thumbs.set(id, photoById(id));
+  return thumbs.get(id);
+};
+
 function Thumb({ id, icon }: { id?: string; icon?: Parameters<typeof Icon>[0]["name"] }) {
-  const photo = id ? photoById(id) : undefined;
+  const photo = id ? thumbOf(id) : undefined;
   return (
     <span className="h-8 w-8 shrink-0 rounded-full overflow-hidden grid place-items-center border" style={{ borderColor: "var(--p-line)", background: "var(--p-panel)" }}>
       {photo ? (
@@ -89,7 +96,6 @@ function Thumb({ id, icon }: { id?: string; icon?: Parameters<typeof Icon>[0]["n
 export default function SearchPalette({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const [q, setQ] = useState("");
-  const [settled, setSettled] = useState(true);
   const [at, setAt] = useState(0);
   const [menu, setMenu] = useState<string | null>(null);
   const [picker, setPicker] = useState(false);
@@ -100,7 +106,6 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [ready, setReady] = useState(() => helpBotNow() !== null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const timer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -109,18 +114,34 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
     void loadHelpBot().then(() => { if (alive) setReady(true); });
     return () => { alive = false; };
   }, [ready]);
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+  // Nothing moves behind the window while it is open. A playing video under
+  // a translucent card has to be re-composited every frame, and that is what
+  // made typing lag. Whatever was playing resumes on close.
+  useEffect(() => {
+    const playing = [...document.querySelectorAll("video")].filter((v) => !v.paused);
+    playing.forEach((v) => v.pause());
+    // Same for the CSS loops behind it (the shelf marquee, the orbit buttons).
+    document.documentElement.classList.add("sp-open");
+    return () => {
+      document.documentElement.classList.remove("sp-open");
+      playing.forEach((v) => void v.play().catch(() => {}));
+    };
+  }, []);
 
   const cat = ready ? helpBotNow()?.catalog : undefined;
+  // The field updates on every key; the result list follows a beat behind
+  // when it has to, instead of holding the key back.
+  const dq = useDeferredValue(q);
   const typed = q.trim().length >= 2;
+  const dTyped = dq.trim().length >= 2;
 
   const groups = useMemo(() => {
-    if (!cat || !typed) return [];
-    const found = cat.findProducts(q, 40).filter((f) => !shelves.length || shelves.includes(f.shelf));
+    if (!cat || !dTyped) return [];
+    const found = cat.findProducts(dq, 40).filter((f) => !shelves.length || shelves.includes(f.shelf));
     const by = new Map<ImportedShelf, Found[]>();
     for (const f of found) by.set(f.shelf, [...(by.get(f.shelf) ?? []), f]);
     return [...by.entries()].map(([shelf, list]) => ({ shelf, list: list.slice(0, 4), more: list.length > 4 }));
-  }, [cat, q, typed, shelves]);
+  }, [cat, dq, dTyped, shelves]);
 
   const idle: { title: string; rows: Row[] }[] = useMemo(() => {
     const out: { title: string; rows: Row[] }[] = [];
@@ -135,19 +156,17 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
     return out;
   }, [recent, cat, shelves]);
 
-  const sections: { title: string; rows: Row[]; shelf?: ImportedShelf; more?: boolean }[] = typed
+  const sections: { title: string; rows: Row[]; shelf?: ImportedShelf; more?: boolean }[] = typed && dTyped
     ? groups.map((g) => ({ title: SHELF_LABEL[g.shelf], shelf: g.shelf, more: g.more, rows: g.list.map((f) => ({ kind: "product" as const, f })) }))
     : idle;
   const flat = sections.flatMap((s) => s.rows);
-  const loading = typed && (!cat || !settled);
+  // A skeleton only while the catalogue itself is still on its way.
+  const loading = typed && !cat;
 
   const type = (v: string) => {
     setQ(v);
     setAt(0);
     setMenu(null);
-    setSettled(false);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setSettled(true), 260);
   };
 
   const hrefOf = (r: Row) => (r.kind === "product" ? r.f.href : r.kind === "action" ? r.href : SHELF_ROUTE[r.shelf]);
@@ -188,16 +207,18 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
   };
 
   let n = -1;
-  // Portalled to <body>: the header has its own backdrop-filter, and a blur
-  // inside it can only see the header, so the page behind came through sharp.
+  // Portalled to <body>, out of the header's stacking context. No
+  // backdrop-filter anywhere: a blur over the page cost a third of a second
+  // per key on the home page. The "glass" is a translucent fill over a
+  // near-opaque dim, a light edge and the green glow, which read the same.
   return createPortal(
-    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={GLASS} onKeyDown={onKeyDown}>
-      <button type="button" aria-label="סגור חיפוש" onClick={onClose} className="absolute inset-0 backdrop-blur-sm" style={{ background: "var(--p-backdrop)" }} />
+    <div className="sp-root fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={GLASS} onKeyDown={onKeyDown}>
+      <button type="button" aria-label="סגור חיפוש" onClick={onClose} className="absolute inset-0" style={{ background: "var(--p-backdrop)" }} />
       <div className="sp-in relative mx-auto mt-[8vh] w-[min(94vw,640px)] grid gap-2">
         {/* Search field: its own card, as in the shot */}
         <div
           className="flex items-center gap-3 px-4 h-14 border-2 transition-colors"
-          style={{ background: "var(--p-bg)", borderColor: "var(--p-ring)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)", backdropFilter: "blur(18px)" }}
+          style={{ background: "var(--p-bg)", borderColor: "var(--p-ring)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)" }}
         >
           {loading ? (
             <span className="h-4 w-4 shrink-0 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "var(--p-accent)", borderTopColor: "transparent" }} />
@@ -225,7 +246,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
         {/* Results card */}
         <div
           className="overflow-hidden border"
-          style={{ background: "var(--p-bg)", borderColor: "var(--p-line)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)", backdropFilter: "blur(18px)" }}
+          style={{ background: "var(--p-bg)", borderColor: "var(--p-line)", borderRadius: "var(--p-radius)", boxShadow: "var(--p-shadow)", color: "var(--p-fg)" }}
         >
           <div className="px-4 pt-3 pb-2 relative">
             <div className="text-[11px] font-semibold mb-2" style={{ color: "var(--p-sub)" }}>מחפשים ב</div>
@@ -284,7 +305,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
                 </div>
               ))}
 
-            {!loading && typed && !groups.length && (
+            {!loading && typed && dTyped && !groups.length && (
               <p className="px-6 py-8 text-center text-sm leading-relaxed" style={{ color: "var(--p-sub)" }}>
                 לא מצאתי כלום על <span style={{ color: "var(--p-fg)" }}>״{q}״</span>{shelves.length ? " במדפים שבחרת" : ""}.
                 <br />
@@ -294,7 +315,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
 
             {!loading &&
               sections.map((s) => (
-                <div key={s.title} className="sp-group px-2 pt-2">
+                <div key={s.title} className={typed ? "px-2 pt-2" : "sp-group px-2 pt-2"}>
                   <div className="flex items-center justify-between px-2 pb-1">
                     <span className="text-[11px] font-semibold" style={{ color: "var(--p-sub)" }}>{s.title}</span>
                     {s.shelf && s.more && (
@@ -319,7 +340,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
                         <button type="button" onClick={() => open(r)} className="flex-1 min-w-0 flex items-center gap-3 text-right h-full">
                           <Thumb id={r.kind === "product" ? r.f.id : undefined} icon={r.kind === "action" ? r.icon : r.kind === "shelf" ? "package" : undefined} />
                           <span className="flex-1 min-w-0 truncate text-sm font-medium">
-                            {r.kind === "product" ? <Marked text={r.f.name} q={q} /> : r.kind === "action" ? r.label : `מדף ${SHELF_LABEL[r.shelf]}`}
+                            {r.kind === "product" ? <Marked text={r.f.name} q={dq} /> : r.kind === "action" ? r.label : `מדף ${SHELF_LABEL[r.shelf]}`}
                           </span>
                           {r.kind === "product" && (
                             <span className="shrink-0 font-mono text-[11px] px-2 h-6 inline-flex items-center rounded-full border" style={{ borderColor: "var(--p-line)", color: copied === r.f.id ? "var(--p-accent)" : "var(--p-sub)" }}>

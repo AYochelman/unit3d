@@ -44,7 +44,6 @@ export function VariableFontCursorProximity({
   const to = parse(toFontVariationSettings);
   const axes = Object.keys(from).filter((k) => k in to);
   const settings = (t: number) => axes.map((a) => `'${a}' ${from[a] + (to[a] - from[a]) * t}`).join(", ");
-  const rest = settings(0);
   // Kept in a ref so the listener below is attached once, not on every render.
   const live = useRef({ settings, radius, falloff });
   useEffect(() => { live.current = { settings, radius, falloff }; });
@@ -54,6 +53,10 @@ export function VariableFontCursorProximity({
     if (!box) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!window.matchMedia("(hover: hover)").matches) return;
+    // Letters carry no inline settings until here, so a phone (or the first
+    // paint) keeps whatever weight the text's own CSS gives it.
+    const rest = live.current.settings(0);
+    for (const el of letters.current) if (el) el.style.fontVariationSettings = rest;
 
     let raf = 0;
     let x = 0;
@@ -94,31 +97,27 @@ export function VariableFontCursorProximity({
   let i = -1;
   return (
     <span className={cn("inline-block", className)}>
-      <span className="sr-only">{children}</span>
-      <span aria-hidden>
-        {children.split(/(\s+)/).map((word, w) =>
-          /^\s+$/.test(word) ? (
-            word
-          ) : (
-            <span key={w} className="inline-block whitespace-nowrap">
-              {[...word].map((ch) => {
-                i += 1;
-                const k = i;
-                return (
-                  <span
-                    key={k}
-                    ref={(el) => { letters.current[k] = el; }}
-                    className="inline-block transition-[font-variation-settings] duration-150 ease-out"
-                    style={{ fontVariationSettings: rest }}
-                  >
-                    {ch}
-                  </span>
-                );
-              })}
-            </span>
-          ),
-        )}
-      </span>
+      {children.split(/(\s+)/).map((word, w) =>
+        /^\s+$/.test(word) ? (
+          word
+        ) : (
+          <span key={w} className="inline-block whitespace-nowrap">
+            {[...word].map((ch) => {
+              i += 1;
+              const k = i;
+              return (
+                <span
+                  key={k}
+                  ref={(el) => { letters.current[k] = el; }}
+                  className="inline-block transition-[font-variation-settings] duration-150 ease-out"
+                >
+                  {ch}
+                </span>
+              );
+            })}
+          </span>
+        ),
+      )}
     </span>
   );
 }

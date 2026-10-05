@@ -4,6 +4,7 @@ import PrinterPanel from "./PrinterPanel";
 import HeroCarousel from "./HeroCarousel";
 import ShelfMarquee from "./ShelfMarquee";
 import HeroVideo from "./HeroVideo";
+import HeroTitle from "./HeroTitle";
 
 export default function Hero() {
   return (
@@ -41,13 +42,7 @@ export default function Hero() {
             <span className="text-ink-400">·</span>
             <span>שידור חי מהסטודיו</span>
           </div>
-          <h1 className="text-[40px] xs:text-[44px] md:text-[88px] leading-heading font-bold text-ink-50">
-            כל רעיון.
-            <br />
-            מודפס.
-            <br />
-            <span className="text-flame">בידיים שלך.</span>
-          </h1>
+          <HeroTitle />
           <p className="mt-5 sm:mt-8 text-ink-200 text-body md:text-lg md:leading-[1.6] max-w-2xl mx-auto">
             מדפסת תלת מימד מקצועית שעובדת עבורך — סמלי יחידות, מתנות לעובדים,
             פידג&apos;טים, או כל קובץ שתעלה. ישירות מהסטודיו אליך.
