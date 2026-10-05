@@ -42,6 +42,7 @@
     ".next",
     "tools",
     "data",
-    "out"
+    "out",
+    "supabase/functions"
   ]
 }

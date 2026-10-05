@@ -216,3 +216,6 @@ export function shelfCount(shelf: ImportedShelf): number {
 }
 
 export const catalogueSize = (): number => build().length;
+
+/** Every sellable model as the bot quotes it: the AI helper's product list. */
+export const allProducts = (): Found[] => build().map((x) => toFound(x.model, true));

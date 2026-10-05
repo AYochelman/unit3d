@@ -21,6 +21,8 @@ const eslintConfig = [
       // eslint config (tools/reference-studio). It is never built into the
       // shop, so it must not be able to fail the shop's gates either.
       "tools/**",
+      // Supabase Edge Functions run on Deno, not in the Next build.
+      "supabase/functions/**",
     ],
   },
   ...coreWebVitals,
