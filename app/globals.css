@@ -484,3 +484,19 @@ html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is
    light page they keep the site's dark ground so their light text stays legible. */
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) :is(body > header, header.sticky, footer) { background-color: #04110b; }
 html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is([class*="bg-ink-950"], [class*="bg-ink-900"], [class*="bg-ink-800"]):not(.pd-hero) { background-color: var(--pd-card); }
+
+/* Header search window (components/SearchPalette.tsx) */
+@keyframes sp-in { from { opacity: 0; transform: translateY(-8px) scale(.985); } }
+@keyframes sp-pop { from { opacity: 0; transform: translateY(-4px) scale(.97); } }
+@keyframes sp-rise { from { opacity: 0; transform: translateY(6px); } }
+@keyframes sp-shim { 50% { opacity: .45; } }
+.sp-in { animation: sp-in .22s cubic-bezier(.2,.8,.2,1); }
+.sp-pop { animation: sp-pop .16s cubic-bezier(.2,.8,.2,1); transform-origin: top left; }
+.sp-group { animation: sp-rise .24s cubic-bezier(.2,.8,.2,1) both; }
+.sp-group:nth-child(2) { animation-delay: 40ms; }
+.sp-group:nth-child(3) { animation-delay: 80ms; }
+.sp-chip { animation: sp-pop .16s ease-out; }
+.sp-shim { animation: sp-shim 1s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .sp-in, .sp-pop, .sp-group, .sp-chip, .sp-shim { animation: none; }
+}

@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import OrbDemo from "./OrbDemo";
 import HeroVideoOptions from "./HeroVideoOptions";
 import ShinyButton from "@/components/ui/shiny-button";
+import VariableFontCursorProximityHero from "@/components/ui/m-variable-font-cursor-proximity-1";
 
 const PAGES: { href: string; label: string }[] = [
   { href: "/", label: "דף הבית" },
@@ -126,6 +127,16 @@ export default function DesignLabTab() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="grid gap-3">
+        <h2 className="font-black text-lg">רכיב: כותרת שמגיבה לעכבר</h2>
+        <p className="text-sm text-ink-400 leading-relaxed">
+          כל אות מתעבה כשהעכבר מתקרב אליה, ונרגעת כשהוא מתרחק. עובד רק עם עכבר. בטלפון ולמי שביקש פחות תנועה הכותרת נשארת כרגיל. עדיין לא מופיע לגולשים.
+        </p>
+        <div className="rounded-2xl border border-ink-800 bg-ink-900">
+          <VariableFontCursorProximityHero />
         </div>
       </section>
 
