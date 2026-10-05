@@ -873,6 +873,19 @@ export default function MorphOrb(props: MorphOrbProps) {
     copyRef.current = { ...DEFAULT_COPY, ...props.copy };
     speedRef.current = Math.max(0.05, props.speed ?? 1);
   });
+  // Belt and braces for browsers without `overflow: clip` (see the CSS): the
+  // stage is never meant to scroll, so any scroll a focus causes is undone.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const pin = () => {
+      if (root.scrollLeft !== 0) root.scrollLeft = 0;
+      if (root.scrollTop !== 0) root.scrollTop = 0;
+    };
+    root.addEventListener("scroll", pin, { passive: true });
+    return () => root.removeEventListener("scroll", pin);
+  }, []);
+
   const phaseRef = useRef<Phase>("idle");
   const reducedRef = useRef(false);
   const rtRef = useRef<Runtime | null>(null);
