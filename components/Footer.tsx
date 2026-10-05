@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
+import OwnerSignature from "./OwnerSignature";
 import { CONTACT } from "@/lib/contact";
 import { BUSINESS, addressLine, businessDetailsComplete, orPending } from "@/lib/business";
 import { LEGAL_PAGES } from "@/components/legal/LegalPage";
@@ -159,9 +160,7 @@ export default function Footer() {
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 border-t border-ink-800 flex flex-col md:flex-row items-center justify-between gap-3">
           {/* The owner's signature: the shop and this site are his work. */}
-          <div className="text-sm text-ink-300">
-            Unit 3D הוא מוצר של <span className="font-semibold text-ink-50">ארז יוכלמן</span>
-          </div>
+          <OwnerSignature />
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             © 2026 Unit3D · MADE IN GIVATAYIM · NOZZLE 0.4mm · v2.6
           </div>

@@ -1,11 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { DESIGNS, PRODUCT_LOOKS, inkOn, useDesignPreview, type DesignId, type ProductLook } from "@/lib/design-preview";
+import { DESIGNS, PRODUCT_LOOKS, SIGNATURES, inkOn, useDesignPreview, type DesignId, type ProductLook } from "@/lib/design-preview";
 import { cn } from "@/lib/cn";
 import OrbDemo from "./OrbDemo";
 import HeroVideoOptions from "./HeroVideoOptions";
 import ShinyButton from "@/components/ui/shiny-button";
 import MorphGalleryDemo from "./MorphGalleryDemo";
+import { Signature } from "@/components/OwnerSignature";
 import VariableFontCursorProximityHero from "@/components/ui/m-variable-font-cursor-proximity-1";
 
 const PAGES: { href: string; label: string }[] = [
@@ -27,6 +28,8 @@ export default function DesignLabTab() {
   const setDesign = useDesignPreview((s) => s.setDesign);
   const router = useRouter();
 
+  const signature = useDesignPreview((s) => s.signature);
+  const setSignature = useDesignPreview((s) => s.setSignature);
   const productLook = useDesignPreview((s) => s.productLook);
   const setProductLook = useDesignPreview((s) => s.setProductLook);
   const showProduct = (id: ProductLook, href: string) => {
@@ -124,6 +127,36 @@ export default function DesignLabTab() {
                 </button>
                 <button type="button" onClick={() => showProduct(l.id, "/fidgets/")} className="text-[11px] px-2 py-1 rounded-lg border border-ink-700 text-ink-300 hover:border-ink-500 justify-self-start">
                   לבחור מוצר אחר מהמדף
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-3">
+        <h2 className="font-black text-lg">החותם שלך בתחתית האתר</h2>
+        <p className="text-sm text-ink-400 leading-relaxed">
+          ארבע דרכים לחתום על האתר. כל אחת מוצגת כאן כמו בפס התחתון של האתר. &quot;לראות באתר&quot; מחליף את החותם בתחתית של כל העמודים, רק בדפדפן הזה.
+        </p>
+        <div className="grid gap-3 md:grid-cols-2">
+          {SIGNATURES.map((sg) => (
+            <div key={sg.id} className={cn("rounded-2xl border bg-ink-900 overflow-hidden grid", signature === sg.id ? "border-flame" : "border-ink-800")}>
+              <div className="min-h-24 px-5 py-5 bg-ink-950 border-b border-ink-800 flex items-center justify-between gap-3 flex-wrap">
+                <Signature variant={sg.id} />
+                <span className="font-mono text-[10px] tracking-wider text-ink-500" dir="ltr">© 2026 Unit3D</span>
+              </div>
+              <div className="p-4 grid gap-3">
+                <div>
+                  <div className="font-bold">{sg.label}{sg.id === "text" && <span className="text-xs text-ink-400 font-normal"> · באתר עכשיו</span>}</div>
+                  <p className="text-xs text-ink-400 mt-1 leading-relaxed">{sg.note}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { setSignature(sg.id); window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" }); }}
+                  className="h-10 rounded-xl bg-flame text-white font-bold text-sm hover:bg-flame-600"
+                >
+                  {signature === sg.id ? "מוצג עכשיו בתחתית ↓" : "לראות באתר"}
                 </button>
               </div>
             </div>
