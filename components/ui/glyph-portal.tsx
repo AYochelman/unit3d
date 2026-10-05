@@ -5,8 +5,9 @@
  * Origin: UsefulPortal.astro on https://ktzm.dk → UsefulPortal.tsx → ClarityPortal.tsx.
  * A scroll-driven camera through live type. Keep this notice with copies.
  *
- * Unit 3D changes: Hebrew labels, direction="ltr" on the measured text (the
- * site is right to left), and two lines restated for the project's React lint.
+ * Unit 3D changes: Hebrew words (measured as a right-to-left run), Hebrew
+ * labels, direction="ltr" on the measured text and canvas (the site is right
+ * to left), and two lines restated for the project's React lint.
  */
 import { useId, useLayoutEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
@@ -53,6 +54,7 @@ type Letter = { index: number; x: number; y: number; width: number; height: numb
 function interior(context: CanvasRenderingContext2D, char: string, font: string): Omit<Ink, "index"> | null {
   const canvas = context.canvas;
   context.font = font;
+  context.direction = "ltr";
   const m = context.measureText(char);
   const pad = 8;
   const left = Math.ceil(m.actualBoundingBoxLeft);
@@ -110,6 +112,9 @@ export default function GlyphPortal({
   const length = Number.isFinite(scrollLength) ? clamp(scrollLength, 1, 8) : 2.4;
   const weight = Number.isFinite(fontWeight) ? clamp(fontWeight, 1, 1000) : 900;
   const hasFront = front != null;
+  // Hebrew (or Arabic): the word is one right-to-left run. Measured as such in
+  // readInk below; the letter buttons and arrow keys follow the reading order.
+  const rtl = /[\u0590-\u05FF\u0600-\u06FF\uFB1D-\uFDFF]/.test(text);
   const q = `:where(#${uid})`;
 
   useLayoutEffect(() => {
@@ -158,8 +163,17 @@ export default function GlyphPortal({
       const scanFont = `${font.fontWeight} 300px ${font.fontFamily}`;
       context.font = `${font.fontWeight} 100px ${font.fontFamily}`;
       context.fontKerning = "none";
+      context.direction = "ltr";
       const metrics = context.measureText(text);
-      const advances = Array.from({ length: text.length }, (_, i) => context.measureText(text.slice(0, i)).width);
+      // Where each character's own origin sits, measured from x = 0. A Latin
+      // word runs rightwards, so that is the width of everything before it.
+      // A Hebrew word is one right-to-left run that still starts at x = 0 (the
+      // SVG text and this canvas are both direction="ltr"), so the first letter
+      // sits at the far right: its origin is the whole width less the width up
+      // to and including it.
+      const total = metrics.width;
+      const advances = Array.from({ length: text.length }, (_, i) =>
+        rtl ? total - context.measureText(text.slice(0, i + (text.codePointAt(i)! > 0xffff ? 2 : 1))).width : context.measureText(text.slice(0, i)).width);
       // SVG getBBox includes the font's line box in some engines. Frame visible ink instead.
       bounds = { x: -metrics.actualBoundingBoxLeft, y: -metrics.actualBoundingBoxAscent,
         width: metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight,
@@ -300,7 +314,7 @@ export default function GlyphPortal({
       event.preventDefault();
       const current = candidates.indexOf(target!);
       const index = event.key === "Home" ? 0 : event.key === "End" ? candidates.length - 1
-        : (current + (event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 1) + candidates.length) % candidates.length;
+        : (current + ((event.key === "ArrowLeft") !== rtl || event.key === "ArrowUp" ? -1 : 1) + candidates.length) % candidates.length;
       buttons.find((button) => Number(button.dataset.gpLetter) === candidates[index].index)?.focus({ preventScroll: true });
     };
     const pick = () => {
@@ -345,7 +359,7 @@ export default function GlyphPortal({
       choices.removeEventListener("keydown", navigate);
       picker.removeEventListener("change", pick);
     };
-  }, [text, focusChar, interactive, fontFamily, weight, length, clipId, hasFront]);
+  }, [text, focusChar, interactive, fontFamily, weight, length, clipId, hasFront, rtl]);
 
   return (
     <section ref={sectionRef} id={uid} className={className} aria-label={text}
