@@ -263,7 +263,7 @@ function Card({
 
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 will-change-transform"
+      className="pointer-events-auto absolute left-1/2 top-1/2 will-change-transform"
       style={{
         width: `${fixedCard ? fixedCard.w : target.w}vw`,
         height: `${fixedCard ? fixedCard.h : target.h}vh`,
@@ -357,6 +357,8 @@ interface StackSpreadStageProps {
   title?: ReactNode;
   sub?: ReactNode;
   hintLabel?: string;
+  /** Links or buttons under the subtitle; they stay clickable through the cards' layer. */
+  actions?: ReactNode;
 }
 
 function StackSpreadStage({
@@ -372,6 +374,7 @@ function StackSpreadStage({
   title,
   sub = SUB,
   hintLabel = "Scroll",
+  actions,
 }: StackSpreadStageProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
@@ -439,10 +442,11 @@ function StackSpreadStage({
           >
             {sub}
           </p>
+          {actions && <div className="pointer-events-auto mt-6 flex flex-wrap items-center justify-center gap-3">{actions}</div>}
         </motion.div>
 
         {/* scattering cards */}
-        <div className="absolute inset-0 z-10">
+        <div className="pointer-events-none absolute inset-0 z-10">
           {cards.map((card, i) => (
             <Card
               key={i}
@@ -512,6 +516,7 @@ export interface StackSpreadProps {
   title?: ReactNode;
   sub?: ReactNode;
   hintLabel?: string;
+  actions?: ReactNode;
 }
 
 export default function StackSpread({
@@ -527,6 +532,7 @@ export default function StackSpread({
   title,
   sub,
   hintLabel,
+  actions,
 }: StackSpreadProps) {
   return (
     <StackSpreadStage
@@ -542,6 +548,7 @@ export default function StackSpread({
       title={title}
       sub={sub}
       hintLabel={hintLabel}
+      actions={actions}
     />
   );
 }
