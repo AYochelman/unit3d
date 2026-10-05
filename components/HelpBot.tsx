@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 import { helpBotNow, loadHelpBot, warmHelpBot } from "@/lib/helpbot-lazy";
 import MorphOrb, { type MorphOrbApi, type MorphOrbPhase } from "@/components/ui/ai-thiking-orb-and-input";
 import type { BotAnswer, BotLink } from "@/lib/helpbot";
+import { askAI, type AiTurn } from "@/lib/helpbot-ai";
 
 /**
  * The site's help bot, asked through the thinking orb.
@@ -51,10 +52,27 @@ export default function HelpBot() {
     return () => { alive = false; };
   }, [open]);
 
+  // The conversation so far, so a follow-up ("ובכחול?") is understood.
+  // Kept in memory only; closing the panel starts fresh.
+  const history = useRef<AiTurn[]>([]);
+
   const answer = async (text: string): Promise<string> => {
     const m = await loadHelpBot();
+    history.current = [...history.current, { role: "user" as const, content: text }].slice(-8);
+
+    // The real AI first (lib/helpbot-ai.ts). If it is not deployed yet or
+    // cannot answer, the prepared answers below carry on exactly as before.
+    const ai = await askAI(history.current);
+    if (ai) {
+      history.current = [...history.current, { role: "assistant" as const, content: ai.text }];
+      setLinks(ai.links);
+      setChips(m.BOT_STARTERS);
+      return ai.text;
+    }
+
     const byChip = m.BOT_ANSWERS.find((a) => (a.chip ?? a.keys[0]) === text);
     const a: BotAnswer = byChip ?? m.matchAnswer(text) ?? m.BOT_FALLBACK;
+    history.current = [...history.current, { role: "assistant" as const, content: a.text }];
     setLinks(a.links ?? []);
     setChips(a.next?.length ? a.next : m.BOT_STARTERS);
     return a.text;

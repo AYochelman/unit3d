@@ -41,6 +41,7 @@
     "_recovered-newest",
     ".next",
     "data",
-    "out"
+    "out",
+    "supabase/functions"
   ]
 }

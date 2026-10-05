@@ -17,6 +17,8 @@ const eslintConfig = [
       "data/**",
       // Throw-away Playwright checks run by hand; not part of the site.
       "*.cjs",
+      // Supabase Edge Functions run on Deno, not in the Next build.
+      "supabase/functions/**",
     ],
   },
   ...coreWebVitals,
