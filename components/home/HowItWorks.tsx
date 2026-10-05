@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useState } from "react";
 import Icon, { type IconName } from "@/components/ui/Icon";
 import GlyphPortal from "@/components/ui/glyph-portal";
@@ -32,9 +33,9 @@ const FIELD =
 function Steps() {
   return (
     <div data-hiw-copy dir="rtl">
-      <h2 data-hiw-title>
+      <ProximityH2 data-hiw-title>
         4 צעדים מהרעיון <span>לקופסה אצלך הביתה.</span>
-      </h2>
+      </ProximityH2>
       <ol data-hiw-steps>
         {STEPS.map((s) => (
           <li key={s.index} data-hiw-step>

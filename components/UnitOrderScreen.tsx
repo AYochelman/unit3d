@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useMemo, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
@@ -188,7 +188,7 @@ export default function UnitOrderScreen({
             </div>
             <div className="min-w-0 lg:p-5 lg:border-t lg:border-ink-800">
               <Pill tone="flame" className="mb-2">הגדוד שבחרת</Pill>
-              <h2 className="text-lg lg:text-2xl font-black tracking-tight leading-tight truncate lg:whitespace-normal">{unit.title}</h2>
+              <ProximityH2 className="text-lg lg:text-2xl font-black tracking-tight leading-tight truncate lg:whitespace-normal">{unit.title}</ProximityH2>
               <dl className="mt-2 lg:mt-3 space-y-1 text-xs lg:text-sm">
                 <div className="flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">חטיבה</dt><dd className="text-ink-200 truncate">{unit.brigade}</dd></div>
                 <div className="hidden sm:flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">חיל</dt><dd className="text-ink-200 truncate">{unit.corps}</dd></div>

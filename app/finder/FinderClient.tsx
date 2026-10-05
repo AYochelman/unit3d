@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
@@ -75,7 +75,7 @@ export default function FinderClient() {
 
       {!done && q && (
         <section aria-labelledby="finder-q">
-          <h2 id="finder-q" className="text-xl font-bold mb-1">{q.title}</h2>
+          <ProximityH2 id="finder-q" className="text-xl font-bold mb-1">{q.title}</ProximityH2>
           {q.hint && <p className="text-ink-400 text-sm mb-4">{q.hint}</p>}
           <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
             {q.options.map((o) => {

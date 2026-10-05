@@ -1,3 +1,4 @@
+import { ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { cn } from "@/lib/cn";
 
 export default function SectionHead({
@@ -19,9 +20,9 @@ export default function SectionHead({
           <span className="font-mono">{eyebrow}</span>
         </div>
       )}
-      <h2 className="text-3xl md:text-5xl font-bold leading-heading text-balance">
+      <ProximityH2 className="text-3xl md:text-5xl font-bold leading-heading text-balance">
         {title}
-      </h2>
+      </ProximityH2>
       {sub && (
         <p className="mt-4 text-ink-300 text-body md:text-lg md:leading-[1.6] max-w-2xl">
           {sub}

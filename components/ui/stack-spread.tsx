@@ -12,6 +12,7 @@
  * `!leading-none` for this project's Tailwind 3; and the <img> lint rule is
  * acknowledged where the card face draws its picture.
  */
+import { ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import {
   motion,
   useScroll,
@@ -424,8 +425,8 @@ function StackSpreadStage({
             scale: noScale ? 1 : copyScale,
           }}
         >
-          <h2
-            className="w-full whitespace-pre-line text-[4.5vw] font-normal !leading-none tracking-tight max-md:text-[10vw]"
+          <ProximityH2
+            className="pointer-events-auto w-full whitespace-pre-line text-[4.5vw] font-normal !leading-none tracking-tight max-md:text-[10vw]"
             style={{ color: textColor }}
           >
             {title ?? (
@@ -435,7 +436,7 @@ function StackSpreadStage({
                 Responds.
               </>
             )}
-          </h2>
+          </ProximityH2>
           <p
             className="mt-[1.2vw] w-full max-w-[42ch] text-[1.15vw] leading-relaxed tracking-tight max-md:mt-3 max-md:text-[3.6vw]"
             style={{ color: textColor, opacity: 0.6 }}

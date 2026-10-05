@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
@@ -386,9 +386,9 @@ export default function LivestreamClient() {
                   <div className="flex flex-wrap items-end justify-between gap-3">
                     <div className="min-w-0">
                       <div className="font-mono text-[10px] tracking-widest uppercase text-ink-500" dir="ltr">READY</div>
-                      <h2 className="font-extrabold text-lg md:text-xl mt-0.5">
+                      <ProximityH2 className="font-extrabold text-lg md:text-xl mt-0.5">
                         הפלטה פנויה — מחכים רק <span className="text-flame">להזמנה שלך</span>.
-                      </h2>
+                      </ProximityH2>
                     </div>
                     <Btn as="a" href="/contact" size="sm" icon="arrowLeft" className="shrink-0">
                       להזמנה
@@ -402,7 +402,7 @@ export default function LivestreamClient() {
               <div className="absolute inset-x-0 bottom-0 z-10">
                 <div className="bg-gradient-to-t from-ink-950 via-ink-950/80 to-transparent p-4 pt-12">
                   <div className="flex items-end justify-between gap-3">
-                    <h2 className="font-bold text-lg truncate">{live?.job_name || "הדפסה"}</h2>
+                    <ProximityH2 className="font-bold text-lg truncate">{live?.job_name || "הדפסה"}</ProximityH2>
                     <div className="font-mono text-3xl font-extrabold text-flame tabular-nums" dir="ltr">
                       {Math.round(progress)}%
                     </div>
@@ -464,7 +464,7 @@ export default function LivestreamClient() {
       {jobs.length > 0 && (
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">THE NUMBERS</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה יצא מהמדפסת הזאת.</h2>
+          <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה יצא מהמדפסת הזאת.</ProximityH2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { label: "הדפסות שהסתיימו", value: String(stats.ok) },
@@ -488,7 +488,7 @@ export default function LivestreamClient() {
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">TIMELAPSE</div>
           <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">שעות בתוך חצי דקה.</h2>
+            <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight">שעות בתוך חצי דקה.</ProximityH2>
             <Link
               href="/timelapses"
               className="inline-flex items-center gap-1 text-[13px] font-semibold text-flame hover:text-flame-400 shrink-0"
@@ -515,7 +515,7 @@ export default function LivestreamClient() {
       {jobs.length > 0 && (
         <section className="mt-12">
           <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">RECENT</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה רץ כאן לאחרונה.</h2>
+          <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה רץ כאן לאחרונה.</ProximityH2>
           <div className="space-y-2">
             {jobs.slice(0, 8).map((j) => (
               <div key={j.key} className="flex flex-wrap items-center gap-3 px-4 py-3 rounded-xl bg-ink-900 border border-ink-800">

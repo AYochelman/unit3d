@@ -1,5 +1,5 @@
 "use client";
-import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
+import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -206,9 +206,9 @@ export default function ContactClient() {
 
         {bought && similar.length > 0 && (
           <section className="mb-10">
-            <h2 className="text-xl md:text-2xl font-black tracking-tightest mb-1">
+            <ProximityH2 className="text-xl md:text-2xl font-black tracking-tightest mb-1">
               דומים למה שבחרת
-            </h2>
+            </ProximityH2>
             <p className="text-sm text-ink-400 mb-5">
               מאותם מדפים. אם משהו מוצא חן — אפשר להוסיף אותו לאותה הדפסה.
             </p>
