@@ -4,7 +4,7 @@ import Btn from "@/components/ui/Btn";
 import Pill from "@/components/ui/Pill";
 import { Input } from "@/components/ui/Field";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
-import { readEvents, type SiteEvent } from "@/lib/analytics";
+import { readEvents, type ReadProblem, type SiteEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 const RANGES = [
@@ -168,11 +168,13 @@ export default function TrafficTab() {
   const [days, setDays] = useState(30);
   const [rows, setRows] = useState<SiteEvent[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [problem, setProblem] = useState<ReadProblem>(null);
 
   const load = useCallback(async (t: string, d: number) => {
     setLoaded(false);
     const r = await readEvents(t, d);
-    setRows(r);
+    setRows(r.rows);
+    setProblem(r.problem);
     setLoaded(true);
   }, []);
 
@@ -181,7 +183,8 @@ export default function TrafficTab() {
     let alive = true;
     void readEvents(token, days).then((r) => {
       if (!alive) return;
-      setRows(r);
+      setRows(r.rows);
+      setProblem(r.problem);
       setLoaded(true);
     });
     return () => { alive = false; };
@@ -257,6 +260,25 @@ export default function TrafficTab() {
     return <div className="space-y-4">{header}<div className="p-8 text-center text-sm text-ink-500 rounded-2xl border border-ink-800">טוען…</div></div>;
   }
 
+  if (problem) {
+    const say = {
+      missing: <>הטבלה <span dir="ltr" className="font-mono text-xs">site_events</span> לא קיימת ב-Supabase, ולכן אף ביקור לא נשמר. צריך להריץ פעם אחת את ה-SQL שב-<span dir="ltr" className="font-mono text-xs">docs/analytics-table.md</span> (Supabase ← SQL Editor).</>,
+      denied: <>הטבלה קיימת, אבל המשתמש שנכנסת איתו לא מורשה לקרוא אותה. זו הגדרת הרשאות (policy) בטבלה, לא חוסר בנתונים.</>,
+      session: <>הכניסה פגה. צא והיכנס שוב.</>,
+      other: <>הקריאה מ-Supabase נכשלה.</>,
+    }[problem.kind];
+    return (
+      <div className="space-y-4">
+        {header}
+        <div className="p-6 rounded-2xl border border-amber-500/40 bg-amber-500/5">
+          <p className="text-ink-100 font-semibold mb-2">לא הצלחתי לקרוא את התנועה.</p>
+          <p className="text-sm text-ink-300 leading-relaxed">{say}</p>
+          <p className="mt-3 text-[11px] text-ink-500 font-mono break-all" dir="ltr">{problem.detail}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!rows.length) {
     return (
       <div className="space-y-4">
@@ -264,8 +286,8 @@ export default function TrafficTab() {
         <div className="p-8 rounded-2xl border border-dashed border-ink-700 text-center">
           <p className="text-ink-100 font-semibold mb-2">עוד אין נתונים.</p>
           <p className="text-sm text-ink-400 max-w-md mx-auto leading-relaxed">
-            או שהטבלה עוד לא נוצרה ב-Supabase (ה-SQL נמצא ב-<span dir="ltr" className="font-mono text-xs">docs/analytics-table.md</span>),
-            או שעוד לא נכנס אף אחד מאז שזה עלה. זכור שהגלישה שלך עצמך לא נספרת.
+            הטבלה קיימת ונקראה בהצלחה, אבל אין בה אף ביקור בתקופה הזו. זכור שהגלישה מהמכשיר הזה לא נספרת,
+            כי האדמין פתוח בו.
           </p>
         </div>
       </div>
