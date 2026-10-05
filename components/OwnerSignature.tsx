@@ -9,7 +9,7 @@ import { cn } from "@/lib/cn";
  * Four treatments; the live site shows `LIVE`. The others are previewed from
  * /admin → "תצוגת עיצוב", in the owner's browser only.
  */
-const LIVE: SignatureId = "text";
+const LIVE: SignatureId = "seal";
 const NAME = "ארז יוכלמן";
 
 export function Signature({ variant, className }: { variant: SignatureId; className?: string }) {

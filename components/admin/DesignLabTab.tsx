@@ -148,7 +148,7 @@ export default function DesignLabTab() {
               </div>
               <div className="p-4 grid gap-3">
                 <div>
-                  <div className="font-bold">{sg.label}{sg.id === "text" && <span className="text-xs text-ink-400 font-normal"> · באתר עכשיו</span>}</div>
+                  <div className="font-bold">{sg.label}{sg.id === "seal" && <span className="text-xs text-ink-400 font-normal"> · באתר עכשיו</span>}</div>
                   <p className="text-xs text-ink-400 mt-1 leading-relaxed">{sg.note}</p>
                 </div>
                 <button
