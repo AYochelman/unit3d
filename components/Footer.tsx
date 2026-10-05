@@ -158,6 +158,10 @@ export default function Footer() {
           </address>
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 border-t border-ink-800 flex flex-col md:flex-row items-center justify-between gap-3">
+          {/* The owner's signature: the shop and this site are his work. */}
+          <div className="text-sm text-ink-300">
+            Unit 3D הוא מוצר של <span className="font-semibold text-ink-50">ארז יוכלמן</span>
+          </div>
           <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
             © 2026 Unit3D · MADE IN GIVATAYIM · NOZZLE 0.4mm · v2.6
           </div>

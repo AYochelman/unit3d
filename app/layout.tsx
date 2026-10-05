@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description:
     "מדפסת תלת מימד מקצועית שעובדת עבורך — סמלי יחידות, מתנות לעובדים, פידג'טים, או כל קובץ שתעלה. ישירות מהסטודיו אליך.",
   metadataBase: new URL("https://unit-3d.com"),
+  // The owner's name on his work, where search engines and link previews read it.
+  authors: [{ name: "ארז יוכלמן" }],
+  creator: "ארז יוכלמן",
+  publisher: "ארז יוכלמן",
   openGraph: {
     title: "Unit 3D · הדפסות תלת מימד בהתאמה אישית",
     description: "סמלי יחידות · מתנות לעובדים · פידג'טים · כל רעיון, מודפס.",

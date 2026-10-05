@@ -50,7 +50,11 @@ export const businessJsonLd = () => ({
   // Every profile that is this business. The Google Business Profile's share
   // link belongs here too, once its verification is through.
   sameAs: [CONTACT.instagram],
+  founder: { "@id": `${SITE_URL}/#owner` },
 });
+
+/** The person behind the shop and this site. */
+const OWNER = { "@type": "Person", "@id": `${SITE_URL}/#owner`, name: "ארז יוכלמן" } as const;
 
 export const websiteJsonLd = () => ({
   "@context": "https://schema.org",
@@ -60,6 +64,7 @@ export const websiteJsonLd = () => ({
   name: "Unit 3D",
   inLanguage: "he-IL",
   publisher: { "@id": `${SITE_URL}/#business` },
+  creator: OWNER,
 });
 
 /** A trail Google prints under the result instead of a raw URL. */
