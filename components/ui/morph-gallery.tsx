@@ -24,8 +24,11 @@ import * as React from "react"
  * right-to-left controls (the "previous" arrow sits on the right, ← is "next",
  * swipes follow the reading direction); the site's ink palette instead of
  * black and white; `tuning` is written in an effect rather than during render;
- * and the source-list key uses "\n" (the paste had a literal line break inside
- * the string, which does not compile).
+ * the source-list key uses "\n" (the paste had a literal line break inside
+ * the string, which does not compile); and the canvas is redrawn only while a
+ * dissolve runs or something changed, and not at all off screen — the
+ * original drew every frame forever, which on a page that also plays a video
+ * is a GPU kept busy for a picture that is standing still.
  */
 
 export type MorphItem = {
@@ -61,6 +64,8 @@ export type MorphGalleryProps = {
   className?: string
   /** Shown over the bottom of the frame, above the thumbnails. */
   caption?: (item: MorphItem, index: number) => React.ReactNode
+  /** A click (not a swipe) on the picture itself. */
+  onSlideClick?: (index: number) => void
 }
 
 /** Wrap past the ends when looping, clamp at them when not. */
@@ -249,6 +254,7 @@ export default function MorphGallery({
   onIndexChange,
   className = "",
   caption,
+  onSlideClick,
 }: MorphGalleryProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
   const [uncontrolled, setUncontrolled] = React.useState(() =>
@@ -318,6 +324,15 @@ export default function MorphGallery({
     let progress = 1
     let startedAt = 0
     let direction = 1
+    // Something new to show (a texture arrived, the size changed) while no
+    // dissolve is running.
+    let dirty = true
+    let visible = true
+    const seen = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting
+      dirty = true
+    })
+    seen.observe(canvas)
 
     const onLost = (e: Event) => {
       e.preventDefault()
@@ -335,6 +350,7 @@ export default function MorphGallery({
       canvas.width = w
       canvas.height = h
       gl.viewport(0, 0, w, h)
+      dirty = true
     }
     const observer = new ResizeObserver(resize)
     observer.observe(canvas)
@@ -361,6 +377,9 @@ export default function MorphGallery({
           direction = forward ? 1 : -1
         }
       }
+
+      if (!visible || (progress >= 1 && !dirty)) return
+      dirty = false
 
       if (progress < 1) {
         const span = t.reduced ? 0 : Math.max(t.duration, 1)
@@ -431,6 +450,7 @@ export default function MorphGallery({
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
                 textures[i] = tex
                 aspects[i] = img.naturalWidth / Math.max(img.naturalHeight, 1)
+                dirty = true
                 if (!running) {
                   running = true
                   resize()
@@ -455,6 +475,7 @@ export default function MorphGallery({
       disposed = true
       cancelAnimationFrame(raf)
       observer.disconnect()
+      seen.disconnect()
       canvas.removeEventListener("webglcontextlost", onLost)
       canvas.removeEventListener("webglcontextrestored", onRestored)
       for (const tex of textures) if (tex) gl.deleteTexture(tex)
@@ -489,6 +510,10 @@ export default function MorphGallery({
     swipe.current = null
     if (startX === null) return
     const dx = e.clientX - startX
+    if (Math.abs(dx) < 8 && onSlideClick && !(e.target as HTMLElement).closest("button, a")) {
+      onSlideClick(active)
+      return
+    }
     // Hebrew reads right to left, so the next picture comes in from the left:
     // dragging rightwards pulls it in.
     if (Math.abs(dx) > 48) go(active + (dx > 0 ? 1 : -1))
@@ -545,7 +570,7 @@ export default function MorphGallery({
       ) : (
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 block h-full w-full"
+          className={"absolute inset-0 block h-full w-full" + (onSlideClick ? " cursor-pointer" : "")}
           style={{ opacity: ready ? 1 : 0, transition: "opacity 400ms ease" }}
           aria-hidden="true"
         />

@@ -222,17 +222,30 @@ export const PRODUCT_LOOKS: { id: ProductLook; label: string; note: string; swat
   { id: "gift-c", label: "ג · בהיר עם הירוק", note: "רקע בהיר כמו בעיצוב, והירוק של המותג לבחירות ולכפתור ההוספה.", swatch: ["#f6f6f6", "#ffffff", "#e8f6ee", "#089a47"] },
 ];
 
+/** How the owner's signature sits in the footer (components/OwnerSignature.tsx). */
+export type SignatureId = "text" | "script" | "seal" | "monogram";
+export const SIGNATURES: { id: SignatureId; label: string; note: string }[] = [
+  { id: "text", label: "א · שורת טקסט", note: "מה שבאתר עכשיו: משפט אחד ליד זכויות היוצרים, השם מודגש." },
+  { id: "script", label: "ב · חתימה", note: "השם בגופן סריף עדין וגדול יותר, עם קו חתימה ירוק מתחתיו. נראה כמו חתימה על יצירה." },
+  { id: "seal", label: "ג · חותמת", note: "חותמת עגולה עם ראשי התיבות במרכז והשם מסביב, כמו חותמת של בעל מקצוע." },
+  { id: "monogram", label: "ד · מונוגרמה", note: "ריבוע קטן עם ראשי התיבות, ולידו \"עוצב ונבנה ע״י\" בכתב טכני, בסגנון של האתר." },
+];
+
 type PreviewState = {
   design: DesignId | null;
   setDesign: (d: DesignId | null) => void;
   productLook: ProductLook | null;
   setProductLook: (l: ProductLook | null) => void;
+  signature: SignatureId | null;
+  setSignature: (s: SignatureId | null) => void;
 };
 export const useDesignPreview = create<PreviewState>((set) => ({
   design: null,
   setDesign: (design) => set({ design }),
   productLook: null,
   setProductLook: (productLook) => set({ productLook }),
+  signature: null,
+  setSignature: (signature) => set({ signature }),
 }));
 
 const toRgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(" ");

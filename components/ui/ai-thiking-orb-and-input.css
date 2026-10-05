@@ -23,7 +23,13 @@
   --mo-mint: #5fe39a;
   position: relative;
   isolation: isolate;
+  /* clip, not just hidden: "hidden" is still a scroll container, and with the
+     halo, the 560px pill and the off-screen sizer it holds ~10,000px of
+     sideways overflow. iOS scrolled it to reveal the focused field and the
+     whole stage slid right, half off the panel. clip cannot be scrolled;
+     hidden stays first as the fallback for browsers without clip. */
   overflow: hidden;
+  overflow: clip;
   width: 100%;
   min-height: 360px;
   height: 100%;

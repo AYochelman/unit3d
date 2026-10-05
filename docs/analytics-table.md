@@ -27,7 +27,8 @@ create table if not exists public.site_events (
   -- עדיין לא יכול לכתוב שורה באורך ספר.
   constraint site_events_name_valid check (name in (
     'page_view','product_open','shelf_open','whatsapp_click','order_start',
-    'order_sent','configurator_open','review_sent','live_open','search')),
+    'order_sent','configurator_open','review_sent','live_open','search',
+    'finder_open','finder_done')),
   constraint site_events_device_valid check (device in ('phone','tablet','desktop')),
   constraint site_events_len check (
     char_length(path) <= 200
@@ -58,6 +59,26 @@ drop policy if exists site_events_delete_owner on public.site_events;
 create policy site_events_delete_owner on public.site_events
   for delete to authenticated using (true);
 ```
+
+## אם הטבלה כבר נוצרה לפני 5.10
+
+הגרסה הקודמת של ה-SQL לא כללה את `finder_open` ו-`finder_done` (השאלון "מה
+מתאים לי"), ולכן כל אירוע כזה נדחה ע"י הטבלה. ביקורי עמוד לא הושפעו. לתקן פעם
+אחת:
+
+```sql
+alter table public.site_events drop constraint if exists site_events_name_valid;
+alter table public.site_events add constraint site_events_name_valid check (name in (
+  'page_view','product_open','shelf_open','whatsapp_click','order_start',
+  'order_sent','configurator_open','review_sent','live_open','search',
+  'finder_open','finder_done'));
+```
+
+## לשונית "תנועה" אומרת מה לא בסדר
+
+מ-5.10 הלשונית מציגה את התשובה של Supabase במקום "עוד אין נתונים" כללי:
+טבלה שלא קיימת, משתמש שלא מורשה לקרוא, כניסה שפגה, או תקלה אחרת — עם הקוד
+המדויק בשורה הקטנה מתחת.
 
 ## מה נאסף, ומה במפורש לא
 
