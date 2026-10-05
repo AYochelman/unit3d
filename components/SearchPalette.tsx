@@ -106,6 +106,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [ready, setReady] = useState(() => helpBotNow() !== null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -124,7 +125,13 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
     // only the animations actually running, through the Web Animations API.
     // A class on <html> did the same by restyling all ~2,000 elements of the
     // page on open and again on close, which was half a second on a slow CPU.
-    const running = document.getAnimations().filter((a) => a.playState === "running");
+    // Never the window's own: its entrance animation is already running at
+    // this point, and pausing it froze the window invisible at frame one.
+    const root = rootRef.current;
+    const running = document.getAnimations().filter((a) => {
+      const target = (a.effect as KeyframeEffect | null)?.target;
+      return a.playState === "running" && !(root && target && root.contains(target));
+    });
     running.forEach((a) => a.pause());
     return () => {
       running.forEach((a) => { try { a.play(); } catch { /* element gone */ } });
@@ -216,7 +223,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
   // per key on the home page. The "glass" is a translucent fill over a
   // near-opaque dim, a light edge and the green glow, which read the same.
   return createPortal(
-    <div className="sp-root fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={GLASS} onKeyDown={onKeyDown}>
+    <div ref={rootRef} className="sp-root fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={GLASS} onKeyDown={onKeyDown}>
       <button type="button" aria-label="סגור חיפוש" onClick={onClose} className="absolute inset-0" style={{ background: "var(--p-backdrop)" }} />
       <div className="sp-in relative mx-auto mt-[8vh] w-[min(94vw,640px)] grid gap-2">
         {/* Search field: its own card, as in the shot */}
