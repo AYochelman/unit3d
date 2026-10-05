@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
@@ -63,9 +64,9 @@ export default function ShippingClient() {
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
         <Pill tone="cyan" className="mb-4">משלוחים · SHIPPING</Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           כמה עולה לשלוח את זה.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           המחשבון מחשב את מחיר המשלוח לפי המחירון הרשמי של דואר ישראל, ומוסיף עליו את עלות
           האריזה בפועל. דואר ישראל לא מתמחר לפי קילומטרים — המשקל קובע את המדרגה, והמרחק

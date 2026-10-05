@@ -453,6 +453,8 @@ html[data-product-look="gift-c"] .pd-root {
 .pd-root .pd-hero { border: 0; border-radius: 28px; background: var(--pd-hero) !important; }
 .pd-root .pd-thumb { border-radius: 18px; height: 4.5rem; width: 4.5rem; }
 .pd-root .pd-title { font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; font-weight: 700; color: var(--pd-ink); }
+/* With a mouse the title rests at 400 and swells under the pointer (ProximityH1). */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .pd-root .pd-title { font-weight: 400; } }
 .pd-root .pd-chip {
   border-radius: 9999px; border-color: transparent; background: var(--pd-chip); color: var(--pd-chip-fg);
   padding: 0.5rem 1rem; font-family: var(--font-sans); font-weight: 600;
@@ -500,7 +502,3 @@ html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is
 @media (prefers-reduced-motion: reduce) {
   .sp-in, .sp-pop, .sp-group, .sp-chip, .sp-shim { animation: none; }
 }
-html.sp-open body > :not(.sp-root),
-html.sp-open body > :not(.sp-root) *,
-html.sp-open body > :not(.sp-root) *::before,
-html.sp-open body > :not(.sp-root) *::after { animation-play-state: paused !important; }

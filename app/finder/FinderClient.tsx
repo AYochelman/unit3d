@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
@@ -57,9 +58,9 @@ export default function FinderClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           {done ? "RESULT" : `שאלה ${step + 1} מתוך ${QUESTIONS.length}`}
         </div>
-        <h1 className="text-3xl md:text-5xl font-black tracking-tightest leading-heading">
+        <ProximityH1 className="text-3xl md:text-5xl font-black tracking-tightest leading-heading">
           {done ? "זה מה שמתאים לך." : "יש לנו מבחר גדול, אנחנו יודעים."}
-        </h1>
+        </ProximityH1>
         {!done && (
           <p className="mt-3 text-ink-300 leading-relaxed">שלוש שאלות, ואנחנו מכוונים אותך למקום הנכון.</p>
         )}

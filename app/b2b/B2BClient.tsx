@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
@@ -94,11 +95,11 @@ export default function B2BClient() {
           <Pill tone="flame" className="mb-5">
             UNIT3D · BUSINESS
           </Pill>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-4">
+          <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-4">
             הדפסות בכמויות.
             <br />
             <span className="text-flame">עבור החברה שלך.</span>
-          </h1>
+          </ProximityH1>
           <p className="text-ink-300 max-w-2xl mx-auto text-base md:text-lg">
             10 יחידות, 100, או 1000. אני עובד מול חברות מאז 2021 — חשבונית מס,
             מחירון מדורג, ומשלוחים מתואמים. דבר איתי, בלי תיווך.

@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useMemo, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
@@ -200,9 +201,9 @@ export default function UnitOrderScreen({
         {/* The choices */}
         <div className="lg:col-span-3 space-y-8">
           <header>
-            <h1 className="text-2xl md:text-4xl font-black tracking-tightest leading-tight">
+            <ProximityH1 className="text-2xl md:text-4xl font-black tracking-tightest leading-tight">
               אין בעיה. איפה אתה רוצה את הגדוד שלך?
-            </h1>
+            </ProximityH1>
             <p className="text-ink-400 mt-2">
               אותו סמל, על גוף אחר. בחר איפה הוא יושב ואיך הוא נגמר.
             </p>

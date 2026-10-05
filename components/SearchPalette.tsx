@@ -85,7 +85,7 @@ function Thumb({ id, icon }: { id?: string; icon?: Parameters<typeof Icon>[0]["n
     <span className="h-8 w-8 shrink-0 rounded-full overflow-hidden grid place-items-center border" style={{ borderColor: "var(--p-line)", background: "var(--p-panel)" }}>
       {photo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={photoSrc(photo.src)} alt="" className="h-full w-full object-cover" loading="lazy" />
+        <img src={photoSrc(photo.src)} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
       ) : (
         <Icon name={icon ?? "cube"} size={15} style={{ color: "var(--p-accent)" }} />
       )}
@@ -106,6 +106,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [ready, setReady] = useState(() => helpBotNow() !== null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -120,10 +121,20 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     const playing = [...document.querySelectorAll("video")].filter((v) => !v.paused);
     playing.forEach((v) => v.pause());
-    // Same for the CSS loops behind it (the shelf marquee, the orbit buttons).
-    document.documentElement.classList.add("sp-open");
+    // Same for the CSS loops behind it (the shelf marquee, the orbit buttons):
+    // only the animations actually running, through the Web Animations API.
+    // A class on <html> did the same by restyling all ~2,000 elements of the
+    // page on open and again on close, which was half a second on a slow CPU.
+    // Never the window's own: its entrance animation is already running at
+    // this point, and pausing it froze the window invisible at frame one.
+    const root = rootRef.current;
+    const running = document.getAnimations().filter((a) => {
+      const target = (a.effect as KeyframeEffect | null)?.target;
+      return a.playState === "running" && !(root && target && root.contains(target));
+    });
+    running.forEach((a) => a.pause());
     return () => {
-      document.documentElement.classList.remove("sp-open");
+      running.forEach((a) => { try { a.play(); } catch { /* element gone */ } });
       playing.forEach((v) => void v.play().catch(() => {}));
     };
   }, []);
@@ -212,7 +223,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
   // per key on the home page. The "glass" is a translucent fill over a
   // near-opaque dim, a light edge and the green glow, which read the same.
   return createPortal(
-    <div className="sp-root fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={GLASS} onKeyDown={onKeyDown}>
+    <div ref={rootRef} className="sp-root fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="חיפוש באתר" style={GLASS} onKeyDown={onKeyDown}>
       <button type="button" aria-label="סגור חיפוש" onClick={onClose} className="absolute inset-0" style={{ background: "var(--p-backdrop)" }} />
       <div className="sp-in relative mx-auto mt-[8vh] w-[min(94vw,640px)] grid gap-2">
         {/* Search field: its own card, as in the shot */}
@@ -291,7 +302,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
             )}
           </div>
 
-          <div className="max-h-[52vh] overflow-y-auto pb-1" onClick={() => setPicker(false)}>
+          <div className="h-[min(52vh,460px)] overflow-y-auto overscroll-contain pb-1 [contain:strict]" onClick={() => setPicker(false)}>
             {loading &&
               [0, 1].map((g) => (
                 <div key={g} className="px-4 py-2">

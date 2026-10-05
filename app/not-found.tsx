@@ -1,3 +1,4 @@
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
 
@@ -28,9 +29,9 @@ export default function NotFound() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           404 · PAGE NOT FOUND
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-4">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-4">
           הדף הזה לא קיים.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 leading-relaxed">
           כנראה הקישור נשבר, או שהכתובת הוקלדה עם טעות. הכל עדיין כאן — רק
           במקום אחר.

@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
@@ -24,9 +25,9 @@ export default function TrackingClient() {
         <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
           ORDER TRACKING
         </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
+        <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
           איפה ההזמנה שלי?
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300">הזן את מספר ההזמנה — דוגמה: <span className="num text-flame">#4781</span></p>
       </header>
 

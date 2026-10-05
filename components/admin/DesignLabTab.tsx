@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import OrbDemo from "./OrbDemo";
 import HeroVideoOptions from "./HeroVideoOptions";
 import ShinyButton from "@/components/ui/shiny-button";
+import MorphGalleryDemo from "./MorphGalleryDemo";
 import VariableFontCursorProximityHero from "@/components/ui/m-variable-font-cursor-proximity-1";
 
 const PAGES: { href: string; label: string }[] = [
@@ -129,6 +130,8 @@ export default function DesignLabTab() {
           ))}
         </div>
       </section>
+
+      <MorphGalleryDemo />
 
       <section className="grid gap-3">
         <h2 className="font-black text-lg">רכיב: כותרת שמגיבה לעכבר</h2>

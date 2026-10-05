@@ -1,4 +1,5 @@
 "use client";
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Pill from "@/components/ui/Pill";
@@ -20,9 +21,9 @@ export default function TrendyClient() {
           <span className="w-1.5 h-1.5 rounded-full bg-flame live-dot" />
           טרנדי כרגע · HOT RIGHT NOW
         </Pill>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
+        <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           מה שכולם מזמינים השבוע.
-        </h1>
+        </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
           המדף שמתעדכן לפי מה שבאמת יוצא מהמדפסת, וגם <b className="text-ink-100">הבית של כל מה שלא נכנס לעמודה אחרת</b> —
           גאדג&apos;טים, מתנות מצחיקות, דברים ויראליים ופריטים חד-פעמיים. לוחצים, בוחרים צבע, ומגיעים לטופס עם הכל מוכן.

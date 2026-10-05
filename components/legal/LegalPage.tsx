@@ -1,3 +1,4 @@
+import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { BUSINESS } from "@/lib/business";
@@ -54,7 +55,7 @@ export default function LegalPage({
   return (
     <div className="max-w-3xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-black tracking-tightest leading-tight mb-3">{title}</h1>
+        <ProximityH1 className="text-3xl md:text-4xl font-black tracking-tightest leading-tight mb-3">{title}</ProximityH1>
         <p className="text-ink-300 leading-relaxed">{lead}</p>
         <p className="mt-4 text-sm text-ink-400">
           עודכן לאחרונה: <time dateTime={BUSINESS.legalUpdated}>{BUSINESS.legalUpdated.split("-").reverse().join(".")}</time>
