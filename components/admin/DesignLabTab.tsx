@@ -7,6 +7,7 @@ import HeroVideoOptions from "./HeroVideoOptions";
 import ShinyButton from "@/components/ui/shiny-button";
 import MorphGalleryDemo from "./MorphGalleryDemo";
 import GlyphPortalDemo from "./GlyphPortalDemo";
+import StackSpreadDemo from "./StackSpreadDemo";
 import { Signature } from "@/components/OwnerSignature";
 import VariableFontCursorProximityHero from "@/components/ui/m-variable-font-cursor-proximity-1";
 
@@ -134,6 +135,8 @@ export default function DesignLabTab() {
           ))}
         </div>
       </section>
+
+      <StackSpreadDemo />
 
       <GlyphPortalDemo />
 
