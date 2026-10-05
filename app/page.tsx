@@ -37,8 +37,10 @@ export default function HomePage() {
       */}
       <Reveal><AudienceSwitcher /></Reveal>
       <Reveal><Categories /></Reveal>
+      {/* Not in a Reveal: its pin is position: sticky, and a transformed
+          ancestor while revealing would hold it. */}
+      <HowItWorks />
       <Reveal><ProductShowcase /></Reveal>
-      <Reveal><HowItWorks /></Reveal>
       <Reveal><ReviewsRow /></Reveal>
       <Reveal><NewInShop /></Reveal>
       <Reveal><B2BBlock /></Reveal>
