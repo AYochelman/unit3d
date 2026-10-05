@@ -19,6 +19,8 @@ const eslintConfig = [
       "*.cjs",
       // Vendored bundles shipped inside the impeccable skill install.
       "**/skills/impeccable/**",
+      // Supabase Edge Functions run on Deno, not in the Next build.
+      "supabase/functions/**",
     ],
   },
   ...coreWebVitals,
