@@ -10,12 +10,12 @@
       "tpu": 129,
       "abs": 105
     },
-    "machineRatePerHour": 2.5,
+    "machineRatePerHour": 1,
     "printerWatts": 150,
     "kwhPriceILS": 0.5,
     "laborPerItem": 5,
     "amsWastePerColor": 0.1,
-    "targetMargin": 0.2
+    "targetMargin": 0.3
   },
   "overrides": {},
   "pricing": {
@@ -31,17 +31,8 @@
     "pla:purple": false,
     "pla:pink": false,
     "pla:custom_ירוק_זוהר": false,
-    "pla_plus:black": false,
-    "pla_plus:white": false,
-    "pla_plus:orange": false,
-    "pla_plus:red": false,
-    "pla_plus:blue": false,
     "pla_plus:cyan": false,
     "pla_plus:green": false,
-    "pla_plus:gold": false,
-    "pla_plus:silver": false,
-    "pla_plus:purple": false,
-    "pla_plus:pink": false,
     "pla_plus:glow": false,
     "pla_matte:orange": false,
     "pla_matte:red": false,
@@ -100,11 +91,11 @@
     "abs:pink": false,
     "abs:glow": false,
     "tpu:white": false,
-    "pla:black": false,
     "pla_matte:white": false,
     "pla:white": false,
     "pla:green": false,
-    "tpu:black": false
+    "tpu:black": false,
+    "pla:black": false
   },
   "shelves": {},
   "materials": [],
