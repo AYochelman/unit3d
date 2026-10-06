@@ -1,6 +1,6 @@
 import { FAQS } from "./faqs";
 import { CONTACT } from "./contact";
-import { catalogueSize, findProducts, findShelf, fold as foldHe, shelfCount, SHELF_ROUTE, type Found } from "./helpbot-catalog";
+import { allProducts, catalogueSize, findProducts, findShelf, fold as foldHe, shelfCount, SHELF_ROUTE, type Found } from "./helpbot-catalog";
 // Re-exported so the one lazy chunk carries both the answers and the index —
 // the search needs the catalogue, the bot needs both, and neither should cost
 // a second round trip. See lib/helpbot-lazy.ts.
@@ -14,6 +14,31 @@ import type { ImportedShelf } from "./imported";
 // contact form) rather than guessed at.
 
 export type BotLink = { label: string; href: string };
+
+/**
+ * The cheapest price on the shop today for a kind of product.
+ *
+ * These "from ₪…" figures used to be typed into the answer and drifted the
+ * moment a spool price changed (pets read ₪30 while the cheapest tag cost
+ * ₪25). They are now the actual minimum of the catalogue the shelves show.
+ */
+function fromPrice(pick: (f: Found) => boolean): number | null {
+  const prices = allProducts().filter(pick).map((f) => f.price).filter((p) => p > 0);
+  return prices.length ? Math.min(...prices) : null;
+}
+const FROM = {
+  pets: fromPrice((f) => f.shelf === "pets"),
+  keychains: fromPrice((f) => f.name.includes("מחזיק מפתחות")),
+  fidgets: fromPrice((f) => f.shelf === "fidget" || f.shelf === "flexi"),
+  statues: fromPrice((f) => f.shelf === "statues"),
+};
+const priceFrom = (label: string, p: number | null) => (p ? `${label} מ-₪${p}` : null);
+const FROM_LINE = [
+  priceFrom("תגים לחיות", FROM.pets),
+  priceFrom("מחזיקי מפתחות", FROM.keychains),
+  priceFrom("פידג'טים", FROM.fidgets),
+  priceFrom("פסלים", FROM.statues),
+].filter(Boolean).join(", ");
 
 export type BotAnswer = {
   id: string;
@@ -43,7 +68,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
     keys: ["מחיר", "עלות", "תקציב", "יקר", "זול", "מחירון", "price"],
     frames: ["כמה עולה", "כמה זה", "כמה יעלה"],
     text:
-      "המחיר מורכב מחומר + זמן הדפסה + עיבוד אחרי ההדפסה. למוצרי הקטלוג יש מחיר קבוע שמופיע על הכרטיס: תגים לחיות מ-₪30, מחזיקי מפתחות מ-₪45, פידג'טים מ-₪55, פסלים מ-₪110. להזמנה מיוחדת אני שולח הצעת מחיר תוך 24 שעות.",
+      `המחיר מורכב מחומר + זמן הדפסה + עיבוד אחרי ההדפסה. למוצרי הקטלוג יש מחיר קבוע שמופיע על הכרטיס${FROM_LINE ? `: ${FROM_LINE}` : ""}. להזמנה מיוחדת אני שולח הצעת מחיר תוך 24 שעות.`,
     links: [
       { label: "טרנדי כרגע", href: "/trendy" },
       { label: "בקשת הצעת מחיר", href: "/contact" },

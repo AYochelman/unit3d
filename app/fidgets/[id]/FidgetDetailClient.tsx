@@ -23,7 +23,7 @@ import ShippingEstimate from "@/components/ShippingEstimate";
 import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import { filamentsFor, useMaterials } from "@/lib/palette";
-import { nearestColor, offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
+import { nearestColor, offeredFamilyColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import ProductClip from "@/components/ProductClip";
@@ -134,7 +134,9 @@ export default function FidgetDetailClient({ id }: { id: string }) {
     : f.thumbnail ? [f.thumbnail]
     : [];
 
-  const colorChoices = offeredColors(FILAMENTS, stock, material, recommendedColor);
+  // The whole family's shelf, not only this finish's: picking a colour that
+  // exists only on a sibling finish switches to it (lib/offer.ts).
+  const colorChoices = offeredFamilyColors(FILAMENTS, stock, materialChoices, material, recommendedColor);
   const colorId = pickedColor ?? startingColor(FILAMENTS, stock, material, recommendedColor);
   const setColorId = setPickedColor;
   const selectedFilament = FILAMENTS.find((c) => c.id === colorId);
@@ -451,12 +453,12 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   making. */}
             </div>
             <div className="flex flex-wrap gap-2.5">
-              {colorChoices.map((c) => (
+              {colorChoices.map(({ color: c, material: cm }) => (
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => setColorId(c.id)}
-                  title={`${c.name} — ${c.desc}`}
+                  onClick={() => { setColorId(c.id); if (cm !== material) setMaterial(cm); }}
+                  title={cm !== material ? `${c.name} · ${MATERIAL_BY_ID[cm]?.short ?? cm}` : `${c.name} — ${c.desc}`}
                   aria-label={c.name}
                   aria-pressed={colorId === c.id}
                   className={cn(
@@ -464,11 +466,11 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                     colorId === c.id
                       ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]"
                       : "border-ink-700/50",
-                    !isColorInStock(stock, material, c.id) && "opacity-35",
+                    !isColorInStock(stock, cm, c.id) && "opacity-35",
                   )}
                 >
                   <ColorSwatch filament={c} fill />
-                  {!isColorInStock(stock, material, c.id) && (
+                  {!isColorInStock(stock, cm, c.id) && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />
                     </span>

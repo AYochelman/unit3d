@@ -135,3 +135,44 @@ export function startingColor(
   if (recommendedId && isColorInStock(stock, material, recommendedId)) return recommendedId;
   return offered.find((c) => isColorInStock(stock, material, c.id))?.id ?? offered[0]?.id ?? palette[0]?.id ?? "";
 }
+
+/**
+ * Every colour on the shelf for this model's family, each with the finish it
+ * comes on.
+ *
+ * Colours are stocked per finish, and the owner's own spools (brown, grey,
+ * marble, colour-shift…) are often on plain PLA only. A page that opened on
+ * PLA+ showed none of them unless the customer happened to switch finish
+ * first — the shop looked smaller than its shelf. So the row now shows the
+ * whole family: the current finish's colours first, then any other finish's
+ * colours not already there, and picking one of those switches the finish.
+ * Across families nothing changes (see offeredMaterials).
+ */
+export function offeredFamilyColors(
+  palette: Filament[],
+  stock: StockMap,
+  family: Material[],
+  current: MaterialId,
+  recommendedId?: string,
+): { color: Filament; material: MaterialId }[] {
+  const out: { color: Filament; material: MaterialId }[] = [];
+  const seen = new Set<string>();
+  const order = [current, ...family.map((m) => m.id).filter((id) => id !== current)];
+  for (const mid of order) {
+    for (const c of filamentsFor(palette, mid)) {
+      if (seen.has(c.id) || !isColorInStock(stock, mid, c.id)) continue;
+      seen.add(c.id);
+      out.push({ color: c, material: mid });
+    }
+  }
+  // The model's own colour stays on the row even when it is out, as before.
+  if (recommendedId && !seen.has(recommendedId)) {
+    const rec = filamentsFor(palette, current).find((c) => c.id === recommendedId);
+    if (rec) out.unshift({ color: rec, material: current });
+  }
+  if (!out.length) {
+    const first = filamentsFor(palette, current)[0];
+    if (first) out.push({ color: first, material: current });
+  }
+  return out;
+}
