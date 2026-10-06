@@ -10,7 +10,7 @@ import { Field, Input } from "@/components/ui/Field";
 import { useFilaments } from "@/lib/palette";
 import { MATERIAL_BY_ID } from "@/lib/materials";
 import { useMaterials } from "@/lib/palette";
-import { nearestColor, offeredColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
+import { nearestColor, offeredFamilyColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
 import { filamentsFor } from "@/lib/palette";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
@@ -101,7 +101,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const material: MaterialId =
     pickedMaterial ?? startingMaterial(ALL_MATERIALS, stock, FILAMENTS, wantMaterial);
   const setMaterial = setPickedMaterial;
-  const colorChoices = offeredColors(FILAMENTS, stock, material, recommendedColor);
+  // The whole family's shelf, not only this finish's: picking a colour that
+  // exists only on a sibling finish switches to it (lib/offer.ts).
+  const colorChoices = offeredFamilyColors(FILAMENTS, stock, materialChoices, material, recommendedColor);
   const colorId = pickedColor ?? startingColor(FILAMENTS, stock, material, recommendedColor);
   const setColorId = setPickedColor;
 
@@ -431,28 +433,28 @@ export default function ProductDetailClient({ id }: { id: string }) {
               צבע: <span className="text-ink-100 font-normal">{color.name}</span>
             </div>
             <div className="flex flex-wrap gap-2.5">
-              {colorChoices.map((c) => (
+              {colorChoices.map(({ color: c, material: cm }) => (
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => setColorId(c.id)}
-                  title={c.name}
+                  onClick={() => { setColorId(c.id); if (cm !== material) setMaterial(cm); }}
+                  title={cm !== material ? `${c.name} · ${MATERIAL_BY_ID[cm]?.short ?? cm}` : c.name}
                   aria-label={c.name}
                   aria-pressed={colorId === c.id}
                   className={cn(
                     "h-9 w-9 rounded-full border-2 transition-all hover:scale-110 active:scale-95 relative",
                     colorId === c.id ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-ink-700/50",
-                    !isColorInStock(stock, material, c.id) && "opacity-35",
+                    !isColorInStock(stock, cm, c.id) && "opacity-35",
                   )}
                 >
                   <ColorSwatch filament={c} fill />
                   {/* The star answers "why is this one here when it is out?".
                       When the colour is on the shelf like the rest, there is no
                       question to answer and the mark is noise. */}
-                  {c.id === recommendedColor && !isColorInStock(stock, material, c.id) && (
+                  {c.id === recommendedColor && !isColorInStock(stock, cm, c.id) && (
                     <span className="absolute -top-1 -right-1 z-[1] text-[9px] leading-none text-flame" title="הצבע שהדגם מוצג בו">★</span>
                   )}
-                  {!isColorInStock(stock, material, c.id) && (
+                  {!isColorInStock(stock, cm, c.id) && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <span className="block w-7 h-[2px] bg-white/80 rotate-45 rounded-full" />
                     </span>
