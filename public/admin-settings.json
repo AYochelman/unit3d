@@ -2,12 +2,12 @@
   "version": 1,
   "settings": {
     "spoolPrices": {
-      "pla": 95,
-      "pla_plus": 110,
-      "pla_matte": 115,
-      "pla_silk": 120,
-      "petg": 125,
-      "tpu": 160,
+      "pla": 74,
+      "pla_plus": 74,
+      "pla_matte": 74,
+      "pla_silk": 109,
+      "petg": 99,
+      "tpu": 129,
       "abs": 105
     },
     "machineRatePerHour": 2.5,
