@@ -1,0 +1,546 @@
+<title>Bake with me</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap">
+<style>
+/* Layout: a kitchen notebook — one narrow column of handwritten headings, recipe cards with
+   ingredient weights, an order slip that turns into an Instagram message. */
+:root {
+  --flour: #fbf5f1;        /* page: flour-dusted paper with a hint of rose */
+  --paper: #fffdfb;        /* cards and the order slip */
+  --cocoa: #4b302b;        /* ink */
+  --cocoa-soft: #7d625b;   /* secondary ink */
+  --berry: #b44a62;        /* raspberry accent */
+  --berry-ink: #ffffff;
+  --butter: #f3dc96;       /* highlight, oven-warm */
+  --sage: #7f9a83;         /* quiet second accent */
+  --line: #ead9d1;         /* dotted notebook lines */
+  --tile-a: #f6e1d7; --tile-b: #f3e7c6; --tile-c: #e3ead9; --tile-d: #f2dbe0;
+  --f-hand: "Amatic SC", "Assistant", "Arial Hebrew", cursive;
+  --f-serif: "Frank Ruhl Libre", "David", "Times New Roman", serif;
+  --f-body: "Assistant", "Segoe UI", "Arial Hebrew", Arial, sans-serif;
+  --f-num: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --flour: #211816; --paper: #2b201d; --cocoa: #f2e4da; --cocoa-soft: #c4ab9f;
+  --berry: #e88a9e; --berry-ink: #2a1418; --butter: #c9a54a; --sage: #9db7a0; --line: #463532;
+  --tile-a: #3a2925; --tile-b: #3a3222; --tile-c: #2c3429; --tile-d: #3b262b; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --flour: #211816; --paper: #2b201d; --cocoa: #f2e4da; --cocoa-soft: #c4ab9f;
+  --berry: #e88a9e; --berry-ink: #2a1418; --butter: #c9a54a; --sage: #9db7a0; --line: #463532;
+  --tile-a: #3a2925; --tile-b: #3a3222; --tile-c: #2c3429; --tile-d: #3b262b; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { direction: rtl; background: var(--flour); color: var(--cocoa); font-family: var(--f-body); font-size: 17px; line-height: 1.7; margin: 0; }
+.site { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 0 40px; }
+a { color: var(--berry); }
+:focus-visible { outline: 3px solid var(--berry); outline-offset: 3px; border-radius: 6px; }
+h1, h2 { font-family: var(--f-hand); font-weight: 700; line-height: 1; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+h3 { font-family: var(--f-serif); font-weight: 700; margin: 0; line-height: 1.3; text-wrap: balance; }
+p { margin: 0; }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--flour); border-block-end: 1px dashed var(--line); }
+.top-in { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 10px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--cocoa); }
+.brand svg { width: 38px; height: 38px; flex: none; }
+.brand b { font-family: var(--f-hand); font-size: 34px; line-height: 1; }
+.brand small { display: block; font-size: 13px; color: var(--cocoa-soft); line-height: 1.2; }
+nav { display: flex; gap: 4px; flex-wrap: wrap; }
+nav a { text-decoration: none; color: var(--cocoa); padding: 6px 12px; border-radius: 999px; font-weight: 600; font-size: 15px; }
+nav a:hover { background: var(--paper); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; align-items: center; padding-block: 44px 28px; }
+.hero > * { min-width: 0; }
+.hero h1 { font-size: clamp(56px, 10vw, 96px); }
+.hero h1 em { font-style: normal; color: var(--berry); }
+.hero .lead { margin-block-start: 14px; font-size: 19px; color: var(--cocoa-soft); max-width: 34ch; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-block-start: 22px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 700 16px var(--f-body); padding: 11px 20px; border-radius: 999px; border: 1.5px solid var(--berry); background: var(--berry); color: var(--berry-ink); text-decoration: none; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--berry); }
+.btn:hover { filter: brightness(1.05); }
+.oven-note { position: relative; background: var(--paper); border-radius: 6px; padding: 22px 22px 18px; transform: rotate(-1.5deg); box-shadow: 0 10px 24px -14px rgba(75,48,43,.45); background-image: repeating-linear-gradient(var(--paper) 0 31px, var(--line) 31px 32px); }
+.oven-note::before { content: ""; position: absolute; top: -10px; inset-inline-start: 40%; width: 90px; height: 22px; background: var(--butter); opacity: .8; transform: rotate(3deg); }
+.oven-note h2 { font-size: 40px; margin-block-end: 6px; }
+.oven-note ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
+.oven-note li { display: flex; justify-content: space-between; gap: 12px; line-height: 32px; }
+.oven-note li span:first-child { font-weight: 600; }
+.oven-note .hint { font-size: 14px; color: var(--cocoa-soft); line-height: 1.5; margin-block-start: 8px; }
+
+section { padding-block: 40px; border-block-start: 1px dashed var(--line); scroll-margin-top: 80px; }
+.sec-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-block-end: 22px; }
+.sec-head h2 { font-size: clamp(48px, 8vw, 68px); }
+.sec-head p { color: var(--cocoa-soft); max-width: 46ch; }
+.example { display: inline-block; font-size: 13px; background: var(--butter); color: #4b302b; padding: 1px 10px; border-radius: 999px; font-weight: 600; }
+
+/* order */
+.order { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: start; }
+.order > * { min-width: 0; }
+.menu { display: grid; gap: 0; }
+.item { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; padding-block: 14px; border-block-end: 1px dotted var(--line); }
+.item svg { width: 56px; height: 56px; }
+.item h3 { font-size: 19px; }
+.item p { font-size: 15px; color: var(--cocoa-soft); line-height: 1.5; }
+.item .price { font-size: 15px; color: var(--cocoa); font-weight: 600; }
+.step { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 999px; background: var(--paper); }
+.step button { width: 36px; height: 36px; border: 0; background: none; color: var(--berry); font-size: 22px; line-height: 1; cursor: pointer; border-radius: 999px; }
+.step output { min-width: 22px; text-align: center; font-weight: 700; }
+.slip { background: var(--paper); border-radius: var(--radius); padding: 22px; position: sticky; top: 84px; box-shadow: 0 1px 0 var(--line), 0 14px 30px -20px rgba(75,48,43,.5); }
+.slip h3 { font-family: var(--f-hand); font-size: 40px; line-height: 1; margin-block-end: 10px; }
+.field { display: grid; gap: 4px; margin-block-end: 12px; }
+.field label, .field legend { font-size: 14px; font-weight: 600; color: var(--cocoa-soft); }
+.field input, .field select, .field textarea { font: 16px var(--f-body); color: var(--cocoa); background: var(--flour); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 12px; width: 100%; }
+.field textarea { resize: vertical; min-height: 64px; }
+fieldset.field { border: 0; padding: 0; margin-inline: 0; }
+.choice { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice label { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1.5px solid var(--line); border-radius: 999px; cursor: pointer; font-weight: 600; color: var(--cocoa); font-size: 15px; }
+.choice input { accent-color: var(--berry); width: auto; }
+.lines { list-style: none; padding: 0; margin: 0 0 8px; font-size: 15px; }
+.lines li { display: flex; justify-content: space-between; gap: 10px; }
+.lines .empty { color: var(--cocoa-soft); }
+.total { display: flex; justify-content: space-between; font-weight: 700; font-size: 18px; border-block-start: 1.5px dashed var(--line); padding-block: 10px; margin-block-end: 8px; }
+.slip .btn { width: 100%; justify-content: center; margin-block-start: 8px; }
+.status { font-size: 14px; color: var(--sage); min-height: 1.5em; margin-block-start: 6px; font-weight: 600; }
+#msg { font-size: 14px; min-height: 120px; }
+.howto { font-size: 14px; color: var(--cocoa-soft); line-height: 1.55; margin-block-start: 10px; }
+
+/* recipes */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { font: 600 15px var(--f-body); padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--paper); color: var(--cocoa); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--cocoa); color: var(--flour); border-color: var(--cocoa); }
+.recipes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-block-start: 18px; }
+.recipe { background: var(--paper); border-radius: var(--radius); padding: 20px; display: grid; gap: 10px; align-content: start; border: 1px solid var(--line); }
+.recipe-top { display: flex; gap: 14px; align-items: center; }
+.recipe-top svg { width: 64px; height: 64px; flex: none; }
+.recipe-top > div { min-width: 0; }
+.recipe h3 { font-size: 22px; }
+.meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 14px; color: var(--cocoa-soft); }
+.meta b { color: var(--cocoa); font-weight: 600; }
+.recipe details summary { cursor: pointer; font-weight: 700; color: var(--berry); list-style: none; padding-block: 4px; }
+.recipe details summary::-webkit-details-marker { display: none; }
+.recipe details summary::before { content: "+ "; }
+.recipe details[open] summary::before { content: "− "; }
+.scale { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 14px; margin-block: 8px; color: var(--cocoa-soft); }
+.scale .chip { padding: 2px 10px; font-size: 14px; }
+.ing { list-style: none; padding: 0; margin: 0 0 12px; columns: 2; column-gap: 18px; font-size: 15px; }
+.ing li { break-inside: avoid; display: flex; justify-content: space-between; gap: 8px; border-block-end: 1px dotted var(--line); padding-block: 3px; }
+.steps { padding-inline-start: 22px; margin: 0; font-size: 15px; display: grid; gap: 6px; }
+.steps li::marker { color: var(--berry); font-weight: 700; }
+.tip { font-size: 14px; background: var(--flour); border-radius: 10px; padding: 8px 12px; margin-block-start: 10px; border-inline-start: 3px solid var(--sage); }
+
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 150px; gap: 12px; }
+.tile { position: relative; border: 0; padding: 0; border-radius: 12px; overflow: hidden; cursor: pointer; display: grid; place-items: center; color: var(--cocoa); font: inherit; }
+.tile svg { width: 46%; height: 46%; max-width: 120px; }
+.tile figcaption, .tile .cap { position: absolute; inset-inline: 0; bottom: 0; padding: 6px 10px; font-size: 14px; font-weight: 600; text-align: start; background: linear-gradient(transparent, color-mix(in srgb, var(--paper) 85%, transparent)); }
+.tile.wide { grid-column: span 2; }
+.tile.tall { grid-row: span 2; }
+.t-a { background: var(--tile-a); } .t-b { background: var(--tile-b); } .t-c { background: var(--tile-c); } .t-d { background: var(--tile-d); }
+.gal-note { font-size: 14px; color: var(--cocoa-soft); margin-block-start: 12px; }
+dialog { border: 0; border-radius: var(--radius); padding: 0; max-width: min(520px, calc(100vw - 32px)); width: 100%; background: var(--paper); color: var(--cocoa); }
+dialog::backdrop { background: rgba(33,24,22,.55); }
+.lb-art { aspect-ratio: 4/3; display: grid; place-items: center; max-width: 100%; }
+.lb-art svg { width: 40%; height: 40%; }
+.lb-body { padding: 16px 20px 20px; display: grid; gap: 8px; }
+.lb-body h3 { font-size: 22px; }
+.lb-body .btn { justify-self: start; }
+
+/* about */
+.about { display: grid; grid-template-columns: 1fr 1.3fr; gap: 28px; align-items: center; }
+.about > * { min-width: 0; }
+.about blockquote { margin: 0; font-family: var(--f-hand); font-size: clamp(40px, 6vw, 56px); line-height: 1.05; color: var(--berry); }
+.about p + p { margin-block-start: 12px; }
+.values { display: flex; gap: 8px; flex-wrap: wrap; margin-block-start: 16px; }
+.values span { font-size: 14px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--tile-c); }
+
+footer { text-align: center; padding-block: 34px 10px; color: var(--cocoa-soft); font-size: 15px; border-block-start: 1px dashed var(--line); }
+footer .hand { font-family: var(--f-hand); font-size: 36px; color: var(--cocoa); display: block; line-height: 1.1; }
+
+@media (max-width: 760px) {
+  .hero, .order, .about { grid-template-columns: 1fr; }
+  .slip { position: static; }
+  .recipes { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 130px; }
+  .ing { columns: 1; }
+  nav a { padding: 4px 9px; font-size: 14px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tile svg { transition: transform .3s ease; }
+  .tile:hover svg { transform: scale(1.06) rotate(-3deg); }
+}
+</style>
+
+<!-- Hand-drawn bakes, reused across the menu, recipes and gallery -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="challah" viewBox="0 0 64 64">
+      <ellipse cx="32" cy="40" rx="27" ry="13" fill="#c98a4b"/>
+      <ellipse cx="18" cy="38" rx="9" ry="8" fill="#dca061"/><ellipse cx="32" cy="35" rx="10" ry="9" fill="#e2aa6b"/><ellipse cx="46" cy="38" rx="9" ry="8" fill="#dca061"/>
+      <g fill="#fff6e0"><circle cx="16" cy="35" r="1.2"/><circle cx="21" cy="37" r="1"/><circle cx="30" cy="31" r="1.2"/><circle cx="35" cy="34" r="1"/><circle cx="44" cy="35" r="1.2"/><circle cx="49" cy="37" r="1"/></g>
+      <path d="M12 44c8 4 32 4 40 0" stroke="#a96a35" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="cookie" viewBox="0 0 64 64">
+      <circle cx="32" cy="33" r="22" fill="#d9a066"/><circle cx="32" cy="33" r="22" fill="none" stroke="#b47b45" stroke-width="2"/>
+      <g fill="#5a3826"><circle cx="24" cy="25" r="3"/><circle cx="38" cy="22" r="2.5"/><circle cx="41" cy="36" r="3"/><circle cx="27" cy="40" r="2.6"/><circle cx="33" cy="31" r="2"/><circle cx="20" cy="34" r="1.8"/></g>
+    </symbol>
+    <symbol id="cake" viewBox="0 0 64 64">
+      <path d="M10 28h44v24H10z" fill="#f4e3c8"/><path d="M10 38h44v4H10z" fill="#c2566c"/>
+      <path d="M8 26c4-8 44-8 48 0v4H8z" fill="#fbf1f3"/>
+      <path d="M12 30c2 4 4 4 6 0s4 4 6 0 4 4 6 0 4 4 6 0 4 4 6 0 4 4 6 0" stroke="#fbf1f3" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="32" cy="15" r="4" fill="#c2566c"/><path d="M32 11c1-3 3-4 5-4" stroke="#7f9a83" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <rect x="6" y="52" width="52" height="3" rx="1.5" fill="#b9a59b"/>
+    </symbol>
+    <symbol id="babka" viewBox="0 0 64 64">
+      <rect x="8" y="22" width="48" height="30" rx="7" fill="#d29458"/>
+      <path d="M12 28c8 6 14-4 20 2s14-4 20 2M12 38c8 6 14-4 20 2s14-4 20 2M12 46c8 4 14-2 20 1s14-2 20 1" stroke="#5a3826" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M8 26c4-8 44-8 48 0" stroke="#b47b45" stroke-width="2" fill="none"/>
+    </symbol>
+    <symbol id="lemon" viewBox="0 0 64 64">
+      <path d="M8 46 32 14l24 32z" fill="#f2df8f"/><path d="M8 46 32 14l24 32" fill="none" stroke="#d9b94e" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M14 38h36" stroke="#fff8dd" stroke-width="3"/><path d="M6 46h52v5H6z" fill="#e7cf7b"/>
+      <circle cx="46" cy="18" r="7" fill="#f4d64e"/><path d="M46 13v10M41 18h10" stroke="#fff3b0" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="quiche" viewBox="0 0 64 64">
+      <ellipse cx="32" cy="38" rx="27" ry="14" fill="#c98a4b"/><ellipse cx="32" cy="36" rx="22" ry="10" fill="#f0d27e"/>
+      <g fill="#7f9a83"><circle cx="24" cy="34" r="3"/><circle cx="38" cy="38" r="2.6"/><circle cx="34" cy="31" r="2"/></g><g fill="#c2566c"><circle cx="29" cy="39" r="2.4"/><circle cx="43" cy="33" r="2"/></g>
+      <path d="M6 38c2-2 4 2 6 0s4 2 6 0" stroke="#a96a35" stroke-width="1.5" fill="none"/>
+    </symbol>
+    <symbol id="rolls" viewBox="0 0 64 64">
+      <circle cx="22" cy="38" r="14" fill="#d9a066"/><circle cx="42" cy="38" r="14" fill="#e2aa6b"/><circle cx="32" cy="24" r="12" fill="#dca061"/>
+      <path d="M22 38a7 7 0 1 0 0-.1M42 38a7 7 0 1 0 0-.1M32 24a6 6 0 1 0 0-.1" stroke="#7a4a2a" stroke-width="2.2" fill="none"/>
+      <path d="M14 30c4 2 8 2 10 0M36 32c4 2 8 2 10 0" stroke="#fff6e0" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="whisk" viewBox="0 0 64 64">
+      <path d="M32 6v18" stroke="#7d625b" stroke-width="4" stroke-linecap="round"/>
+      <path d="M32 24c-14 6-12 34 0 34s14-28 0-34zM32 24c-6 8-6 30 0 34M32 24c6 8 6 30 0 34" stroke="#b44a62" stroke-width="2.5" fill="none"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div dir="rtl" lang="he">
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#top" aria-label="Bake with me, לראש העמוד">
+      <svg aria-hidden="true"><use href="#whisk"/></svg>
+      <span><b>Bake with me</b><small>מאפייה ביתית, באהבה</small></span>
+    </a>
+    <nav aria-label="ניווט ראשי">
+      <a href="#order">הזמנות</a>
+      <a href="#recipes">מתכונים</a>
+      <a href="#gallery">גלריה</a>
+      <a href="#about">עלינו</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site" id="top">
+  <div class="hero">
+    <div>
+      <h1>אופים בבית,<br><em>ומגישים באהבה</em></h1>
+      <p class="lead">חלות, עוגות שמרים ועוגיות שיוצאות מהתנור הביתי שלנו בכל סוף שבוע. בוחרים מה בא לכם, ואנחנו כבר נדאג שזה יגיע חם.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#order">להזמנה לסוף השבוע</a>
+        <a class="btn ghost" href="#recipes">מתכונים מהמטבח</a>
+      </div>
+    </div>
+    <aside class="oven-note" aria-labelledby="oven-title">
+      <h2 id="oven-title">מה בתנור השבוע</h2>
+      <ul id="ovenDays"></ul>
+      <p class="hint">הזמנות עד יום שלישי בערב, כדי שנספיק להתפיח את הבצק בנחת. <span class="example">לוח זמנים לדוגמה</span></p>
+    </aside>
+  </div>
+
+  <!-- ORDER -->
+  <section id="order" aria-labelledby="order-title">
+    <div class="sec-head">
+      <h2 id="order-title">הזמנה לסוף השבוע</h2>
+      <p>מסמנים כמויות, ממלאים פרטים, ושולחים לנו את ההזמנה בהודעה באינסטגרם. אנחנו מאשרים כל הזמנה באופן אישי. <span class="example">מחירים לדוגמה</span></p>
+    </div>
+    <div class="order">
+      <div class="menu" id="menu"></div>
+      <form class="slip" id="orderForm" novalidate>
+        <h3>פתק ההזמנה</h3>
+        <ul class="lines" id="lines"><li class="empty">עוד לא נבחר כלום. אולי חלה?</li></ul>
+        <div class="total"><span>סה"כ</span><span id="total" class="num">₪0</span></div>
+        <div class="field">
+          <label for="fDate">מתי לאסוף?</label>
+          <select id="fDate"></select>
+        </div>
+        <fieldset class="field">
+          <legend>איך זה מגיע אליכם?</legend>
+          <div class="choice">
+            <label><input type="radio" name="fWay" id="fWayPick" value="איסוף עצמי" checked> איסוף עצמי</label>
+            <label><input type="radio" name="fWay" id="fWayShip" value="משלוח"> משלוח באזור</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="fName">שם</label>
+          <input id="fName" autocomplete="name" placeholder="איך לקרוא לכם?">
+        </div>
+        <div class="field">
+          <label for="fPhone">טלפון</label>
+          <input id="fPhone" type="tel" dir="ltr" autocomplete="tel" placeholder="050-0000000" style="text-align:end">
+        </div>
+        <div class="field">
+          <label for="fNotes">הערות, ברכה או אלרגיות</label>
+          <textarea id="fNotes" placeholder="למשל: בלי שומשום, או 'מזל טוב נועה!' על העוגה"></textarea>
+        </div>
+        <div class="field">
+          <label for="msg">ההודעה שתישלח</label>
+          <textarea id="msg" readonly></textarea>
+        </div>
+        <button class="btn" type="submit" id="copyBtn">העתקת ההזמנה</button>
+        <a class="btn ghost" href="https://ig.me/m/bake_with_me_il" target="_blank" rel="noopener">פתיחת הודעה באינסטגרם</a>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <p class="howto">מעתיקים, פותחים את ההודעה באינסטגרם, ומדביקים. ההזמנה סגורה רק אחרי שנאשר אותה בחזרה.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- RECIPES -->
+  <section id="recipes" aria-labelledby="rec-title">
+    <div class="sec-head">
+      <h2 id="rec-title">מתכונים מהמטבח</h2>
+      <p>המתכונים שאנחנו אופים שוב ושוב. הכמויות בגרמים, ואפשר להכפיל או לחצות בלחיצה.</p>
+    </div>
+    <div class="chips" role="group" aria-label="סינון מתכונים" id="recFilter">
+      <button class="chip" type="button" data-cat="all" aria-pressed="true">הכל</button>
+      <button class="chip" type="button" data-cat="bread" aria-pressed="false">לחמים וחלות</button>
+      <button class="chip" type="button" data-cat="cake" aria-pressed="false">עוגות</button>
+      <button class="chip" type="button" data-cat="cookie" aria-pressed="false">עוגיות</button>
+    </div>
+    <div class="recipes" id="recipeList"></div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" aria-labelledby="gal-title">
+    <div class="sec-head">
+      <h2 id="gal-title">מהתנור שלנו</h2>
+      <p>רגעים מהמטבח. התמונות המלאות, והחדשות ביותר, מחכות באינסטגרם.</p>
+    </div>
+    <div class="gallery" id="galleryGrid"></div>
+    <p class="gal-note">כל אריח כאן שומר מקום לתמונה מהאינסטגרם <a href="https://www.instagram.com/bake_with_me_il/" target="_blank" rel="noopener"><span dir="ltr">@bake_with_me_il</span></a>.</p>
+    <dialog id="lightbox" aria-labelledby="lbTitle">
+      <div class="lb-art" id="lbArt"></div>
+      <div class="lb-body">
+        <h3 id="lbTitle"></h3>
+        <p id="lbText"></p>
+        <button class="btn ghost" type="button" id="lbClose">סגירה</button>
+      </div>
+    </dialog>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" aria-labelledby="about-title">
+    <div class="about">
+      <blockquote>"הכי טעים זה מה שנאפה בשבילך"</blockquote>
+      <div>
+        <h2 id="about-title" style="font-size:52px;margin-block-end:10px">קצת עלינו</h2>
+        <p>Bake with me התחילה במטבח של הבית, עם תנור אחד, קערה גדולה והרבה סבלנות לבצק. מה שהתחיל כחלה לשישי למשפחה הפך לאפייה לחברים, ואז לחברים של חברים.</p>
+        <p>אנחנו אופים בכמויות קטנות, מחומרים טובים ובלי קיצורי דרך. כל הזמנה נארזת ביד ויוצאת מהתנור ביום שבו היא נאספת.</p>
+        <div class="values"><span>חמאה אמיתית</span><span>כמויות קטנות</span><span>נאפה ביום האיסוף</span><span>אפשר לבקש בלי</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="hand">נתראה ליד התנור</span>
+  כל העדכונים, המבצעים וההזמנות באינסטגרם:
+  <a href="https://www.instagram.com/bake_with_me_il/" target="_blank" rel="noopener"><span dir="ltr">@bake_with_me_il</span></a>
+</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var IG = "bake_with_me_il";
+
+  // Menu — example items and prices; replace with the real weekly menu.
+  var MENU = [
+    { id: "challah", art: "challah", name: "חלה קלועה", desc: "שש קליעות, שומשום או בלי. כ-600 גרם.", price: 28 },
+    { id: "babka", art: "babka", name: "עוגת שמרים שוקולד", desc: "שכבות של שוקולד מריר וחמאה, בתבנית אינגליש.", price: 65 },
+    { id: "rolls", art: "rolls", name: "שושני קינמון", desc: "תבנית של 9 שושנים עם זיגוג גבינה.", price: 70 },
+    { id: "cookies", art: "cookie", name: "עוגיות שוקולד צ'יפס", desc: "קופסה של 12, רכות במרכז.", price: 45 },
+    { id: "lemon", art: "lemon", name: "עוגת לימון בחושה", desc: "עם סירופ לימון, נשארת לחה כמה ימים.", price: 55 },
+    { id: "quiche", art: "quiche", name: "קיש ירקות העונה", desc: "בצק פריך ביתי, קוטר 26 ס\"מ.", price: 80 }
+  ];
+
+  var RECIPES = [
+    { cat: "bread", art: "challah", name: "החלה של שישי", time: "3 שעות", temp: 180, yield: "2 חלות",
+      ing: [["קמח לבן", 1000, "גרם"], ["מים פושרים", 450, "מ\"ל"], ["שמרים יבשים", 10, "גרם"], ["סוכר", 100, "גרם"], ["שמן", 100, "מ\"ל"], ["ביצים", 2, "יח'"], ["מלח", 15, "גרם"]],
+      steps: ["מערבבים קמח, סוכר ושמרים, ומוסיפים מים, שמן וביצים.", "לשים 8 דקות, מוסיפים מלח ולשים עוד 2 דקות עד בצק חלק.", "מתפיחים מכוסה כשעה וחצי, עד שהבצק מכפיל את נפחו.", "מחלקים לגדילים, קולעים, ומתפיחים שוב 40 דקות.", "מורחים ביצה, מפזרים שומשום ואופים כ-25 דקות עד הזהבה."],
+      tip: "חלה מוכנה כשמקישים על התחתית ושומעים צליל חלול." },
+    { cat: "cake", art: "babka", name: "עוגת שמרים שוקולד", time: "4 שעות", temp: 170, yield: "2 תבניות",
+      ing: [["קמח", 500, "גרם"], ["חלב", 200, "מ\"ל"], ["שמרים יבשים", 10, "גרם"], ["סוכר", 80, "גרם"], ["חמאה רכה", 120, "גרם"], ["ביצים", 2, "יח'"], ["שוקולד מריר", 200, "גרם"], ["חמאה למילוי", 100, "גרם"]],
+      steps: ["לשים קמח, חלב, שמרים, סוכר וביצים, ומוסיפים את החמאה בהדרגה.", "מתפיחים שעה, או לילה במקרר לבצק נוח יותר.", "ממיסים שוקולד עם החמאה למילוי ומצננים מעט.", "מרדדים, מורחים, מגלגלים, חוצים לאורך וקולעים.", "מתפיחים בתבנית שעה ואופים כ-35 דקות."],
+      tip: "סירופ סוכר על העוגה כשהיא יוצאת מהתנור שומר עליה לחה." },
+    { cat: "cookie", art: "cookie", name: "עוגיות שוקולד צ'יפס", time: "45 דקות", temp: 175, yield: "24 עוגיות",
+      ing: [["חמאה", 200, "גרם"], ["סוכר חום", 180, "גרם"], ["סוכר לבן", 60, "גרם"], ["ביצה", 1, "יח'"], ["קמח", 300, "גרם"], ["סודה לשתייה", 5, "גרם"], ["שוקולד צ'יפס", 200, "גרם"], ["מלח", 3, "גרם"]],
+      steps: ["מקציפים חמאה וסוכרים עד שמנת, ומוסיפים ביצה.", "מערבבים פנימה קמח, סודה ומלח, ובסוף את השוקולד.", "יוצרים כדורים ומקררים חצי שעה.", "אופים 10 עד 11 דקות. הן ייראו רכות מדי, וזה בדיוק נכון."],
+      tip: "מקררים את הבצק לילה שלם, והטעם נעשה קרמלי יותר." },
+    { cat: "cake", art: "lemon", name: "עוגת לימון בחושה", time: "1 שעה", temp: 170, yield: "תבנית אינגליש",
+      ing: [["ביצים", 3, "יח'"], ["סוכר", 200, "גרם"], ["שמן", 120, "מ\"ל"], ["יוגורט", 150, "גרם"], ["קמח תופח", 220, "גרם"], ["מיץ לימון", 60, "מ\"ל"], ["גרידת לימון", 1, "לימון"]],
+      steps: ["טורפים ביצים וסוכר, מוסיפים שמן, יוגורט וגרידה.", "מקפלים פנימה את הקמח, רק עד שאין גושים.", "אופים כ-45 דקות, עד שקיסם יוצא נקי.", "מרתיחים מיץ לימון עם 3 כפות סוכר ויוצקים על העוגה החמה."],
+      tip: "עטופה בניילון נצמד היא טעימה עוד יותר למחרת." }
+  ];
+
+  var GALLERY = [
+    { art: "challah", t: "t-b", cls: "wide tall", cap: "חלות לשבת", text: "מגש חלות קלועות לפני ההכנסה לתנור." },
+    { art: "babka", t: "t-a", cls: "", cap: "בבקה בשכבות", text: "חתך של עוגת שמרים, עם כל השכבות." },
+    { art: "cookie", t: "t-d", cls: "", cap: "עוגיות חמות", text: "תבנית עוגיות שרק יצאה מהתנור." },
+    { art: "cake", t: "t-c", cls: "wide", cap: "עוגת יום הולדת", text: "עוגה בהזמנה אישית, עם קרם ופירות יער." },
+    { art: "rolls", t: "t-a", cls: "tall", cap: "שושני קינמון", text: "תבנית שושנים לבוקר של שישי." },
+    { art: "lemon", t: "t-b", cls: "", cap: "לימון וסירופ", text: "עוגת לימון ביתית עם סירופ." },
+    { art: "quiche", t: "t-c", cls: "", cap: "קיש מהשוק", text: "קיש ירקות עם מה שהיה טרי בשוק." },
+    { art: "whisk", t: "t-d", cls: "wide", cap: "מאחורי הקלעים", text: "המטבח באמצע יום אפייה." }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var art = function (id) { return '<svg aria-hidden="true"><use href="#' + id + '"/></svg>'; };
+  var qty = {};
+  var fmtDate = function (d) { return d.toLocaleDateString("he-IL", { weekday: "long", day: "numeric", month: "numeric" }); };
+
+  // Upcoming Thursdays and Fridays — the baking days.
+  function bakeDays(count) {
+    var out = [], d = new Date();
+    d.setHours(12, 0, 0, 0);
+    d.setDate(d.getDate() + 2); // leave time for dough to rise
+    while (out.length < count) { var w = d.getDay(); if (w === 4 || w === 5) out.push(new Date(d)); d.setDate(d.getDate() + 1); }
+    return out;
+  }
+
+  var days = bakeDays(6);
+  $("fDate").innerHTML = days.map(function (d, i) { return '<option value="' + i + '">' + fmtDate(d) + '</option>'; }).join("");
+  $("ovenDays").innerHTML = [
+    ["חמישי", "חלות, קישים ועוגות"], ["שישי בבוקר", "חלות, שמרים, שושנים"], ["ראשון–שלישי", "קבלת הזמנות"]
+  ].map(function (r) { return "<li><span>" + r[0] + "</span><span>" + r[1] + "</span></li>"; }).join("");
+
+  // ---- order ----
+  $("menu").innerHTML = MENU.map(function (m) {
+    return '<div class="item">' + art(m.art) +
+      '<div><h3>' + m.name + '</h3><p>' + m.desc + '</p><span class="price num">₪' + m.price + '</span></div>' +
+      '<div class="step" role="group" aria-label="כמות ' + m.name + '">' +
+      '<button type="button" data-id="' + m.id + '" data-d="1" aria-label="להוסיף ' + m.name + '">+</button>' +
+      '<output id="q-' + m.id + '">0</output>' +
+      '<button type="button" data-id="' + m.id + '" data-d="-1" aria-label="להוריד ' + m.name + '">−</button></div></div>';
+  }).join("");
+
+  $("menu").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-id]");
+    if (!b) return;
+    var id = b.dataset.id;
+    qty[id] = Math.max(0, Math.min(20, (qty[id] || 0) + Number(b.dataset.d)));
+    $("q-" + id).textContent = qty[id];
+    render();
+  });
+
+  function chosen() { return MENU.filter(function (m) { return qty[m.id] > 0; }); }
+
+  function render() {
+    var items = chosen(), sum = 0;
+    $("lines").innerHTML = items.length ? items.map(function (m) {
+      var s = m.price * qty[m.id]; sum += s;
+      return '<li><span>' + m.name + ' × <span class="num">' + qty[m.id] + '</span></span><span class="num">₪' + s + '</span></li>';
+    }).join("") : '<li class="empty">עוד לא נבחר כלום. אולי חלה?</li>';
+    $("total").textContent = "₪" + sum;
+
+    var way = document.querySelector('input[name="fWay"]:checked').value;
+    var day = days[Number($("fDate").value)] || days[0];
+    var parts = ["היי Bake with me! אשמח להזמין:"];
+    items.forEach(function (m) { parts.push("• " + m.name + " × " + qty[m.id]); });
+    if (!items.length) parts.push("• (עוד לא נבחרו מאפים)");
+    parts.push("סה\"כ משוער: ₪" + sum);
+    parts.push("מועד: " + fmtDate(day) + " · " + way);
+    if ($("fName").value.trim()) parts.push("שם: " + $("fName").value.trim());
+    if ($("fPhone").value.trim()) parts.push("טלפון: " + $("fPhone").value.trim());
+    if ($("fNotes").value.trim()) parts.push("הערות: " + $("fNotes").value.trim());
+    $("msg").value = parts.join("\n");
+  }
+
+  $("orderForm").addEventListener("input", render);
+  $("orderForm").addEventListener("change", render);
+  $("orderForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = $("status");
+    if (!chosen().length) { st.textContent = "בחרו לפחות מאפה אחד מהתפריט, ואז אפשר להעתיק."; return; }
+    if (!$("fName").value.trim()) { st.textContent = "נשאר רק שם, כדי שנדע למי לארוז."; $("fName").focus(); return; }
+    var text = $("msg").value;
+    var fallback = function () { $("msg").focus(); $("msg").select(); st.textContent = "ההודעה מסומנת. העתיקו אותה ושלחו לנו באינסטגרם."; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        st.textContent = "ההזמנה הועתקה. עכשיו פותחים הודעה באינסטגרם ומדביקים.";
+      }, fallback);
+    } else { fallback(); }
+  });
+
+  // Example selection so the slip opens filled in
+  qty.challah = 2; qty.cookies = 1;
+  MENU.forEach(function (m) { $("q-" + m.id).textContent = qty[m.id] || 0; });
+  render();
+
+  // ---- recipes ----
+  var scales = {};
+  function fmtAmount(n) { var r = Math.round(n * 10) / 10; return (r % 1 === 0 ? r : r.toFixed(1)).toString(); }
+
+  function recipeHTML(r, i) {
+    var k = scales[i] || 1;
+    return '<article class="recipe" data-cat="' + r.cat + '">' +
+      '<div class="recipe-top">' + art(r.art) + '<div><h3>' + r.name + '</h3>' +
+      '<div class="meta"><span>זמן: <b>' + r.time + '</b></span><span>תנור: <b class="num">' + r.temp + '°C</b></span><span>יוצא: <b>' + r.yield + '</b></span></div></div></div>' +
+      '<details data-i="' + i + '"' + (r.open ? " open" : "") + '><summary>לרשימת המצרכים ולהכנה</summary>' +
+      '<div class="scale" role="group" aria-label="כמות"><span>כמות:</span>' +
+      [0.5, 1, 2].map(function (s) { return '<button type="button" class="chip" data-i="' + i + '" data-s="' + s + '" aria-pressed="' + (s === k) + '">×' + (s === 0.5 ? "½" : s) + '</button>'; }).join("") + '</div>' +
+      '<ul class="ing">' + r.ing.map(function (g) { return '<li><span>' + g[0] + '</span><span><span class="num">' + fmtAmount(g[1] * k) + '</span> ' + g[2] + '</span></li>'; }).join("") + '</ul>' +
+      '<ol class="steps">' + r.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol>' +
+      '<p class="tip">' + r.tip + '</p></details></article>';
+  }
+
+  var filter = "all";
+  RECIPES[0].open = true;
+  function renderRecipes() {
+    $("recipeList").innerHTML = RECIPES.map(function (r, i) { return (filter === "all" || r.cat === filter) ? recipeHTML(r, i) : ""; }).join("");
+  }
+  renderRecipes();
+
+  $("recFilter").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-cat]"); if (!b) return;
+    filter = b.dataset.cat;
+    $("recFilter").querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+    renderRecipes();
+  });
+  $("recipeList").addEventListener("toggle", function (e) {
+    var d = e.target; if (d.matches && d.matches("details")) RECIPES[d.dataset.i].open = d.open;
+  }, true);
+  $("recipeList").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-s]"); if (!b) return;
+    scales[b.dataset.i] = Number(b.dataset.s);
+    RECIPES[b.dataset.i].open = true;
+    renderRecipes();
+  });
+
+  // ---- gallery ----
+  $("galleryGrid").innerHTML = GALLERY.map(function (g, i) {
+    return '<button type="button" class="tile ' + g.t + ' ' + g.cls + '" data-g="' + i + '" aria-label="' + g.cap + '">' + art(g.art) + '<span class="cap">' + g.cap + '</span></button>';
+  }).join("");
+  var lb = $("lightbox");
+  $("galleryGrid").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-g]"); if (!b) return;
+    var g = GALLERY[b.dataset.g];
+    $("lbArt").className = "lb-art " + g.t;
+    $("lbArt").innerHTML = art(g.art);
+    $("lbTitle").textContent = g.cap;
+    $("lbText").innerHTML = g.text + ' התמונה המלאה ב-<a href="https://www.instagram.com/' + IG + '/" target="_blank" rel="noopener"><span dir="ltr">@' + IG + '</span></a>.';
+    if (lb.showModal) lb.showModal(); else lb.setAttribute("open", "");
+  });
+  $("lbClose").addEventListener("click", function () { lb.close ? lb.close() : lb.removeAttribute("open"); });
+  lb.addEventListener("click", function (e) { if (e.target === lb) lb.close(); });
+})();
+</script>
