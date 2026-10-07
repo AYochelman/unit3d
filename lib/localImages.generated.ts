@@ -2,7 +2,7 @@
 //
 // Remote photo URL → the copy of it stored in public/. Run
 // `npm run fetch:images` after adding models.
-// Images: 3439
+// Images: 3441
 
 export const LOCAL_IMAGES: Record<string, string> = {
   "https://dl2.myminifactory.com/object-assets/5992b909866ea/images/720X720-imgp5831.jpg": "img/catalog/f4da1d23d4d5c008.webp",
@@ -969,6 +969,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US4b9b2fa7c0f119/design/2025-01-02_840a1a228b88c.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/e6ddba78975d3f70.webp",
   "https://makerworld.bblmw.com/makerworld/model/US4b9b2fa7c0f119/design/2025-01-02_a35fdf67b1c37.png": "img/catalog/1c71625f04fe6e18.webp",
   "https://makerworld.bblmw.com/makerworld/model/US4b9b2fa7c0f119/design/2025-01-02_d59c1abaead81.png": "img/catalog/075a5b07b9ca23af.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US4bcf50a03f9cb1/design/04d42531f1027c30.webp?x-oss-process=image/resize,w_400/format,webp": "img/catalog/e4a7772466b86371.webp",
   "https://makerworld.bblmw.com/makerworld/model/US4d77a9b475e833/design/2025-09-28_10173b0f61fdc.jpg": "img/catalog/24e63123de08660e.webp",
   "https://makerworld.bblmw.com/makerworld/model/US4d77a9b475e833/design/2025-09-28_5957c52acfc308.jpg": "img/catalog/982b9f9bf14a080e.webp",
   "https://makerworld.bblmw.com/makerworld/model/US4d77a9b475e833/design/2025-09-28_632526e040b558.png": "img/catalog/2d34cdc2f7c11bb9.webp",
@@ -2515,6 +2516,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/USbc0221a3315793/design/8e871d07d18b962b.png": "img/catalog/5d27b11f78823a3d.webp",
   "https://makerworld.bblmw.com/makerworld/model/USbc0221a3315793/design/ee1c14f3822cb673.png": "img/catalog/39b48102b8a6955a.webp",
   "https://makerworld.bblmw.com/makerworld/model/USbc0221a3315793/design/ee1c14f3822cb673.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/96fe16048cce619c.webp",
+  "https://makerworld.bblmw.com/makerworld/model/USbc05779736bed8/design/2025-12-01_0e0e136d176d28.gif?x-oss-process=image/resize,w_400/format,webp": "img/catalog/65b699bf8f2250c4.webp",
   "https://makerworld.bblmw.com/makerworld/model/USbc4b9e940d806f/design/2ed34282d6b247e4.jpg": "img/catalog/af5150f66886c342.webp",
   "https://makerworld.bblmw.com/makerworld/model/USbc4b9e940d806f/design/ae759c13b98e3706.jpg": "img/catalog/352280442104472e.webp",
   "https://makerworld.bblmw.com/makerworld/model/USbc4b9e940d806f/design/d963988e02259f69.jpg": "img/catalog/d4359772be4e169d.webp",
