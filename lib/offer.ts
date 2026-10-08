@@ -132,47 +132,37 @@ export function startingColor(
   recommendedId?: string,
 ): string {
   const offered = offeredColors(palette, stock, material, recommendedId);
-  if (recommendedId && isColorInStock(stock, material, recommendedId)) return recommendedId;
+  // "In stock" only means nobody marked it out — the colour must also be one
+  // this finish actually comes in, or a PLA-only spool lands on a PLA+ page.
+  if (recommendedId && offered.some((c) => c.id === recommendedId) && isColorInStock(stock, material, recommendedId)) return recommendedId;
   return offered.find((c) => isColorInStock(stock, material, c.id))?.id ?? offered[0]?.id ?? palette[0]?.id ?? "";
 }
 
 /**
- * Every colour on the shelf for this model's family, each with the finish it
- * comes on.
+ * Colours that are on the shelf only on a sibling finish, grouped by finish.
  *
- * Colours are stocked per finish, and the owner's own spools (brown, grey,
- * marble, colour-shift…) are often on plain PLA only. A page that opened on
- * PLA+ showed none of them unless the customer happened to switch finish
- * first — the shop looked smaller than its shelf. So the row now shows the
- * whole family: the current finish's colours first, then any other finish's
- * colours not already there, and picking one of those switches the finish.
- * Across families nothing changes (see offeredMaterials).
+ * The colour row shows the selected finish's stock and nothing else — a PLA+
+ * page lists PLA+ colours. But the owner's own spools (brown, grey, marble,
+ * colour-shift…) often exist on plain PLA only, and hiding that the shop has
+ * them made it look smaller than its shelf. So they are offered as a separate
+ * "also on PLA" line under the row; picking one switches the finish openly
+ * instead of silently. Across families nothing changes (see offeredMaterials).
  */
-export function offeredFamilyColors(
+export function otherFinishColors(
   palette: Filament[],
   stock: StockMap,
   family: Material[],
   current: MaterialId,
-  recommendedId?: string,
-): { color: Filament; material: MaterialId }[] {
-  const out: { color: Filament; material: MaterialId }[] = [];
-  const seen = new Set<string>();
-  const order = [current, ...family.map((m) => m.id).filter((id) => id !== current)];
-  for (const mid of order) {
-    for (const c of filamentsFor(palette, mid)) {
-      if (seen.has(c.id) || !isColorInStock(stock, mid, c.id)) continue;
-      seen.add(c.id);
-      out.push({ color: c, material: mid });
-    }
-  }
-  // The model's own colour stays on the row even when it is out, as before.
-  if (recommendedId && !seen.has(recommendedId)) {
-    const rec = filamentsFor(palette, current).find((c) => c.id === recommendedId);
-    if (rec) out.unshift({ color: rec, material: current });
-  }
-  if (!out.length) {
-    const first = filamentsFor(palette, current)[0];
-    if (first) out.push({ color: first, material: current });
+): { material: Material; colors: Filament[] }[] {
+  const seen = new Set(
+    filamentsFor(palette, current).filter((c) => isColorInStock(stock, current, c.id)).map((c) => c.id),
+  );
+  const out: { material: Material; colors: Filament[] }[] = [];
+  for (const m of family) {
+    if (m.id === current) continue;
+    const colors = filamentsFor(palette, m.id).filter((c) => !seen.has(c.id) && isColorInStock(stock, m.id, c.id));
+    colors.forEach((c) => seen.add(c.id));
+    if (colors.length) out.push({ material: m, colors });
   }
   return out;
 }
