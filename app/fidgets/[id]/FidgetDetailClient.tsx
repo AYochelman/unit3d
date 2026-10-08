@@ -23,7 +23,7 @@ import ShippingEstimate from "@/components/ShippingEstimate";
 import RestockModal from "@/components/RestockModal";
 import { isColorInStock, isMaterialInStock } from "@/lib/inventory";
 import { filamentsFor, useMaterials } from "@/lib/palette";
-import { nearestColor, offeredFamilyColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
+import { nearestColor, offeredColors, offeredMaterials, otherFinishColors, startingColor, startingMaterial } from "@/lib/offer";
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import ProductClip from "@/components/ProductClip";
@@ -33,6 +33,7 @@ import { useLivePrice } from "@/lib/live-price";
 import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
+import OtherFinishColors from "@/components/OtherFinishColors";
 import CheaperOptions from "@/components/CheaperOptions";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
@@ -79,7 +80,13 @@ export default function FidgetDetailClient({ id }: { id: string }) {
     .filter((m) => m.id !== "tpu");
   const material: MaterialId =
     pickedMaterial ?? startingMaterial(ALL_MATERIALS, stock, FILAMENTS, wantMaterial);
-  const setMaterial = setPickedMaterial;
+  // A colour picked on one finish that this finish does not have would leave
+  // the page unsellable on a colour it no longer shows — drop it, land fresh.
+  const setMaterial = (m: MaterialId) => {
+    setPickedMaterial(m);
+    if (pickedColor && !isColorInStock(stock, m, pickedColor)) setPickedColor(null);
+    else if (pickedColor && !filamentsFor(FILAMENTS, m).some((c) => c.id === pickedColor)) setPickedColor(null);
+  };
 
   // Hooks must run before the "not found" bail-out below, so the price is
   // resolved here with safe fallbacks rather than next to the other derived state.
@@ -134,9 +141,11 @@ export default function FidgetDetailClient({ id }: { id: string }) {
     : f.thumbnail ? [f.thumbnail]
     : [];
 
-  // The whole family's shelf, not only this finish's: picking a colour that
-  // exists only on a sibling finish switches to it (lib/offer.ts).
-  const colorChoices = offeredFamilyColors(FILAMENTS, stock, materialChoices, material, recommendedColor);
+  // The row is this finish's stock only; colours that exist only on a sibling
+  // finish sit on their own "also on PLA" line and switching is explicit.
+  const colorChoices = offeredColors(FILAMENTS, stock, material, recommendedColor)
+    .map((c) => ({ color: c, material }));
+  const otherFinishes = otherFinishColors(FILAMENTS, stock, materialChoices, material);
   const colorId = pickedColor ?? startingColor(FILAMENTS, stock, material, recommendedColor);
   const setColorId = setPickedColor;
   const selectedFilament = FILAMENTS.find((c) => c.id === colorId);
@@ -457,7 +466,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => { setColorId(c.id); if (cm !== material) setMaterial(cm); }}
+                  onClick={() => setColorId(c.id)}
                   title={cm !== material ? `${c.name} · ${MATERIAL_BY_ID[cm]?.short ?? cm}` : `${c.name} — ${c.desc}`}
                   aria-label={c.name}
                   aria-pressed={colorId === c.id}
@@ -491,6 +500,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 </button>
               ))}
             </div>
+            <OtherFinishColors
+              groups={otherFinishes}
+              onPick={(m, c) => { setPickedMaterial(m); setPickedColor(c); }}
+            />
           </div>
 
           {/* ── Bigger, same as every other product ─────────────────────── */}

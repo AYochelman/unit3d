@@ -10,7 +10,7 @@ import { Field, Input } from "@/components/ui/Field";
 import { useFilaments } from "@/lib/palette";
 import { MATERIAL_BY_ID } from "@/lib/materials";
 import { useMaterials } from "@/lib/palette";
-import { nearestColor, offeredFamilyColors, offeredMaterials, startingColor, startingMaterial } from "@/lib/offer";
+import { nearestColor, offeredColors, offeredMaterials, otherFinishColors, startingColor, startingMaterial } from "@/lib/offer";
 import { filamentsFor } from "@/lib/palette";
 import { PRODUCT_BY_ID, CATEGORY_LABEL } from "@/lib/products";
 import AdminCostPanel from "@/components/AdminCostPanel";
@@ -38,6 +38,7 @@ import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
+import OtherFinishColors from "@/components/OtherFinishColors";
 import CheaperOptions from "@/components/CheaperOptions";
 
 /** MakerWorld plates have no names, so sizes are named by their order. */
@@ -100,10 +101,18 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const materialChoices = offeredMaterials(ALL_MATERIALS, stock, FILAMENTS, wantMaterial);
   const material: MaterialId =
     pickedMaterial ?? startingMaterial(ALL_MATERIALS, stock, FILAMENTS, wantMaterial);
-  const setMaterial = setPickedMaterial;
-  // The whole family's shelf, not only this finish's: picking a colour that
-  // exists only on a sibling finish switches to it (lib/offer.ts).
-  const colorChoices = offeredFamilyColors(FILAMENTS, stock, materialChoices, material, recommendedColor);
+  // A colour picked on one finish that this finish does not have would leave
+  // the page unsellable on a colour it no longer shows — drop it, land fresh.
+  const setMaterial = (m: MaterialId) => {
+    setPickedMaterial(m);
+    if (pickedColor && !isColorInStock(stock, m, pickedColor)) setPickedColor(null);
+    else if (pickedColor && !filamentsFor(FILAMENTS, m).some((c) => c.id === pickedColor)) setPickedColor(null);
+  };
+  // The row is this finish's stock only; colours that exist only on a sibling
+  // finish sit on their own "also on PLA" line and switching is explicit.
+  const colorChoices = offeredColors(FILAMENTS, stock, material, recommendedColor)
+    .map((c) => ({ color: c, material }));
+  const otherFinishes = otherFinishColors(FILAMENTS, stock, materialChoices, material);
   const colorId = pickedColor ?? startingColor(FILAMENTS, stock, material, recommendedColor);
   const setColorId = setPickedColor;
 
@@ -437,7 +446,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => { setColorId(c.id); if (cm !== material) setMaterial(cm); }}
+                  onClick={() => setColorId(c.id)}
                   title={cm !== material ? `${c.name} · ${MATERIAL_BY_ID[cm]?.short ?? cm}` : c.name}
                   aria-label={c.name}
                   aria-pressed={colorId === c.id}
@@ -462,6 +471,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 </button>
               ))}
             </div>
+            <OtherFinishColors
+              groups={otherFinishes}
+              onPick={(m, c) => { setPickedMaterial(m); setPickedColor(c); }}
+            />
           </div>
 
           {/* Bigger, on every product - not just the ones a designer happened
