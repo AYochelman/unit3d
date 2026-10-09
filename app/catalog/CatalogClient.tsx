@@ -21,6 +21,7 @@ import UnitOrderScreen, { type UnitPick } from "@/components/UnitOrderScreen";
 import { bulkDiscount } from "@/lib/pricing";
 import { orderHref } from "@/lib/order-link";
 import { CONTACT } from "@/lib/contact";
+import { companiesFor, companyWord } from "@/lib/unit-companies";
 import { UNIT_FORMS, unitFormItemId } from "@/lib/unitForms";
 import { fmtILS } from "@/lib/format";
 import { useLivePricer } from "@/lib/live-price";
@@ -139,8 +140,10 @@ export default function CatalogClient() {
     brigade: Brigade,
     corps: Corps,
     branch: BranchNode,
+    company?: string,
   ) => {
     setPicked({
+      company,
       slug: battalion.slug,
       title: battalion.nickname ? `${battalion.name} - ${battalion.nickname}` : battalion.name,
       brigade: brigade.name,
@@ -326,7 +329,7 @@ export default function CatalogClient() {
                 corps={corps}
                 branch={branch}
                 fromPrice={fromPrice}
-                onAdd={() => addToOrder(battalion, brigade, corps, branch)}
+                onAdd={(company) => addToOrder(battalion, brigade, corps, branch, company)}
               />
             ))}
           </div>
@@ -504,12 +507,13 @@ export default function CatalogClient() {
                                             corps={corps}
                                             branch={branch}
                                             fromPrice={fromPrice}
-                                            onAdd={() =>
+                                            onAdd={(company) =>
                                               addToOrder(
                                                 battalion,
                                                 brigade,
                                                 corps,
                                                 branch,
+                                                company,
                                               )
                                             }
                                           />
@@ -533,18 +537,19 @@ export default function CatalogClient() {
       )}
 
       <UnitOrderScreen
-        key={picked?.slug ?? "none"}
+        key={picked ? `${picked.slug}:${picked.company ?? ""}` : "none"}
         unit={picked}
         onClose={() => setPicked(null)}
-        onConfirm={({ form, summary, price, qty }) => {
+        onConfirm={({ form, summary, price, qty, company }) => {
           if (!picked) return;
           const order = {
-            title: `${picked.title} · ${form.label}`,
+            title: `${picked.title}${company ? ` · ${company}` : ""} · ${form.label}`,
             summary,
             price,
             source: "catalog" as const,
             meta: {
               unitSlug: picked.slug,
+              ...(company ? { company } : {}),
               brigadeSlug: picked.brigadeSlug,
               form: form.id,
               qty,
@@ -576,8 +581,9 @@ function BattalionCard({
   branch: BranchNode;
   /** Cheapest body the emblem is offered on — the card says "from". */
   fromPrice: number;
-  onAdd: () => void;
+  onAdd: (company?: string) => void;
 }) {
+  const companies = companiesFor(battalion.slug);
   const hue = battalion.fallbackHue ?? brigade.fallbackHue ?? branch.fallbackHue;
   const shape =
     battalion.fallbackShape ?? brigade.fallbackShape ?? branch.fallbackShape;
@@ -613,6 +619,25 @@ function BattalionCard({
         <div className="text-[11px] text-ink-500 mb-3 truncate">
           {brigade.name} · {corps.name}
         </div>
+        {/* The level under the battalion. A tap orders the emblem for that
+            company — the picker in the order screen opens on it. */}
+        {companies.length > 0 && (
+          <div className="mb-3">
+            <div className="text-[10px] text-ink-500 mb-1">{companyWord(battalion.slug) === "סוללה" ? "סוללות" : "פלוגות"}</div>
+            <div className="flex flex-wrap gap-1">
+              {companies.map((c) => (
+                <button
+                  key={c.label}
+                  type="button"
+                  onClick={() => onAdd(c.label)}
+                  className="px-2 py-0.5 rounded-full border border-ink-700 text-[10px] text-ink-300 hover:border-flame hover:text-flame transition-colors"
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="flex items-center justify-between mt-auto gap-2">
           <span className="font-mono text-flame text-sm">
             <span className="text-ink-500 text-xs">מ־</span>
@@ -621,7 +646,7 @@ function BattalionCard({
           <Btn
             size="sm"
             variant="secondary"
-            onClick={onAdd}
+            onClick={() => onAdd()}
             iconRight="arrowLeft"
             className="hover:bg-flame-600 hover:border-flame hover:text-white"
           >
