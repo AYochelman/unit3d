@@ -149,3 +149,51 @@ export function SingleColorNote({
     </p>
   );
 }
+
+/**
+ * "How will mine look?" — the photo, re-coloured in the picked filament.
+ *
+ * A permanent tint was tried and removed: every model looked lit through
+ * coloured glass. This one is the customer's own choice, labelled as a
+ * simulation, and drawn as luminance × colour (greyscale photo, multiply) so
+ * shading survives and a black spool reads black rather than grey.
+ * The parent marks itself `data-tint` so its <img>s go greyscale (globals.css).
+ */
+export function TintOverlay({ on, hex }: { on: boolean; hex: string }) {
+  if (!on) return null;
+  return (
+    <>
+      <div aria-hidden className="absolute inset-0 pointer-events-none mix-blend-multiply" style={{ background: hex }} />
+      <span className="absolute top-3 left-1/2 -translate-x-1/2 z-10 px-2 py-0.5 rounded-full text-[10px] font-bold bg-ink-950/75 text-ink-100 border border-white/15 backdrop-blur">
+        הדמיה בצבע שבחרת
+      </span>
+    </>
+  );
+}
+
+export function TintToggle({
+  on,
+  onChange,
+  colorName,
+  hex,
+}: {
+  on: boolean;
+  onChange: (on: boolean) => void;
+  colorName: string;
+  hex: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={() => onChange(!on)}
+      className={cn(
+        "w-full flex items-center justify-center gap-2 h-10 rounded-xl border text-xs font-semibold transition-colors",
+        on ? "border-flame bg-flame/10 text-flame" : "border-ink-700 text-ink-200 hover:border-ink-500",
+      )}
+    >
+      <span className="h-4 w-4 rounded-full border border-white/25" style={{ background: hex }} />
+      {on ? "חזרה לתמונה המקורית" : `איך זה ייראה אצלי? (${colorName})`}
+    </button>
+  );
+}
