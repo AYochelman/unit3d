@@ -122,7 +122,10 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   // What the waiting list should actually name if it IS out.
   const wouldUse = startingMaterial(materials, stock, palette, material);
   // The shelf price follows /admin, so a margin change moves every card at once.
-  const priceable = { id: c.itemId ?? c.id, price: c.price, grams: c.grams, hours: c.hours, material, colors: c.colors, pieces: c.pieces };
+  // Priced in ONE colour, like the product page opens. `c.colors` is what the
+  // photograph shows; pricing the card by it put the multi-colour price on
+  // the shelf and a lower one-colour price on the page behind it.
+  const priceable = { id: c.itemId ?? c.id, price: c.price, grams: c.grams, hours: c.hours, material, colors: 1, pieces: c.pieces };
   const price = useLivePrice(priceable);
   // Heavy pieces are quoted, not priced — see MADE_TO_ORDER_FROM.
   const quoteOnly = useQuoteOnly(priceable);
@@ -188,8 +191,8 @@ export function ListingCardView({ c }: { c: ListingCard }) {
           <Pill tone="neutral" className="text-[10px] px-1.5 py-0.5">{c.category}</Pill>
         </span>
         {c.colors > 1 && (
-          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider border backdrop-blur bg-cyan2/15 text-cyan2 border-cyan2/40" dir="ltr">
-            AMS · {c.colors}C
+          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border backdrop-blur bg-ink-950/75 text-ink-100 border-white/15">
+            בתמונה <bdi dir="ltr" className="font-mono">{c.colors}</bdi> צבעים
           </span>
         )}
         {c.personalizable && (
@@ -221,7 +224,10 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   const priceRow = quoteOnly ? (
     <span className="text-flame text-sm font-bold">לפי הזמנה</span>
   ) : (
-    <span className="font-mono text-flame text-sm" dir="ltr">{fmtILS(price)}</span>
+    <span className="inline-flex items-baseline gap-1">
+      <span className="font-mono text-flame text-sm" dir="ltr">{fmtILS(price)}</span>
+      {c.colors > 1 && <span className="text-[10px] text-ink-500">צבע אחד</span>}
+    </span>
   );
 
   // Out of filament: the card greys out, says so, and opens the waiting list

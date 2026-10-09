@@ -270,6 +270,7 @@ export function importedFidgets(): Fidget[] {
       sourceUrl: m.sourceUrl,
       license: m.license,
       downloads: m.downloads,
+      colors: m.colors,
       ams: m.colors > 1,
       hoursAms: m.hoursAms,
       gramsAms: m.gramsAms,

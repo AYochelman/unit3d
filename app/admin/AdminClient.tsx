@@ -76,7 +76,9 @@ function baseRows(): Row[] {
     hours: parseHours(f.time),
     material: "pla_plus",
     price: f.price,
-    colors: f.ams ? 2 : 1,
+    // Costed as sold by default: one colour. The multi-colour plate is an
+    // option on the product page, priced there on top of this.
+    colors: 1,
   }));
   const shop: Row[] = PRODUCTS.map((p) => ({
     id: p.id,
@@ -86,7 +88,7 @@ function baseRows(): Row[] {
     hours: p.hours,
     material: p.material ?? "pla",
     price: p.price,
-    colors: p.colors ?? (p.ams ? 2 : 1),
+    colors: 1,
     pieces: p.pieces,
   }));
   const config: Row[] = CONFIG_PRODUCTS.map((c) => ({

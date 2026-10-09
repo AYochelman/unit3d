@@ -39,6 +39,7 @@ import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
 import OtherFinishColors from "@/components/OtherFinishColors";
+import { ColorModeCards, PhotoColorsBadge, SingleColorNote, TintOverlay, TintToggle, photoAmsColors } from "@/components/ColorMode";
 import CheaperOptions from "@/components/CheaperOptions";
 
 /** MakerWorld plates have no names, so sizes are named by their order. */
@@ -81,6 +82,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [pickedColor, setPickedColor] = useState<string | null>(null);
   const [pickedMaterial, setPickedMaterial] = useState<MaterialId | null>(null);
   const [amsOn, setAmsOn] = useState(false);
+  const [tintOn, setTintOn] = useState(false);
   const [amsColors, setAmsColors] = useState<2 | 3 | 4>(2);
   const [engrave1, setEngrave1] = useState("");
   const [engrave2, setEngrave2] = useState("");
@@ -167,6 +169,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
     return Math.max(flat, Math.ceil((many - one) / 5) * 5);
   };
   const amsSurcharge = amsOn ? amsExtra(amsColors) : 0;
+  // How many filaments the photographed print used (the designer's own slice).
+  const photoColors = p.colors ?? 1;
   // Only the DELTA from the product's own default material is a surcharge —
   // the listed catalogue price already includes that default.
   const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
@@ -244,6 +248,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
           <div
             className="pd-hero relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
             style={{ background: "#06150e" }}
+            data-tint={hero && tintOn && !amsOn ? "" : undefined}
           >
             {hero ? (
               // A photograph of the actual model beats a drawing of it. The
@@ -259,9 +264,11 @@ export default function ProductDetailClient({ id }: { id: string }) {
             ) : (
               <ProductArt art={p.art} color={color.hex} size={360} className="max-w-[80%] h-auto drop-shadow-2xl" />
             )}
+            <TintOverlay on={!!hero && tintOn && !amsOn} hex={color.hex} />
             <div className="absolute top-3 right-3 flex flex-col gap-1.5">
               <Pill tone="neutral" className="text-[10px]">{CATEGORY_LABEL[p.category]}</Pill>
               {p.tag && <Pill tone="flame" className="text-[10px]">{p.tag}</Pill>}
+              <PhotoColorsBadge photoColors={hero && !tintOn ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
             </div>
             <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
               <span className="h-3.5 w-3.5 rounded-full border border-white/20" style={{ backgroundColor: color.hex }} />
@@ -273,6 +280,12 @@ export default function ProductDetailClient({ id }: { id: string }) {
               </div>
             )}
           </div>
+
+          {hero && !amsOn && (
+            <div className="mt-3">
+              <TintToggle on={tintOn} onChange={setTintOn} colorName={color.name} hex={color.hex} />
+            </div>
+          )}
 
           {/* Thumbnails — the rest of what the designer photographed. Scrolls
               sideways rather than wrapping, so the frame above never moves. */}
@@ -475,6 +488,12 @@ export default function ProductDetailClient({ id }: { id: string }) {
               groups={otherFinishes}
               onPick={(m, c) => { setPickedMaterial(m); setPickedColor(c); }}
             />
+            <SingleColorNote
+              photoColors={photoColors}
+              amsOn={amsOn}
+              canMulti={!!p.ams}
+              onMulti={() => { setAmsColors(photoAmsColors(photoColors)); setAmsOn(true); }}
+            />
           </div>
 
           {/* Bigger, on every product - not just the ones a designer happened
@@ -505,40 +524,18 @@ export default function ProductDetailClient({ id }: { id: string }) {
             </div>
           </div>
 
-          {/* AMS */}
+          {/* One colour or several — two cards with their prices, not a switch. */}
           {p.ams && (
-            <div className={cn("rounded-xl border transition-colors overflow-hidden", amsOn ? "border-cyan2/40 bg-cyan2/5" : "border-ink-800 bg-ink-900/40")}>
-              <div className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <div className={cn("h-9 w-9 rounded-lg flex items-center justify-center", amsOn ? "bg-cyan2/20 text-cyan2" : "bg-ink-800 text-ink-400")}>
-                    <Icon name="layers" size={18} />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm">הדפסת AMS — ריבוי צבעים</div>
-                    <div className="text-[11px] text-ink-400 mt-0.5">טקסט או פרט בצבע שני, שלישי ורביעי</div>
-                  </div>
-                </div>
-                {/* dir="ltr" + translate-x pushed the knob right on an RTL page,
-                    so "on" travelled backwards. Inset-inline moves it along the
-                    reading direction: right→left here, left→right in English. */}
-                <button type="button" role="switch" aria-checked={amsOn} onClick={() => setAmsOn((v) => !v)} className={cn("relative h-6 w-11 rounded-full transition-colors flex-shrink-0", amsOn ? "bg-cyan2" : "bg-ink-700")}>
-                  <span
-                    className="absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-md transition-[inset-inline-start] duration-200"
-                    style={{ insetInlineStart: amsOn ? 23 : 3 }}
-                  />
-                </button>
-              </div>
-              {amsOn && (
-                <div className="px-4 pb-4 border-t border-cyan2/20 pt-3 grid grid-cols-3 gap-2">
-                  {AMS_OPTIONS.map((o) => (
-                    <button key={o.colors} type="button" onClick={() => setAmsColors(o.colors)} className={cn("py-2.5 rounded-xl text-xs font-semibold border transition-all", amsColors === o.colors ? "bg-cyan2/20 border-cyan2 text-cyan2" : "border-ink-700 text-ink-400 hover:border-ink-500")}>
-                      {o.label}
-                      <div className="font-mono text-[10px] mt-0.5 opacity-80">+{fmtILS(amsExtra(o.colors))}</div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ColorModeCards
+              photoColors={photoColors}
+              amsOn={amsOn}
+              amsColors={amsColors}
+              single={unitPrice - amsSurcharge}
+              extra={amsExtra}
+              options={AMS_OPTIONS}
+              onSingle={() => setAmsOn(false)}
+              onMulti={(n) => { setAmsColors(n); setAmsOn(true); }}
+            />
           )}
 
           {/* Qty */}

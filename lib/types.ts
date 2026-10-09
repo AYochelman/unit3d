@@ -158,6 +158,8 @@ export type Fidget = {
   license?: string;
   downloads?: number;
   ams?: boolean;
+  /** Filaments the photographed print used (MakerWorld's figure). The shop default is still one. */
+  colors?: number;
   /** Print time and weight of the AMS plate, when the designer published one. */
   hoursAms?: number;
   gramsAms?: number;
