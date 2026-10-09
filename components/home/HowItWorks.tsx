@@ -3,6 +3,7 @@ import { ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useEffect, useRef, useState } from "react";
 import Icon, { type IconName } from "@/components/ui/Icon";
 import GlyphPortal from "@/components/ui/glyph-portal";
+import { useScrollComplete } from "@/lib/use-scroll-complete";
 
 /**
  * "התהליך" — the four steps, entered through a letter.
@@ -65,70 +66,16 @@ export default function HowItWorks() {
     return () => { alive = false; clearTimeout(t); };
   }, []);
 
-  // Never left halfway. The dive is a scroll-driven animation, and a visitor
-  // who stopped scrolling inside it was left staring at a giant slab of letter
-  // or a green field with nothing on it, not knowing that more scrolling was
-  // the way out. So once the scroll comes to rest inside the dive, the page
-  // finishes it: on to the four steps if they were going down, back to the
-  // whole word if they were going up. Any input of theirs takes over at once.
+  // Never left halfway — see useScrollComplete. The dive runs from the
+  // section's top over 2.4 screen heights (scrollLength below).
   const wrapRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!face || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let lastY = window.scrollY, dir = 1, idle = 0, anim = 0, touching = false;
-    const stop = () => { if (anim) { cancelAnimationFrame(anim); anim = 0; } };
-    const glide = (to: number) => {
-      const from = window.scrollY, dist = to - from;
-      if (Math.abs(dist) < 2) return;
-      const ms = Math.min(900, 350 + Math.abs(dist) * 0.35), t0 = performance.now();
-      const step = (now: number) => {
-        const t = Math.min(1, (now - t0) / ms);
-        const e = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
-        window.scrollTo(0, from + dist * e);
-        lastY = window.scrollY;
-        anim = t < 1 ? requestAnimationFrame(step) : 0;
-      };
-      anim = requestAnimationFrame(step);
-    };
-    const settle = () => {
-      idle = 0;
-      if (anim || touching) return;
-      const section = wrapRef.current?.querySelector<HTMLElement>("[data-gp-motion=on]");
-      if (!section) return;
-      const H = parseFloat(getComputedStyle(section).getPropertyValue("--gp-height")) || window.innerHeight;
-      const travel = H * 2.4; // = scrollLength below
-      const top = section.getBoundingClientRect().top;
-      const p = -top / travel;
-      if (p <= 0.02 || p >= 0.98) return;
-      const start = window.scrollY + top;
-      glide(dir > 0 ? start + travel : start);
-    };
-    const onScroll = () => {
-      if (anim) return;
-      const y = window.scrollY;
-      if (y !== lastY) dir = y > lastY ? 1 : -1;
-      lastY = y;
-      clearTimeout(idle);
-      idle = window.setTimeout(settle, 160);
-    };
-    const takeOver = () => stop();
-    const down = () => { touching = true; stop(); };
-    const up = () => { touching = false; clearTimeout(idle); idle = window.setTimeout(settle, 160); };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("wheel", takeOver, { passive: true });
-    window.addEventListener("keydown", takeOver);
-    window.addEventListener("touchstart", down, { passive: true });
-    window.addEventListener("touchend", up, { passive: true });
-    window.addEventListener("touchcancel", up, { passive: true });
-    return () => {
-      stop(); clearTimeout(idle);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("wheel", takeOver);
-      window.removeEventListener("keydown", takeOver);
-      window.removeEventListener("touchstart", down);
-      window.removeEventListener("touchend", up);
-      window.removeEventListener("touchcancel", up);
-    };
-  }, [face]);
+  useScrollComplete(wrapRef, (wrap) => {
+    const section = wrap.querySelector<HTMLElement>("[data-gp-motion=on]");
+    if (!section) return null;
+    const H = parseFloat(getComputedStyle(section).getPropertyValue("--gp-height")) || window.innerHeight;
+    const start = window.scrollY + section.getBoundingClientRect().top;
+    return { start, end: start + H * 2.4 };
+  }, !!face);
 
   return (
     <div ref={wrapRef} data-hiw className="border-y border-ink-800/60" style={{ containerType: "inline-size" }}>
