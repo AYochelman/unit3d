@@ -502,3 +502,6 @@ html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is
 @media (prefers-reduced-motion: reduce) {
   .sp-in, .sp-pop, .sp-group, .sp-chip, .sp-shim { animation: none; }
 }
+
+/* "How will mine look?" — see TintOverlay in components/ColorMode.tsx. */
+[data-tint] > img { filter: grayscale(1) brightness(1.18) contrast(1.05); }

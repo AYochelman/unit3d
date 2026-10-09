@@ -105,15 +105,17 @@ function FidgetCard({
         )}
 
         {/* AMS / colors badge — top left, below tag */}
-        {(f.ams || displayColors > 1) && (
-          <span
-            className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider border backdrop-blur bg-cyan2/15 text-cyan2 border-cyan2/40"
-            dir="ltr"
-            title="Multi-color AMS print"
-          >
-            AMS · {displayColors}C
+        {/* A variant that IS several colours says so; otherwise the badge
+            describes the photograph, not the price (that is one colour). */}
+        {displayColors > 1 ? (
+          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border backdrop-blur bg-cyan2/15 text-cyan2 border-cyan2/40">
+            <bdi dir="ltr" className="font-mono">{displayColors}</bdi> צבעים
           </span>
-        )}
+        ) : (f.colors ?? 1) > 1 ? (
+          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border backdrop-blur bg-ink-950/75 text-ink-100 border-white/15">
+            בתמונה <bdi dir="ltr" className="font-mono">{f.colors}</bdi> צבעים
+          </span>
+        ) : null}
 
         {/* Custom tag — top left */}
         {f.tag && (
