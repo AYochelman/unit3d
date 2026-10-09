@@ -141,6 +141,13 @@ export default function ContactClient() {
       .map(productToCard);
   }, [ordered]);
 
+  // The thank-you replaces a long form, and the page kept the form's scroll —
+  // a phone landed on the related products and the footer, below the very
+  // message it came for. Start the thank-you at the top.
+  useEffect(() => {
+    if (submitted) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [submitted]);
+
   if (submitted) {
     // An order and a question are not the same moment. Someone who just bought
     // is told the work has started, handed their discount for next time, and
