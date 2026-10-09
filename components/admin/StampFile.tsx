@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Icon from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import { stamp3mf } from "@/lib/stamp-3mf";
@@ -12,7 +12,27 @@ import { stamp3mf } from "@/lib/stamp-3mf";
  */
 export default function StampFile({ name }: { name: string }) {
   const input = useRef<HTMLInputElement>(null);
-  const [state, setState] = useState<"idle" | "over" | "busy" | "done" | "bad">("idle");
+  const [state, setState] = useState<"idle" | "over" | "busy" | "done" | "bad" | "missed">("idle");
+
+  // A file dropped a few pixels off the target is opened (or saved under its
+  // old name) by the browser itself — which looks exactly like "it saved the
+  // wrong name". While this is on screen, a stray drop does nothing but say
+  // where to drop.
+  useEffect(() => {
+    const over = (e: DragEvent) => { if (e.dataTransfer?.types.includes("Files")) e.preventDefault(); };
+    const drop = (e: DragEvent) => {
+      if (!e.dataTransfer?.types.includes("Files") || e.defaultPrevented) return;
+      e.preventDefault();
+      setState("missed");
+      setTimeout(() => setState((s) => (s === "missed" ? "idle" : s)), 2500);
+    };
+    window.addEventListener("dragover", over);
+    window.addEventListener("drop", drop);
+    return () => {
+      window.removeEventListener("dragover", over);
+      window.removeEventListener("drop", drop);
+    };
+  }, []);
 
   const handle = async (file: File | undefined) => {
     if (!file) return;
@@ -39,6 +59,7 @@ export default function StampFile({ name }: { name: string }) {
     state === "done" ? `ירד: ${name}.3mf` :
     state === "bad" ? "זה לא קובץ 3MF" :
     state === "over" ? "שחרר כאן" :
+    state === "missed" ? "גרור בדיוק על הכפתור הזה" :
     "גרור 3MF ← יורד עם מספר ההזמנה";
 
   return (
@@ -48,17 +69,17 @@ export default function StampFile({ name }: { name: string }) {
         onClick={() => input.current?.click()}
         onDragOver={(e) => { e.preventDefault(); if (state !== "over") setState("over"); }}
         onDragLeave={() => setState((s) => (s === "over" ? "idle" : s))}
-        onDrop={(e) => { e.preventDefault(); void handle(e.dataTransfer.files?.[0]); }}
+        onDrop={(e) => { e.preventDefault(); e.stopPropagation(); void handle(e.dataTransfer.files?.[0]); }}
         title={`הקובץ שהורדת ממייקרוורלד יחזור בשם ${name}, וזה השם שהמדפסת תציג`}
         className={cn(
-          "inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg text-[11px] border border-dashed transition-colors",
+          "inline-flex items-center gap-2 px-4 h-10 rounded-xl text-xs font-semibold border-2 border-dashed transition-colors",
           state === "done" ? "border-good text-good bg-good/10" :
-          state === "bad" ? "border-bad text-bad bg-bad/10" :
+          state === "bad" || state === "missed" ? "border-bad text-bad bg-bad/10" :
           state === "over" ? "border-flame text-flame bg-flame/10" :
           "border-ink-600 text-ink-300 hover:border-flame hover:text-flame",
         )}
       >
-        <Icon name={state === "done" ? "check" : "download"} size={12} />
+        <Icon name={state === "done" ? "check" : "download"} size={15} />
         {label}
       </button>
       <input
