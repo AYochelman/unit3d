@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import ModelDownload from "./ModelDownload";
+import StampFile from "./StampFile";
 import { modelSourceForLine } from "@/lib/model-source";
 import Pill from "@/components/ui/Pill";
 import { Input, Textarea } from "@/components/ui/Field";
@@ -720,6 +721,8 @@ function OrderRow({
                       an order often means looking at the model first. */}
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <ModelDownload model={modelSourceForLine(l)} size="sm" />
+                    {/* Several lines → one name each, all carrying the ref. */}
+                    <StampFile name={o.lines.length > 1 ? `${o.ref}-${i + 1}` : o.ref} />
                     {state === "approved" && (
                       <button
                         type="button"
