@@ -24,6 +24,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useScrollComplete } from "@/lib/use-scroll-complete";
 
 const IMG_BASE =
   "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/stack-spread";
@@ -381,6 +382,12 @@ function StackSpreadStage({
   const reduce = useReducedMotion();
   const { scale: scaleMul, small: isSmall, colX, card: fixedCard } =
     useResponsive();
+
+  // Never left as a heap of half-spread cards (lib/use-scroll-complete).
+  useScrollComplete(wrapRef, (el) => {
+    const start = window.scrollY + el.getBoundingClientRect().top;
+    return { start, end: start + el.offsetHeight - window.innerHeight };
+  });
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
