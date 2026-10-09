@@ -141,6 +141,13 @@ export default function ContactClient() {
       .map(productToCard);
   }, [ordered]);
 
+  // The thank-you replaces a long form, and the page kept the form's scroll —
+  // a phone landed on the related products and the footer, below the very
+  // message it came for. Start the thank-you at the top.
+  useEffect(() => {
+    if (submitted) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [submitted]);
+
   if (submitted) {
     // An order and a question are not the same moment. Someone who just bought
     // is told the work has started, handed their discount for next time, and
@@ -684,7 +691,7 @@ export default function ContactClient() {
                 only in a footer link — and it has to name where the details
                 actually go. */}
             <p className="text-xs text-ink-400 max-w-md leading-relaxed">
-              בלחיצה על &quot;שלח&quot; אתה מאשר שאני יכול לחזור אליך בוואטסאפ עם פרטי ההזמנה,
+              בלחיצה על הכפתור אתה מאשר שאני יכול לחזור אליך בוואטסאפ עם פרטי ההזמנה,
               ומסכים ל
               <Link href="/terms" className="text-flame-300 underline hover:text-flame">תנאי השימוש</Link>
               {" ול"}
@@ -692,9 +699,18 @@ export default function ContactClient() {
               {" "}הפרטים משמשים לביצוע ההזמנה בלבד ולא נמסרים לאף אחד לצורכי שיווק.{" "}
               <Link href="/returns" className="text-flame-300 underline hover:text-flame">זכות הביטול</Link>.
             </p>
-            <Btn type="submit" size="lg" icon="whatsapp">
-              שלח פנייה
-            </Btn>
+            {/* The one button the whole site leads to — it should look like it.
+                Solid brand green, not the glassy primary that sat back into
+                the page. Orders say what the click does; questions stay a
+                "פנייה". */}
+            <button
+              type="submit"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 h-16 px-10 rounded-2xl bg-[#089a47] hover:bg-[#0bb455] active:scale-[0.98] text-white text-lg font-extrabold shadow-[0_0_0_4px_rgba(8,154,71,0.22),0_12px_32px_-8px_rgba(8,154,71,0.75)] hover:shadow-[0_0_0_6px_rgba(8,154,71,0.28),0_14px_40px_-8px_rgba(11,180,85,0.9)] transition-all"
+            >
+              <Icon name="whatsapp" size={22} />
+              {inquiry === "new" || inquiry === "bulk" ? "לסיום הזמנה" : "שלח פנייה"}
+              <Icon name="arrowLeft" size={20} />
+            </button>
           </section>
         </form>
 

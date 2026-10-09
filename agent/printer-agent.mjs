@@ -111,8 +111,24 @@ const state = () => {
   return "idle";
 };
 
+// The order number, wherever the printer happens to carry it. Bambu Studio's
+// "Send print job" name renames the uploaded FILE (UNIT3D-91872.3mf), but the
+// printer's subtask_name can still be the plate/model name from MakerWorld
+// ("Chill_Cat_-_Phone_Holder"). So the ref is looked for in every name-like
+// field first, and only then do we fall back to the subtask name.
+const ORDER_REF = /UNIT3D-\d{3,}/i;
+const orderRef = (p) => {
+  for (const v of [p.subtask_name, p.gcode_file, p.file, p.url]) {
+    const m = typeof v === "string" ? v.match(ORDER_REF) : null;
+    if (m) return m[0].toUpperCase();
+  }
+  return "";
+};
+
 const jobName = () => {
   const p = last.print ?? {};
+  const ref = orderRef(p);
+  if (ref) return ref;
   const raw = p.subtask_name || p.gcode_file || "";
   return String(raw).replace(/\.(gcode|3mf)(\.\d+)?$/i, "").replace(/^.*\//, "");
 };

@@ -29,9 +29,11 @@
     "audit:mobile": "node scripts/audit-mobile.mjs",
     "check:weapons": "node scripts/check-weapon-words.mjs",
     "check:ingest": "node scripts/check-ingest-input.mjs",
-    "fetch:hd": "node scripts/fetch-hd.mjs"
+    "fetch:hd": "node scripts/fetch-hd.mjs",
+    "stamp:3mf": "node scripts/stamp-3mf.mjs"
   },
   "dependencies": {
+    "fflate": "^0.8.2",
     "hls.js": "^1.7.2",
     "motion": "^14.0.0",
     "next": "^16.2.6",

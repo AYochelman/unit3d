@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-10-01T10:28:39.912Z
-// Items: 592
+// Items: 598
 
 import type { ImportedModel } from "./imported";
 
@@ -19905,6 +19905,139 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "also": [
       "statues"
     ]
+  },
+  {
+    "id": "mw-69865",
+    "name": "W l M Sign",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 0.32,
+    "grams": 9,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US975c8253af3b66/design/2023-11-21_ed1c8bd892a6.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Emvi 3D",
+    "sourceUrl": "https://makerworld.com/en/models/69865-w-l-m-sign",
+    "license": "Standard Digital File License",
+    "downloads": 456,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ]
+  },
+  {
+    "id": "mw-1516685",
+    "name": "Pasta Playset: Pasta Box,Noodles,Bowl,&Funny Fork",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 10.59,
+    "grams": 247,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US32be343de3d5/design/2025-06-13_a92a8d7bc002e.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "3DPmom",
+    "sourceUrl": "https://makerworld.com/en/models/1516685-pasta-playset-pasta-box-noodles-bowl-funny-fork",
+    "license": "Standard Digital File License",
+    "downloads": 31395,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 18.65,
+    "gramsAms": 450
+  },
+  {
+    "id": "mw-1900285",
+    "name": "The Safest Safe",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 5.47,
+    "grams": 229,
+    "size": "~160mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USee51bac0dc5ea2/design/2025-10-18_efd4d96cc3b428.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Poleteswims",
+    "sourceUrl": "https://makerworld.com/en/models/1900285-the-safest-safe",
+    "license": "Standard Digital File License",
+    "downloads": 2094,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2060058",
+    "name": "ToeKick Drawer Opener",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.65,
+    "grams": 82,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USbc05779736bed8/design/2025-12-01_0e0e136d176d28.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "RummWorks",
+    "sourceUrl": "https://makerworld.com/en/models/2060058-toekick-drawer-opener",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 680,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ]
+  },
+  {
+    "id": "mw-3002104",
+    "name": "Levi vs Beast Titan Diorama",
+    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
+    "shelf": "screen",
+    "hours": 5.19,
+    "grams": 150,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US4bcf50a03f9cb1/design/04d42531f1027c30.webp?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Pirus",
+    "sourceUrl": "https://makerworld.com/en/models/3002104-levi-vs-beast-titan-diorama",
+    "license": "Standard Digital File License",
+    "downloads": 243,
+    "hue": 340,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "statues"
+    ]
+  },
+  {
+    "id": "mw-3288378",
+    "name": "Clicker Fidget Spinner",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.96,
+    "grams": 25,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfb1db311be4434/design/e25b19cdaced9daa.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "KingTut Design",
+    "sourceUrl": "https://makerworld.com/en/models/3288378-clicker-fidget-spinner",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 5452,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.04,
+    "gramsAms": 36
   }
 ];
 
