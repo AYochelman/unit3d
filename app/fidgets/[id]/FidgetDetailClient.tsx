@@ -34,7 +34,7 @@ import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
 import OtherFinishColors from "@/components/OtherFinishColors";
-import { ColorModeCards, PhotoColorsBadge, SingleColorNote, TintOverlay, TintToggle, photoAmsColors } from "@/components/ColorMode";
+import { ColorModeCards, PhotoColorsBadge, SingleColorNote, photoAmsColors } from "@/components/ColorMode";
 import CheaperOptions from "@/components/CheaperOptions";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
@@ -59,7 +59,6 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const recommendedColor = nearestColor(FILAMENTS, f?.defaultColor);
   const [pickedColor, setPickedColor] = useState<string | null>(null);
   const [amsOn, setAmsOn]         = useState(false);
-  const [tintOn, setTintOn]       = useState(false);
   const [amsColors, setAmsColors] = useState<2 | 3 | 4>(2);
   const [qty, setQty]             = useState(1);
   // Same rule as the shop: substitute inside the PLA family, never across one.
@@ -223,10 +222,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
         <div className="flex flex-col gap-3 min-w-0 lg:sticky lg:top-24">
 
           {/* Main image with color tint overlay */}
-          <div
-            className="relative aspect-square rounded-2xl overflow-hidden bg-ink-900 border border-ink-800 group"
-            data-tint={tintOn && !amsOn ? "" : undefined}
-          >
+          <div className="relative aspect-square rounded-2xl overflow-hidden bg-ink-900 border border-ink-800 group">
             {images.length > 0 ? (
               <>
                 {images.map((src, i) => (
@@ -245,10 +241,11 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   />
                 ))}
 
-                {/* No tint by default — it made every model look lit through
-                    coloured glass. Only when the customer asks for it, and
-                    labelled as a simulation (TintOverlay). */}
-                <TintOverlay on={tintOn && !amsOn} hex={tintHex} />
+                {/* No tint over the photo. Washing a real print in the chosen
+                    filament's colour made every model look like it was lit
+                    through coloured glass; the swatch below already says which
+                    colour was picked, and it says it without lying about the
+                    photograph. */}
 
                 {/* Nav buttons */}
                 {images.length > 1 && (
@@ -293,7 +290,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               )}
               {/* Was "AMS · 2C" whenever the model had two colours — read as
                   "this comes in two colours" while the price was for one. */}
-              <PhotoColorsBadge photoColors={images.length && !tintOn ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
+              <PhotoColorsBadge photoColors={images.length ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
             </div>
 
             {/* Selected color chip */}
@@ -307,10 +304,6 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               </div>
             )}
           </div>
-
-          {images.length > 0 && !amsOn && selectedFilament && (
-            <TintToggle on={tintOn} onChange={setTintOn} colorName={selectedFilament.name} hex={tintHex} />
-          )}
 
           {/* Thumbnails */}
           {images.length > 1 && (

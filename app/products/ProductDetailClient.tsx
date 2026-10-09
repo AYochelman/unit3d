@@ -39,7 +39,7 @@ import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
 import OtherFinishColors from "@/components/OtherFinishColors";
-import { ColorModeCards, PhotoColorsBadge, SingleColorNote, TintOverlay, TintToggle, photoAmsColors } from "@/components/ColorMode";
+import { ColorModeCards, PhotoColorsBadge, SingleColorNote, photoAmsColors } from "@/components/ColorMode";
 import CheaperOptions from "@/components/CheaperOptions";
 
 /** MakerWorld plates have no names, so sizes are named by their order. */
@@ -82,7 +82,6 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [pickedColor, setPickedColor] = useState<string | null>(null);
   const [pickedMaterial, setPickedMaterial] = useState<MaterialId | null>(null);
   const [amsOn, setAmsOn] = useState(false);
-  const [tintOn, setTintOn] = useState(false);
   const [amsColors, setAmsColors] = useState<2 | 3 | 4>(2);
   const [engrave1, setEngrave1] = useState("");
   const [engrave2, setEngrave2] = useState("");
@@ -248,7 +247,6 @@ export default function ProductDetailClient({ id }: { id: string }) {
           <div
             className="pd-hero relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
             style={{ background: "#06150e" }}
-            data-tint={hero && tintOn && !amsOn ? "" : undefined}
           >
             {hero ? (
               // A photograph of the actual model beats a drawing of it. The
@@ -264,11 +262,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
             ) : (
               <ProductArt art={p.art} color={color.hex} size={360} className="max-w-[80%] h-auto drop-shadow-2xl" />
             )}
-            <TintOverlay on={!!hero && tintOn && !amsOn} hex={color.hex} />
             <div className="absolute top-3 right-3 flex flex-col gap-1.5">
               <Pill tone="neutral" className="text-[10px]">{CATEGORY_LABEL[p.category]}</Pill>
               {p.tag && <Pill tone="flame" className="text-[10px]">{p.tag}</Pill>}
-              <PhotoColorsBadge photoColors={hero && !tintOn ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
+              <PhotoColorsBadge photoColors={hero ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
             </div>
             <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
               <span className="h-3.5 w-3.5 rounded-full border border-white/20" style={{ backgroundColor: color.hex }} />
@@ -280,12 +277,6 @@ export default function ProductDetailClient({ id }: { id: string }) {
               </div>
             )}
           </div>
-
-          {hero && !amsOn && (
-            <div className="mt-3">
-              <TintToggle on={tintOn} onChange={setTintOn} colorName={color.name} hex={color.hex} />
-            </div>
-          )}
 
           {/* Thumbnails — the rest of what the designer photographed. Scrolls
               sideways rather than wrapping, so the frame above never moves. */}
