@@ -1,4 +1,110 @@
 {
   "version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "id": "15784",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "69865",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "office"
+      ],
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "226667",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "421037",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "580825",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "761480",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "1255869",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "1400050",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "1506167",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "1516685",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "1900285",
+      "decision": "approved",
+      "shelf": "home",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "2060058",
+      "decision": "approved",
+      "shelf": "home",
+      "also": [
+        "office"
+      ],
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "2559326",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "2841172",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "2850640",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "2868821",
+      "decision": "rejected",
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "3002104",
+      "decision": "approved",
+      "shelf": "screen",
+      "also": [
+        "statues"
+      ],
+      "at": "2026-10-09T15:38:12.249Z"
+    },
+    {
+      "id": "3288378",
+      "decision": "approved",
+      "shelf": "fidget",
+      "at": "2026-10-09T15:38:12.249Z"
+    }
+  ]
 }
