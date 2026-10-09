@@ -462,9 +462,12 @@ html[data-product-look="gift-c"] .pd-root {
 .pd-root .pd-chip[data-on] { background: var(--pd-on); color: var(--pd-on-fg); border-color: transparent; }
 .pd-root .pd-qty { border: 0; border-radius: 9999px; background: var(--pd-qty); color: var(--pd-qty-fg); height: 2.25rem; width: 2.25rem; }
 .pd-root .pd-price { font-family: var(--font-sans); font-weight: 700; color: var(--pd-ink); font-size: clamp(2rem, 3.5vw, 2.75rem); }
-.pd-root .pd-cta { background: var(--pd-cta); color: var(--pd-cta-fg); border-radius: 9999px; height: 3.25rem; box-shadow: none; }
-.pd-root .pd-cta::before,
-.pd-root .pd-cta::after { display: none; }
+/* The live look's "add to cart" is the site's own green button (.btn-shiny,
+   same as the fidget page) — a white pill read as a different site. The flat
+   CTA token stays for the two preview looks only. */
+html[data-product-look] .pd-root .pd-cta { background: var(--pd-cta); color: var(--pd-cta-fg); border-radius: 9999px; height: 3.25rem; box-shadow: none; }
+html[data-product-look] .pd-root .pd-cta::before,
+html[data-product-look] .pd-root .pd-cta::after { display: none; }
 .pd-root .pd-benefit-icon {
   display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; flex: none;
   border-radius: 9999px; background: var(--pd-icon); color: var(--pd-icon-fg);

@@ -635,7 +635,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <button
               type="button"
               onClick={handleAdd}
-              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "pd-cta")}
+              className={cn("w-full h-12 rounded-xl font-black text-base active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg", added ? "bg-good text-ink-950" : "pd-cta btn-shiny")}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
             </button>
@@ -733,7 +733,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 "flex-1 h-12 rounded-xl font-black text-base flex items-center justify-center gap-2",
                 "transition-[background-color,transform] duration-200 active:scale-[0.98]",
                 "motion-reduce:transition-none motion-reduce:active:scale-100",
-                added ? "bg-good text-ink-950" : "pd-cta",
+                added ? "bg-good text-ink-950" : "pd-cta btn-shiny",
               )}
             >
               {added ? (<><Icon name="check" size={18} strokeWidth={3} />נוסף לסל!</>) : (<><Icon name="plus" size={18} />הוסף לסל</>)}
