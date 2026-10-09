@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import { STANDING, standingCounts, standingFor } from "@/lib/permissions";
 import { useSearchParams } from "next/navigation";
+import { useKeepScroll } from "@/lib/use-keep-scroll";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
@@ -114,7 +115,18 @@ export default function AdminClient() {
   // the costing table and leaving the order unfiled is the one thing that link
   // must not do, so it opens where it belongs.
   const params = useSearchParams();
-  const [tab, setTab] = useState<Tab>(params?.get("order") ? "orders" : "products");
+  // The tab lives in the address (?tab=), so a reload reopens the same one.
+  const fromUrl = params?.get("tab") as Tab | null;
+  const [tab, setTabState] = useState<Tab>(
+    fromUrl && TABS.some((t) => t.id === fromUrl) ? fromUrl : params?.get("order") ? "orders" : "products",
+  );
+  const setTab = (t: Tab) => {
+    setTabState(t);
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", t);
+    history.replaceState(history.state, "", url);
+  };
+  useKeepScroll(unlocked);
 
   if (!unlocked) {
     return (
