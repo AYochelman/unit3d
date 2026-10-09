@@ -24,6 +24,7 @@ export function useScrollComplete(
     if (!enabled || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let lastY = window.scrollY, dir = 1, idle = 0, anim = 0, touching = false;
     const stop = () => { if (anim) { cancelAnimationFrame(anim); anim = 0; } };
+    let tries = 0;
     const glide = (to: number) => {
       const from = window.scrollY, dist = to - from;
       if (Math.abs(dist) < 2) return;
@@ -31,9 +32,19 @@ export function useScrollComplete(
       const step = (now: number) => {
         const t = Math.min(1, (now - t0) / ms);
         const e = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
-        window.scrollTo(0, from + dist * e);
+        window.scrollTo({ top: from + dist * e, behavior: "instant" });
         lastY = window.scrollY;
-        anim = t < 1 ? requestAnimationFrame(step) : 0;
+        if (t < 1) { anim = requestAnimationFrame(step); return; }
+        anim = 0;
+        // iOS keeps a flick's momentum going and quietly overrides scrollTo
+        // while it does — the glide "finished" with the page still in the
+        // green middle of the dive. So look again once things are still, and
+        // finish the job if it did not land.
+        window.setTimeout(() => {
+          if (anim || touching) return;
+          if (Math.abs(window.scrollY - to) > 4 && tries++ < 4) glide(to);
+          else tries = 0;
+        }, 250);
       };
       anim = requestAnimationFrame(step);
     };
@@ -54,8 +65,8 @@ export function useScrollComplete(
       lastY = y;
       later();
     };
-    const takeOver = () => stop();
-    const down = () => { touching = true; stop(); };
+    const takeOver = () => { tries = 0; stop(); };
+    const down = () => { touching = true; tries = 0; stop(); };
     const up = () => { touching = false; later(); };
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("wheel", takeOver, { passive: true });
