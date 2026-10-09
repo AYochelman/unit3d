@@ -25,31 +25,6 @@ import { fmtILS } from "@/lib/format";
 import { useLivePricer } from "@/lib/live-price";
 import { cn } from "@/lib/cn";
 
-
-// Battalion slugs that have a ready-to-download STL sample at /stl-samples/<slug>.stl
-const STL_AVAILABLE = new Set<string>([
-  "givati-432-tzabar",
-  "givati-435-rotem",
-  "kfir-90-nachshon",
-  "kfir-92-shimshon",
-  "kfir-93-haruv",
-  "kfir-94-duchifat",
-  "kfir-97-netzah-yehuda",
-  "golani-12-barak",
-  "golani-13-gideon",
-  "golani-51-habokim",
-  "nahal-50-haharel",
-  "nahal-932-granite",
-  "armor-7-75-romach",
-  "armor-7-77-oz",
-  "nahal-pelsar",
-]);
-
-// Battalion slugs with a print-ready Bambu 3MF at /3mf/<slug>.3mf
-const THREEMF_AVAILABLE = new Set<string>([
-  "nahal-pelsar",
-]);
-
 type FilterId = "all" | BranchNode["id"];
 
 const FILTERS: { id: FilterId; label: string }[] = [
@@ -582,8 +557,6 @@ function BattalionCard({
   const hue = battalion.fallbackHue ?? brigade.fallbackHue ?? branch.fallbackHue;
   const shape =
     battalion.fallbackShape ?? brigade.fallbackShape ?? branch.fallbackShape;
-  const hasStl = STL_AVAILABLE.has(battalion.slug);
-  const has3mf = THREEMF_AVAILABLE.has(battalion.slug);
   return (
     <div className="group rounded-xl bg-ink-900 border border-ink-800 hover:border-ink-700 hover:-translate-y-0.5 transition-all duration-200 ease-smooth overflow-hidden flex flex-col">
       <div
@@ -607,18 +580,6 @@ function BattalionCard({
             #{battalion.number}
           </span>
         )}
-        <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
-          {hasStl && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan2/20 text-cyan2 border border-cyan2/40">
-              STL
-            </span>
-          )}
-          {has3mf && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-brand/20 text-brand border border-brand/40">
-              3MF
-            </span>
-          )}
-        </div>
       </div>
       <div className="p-3 flex flex-col flex-1">
         <h4 className="font-bold text-ink-50 leading-tight">{battalion.name}</h4>
@@ -643,24 +604,6 @@ function BattalionCard({
             הזמן
           </Btn>
         </div>
-        {hasStl && (
-          <a
-            href={`/stl-samples/${battalion.slug}.stl`}
-            download
-            className="mt-2 text-center text-xs font-mono py-1.5 rounded border border-cyan2/30 bg-cyan2/5 text-cyan2 hover:bg-cyan2/15 transition-colors"
-          >
-            ⬇ הורד STL לדוגמא
-          </a>
-        )}
-        {has3mf && (
-          <a
-            href={`/3mf/${battalion.slug}.3mf`}
-            download
-            className="mt-2 text-center text-xs font-mono py-1.5 rounded border border-brand/30 bg-brand/5 text-brand hover:bg-brand/15 transition-colors"
-          >
-            ⬇ הורד 3MF להדפסה
-          </a>
-        )}
       </div>
     </div>
   );
