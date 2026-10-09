@@ -34,6 +34,7 @@ import { SCALE_LABEL, SCALE_STEPS, scaleExtra } from "@/lib/personalize";
 import type { MaterialId } from "@/lib/types";
 import ColorSwatch from "@/components/ui/ColorSwatch";
 import OtherFinishColors from "@/components/OtherFinishColors";
+import { ColorModeCards, PhotoColorsBadge, SingleColorNote, photoAmsColors } from "@/components/ColorMode";
 import CheaperOptions from "@/components/CheaperOptions";
 
 // ─── AMS multi-colour options ─────────────────────────────────────────────────
@@ -127,6 +128,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const scaleRatio    = scale > 0 && pickedG > 0 ? (pickedG + scale) / pickedG : 1;
   const scaleAdd      = scaleExtra(pickedG, pickedH, scale);
   const amsSurcharge  = amsOn ? amsExtra(amsColors) : 0;
+  // How many filaments the photographed print used (the designer's own slice).
+  // A variant picker already says what it prints in, with its own photo — no
+  // gap between picture and price to warn about there.
+  const photoColors   = variant ? 1 : f.colors ?? 1;
   const mat           = MATERIAL_BY_ID[material];
   // Fidget list prices assume PLA+, so only the delta above it is a surcharge.
   const baseMatAdd    = MATERIAL_BY_ID.pla_plus.priceAdd;
@@ -214,7 +219,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
       <div className="grid lg:grid-cols-[1fr_420px] gap-8 lg:gap-14 items-start">
 
         {/* ── LEFT: gallery ────────────────────────────────────────────── */}
-        <div className="flex flex-col gap-3 lg:sticky lg:top-24">
+        <div className="flex flex-col gap-3 min-w-0 lg:sticky lg:top-24">
 
           {/* Main image with color tint overlay */}
           <div className="relative aspect-square rounded-2xl overflow-hidden bg-ink-900 border border-ink-800 group">
@@ -283,14 +288,9 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   {f.tag}
                 </Pill>
               )}
-              {displayColors > 1 && (
-                <span
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold border backdrop-blur bg-cyan2/15 text-cyan2 border-cyan2/40 shadow-lg"
-                  dir="ltr"
-                >
-                  AMS · {displayColors}C
-                </span>
-              )}
+              {/* Was "AMS · 2C" whenever the model had two colours — read as
+                  "this comes in two colours" while the price was for one. */}
+              <PhotoColorsBadge photoColors={images.length ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
             </div>
 
             {/* Selected color chip */}
@@ -504,6 +504,12 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               groups={otherFinishes}
               onPick={(m, c) => { setPickedMaterial(m); setPickedColor(c); }}
             />
+            <SingleColorNote
+              photoColors={photoColors}
+              amsOn={amsOn}
+              canMulti
+              onMulti={() => { setAmsColors(photoAmsColors(photoColors)); setAmsOn(true); }}
+            />
           </div>
 
           {/* ── Bigger, same as every other product ─────────────────────── */}
@@ -532,66 +538,17 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             </div>
           </div>
 
-          {/* ── AMS multi-colour toggle ─────────────────────────────────── */}
-          <div
-            className={cn(
-              "rounded-xl border transition-colors overflow-hidden",
-              amsOn ? "border-cyan2/40 bg-cyan2/5" : "border-ink-800 bg-ink-900/40",
-            )}
-          >
-            <div className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  "h-9 w-9 rounded-lg flex items-center justify-center transition-colors",
-                  amsOn ? "bg-cyan2/20 text-cyan2" : "bg-ink-800 text-ink-400",
-                )}>
-                  <Icon name="layers" size={18} />
-                </div>
-                <div>
-                  <div className="font-semibold text-sm">הדפסת AMS — ריבוי צבעים</div>
-                  <div className="text-[11px] text-ink-400 mt-0.5">Bambu X1C · 4 גלילים במקביל</div>
-                </div>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={amsOn}
-                onClick={() => setAmsOn((p) => !p)}
-                className={cn(
-                  "relative h-6 w-11 rounded-full transition-colors flex-shrink-0",
-                  amsOn ? "bg-cyan2" : "bg-ink-700",
-                )}
-              >
-                {/* Travels along the reading direction, so "on" is left in Hebrew. */}
-                <span
-                  className="absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-md transition-[inset-inline-start] duration-200"
-                  style={{ insetInlineStart: amsOn ? 23 : 3 }}
-                />
-              </button>
-            </div>
-            {amsOn && (
-              <div className="px-4 pb-4 border-t border-cyan2/20 pt-3">
-                <div className="text-xs text-ink-400 mb-2.5">מספר צבעים:</div>
-                <div className="grid grid-cols-3 gap-2">
-                  {AMS_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.colors}
-                      onClick={() => setAmsColors(opt.colors)}
-                      className={cn(
-                        "py-2.5 rounded-xl text-xs font-semibold border transition-all",
-                        amsColors === opt.colors
-                          ? "bg-cyan2/20 border-cyan2 text-cyan2 shadow-[0_0_0_2px_rgba(0,194,199,0.2)]"
-                          : "border-ink-700 text-ink-400 hover:border-ink-500",
-                      )}
-                    >
-                      {opt.label}
-                      <div className="font-mono text-[10px] mt-0.5 opacity-80">+{fmtILS(opt.surcharge)}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          {/* ── One colour or several: two cards with their prices ───────── */}
+          <ColorModeCards
+            photoColors={photoColors}
+            amsOn={amsOn}
+            amsColors={amsColors}
+            single={unitPrice - amsSurcharge}
+            extra={amsExtra}
+            options={AMS_OPTIONS}
+            onSingle={() => setAmsOn(false)}
+            onMulti={(n) => { setAmsColors(n); setAmsOn(true); }}
+          />
 
           {/* ── Quantity ───────────────────────────────────────────────── */}
           <div>
