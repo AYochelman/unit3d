@@ -20,6 +20,7 @@ import { useOrderStore } from "@/lib/order-store";
 import UnitOrderScreen, { type UnitPick } from "@/components/UnitOrderScreen";
 import { bulkDiscount } from "@/lib/pricing";
 import { orderHref } from "@/lib/order-link";
+import { CONTACT } from "@/lib/contact";
 import { UNIT_FORMS, unitFormItemId } from "@/lib/unitForms";
 import { fmtILS } from "@/lib/format";
 import { useLivePricer } from "@/lib/live-price";
@@ -209,6 +210,29 @@ export default function CatalogClient() {
             {totals.battalions} גדודים
           </button>
         </div>
+
+        {/* Soldiers' discount — not a number on the page: it is agreed one to
+            one, in a private message, so it opens WhatsApp with the ask
+            already written. */}
+        <a
+          href={`${CONTACT.whatsapp}?text=${encodeURIComponent("היי, אני חייל/ת ואשמח לשמוע על ההנחה לחיילים")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 rounded-2xl border-2 border-flame/60 bg-flame/10 hover:bg-flame/15 hover:border-flame transition-colors"
+        >
+          <span className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-flame text-white shrink-0">
+            <Icon name="star" size={18} />
+          </span>
+          <span>
+            <span className="block font-black text-ink-50">הנחה מיוחדת לחיילים!</span>
+            <span className="block text-sm text-ink-300">שלחו לנו הודעה בפרטי ונסגור לכם מחיר</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-flame font-bold text-sm">
+            <Icon name="whatsapp" size={16} />
+            לפנייה בוואטסאפ
+            <Icon name="arrowLeft" size={14} />
+          </span>
+        </a>
       </header>
 
       {/* Sticky toolbar */}

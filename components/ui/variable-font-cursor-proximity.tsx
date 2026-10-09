@@ -101,21 +101,57 @@ function useProximity(
 
 const LETTER = "inline-block transition-[font-variation-settings] duration-150 ease-out";
 
-/** A run of text as words of letters. */
+const RTL_CHAR = /[\u0590-\u05FF\u0600-\u06FF\uFB1D-\uFDFF]/;
+
+/**
+ * A run of text as words of letters.
+ *
+ * Every letter is its own inline-block, and inline-blocks are laid out in the
+ * paragraph's direction, not by the bidi algorithm. On a right-to-left page a
+ * Latin word or a number therefore came out backwards — "Chill_Cat" read
+ * "taC_llihC" on the live-stream title. So consecutive words with no Hebrew
+ * (or Arabic) in them are kept together in a left-to-right span.
+ */
 function lettersOf(text: string, key: string): ReactNode[] {
-  return text.split(/(\s+)/).map((word, w) =>
-    !word ? null : /^\s+$/.test(word) ? (
-      word
-    ) : (
-      <span key={`${key}-${w}`} className="inline-block whitespace-nowrap">
-        {[...word].map((ch, c) => (
-          <span key={c} data-vfl="" className={LETTER}>
-            {ch}
-          </span>
-        ))}
-      </span>
-    ),
+  const word = (w: string, i: number) => (
+    <span key={`${key}-${i}`} className="inline-block whitespace-nowrap">
+      {[...w].map((ch, c) => (
+        <span key={c} data-vfl="" className={LETTER}>
+          {ch}
+        </span>
+      ))}
+    </span>
   );
+  const parts = text.split(/(\s+)/);
+  const out: ReactNode[] = [];
+  let ltr: ReactNode[] = [];
+  let pendingSpace = "";
+  const flush = (i: number) => {
+    if (ltr.length) out.push(<span key={`${key}-ltr${i}`} dir="ltr">{ltr}</span>);
+    ltr = [];
+  };
+  parts.forEach((part, i) => {
+    if (!part) return;
+    if (/^\s+$/.test(part)) {
+      // A space between two LTR words stays inside their run; otherwise it is
+      // placed after whatever comes next is decided.
+      pendingSpace = part;
+      return;
+    }
+    if (RTL_CHAR.test(part)) {
+      flush(i);
+      if (pendingSpace) out.push(pendingSpace);
+      out.push(word(part, i));
+    } else {
+      if (ltr.length) ltr.push(pendingSpace);
+      else if (pendingSpace) out.push(pendingSpace);
+      ltr.push(word(part, i));
+    }
+    pendingSpace = "";
+  });
+  flush(parts.length);
+  if (pendingSpace) out.push(pendingSpace);
+  return out;
 }
 
 /** Splits every string inside, keeping the elements around them (spans, <br>, <bdi>). */
