@@ -97,7 +97,24 @@
     "tpu:black": false,
     "pla:black": false
   },
-  "shelves": {},
+  "shelves": {
+    "mw-1994754": [
+      "smoke",
+      "trendy"
+    ],
+    "mw-1379807": [
+      "smoke",
+      "trendy"
+    ],
+    "mw-713529": [
+      "smoke",
+      "trendy"
+    ],
+    "mw-3346591": [
+      "smoke",
+      "trendy"
+    ]
+  },
   "materials": [],
   "colors": [
     {
