@@ -573,13 +573,22 @@ function OrderRow({
 
   return (
     <div className={cn("rounded-2xl border bg-ink-900 overflow-hidden", open ? "border-flame/50" : "border-ink-800")}>
-      <button
-        type="button"
+      {/* A div, not a <button>: the copy button sits inside the row, and a
+          button inside a button is invalid HTML (and swallows the click). */}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
         onClick={onToggle}
-        className="w-full flex flex-wrap items-center gap-2 px-4 py-3 text-right hover:bg-ink-800/40 transition-colors"
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); }
+        }}
+        className="w-full flex flex-wrap items-center gap-2 px-4 py-3 text-right cursor-pointer hover:bg-ink-800/40 transition-colors"
       >
         <Icon name={open ? "minus" : "chevDown"} size={14} className="text-ink-500" />
         <span className="font-mono text-sm text-flame" dir="ltr">{o.ref}</span>
+        <CopyRef value={o.ref} />
         <Pill tone={FULFIL[stage].tone} className="text-[10px]">{FULFIL[stage].label}</Pill>
         {stage === "active" && (
           <span className="font-mono text-[11px] text-ink-400" dir="ltr">{ready}/{o.lines.length}</span>
@@ -589,7 +598,7 @@ function OrderRow({
         <span className="flex-1" />
         <span className="text-[11px] text-ink-500">{o.lines.length} פריטים</span>
         <span className="font-black">{total == null ? "לפי הזמנה" : fmtILS(total)}</span>
-      </button>
+      </div>
 
       {open && (
         <>
@@ -794,5 +803,46 @@ function OrderRow({
         </>
       )}
     </div>
+  );
+}
+
+/**
+ * One click puts the order number on the clipboard — it is pasted as the
+ * model's name in the slicer, so the plate on the printer says whose it is.
+ */
+function CopyRef({ value }: { value: string }) {
+  const [done, setDone] = useState(false);
+  const copy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      // Older Safari / no permission: fall back to a hidden selection.
+      const t = document.createElement("textarea");
+      t.value = value;
+      t.style.position = "fixed";
+      t.style.opacity = "0";
+      document.body.appendChild(t);
+      t.select();
+      document.execCommand("copy");
+      t.remove();
+    }
+    setDone(true);
+    setTimeout(() => setDone(false), 1500);
+  };
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      title="העתק מספר הזמנה"
+      aria-label={`העתק ${value}`}
+      className={cn(
+        "inline-flex items-center gap-1 h-7 px-2 rounded-lg border text-[11px] font-semibold transition-colors",
+        done ? "border-good/50 text-good bg-good/10" : "border-ink-700 text-ink-400 hover:border-flame hover:text-flame",
+      )}
+    >
+      <Icon name={done ? "check" : "copy"} size={13} />
+      {done ? "הועתק" : "העתק"}
+    </button>
   );
 }
