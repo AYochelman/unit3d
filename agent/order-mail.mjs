@@ -19,26 +19,101 @@
  *   "site": "https://unit-3d.com"         — optional.
  */
 
-const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+// The shop's letterhead — a copy of shell / lineRow / refChip in
+// lib/order-email.ts (the agent runs plain node and cannot import TS), so this
+// letter looks exactly like the confirmation and the "ready" mail. Change one,
+// change both.
+const INK = "#0A0A0B", GREEN = "#089a47", GREEN_LIGHT = "#3FB872", PAPER = "#F2F2F4", LINE = "#E5E5EA", MUTED = "#8E8E93";
+const FONT = "'Segoe UI', Arial, 'Arial Hebrew', sans-serif";
+const WHATSAPP = "https://wa.me/972509300990", PHONE = "050-930-0990", INSTAGRAM = "@unit3design";
+const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const ils = (n) => "₪" + Number(n).toLocaleString("en-US");
+const pick = (summary, label) => {
+  const hit = (summary ?? []).find((x) => String(x).trim().startsWith(label + ":"));
+  return hit ? hit.slice(hit.indexOf(":") + 1).trim() : null;
+};
+
+function lineRow(l, i) {
+  const material = [pick(l.summary, "חומר"), pick(l.summary, "צבע")].filter(Boolean).join(" · ");
+  const hours = pick(l.summary, "זמן הדפסה");
+  return `
+    <tr><td style="padding:16px 20px;border-bottom:1px solid ${LINE};">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+        <td style="font:700 15px/1.5 ${FONT};color:${INK};"><span style="display:inline-block;min-width:20px;color:${MUTED};font-weight:400;">${i + 1}.</span> ${esc(l.title)}</td>
+        <td align="left" style="font:700 15px/1.5 ${FONT};color:${INK};white-space:nowrap;padding-right:10px;" dir="ltr">${l.price == null ? "לפי הזמנה" : esc(ils(l.price))}</td>
+      </tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:8px;">
+        ${material ? `<tr><td style="font:400 13px/1.7 ${FONT};color:${MUTED};width:86px;">חומר וצבע</td><td style="font:600 13px/1.7 ${FONT};color:${INK};">${esc(material)}</td></tr>` : ""}
+        <tr><td style="font:400 13px/1.7 ${FONT};color:${MUTED};width:86px;">כמות</td><td style="font:600 13px/1.7 ${FONT};color:${INK};">${esc(l.qty ?? 1)}</td></tr>
+        ${hours ? `<tr><td style="font:400 13px/1.7 ${FONT};color:${MUTED};">זמן הדפסה</td><td style="font:600 13px/1.7 ${FONT};color:${INK};">${esc(hours)}</td></tr>` : ""}
+      </table>
+    </td></tr>`;
+}
+
+const shell = (inner, site) => `<!DOCTYPE html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:${PAPER};">
+<div dir="rtl" style="background:${PAPER};padding:24px 12px;">
+<table role="presentation" align="center" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:100%;background:#FFFFFF;border-radius:16px;overflow:hidden;">
+  <tr><td style="background:${INK};padding:26px 24px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="font:700 20px/1 ${FONT};letter-spacing:3px;color:#FAFAFA;" dir="ltr">UNIT<span style="color:${GREEN_LIGHT};"> 3D</span></td>
+      <td align="left" style="font:400 13px/1 ${FONT};color:${MUTED};">הדפסת תלת מימד</td>
+    </tr></table>
+  </td></tr>
+${inner}
+  <tr><td style="background:${PAPER};padding:20px 24px;border-top:1px solid ${LINE};">
+    <div style="font:400 13px/1.9 ${FONT};color:${MUTED};">
+      שאלה? אפשר להשיב למייל הזה, או בוואטסאפ:
+      <a href="${WHATSAPP}" style="color:${GREEN};text-decoration:none;font-weight:700;">${PHONE}</a>
+    </div>
+    <div style="font:400 12px/1.9 ${FONT};color:${MUTED};padding-top:4px;" dir="ltr">${esc(site)} · ${INSTAGRAM}</div>
+  </td></tr>
+</table>
+</div></body></html>`;
+
+const refChip = (ref) =>
+  `<div style="margin-top:16px;display:inline-block;background:${INK};border-radius:999px;padding:9px 18px;font:700 15px/1 ${FONT};color:${GREEN_LIGHT};" dir="ltr">${esc(ref)}</div>`;
 
 export function letter({ ref, name, lines, site }) {
-  const FONT = "Arial,'Segoe UI',sans-serif";
-  const items = (lines ?? [])
-    .map((l) => `<tr><td style="padding:8px 0;border-top:1px solid #e4e4e7;font:400 14px/1.6 ${FONT};color:#18181b;">${esc(l.title)}${l.qty > 1 ? ` × ${esc(l.qty)}` : ""}</td></tr>`)
-    .join("");
-  return `<div dir="rtl" style="background:#f4f4f5;padding:24px 12px;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;">
+  const total = (lines ?? []).every((l) => l.price != null) && (lines ?? []).length
+    ? lines.reduce((s, l) => s + Number(l.price), 0) : null;
+  return shell(`
   <tr><td style="padding:28px 24px 4px;">
-    <div style="font:700 22px/1.4 ${FONT};color:#18181b;">ההזמנה שלך עלתה עכשיו למדפסת 🟢</div>
-    <div style="font:400 15px/1.7 ${FONT};color:#52525b;margin-top:6px;">${name ? esc(name) + ", " : ""}ההדפסה התחילה ממש עכשיו. אפשר לראות אותה בשידור חי: אחוזים, שכבות, וכמה זמן נשאר.</div>
-    <div style="display:inline-block;margin-top:14px;padding:6px 12px;border-radius:8px;background:#f4f4f5;font:700 13px/1 monospace;color:#18181b;" dir="ltr">${esc(ref)}</div>
+    <div style="font:700 22px/1.4 ${FONT};color:${INK};">ההזמנה שלך עלתה עכשיו למדפסת 🟢</div>
+    <div style="font:400 15px/1.7 ${FONT};color:${MUTED};margin-top:6px;">
+      ${name ? esc(name) + ", " : ""}ההדפסה התחילה ממש עכשיו. אפשר לראות את המדפסת עובדת בשידור חי.
+    </div>
+    ${refChip(ref)}
   </td></tr>
-  ${items ? `<tr><td style="padding:20px 24px 0;"><div style="font:700 12px/1 ${FONT};letter-spacing:2px;color:#71717a;padding-bottom:8px;">מה מודפס</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${items}</table></td></tr>` : ""}
-  <tr><td style="padding:24px 24px 28px;">
-    <a href="${esc(site)}/livestream" style="display:inline-block;background:#089a47;color:#ffffff;text-decoration:none;border-radius:10px;padding:13px 26px;font:700 15px/1 ${FONT};">לצפות בשידור החי</a>
-    <div style="font:400 13px/1.7 ${FONT};color:#71717a;margin-top:14px;">כשהכל ירד מהמדפסת ייצא מייל נוסף.</div>
+  ${(lines ?? []).length ? `
+  <tr><td style="padding:24px 24px 8px;">
+    <div style="font:700 12px/1 ${FONT};letter-spacing:2px;color:${MUTED};padding-bottom:10px;">מה מודפס</div>
   </td></tr>
-</table></div>`;
+  <tr><td style="padding:0 4px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${LINE};">
+      ${lines.map(lineRow).join("")}
+    </table>
+  </td></tr>` : ""}
+  ${total == null ? "" : `
+  <tr><td style="padding:20px 24px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="font:400 14px/1.9 ${FONT};color:${MUTED};width:110px;">סה"כ</td>
+      <td style="font:700 14px/1.9 ${FONT};color:${INK};">${esc(ils(total))}</td>
+    </tr></table>
+  </td></tr>`}
+  <tr><td style="padding:20px 24px 4px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${INK};border-radius:12px;">
+      <tr><td style="padding:16px 20px;font:400 14px/1.7 ${FONT};color:#FAFAFA;">
+        המדפסת משודרת בזמן אמת: מצב ההדפסה, אחוזים, וכמה זמן נשאר. כשהכל ירד מהמדפסת ייצא מייל נוסף.
+      </td></tr>
+    </table>
+  </td></tr>
+  <tr><td style="padding:16px 24px 28px;">
+    <a href="${esc(site)}/livestream" style="display:inline-block;background:${GREEN};color:#FFFFFF;text-decoration:none;border-radius:10px;padding:13px 26px;font:700 15px/1 ${FONT};">לצפות בשידור החי</a>
+  </td></tr>
+`, site);
 }
 
 export function makeOrderMail({ SB, headers, cfg, log }) {
