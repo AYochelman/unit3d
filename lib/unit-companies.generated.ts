@@ -13,7 +13,6 @@ export const UNIT_COMPANIES: Record<string, UnitCompanies> = {
   "givati-432-tzabar": { structure: "infantry" },
   "givati-433-shaked": { structure: "infantry" },
   "givati-435-rotem": { structure: "infantry" },
-  "givati-605-engineering": { structure: "engineering" },
   "nahal-50-haharel": { structure: "infantry" },
   "nahal-931": { structure: "infantry" },
   "nahal-932-granite": { structure: "infantry" },
