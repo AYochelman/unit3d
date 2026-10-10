@@ -9,6 +9,12 @@ import { useAdminStore } from "@/lib/admin-store";
 import { couponLabel, couponState, normalizeCode, suggestCode, type Coupon } from "@/lib/coupons";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { PRODUCT_BY_ID } from "@/lib/products";
+import { FIDGETS } from "@/lib/data";
+
+/** The product's shop name, for the customer's "the code is for …". */
+const itemName = (id: string): string | undefined =>
+  PRODUCT_BY_ID[id]?.name ?? FIDGETS.find((f) => f.id === id)?.name;
 
 const FILE = "public/coupons.json";
 
@@ -38,6 +44,7 @@ export default function CouponsTab() {
   const [until, setUntil] = useState("");
   const [minTotal, setMinTotal] = useState("");
   const [note, setNote] = useState("");
+  const [itemId, setItemId] = useState("");
   const [err, setErr] = useState("");
   const [copied, setCopied] = useState("");
 
@@ -47,11 +54,16 @@ export default function CouponsTab() {
     if (clean.length < 3) { setErr("קוד קצר מדי."); return; }
     if (!Number.isFinite(v) || v <= 0) { setErr("ההנחה חייבת להיות מספר גדול מאפס."); return; }
     if (kind === "percent" && v > 90) { setErr("אחוז ההנחה גבוה מדי."); return; }
+    // A fixed price needs the product: the id from its address (…/products/mw-123
+    // or …/fidgets/mw-123), pasted whole or alone.
+    const pid = itemId.trim().match(/(mw-\d+|[a-z][a-z0-9-]+)\/?$/i)?.[1] ?? "";
+    if (kind === "price" && !pid) { setErr("הדבק את הקישור של המוצר (או את המזהה שבסוף הכתובת)."); return; }
     setErr("");
     saveCoupon({
       code: clean,
       kind,
       value: Math.round(v),
+      ...(kind === "price" ? { itemId: pid, itemName: itemName(pid) } : {}),
       until: until || undefined,
       minTotal: minTotal ? Math.round(Number(minTotal)) : undefined,
       note: note.trim() || undefined,
@@ -102,6 +114,7 @@ export default function CouponsTab() {
               >
                 <option value="percent">אחוזים</option>
                 <option value="amount">סכום בשקלים</option>
+                <option value="price">מחיר קבוע למוצר אחד (₪)</option>
               </Select>
               <Input
                 type="number" min={1} dir="ltr" className="w-28"
@@ -110,6 +123,11 @@ export default function CouponsTab() {
               />
             </div>
           </Field>
+          {kind === "price" && (
+            <Field label="המוצר" hint="הדבק את הקישור לעמוד המוצר">
+              <Input dir="ltr" placeholder="unit-3d.com/fidgets/mw-2851979" value={itemId} onChange={(e) => { setItemId(e.target.value); setErr(""); }} />
+            </Field>
+          )}
           <Field label="בתוקף עד" optional>
             <Input type="date" dir="ltr" value={until} onChange={(e) => setUntil(e.target.value)} />
           </Field>

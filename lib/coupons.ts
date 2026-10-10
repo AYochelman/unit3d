@@ -15,9 +15,16 @@ import { fmtILS } from "./format";
  */
 export type Coupon = {
   code: string;
-  /** "percent" — off the items total; "amount" — a flat sum in shekels. */
-  kind: "percent" | "amount";
+  /**
+   * "percent" — off the items total; "amount" — a flat sum in shekels;
+   * "price" — one product sells for `value` shekels a unit (itemId).
+   */
+  kind: "percent" | "amount" | "price";
   value: number;
+  /** For "price": the product it applies to (the id in its address, e.g. mw-2851979). */
+  itemId?: string;
+  /** For "price": the product's name, for the customer and the admin. */
+  itemName?: string;
   /** What it is for, in his words. Shown only in /admin. */
   note?: string;
   /** Last day it works, inclusive (YYYY-MM-DD). Empty = no end. */
@@ -43,7 +50,12 @@ export const couponState = (c: Coupon, now = new Date()): "פעיל" | "כבוי
   !c.active ? "כבוי" : expired(c, now) ? "פג תוקף" : "פעיל";
 
 export const couponLabel = (c: Coupon): string =>
-  c.kind === "percent" ? `${c.value}% הנחה` : `${fmtILS(c.value)} הנחה`;
+  c.kind === "percent" ? `${c.value}% הנחה`
+  : c.kind === "price" ? `${c.itemName ?? "המוצר"} ב-${fmtILS(c.value)}`
+  : `${fmtILS(c.value)} הנחה`;
+
+/** A basket line as a code sees it: which product, what it costs, how many. */
+export type CodeLine = { id?: string; price: number | null; qty: number };
 
 /**
  * What a typed code is worth against this basket.
@@ -56,12 +68,25 @@ export function discountFor(
   typed: string,
   itemsTotal: number | null,
   now = new Date(),
+  lines: CodeLine[] = [],
 ): { applied?: AppliedDiscount; error?: string } {
   const code = normalizeCode(typed);
   if (!code) return {};
-  if (itemsTotal == null) return { error: "בהזמנה יש פריט לתמחור — נסגור את ההנחה בוואטסאפ." };
-
   const hit = list.find((c) => normalizeCode(c.code) === code);
+
+  // One product at a fixed price: only its own lines count, so the rest of
+  // the basket may even be priced by quote.
+  if (hit?.kind === "price") {
+    if (!hit.active) return { error: "הקוד כבר לא בתוקף." };
+    if (expired(hit, now)) return { error: "פג תוקף הקוד." };
+    const mine = lines.filter((l) => l.id && l.id === hit.itemId && l.price != null);
+    if (!mine.length) return { error: `הקוד חל רק על ${hit.itemName ?? "מוצר אחד"} — הוסף אותו להזמנה.` };
+    const off = mine.reduce((sum, l) => sum + Math.max(0, (l.price ?? 0) - hit.value * l.qty), 0);
+    if (off <= 0) return { error: "המוצר כבר במחיר הזה או פחות." };
+    return { applied: { code: normalizeCode(hit.code), label: couponLabel(hit), off: Math.round(off) } };
+  }
+
+  if (itemsTotal == null) return { error: "בהזמנה יש פריט לתמחור — נסגור את ההנחה בוואטסאפ." };
   if (!hit) {
     // The self-checking code every customer leaves with, which is on no list.
     if (isValidCoupon(code)) {

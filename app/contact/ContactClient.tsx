@@ -103,8 +103,15 @@ export default function ContactClient() {
   const priced = items.every((it) => it.price != null);
   const itemsTotal = priced ? items.reduce((sum, x) => sum + (x.price ?? 0), 0) : null;
 
+  // Which product each line is, for a code that applies to one product only.
+  const codeLines = items.map((it) => ({
+    id: String(it.meta?.productId ?? it.meta?.fidgetId ?? ""),
+    price: it.price ?? null,
+    qty: it.qty,
+  }));
+
   const tryCode = () => {
-    const { applied: hit, error } = discountFor(codes, codeInput, itemsTotal);
+    const { applied: hit, error } = discountFor(codes, codeInput, itemsTotal, new Date(), codeLines);
     setApplied(hit ?? null);
     setCodeErr(hit ? "" : error ?? "");
   };
@@ -325,7 +332,7 @@ export default function ContactClient() {
               // the page sat open must not travel with the order.
               ...(applied
                 ? (() => {
-                    const fresh = discountFor(codes, applied.code, itemsTotal).applied;
+                    const fresh = discountFor(codes, applied.code, itemsTotal, new Date(), codeLines).applied;
                     return fresh ? { discount: fresh } : {};
                   })()
                 : {}),
