@@ -74,5 +74,19 @@ scripts/sync-daily.log
 # The Supabase service key on the owner PC, for the one-off folder import.
 agent/supabase-key.txt
 
+# Impeccable (npx impeccable install). The skills, agents and launcher are
+# tracked; these are per-machine or per-run and are not.
+# Engine binaries are fetched per platform by the launcher on first run.
+**/skills/impeccable/scripts/bin/
+# Claude Code hook registration is machine-local by design (hooks.md).
+.claude/settings.local.json
+# Hook cache / local config / per-run critique snapshots.
+**/.impeccable/hook.cache.json
+**/.impeccable/hook.pending.json
+.impeccable/config.local.json
+.impeccable/history/
+.impeccable/critique/*
+!.impeccable/critique/ignore.md
+
 # Which sweep this machine already folded in — per-machine, not shared.
 data/collected-state.json
