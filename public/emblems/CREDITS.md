@@ -216,3 +216,15 @@ IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | plahatz-489.png | גדוד 489 | [File:Kedemnew.png](https://commons.wikimedia.org/wiki/File:Kedemnew.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | plahatz-894.png | גדוד 894 | [File:Tavornew.png](https://commons.wikimedia.org/wiki/File:Tavornew.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | plahatz-668.png | גדוד 668 | [File:Remnew.png](https://commons.wikimedia.org/wiki/File:Remnew.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+
+## From Hebrew Wikipedia (local uploads, free licence)
+
+| File | Unit | Source | Author | Licence |
+|---|---|---|---|---|
+| sq-117-first-jet.png | טייסת 117 | [File:117patch.png](https://he.wikipedia.org/wiki/%D7%98%D7%99%D7%99%D7%A1%D7%AA%20117) | see file page | CC BY-SA 3.0 |
+| sq-69-hammers.png | טייסת 69 | [File:IAF_Squadron_69.png](https://he.wikipedia.org/wiki/%D7%98%D7%99%D7%99%D7%A1%D7%AA%2069) | see file page | Cc-by-sa-3.0 |
+| sq-101-first.png | טייסת 101 | [File:IAF_Squadron_101_2.png](https://he.wikipedia.org/wiki/%D7%98%D7%99%D7%99%D7%A1%D7%AA%20101) | see file page | CC BY-SA 3.0 |
+| sq-109-valley.png | טייסת 109 | [File:IAF_Squadron_109.png](https://he.wikipedia.org/wiki/%D7%98%D7%99%D7%99%D7%A1%D7%AA%20109) | see file page | Cc-by-sa-3.0 |
+| sq-120-international.png | טייסת 120 | [File:IAF_Squadron_120.png](https://he.wikipedia.org/wiki/%D7%98%D7%99%D7%99%D7%A1%D7%AA%20120) | see file page | Cc-by-sa-3.0 |
+| sea-9-dvora.png | ספינות דבורה/שלדג | [File:סמל_דבורים.png](https://he.wikipedia.org/wiki/%D7%A4%D7%9C%D7%92%D7%95%D7%AA%20%D7%94%D7%91%D7%98%22%D7%A9) | see file page | CC BY-SA 3.0 |
+| sea-3-flotilla.png | מטה שייטת 3 | [קובץ:800px-Missile Boat insignia.png](https://he.wikipedia.org/wiki/%D7%A9%D7%99%D7%99%D7%98%D7%AA%20%D7%A1%D7%A4%D7%99%D7%A0%D7%95%D7%AA%20%D7%94%D7%98%D7%99%D7%9C%D7%99%D7%9D) | see file page | CC BY-SA 3.0 |
