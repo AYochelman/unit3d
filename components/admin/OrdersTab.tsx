@@ -183,11 +183,12 @@ export default function OrdersTab() {
       );
       const ok = await adminDecide(token, o.ref, d, note);
       if (!ok) { setLoadErr("ההחלטה לא נשמרה. נסה שוב."); await load(token); return; }
-      if (d === "approved") await tellLive({ ...o, decision: d, decisionNote: note });
+      // No mail here any more: "it is on the printer" goes out from the
+      // printer agent when the job named UNIT3D-<n> actually starts
+      // (agent/order-mail.mjs). Approving is not printing.
       return;
     }
     decideLocal(o.ref, d, note);
-    if (d === "approved") await tellLive({ ...o, decision: d, decisionNote: note });
   };
 
   /**
@@ -640,7 +641,7 @@ function OrderRow({
             {stage === "active" && (
               <div className={cn(
                 "rounded-lg border p-2.5 text-[11px] flex flex-wrap items-center gap-2",
-                o.liveEmailAt ? "border-good/40 bg-good/5" : "border-amber-500/40 bg-amber-500/5",
+                o.liveEmailAt ? "border-good/40 bg-good/5" : o.customer.email && !mailed ? "border-ink-700 bg-ink-900/40" : "border-amber-500/40 bg-amber-500/5",
               )}>
                 <Icon name={o.liveEmailAt ? "check" : "mail"} size={13} className={o.liveEmailAt ? "text-good" : "text-amber-500"} />
                 <span className="text-ink-200">
@@ -648,7 +649,11 @@ function OrderRow({
                     ? "שולח ללקוח מייל…"
                     : o.liveEmailAt
                       ? `הלקוח קיבל מייל שההזמנה עלתה למדפסת, עם קישור לשידור החי · ${when(o.liveEmailAt)}`
-                      : MAIL_PROBLEM[mailed ?? (o.customer.email ? "failed" : "no-address")]}
+                      : mailed
+                        ? MAIL_PROBLEM[mailed]
+                        : o.customer.email
+                          ? "המייל \"עלתה למדפסת\" יישלח לבד כשההדפסה תתחיל (קובץ בשם ההזמנה)."
+                          : MAIL_PROBLEM["no-address"]}
                 </span>
                 <span className="flex-1" />
                 {!mailing && (
@@ -683,7 +688,11 @@ function OrderRow({
                     ? "שולח ללקוח מייל…"
                     : o.readyEmailAt
                       ? `הלקוח קיבל מייל ש${o.delivery === "pickup" ? "מוכן לאיסוף" : "יוצא למשלוח"} · ${when(o.readyEmailAt)}`
-                      : MAIL_PROBLEM[mailed ?? (o.customer.email ? "failed" : "no-address")]}
+                      : mailed
+                        ? MAIL_PROBLEM[mailed]
+                        : o.customer.email
+                          ? "המייל \"עלתה למדפסת\" יישלח לבד כשההדפסה תתחיל (קובץ בשם ההזמנה)."
+                          : MAIL_PROBLEM["no-address"]}
                 </span>
                 <span className="flex-1" />
                 {!mailing && (
