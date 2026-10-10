@@ -147,7 +147,7 @@ export default function UnitOrderScreen({
       `חטיבה: ${unit.brigade}`,
       `חיל: ${unit.corps}`,
       `זרוע: ${unit.branch}`,
-      company ? `${companyWord(unit.slug)}: ${company}` : null,
+      company?.trim() ? `${companyWord(unit.slug)}: ${company.trim()}` : null,
       `מוצר: ${form.label} · ${form.dim}`,
       `חומר: ${MATERIAL_BY_ID[form.material].name}`,
       `צבע: ${colorName}${twoTone ? ` + יותר מצבע אחד (${fmtILS(EXTRA_COLOR_PRICE)})` : ""}`,
@@ -157,7 +157,7 @@ export default function UnitOrderScreen({
       qty > 1 ? `כמות: ${qty}${bulkDiscount(qty) ? ` · ${BULK_NOTE}` : ""}` : null,
       quoteOnly ? "מחיר: לפי הזמנה" : null,
     ].filter(Boolean) as string[];
-    onConfirm({ form, summary, price: total, qty, company });
+    onConfirm({ form, summary, price: total, qty, company: company?.trim() || undefined });
   };
 
   return (
@@ -200,10 +200,12 @@ export default function UnitOrderScreen({
                 <div className="hidden sm:flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">חיל</dt><dd className="text-ink-200 truncate">{unit.corps}</dd></div>
                 <div className="hidden sm:flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">זרוע</dt><dd className="text-ink-200 truncate">{unit.branch}</dd></div>
               </dl>
-              {/* The level under the battalion — optional, it goes on the order. */}
-              {companies.length > 0 && (
-                <div className="mt-3">
-                  <div className="text-[11px] text-ink-500 mb-1.5">{companyWord(unit.slug)} (לא חובה)</div>
+              {/* The level under the battalion — optional, it goes on the order.
+                  Chips where its letters are publicly known; otherwise the
+                  soldier writes it (lib/unit-companies.ts). */}
+              <div className="mt-3">
+                <div className="text-[11px] text-ink-500 mb-1.5">{companyWord(unit.slug)} (לא חובה)</div>
+                {companies.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
                     {companies.map((c) => (
                       <button
@@ -220,8 +222,16 @@ export default function UnitOrderScreen({
                       </button>
                     ))}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <Input
+                    aria-label="הפלוגה שלך"
+                    value={company ?? ""}
+                    onChange={(e) => setCompany(e.target.value.slice(0, 30) || undefined)}
+                    placeholder="לדוגמה: פלוגה ב' / פלוגת להב"
+                    maxLength={30}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </aside>
