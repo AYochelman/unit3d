@@ -1130,6 +1130,29 @@ setInterval(() => {
   if (corsOk !== true) void ensureLiveCors().catch(() => {});
 }, 10 * 60 * 1000);
 
+// ─── Keeping itself current (Pi) ────────────────────────────────────────────
+// The Pi installs from a git clone and then ran that code forever: every agent
+// fix waited for someone to log into it. Under systemd (which restarts it),
+// and only while idle — never mid-print — it pulls main twice a day and exits
+// when its own files changed, so the service comes back up on the new code.
+// On Windows nothing restarts a stopped agent, so there it never does this.
+function selfUpdate() {
+  if (!process.env.INVOCATION_ID) return;                 // not under systemd
+  const repo = path.resolve(HERE, "..");
+  if (!fs.existsSync(path.join(repo, ".git"))) return;
+  if (state() === "printing" || state() === "paused") return;
+  const before = spawnSync("git", ["-C", repo, "rev-parse", "HEAD:agent"], { encoding: "utf8" }).stdout.trim();
+  const pull = spawnSync("git", ["-C", repo, "pull", "--ff-only", "--quiet"], { encoding: "utf8", timeout: 120_000 });
+  if (pull.status !== 0) { log("self-update: git pull failed:", (pull.stderr || "").trim().slice(0, 200)); return; }
+  const after = spawnSync("git", ["-C", repo, "rev-parse", "HEAD:agent"], { encoding: "utf8" }).stdout.trim();
+  if (before && after && before !== after) {
+    log("self-update: new agent code pulled - restarting on it");
+    setTimeout(() => process.exit(0), 1500);
+  }
+}
+setTimeout(selfUpdate, 60_000);
+setInterval(selfUpdate, 12 * 60 * 60 * 1000);
+
 log(`agent ${VERSION} running - printer ${host} - updating every ${STATUS_EVERY / 1000}s`);
 
 // Live video only starts when a print does, which means an unconfigured setup
