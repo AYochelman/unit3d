@@ -184,3 +184,35 @@ IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | ad-arrow-136.png | גדוד 136 - חץ | [File:Israeli Air Defense batalion 136 logo.png](https://commons.wikimedia.org/wiki/File:Israeli_Air_Defense_batalion_136_logo.png) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
 | 669-rescue.png | יחידה 669 | [File:Emblème de l'Unité 669 (יחידת החילוץ והפינוי בהיטס).svg](https://commons.wikimedia.org/wiki/File:Embl%C3%A8me_de_l%27Unit%C3%A9_669_(%D7%99%D7%97%D7%99%D7%93%D7%AA_%D7%94%D7%97%D7%99%D7%9C%D7%95%D7%A5_%D7%95%D7%94%D7%A4%D7%99%D7%A0%D7%95%D7%99_%D7%91%D7%94%D7%99%D7%98%D7%A1).svg) | Futurhit12 / IDF Spokesperson's Unit | CC BY-SA 3.0 |
 | med-7058.png | גדוד רפואה 7058 (גבעתי) | [File:תג גדוד 7058.png](https://commons.wikimedia.org/wiki/File:%D7%AA%D7%92_%D7%92%D7%93%D7%95%D7%93_7058.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| para-5135-james.png | גדוד 5135 (מיל') | [File:Sayret tzanhanim insignia.png](https://commons.wikimedia.org/wiki/File:Sayret_tzanhanim_insignia.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| givati-424-shualey-shimshon.png | גדוד 424 | [File:Sayret givati.png](https://commons.wikimedia.org/wiki/File:Sayret_givati.png) | Yarin50 | CC BY-SA 4.0 |
+| nahal-pelsar.png | פלס"ר נח"ל | [File:IDF Gadsar Nahal badge.png](https://commons.wikimedia.org/wiki/File:IDF_Gadsar_Nahal_badge.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| kfir-93-haruv.png | גדוד 93 | [File:Haruvtag.png](https://commons.wikimedia.org/wiki/File:Haruvtag.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| armor-7-recon-75.png | גדוד הסיור 75 | [File:סיכת לוחם פלסר 7 החדשה.png](https://commons.wikimedia.org/wiki/File:%D7%A1%D7%99%D7%9B%D7%AA_%D7%9C%D7%95%D7%97%D7%9D_%D7%A4%D7%9C%D7%A1%D7%A8_7_%D7%94%D7%97%D7%93%D7%A9%D7%94.png) | Eliran t / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| art-215-405-cheetz-shahor.png | גדוד 405 | [File:Israeli 405 "Tiger" Artillery Battalion lapel pin.jpg](https://commons.wikimedia.org/wiki/File:Israeli_405_%22Tiger%22_Artillery_Battalion_lapel_pin.jpg) | IDF Spokesperson's Unit | CC BY-SA 4.0 |
+| art-282-403.png | גדוד 403 | [File:Gdud 403 Eyal Amud aEsh.jpg](https://commons.wikimedia.org/wiki/File:Gdud_403_Eyal_Amud_aEsh.jpg) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| art-meteor-uav.png | גדוד מל"טים תוקפניים | [File:Gdud Rohev Shamaim Tag.png](https://commons.wikimedia.org/wiki/File:Gdud_Rohev_Shamaim_Tag.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| ci-595-nesher.png | גדוד 595 | [File:Gdud Ait.png](https://commons.wikimedia.org/wiki/File:Gdud_Ait.png) | McKaby / IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| ci-636-rotem.png | גדוד 636 | [File:Nizan badge.png](https://commons.wikimedia.org/wiki/File:Nizan_badge.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| ci-727-eitam.png | גדוד 727 | [File:Eitam.png](https://commons.wikimedia.org/wiki/File:Eitam.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| ci-869-nitzan.png | גדוד 869 | [File:Shahaf badge.png](https://commons.wikimedia.org/wiki/File:Shahaf_badge.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| borders-caracal.png | גדוד קרקל | [File:Logo caracal.png](https://commons.wikimedia.org/wiki/File:Logo_caracal.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| bd-ephraim.png | חטיבת אפרים | [File:421px-YoSH h-Efraim 2.png](https://commons.wikimedia.org/wiki/File:421px-YoSH_h-Efraim_2.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| bd-etzion.png | חטיבת עציון | [File:426px-YoSH h-Etzion.png](https://commons.wikimedia.org/wiki/File:426px-YoSH_h-Etzion.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| bd-judea.png | חטיבת יהודה | [File:Hatmar Yehuda tag from 2023.svg](https://commons.wikimedia.org/wiki/File:Hatmar_Yehuda_tag_from_2023.svg) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| bd-arava.png | חטיבת הערבה | [File:AravaBrigade.png](https://commons.wikimedia.org/wiki/File:AravaBrigade.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| commando-duvdevan.png | דובדבן | [File:סמל דובדבן.jpg](https://commons.wikimedia.org/wiki/File:%D7%A1%D7%9E%D7%9C_%D7%93%D7%95%D7%91%D7%93%D7%91%D7%9F.jpg) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| commando-rimon.png | רימון | [File:יחידת רימון.png](https://commons.wikimedia.org/wiki/File:%D7%99%D7%97%D7%99%D7%93%D7%AA_%D7%A8%D7%99%D7%9E%D7%95%D7%9F.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| sq-red-baron.png | טייסת הברון האדום | [File:Red Baron Squadron Tag.svg](https://commons.wikimedia.org/wiki/File:Red_Baron_Squadron_Tag.svg) | Matankic / Israel Defense Forces | CC BY-SA 3.0 |
+| ad-davids-sling.png | סוללת שרביט קסמים | [File:Israeli Air Defense Command batalion 66 Ram new logo David's Sling.jpg](https://commons.wikimedia.org/wiki/File:Israeli_Air_Defense_Command_batalion_66_Ram_new_logo_David%27s_Sling.jpg) | Israel Defense Forces | CC BY-SA 3.0 |
+| shaldag-5101.png | יחידת שלדג | [File:Shaldag.svg](https://commons.wikimedia.org/wiki/File:Shaldag.svg) | KariEllien / Israel Defense Forces | CC BY-SA 3.0 |
+| 8200-hatsav.png | חצב - איסוף גלוי | [File:EmblemChatsav.jpg](https://commons.wikimedia.org/wiki/File:EmblemChatsav.jpg) | IDF Spokesperson's Unit photographer | CC BY-SA 3.0 |
+| lotem-mamram.png | ממר"ם - מרכז מחשבים ומידע | [File:תג יחידת ממרם.svg](https://commons.wikimedia.org/wiki/File:%D7%AA%D7%92_%D7%99%D7%97%D7%99%D7%93%D7%AA_%D7%9E%D7%9E%D7%A8%D7%9D.svg) | אמיר  / Israel Defense Forces | CC BY-SA 3.0 |
+| lotem-matzov.png | מצו"ב - מערכות שו"ב | [File:Matzov-unit-insignia-2020.png](https://commons.wikimedia.org/wiki/File:Matzov-unit-insignia-2020.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| lotem-hoshen.png | חוש"ן - חטיבת השרתים | [File:Hoshen center.png](https://commons.wikimedia.org/wiki/File:Hoshen_center.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| ordnance-7100.png | גדוד תחזוקה 7100 | [File:Masha 7100.png](https://commons.wikimedia.org/wiki/File:Masha_7100.png) | Israel Defense Forces | CC BY-SA 3.0 |
+| ordnance-650.png | גדוד 650 - מרכז שיקום שריון | [File:Yahsham650.png](https://commons.wikimedia.org/wiki/File:Yahsham650.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| plahatz-498.png | גדוד 498 | [File:Shaharnew.png](https://commons.wikimedia.org/wiki/File:Shaharnew.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| plahatz-489.png | גדוד 489 | [File:Kedemnew.png](https://commons.wikimedia.org/wiki/File:Kedemnew.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| plahatz-894.png | גדוד 894 | [File:Tavornew.png](https://commons.wikimedia.org/wiki/File:Tavornew.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |
+| plahatz-668.png | גדוד 668 | [File:Remnew.png](https://commons.wikimedia.org/wiki/File:Remnew.png) | IDF Spokesperson's Unit | CC BY-SA 3.0 |

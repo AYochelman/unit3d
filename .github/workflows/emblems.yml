@@ -24,6 +24,10 @@ on:
         description: "למשוך רשימת קבצי סמלים מקטגוריות צה\"ל בקומונס"
         type: boolean
         default: false
+      wiki:
+        description: "לחפש סמלים בוויקיפדיה העברית והאנגלית ליחידות שעדיין בלי סמל"
+        type: boolean
+        default: false
   # Commons files get replaced and re-licensed; a monthly pass catches that.
   schedule:
     - cron: "20 4 2 * *"
@@ -63,6 +67,13 @@ jobs:
         run: npm run emblems:catalog
         continue-on-error: true
 
+      # Hebrew Wikipedia keeps many unit tags as local files the Commons
+      # inventory never sees. Candidates only, downloaded for a person to look at.
+      - name: Look on the Wikipedias
+        if: inputs.wiki
+        run: npm run emblems:wiki
+        continue-on-error: true
+
       - name: Fetch emblems
         env:
           FORCE: ${{ inputs.force && '--force' || '' }}
@@ -73,7 +84,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for p in public/emblems data/emblem-candidates.json data/emblem-catalog.json; do
+          for p in public/emblems data/emblem-candidates.json data/emblem-catalog.json data/wiki-emblem-candidates.json data/emblem-review; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
           if git diff --cached --quiet; then

@@ -28,6 +28,7 @@ import mqtt from "mqtt";
 import { makeR2 } from "./r2.mjs";
 import { VERSION } from "./version.mjs";
 import { HINT } from "./hints.mjs";
+import { makeOrderMail } from "./order-mail.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(HERE, "config.json");
@@ -73,6 +74,9 @@ async function upsertStatus(row) {
   });
   if (!res.ok) log("status write failed:", res.status, (await res.text()).slice(0, 200));
 }
+
+// "It is on the printer now" — once per order, when its job starts (order-mail.mjs).
+const tellPrinting = makeOrderMail({ SB, headers: sbHeaders, cfg, log });
 
 async function insertJob(row) {
   const res = await fetch(`${SB}/rest/v1/printer_jobs?on_conflict=key`, {
@@ -215,6 +219,7 @@ async function watchFinish() {
   const name = jobName();
   if (s === "printing" && name) {
     wasPrinting = true;
+    void tellPrinting(orderRef(last.print ?? {}));
     currentKey = currentKey || `${name}·${new Date().toISOString().slice(0, 16)}`;
     return;
   }
