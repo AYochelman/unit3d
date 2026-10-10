@@ -19,7 +19,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { makeOrderMail } from "../agent/order-mail.mjs";
+import { letter, makeOrderMail } from "../agent/order-mail.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const shop = JSON.parse(fs.readFileSync(path.join(ROOT, "public", "shop.json"), "utf8"));
@@ -32,6 +32,26 @@ if (!SB || !KEY || !PRIVATE) {
   process.exit(0);
 }
 
+// A manual run with TEST_TO sends one sample letter there and stops — proof
+// the EmailJS key works, without touching any order.
+if (process.env.TEST_TO) {
+  const e = shop.emailjs ?? {};
+  const r = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      service_id: e.serviceId, template_id: e.templateId, user_id: e.publicKey, accessToken: PRIVATE,
+      template_params: {
+        to_email: process.env.TEST_TO, to_name: "בדיקה", subject: "בדיקה · ההזמנה UNIT3D-TEST עלתה עכשיו למדפסת",
+        order_ref: "UNIT3D-TEST", reply_to: "orders@unit-3d.com",
+        message_html: letter({ ref: "UNIT3D-TEST", name: "בדיקה", lines: [{ title: "מוצר לדוגמה", qty: 1 }], site: "https://unit-3d.com" }),
+      },
+    }),
+  });
+  console.log(`::notice::test mail to ${process.env.TEST_TO}: ${r.status} ${(await r.text()).slice(0, 160)}`);
+  process.exit(0);
+}
+
 const headers = { apikey: KEY, ...(KEY.startsWith("ey") ? { Authorization: `Bearer ${KEY}` } : {}), "Content-Type": "application/json" };
 const log = (...a) => console.log(...a);
 
@@ -40,7 +60,7 @@ if (!res.ok) { console.log(`::warning::printer_status ${res.status}`); process.e
 const [row] = await res.json();
 const ref = String(row?.job_name ?? "").match(/UNIT3D-\d{3,}/i)?.[0]?.toUpperCase();
 const fresh = row?.updated_at && Date.now() - Date.parse(row.updated_at) < 10 * 60_000;
-log(`printer: ${row?.state ?? "?"} · job ${row?.job_name ?? "-"} · ${fresh ? "fresh" : "stale"}`);
+console.log(`::notice::printer ${row?.state ?? "?"} · job ${row?.job_name ?? "-"} · ${fresh ? "fresh" : "stale"}`);
 if (row?.state !== "printing" || !ref || !fresh) process.exit(0);
 
 const tell = makeOrderMail({ SB, headers, cfg: { emailjs: { privateKey: PRIVATE }, site: "https://unit-3d.com" }, log });

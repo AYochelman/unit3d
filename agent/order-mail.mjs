@@ -21,7 +21,7 @@
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-function letter({ ref, name, lines, site }) {
+export function letter({ ref, name, lines, site }) {
   const FONT = "Arial,'Segoe UI',sans-serif";
   const items = (lines ?? [])
     .map((l) => `<tr><td style="padding:8px 0;border-top:1px solid #e4e4e7;font:400 14px/1.6 ${FONT};color:#18181b;">${esc(l.title)}${l.qty > 1 ? ` × ${esc(l.qty)}` : ""}</td></tr>`)
