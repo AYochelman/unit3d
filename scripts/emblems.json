@@ -1532,14 +1532,14 @@
     "nickname": "ג'יימס",
     "parent": "paratroopers",
     "parentName": "חטיבת הצנחנים",
-    "englishName": "",
-    "file": null,
+    "englishName": "Sayeret Tzanhanim (Paratroopers Reconnaissance)",
+    "file": "File:Sayret tzanhanim insignia.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Sayeret Tzanhanim insignia, the paratroopers' recon unit."
   },
   {
     "slug": "para-pelsar",
@@ -1617,14 +1617,14 @@
     "nickname": "שועלי שמשון (פלס\"ר)",
     "parent": "givati",
     "parentName": "חטיבת גבעתי",
-    "englishName": "",
-    "file": null,
+    "englishName": "Givati 846th Reconnaissance (Shualei Shimshon)",
+    "file": "File:Sayret givati.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Sayeret Givati, which is the Shualei Shimshon recon battalion. 'Seal of sayret givati.jpg' is another version."
   },
   {
     "slug": "givati-605-engineering",
@@ -1702,14 +1702,14 @@
     "nickname": "פלס\"ר",
     "parent": "nahal",
     "parentName": "חטיבת הנח\"ל",
-    "englishName": "",
-    "file": null,
+    "englishName": "Nahal Gadsar (934)",
+    "file": "File:IDF Gadsar Nahal badge.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Gadsar Nahal badge. 'Sayret nahal 934 seal.png' is an alternative."
   },
   {
     "slug": "kfir-90-nachshon",
@@ -1753,14 +1753,14 @@
     "nickname": "חרוב",
     "parent": "kfir",
     "parentName": "חטיבת כפיר",
-    "englishName": "",
-    "file": null,
+    "englishName": "Kfir 93rd Battalion (Haruv)",
+    "file": "File:Haruvtag.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Haruv tag. 'סמל סיירת חרוב 93.jpg' is also 93."
   },
   {
     "slug": "kfir-94-duchifat",
@@ -1855,14 +1855,14 @@
     "nickname": "פלס\"ר 7",
     "parent": "armor-7",
     "parentName": "חטיבה 7",
-    "englishName": "",
-    "file": null,
+    "englishName": "7th Brigade Reconnaissance Company (Palsar 7)",
+    "file": "File:סיכת לוחם פלסר 7 החדשה.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says the new Palsar 7 fighter pin. It is a pin, not a shoulder tag."
   },
   {
     "slug": "armor-188-53-shualey-habashan",
@@ -2212,14 +2212,14 @@
     "nickname": "חץ שחור",
     "parent": "art-215",
     "parentName": "אגד אש 215",
-    "englishName": "",
-    "file": null,
+    "englishName": "405th Artillery Battalion",
+    "file": "File:Israeli 405 \"Tiger\" Artillery Battalion lapel pin.jpg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says 405 Artillery Battalion lapel pin (photo of a pin). The title's nickname 'Tiger' (Namer) differs from the hierarchy's 'Hetz Shahor'."
   },
   {
     "slug": "art-215-411-yuri",
@@ -2246,14 +2246,14 @@
     "nickname": null,
     "parent": "art-282",
     "parentName": "אגד אש 282",
-    "englishName": "",
-    "file": null,
+    "englishName": "403rd Artillery Battalion",
+    "file": "File:Gdud 403 Eyal Amud aEsh.jpg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Gdud 403 'Eyal' (Amud HaEsh). The number matches, but the title links it to brigade 215 while the hierarchy has 282. JPG."
   },
   {
     "slug": "art-282-454",
@@ -2314,14 +2314,14 @@
     "nickname": null,
     "parent": "art-meteor",
     "parentName": "אגד מטאור",
-    "englishName": "",
-    "file": null,
+    "englishName": "Unit 5353 (Rochev Shamayim / Sky Rider)",
+    "file": "File:Gdud Rohev Shamaim Tag.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Rohev Shamaim (Sky Rider) battalion tag."
   },
   {
     "slug": "yahalom-sayfan",
@@ -2450,14 +2450,14 @@
     "nickname": "נשר",
     "parent": "ci-recon",
     "parentName": "גדודי סיור גזרתיים",
-    "englishName": "",
-    "file": null,
+    "englishName": "595th Combat Intelligence Battalion (Eit)",
+    "file": "File:Gdud Ait.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'Gdud Ait' = Eit battalion (the hierarchy nickname is עיט). 'Eit temp.png' is another version."
   },
   {
     "slug": "ci-636-rotem",
@@ -2467,14 +2467,14 @@
     "nickname": "רותם",
     "parent": "ci-recon",
     "parentName": "גדודי סיור גזרתיים",
-    "englishName": "",
-    "file": null,
+    "englishName": "Unit 636 (Nitzan)",
+    "file": "File:Nizan badge.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'Nizan badge'. The hierarchy gives 636 the nickname Nitzan. Older version: 'Nitzan unit till 2000.png'."
   },
   {
     "slug": "ci-727-eitam",
@@ -2484,14 +2484,14 @@
     "nickname": "איתם",
     "parent": "ci-recon",
     "parentName": "גדודי סיור גזרתיים",
-    "englishName": "",
-    "file": null,
+    "englishName": "727th Combat Intelligence Battalion (Eitam)",
+    "file": "File:Eitam.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'Eitam'."
   },
   {
     "slug": "ci-869-nitzan",
@@ -2501,14 +2501,14 @@
     "nickname": "ניצן/שחף",
     "parent": "ci-recon",
     "parentName": "גדודי סיור גזרתיים",
-    "englishName": "",
-    "file": null,
+    "englishName": "869th Combat Intelligence Battalion (Shahaf)",
+    "file": "File:Shahaf badge.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'Shahaf badge'. The hierarchy gives 869 the nickname Shahaf. Also 'ShahafTag.jpg' and 'Shahaf.png'."
   },
   {
     "slug": "ci-oketz-bn",
@@ -2586,14 +2586,14 @@
     "nickname": null,
     "parent": "bd-borders",
     "parentName": "מערך הגבולות",
-    "englishName": "",
-    "file": null,
+    "englishName": "Caracal Battalion",
+    "file": "File:Logo caracal.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'Logo caracal'."
   },
   {
     "slug": "borders-lions-of-jordan",
@@ -2637,14 +2637,14 @@
     "nickname": null,
     "parent": "bd-territorial",
     "parentName": "חטיבות מרחביות",
-    "englishName": "",
-    "file": null,
+    "englishName": "Ephraim Territorial Brigade",
+    "file": "File:421px-YoSH h-Efraim 2.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'YoSH h-Efraim' = Judea & Samaria Ephraim brigade. Low-res thumbnail (421px)."
   },
   {
     "slug": "bd-etzion",
@@ -2654,14 +2654,14 @@
     "nickname": null,
     "parent": "bd-territorial",
     "parentName": "חטיבות מרחביות",
-    "englishName": "",
-    "file": null,
+    "englishName": "Etzion Territorial Brigade",
+    "file": "File:426px-YoSH h-Etzion.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'YoSH h-Etzion' = Judea & Samaria Etzion brigade. Low-res thumbnail. ('Etzioni.svg' is the 1948 Etzioni brigade, so it is not used.)"
   },
   {
     "slug": "bd-judea",
@@ -2671,14 +2671,14 @@
     "nickname": null,
     "parent": "bd-territorial",
     "parentName": "חטיבות מרחביות",
-    "englishName": "",
-    "file": null,
+    "englishName": "Judea Territorial Brigade",
+    "file": "File:Hatmar Yehuda tag from 2023.svg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Hatmar Yehuda tag from 2023 (current). Older version: 'Hatmar Yehuda tag until 2023.svg'."
   },
   {
     "slug": "bd-arava",
@@ -2688,14 +2688,14 @@
     "nickname": null,
     "parent": "bd-territorial",
     "parentName": "חטיבות מרחביות",
-    "englishName": "",
-    "file": null,
+    "englishName": "Arava Territorial Brigade",
+    "file": "File:AravaBrigade.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'AravaBrigade'. Older version: 'Arava Territorial Brigade 416 (270 today) old tag.png'."
   },
   {
     "slug": "commando-maglan",
@@ -2740,13 +2740,13 @@
     "parent": "commando-units",
     "parentName": "יחידות הקומנדו",
     "englishName": "",
-    "file": "File:Logo-hativa-217.png",
+    "file": "File:סמל דובדבן.jpg",
     "altFiles": [],
     "license": null,
     "confidence": "medium",
-    "status": "candidate",
+    "status": "unverified",
     "statusNote": "סמל הגדוד עצמו, מוויקישיתוף",
-    "note": ""
+    "note": "Duvdevan unit emblem (was mapped to brigade 217 logo by mistake)."
   },
   {
     "slug": "commando-rimon",
@@ -2756,14 +2756,14 @@
     "nickname": "מסתערבי הדרום",
     "parent": "commando-units",
     "parentName": "יחידות הקומנדו",
-    "englishName": "",
-    "file": null,
+    "englishName": "Rimon Unit",
+    "file": "File:יחידת רימון.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Rimon unit."
   },
   {
     "slug": "commando-shaldag-link",
@@ -3096,14 +3096,14 @@
     "nickname": "אימון מתקדם",
     "parent": "training-squadrons",
     "parentName": "טייסות הדרכה ואימון",
-    "englishName": "",
-    "file": null,
+    "englishName": "Red Baron Squadron",
+    "file": "File:Red Baron Squadron Tag.svg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "SVG titled Red Baron Squadron Tag."
   },
   {
     "slug": "sq-113-hornet",
@@ -3572,14 +3572,14 @@
     "nickname": null,
     "parent": "patriot-davids",
     "parentName": "פטריוט ושרביט קסמים",
-    "englishName": "",
-    "file": null,
+    "englishName": "66th Air Defense Battalion (David's Sling)",
+    "file": "File:Israeli Air Defense Command batalion 66 Ram new logo David's Sling.jpg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says battalion 66 Ram new logo, David's Sling. JPG."
   },
   {
     "slug": "shaldag-5101",
@@ -3589,14 +3589,14 @@
     "nickname": "מצבעת מטרות מהאוויר",
     "parent": "air-elite-units",
     "parentName": "יחידות עילית של חיל האוויר",
-    "englishName": "",
-    "file": null,
+    "englishName": "Shaldag Unit (5101)",
+    "file": "File:Shaldag.svg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "SVG titled Shaldag. It is the unit's own emblem, not the Wing 7 emblem. 'Shaldag-logo.gif' is an alternative."
   },
   {
     "slug": "669-rescue",
@@ -3878,14 +3878,14 @@
     "nickname": null,
     "parent": "intel-8200",
     "parentName": "יחידה 8200",
-    "englishName": "",
-    "file": null,
+    "englishName": "Hatzav",
+    "file": "File:EmblemChatsav.jpg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Hatzav emblem. JPG."
   },
   {
     "slug": "8200-cyber",
@@ -4014,14 +4014,14 @@
     "nickname": null,
     "parent": "lotem-units",
     "parentName": "יחידות לוט\"ם",
-    "englishName": "",
-    "file": null,
+    "englishName": "Mamram",
+    "file": "File:תג יחידת ממרם.svg",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "SVG titled Mamram unit tag. 'Mamram.png' is an alternative."
   },
   {
     "slug": "lotem-matzov",
@@ -4031,14 +4031,14 @@
     "nickname": null,
     "parent": "lotem-units",
     "parentName": "יחידות לוט\"ם",
-    "englishName": "",
-    "file": null,
+    "englishName": "Matzov",
+    "file": "File:Matzov-unit-insignia-2020.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Matzov insignia from 2020. 'Matzov-unit-logo.svg' is an alternative."
   },
   {
     "slug": "lotem-hoshen",
@@ -4048,14 +4048,14 @@
     "nickname": null,
     "parent": "lotem-units",
     "parentName": "יחידות לוט\"ם",
-    "englishName": "",
-    "file": null,
+    "englishName": "Hoshen Center",
+    "file": "File:Hoshen center.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Hoshen center."
   },
   {
     "slug": "cyber-c4i",
@@ -4150,14 +4150,14 @@
     "nickname": null,
     "parent": "ordnance",
     "parentName": "חיל החימוש",
-    "englishName": "",
-    "file": null,
+    "englishName": "7100 Maintenance Center (Masha 7100)",
+    "file": "File:Masha 7100.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "high",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title says Masha 7100. Older variant: 'Masha 7100 old variant.png'."
   },
   {
     "slug": "ordnance-7150",
@@ -4184,14 +4184,14 @@
     "nickname": null,
     "parent": "ordnance",
     "parentName": "חיל החימוש",
-    "englishName": "",
-    "file": null,
+    "englishName": "Unit 650",
+    "file": "File:Yahsham650.png",
     "altFiles": [],
     "license": null,
-    "confidence": "low",
-    "status": "pending",
+    "confidence": "medium",
+    "status": "unverified",
     "statusNote": "",
-    "note": ""
+    "note": "Title 'Yahsham650' (unit 650)."
   },
   {
     "slug": "log-trans-6320",
@@ -4583,5 +4583,45 @@
     "status": "pending",
     "statusNote": "אין סמל חופשי בוויקישיתוף - מוצג סמל היחידה שמעליה",
     "note": ""
+  },
+  {
+    "slug": "plahatz-498",
+    "name": "גדוד 498",
+    "level": "גדוד",
+    "englishName": "498th Search & Rescue Battalion (Shahar)",
+    "file": "File:Shaharnew.png",
+    "confidence": "medium",
+    "status": "unverified",
+    "note": "Title 'Shaharnew' (new version). 'Shahar498.png' is the numbered, apparently older version."
+  },
+  {
+    "slug": "plahatz-489",
+    "name": "גדוד 489",
+    "level": "גדוד",
+    "englishName": "489th Search & Rescue Battalion (Kedem)",
+    "file": "File:Kedemnew.png",
+    "confidence": "medium",
+    "status": "unverified",
+    "note": "Title 'Kedemnew' (new version). 'Kedem489.png' is the numbered version."
+  },
+  {
+    "slug": "plahatz-894",
+    "name": "גדוד 894",
+    "level": "גדוד",
+    "englishName": "894th Search & Rescue Battalion (Tavor)",
+    "file": "File:Tavornew.png",
+    "confidence": "medium",
+    "status": "unverified",
+    "note": "Title 'Tavornew'; it belongs to the same new/old series as Kedem and Shahar. 'Tavor.png' is the older version."
+  },
+  {
+    "slug": "plahatz-668",
+    "name": "גדוד 668",
+    "level": "גדוד",
+    "englishName": "668th Search & Rescue Battalion (Ram)",
+    "file": "File:Remnew.png",
+    "confidence": "medium",
+    "status": "unverified",
+    "note": "Title 'Remnew' (Ram, new version), from the same series as Kedem, Shahar and Tavor."
   }
 ]
