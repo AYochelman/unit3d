@@ -1,46 +1,25 @@
-// From the unit audit (9.10): the standard sub-unit type of each battalion where a
-// company level applies. No battalion had company NAMES in a public source that
-// held up, so none are listed — see lib/unit-companies.ts for the rule.
+// Company letters per battalion, only where public sources give them (research
+// 10.10.2026: news, memorial sites, unit citations — via search results).
+// A battalion missing here still takes its company as free text in the order
+// screen. See lib/unit-companies.ts.
 import type { UnitCompanies } from "./unit-companies";
 
+const P = (...l: string[]) => l.map((x) => `פלוגה ${x}`);
+const S = (...l: string[]) => l.map((x) => `סוללה ${x}`);
+
 export const UNIT_COMPANIES: Record<string, UnitCompanies> = {
-  "golani-12-barak": { structure: "infantry" },
-  "golani-13-gideon": { structure: "infantry" },
-  "golani-51-habokim": { structure: "infantry" },
-  "para-101-peten": { structure: "infantry" },
-  "para-202-cobra": { structure: "infantry" },
-  "para-890-efe": { structure: "infantry" },
-  "givati-432-tzabar": { structure: "infantry" },
-  "givati-433-shaked": { structure: "infantry" },
-  "givati-435-rotem": { structure: "infantry" },
-  "givati-605-engineering": { structure: "engineering" },
-  "nahal-50-haharel": { structure: "infantry" },
-  "nahal-931": { structure: "infantry" },
-  "nahal-932-granite": { structure: "infantry" },
-  "kfir-90-nachshon": { structure: "infantry" },
-  "kfir-92-shimshon": { structure: "infantry" },
-  "kfir-93-haruv": { structure: "infantry" },
-  "kfir-94-duchifat": { structure: "infantry" },
-  "kfir-97-netzah-yehuda": { structure: "infantry" },
-  "eng-601-asaf": { structure: "engineering" },
-  "eng-603-machatz": { structure: "engineering" },
-  "eng-605-machatz": { structure: "engineering" },
-  "armor-7-75-romach": { structure: "armor" },
-  "armor-7-77-oz": { structure: "armor" },
-  "armor-7-82-bnei-itshar": { structure: "armor" },
-  "armor-188-53-shualey-habashan": { structure: "armor" },
-  "armor-188-71-ahihoud": { structure: "armor" },
-  "armor-188-74-habokim": { structure: "armor" },
-  "armor-401-9-eshet": { structure: "armor" },
-  "armor-401-46-shelah": { structure: "armor" },
-  "armor-401-52-habokim": { structure: "armor" },
-  "borders-bardelas": { structure: "infantry" },
-  "borders-caracal": { structure: "infantry" },
-  "borders-lions-of-jordan": { structure: "infantry" },
-  "art-215-334-marav": { structure: "artillery" },
-  "art-215-405-cheetz-shahor": { structure: "artillery" },
-  "art-215-411-yuri": { structure: "artillery" },
-  "art-282-403": { structure: "artillery" },
-  "art-282-454": { structure: "artillery" },
-  "art-282-55": { structure: "artillery" },
+  // Armor — letters run across the brigade.
+  "armor-188-53-shualey-habashan": { word: "פלוגה", companies: P("א'", "ב'", "ג'") },
+  "armor-188-74-habokim": { word: "פלוגה", companies: P("ו'", "ז'", "ח'") },
+  "armor-7-82-bnei-itshar": { word: "פלוגה", companies: P("א'", "ב'", "ג'") },
+  "armor-7-77-oz": { word: "פלוגה", companies: P("ו'", "ז'", "ח'") },
+  "armor-401-52-habokim": { word: "פלוגה", companies: P("א'", "ב'", "ג'") },
+  // Golani — letters restart in each battalion.
+  "golani-12-barak": { word: "פלוגה", companies: P("א'", "ב'", "ג'") },
+  "golani-13-gideon": { word: "פלוגה", companies: P("א'", "ב'", "ג'", "ד'") },
+  // Artillery — batteries א'-ג' inside each battalion.
+  "art-215-334-marav": { word: "סוללה", companies: S("א'", "ב'", "ג'") },
+  "art-215-405-cheetz-shahor": { word: "סוללה", companies: S("א'", "ב'", "ג'") },
+  "art-215-411-yuri": { word: "סוללה", companies: S("א'", "ב'", "ג'") },
+  "art-282-55": { word: "סוללה", companies: S("א'", "ב'", "ג'") },
 };
