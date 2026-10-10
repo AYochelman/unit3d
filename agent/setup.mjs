@@ -191,8 +191,21 @@ if (r2Account) {
   live = { ...live, enabled: false };
 }
 
+// ─── The "on the printer now" email (optional) ──────────────────────────────
+// order-mail.mjs sends it when a job named UNIT3D-<n> starts. EmailJS only
+// accepts a send from outside a browser with this key.
+console.log("\n  Customer email when a print starts (optional). Enter skips it.");
+console.log("  EmailJS > Account > Security: turn on 'Allow EmailJS API for non-browser applications',");
+console.log("  then copy the Private Key from the same page.\n");
+const emailKey = await ask(
+  "EmailJS Private Key (Enter to skip)", old?.emailjs?.privateKey || "",
+  (v) => v === "" || /^[A-Za-z0-9_-]{10,}$/.test(v),
+  "letters and digits, from EmailJS > Account > Security. Enter alone skips.",
+);
+
 const config = {
   printer: { host, serial, accessCode, model },
+  ...(emailKey ? { emailjs: { privateKey: emailKey } } : {}),
   ...(live ? { live } : {}),
   supabase: { url: url.replace(/\/$/, ""), serviceKey },
   camera: {

@@ -17,5 +17,8 @@
     "enabled": false,
     "everyMinutes": 30
   },
-  "statusEverySeconds": 5
+  "statusEverySeconds": 5,
+  "emailjs": {
+    "privateKey": "PASTE-THE-EMAILJS-PRIVATE-KEY-HERE"
+  }
 }
