@@ -20,6 +20,7 @@ import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { UNIT_FORMS, UNIT_FORM_GROUP, unitFormItemId, type UnitForm, type UnitFormGroup, type UnitFormId } from "@/lib/unitForms";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { companiesFor, companyWord } from "@/lib/unit-companies";
 
 export type UnitPick = {
   slug: string;
@@ -27,6 +28,8 @@ export type UnitPick = {
   brigade: string;
   corps: string;
   branch: string;
+  /** Picked on the catalog card; the order screen opens on it. */
+  company?: string;
 };
 
 const GROUPS: UnitFormGroup[] = ["emblem", "everyday"];
@@ -68,7 +71,7 @@ export default function UnitOrderScreen({
 }: {
   unit: UnitPick | null;
   onClose: () => void;
-  onConfirm: (order: { form: UnitForm; summary: string[]; price: number | null; qty: number }) => void;
+  onConfirm: (order: { form: UnitForm; summary: string[]; price: number | null; qty: number; company?: string }) => void;
 }) {
   const palette = useFilaments();
   const stock = useAdminStore((s) => s.stock);
@@ -92,6 +95,8 @@ export default function UnitOrderScreen({
   const [twoTone, setTwoTone] = useState(false);
   const [text, setText] = useState("");
   const [qty, setQty] = useState(1);
+  const [company, setCompany] = useState<string | undefined>(unit?.company);
+  const companies = unit ? companiesFor(unit.slug) : [];
 
   useEffect(() => {
     if (!unit) return;
@@ -142,6 +147,7 @@ export default function UnitOrderScreen({
       `חטיבה: ${unit.brigade}`,
       `חיל: ${unit.corps}`,
       `זרוע: ${unit.branch}`,
+      company ? `${companyWord(unit.slug)}: ${company}` : null,
       `מוצר: ${form.label} · ${form.dim}`,
       `חומר: ${MATERIAL_BY_ID[form.material].name}`,
       `צבע: ${colorName}${twoTone ? ` + יותר מצבע אחד (${fmtILS(EXTRA_COLOR_PRICE)})` : ""}`,
@@ -151,7 +157,7 @@ export default function UnitOrderScreen({
       qty > 1 ? `כמות: ${qty}${bulkDiscount(qty) ? ` · ${BULK_NOTE}` : ""}` : null,
       quoteOnly ? "מחיר: לפי הזמנה" : null,
     ].filter(Boolean) as string[];
-    onConfirm({ form, summary, price: total, qty });
+    onConfirm({ form, summary, price: total, qty, company });
   };
 
   return (
@@ -194,6 +200,28 @@ export default function UnitOrderScreen({
                 <div className="hidden sm:flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">חיל</dt><dd className="text-ink-200 truncate">{unit.corps}</dd></div>
                 <div className="hidden sm:flex gap-2"><dt className="text-ink-500 w-12 lg:w-14 shrink-0">זרוע</dt><dd className="text-ink-200 truncate">{unit.branch}</dd></div>
               </dl>
+              {/* The level under the battalion — optional, it goes on the order. */}
+              {companies.length > 0 && (
+                <div className="mt-3">
+                  <div className="text-[11px] text-ink-500 mb-1.5">{companyWord(unit.slug)} (לא חובה)</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {companies.map((c) => (
+                      <button
+                        key={c.label}
+                        type="button"
+                        aria-pressed={company === c.label}
+                        onClick={() => setCompany(company === c.label ? undefined : c.label)}
+                        className={cn(
+                          "px-2.5 py-1 rounded-full border text-xs transition-colors",
+                          company === c.label ? "bg-flame/15 border-flame text-flame" : "border-ink-700 text-ink-300 hover:border-ink-500",
+                        )}
+                      >
+                        {c.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </aside>
