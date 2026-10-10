@@ -1,0 +1,47 @@
+/* Starter token set for the design panel.
+ * Import this before your own stylesheet, then have your CSS read from these
+ * variables instead of hard-coded values - that is what makes the panel able
+ * to move them live. */
+:root {
+  /* type */
+  --font-size-base: 16px;
+  --font-scale: 1.25;
+  --line-height: 1.55;
+  --letter-spacing: 0em;
+  --font-weight-heading: 700;
+
+  /* colour */
+  --color-bg: #ffffff;
+  --color-surface: #f5f4f2;
+  --color-text: #16181c;
+  --color-muted: #5f6570;
+  --color-accent: #1f4ed8;
+  --color-accent-text: #ffffff;
+
+  /* layout */
+  --container-width: 1120px;
+  --gutter: 24px;
+  --space-unit: 8px;
+  --section-gap: 96px;
+
+  /* shape */
+  --radius: 10px;
+  --radius-lg: 20px;
+  --border-width: 1px;
+
+  /* hero */
+  --hero-height: 560px;
+  --hero-pos-x: 50%;
+  --hero-pos-y: 50%;
+  --hero-scale: 1;
+  --hero-overlay: 0.25;
+
+  /* motion */
+  --duration: 220ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-distance: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration: 0ms; --motion-distance: 0px; }
+}
