@@ -43,9 +43,12 @@
 את ההזמנה ושולח ללקוח מייל — פעם אחת, ומסמן אותה כנשלחה. צריך פעם אחת:
 
 1. ב-EmailJS: **Account → Security** → להדליק *Allow EmailJS API for non-browser applications*.
-2. להעתיק משם את ה-**Private Key** ולהוסיף ל-`config.json`:
-   `"emailjs": { "privateKey": "..." }`
-3. להפעיל את הסוכן מחדש. בלוג יופיע `order mail: the customer was told it is printing`.
+2. להעתיק משם את ה-**Private Key**.
+3. להריץ את הגדרות הסוכן — ב-Pi: `cd ~/unit3d/agent && git pull && node setup.mjs`
+   (במחשב: `update.bat` ואז `settings.bat`). Enter על כל השאלות הקיימות, ובשאלה
+   האחרונה להדביק את המפתח.
+4. להפעיל את הסוכן מחדש — ב-Pi: `sudo systemctl restart unit3d-agent`. בלוג
+   יופיע `order mail: the customer was told it is printing` כשהדפסה של הזמנה מתחילה.
 
 בלי המפתח הסוכן כותב בלוג שהלקוח לא קיבל מייל, ואפשר לשלוח ידנית מהאדמין ("שלח עכשיו").
 
