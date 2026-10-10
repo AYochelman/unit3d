@@ -1,0 +1,44 @@
+# "Your order is on the printer now" — checks the printer every 5 minutes and
+# emails the customer once when a job named UNIT3D-<n> is printing.
+# See scripts/order-printing-mail.mjs. Needs two repository secrets:
+# SUPABASE_SERVICE_KEY and EMAILJS_PRIVATE_KEY. Without them it does nothing.
+name: Order on the printer mail
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      test_to:
+        description: "כתובת לבדיקה — שולח מייל לדוגמה לכתובת הזו בלבד"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: order-mail
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/order-printing-mail.mjs
+            agent/order-mail.mjs
+            public/shop.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tell the customer it is printing
+        env:
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          EMAILJS_PRIVATE_KEY: ${{ secrets.EMAILJS_PRIVATE_KEY }}
+          TEST_TO: ${{ inputs.test_to }}
+        run: node scripts/order-printing-mail.mjs
