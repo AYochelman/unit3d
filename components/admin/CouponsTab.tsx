@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
@@ -9,12 +9,23 @@ import { useAdminStore } from "@/lib/admin-store";
 import { couponLabel, couponState, normalizeCode, suggestCode, type Coupon } from "@/lib/coupons";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
-import { PRODUCT_BY_ID } from "@/lib/products";
+import { PRODUCTS, PRODUCT_BY_ID, fidgetGrams } from "@/lib/products";
+import { parseHours } from "@/lib/costing";
+import { useLivePricer, type Priceable } from "@/lib/live-price";
 import { FIDGETS } from "@/lib/data";
 
 /** The product's shop name, for the customer's "the code is for …". */
 const itemName = (id: string): string | undefined =>
   PRODUCT_BY_ID[id]?.name ?? FIDGETS.find((f) => f.id === id)?.name;
+
+/** Everything a fixed-price code can point at: the shop's products and the fidgets. */
+const ITEMS: (Priceable & { name: string })[] = [
+  ...PRODUCTS.map((p) => ({ id: p.id, name: p.name, price: p.price, grams: p.grams, hours: p.hours, material: p.material, colors: 1 })),
+  ...FIDGETS.map((f) => ({ id: f.id, name: f.name, price: f.price, grams: fidgetGrams(f), hours: parseHours(f.time) })),
+].filter((it, i, all) => all.findIndex((x) => x.id === it.id) === i);
+
+/** The id at the end of a pasted address (…/products/mw-123 or …/fidgets/mw-123), or the id alone. */
+const idFromText = (t: string): string => t.trim().match(/(mw-\d+|[a-z][a-z0-9-]+)\/?$/i)?.[1] ?? "";
 
 const FILE = "public/coupons.json";
 
@@ -45,6 +56,17 @@ export default function CouponsTab() {
   const [minTotal, setMinTotal] = useState("");
   const [note, setNote] = useState("");
   const [itemId, setItemId] = useState("");
+  const [query, setQuery] = useState("");
+  // The price the customer sees today, so "₪15 instead of …" is the real saving.
+  const priced = useLivePricer();
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    const byId = ITEMS.find((it) => it.id === idFromText(q));
+    if (byId) return [byId];
+    return ITEMS.filter((it) => it.name.toLowerCase().includes(q) || it.id.includes(q)).slice(0, 8);
+  }, [query]);
+  const chosen = ITEMS.find((it) => it.id === itemId);
   const [err, setErr] = useState("");
   const [copied, setCopied] = useState("");
 
@@ -54,10 +76,10 @@ export default function CouponsTab() {
     if (clean.length < 3) { setErr("קוד קצר מדי."); return; }
     if (!Number.isFinite(v) || v <= 0) { setErr("ההנחה חייבת להיות מספר גדול מאפס."); return; }
     if (kind === "percent" && v > 90) { setErr("אחוז ההנחה גבוה מדי."); return; }
-    // A fixed price needs the product: the id from its address (…/products/mw-123
-    // or …/fidgets/mw-123), pasted whole or alone.
-    const pid = itemId.trim().match(/(mw-\d+|[a-z][a-z0-9-]+)\/?$/i)?.[1] ?? "";
-    if (kind === "price" && !pid) { setErr("הדבק את הקישור של המוצר (או את המזהה שבסוף הכתובת)."); return; }
+    // A fixed price needs the product: picked from the search, or pasted as a link.
+    const pid = itemId || idFromText(query);
+    if (kind === "price" && !pid) { setErr("בחר מוצר מהחיפוש (או הדבק את הקישור שלו)."); return; }
+    if (kind === "price" && chosen && v >= priced(chosen)) { setErr(`המחיר הקבוע צריך להיות נמוך מ-${fmtILS(priced(chosen))}.`); return; }
     setErr("");
     saveCoupon({
       code: clean,
@@ -73,6 +95,8 @@ export default function CouponsTab() {
     setCode(suggestCode());
     setValue(kind === "percent" ? "10" : "20");
     setNote("");
+    setItemId("");
+    setQuery("");
   };
 
   const copy = (c: string) => {
@@ -124,8 +148,42 @@ export default function CouponsTab() {
             </div>
           </Field>
           {kind === "price" && (
-            <Field label="המוצר" hint="הדבק את הקישור לעמוד המוצר">
-              <Input dir="ltr" placeholder="unit-3d.com/fidgets/mw-2851979" value={itemId} onChange={(e) => { setItemId(e.target.value); setErr(""); }} />
+            <Field label="המוצר" hint="חיפוש לפי שם, או הדבקת קישור">
+              {chosen ? (
+                <div className="flex items-center gap-2 h-10 px-3 rounded-xl border border-flame/60 bg-flame/5">
+                  <span className="text-sm font-bold truncate">{chosen.name}</span>
+                  <span className="text-[11px] text-ink-500 whitespace-nowrap">במקום <bdi dir="ltr">{fmtILS(priced(chosen))}</bdi></span>
+                  <span className="flex-1" />
+                  <button type="button" onClick={() => { setItemId(""); setQuery(""); }} className="text-[11px] text-ink-400 hover:text-ink-100 underline">
+                    החלפה
+                  </button>
+                </div>
+              ) : (
+                <div className="relative">
+                  <Input
+                    placeholder="מעבר בקבוק שמן · דרקון · unit-3d.com/fidgets/mw-…"
+                    value={query}
+                    onChange={(e) => { setQuery(e.target.value); setErr(""); }}
+                    aria-label="חיפוש מוצר"
+                  />
+                  {matches.length > 0 && (
+                    <div className="absolute z-20 inset-x-0 top-full mt-1 rounded-xl border border-ink-800 bg-ink-950 shadow-xl max-h-64 overflow-y-auto">
+                      {matches.map((it) => (
+                        <button
+                          key={it.id}
+                          type="button"
+                          onClick={() => { setItemId(it.id); setQuery(""); setErr(""); }}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-start text-sm hover:bg-ink-900"
+                        >
+                          <span className="truncate">{it.name}</span>
+                          <span className="flex-1" />
+                          <span className="font-mono text-[12px] text-ink-400" dir="ltr">{fmtILS(priced(it))}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </Field>
           )}
           <Field label="בתוקף עד" optional>
