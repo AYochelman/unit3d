@@ -24,6 +24,7 @@ import NamesTab from "@/components/admin/NamesTab";
 import OrdersTab from "@/components/admin/OrdersTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import ExpensesTab from "@/components/admin/ExpensesTab";
+import TodoTab from "@/components/admin/TodoTab";
 import ChangelogTab from "@/components/admin/ChangelogTab";
 import ReviewsTab from "@/components/admin/ReviewsTab";
 import TrafficTab from "@/components/admin/TrafficTab";
@@ -34,10 +35,11 @@ import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
 
-type Tab = "design" | "calc" | "orders" | "traffic" | "reviews" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
+type Tab = "todo" | "design" | "calc" | "orders" | "traffic" | "reviews" | "coupons" | "expenses" | "products" | "names" | "approvals" | "stock" | "materials" | "params" | "emblems" | "backup" | "changelog";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "orders", label: "הזמנות" },
+  { id: "todo", label: "משימות" },
   { id: "traffic", label: "תנועה" },
   { id: "reviews", label: "ביקורות" },
   { id: "coupons", label: "קודי הנחה" },
@@ -194,6 +196,7 @@ export default function AdminClient() {
       {tab === "reviews" && <ReviewsTab />}
       {tab === "coupons" && <CouponsTab />}
       {tab === "expenses" && <ExpensesTab />}
+      {tab === "todo" && <TodoTab />}
       {tab === "names" && <NamesTab />}
       {tab === "approvals" && <ApprovalsTab />}
       {tab === "stock" && <StockTab />}
