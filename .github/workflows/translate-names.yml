@@ -1,0 +1,65 @@
+# Hebrew names for every product still titled in English — once a day.
+# See scripts/translate-names.mjs. Uses Claude when the ANTHROPIC_API_KEY
+# secret is set, Google Translate otherwise. A name written in /admin → "שמות"
+# always wins over the machine one.
+name: Translate product names
+
+on:
+  schedule:
+    # 09:20 Israel time in winter, 10:20 in summer — after the morning MakerWorld sync.
+    - cron: "20 7 * * *"
+  workflow_dispatch:
+    inputs:
+      test_title:
+        description: "כותרת לבדיקה — מתרגם רק אותה ולא כותב כלום"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: translate-names
+  cancel-in-progress: false
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Translate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TEST_TITLE: ${{ inputs.test_title }}
+        run: node scripts/translate-names.mjs
+      - name: Commit
+        id: commit
+        if: inputs.test_title == ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/he-names.auto.generated.ts
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Hebrew names for products that were still in English"
+          for i in 1 2 3 4 5; do
+            if git push; then break; fi
+            git pull --rebase origin main || exit 1
+            sleep $((i * 3))
+          done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      # A push made with GITHUB_TOKEN does not start another workflow.
+      - name: Publish the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main

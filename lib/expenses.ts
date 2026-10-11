@@ -13,9 +13,16 @@
  */
 export type Cycle = "once" | "monthly" | "yearly";
 export type Currency = "ILS" | "USD";
+export type Kind = "expense" | "income";
 
 export type Expense = {
   id: string;
+  /**
+   * Money out or money in. Stored in the same table, told apart by the id
+   * (income ids start with "inc-"), so adding income needed no new column and
+   * no migration the owner would have to run.
+   */
+  kind: Kind;
   name: string;
   amount: number;
   currency: Currency;
@@ -46,7 +53,8 @@ export const monthlyILS = (e: Expense, usdRate: number): number => {
 
 const thisYear = (iso: string) => new Date(iso).getFullYear() === new Date().getFullYear();
 
-export function expenseTotals(list: Expense[], usdRate: number) {
+export function expenseTotals(all: Expense[], usdRate: number) {
+  const list = all.filter((e) => e.kind !== "income");
   const monthly = list.reduce((s, e) => s + monthlyILS(e, usdRate), 0);
   const oneOffYear = list
     .filter((e) => e.cycle === "once" && e.date && thisYear(e.date))
@@ -61,8 +69,18 @@ export function expenseTotals(list: Expense[], usdRate: number) {
   };
 }
 
-export const newExpenseId = (): string =>
-  `x${Date.now().toString(36)}${Math.floor(Math.random() * 1296).toString(36)}`;
+export const newExpenseId = (kind: Kind = "expense"): string =>
+  `${kind === "income" ? "inc-" : "x"}${Date.now().toString(36)}${Math.floor(Math.random() * 1296).toString(36)}`;
+
+export const kindOfId = (id: string): Kind => (id.startsWith("inc-") ? "income" : "expense");
+
+/** Common ways money comes in besides the site's own orders. */
+export const INCOME_PRESETS: ExpensePreset[] = [
+  { name: "מכירה בוואטסאפ", currency: "ILS", cycle: "once" },
+  { name: "יריד / דוכן", currency: "ILS", cycle: "once" },
+  { name: "הזמנת יחידה", currency: "ILS", cycle: "once" },
+  { name: "מזומן", currency: "ILS", cycle: "once" },
+];
 
 /**
  * The costs a print shop actually has, as one-click starting points.
@@ -101,7 +119,7 @@ export const EXPENSE_PRESETS: ExpensePreset[] = [
  * to write them back while the table is still empty. Once it is not, this list
  * is inert: it is a rescue, not a seed.
  */
-export const RECOVERED_EXPENSES: Expense[] = [
+export const RECOVERED_EXPENSES: Expense[] = ([
   { id: "xmtuaai5zcg", name: "P2S Printer", amount: 3000, currency: "ILS", cycle: "once", date: "2026-09-09", active: true },
   { id: "xmtuadxjdly", name: "\u05d2\u05dc\u05d9\u05dc PLA \u05e2\u05e9\u05e8\u05d4", amount: 1000, currency: "ILS", cycle: "once", date: "2026-09-09", active: true },
   { id: "xmtuacsksok", name: "\u05d2\u05dc\u05d9\u05dc PLA \u05d6\u05d5\u05d2", amount: 200, currency: "ILS", cycle: "once", date: "2026-09-09", active: true },
@@ -114,7 +132,7 @@ export const RECOVERED_EXPENSES: Expense[] = [
     id: "x-domain", name: "\u05d3\u05d5\u05de\u05d9\u05d9\u05df unit-3d.com", amount: 10.44, currency: "USD", cycle: "yearly",
     date: "2026-09-08", note: "Cloudflare Registrar \u00b7 \u05d7\u05d9\u05d3\u05d5\u05e9 \u05e9\u05e0\u05ea\u05d9", active: true,
   },
-];
+] as Omit<Expense, "kind">[]).map((e) => ({ ...e, kind: "expense" }));
 
 /**
  * The migration that was written but never run.
