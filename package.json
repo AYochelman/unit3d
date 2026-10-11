@@ -35,7 +35,8 @@
     "check:ingest": "node scripts/check-ingest-input.mjs",
     "fetch:hd": "node scripts/fetch-hd.mjs",
     "stamp:3mf": "node scripts/stamp-3mf.mjs",
-    "emblems:wiki": "node scripts/find-wiki-emblems.mjs"
+    "emblems:wiki": "node scripts/find-wiki-emblems.mjs",
+    "translate:names": "node scripts/translate-names.mjs"
   },
   "dependencies": {
     "fflate": "^0.8.2",

@@ -41,7 +41,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "traffic", label: "תנועה" },
   { id: "reviews", label: "ביקורות" },
   { id: "coupons", label: "קודי הנחה" },
-  { id: "expenses", label: "הוצאות" },
+  { id: "expenses", label: "הוצאות והכנסות" },
   { id: "products", label: "מוצרים" },
   { id: "calc", label: "מחשבון עלות" },
   { id: "design", label: "תצוגת עיצוב" },

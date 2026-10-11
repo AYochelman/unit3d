@@ -8,6 +8,7 @@ import { useAdminStore } from "@/lib/admin-store";
 import { IMPORTED, type ImportedShelf } from "@/lib/imported";
 import { SHELF_LABEL, SHELVES } from "@/lib/candidates";
 import { HE_NAMES } from "@/lib/he-names";
+import { HE_NAMES_AUTO } from "@/lib/he-names.auto.generated";
 import { cn } from "@/lib/cn";
 
 const FILE = "lib/he-names.overrides.ts";
@@ -90,7 +91,7 @@ export default function NamesTab() {
   const rows = useMemo(() => {
     const gone = new Set(removed);
     const list = IMPORTED.map((m) => {
-      const current = names[m.id] ?? HE_NAMES[m.id] ?? m.name;
+      const current = names[m.id] ?? HE_NAMES[m.id] ?? HE_NAMES_AUTO[m.id] ?? m.name;
       const on = shelves[m.id] ?? [m.shelf, ...(m.also ?? [])];
       return { id: m.id, original: m.name, current, image: m.image, shelves: on, gone: gone.has(m.id) };
     });
@@ -105,7 +106,7 @@ export default function NamesTab() {
       .slice(0, 300);
   }, [names, q, only, shelves, removed]);
 
-  const english = useMemo(() => IMPORTED.filter((m) => !HEB.test(names[m.id] ?? HE_NAMES[m.id] ?? m.name)).length, [names]);
+  const english = useMemo(() => IMPORTED.filter((m) => !HEB.test(names[m.id] ?? HE_NAMES[m.id] ?? HE_NAMES_AUTO[m.id] ?? m.name)).length, [names]);
   const siteFile = () => fileText(names);
   const shopFile = () => shopFileText(shelves, removed);
 

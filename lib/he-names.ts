@@ -1,4 +1,5 @@
 import { HE_NAME_OVERRIDES } from "./he-names.overrides";
+import { HE_NAMES_AUTO } from "./he-names.auto.generated";
 
 // Hebrew names for the imported models.
 //
@@ -8,9 +9,10 @@ import { HE_NAME_OVERRIDES } from "./he-names.overrides";
 // title is still shown on the product page next to the designer credit — that
 // is what a customer needs in order to find the model at its source.
 //
-// A model with no entry falls back to its original title, so an import that
-// brings in something new is never blocked on translation; it just shows up in
-// English until a name is added here.
+// A model with no entry here gets a machine translation from the daily run
+// (scripts/translate-names.mjs → he-names.auto.generated.ts), and only falls
+// back to its original title until that run has seen it. A name written here,
+// or typed in /admin, always wins over the machine one.
 
 export const HE_NAMES: Record<string, string> = {
   // ── פידג'טים ───────────────────────────────────────────────────────────
@@ -616,6 +618,15 @@ export const HE_NAMES: Record<string, string> = {
   "mw-2851979": "מעבר בקבוק שמן זית",
   "mw-2934729": "מעמד ללפטופ · ויבל אנכי",
   "mw-3256235": "קייס ל-iPhone 17/18 Pro Max",
+  "mw-2587390": "מעמד לשלט PS5 · סיזיפוס",
+  "mw-2798524": "באקי האנמה · פסל קליסטניקס",
+  "mw-3233606": "קופסת צללים פוקימון · צ'רמנדר",
+  "mw-69865": "שלט W l M",
+  "mw-1900285": "הכספת הכי בטוחה",
+  "mw-2060058": "פותחן מגירה ברגל",
+  "mw-3002104": "דיורמה · לוי נגד טיטאן החיה",
+  "mw-1516685": "ערכת פסטה · קופסה, אטריות, קערה ומזלג מצחיק",
+  "mw-3288378": "ספינר פידג'ט קליקר",
 };
 
 /**
@@ -625,4 +636,4 @@ export const HE_NAMES: Record<string, string> = {
  * point of being able to fix one from a phone.
  */
 export const heName = (id: string, fallback: string): string =>
-  HE_NAME_OVERRIDES[id] ?? HE_NAMES[id] ?? fallback;
+  HE_NAME_OVERRIDES[id] ?? HE_NAMES[id] ?? HE_NAMES_AUTO[id] ?? fallback;

@@ -1,6 +1,6 @@
 "use client";
 import { isConfigured, shopConfig } from "./orders-remote";
-import { DEFAULT_USD_RATE, type Expense } from "./expenses";
+import { DEFAULT_USD_RATE, kindOfId, type Expense } from "./expenses";
 
 /**
  * The shop's own books, kept where only the owner can read them.
@@ -23,6 +23,7 @@ type Row = {
 
 const toExpense = (r: Row): Expense => ({
   id: r.id,
+  kind: kindOfId(r.id),
   name: r.name,
   amount: Number(r.amount) || 0,
   currency: r.currency === "USD" ? "USD" : "ILS",

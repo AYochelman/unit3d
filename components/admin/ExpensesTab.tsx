@@ -6,10 +6,13 @@ import Pill from "@/components/ui/Pill";
 import { Field, Input, Select } from "@/components/ui/Field";
 import { useAdminStore } from "@/lib/admin-store";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
+import FinanceBoard from "@/components/admin/FinanceBoard";
+import { adminOrders } from "@/lib/orders-remote";
+import type { PlacedOrder } from "@/lib/orders";
 import { deleteExpenseRow, loadExpenses, saveExpenseRow, saveUsdRate, type ExpensesLoad } from "@/lib/expenses-remote";
 import {
-  CYCLE_HE, EXPENSES_SQL, EXPENSE_PRESETS, RECOVERED_EXPENSES, expenseTotals, inILS, monthlyILS, newExpenseId,
-  type Currency, type Cycle, type Expense, type ExpensePreset,
+  CYCLE_HE, EXPENSES_SQL, EXPENSE_PRESETS, INCOME_PRESETS, RECOVERED_EXPENSES, expenseTotals, inILS, monthlyILS, newExpenseId,
+  type Currency, type Cycle, type Expense, type ExpensePreset, type Kind,
 } from "@/lib/expenses";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -47,6 +50,10 @@ export default function ExpensesTab() {
   const [loadProblem, setLoadProblem] = useState<Exclude<ExpensesLoad, { ok: true }> | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [restored, setRestored] = useState(false);
+  const [orders, setOrders] = useState<PlacedOrder[]>([]);
+  const [ordersNote, setOrdersNote] = useState("");
+  const [show, setShow] = useState<"all" | Kind>("all");
+  const [kind, setKind] = useState<Kind>("expense");
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -72,6 +79,11 @@ export default function ExpensesTab() {
       // how a missing table came to look like deleted data.
       setLoaded(true);
     });
+    // Approved orders are income on their own — nothing to type twice.
+    adminOrders(token).then(
+      (list) => { if (alive) { setOrders(list); setOrdersNote(""); } },
+      () => { if (alive) setOrdersNote("לא הצלחתי לקרוא את ההזמנות — ההכנסות כאן הן רק מה שהקלדת."); },
+    );
     return () => { alive = false; };
   }, [token, setExpenses]);
 
@@ -79,7 +91,7 @@ export default function ExpensesTab() {
 
   const reset = () => {
     setEditing(null);
-    setName(""); setAmount(""); setCurrency("ILS"); setCycle("monthly"); setDate(today()); setNote(""); setErr("");
+    setName(""); setAmount(""); setCurrency("ILS"); setCycle(kind === "income" ? "once" : "monthly"); setDate(today()); setNote(""); setErr("");
   };
 
   const submit = () => {
@@ -87,7 +99,8 @@ export default function ExpensesTab() {
     if (!name.trim()) { setErr("צריך שם."); return; }
     if (!Number.isFinite(v) || v <= 0) { setErr("צריך סכום גדול מאפס."); return; }
     const row: Expense = {
-      id: editing ?? newExpenseId(),
+      id: editing ?? newExpenseId(kind),
+      kind,
       name: name.trim(),
       amount: Math.round(v * 100) / 100,
       currency,
@@ -136,6 +149,7 @@ export default function ExpensesTab() {
 
   const edit = (e: Expense) => {
     setEditing(e.id);
+    setKind(e.kind);
     setName(e.name); setAmount(String(e.amount)); setCurrency(e.currency);
     setCycle(e.cycle); setDate(e.date || today()); setNote(e.note ?? ""); setErr("");
   };
@@ -159,16 +173,16 @@ export default function ExpensesTab() {
   };
 
   const ordered = useMemo(
-    () => [...expenses].sort((a, b) => monthlyILS(b, usdRate) - monthlyILS(a, usdRate) || a.name.localeCompare(b.name, "he")),
-    [expenses, usdRate],
+    () => expenses.filter((e) => show === "all" || e.kind === show).sort((a, b) => monthlyILS(b, usdRate) - monthlyILS(a, usdRate) || a.name.localeCompare(b.name, "he")),
+    [expenses, usdRate, show],
   );
 
   const header = (
     <div>
-      <h2 className="text-lg font-black mb-1">ניהול הוצאות</h2>
+      <h2 className="text-lg font-black mb-1">הוצאות והכנסות</h2>
       <p className="text-xs text-ink-500">
-        כל מה שהחנות משלמת — מנויים חודשיים, תשלומים שנתיים, וקניות חד פעמיות.
-        הכל מתורגם לעלות חודשית אחת, כדי שתדע כמה עולה להחזיק את העסק פתוח.
+        כל מה שהחנות משלמת וכל מה שנכנס. הזמנות מאושרות מהאתר נספרות כהכנסה לבד;
+        כאן מוסיפים רק מה שנכנס בדרך אחרת — וואטסאפ, יריד, מזומן. למטה: רווח או הפסד לכל חודש, ומאז ההתחלה.
       </p>
     </div>
   );
@@ -231,6 +245,8 @@ export default function ExpensesTab() {
         ))}
       </div>
 
+      {loaded && !loadProblem && <FinanceBoard rows={expenses} orders={orders} usdRate={usdRate} ordersNote={ordersNote} />}
+
       {loadProblem && (
         <div className="p-4 rounded-2xl border border-bad/40 bg-bad/5">
           <div className="font-bold text-sm mb-1">
@@ -279,11 +295,33 @@ export default function ExpensesTab() {
       )}
 
       <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-3">
+        <div className="flex gap-1.5" role="radiogroup" aria-label="סוג">
+          {(["expense", "income"] as Kind[]).map((k) => (
+            <button
+              key={k}
+              type="button"
+              role="radio"
+              aria-checked={kind === k}
+              disabled={!!editing && kind !== k}
+              onClick={() => { setKind(k); if (!editing) setCycle(k === "income" ? "once" : "monthly"); }}
+              className={cn(
+                "px-4 h-9 rounded-xl border text-sm font-bold transition-colors disabled:opacity-40",
+                kind === k
+                  ? k === "income" ? "border-good bg-good/10 text-good" : "border-bad bg-bad/10 text-bad"
+                  : "border-ink-800 text-ink-400 hover:text-ink-100",
+              )}
+            >
+              {k === "income" ? "+ הכנסה" : "− הוצאה"}
+            </button>
+          ))}
+        </div>
         {!editing && (
           <div>
-            <div className="text-[11px] text-ink-500 mb-1.5">הוצאות נפוצות — לחיצה ממלאת את הטופס, נשאר רק להקליד סכום:</div>
+            <div className="text-[11px] text-ink-500 mb-1.5">
+              {kind === "income" ? "הכנסות נפוצות" : "הוצאות נפוצות"} — לחיצה ממלאת את הטופס, נשאר רק להקליד סכום:
+            </div>
             <div className="flex flex-wrap gap-1.5">
-              {EXPENSE_PRESETS.map((p) => (
+              {(kind === "income" ? INCOME_PRESETS : EXPENSE_PRESETS).map((p) => (
                 <button
                   key={p.name}
                   type="button"
@@ -298,8 +336,8 @@ export default function ExpensesTab() {
           </div>
         )}
         <div className="grid sm:grid-cols-2 gap-3">
-          <Field label="על מה">
-            <Input placeholder="EmailJS · דומיין · גליל PLA" value={name} onChange={(e) => { setName(e.target.value); setErr(""); }} />
+          <Field label={kind === "income" ? "ממה" : "על מה"}>
+            <Input placeholder={kind === "income" ? "מכירה ביריד · הזמנה בוואטסאפ" : "EmailJS · דומיין · גליל PLA"} value={name} onChange={(e) => { setName(e.target.value); setErr(""); }} />
           </Field>
           <Field label="כמה">
             <div className="flex gap-2">
@@ -320,7 +358,7 @@ export default function ExpensesTab() {
               <option value="once">{CYCLE_HE.once}</option>
             </Select>
           </Field>
-          <Field label={cycle === "once" ? "תאריך התשלום" : "מאיזה תאריך"}>
+          <Field label={cycle === "once" ? (kind === "income" ? "תאריך" : "תאריך התשלום") : "מאיזה תאריך"}>
             <Input type="date" dir="ltr" value={date} onChange={(e) => setDate(e.target.value)} />
           </Field>
         </div>
@@ -329,7 +367,7 @@ export default function ExpensesTab() {
         </Field>
         <div className="flex flex-wrap items-center gap-2">
           <Btn size="sm" icon={editing ? "check" : "plus"} onClick={submit}>
-            {editing ? "שמירת שינוי" : "הוספת הוצאה"}
+            {editing ? "שמירת שינוי" : kind === "income" ? "הוספת הכנסה" : "הוספת הוצאה"}
           </Btn>
           {editing && <Btn size="sm" variant="ghost" onClick={reset}>ביטול</Btn>}
           {err && <span className="text-xs text-bad">{err}</span>}
@@ -346,9 +384,25 @@ export default function ExpensesTab() {
         </div>
       </div>
 
+      <div className="flex gap-1.5">
+        {([["all", "הכל"], ["expense", "הוצאות"], ["income", "הכנסות"]] as const).map(([k, label]) => (
+          <button
+            key={k}
+            type="button"
+            onClick={() => setShow(k)}
+            className={cn(
+              "px-3 h-8 rounded-full border text-[12px]",
+              show === k ? "border-flame bg-flame/10 text-ink-50 font-bold" : "border-ink-800 text-ink-400 hover:text-ink-100",
+            )}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {ordered.length === 0 ? (
         <div className="p-8 text-center text-sm text-ink-500 rounded-2xl border border-ink-800">
-          {loaded ? "עדיין אין הוצאות. הראשונה נוספת למעלה." : "טוען…"}
+          {loaded ? (show === "income" ? "עדיין אין הכנסות שהוקלדו. הזמנות מהאתר נספרות לבד." : "עדיין אין כלום כאן. הראשון נוסף למעלה.") : "טוען…"}
         </div>
       ) : (
         <div className="space-y-2">
@@ -357,13 +411,14 @@ export default function ExpensesTab() {
             return (
               <div key={e.id} className="rounded-2xl border border-ink-800 bg-ink-900 px-4 py-3">
                 <div className="flex flex-wrap items-center gap-2">
+                  {e.kind === "income" && <Pill tone="good" className="text-[10px]">הכנסה</Pill>}
                   <span className="font-bold text-sm">{e.name}</span>
                   <Pill tone={e.cycle === "once" ? "neutral" : e.active ? "good" : "neutral"} className="text-[10px]">
                     {CYCLE_HE[e.cycle]}
                   </Pill>
                   {!e.active && <span className="text-[10px] text-ink-500">מושהה</span>}
-                  <span className="font-mono text-sm" dir="ltr">
-                    {e.currency === "USD" ? `$${e.amount}` : fmtILS(e.amount)}
+                  <span className={cn("font-mono text-sm", e.kind === "income" && "text-good")} dir="ltr">
+                    {e.kind === "income" ? "+" : ""}{e.currency === "USD" ? `$${e.amount}` : fmtILS(e.amount)}
                   </span>
                   {e.currency === "USD" && (
                     <span className="text-[11px] text-ink-500" dir="ltr">≈ {fmtILS(Math.round(inILS(e, usdRate)))}</span>
@@ -399,7 +454,7 @@ export default function ExpensesTab() {
       )}
 
       <p className="text-[11px] text-ink-600">
-        ההוצאות נשמרות במאגר הפרטי שלך, מאחורי הכניסה — לא בקובץ באתר. כל שינוי נשמר מיד.
+        ההוצאות וההכנסות נשמרות במאגר הפרטי שלך, מאחורי הכניסה — לא בקובץ באתר. כל שינוי נשמר מיד.
       </p>
     </div>
   );

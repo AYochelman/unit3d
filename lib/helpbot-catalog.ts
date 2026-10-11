@@ -1,7 +1,6 @@
 import { SHELF_LABEL } from "./candidates";
 import { sellableModels, suggestPrice, type ImportedModel, type ImportedShelf } from "./imported";
-import { HE_NAMES } from "./he-names";
-import { HE_NAME_OVERRIDES } from "./he-names.overrides";
+import { heName as heNameOf } from "./he-names";
 
 /**
  * The help bot's knowledge of what is actually in the shop.
@@ -64,7 +63,7 @@ const STOP = new Set(
 );
 
 const heName = (m: ImportedModel): string =>
-  HE_NAME_OVERRIDES[m.id] ?? HE_NAMES[m.id] ?? m.name;
+  heNameOf(m.id, m.name);
 
 const priceOf = (m: ImportedModel): number =>
   suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus");
