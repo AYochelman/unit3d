@@ -4,7 +4,8 @@ import Btn from "@/components/ui/Btn";
 import Pill from "@/components/ui/Pill";
 import { Input } from "@/components/ui/Field";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
-import { readEvents, type ReadProblem, type SiteEvent } from "@/lib/analytics";
+import { ANALYTICS_SQL, readEvents, type ReadProblem, type SiteEvent } from "@/lib/analytics";
+import { shopConfig } from "@/lib/orders-remote";
 import { cn } from "@/lib/cn";
 
 const RANGES = [
@@ -262,7 +263,7 @@ export default function TrafficTab() {
 
   if (problem) {
     const say = {
-      missing: <>הטבלה <span dir="ltr" className="font-mono text-xs">site_events</span> לא קיימת ב-Supabase, ולכן אף ביקור לא נשמר. צריך להריץ פעם אחת את ה-SQL שב-<span dir="ltr" className="font-mono text-xs">docs/analytics-table.md</span> (Supabase ← SQL Editor).</>,
+      missing: <>הטבלה <span dir="ltr" className="font-mono text-xs">site_events</span> לא קיימת ב-Supabase, ולכן אף ביקור לא נשמר. צריך להריץ פעם אחת את ה-SQL שלמטה ב-Supabase. זה לוקח דקה, ואפשר מהטלפון.</>,
       denied: <>הטבלה קיימת, אבל המשתמש שנכנסת איתו לא מורשה לקרוא אותה. זו הגדרת הרשאות (policy) בטבלה, לא חוסר בנתונים.</>,
       session: <>הכניסה פגה. צא והיכנס שוב.</>,
       other: <>הקריאה מ-Supabase נכשלה.</>,
@@ -274,6 +275,7 @@ export default function TrafficTab() {
           <p className="text-ink-100 font-semibold mb-2">לא הצלחתי לקרוא את התנועה.</p>
           <p className="text-sm text-ink-300 leading-relaxed">{say}</p>
           <p className="mt-3 text-[11px] text-ink-500 font-mono break-all" dir="ltr">{problem.detail}</p>
+          {problem.kind === "missing" && <MakeTable />}
         </div>
       </div>
     );
@@ -336,6 +338,46 @@ export default function TrafficTab() {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * The fix for a missing table, in three taps: copy, open Supabase's SQL editor
+ * on this very project, paste and Run. Nothing is created from here — a table
+ * in the shop's database is the owner's to make, with his own sign-in.
+ */
+function MakeTable() {
+  const [copied, setCopied] = useState(false);
+  const [editor, setEditor] = useState("https://supabase.com/dashboard/projects");
+  useEffect(() => {
+    void shopConfig().then((c) => {
+      const ref = c.supabaseUrl.match(/^https:\/\/([a-z0-9]+)\.supabase\.co/i)?.[1];
+      if (ref) setEditor(`https://supabase.com/dashboard/project/${ref}/sql/new`);
+    });
+  }, []);
+  const copy = () =>
+    navigator.clipboard?.writeText(ANALYTICS_SQL).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }, () => {});
+  return (
+    <div className="mt-4 space-y-3">
+      <ol className="text-sm text-ink-300 space-y-1 list-decimal ps-5">
+        <li>להעתיק את ה-SQL</li>
+        <li>לפתוח את עורך ה-SQL של Supabase (נכנסים עם המשתמש שלך שם)</li>
+        <li>להדביק וללחוץ <b dir="ltr">Run</b>, ואז לחזור לכאן וללחוץ &quot;רענן&quot;</li>
+      </ol>
+      <div className="flex flex-wrap gap-2">
+        <Btn size="sm" icon={copied ? "check" : "copy"} onClick={() => void copy()}>{copied ? "הועתק" : "1. העתקת ה-SQL"}</Btn>
+        <a
+          href={editor}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center h-9 px-4 rounded-xl border border-ink-700 text-sm font-bold text-ink-100 hover:border-flame"
+        >
+          2. פתיחת Supabase
+        </a>
+        <Btn size="sm" variant="ghost" icon="rotate" onClick={() => window.location.reload()}>3. הרצתי — רענון</Btn>
+      </div>
+      <pre dir="ltr" className="text-left overflow-x-auto text-[11px] leading-relaxed bg-ink-950 border border-ink-800 rounded-xl p-3 font-mono max-h-48">{ANALYTICS_SQL}</pre>
     </div>
   );
 }

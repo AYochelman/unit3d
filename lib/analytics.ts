@@ -195,3 +195,57 @@ export async function readEvents(token: string, days = 30): Promise<{ rows: Site
     return { rows: [], problem: { kind: "other", detail: e instanceof Error ? e.message : "network" } };
   }
 }
+
+/**
+ * The one-time migration that creates the table, as shown in /admin → "תנועה"
+ * when it is missing (same text as docs/analytics-table.md), so it can be
+ * copied from the phone straight into Supabase's SQL editor.
+ */
+export const ANALYTICS_SQL = `create table if not exists public.site_events (
+  id            bigint generated always as identity primary key,
+  created_at    timestamptz not null default now(),
+  name          text not null,
+  visit         text not null,
+  path          text not null,
+  source        text not null default 'direct',
+  referrer      text,
+  utm_campaign  text,
+  device        text not null default 'desktop',
+  lang          text,
+  props         jsonb,
+
+  -- אותו תפקיד שיש למגבלות בטבלת הביקורות: דפדפן שמדלג על הקוד שלנו
+  -- עדיין לא יכול לכתוב שורה באורך ספר.
+  constraint site_events_name_valid check (name in (
+    'page_view','product_open','shelf_open','whatsapp_click','order_start',
+    'order_sent','configurator_open','review_sent','live_open','search',
+    'finder_open','finder_done')),
+  constraint site_events_device_valid check (device in ('phone','tablet','desktop')),
+  constraint site_events_len check (
+    char_length(path) <= 200
+    and char_length(visit) <= 40
+    and char_length(source) <= 60
+    and (referrer is null or char_length(referrer) <= 200)
+    and (utm_campaign is null or char_length(utm_campaign) <= 80)
+    and (lang is null or char_length(lang) <= 8)
+  )
+);
+
+create index if not exists site_events_time_idx on public.site_events (created_at desc);
+create index if not exists site_events_visit_idx on public.site_events (visit);
+
+alter table public.site_events enable row level security;
+
+-- כל דפדפן כותב אירוע. אף אחד לא קורא בלי להתחבר: הטבלה היא הספרים של
+-- החנות, לא תוכן ציבורי.
+drop policy if exists site_events_insert_public on public.site_events;
+create policy site_events_insert_public on public.site_events
+  for insert to anon, authenticated with check (true);
+
+drop policy if exists site_events_read_owner on public.site_events;
+create policy site_events_read_owner on public.site_events
+  for select to authenticated using (true);
+
+drop policy if exists site_events_delete_owner on public.site_events;
+create policy site_events_delete_owner on public.site_events
+  for delete to authenticated using (true);`;
