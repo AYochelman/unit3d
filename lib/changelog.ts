@@ -34,6 +34,12 @@ export const KIND_HE: Record<ChangeKind, string> = {
 
 export const CHANGELOG: ChangeDay[] = [
   {
+    date: "2026-10-13",
+    items: [
+      { kind: "admin", text: "תנועה: כשהטבלה חסרה, הלשונית מציגה את ה-SQL עם כפתור העתקה וקישור ישיר לעורך של Supabase — שלוש לחיצות מהטלפון." },
+    ],
+  },
+  {
     date: "2026-10-11",
     items: [
       { kind: "admin", text: "לשונית \"משימות\" באדמין: רשימת to-do עם דחוף ותאריך יעד, נשמרת מיד ואותה רשימה במחשב ובטלפון." },
