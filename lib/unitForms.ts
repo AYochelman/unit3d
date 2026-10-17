@@ -215,7 +215,10 @@ export const UNIT_FORMS: UnitForm[] = [
     recommends: { material: "petg", why: "עומד בחום" },
     group: "everyday",
     art: "ashtray",
-    photo: CONFIG_PRODUCT_BY_ID.ashtray.image,
+    // The owner's own print: a unit emblem in the base, which is what this
+    // screen is choosing. Padded to 4:3 so the tile's object-cover keeps the
+    // whole ashtray in frame.
+    photo: "/studio/ashtray-emblem.webp",
     price: 40,
   },
   {
