@@ -17,6 +17,7 @@ export type UnitFormId =
   | "keychain"
   | "dogtag"
   | "magnet"
+  | "pokerchip"
   | "desk"
   | "wall"
   | "lighter"
@@ -112,6 +113,22 @@ export const UNIT_FORMS: UnitForm[] = [
     group: "emblem",
     art: "coaster",
     price: 75,
+  },
+  {
+    // The shop's own poker-chip model (mw-741443): 4 g and 0.24 h are its real
+    // plate figures, and the photo is its shelf picture. A unit's emblem on a
+    // chip is a natural set for a company's poker night or a release gift.
+    id: "pokerchip",
+    label: "ז'יטון פוקר",
+    desc: "ז'יטון עם הסמל במרכז. סטים לפלוגה לפי הזמנה.",
+    dim: "Ø39mm",
+    grams: 4,
+    hours: 0.24,
+    material: "pla",
+    group: "emblem",
+    art: "pokerchip",
+    photo: CONFIG_PRODUCT_BY_ID.poker_chip.image,
+    price: 12,
   },
   {
     id: "desk",

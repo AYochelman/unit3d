@@ -34,6 +34,12 @@ export const KIND_HE: Record<ChangeKind, string> = {
 
 export const CHANGELOG: ChangeDay[] = [
   {
+    date: "2026-10-17",
+    items: [
+      { kind: "content", text: "לחיילים: ז'יטון פוקר עם סמל היחידה, כאפשרות נוספת במסך ההזמנה של הסמל." },
+    ],
+  },
+  {
     date: "2026-10-13",
     items: [
       { kind: "admin", text: "תנועה: כשהטבלה חסרה, הלשונית מציגה את ה-SQL עם כפתור העתקה וקישור ישיר לעורך של Supabase — שלוש לחיצות מהטלפון." },
