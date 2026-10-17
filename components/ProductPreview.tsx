@@ -86,7 +86,11 @@ export default function ProductPreview({ product, shape, text, number, colorObj,
 
   // Keep the engraving inside the shape's own panel rather than the centre of
   // its bounding box - on a paw the box centre is empty air between the toes.
-  const box = faceTextBox(kind);
+  // A poker chip prints its text on the inlay inside the edge spots, so the
+  // text box is the inner disc, not the whole face.
+  const chip = product.id === "poker_chip";
+  const box0 = faceTextBox(kind);
+  const box = chip ? { ...box0, w: box0.w * 0.68, h: box0.h * 0.62 } : box0;
   const boxW = fw * box.w, boxH = fh * box.h;
   const lines = number ? 2 : 1;
   const quickTextSize = Math.min(
@@ -131,6 +135,34 @@ export default function ProductPreview({ product, shape, text, number, colorObj,
           {product.id === "lighter_case" && (
             <rect x={fw * 0.15} y={-fh * 0.06} width={fw * 0.7} height={fh * 0.08} rx={fw * 0.04} fill="#8E8E93" />
           )}
+          {chip && (() => {
+            // What makes a disc read as a chip: rectangular edge spots in a
+            // contrasting colour, a dashed ring, and a raised inner inlay.
+            const cx = fw / 2, cy = fh / 2, R = fw / 2;
+            const mark = isLight ? "#1C1C1E" : "#F5F5F7";
+            const spots = 8;
+            const sw = R * 0.34, sh = R * 0.2;
+            return (
+              <g>
+                {Array.from({ length: spots }).map((_, i) => (
+                  <rect
+                    key={i}
+                    x={cx - sw / 2}
+                    y={cy - R + R * 0.02}
+                    width={sw}
+                    height={sh}
+                    rx={sh * 0.18}
+                    fill={mark}
+                    opacity="0.92"
+                    transform={`rotate(${(360 / spots) * i + 22.5} ${cx} ${cy})`}
+                  />
+                ))}
+                <circle cx={cx} cy={cy} r={R * 0.74} fill="none" stroke={mark} strokeWidth={R * 0.035} strokeDasharray={`${R * 0.12} ${R * 0.08}`} opacity="0.85" />
+                <circle cx={cx} cy={cy} r={R * 0.66} fill={fg} stroke="rgba(0,0,0,0.35)" strokeWidth={R * 0.02} />
+                <circle cx={cx} cy={cy} r={R * 0.66} fill="rgba(255,255,255,0.08)" />
+              </g>
+            );
+          })()}
           {product.id === "bookmark" && <circle cx={fw / 2} cy={fh * 0.06} r={fw * 0.06} fill="rgba(0,0,0,0.45)" />}
           {product.id === "dog_tag" && <circle cx={fw * 0.12} cy={fh * 0.5} r={fh * 0.08} fill="rgba(0,0,0,0.45)" />}
 
