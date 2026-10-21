@@ -108,9 +108,6 @@ export default function B2BClient() {
             <Btn as="a" href="#b2b-form" size="lg">
               קבל הצעת מחיר
             </Btn>
-            <Btn as="a" href="/gallery?cat=b2b" variant="ghost" size="lg">
-              ראה דוגמאות עסקיות
-            </Btn>
           </div>
         </div>
       </section>

@@ -64,9 +64,6 @@ export default function B2BBlock() {
               <Btn as="a" href="/b2b">
                 קבל הצעת מחיר
               </Btn>
-              <Btn as="a" href="/gallery?cat=b2b" variant="ghost">
-                ראה דוגמאות עסקיות
-              </Btn>
             </div>
           </div>
 
