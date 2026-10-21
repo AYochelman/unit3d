@@ -131,23 +131,52 @@ export const OFFICE_PRODUCTS: Product[] = [
     categories: ["office", "b2b", "trendy"],
     name: "כרטיס ביקור תלת מימדי",
     desc: "כרטיס ביקור תלת מימדי עם אופציה לטקסט בולט, ואפשרות להוספת ברקוד מאחורה.",
-    price: 45, size: "70×70×6mm", time: "1.8h", hours: 1.8, grams: 20,
+    price: 45, size: "70×70×6mm", time: "1.8h", hours: 1.8, grams: 21,
     art: "qr", hue: 150, ams: true, colors: 3, material: "pla_matte",
     tag: "חדש",
     isNew: true,
-    // The angled shot leads — it is the one on the home page, and the card
-    // reads as an object rather than as two flat squares at thumbnail size.
-    image: "/img/products/biz-card-3.webp",
+    // The owner's own print. The angled front leads — it is the one on the
+    // home page, and the card reads as an object at thumbnail size — then the
+    // front, the QR back, and the back at an angle. New file names rather than
+    // overwriting the old ones, so no cache serves the previous card.
+    image: "/img/products/biz-card-v3-1.webp",
     images: [
-      "/img/products/biz-card-3.webp",
-      "/img/products/biz-card-1.webp",
-      "/img/products/biz-card-2.webp",
+      "/img/products/biz-card-v3-1.webp",
+      "/img/products/biz-card-v3-2.webp",
+      "/img/products/biz-card-v3-3.webp",
+      "/img/products/biz-card-v3-4.webp",
     ],
     engraving: {
       label: "הטקסט הבולט",
       placeholder: "UNIT 3D",
       max: 18,
       second: { label: "טלפון / שורה שנייה", placeholder: "050-930-0990", max: 18 },
+    },
+  },
+  {
+    // The owner's own design: a credit-card-sized business card whose cut-out
+    // panels fold up into a phone stand. Weight and time are his plate figures.
+    id: "biz-card-stand",
+    category: "office",
+    categories: ["office", "b2b", "trendy"],
+    name: "כרטיס ביקור שהופך למעמד לטלפון",
+    desc: "כרטיס ביקור אישי עם QR בגודל כרטיס אשראי — נכנס לארנק, ונפתח למעמד לטלפון.",
+    price: 39, size: "85×54mm", time: "45min", hours: 0.75, grams: 12,
+    art: "qr", hue: 150, ams: true, colors: 3, material: "pla_matte",
+    tag: "חדש",
+    isNew: true,
+    image: "/img/products/biz-stand-1.webp",
+    images: [
+      "/img/products/biz-stand-1.webp",
+      "/img/products/biz-stand-2.webp",
+      "/img/products/biz-stand-3.webp",
+      "/img/products/biz-stand-4.webp",
+    ],
+    engraving: {
+      label: "שם",
+      placeholder: "ארז יוכלמן",
+      max: 18,
+      second: { label: "טלפון / מייל", placeholder: "050-930-0990", max: 26 },
     },
   },
   {
