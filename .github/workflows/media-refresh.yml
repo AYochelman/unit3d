@@ -51,21 +51,29 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
 
       - name: Every picture of every model
-        run: npm run backfill:images -- --all
+        run: |
+          npm run backfill:images -- --all 2>&1 | tee /tmp/out.txt
+          tail -n 6 /tmp/out.txt | sed 's/\x1b\[[0-9;]*m//g' | while IFS= read -r l; do [ -n "$l" ] && echo "::notice title=Every picture of every model::$l"; done
         continue-on-error: true
 
       - name: Download them in high quality
-        run: npm run fetch:images -- --all
+        run: |
+          npm run fetch:images -- --all 2>&1 | tee /tmp/out.txt
+          tail -n 6 /tmp/out.txt | sed 's/\x1b\[[0-9;]*m//g' | while IFS= read -r l; do [ -n "$l" ] && echo "::notice title=Download them in high quality::$l"; done
         continue-on-error: true
 
       - name: Clips, 720p
         env:
           VIDEO_LIMIT: "300"
-        run: npm run fetch:videos -- --all
+        run: |
+          npm run fetch:videos -- --all 2>&1 | tee /tmp/out.txt
+          tail -n 4 /tmp/out.txt | sed 's/\x1b\[[0-9;]*m//g' | while IFS= read -r l; do [ -n "$l" ] && echo "::notice title=Clips::$l"; done
         continue-on-error: true
 
       - name: What the shop holds now
-        run: npm run audit:media
+        run: |
+          npm run audit:media 2>&1 | tee /tmp/out.txt
+          tail -n 6 /tmp/out.txt | sed 's/\x1b\[[0-9;]*m//g' | while IFS= read -r l; do [ -n "$l" ] && echo "::notice title=What the shop holds now::$l"; done
         continue-on-error: true
 
       # A bad row must not reach the site.
@@ -85,12 +93,17 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "Every picture, GIF and clip of every model, in high quality"
+          git commit -q -m "Every picture, GIF and clip of every model, in high quality"
+          echo "::notice title=Commit::$(git show --stat --format= HEAD | tail -1)"
+          ok=false
           for i in 1 2 3 4 5; do
-            if git push; then break; fi
-            git pull --rebase origin main || exit 1
-            sleep $((i * 3))
+            if git push 2>/tmp/push.txt; then ok=true; break; fi
+            echo "::warning title=Push $i::$(tail -n 3 /tmp/push.txt | tr '\n' ' ')"
+            git pull --rebase origin main || { echo "::error title=Rebase::failed"; exit 1; }
+            sleep $((i * 5))
           done
+          # A push that never landed must not look like success.
+          if [ "$ok" != true ]; then echo "::error title=Push::never landed"; exit 1; fi
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       # A push made with GITHUB_TOKEN does not start another workflow.
