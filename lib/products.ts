@@ -139,12 +139,12 @@ export const OFFICE_PRODUCTS: Product[] = [
     // home page, and the card reads as an object at thumbnail size — then the
     // front, the QR back, and the back at an angle. New file names rather than
     // overwriting the old ones, so no cache serves the previous card.
-    image: "/img/products/biz-card-v2-1.webp",
+    image: "/img/products/biz-card-v3-1.webp",
     images: [
-      "/img/products/biz-card-v2-1.webp",
-      "/img/products/biz-card-v2-2.webp",
-      "/img/products/biz-card-v2-3.webp",
-      "/img/products/biz-card-v2-4.webp",
+      "/img/products/biz-card-v3-1.webp",
+      "/img/products/biz-card-v3-2.webp",
+      "/img/products/biz-card-v3-3.webp",
+      "/img/products/biz-card-v3-4.webp",
     ],
     engraving: {
       label: "הטקסט הבולט",
