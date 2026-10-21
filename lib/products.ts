@@ -135,16 +135,14 @@ export const OFFICE_PRODUCTS: Product[] = [
     art: "qr", hue: 150, ams: true, colors: 3, material: "pla_matte",
     tag: "חדש",
     isNew: true,
-    // The owner's own print. The angled front leads — it is the one on the
-    // home page, and the card reads as an object at thumbnail size — then the
-    // front, the QR back, and the back at an angle. New file names rather than
-    // overwriting the old ones, so no cache serves the previous card.
-    image: "/img/products/biz-card-v3-1.webp",
+    // The owner's own square shots (the frames are square, so nothing is
+    // cropped): front, QR back, and the same two at an angle.
+    image: "/img/products/biz-card-v4-1.webp",
     images: [
-      "/img/products/biz-card-v3-1.webp",
-      "/img/products/biz-card-v3-2.webp",
-      "/img/products/biz-card-v3-3.webp",
-      "/img/products/biz-card-v3-4.webp",
+      "/img/products/biz-card-v4-1.webp",
+      "/img/products/biz-card-v4-2.webp",
+      "/img/products/biz-card-v4-3.webp",
+      "/img/products/biz-card-v4-4.webp",
     ],
     engraving: {
       label: "הטקסט הבולט",

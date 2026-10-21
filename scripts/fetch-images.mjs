@@ -35,7 +35,9 @@ const ALL = process.argv.includes("--all");
 const REDO = process.argv.includes("--optimize");
 // Nothing on the site is shown wider than a product card. Designers upload
 // 4000px originals, and 230 of those is 137MB of repository nobody reads.
-const MAX_WIDTH = 900;
+// 1400px: the product page shows a photo up to ~720 CSS px wide, and phones
+// and laptops draw at 2x. 900 looked soft there.
+const MAX_WIDTH = 1400;
 const QUALITY = 80;
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
