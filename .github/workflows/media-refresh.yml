@@ -80,31 +80,49 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
 
+      # In batches: one commit of ~4,000 re-encoded photos is several hundred MB,
+      # and GitHub hangs up on a push that size ("unexpected disconnect").
+      # Photos and clips go first, a few hundred at a time; the manifests that
+      # point at them go last, so the site never references a missing file.
+      # Batch pushes made with GITHUB_TOKEN start no deploy of their own.
       - name: Commit
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for p in lib/imported.generated.ts lib/localImages.generated.ts lib/localVideos.generated.ts \
-                   public/img/catalog public/img/catalog-video data/model-videos.json; do
+          git config http.postBuffer 524288000
+          push() {
+            for i in 1 2 3 4 5; do
+              if git push -q 2>/tmp/push.txt; then return 0; fi
+              echo "::warning title=Push::$(tail -n 2 /tmp/push.txt | tr '\n' ' ')"
+              git pull -q --rebase origin main || return 1
+              sleep $((i * 5))
+            done
+            return 1
+          }
+          git add -A public/img/catalog public/img/catalog-video
+          files=$(git diff --cached --name-only | wc -l)
+          git reset -q
+          n=0
+          git status --porcelain -uall -- public/img/catalog public/img/catalog-video | awk '{print $NF}' | split -l 300 - /tmp/batch.
+          for b in /tmp/batch.*; do
+            [ -e "$b" ] || continue
+            xargs -a "$b" git add -A --
+            git diff --cached --quiet && continue
+            n=$((n + 1))
+            git commit -q -m "Model media in high quality (part $n)"
+            push || { echo "::error title=Push::part $n never landed"; exit 1; }
+          done
+          for p in lib/imported.generated.ts lib/localImages.generated.ts lib/localVideos.generated.ts data/model-videos.json; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
-          if git diff --cached --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
+          if ! git diff --cached --quiet; then
+            git commit -q -m "Every picture, GIF and clip of every model, in high quality"
+            push || { echo "::error title=Push::manifests never landed"; exit 1; }
+            n=$((n + 1))
           fi
-          git commit -q -m "Every picture, GIF and clip of every model, in high quality"
-          echo "::notice title=Commit::$(git show --stat --format= HEAD | tail -1)"
-          ok=false
-          for i in 1 2 3 4 5; do
-            if git push 2>/tmp/push.txt; then ok=true; break; fi
-            echo "::warning title=Push $i::$(tail -n 3 /tmp/push.txt | tr '\n' ' ')"
-            git pull --rebase origin main || { echo "::error title=Rebase::failed"; exit 1; }
-            sleep $((i * 5))
-          done
-          # A push that never landed must not look like success.
-          if [ "$ok" != true ]; then echo "::error title=Push::never landed"; exit 1; fi
-          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "::notice title=Commit::$files media files in $n pushes"
+          if [ "$n" -gt 0 ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; else echo "changed=false" >> "$GITHUB_OUTPUT"; fi
 
       # A push made with GITHUB_TOKEN does not start another workflow.
       - name: Publish the site
