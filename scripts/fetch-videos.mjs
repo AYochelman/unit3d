@@ -59,7 +59,8 @@ async function main() {
   for (const id of todo) {
     const d = await fetchDetails(id);
     await sleep(150);
-    cache[id] = d?.video ?? null;
+    // A failed request is not "no video": keep what was known.
+    if (d) cache[id] = d.video ?? null;
     if (d?.video) { found++; console.log(c.g(`  ✓ ${id}`) + c.d(`  ${d.title.slice(0, 46)}`)); }
   }
   if (todo.length) fs.writeFileSync(CACHE, `${JSON.stringify(cache, null, 2)}\n`, "utf8");
@@ -80,11 +81,12 @@ async function main() {
       const res = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       fs.writeFileSync(tmp, Buffer.from(await res.arrayBuffer()));
-      // 480p, silent, fast-start: a hover preview, not a feature film.
+      // 720p, silent, fast-start: sharp on the product page, still small
+      // enough for a phone plan.
       execFileSync("ffmpeg", [
         "-y", "-loglevel", "error", "-i", tmp,
-        "-an", "-vf", "scale=-2:480", "-c:v", "libx264",
-        "-preset", "slow", "-crf", "30", "-pix_fmt", "yuv420p",
+        "-an", "-vf", "scale=-2:'min(720,ih)'", "-c:v", "libx264",
+        "-preset", "slow", "-crf", "26", "-pix_fmt", "yuv420p",
         "-movflags", "+faststart", out,
       ]);
       made++;
