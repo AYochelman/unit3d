@@ -131,17 +131,20 @@ export const OFFICE_PRODUCTS: Product[] = [
     categories: ["office", "b2b", "trendy"],
     name: "כרטיס ביקור תלת מימדי",
     desc: "כרטיס ביקור תלת מימדי עם אופציה לטקסט בולט, ואפשרות להוספת ברקוד מאחורה.",
-    price: 45, size: "70×70×6mm", time: "1.8h", hours: 1.8, grams: 20,
+    price: 45, size: "70×70×6mm", time: "1.8h", hours: 1.8, grams: 21,
     art: "qr", hue: 150, ams: true, colors: 3, material: "pla_matte",
     tag: "חדש",
     isNew: true,
-    // The angled shot leads — it is the one on the home page, and the card
-    // reads as an object rather than as two flat squares at thumbnail size.
-    image: "/img/products/biz-card-3.webp",
+    // The owner's own print. The angled front leads — it is the one on the
+    // home page, and the card reads as an object at thumbnail size — then the
+    // front, the QR back, and the back at an angle. New file names rather than
+    // overwriting the old ones, so no cache serves the previous card.
+    image: "/img/products/biz-card-v2-1.webp",
     images: [
-      "/img/products/biz-card-3.webp",
-      "/img/products/biz-card-1.webp",
-      "/img/products/biz-card-2.webp",
+      "/img/products/biz-card-v2-1.webp",
+      "/img/products/biz-card-v2-2.webp",
+      "/img/products/biz-card-v2-3.webp",
+      "/img/products/biz-card-v2-4.webp",
     ],
     engraving: {
       label: "הטקסט הבולט",

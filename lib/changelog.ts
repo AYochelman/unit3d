@@ -34,6 +34,13 @@ export const KIND_HE: Record<ChangeKind, string> = {
 
 export const CHANGELOG: ChangeDay[] = [
   {
+    date: "2026-10-21",
+    items: [
+      { kind: "content", text: "כרטיס הביקור: ארבע תמונות חדשות של ההדפסה (חזית, גב עם QR, ושתי זוויות), גם בדף הבית." },
+      { kind: "admin", text: "כרטיס הביקור: משקל החומר עלה ל-21 גרם, כך שעלות החומר והמחיר המומלץ מתעדכנים." },
+    ],
+  },
+  {
     date: "2026-10-17",
     items: [
       { kind: "content", text: "לחיילים: תמונה אמיתית של מאפרה עם סמל יחידה במסך ההזמנה." },
