@@ -66,6 +66,11 @@ export type MorphGalleryProps = {
   caption?: (item: MorphItem, index: number) => React.ReactNode
   /** A click (not a swipe) on the picture itself. */
   onSlideClick?: (index: number) => void
+  /**
+   * Skip WebGL and cross-fade plain <img>s. For galleries holding GIFs: a
+   * texture upload takes one frame, and the animation would stand still.
+   */
+  plain?: boolean
 }
 
 /** Wrap past the ends when looping, clamp at them when not. */
@@ -255,6 +260,7 @@ export default function MorphGallery({
   className = "",
   caption,
   onSlideClick,
+  plain = false,
 }: MorphGalleryProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
   const [uncontrolled, setUncontrolled] = React.useState(() =>
@@ -262,7 +268,7 @@ export default function MorphGallery({
   )
   const active = index === undefined ? uncontrolled : wrapIndex(index, items.length, loop)
 
-  const [failed, setFailed] = React.useState(false)
+  const [failed, setFailed] = React.useState(plain)
   const [ready, setReady] = React.useState(false)
   const [generation, setGeneration] = React.useState(0)
   const reduced = React.useSyncExternalStore(subscribeReduced, getReduced, () => false)

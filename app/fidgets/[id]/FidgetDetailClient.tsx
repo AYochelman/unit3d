@@ -3,7 +3,6 @@
 import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { FIDGETS } from "@/lib/data";
 import { IMPORTED } from "@/lib/imported";
 import DesignerCredit from "@/components/DesignerCredit";
@@ -27,6 +26,8 @@ import { nearestColor, offeredColors, offeredMaterials, otherFinishColors, start
 import ReviewForm from "@/components/ReviewForm";
 import { useAdminStore } from "@/lib/admin-store";
 import ProductClip from "@/components/ProductClip";
+import BackLink from "@/components/BackLink";
+import ProductGallery from "@/components/ProductGallery";
 import ModelDownload from "@/components/admin/ModelDownload";
 import { modelSourceById } from "@/lib/model-source";
 import { useLivePrice } from "@/lib/live-price";
@@ -207,13 +208,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
       )}
 
       {/* Breadcrumb */}
-      <Link
-        href="/fidgets"
-        className="inline-flex items-center gap-2 text-sm text-ink-400 hover:text-ink-100 transition-colors mb-8 group"
-      >
-        <Icon name="arrowRight" size={14} className="group-hover:translate-x-0.5 transition-transform" />
-        חזרה לפידג&apos;טים
-      </Link>
+      <BackLink href="/fidgets" label="חזרה לפידג'טים" />
 
       {/* ── Two-column grid ──────────────────────────────────────────────────── */}
       <div className="grid lg:grid-cols-[1fr_420px] gap-8 lg:gap-14 items-start">
@@ -221,68 +216,18 @@ export default function FidgetDetailClient({ id }: { id: string }) {
         {/* ── LEFT: gallery ────────────────────────────────────────────── */}
         <div className="flex flex-col gap-3 min-w-0 lg:sticky lg:top-24">
 
-          {/* Main image with color tint overlay */}
-          <div className="relative aspect-square rounded-2xl overflow-hidden bg-ink-900 border border-ink-800 group">
-            {images.length > 0 ? (
-              <>
-                {images.map((src, i) => (
-                  <Image
-                    key={src}
-                    src={src}
-                    alt={`${f.name} — תמונה ${i + 1}`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className={cn(
-                      "object-cover transition-opacity duration-300",
-                      i === imgIdx ? "opacity-100" : "opacity-0 pointer-events-none",
-                    )}
-                    priority={i === 0}
-                    unoptimized
-                  />
-                ))}
-
-                {/* No tint over the photo. Washing a real print in the chosen
-                    filament's colour made every model look like it was lit
-                    through coloured glass; the swatch below already says which
-                    colour was picked, and it says it without lying about the
-                    photograph. */}
-
-                {/* Nav buttons */}
-                {images.length > 1 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setImgIdx((p) => (p - 1 + images.length) % images.length)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-ink-950/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-flame-600 transition-all z-10"
-                      aria-label="קודם"
-                    >
-                      <Icon name="chevRight" size={18} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setImgIdx((p) => (p + 1) % images.length)}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-ink-950/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-flame-600 transition-all z-10"
-                      aria-label="הבא"
-                    >
-                      <Icon name="chevLeft" size={18} />
-                    </button>
-                    <div
-                      className="absolute top-3 left-3 font-mono text-[10px] text-ink-200 bg-ink-950/60 backdrop-blur px-2 py-1 rounded-full z-10"
-                      dir="ltr"
-                    >
-                      {imgIdx + 1} / {images.length}
-                    </div>
-                  </>
-                )}
-              </>
-            ) : (
+          <ProductGallery
+            images={images}
+            alt={f.name}
+            index={Math.min(imgIdx, Math.max(0, images.length - 1))}
+            onIndexChange={setImgIdx}
+            fallback={
               <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-ink-800 to-ink-950">
                 <Emblem shape={f.shape} hue={f.hue} size={180} />
               </div>
-            )}
-
-            {/* Tags */}
-            <div className="absolute top-3 right-3 flex flex-col gap-1.5 z-10">
+            }
+          >
+            <div className="pointer-events-none absolute top-3 right-3 flex flex-col gap-1.5 z-20">
               {f.tag && (
                 <Pill tone="flame" className="text-[10px] px-1.5 py-0.5 shadow-lg">
                   {f.tag}
@@ -292,40 +237,14 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   "this comes in two colours" while the price was for one. */}
               <PhotoColorsBadge photoColors={images.length ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
             </div>
-
-            {/* Selected color chip */}
+            {/* Top corner: the bottom of the frame is the thumbnail strip. */}
             {selectedFilament && (
-              <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
-                <span
-                  className="h-3.5 w-3.5 rounded-full border border-white/20"
-                  style={{ backgroundColor: tintHex }}
-                />
+              <div className="pointer-events-none absolute top-3 left-3 z-20 flex items-center gap-1.5 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
+                <span className="h-3.5 w-3.5 rounded-full border border-white/20" style={{ backgroundColor: tintHex }} />
                 <span className="text-[10px] font-mono text-ink-200">{selectedFilament.name}</span>
               </div>
             )}
-          </div>
-
-          {/* Thumbnails */}
-          {images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-0.5">
-              {images.slice(0, 14).map((src, i) => (
-                <button
-                  key={src}
-                  type="button"
-                  onClick={() => setImgIdx(i)}
-                  className={cn(
-                    "relative shrink-0 h-16 w-16 rounded-xl overflow-hidden border-2 transition-all",
-                    i === imgIdx
-                      ? "border-flame shadow-[0_0_0_2px_rgba(255,107,26,0.25)]"
-                      : "border-ink-800 opacity-50 hover:opacity-90 hover:border-ink-600",
-                  )}
-                  aria-label={`תמונה ${i + 1}`}
-                >
-                  <Image src={src} alt={`thumb ${i + 1}`} fill className="object-cover" unoptimized />
-                </button>
-              ))}
-            </div>
-          )}
+          </ProductGallery>
 
           {/* A fidget is the case this matters most for: the whole product is
               a movement. Renders nothing when there is no clip. */}
