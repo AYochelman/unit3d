@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
-import Image from "next/image";
 import ProductArt from "@/components/ProductArt";
 import { Field, Input } from "@/components/ui/Field";
 import { useFilaments } from "@/lib/palette";
@@ -26,6 +25,8 @@ import BodyClass from "@/components/ui/BodyClass";
 import { useAdminStore } from "@/lib/admin-store";
 import ModelDownload from "@/components/admin/ModelDownload";
 import ProductClip from "@/components/ProductClip";
+import ProductGallery from "@/components/ProductGallery";
+import BackLink from "@/components/BackLink";
 import { modelSourceById } from "@/lib/model-source";
 import { estimateCost } from "@/lib/costing";
 import { suggestPrice } from "@/lib/imported";
@@ -235,70 +236,42 @@ export default function ProductDetailClient({ id }: { id: string }) {
         </div>
       )}
 
-      <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-ink-400 hover:text-ink-100 transition-colors mb-8 group">
-        <Icon name="arrowRight" size={14} className="group-hover:translate-x-0.5 transition-transform" />
-        חזרה ל{p.category === "pets" ? "תגים לחיות" : "בית ומשרד"}
-      </Link>
+      <BackLink href={backHref} label={`חזרה ל${p.category === "pets" ? "תגים לחיות" : "בית ומשרד"}`} />
 
       <div className="grid lg:grid-cols-[1fr_420px] gap-8 lg:gap-14 items-start">
         {/* The photograph, on a neutral ground — the chosen colour is named by
             the swatch, never painted over the picture. */}
         <div className="lg:sticky lg:top-24">
-          <div
-            className="pd-hero relative aspect-square rounded-2xl overflow-hidden border border-ink-800 flex items-center justify-center"
-            style={{ background: "#06150e" }}
+          <ProductGallery
+            images={shots}
+            alt={p.name}
+            index={Math.min(shot, Math.max(0, shots.length - 1))}
+            onIndexChange={setShot}
+            fallback={
+              <div className="absolute inset-0 flex items-center justify-center" style={{ background: "#06150e" }}>
+                <ProductArt art={p.art} color={color.hex} size={360} className="max-w-[80%] h-auto drop-shadow-2xl" />
+              </div>
+            }
           >
-            {hero ? (
-              // A photograph of the actual model beats a drawing of it. The
-              // colour swatch below still says which filament it prints in.
-              <Image
-                src={hero}
-                alt={`${p.name}${shots.length > 1 ? ` — תמונה ${shot + 1}` : ""}`}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-                unoptimized
-              />
-            ) : (
-              <ProductArt art={p.art} color={color.hex} size={360} className="max-w-[80%] h-auto drop-shadow-2xl" />
-            )}
-            <div className="absolute top-3 right-3 flex flex-col gap-1.5">
+            <div className="pointer-events-none absolute top-3 right-3 z-20 flex flex-col gap-1.5">
               <Pill tone="neutral" className="text-[10px]">{CATEGORY_LABEL[p.category]}</Pill>
               {p.tag && <Pill tone="flame" className="text-[10px]">{p.tag}</Pill>}
               <PhotoColorsBadge photoColors={hero ? photoColors : 1} amsOn={amsOn} amsColors={amsColors} />
             </div>
-            <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
-              <span className="h-3.5 w-3.5 rounded-full border border-white/20" style={{ backgroundColor: color.hex }} />
-              <span className="text-[10px] font-mono text-ink-200">{color.name} · {mat.short}</span>
-            </div>
-            {(p.engraving && engrave1) && (
-              <div className="absolute bottom-3 left-3 font-mono text-[11px] text-ink-100 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
-                „{engrave1}”
+            {/* Top corner, not bottom: the bottom of the frame is the strip of
+                thumbnails now. */}
+            <div className="pointer-events-none absolute top-3 left-3 z-20 flex flex-col items-end gap-1.5">
+              <div className="flex items-center gap-1.5 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
+                <span className="h-3.5 w-3.5 rounded-full border border-white/20" style={{ backgroundColor: color.hex }} />
+                <span className="text-[10px] font-mono text-ink-200">{color.name} · {mat.short}</span>
               </div>
-            )}
-          </div>
-
-          {/* Thumbnails — the rest of what the designer photographed. Scrolls
-              sideways rather than wrapping, so the frame above never moves. */}
-          {shots.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-0.5 mt-3">
-              {shots.map((src, i) => (
-                <button
-                  key={src}
-                  type="button"
-                  onClick={() => setShot(i)}
-                  aria-label={`תמונה ${i + 1}`}
-                  aria-pressed={i === shot}
-                  className={cn(
-                    "pd-thumb relative shrink-0 h-16 w-16 rounded-xl overflow-hidden border-2 transition-all",
-                    i === shot ? "border-flame" : "border-ink-800 hover:border-ink-700 opacity-70 hover:opacity-100",
-                  )}
-                >
-                  <Image src={src} alt="" fill sizes="64px" className="object-cover" unoptimized />
-                </button>
-              ))}
+              {(p.engraving && engrave1) && (
+                <div className="font-mono text-[11px] text-ink-100 bg-ink-950/70 backdrop-blur px-2 py-1 rounded-full">
+                  „{engrave1}”
+                </div>
+              )}
             </div>
-          )}
+          </ProductGallery>
 
           {/* Renders only when the shop holds a clip for this model. */}
           <ProductClip id={p.id} name={p.name} />

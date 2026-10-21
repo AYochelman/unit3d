@@ -71,14 +71,35 @@ const stemFor = (url) => crypto.createHash("sha1").update(url).digest("hex").sli
  * One photo, at the size the site actually shows it.
  *
  * Everything becomes WebP: it is what MakerWorld already serves, every browser
- * we care about reads it, and it is a third of the JPEG. An animated GIF is
- * left alone — resizing one frame of it would throw the animation away.
+ * we care about reads it, and it is a third of the JPEG. An animated GIF
+ * becomes an animated WebP, every frame kept, at 720px: designers upload
+ * 30MB GIFs, and 171 of them stored as-is came to 2.2GB — twice what GitHub
+ * Pages will publish. As WebP they are ~1.5MB. The ".anim.webp" name tells
+ * the product gallery to show it as a plain image (WebGL takes one frame).
  */
 async function optimise(buf, url) {
   if (!sharp) return { data: buf, ext: url.split("?")[0].match(/\.(webp|png|gif)$/i)?.[1]?.toLowerCase() ?? "jpg" };
   const img = sharp(buf, { animated: false });
   const meta = await img.metadata();
-  if (meta.format === "gif") return { data: buf, ext: "gif" };
+  if (meta.format === "gif") {
+    if ((meta.pages ?? 1) <= 1) {
+      const still = await sharp(buf).resize({ width: Math.min(meta.width || MAX_WIDTH, MAX_WIDTH), withoutEnlargement: true }).webp({ quality: QUALITY }).toBuffer();
+      return { data: still, ext: "webp" };
+    }
+    const anim = await sharp(buf, { animated: true, limitInputPixels: false })
+      .resize({ width: 720, withoutEnlargement: true })
+      .webp({ quality: 65, effort: 4 })
+      .toBuffer();
+    // A long loop is still heavy at 720px; those go smaller rather than out.
+    if (anim.length > 4e6) {
+      const small = await sharp(buf, { animated: true, limitInputPixels: false })
+        .resize({ width: 480, withoutEnlargement: true })
+        .webp({ quality: 50, effort: 4 })
+        .toBuffer();
+      return { data: small.length < anim.length ? small : anim, ext: "anim.webp" };
+    }
+    return { data: anim, ext: "anim.webp" };
+  }
   const out = await img
     .resize({ width: Math.min(meta.width || MAX_WIDTH, MAX_WIDTH), withoutEnlargement: true })
     .webp({ quality: QUALITY })
@@ -89,7 +110,7 @@ async function optimise(buf, url) {
 
 /** The file already on disk for this URL, whatever extension it landed with. */
 function existingFile(stem) {
-  for (const ext of ["webp", "jpg", "png", "gif", "avif"]) {
+  for (const ext of ["anim.webp", "webp", "jpg", "png", "gif", "avif"]) {
     if (fs.existsSync(path.join(OUT_DIR, `${stem}.${ext}`))) return `${stem}.${ext}`;
   }
   return null;
@@ -116,7 +137,7 @@ async function download(url, stem) {
 
 /** Writes the photo under its stem, clearing any older extension for it. */
 function write(stem, { data, ext }) {
-  for (const e of ["webp", "jpg", "png", "gif", "avif"]) {
+  for (const e of ["anim.webp", "webp", "jpg", "png", "gif", "avif"]) {
     const p = path.join(OUT_DIR, `${stem}.${e}`);
     if (e !== ext && fs.existsSync(p)) fs.unlinkSync(p);
   }
