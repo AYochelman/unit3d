@@ -154,6 +154,32 @@ export const OFFICE_PRODUCTS: Product[] = [
     },
   },
   {
+    // The owner's own design: a credit-card-sized business card whose cut-out
+    // panels fold up into a phone stand. Weight and time are his plate figures.
+    id: "biz-card-stand",
+    category: "office",
+    categories: ["office", "b2b", "trendy"],
+    name: "כרטיס ביקור שהופך למעמד לטלפון",
+    desc: "כרטיס ביקור אישי עם QR בגודל כרטיס אשראי — נכנס לארנק, ונפתח למעמד לטלפון.",
+    price: 39, size: "85×54mm", time: "45min", hours: 0.75, grams: 12,
+    art: "qr", hue: 150, ams: true, colors: 3, material: "pla_matte",
+    tag: "חדש",
+    isNew: true,
+    image: "/img/products/biz-stand-1.webp",
+    images: [
+      "/img/products/biz-stand-1.webp",
+      "/img/products/biz-stand-2.webp",
+      "/img/products/biz-stand-3.webp",
+      "/img/products/biz-stand-4.webp",
+    ],
+    engraving: {
+      label: "שם",
+      placeholder: "ארז יוכלמן",
+      max: 18,
+      second: { label: "טלפון / מייל", placeholder: "050-930-0990", max: 26 },
+    },
+  },
+  {
     id: "off-pen-holder",
     category: "office",
     name: "מעמד עטים משושה",
