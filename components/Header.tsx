@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { notePath } from "@/lib/nav-history";
 import Logo from "./ui/Logo";
 import Icon from "./ui/Icon";
 import Btn from "./ui/Btn";
@@ -39,6 +40,8 @@ const SECONDARY = [
 
 export default function Header() {
   const pathname = usePathname();
+  // Remembered so "back" on a product page can name the shelf it came from.
+  useEffect(() => { if (pathname) notePath(pathname); }, [pathname]);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const cartCount = useOrderStore((s) => s.items.length);
