@@ -1,0 +1,101 @@
+# Every picture, GIF and clip the designer published, for every model, in
+# high quality.
+#
+# 1. backfill:images --all  re-reads each model's gallery from MakerWorld (all of
+#    it, GIFs included — it used to stop at 8 and skip GIFs). Only grows a
+#    gallery, never shrinks one.
+# 2. fetch:images --all     re-downloads every photo at up to 1400px.
+# 3. fetch:videos --all     re-checks every model for a clip and re-encodes at 720p.
+#
+# Runs when this file changes (so the first run happens on push), monthly,
+# and on demand. New models between runs are covered by the daily jobs.
+name: Refresh all model media
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/media-refresh.yml"
+  schedule:
+    - cron: "23 3 3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: media-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # The MakerWorld API refuses node's own connection and answers a browser
+      # (CLAUDE.md, "ייבוא ממייקרוורלד"); getJson falls back to one.
+      - name: Install Chromium and ffmpeg
+        run: |
+          npx playwright install --with-deps chromium
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Every picture of every model
+        run: npm run backfill:images -- --all
+        continue-on-error: true
+
+      - name: Download them in high quality
+        run: npm run fetch:images -- --all
+        continue-on-error: true
+
+      - name: Clips, 720p
+        env:
+          VIDEO_LIMIT: "300"
+        run: npm run fetch:videos -- --all
+        continue-on-error: true
+
+      - name: What the shop holds now
+        run: npm run audit:media
+        continue-on-error: true
+
+      # A bad row must not reach the site.
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for p in lib/imported.generated.ts lib/localImages.generated.ts lib/localVideos.generated.ts \
+                   public/img/catalog public/img/catalog-video data/model-videos.json; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Every picture, GIF and clip of every model, in high quality"
+          for i in 1 2 3 4 5; do
+            if git push; then break; fi
+            git pull --rebase origin main || exit 1
+            sleep $((i * 3))
+          done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not start another workflow.
+      - name: Publish the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main

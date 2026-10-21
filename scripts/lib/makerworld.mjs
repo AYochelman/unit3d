@@ -556,14 +556,18 @@ export function picturesOf(d) {
   const out = [];
   const add = (u) => {
     const s = String(u?.url ?? u?.picture ?? u ?? "").split("?")[0];
-    if (/^https?:\/\/[^\s]+\.(png|jpe?g|webp)$/i.test(s)) out.push(s);
+    // GIFs too: a designer's animated loop of the thing moving is worth more
+    // than another still.
+    if (/^https?:\/\/[^\s]+\.(png|jpe?g|webp|gif)$/i.test(s)) out.push(s);
   };
   add(d?.coverUrl);
   for (const key of ["design_pictures", "designPictures", "pictures", "images", "gallery"]) {
     for (const x of d?.designExtension?.[key] ?? d?.[key] ?? []) add(x);
   }
   for (const inst of d?.instances ?? []) add(inst?.coverUrl);
-  return [...new Set(out)].slice(0, 8);
+  // Every picture the designer published. The old cap of 8 cut galleries
+  // short; 30 only guards against a runaway page.
+  return [...new Set(out)].slice(0, 30);
 }
 
 /** One model's details, straight from MakerWorld's API. */
