@@ -55,9 +55,17 @@ if (process.env.TEST_TO) {
 const headers = { apikey: KEY, ...(KEY.startsWith("ey") ? { Authorization: `Bearer ${KEY}` } : {}), "Content-Type": "application/json" };
 const log = (...a) => console.log(...a);
 
-const res = await fetch(`${SB}/rest/v1/printer_status?id=eq.live&select=state,job_name,updated_at`, { headers });
-if (!res.ok) { console.log(`::warning::printer_status ${res.status}`); process.exit(0); }
-const [row] = await res.json();
+// A stale second agent can write "offline" between the live agent's reports,
+// so look a few times and take a real report if any of them is one.
+let row = null;
+for (let i = 0; i < 6; i++) {
+  const res = await fetch(`${SB}/rest/v1/printer_status?id=eq.live&select=state,job_name,updated_at`, { headers });
+  if (!res.ok) { console.log(`::warning::printer_status ${res.status}`); process.exit(0); }
+  const [r] = await res.json();
+  if (r && (!row || r.state !== "offline")) row = r;
+  if (row?.state !== "offline") break;
+  await new Promise((ok) => setTimeout(ok, 1500));
+}
 const ref = String(row?.job_name ?? "").match(/UNIT3D-\d{3,}/i)?.[0]?.toUpperCase();
 const fresh = row?.updated_at && Date.now() - Date.parse(row.updated_at) < 10 * 60_000;
 console.log(`::notice::printer ${row?.state ?? "?"} · job ${row?.job_name ?? "-"} · ${fresh ? "fresh" : "stale"}`);
