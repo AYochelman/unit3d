@@ -1,0 +1,37 @@
+# Read-only: what the printer agent last reported. Prints the status row, the
+# latest jobs and the live status file as annotations. Changes nothing.
+name: Printer diagnosis
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/printer-diag.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: public/shop.json
+          sparse-checkout-cone-mode: false
+      - name: Read
+        env:
+          KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          SB=$(node -e "console.log(require('./public/shop.json').supabaseUrl.replace(/\/$/,''))")
+          LIVE=$(node -e "console.log((require('./public/shop.json').liveUrl||'').replace(/\/$/,''))")
+          H=(-H "apikey: $KEY")
+          case "$KEY" in ey*) H+=(-H "Authorization: Bearer $KEY");; esac
+          row=$(curl -s "${H[@]}" "$SB/rest/v1/printer_status?id=eq.live&select=*")
+          echo "::notice title=status row::$(echo "$row" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const r=JSON.parse(s)[0]||{};for(const k of Object.keys(r))if(/key|token|secret|url/i.test(k))delete r[k];console.log(JSON.stringify(r).slice(0,900))})")"
+          jobs=$(curl -s "${H[@]}" "$SB/rest/v1/printer_jobs?select=key,name,state,started_at,ended_at&order=started_at.desc&limit=4")
+          echo "::notice title=last jobs::$(echo "$jobs" | head -c 900)"
+          if [ -n "$LIVE" ]; then
+            echo "::notice title=live status::$(curl -s -m 10 "$LIVE/live/status.json" | head -c 700)"
+          fi
