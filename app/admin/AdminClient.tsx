@@ -25,7 +25,7 @@ import OrdersTab from "@/components/admin/OrdersTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import ExpensesTab from "@/components/admin/ExpensesTab";
 import TodoTab from "@/components/admin/TodoTab";
-import PartsStock from "@/components/admin/PartsStock";
+import PartsStock, { PartsBanner } from "@/components/admin/PartsStock";
 import PrinterTab from "@/components/admin/PrinterTab";
 import ChangelogTab from "@/components/admin/ChangelogTab";
 import ReviewsTab from "@/components/admin/ReviewsTab";
@@ -190,6 +190,8 @@ export default function AdminClient() {
           </button>
         ))}
       </div>
+
+      <PartsBanner onOpen={() => setTab("stock")} />
 
       {tab === "products" && <ProductsTab />}
       {tab === "calc" && <CalculatorTab />}
