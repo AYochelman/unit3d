@@ -34,6 +34,7 @@ jobs:
             echo "::notice title=sample $i::$(curl -s "${H[@]}" "$SB/rest/v1/printer_status?id=eq.live&select=state,nozzle_temp,bed_temp,job_name,progress,updated_at" | head -c 300)"
             sleep 1.5
           done
+          echo "::notice title=agent info::$(curl -s "${H[@]}" "$SB/rest/v1/shop_settings?key=eq.agent_info&select=value" | head -c 400)"
           echo "::notice title=access code set at::$(curl -s "${H[@]}" "$SB/rest/v1/shop_settings?key=eq.printer_access_code&select=at:value->>at" | head -c 200)"
           jobs=$(curl -s "${H[@]}" "$SB/rest/v1/printer_jobs?select=key,name,state,started_at,ended_at&order=started_at.desc&limit=4")
           echo "::notice title=last jobs::$(echo "$jobs" | head -c 900)"
