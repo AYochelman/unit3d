@@ -194,6 +194,7 @@ export default function LivestreamClient() {
     "disabled-in-config": "live.enabled מוגדר false ב-config.json של הסוכן.",
     "cors-blocked": "ה-bucket לא מרשה לאתר לקרוא ממנו, אז שום דפדפן לא יוכל לנגן את השידור. start.bat מדפיס בדיוק מה להדביק ב-Cloudflare.",
     "not-printing": "המדפסת לא מדפיסה כרגע, אז אין שידור — זה תקין.",
+    "printer-unreachable": "הסוכן רץ ומדווח, אבל לא שומע מהמדפסת כבר יותר מדקה — לכן כתוב 'כבויה' גם כשהיא מדפיסה. בדרך כלל: כתובת ה-IP של המדפסת השתנתה, קוד ה-LAN התחלף, או Developer Mode כבה אחרי עדכון קושחה. בדוק במסך המדפסת (Settings ← Network / LAN Only), תקן ב-node setup.mjs והפעל מחדש את הסוכן.",
     "printer-offers-no-stream": "המדפסת לא מפרסמת כתובת RTSP. צריך LAN Only + Liveview + Developer Mode בתפריט המדפסת.",
     "ffmpeg-missing": "ffmpeg לא מותקן על המחשב של הסוכן. הרץ פעם אחת ffmpeg-install.bat.",
     "encoder-not-started": "ffmpeg עוד לא הספיק לעלות. עוד כמה שניות.",
@@ -219,10 +220,12 @@ export default function LivestreamClient() {
   };
 
   const [clock, setClock] = useState("00:00:00");
+  const [now, setNow] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
       const d = new Date();
       setClock(`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`);
+      setNow(d.getTime());
       // And let an old refusal go, so the next broadcast gets a fresh chance
       // without anyone reloading the page.
       setVideoFault((f) => (f && Date.now() - f.at > REFUSAL_MS ? null : f));
@@ -231,6 +234,11 @@ export default function LivestreamClient() {
   }, []);
 
   const state: PrinterState = live?.state ?? "offline";
+  // The agent writes its row every few seconds whether or not the printer
+  // answers it, so "offline" on a fresh row means the agent is up and the
+  // printer is not talking to it — a different fault from "switched off".
+  const agentFresh = !!live?.updated_at && now - Date.parse(live.updated_at) < 3 * 60_000;
+  const unreachable = state === "offline" && agentFresh;
   const printing = state === "printing" || state === "paused";
   const progress = Math.max(0, Math.min(100, live?.progress ?? 0));
 
@@ -316,20 +324,20 @@ export default function LivestreamClient() {
             {/* Why there is no video — the owner's answer, never a customer's.
                 Without it, a printer that is mid-print with the camera on and
                 no R2 keys looks exactly like one that is working. */}
-            {showWhy && !videoOn && (liveWhy || playWhy) && (
+            {showWhy && !videoOn && (unreachable || liveWhy || playWhy) && (
               <div className="absolute bottom-4 right-4 z-20 max-w-[min(92%,30rem)] rounded-lg border border-amber-500/40 bg-ink-950/85 backdrop-blur px-3 py-2 text-[11px] leading-relaxed text-amber-200">
                 <span className="font-mono text-[10px] tracking-widest uppercase text-amber-400/80">ADMIN · אין וידאו</span>
                 <div className="mt-0.5 text-ink-100">
                   {/* The player appends the HTTP code to its reason, so the
                       lookup uses the reason alone and the code stays in the
                       line below it. */}
-                  {WHY_HE[(liveWhy ?? playWhy ?? "").split(/[:(]/)[0].trim()] ??
+                  {unreachable ? WHY_HE["printer-unreachable"] : WHY_HE[(liveWhy ?? playWhy ?? "").split(/[:(]/)[0].trim()] ??
                     (liveWhy
                       ? liveWhy
                       : `הסוכן משדר, אבל הנגן בדפדפן נכשל: ${playWhy}`)}
                 </div>
                 <div className="mt-1 font-mono text-[10px] text-ink-500" dir="ltr">
-                  {liveWhy ?? `player: ${playWhy}`}{liveAgent ? ` · agent ${liveAgent}` : " · agent ?"}
+                  {unreachable ? "printer-unreachable" : liveWhy ?? `player: ${playWhy}`}{liveAgent ? ` · agent ${liveAgent}` : " · agent ?"}
                   {` · frame ${frameRatio.toFixed(3)}`}
                 </div>
               </div>
