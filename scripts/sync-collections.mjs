@@ -33,6 +33,7 @@ import {
   readableTitle, SHELF_OVERRIDES,
 } from "./lib/makerworld.mjs";
 import { patchStatus } from "./lib/sync-status.mjs";
+import { answeredIds, withoutRejected } from "./lib/answered.mjs";
 
 const OUT = path.join(ROOT, "lib", "imported.generated.ts");
 const PENDING = path.join(ROOT, "data", "pending-models.json");
@@ -620,12 +621,9 @@ function buildCandidate(id, d, shelfHint, via) {
 
 /** Ids the owner has already answered — approved or rejected. Never re-ask. */
 function decidedIds() {
-  try {
-    const f = JSON.parse(fs.readFileSync(DECISIONS, "utf8"));
-    return new Set((f.decisions ?? []).map((d) => String(d.id)));
-  } catch {
-    return new Set();
-  }
+  // Both files: a rejection that apply-approvals already moved out of
+  // model-decisions.json is still a rejection (see lib/answered.mjs).
+  return answeredIds();
 }
 
 /**
@@ -652,7 +650,7 @@ function queueCandidates(rows) {
       `// on the shop; the owner decides, one by one, in that tab.\n` +
       `// Items: ${merged.length}\n// Collected: ${new Date().toISOString()}\n\n` +
       `import type { Candidate } from "./candidates";\n\n` +
-      `export const CANDIDATES: Candidate[] = ${JSON.stringify(merged, null, 2)};\n`,
+      `export const CANDIDATES: Candidate[] = ${JSON.stringify(withoutRejected(merged), null, 2)};\n`,
     "utf8",
   );
   return merged.length;
