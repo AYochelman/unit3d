@@ -101,10 +101,21 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
     let statusId: ReturnType<typeof setInterval> | null = null;
     let cameraId: ReturnType<typeof setInterval> | null = null;
 
+    // Two agents can write this one row: on 22.10 a stale one, still running
+    // somewhere with an old access code, wrote "offline" every two seconds
+    // between the live agent's "printing". A real report from the printer is
+    // never contradicted by one that heard nothing, so for 20 seconds after a
+    // real report a bare "offline" is not believed. A printer that truly goes
+    // off stops sending real reports and shows offline 20 seconds later.
+    let lastReal: { row: PrinterLive; at: number } | null = null;
     const pullStatus = async () => {
       const rows = await rest<PrinterLive>("printer_status?id=eq.live&select=*");
       if (!alive) return;
-      setLive(fresh(rows[0] ?? null));
+      const row = rows[0] ?? null;
+      const now = Date.now();
+      if (row && row.state !== "offline") lastReal = { row, at: now };
+      const shown = row?.state === "offline" && lastReal && now - lastReal.at < 20_000 ? lastReal.row : row;
+      setLive(fresh(shown));
       setReady(true);
     };
 
