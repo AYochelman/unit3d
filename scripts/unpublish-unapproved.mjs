@@ -20,6 +20,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { withoutRejected } from "./lib/answered.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
@@ -100,7 +101,7 @@ fs.writeFileSync(
     `// on the shop; the owner decides, one by one, in that tab.\n` +
     `// Items: ${merged.length}\n// Collected: ${new Date().toISOString()}\n\n` +
     `import type { Candidate } from "./candidates";\n\n` +
-    `export const CANDIDATES: Candidate[] = ${JSON.stringify(merged, null, 2)};\n`,
+    `export const CANDIDATES: Candidate[] = ${JSON.stringify(withoutRejected(merged), null, 2)};\n`,
   "utf8",
 );
 

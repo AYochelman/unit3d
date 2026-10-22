@@ -21,6 +21,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ROOT, c, sleep, getJson, fetchDetails, classify, platesFrom, readableTitle, closeBrowser, isWeapon, isRealWeapon } from "./lib/makerworld.mjs";
+import { withoutRejected } from "./lib/answered.mjs";
 
 const OUT = path.join(ROOT, "lib", "candidates.generated.ts");
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
@@ -150,7 +151,7 @@ async function main() {
       `// on the shop; the owner decides, one by one, in that tab.\n` +
       `// Items: ${rows.length}\n// Collected: ${new Date().toISOString()}\n\n` +
       `import type { Candidate } from "./candidates";\n\n` +
-      `export const CANDIDATES: Candidate[] = ${JSON.stringify(rows, null, 2)};\n`,
+      `export const CANDIDATES: Candidate[] = ${JSON.stringify(withoutRejected(rows), null, 2)};\n`,
     "utf8",
   );
   log(c.g(`\n  נכתב lib/candidates.generated.ts\n`));
