@@ -30,6 +30,7 @@ jobs:
           case "$KEY" in ey*) H+=(-H "Authorization: Bearer $KEY");; esac
           row=$(curl -s "${H[@]}" "$SB/rest/v1/printer_status?id=eq.live&select=*")
           echo "::notice title=status row::$(echo "$row" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const r=JSON.parse(s)[0]||{};for(const k of Object.keys(r))if(/key|token|secret|url/i.test(k))delete r[k];console.log(JSON.stringify(r).slice(0,900))})")"
+          echo "::notice title=access code set at::$(curl -s "${H[@]}" "$SB/rest/v1/shop_settings?key=eq.printer_access_code&select=at:value->>at" | head -c 200)"
           jobs=$(curl -s "${H[@]}" "$SB/rest/v1/printer_jobs?select=key,name,state,started_at,ended_at&order=started_at.desc&limit=4")
           echo "::notice title=last jobs::$(echo "$jobs" | head -c 900)"
           if [ -n "$LIVE" ]; then
