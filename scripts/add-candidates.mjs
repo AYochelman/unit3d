@@ -20,6 +20,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ROOT, c, sleep, fetchDetails, classify, platesFrom, readableTitle, isWeapon, isRealWeapon } from "./lib/makerworld.mjs";
+import { withoutRejected } from "./lib/answered.mjs";
 
 const OUT = path.join(ROOT, "lib", "candidates.generated.ts");
 const CATALOGUE = path.join(ROOT, "lib", "imported.generated.ts");
@@ -156,7 +157,7 @@ async function main() {
       `// on the shop; the owner decides, one by one, in that tab.\n` +
       `// Items: ${rows.length}\n// Updated: ${new Date().toISOString()}\n\n` +
       `import type { Candidate } from "./candidates";\n\n` +
-      `export const CANDIDATES: Candidate[] = ${JSON.stringify(rows, null, 2)};\n`,
+      `export const CANDIDATES: Candidate[] = ${JSON.stringify(withoutRejected(rows), null, 2)};\n`,
     "utf8",
   );
   log(c.g(`\n  ${added.length} נוספו לתור האישור (סה"כ ${rows.length})\n`));

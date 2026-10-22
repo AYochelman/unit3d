@@ -9,6 +9,8 @@ import { modelSourceForLine } from "@/lib/model-source";
 import Pill from "@/components/ui/Pill";
 import { Input, Textarea } from "@/components/ui/Field";
 import { useAdminStore } from "@/lib/admin-store";
+import { missingForLine } from "@/lib/parts-orders";
+import { restockLine } from "@/lib/parts";
 import {
   DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
   type Fulfilment, type OrderDecision, type PlacedOrder,
@@ -572,6 +574,10 @@ function OrderRow({
   const state = o.decision ?? "pending";
   const stage = fulfilment(o);
   const ready = doneCount(o);
+  const parts = useAdminStore((s) => s.parts);
+  // Parts this order is short of, across all its lines — shown on the
+  // collapsed row too, so it is seen before the order is opened.
+  const shortHere = [...new Map(o.lines.flatMap((l) => missingForLine(l, parts)).map((p) => [p.id, p])).values()];
 
   return (
     <div className={cn("rounded-2xl border bg-ink-900 overflow-hidden", open ? "border-flame/50" : "border-ink-800")}>
@@ -599,6 +605,9 @@ function OrderRow({
         <span className="text-[11px] text-ink-500">{when(o.at)}</span>
         <span className="flex-1" />
         <span className="text-[11px] text-ink-500">{o.lines.length} פריטים</span>
+        {shortHere.length > 0 && state !== "rejected" && (
+          <span className="text-[11px] text-amber-300">· {restockLine(shortHere)}</span>
+        )}
         <span className="font-black">{total == null ? "לפי הזמנה" : fmtILS(total)}</span>
       </div>
 
@@ -725,6 +734,14 @@ function OrderRow({
                     </span>
                     <span className="font-mono text-xs">{l.price == null ? "לפי הזמנה" : fmtILS(l.price)}</span>
                   </div>
+                  {/* A part this line needs (ring, chain, magnet…) that is not on
+                      the shelf — filament shortages are shown elsewhere. */}
+                  {(() => {
+                    const short = missingForLine(l, parts);
+                    return short.length ? (
+                      <div className="mt-1.5 text-[12px] text-amber-300">{restockLine(short)}</div>
+                    ) : null;
+                  })()}
                   {/* The file to print, on the line that needs it — at every
                       stage, not only after approval: deciding whether to take
                       an order often means looking at the model first. */}

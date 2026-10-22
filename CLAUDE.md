@@ -259,6 +259,8 @@ PIN ב-`lib/admin-store.ts` (ברירת מחדל 1234). המצב נשמר לסש
 החלטה קיימת אף פעם לא נדרסת: מודל שנדחה לא חוזר כ"אושר" רק כי הוא עדיין
 יושב באוסף.
 
+**דחייה נשמרת בשני מקומות** — `public/model-decisions.json` עד שהיא מיושמת, ו-`data/rejected-models.json` אחרי ש-`apply-approvals` מעביר אותה ומרוקן את הראשון. כל סקריפט שכותב את `lib/candidates.generated.ts` מסנן דרך `scripts/lib/answered.mjs` שקורא את שניהם, ולשונית האישור מסננת שוב. (ב-22.10 הסריקה קראה רק את הראשון, ו-11 מודלים שנדחו חזרו לתור.)
+
 ```bash
 npm run add:candidates -- https://makerworld.com/en/models/2335039-military-dog-tag
 npm run add:candidates -- 2335039 714373        # גם מספרי מודל נטו
