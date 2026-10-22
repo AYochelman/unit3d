@@ -66,3 +66,18 @@ export async function agentStatus(): Promise<AgentStatus | null> {
     return null;
   }
 }
+
+export type AgentInfo = { host: string; ips: string[]; platform: string; user: string; dir: string; version: string; printer: string; at: string };
+
+/** Where the agent says it runs (private: owner sign-in). */
+export async function agentInfo(token: string): Promise<AgentInfo | null> {
+  const a = await auth(token);
+  if (!a) return null;
+  try {
+    const res = await fetch(`${a.url}/rest/v1/shop_settings?key=eq.agent_info&select=value`, { headers: a.headers, cache: "no-store" });
+    if (!res.ok) return null;
+    return ((await res.json())[0]?.value as AgentInfo | undefined) ?? null;
+  } catch {
+    return null;
+  }
+}

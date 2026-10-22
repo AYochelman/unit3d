@@ -23,6 +23,7 @@ import path from "node:path";
 import net from "node:net";
 import { spawn, spawnSync } from "node:child_process";
 import tls from "node:tls";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 import mqtt from "mqtt";
 import { makeR2 } from "./r2.mjs";
@@ -223,6 +224,28 @@ async function checkRemoteAccessCode() {
 }
 setTimeout(checkRemoteAccessCode, 5_000);
 setInterval(checkRemoteAccessCode, 60_000);
+
+// ─── Where this agent runs ───────────────────────────────────────────────────
+// On 22.10 nobody could find the Pi: it was writing to the site, but its
+// address was written down nowhere. The agent now says it itself — device
+// name, LAN address, platform and version — and /admin → "מדפסת" shows it.
+// Kept in shop_settings (private), not in printer_status (public).
+async function reportWhereIAm() {
+  const ips = Object.values(os.networkInterfaces()).flat()
+    .filter((i) => i && i.family === "IPv4" && !i.internal).map((i) => i.address);
+  try {
+    await fetch(`${SB}/rest/v1/shop_settings?on_conflict=key`, {
+      method: "POST",
+      headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({
+        key: "agent_info",
+        value: { host: os.hostname(), ips, platform: `${os.platform()} ${os.arch()}`, user: os.userInfo().username, dir: HERE, version: VERSION, printer: host, at: new Date().toISOString() },
+      }),
+    });
+  } catch { /* the next round tries again */ }
+}
+setTimeout(reportWhereIAm, 10_000);
+setInterval(reportWhereIAm, 10 * 60_000);
 
 // ─── Watchdog: a connection that went quiet is a dead one ─────────────────────
 // Seen on 22.10: the agent kept writing its status every few seconds for days

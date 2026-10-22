@@ -5,7 +5,16 @@ import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
 import AdminSaveToSite from "@/components/AdminSaveToSite";
-import { CANDIDATES } from "@/lib/candidates.generated";
+import { CANDIDATES as QUEUED } from "@/lib/candidates.generated";
+import rejectedFile from "../../data/rejected-models.json";
+
+/**
+ * Never show a model that was already rejected, whatever wrote the queue.
+ * The scripts filter it too (scripts/lib/answered.mjs); this is the second
+ * lock, because one stale sweep re-offered eleven rejected models on 22.10.
+ */
+const REJECTED = new Set(((rejectedFile as { rejected?: (string | number)[] }).rejected ?? []).map((id) => String(id).replace(/^mw-/, "")));
+const CANDIDATES = QUEUED.filter((c) => !REJECTED.has(String(c.id).replace(/^mw-/, "")));
 import SyncStatus from "./SyncStatus";
 import { SHELF_LABEL, SHELVES, type Decision, type DecisionsFile, type ModelDecision } from "@/lib/candidates";
 import { fetchRepoQueue, useApprovalsStore } from "@/lib/approvals-store";

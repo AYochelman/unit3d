@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-10-01T10:28:39.912Z
-// Items: 598
+// Items: 607
 
 import type { ImportedModel } from "./imported";
 
@@ -20645,6 +20645,214 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "https://makerworld.bblmw.com/makerworld/model/USfb1db311be4434/design/eff1639dd42c0d1d.jpeg",
       "https://makerworld.bblmw.com/makerworld/model/USfb1db311be4434/design/96a4134142b0a25c.jpeg"
     ]
+  },
+  {
+    "id": "mw-731905",
+    "name": "Cycle/Bike Phone Holder",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 4.75,
+    "grams": 70,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USf105b9bcab234a/design/2024-10-26_9b6bf598cea71.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Dhruv",
+    "sourceUrl": "https://makerworld.com/en/models/731905-cycle-bike-phone-holder",
+    "license": "Standard Digital File License",
+    "downloads": 12571,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "office"
+    ],
+    "plates": [
+      {
+        "g": 70,
+        "h": 4.75
+      },
+      {
+        "g": 160,
+        "h": 7.64
+      }
+    ]
+  },
+  {
+    "id": "mw-969952",
+    "name": "Toy egg with shell",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 2.44,
+    "grams": 42,
+    "size": "~100mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USeaaaaa6d543a8b/design/2025-01-09_147b0a77bbf1.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "gobyou",
+    "sourceUrl": "https://makerworld.com/en/models/969952-toy-egg-with-shell",
+    "license": "Standard Digital File License",
+    "downloads": 34901,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-1490865",
+    "name": "ClickySlide Fidget - Only 2 Pieces - 15 min",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.42,
+    "grams": 9,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US9427b1749b46ec/design/2025-06-06_c87a2884049c68.gif?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Maker Making",
+    "sourceUrl": "https://makerworld.com/en/models/1490865-clickyslide-fidget-only-2-pieces-15-min",
+    "license": "Standard Digital File License",
+    "downloads": 3112,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.01,
+    "gramsAms": 16
+  },
+  {
+    "id": "mw-1535819",
+    "name": "Medusa Bust Sculpture – Elegant Mythological Decor",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 29.64,
+    "grams": 372,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USe8fac7b9d120f6/design/2025-06-20_cccbc9ccec7b3.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Sculturissimo3D",
+    "sourceUrl": "https://makerworld.com/en/models/1535819-medusa-bust-sculpture-elegant-mythological-decor",
+    "license": "Standard Digital File License",
+    "downloads": 1786,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2600033",
+    "name": "Bone Dog Paw Hooks - Wallmount",
+    "desc": "אביזר לחיה, מודפס ב-PETG שעמיד במים ובשמש.",
+    "shelf": "pets",
+    "hours": 1.9,
+    "grams": 56,
+    "size": "~100mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfa0e44b70dfced/design/5fc77e0b57ca626f.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "ElikaGreen",
+    "sourceUrl": "https://makerworld.com/en/models/2600033-bone-dog-paw-hooks-wallmount",
+    "license": "Standard Digital File License",
+    "downloads": 414,
+    "hue": 30,
+    "art": "round",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ]
+  },
+  {
+    "id": "mw-2830492",
+    "name": "Suporte Paramétrico para Tigela de Cachorro",
+    "desc": "אביזר לחיה, מודפס ב-PETG שעמיד במים ובשמש.",
+    "shelf": "pets",
+    "hours": 7.74,
+    "grams": 255,
+    "size": "~160mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USe56379bd74fec5/design/75610df72f26b14e.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Arthur Matiello",
+    "sourceUrl": "https://makerworld.com/en/models/2830492-parametric-dog-bowl-stand",
+    "license": "Standard Digital File License",
+    "downloads": 3681,
+    "hue": 30,
+    "art": "round",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ],
+    "hoursAms": 8.68,
+    "gramsAms": 277
+  },
+  {
+    "id": "mw-3207428",
+    "name": "Floating Bedside Table – Under Mattress Mount",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 17.04,
+    "grams": 535,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US1db6af32685775/design/6d114d7906222b36.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Sydney 3D Making",
+    "sourceUrl": "https://makerworld.com/en/models/3207428-floating-bedside-table-under-mattress-mount",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 95,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3280107",
+    "name": "Customizable Dog/cat Bowl – Two-Part Design",
+    "desc": "אביזר לחיה, מודפס ב-PETG שעמיד במים ובשמש.",
+    "shelf": "pets",
+    "hours": 14.03,
+    "grams": 421,
+    "size": "~250mm",
+    "colors": 3,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USae6df2806d0020/design/ca0c8e345174b007.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "3D Creations",
+    "sourceUrl": "https://makerworld.com/en/models/3280107-customizable-dog-cat-bowl-two-part-design",
+    "license": "Standard Digital File License",
+    "downloads": 79,
+    "hue": 30,
+    "art": "round",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ]
+  },
+  {
+    "id": "mw-3442709",
+    "name": "Ultra Satisfying Fidget Flexy Ring! (NO TPU!)",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.98,
+    "grams": 21,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US420c445243ab48/design/86f5ff755df51587.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Gjörk",
+    "sourceUrl": "https://makerworld.com/en/models/3442709-ultra-satisfying-fidget-flexy-ring-no-tpu",
+    "license": "Standard Digital File License",
+    "downloads": 11276,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.14,
+    "gramsAms": 24
   }
 ];
 
