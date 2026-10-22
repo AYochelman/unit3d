@@ -25,6 +25,7 @@ import OrdersTab from "@/components/admin/OrdersTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import ExpensesTab from "@/components/admin/ExpensesTab";
 import TodoTab from "@/components/admin/TodoTab";
+import PartsStock from "@/components/admin/PartsStock";
 import PrinterTab from "@/components/admin/PrinterTab";
 import ChangelogTab from "@/components/admin/ChangelogTab";
 import ReviewsTab from "@/components/admin/ReviewsTab";
@@ -654,6 +655,8 @@ function StockTab() {
           כרגע {blockedCount === 0 ? "אין מוצרים חסומים" : `${blockedCount} מוצרים חסומים`} מתוך {items.length}.
         </p>
       </div>
+
+      <PartsStock />
 
       {/* ── material × colour grid ─────────────────────────────────────── */}
       <div className="rounded-2xl border border-ink-800 divide-y divide-ink-800">
