@@ -199,6 +199,51 @@ client.on("error", (e) => {
 });
 client.on("reconnect", () => log("reconnecting..."));
 
+// ─── A new access code, pasted from the site ─────────────────────────────────
+// The printer's LAN access code changes (a reset, a firmware update), and the
+// agent then cannot connect at all — and fixing it meant sitting at the Pi.
+// /admin → "מדפסת" writes the new code to shop_settings ("printer_access_code");
+// the agent reads it every minute (the service key reads the private table),
+// saves it to config.json, and restarts: systemd brings it back with the new
+// code, and every connection — MQTT, camera, FTPS — uses it from there.
+async function checkRemoteAccessCode() {
+  try {
+    const res = await fetch(`${SB}/rest/v1/shop_settings?key=eq.printer_access_code&select=value`, { headers: sbHeaders, cache: "no-store" });
+    if (!res.ok) return;
+    const v = (await res.json())[0]?.value;
+    const code = String((v && typeof v === "object" ? v.code : v) ?? "").trim();
+    if (!code || code === accessCode || !/^[A-Za-z0-9]{6,16}$/.test(code)) return;
+    const next = { ...cfg, printer: { ...cfg.printer, accessCode: code } };
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(next, null, 2) + "\n", "utf8");
+    log("a new printer access code arrived from the site - saved, restarting with it");
+    process.exit(1);
+  } catch (e) {
+    log("access code check failed:", e.message);
+  }
+}
+setTimeout(checkRemoteAccessCode, 5_000);
+setInterval(checkRemoteAccessCode, 60_000);
+
+// ─── Watchdog: a connection that went quiet is a dead one ─────────────────────
+// Seen on 22.10: the agent kept writing its status every few seconds for days
+// while the printer printed, saying "offline" — the MQTT link had died and the
+// client never got a report again. Ask for a full report every minute, and if
+// five minutes pass with nothing from the printer, exit: systemd restarts the
+// agent (Restart=always) with a fresh connection, which is what fixed it by
+// hand. A printer that is really switched off just costs a restart every five
+// minutes, which is harmless.
+const STARTED = Date.now();
+setInterval(() => {
+  if (client.connected) {
+    client.publish(`device/${serial}/request`, JSON.stringify({ pushing: { sequence_id: "0", command: "pushall" } }));
+  }
+  const quiet = Date.now() - (lastSeen || STARTED);
+  if (quiet > 5 * 60_000) {
+    log(`watchdog: nothing from the printer for ${Math.round(quiet / 60_000)} min (connected: ${client.connected}) - restarting the agent`);
+    upsertStatus({ state: "offline" }).finally(() => process.exit(1));
+  }
+}, 60_000);
+
 client.on("message", (_topic, buf) => {
   try {
     const msg = JSON.parse(buf.toString());
