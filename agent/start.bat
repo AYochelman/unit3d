@@ -28,7 +28,14 @@ if not exist config.json (
 echo.
 echo   Running. Leave this window open. Close it to stop.
 echo.
+:run
 node printer-agent.mjs
+rem The watchdog exits with 1 when the printer stopped answering; start again.
+if errorlevel 1 (
+  echo   Restarting in 5 seconds...
+  timeout /t 5 /nobreak >nul
+  goto run
+)
 echo.
 echo   The agent stopped.
 pause
