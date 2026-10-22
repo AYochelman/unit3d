@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import Btn from "@/components/ui/Btn";
 import { Input } from "@/components/ui/Field";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
-import { accessCodeSetAt, agentStatus, saveAccessCode, validAccessCode, type AgentStatus } from "@/lib/printer-remote";
+import { accessCodeSetAt, agentInfo, agentStatus, saveAccessCode, validAccessCode, type AgentInfo, type AgentStatus } from "@/lib/printer-remote";
 import { cn } from "@/lib/cn";
 
 const STATE_HE: Record<string, string> = {
@@ -31,13 +31,17 @@ export default function PrinterTab() {
   const [setAt, setSetAt] = useState<string | null>(null);
   const [status, setStatus] = useState<AgentStatus | null>(null);
   const [fresh, setFresh] = useState(false);
+  const [info, setInfo] = useState<AgentInfo | null>(null);
 
   const refresh = useCallback(() => {
     void agentStatus().then((st) => {
       setStatus(st);
       setFresh(!!st?.updated_at && Date.now() - Date.parse(st.updated_at) < 3 * 60_000);
     });
-    if (token) void accessCodeSetAt(token).then(setSetAt);
+    if (token) {
+      void accessCodeSetAt(token).then(setSetAt);
+      void agentInfo(token).then(setInfo);
+    }
   }, [token]);
 
   useEffect(() => {
@@ -81,6 +85,12 @@ export default function PrinterTab() {
               עדכון אחרון מהסוכן: {when(status.updated_at)}
               {status.job_name ? ` · עבודה: ${status.job_name}` : ""}
             </div>
+            {info && (
+              <div className="text-[11px] text-ink-400" dir="ltr">
+                {info.host} · {info.ips.join(", ")} · {info.platform} · {info.user}@ · v{info.version}
+                <div className="text-ink-500">{info.dir} · reported {when(info.at)}</div>
+              </div>
+            )}
             {fresh && status.state === "offline" && (
               <p className="text-[12px] text-amber-300">הסוכן רץ אבל המדפסת לא עונה לו — בדרך כלל קוד גישה שהתחלף. הדבק את החדש למטה.</p>
             )}
