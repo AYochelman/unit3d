@@ -124,3 +124,20 @@ export function canMake(productId: string, counts: PartCounts): number | null {
   if (!needs.length) return null;
   return Math.min(...needs.map((n) => Math.floor((counts[n.part] ?? 0) / n.qty)));
 }
+
+/** Parts a quantity of this product needs that are not on the shelf (tracked and short). */
+export function missingParts(productId: string, counts: PartCounts, qty = 1): Part[] {
+  return needsFor(productId)
+    .filter((n) => counts[n.part] != null && (counts[n.part] ?? 0) < n.qty * qty)
+    .map((n) => PART_BY_ID[n.part])
+    .filter(Boolean);
+}
+
+/** Every tracked part that is short for at least one product that uses it. */
+export function shortParts(counts: PartCounts): Part[] {
+  return PARTS.filter((p) => counts[p.id] != null && usersOf(p.id).some((id) => missingParts(id, counts).some((m) => m.id === p.id)));
+}
+
+/** The line the owner sees: "יש להשלים את החלקים הבאים: …". */
+export const restockLine = (parts: Part[]): string =>
+  `יש להשלים את החלקים הבאים: ${parts.map((p) => p.name).join(", ")}`;

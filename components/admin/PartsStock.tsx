@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Pill from "@/components/ui/Pill";
 import { useAdminStore } from "@/lib/admin-store";
-import { PARTS, canMake, usersOf, PART_NEEDS } from "@/lib/parts";
+import { PARTS, canMake, usersOf, PART_NEEDS, shortParts, restockLine } from "@/lib/parts";
 import { PRODUCT_BY_ID, CONFIG_PRODUCT_BY_ID } from "@/lib/products";
 import { FIDGETS } from "@/lib/data";
 import { UNIT_FORM_BY_ID, type UnitFormId } from "@/lib/unitForms";
@@ -40,11 +40,14 @@ export default function PartsStock() {
           כל מה שנכנס לקופסה מלבד הפילמנט. רושמים כמה יש, ורואים אילו מוצרים צריכים מה וכמה עוד אפשר לייצר.
           שדה ריק = לא נספר.
         </p>
-        {(low.length > 0 || shortProducts.length > 0) && (
-          <p className="text-xs text-amber-300 mt-1">
-            {low.length > 0 && `נמוך: ${low.map((p) => p.name).join(", ")}. `}
-            {shortProducts.length > 0 && `${shortProducts.length} מוצרים אי אפשר לייצר כרגע בגלל חלק חסר.`}
+        {shortParts(parts).length > 0 && (
+          <p className="text-sm font-semibold text-amber-300 mt-1">
+            {restockLine(shortParts(parts))}
+            {shortProducts.length > 0 && <span className="font-normal text-xs"> · {shortProducts.length} מוצרים אי אפשר לייצר כרגע</span>}
           </p>
+        )}
+        {low.length > 0 && (
+          <p className="text-xs text-ink-400 mt-1">נמוך: {low.map((p) => p.name).join(", ")}.</p>
         )}
       </div>
       <div className="rounded-2xl border border-ink-800 divide-y divide-ink-800">
@@ -104,5 +107,25 @@ export default function PartsStock() {
         })}
       </div>
     </div>
+  );
+}
+
+/**
+ * Across the whole admin: a part is short for something the shop sells.
+ * Filament has its own signals; this is only the rest.
+ */
+export function PartsBanner({ onOpen }: { onOpen: () => void }) {
+  const parts = useAdminStore((s) => s.parts);
+  const short = shortParts(parts);
+  if (!short.length) return null;
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="w-full text-start mb-5 rounded-2xl border border-amber-500/40 bg-amber-500/5 px-4 py-3 text-sm text-amber-200 hover:bg-amber-500/10"
+    >
+      <b>{restockLine(short)}</b>
+      <span className="text-[11px] text-ink-400"> · למלאי ←</span>
+    </button>
   );
 }
