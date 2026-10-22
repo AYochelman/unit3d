@@ -9,6 +9,7 @@ import { REMOVED_BY_OWNER, SHELF_MOVES } from "./shop-overrides";
 import type { OrderDecision, PlacedOrder } from "./orders";
 import { normalizeCode, type Coupon } from "./coupons";
 import { DEFAULT_USD_RATE, type Expense } from "./expenses";
+import type { PartCounts } from "./parts";
 import type { ImportedShelf } from "./imported";
 import { readToken, writeToken } from "./admin-token";
 import { forgetUnlock, rememberUnlock } from "./admin-unlock";
@@ -68,6 +69,8 @@ export type AdminExport = {
   materials?: Material[];
   /** Colours he added — including glow, colour-changing and dual-colour spools. */
   colors?: Filament[];
+  /** Non-filament parts on hand (rings, magnets, chains…) — see lib/parts.ts. */
+  parts?: PartCounts;
 };
 
 type AdminState = {
@@ -76,6 +79,9 @@ type AdminState = {
   overrides: Record<string, ItemOverride>;
   /** Only records what is OUT — a missing key means the filament is on the shelf. */
   stock: StockMap;
+  /** Parts on hand by part id; a missing key means "not tracked". */
+  parts: PartCounts;
+  setPartCount(id: string, count: number | null): void;
   /**
    * Product names the owner rewrote from the shop.
    *
@@ -200,6 +206,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   settings: DEFAULT_COST_SETTINGS,
   overrides: {},
   stock: {},
+  parts: {},
   names: { ...HE_NAME_OVERRIDES },
   orders: [],
   coupons: [],
@@ -277,6 +284,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   removeMaterial: (id) => set((s) => ({ materials: s.materials.filter((x) => x.id !== id) })),
   addColor: (c) => set((s) => ({ colors: [...s.colors.filter((x) => x.id !== c.id), c] })),
   removeColor: (id) => set((s) => ({ colors: s.colors.filter((x) => x.id !== id) })),
+
+  setPartCount: (id, count) =>
+    set((s) => {
+      const next = { ...s.parts };
+      if (count == null || !Number.isFinite(count)) delete next[id];
+      else next[id] = Math.max(0, Math.round(count));
+      return { parts: next };
+    }),
 
   setStock: (material, color, available) =>
     set((s) => {
@@ -390,11 +405,11 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     }),
 
   resetAll: () =>
-    set({ settings: DEFAULT_COST_SETTINGS, overrides: {}, stock: {}, interest: [], pricing: DEFAULT_PRICING, materials: [], colors: [] }),
+    set({ settings: DEFAULT_COST_SETTINGS, overrides: {}, stock: {}, parts: {}, interest: [], pricing: DEFAULT_PRICING, materials: [], colors: [] }),
 
   exportJson: () => {
-    const { settings, overrides, stock, interest, pricing, shelves, materials, colors } = get();
-    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, interest, shelves, materials, colors };
+    const { settings, overrides, stock, parts, interest, pricing, shelves, materials, colors } = get();
+    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, parts, interest, shelves, materials, colors };
     return JSON.stringify(payload, null, 2);
   },
 
@@ -407,6 +422,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         overrides: parsed.overrides ?? {},
         pricing: { ...DEFAULT_PRICING, ...parsed.pricing },
         stock: parsed.stock ?? {},
+        parts: parsed.parts ?? {},
         interest: parsed.interest ?? [],
         shelves: parsed.shelves ?? {},
         materials: parsed.materials ?? [],
