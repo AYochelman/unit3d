@@ -53,7 +53,7 @@ const SLIDES: Slide[] = [
     title: "עיצוב מותאם לחיילים",
     line: "סמל היחידה שלכם, בצבעים שלו, מודפס בגודל שתבחרו.",
     href: "/catalog",
-    photo: "/img/hero/soldiers.webp",
+    photo: "/img/hero/soldiers-432.webp",
     art: true,
   },
   {
