@@ -53,7 +53,7 @@ const SLIDES: Slide[] = [
     title: "עיצוב מותאם לחיילים",
     line: "סמל היחידה שלכם, בצבעים שלו, מודפס בגודל שתבחרו.",
     href: "/catalog",
-    photo: "/img/hero/soldiers.webp",
+    photo: "/img/hero/soldiers-432.webp",
     art: true,
   },
   {
@@ -166,7 +166,7 @@ export default function HeroCarousel() {
               )}
             >
               {(!s.art || shown[s.id]) && (
-              <span className="relative flex items-center justify-center bg-ink-900/60 p-4 md:p-6 overflow-hidden">
+              <span className="relative flex items-center justify-center p-4 md:p-6 overflow-hidden">
                 {s.video ? (
                   <video
                     src={assetSrc(s.video)}
