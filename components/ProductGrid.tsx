@@ -18,6 +18,7 @@ import { track } from "@/lib/analytics";
 import { clipSrc } from "@/lib/assets";
 import { designHref, isPersonalizable } from "@/lib/designable";
 import RestockModal from "@/components/RestockModal";
+import Pager, { usePaged } from "@/components/Pager";
 import type { MaterialId, Product, ProductArtId } from "@/lib/types";
 
 /** One card in any listing. Products, fidgets and configurator picks all map onto this. */
@@ -321,26 +322,12 @@ export function ListingCardView({ c }: { c: ListingCard }) {
   );
 }
 
-/** Six full rows on a wide screen — enough to browse, few enough to load. */
-const PER_PAGE = 24;
-
 export default function ProductGrid({ cards }: { cards: ListingCard[] }) {
-  const [page, setPage] = useState(0);
+  const { shown, at, pages, go } = usePaged(cards);
 
   if (!cards.length) {
     return <div className="text-center py-16 text-ink-400">אין מוצרים שמתאימים לסינון הזה.</div>;
   }
-
-  // Clamped rather than reset in an effect: narrowing a filter must not leave
-  // the grid parked on a page that no longer exists.
-  const pages = Math.ceil(cards.length / PER_PAGE);
-  const at = Math.min(page, pages - 1);
-  const shown = cards.slice(at * PER_PAGE, at * PER_PAGE + PER_PAGE);
-
-  const go = (to: number) => {
-    setPage(to);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <>
@@ -349,41 +336,7 @@ export default function ProductGrid({ cards }: { cards: ListingCard[] }) {
           <ListingCardView key={c.id} c={c} />
         ))}
       </div>
-
-      {pages > 1 && (
-        <nav className="mt-8 flex items-center justify-center gap-2" aria-label="דפדוף">
-          <button
-            type="button"
-            onClick={() => go(at - 1)}
-            disabled={at === 0}
-            className="px-3 py-1.5 rounded-lg text-sm font-semibold border border-ink-800 text-ink-300 hover:border-ink-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-ink-800 transition-colors"
-          >
-            הקודם
-          </button>
-          {Array.from({ length: pages }, (_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => go(i)}
-              aria-current={i === at ? "page" : undefined}
-              className={cn(
-                "w-8 h-8 rounded-lg text-sm font-bold transition-colors",
-                i === at ? "bg-flame-600 text-white" : "text-ink-400 border border-ink-800 hover:border-ink-600 hover:text-ink-100",
-              )}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={() => go(at + 1)}
-            disabled={at === pages - 1}
-            className="px-3 py-1.5 rounded-lg text-sm font-semibold border border-ink-800 text-ink-300 hover:border-ink-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-ink-800 transition-colors"
-          >
-            הבא
-          </button>
-        </nav>
-      )}
+      <Pager at={at} pages={pages} go={go} />
     </>
   );
 }
