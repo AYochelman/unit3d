@@ -59,9 +59,9 @@ jobs:
           from PIL import Image
           import os
           im = Image.open('cam.jpg'); print('::notice title=frame size::%dx%d' % im.size)
-          im = im.convert('RGB'); im.thumbnail((960, 960))
-          for q in (80, 68, 56, 45, 35):
+          im = im.convert('RGB'); im.thumbnail((800, 800))
+          for q in (80, 70, 60, 50, 40, 30, 22):
               im.save('small.jpg', quality=q)
-              if os.path.getsize('small.jpg') < 46000: break
+              if os.path.getsize('small.jpg') < 26500: break
           "
-          base64 -w0 small.jpg | fold -w 7000 | head -n 9 | nl -v1 | while read -r n chunk; do echo "::notice title=frame $n::$chunk"; done
+          base64 -w0 small.jpg | fold -w 4000 | head -n 9 | nl -v1 | while read -r n chunk; do echo "::notice title=frame $n::$chunk"; done
