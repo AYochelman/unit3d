@@ -478,6 +478,19 @@ function keepChamberLit() {
 // neither is told so, once, rather than failing silently.
 const CAM_FILE = path.join(HERE, ".cam.jpg");
 
+// The part of the picture that is the printer and not the room behind it: the
+// camera looks out through the door on its right, so ~24% goes on that side and
+// ~4% on the other. Applied to the still, the site's video, YouTube and the
+// vertical stream alike. config.json camera.crop: an ffmpeg crop to override,
+// or false for the whole picture.
+const CROP = cfg.camera?.crop === false ? "null" : (cfg.camera?.crop || "crop=iw*0.72:ih:iw*0.04:0");
+const BRAND_H = path.join(HERE, "overlay-horizontal.png");
+const BRAND_V = path.join(HERE, "overlay-vertical.png");
+/** Where the camera sits in each panel — the transparent window in the PNGs. */
+const BRAND_SLOT = { x: 240, w: 614, h: 480 };
+const BRAND_V_SLOT = { y: 290, w: 720, h: 562 };
+const branded = () => cfg.live?.branding !== false && fs.existsSync(BRAND_H);
+
 // The printer's stream is served with its own self-signed certificate — the
 // same one MQTT presents, and the same reason that connection passes
 // rejectUnauthorized: false. Recent ffmpeg verifies TLS by default and refuses,
@@ -537,7 +550,7 @@ function startStream() {
   // anyone might paste into a chat.
   const authed = url.replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
   const seconds = Math.max(2, Math.round(CAM_EVERY / 1000));
-  ff = spawn(bin, [...RTSP_IN(authed), "-vf", `fps=1/${seconds}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE],
+  ff = spawn(bin, [...RTSP_IN(authed), "-vf", `${CROP},fps=1/${seconds}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE],
     { stdio: ["ignore", "ignore", "pipe"] });
 
   let said = false;
@@ -826,32 +839,31 @@ function startLive() {
   // bitrate looks the same as the original and costs a fraction to send.
   const copy = cfg.live?.mode === "copy";
   const stillEvery = Math.max(2, Math.round(CAM_EVERY / 1000));
-  const args = [
-    ...RTSP_IN(authed),
-    // The still comes out of THIS connection too.
-    //
-    // The printer serves one video connection at a time, and until now two
-    // were asked for: this encoder, and the separate one that grabs the still
-    // picture. The still grabber gets there first and holds it, so the encoder
-    // connected to nothing and produced nothing — while the agent, which only
-    // checked that the encoder process existed, told the site video was on
-    // air. Stills worked, video never did, and nothing said why.
-    //
-    // One connection, two outputs: the same frames become the still and the
-    // video, so they cannot compete for the printer.
-    "-vf", `fps=1/${stillEvery}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE,
-    ...(copy
-      ? ["-c:v", "copy"]
-      : ["-c:v", "libx264", "-preset", "veryfast", "-tune", "zerolatency",
-         "-vf", "scale=-2:480", "-b:v", "900k", "-maxrate", "1000k", "-bufsize", "1600k",
-         "-g", String(SEG_SECONDS * 25), "-keyint_min", String(SEG_SECONDS * 25), "-sc_threshold", "0"]),
-    "-an",
-    "-f", "hls",
-    "-hls_time", String(SEG_SECONDS),
+  // Branding: the picture cropped to the printer (no room behind it) with the
+  // shop's panel beside it — agent/overlay-horizontal.png, made from
+  // agent/overlay.html. Copy mode passes the printer's video through untouched,
+  // so it can be neither cropped nor branded.
+  const brand = !copy && branded();
+  const inputs = [...RTSP_IN(authed)];
+  if (brand) inputs.push("-loop", "1", "-i", BRAND_H);
+  const audioIn = brand ? 2 : 1;
+  if (hlsYtKey) inputs.push("-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo");
+  const video = copy
+    ? ["-map", "0:v:0", "-c:v", "copy"]
+    : ["-filter_complex", brand
+        ? `[0:v]${CROP},scale=${BRAND_SLOT.w}:${BRAND_SLOT.h},setsar=1,pad=854:480:${BRAND_SLOT.x}:0:black[cam];[cam][1:v]overlay=0:0:shortest=1,format=yuv420p[v]`
+        : `[0:v]${CROP},scale=-2:480,setsar=1,format=yuv420p[v]`,
+       "-map", "[v]",
+       "-c:v", "libx264", "-preset", "veryfast", "-tune", "zerolatency",
+       "-b:v", "900k", "-maxrate", "1000k", "-bufsize", "1600k",
+       "-g", String(SEG_SECONDS * 25), "-keyint_min", String(SEG_SECONDS * 25), "-sc_threshold", "0"];
+
+  const hlsOpts = {
+    time: String(SEG_SECONDS),
     // A little more slack than the player needs, so a viewer who falls a
     // second behind still finds the piece he is asking for.
-    "-hls_list_size", "10",
-    "-hls_flags", "delete_segments+independent_segments+temp_file",
+    list: "10",
+    flags: "delete_segments+independent_segments+temp_file",
     // Every run gets its own name for its pieces.
     //
     // They used to be seg_00000, seg_00001 … starting again from zero on every
@@ -864,28 +876,41 @@ function startLive() {
     //
     // With a run id in the name, a name means one piece of video for ever, and
     // the year-long cache is simply true.
-    "-hls_segment_filename", path.join(HLS_DIR, `seg_${runId}_%05d.ts`),
-    path.join(HLS_DIR, "stream.m3u8"),
-  ];
+    segments: `seg_${runId}_%05d.ts`,
+  };
+
   // YouTube rides on the same encode: one picture, two destinations, through
   // ffmpeg's tee. YouTube wants an audio track, so a silent one is made up for
   // it (the site's pieces stay video-only), and onfail=ignore means a refused
   // or dropped YouTube connection never takes the site's video down with it.
-  // Relative names because the tee spec splits on ':' — a Windows path has one.
-  if (hlsYtKey) {
-    const at = args.indexOf("-an");
-    const hlsOpts = [
-      `hls_time=${SEG_SECONDS}`, "hls_list_size=10",
-      "hls_flags=delete_segments+independent_segments+temp_file",
-      `hls_segment_filename=seg_${runId}_%05d.ts`,
-    ].join(":");
-    args.splice(at, args.length - at,
-      "-map", "0:v:0", "-map", "1:a:0", "-c:a", "aac", "-b:a", "64k", "-flags", "+global_header",
-      "-f", "tee", `[select=v:f=hls:${hlsOpts}]stream.m3u8|[f=flv:onfail=ignore]${rtmpOutput(hlsYtKey)}`);
-    // The silent track is a second input; it has to come right after the printer.
-    const firstOut = args.indexOf("-vf");
-    args.splice(firstOut, 0, "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo");
-  }
+  // Relative names (cwd is HLS_DIR) because the tee spec splits on ':' — a
+  // Windows path has one.
+  const output = hlsYtKey
+    ? ["-map", `${audioIn}:a:0`, "-c:a", "aac", "-b:a", "64k", "-flags", "+global_header",
+       "-f", "tee",
+       `[select=v:f=hls:hls_time=${hlsOpts.time}:hls_list_size=${hlsOpts.list}:hls_flags=${hlsOpts.flags}:hls_segment_filename=${hlsOpts.segments}]stream.m3u8|[f=flv:onfail=ignore]${rtmpOutput(hlsYtKey)}`]
+    : ["-an", "-f", "hls",
+       "-hls_time", hlsOpts.time, "-hls_list_size", hlsOpts.list, "-hls_flags", hlsOpts.flags,
+       "-hls_segment_filename", path.join(HLS_DIR, hlsOpts.segments),
+       path.join(HLS_DIR, "stream.m3u8")];
+
+  const args = [
+    ...inputs,
+    // The still comes out of THIS connection too.
+    //
+    // The printer serves one video connection at a time, and until now two
+    // were asked for: this encoder, and the separate one that grabs the still
+    // picture. The still grabber gets there first and holds it, so the encoder
+    // connected to nothing and produced nothing — while the agent, which only
+    // checked that the encoder process existed, told the site video was on
+    // air. Stills worked, video never did, and nothing said why.
+    //
+    // One connection, two outputs: the same frames become the still and the
+    // video, so they cannot compete for the printer.
+    "-map", "0:v:0", "-vf", `${CROP},fps=1/${stillEvery}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE,
+    ...video,
+    ...output,
+  ];
 
   hls = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"], cwd: HLS_DIR });
   // Only the FIRST chunk of output used to be printed, and the first thing
@@ -1145,8 +1170,15 @@ function stopSocial() {
   socialProcs.clear();
 }
 
-/** 9:16 with the whole picture in the middle and a blurred copy behind it. */
-const VERTICAL = "[0:v]split=2[a][b];[a]scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,boxblur=20:2[bg];[b]scale=720:-2[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2,format=yuv420p[v]";
+/**
+ * 9:16. The local pieces are already the branded horizontal picture, so the
+ * camera's window is cut back out of it and set into the vertical panel
+ * (agent/overlay-vertical.png). Without branding: the whole picture in the
+ * middle, over a blurred copy of itself.
+ */
+const verticalFilter = (brand) => brand
+  ? `[0:v]crop=${BRAND_SLOT.w}:${BRAND_SLOT.h}:${BRAND_SLOT.x}:0,scale=${BRAND_V_SLOT.w}:${BRAND_V_SLOT.h},setsar=1,pad=720:1280:0:${BRAND_V_SLOT.y}:black[cam];[cam][2:v]overlay=0:0:shortest=1,format=yuv420p[v]`
+  : "[0:v]split=2[a][b];[a]scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,boxblur=20:2[bg];[b]scale=720:-2[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2,format=yuv420p[v]";
 
 function socialTick(on) {
   const playlist = path.join(HLS_DIR, "stream.m3u8");
@@ -1156,6 +1188,8 @@ function socialTick(on) {
   }
   const bin = findFfmpeg();
   if (!bin) return;
+  // The horizontal pieces carry the panel only when the encoder was branded.
+  const vBrand = cfg.live?.mode !== "copy" && branded() && fs.existsSync(BRAND_V);
   for (const t of social) {
     const running = socialProcs.get(t.platform);
     if (running?.proc) continue;
@@ -1164,7 +1198,8 @@ function socialTick(on) {
       "-nostdin", "-loglevel", "error",
       "-re", "-i", playlist,
       "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
-      "-filter_complex", VERTICAL,
+      ...(vBrand ? ["-loop", "1", "-i", BRAND_V] : []),
+      "-filter_complex", verticalFilter(vBrand),
       "-map", "[v]", "-map", "1:a:0",
       "-c:v", "libx264", "-preset", "veryfast", "-b:v", "2000k", "-maxrate", "2500k", "-bufsize", "4000k",
       "-g", "50", "-keyint_min", "50", "-r", "25",
