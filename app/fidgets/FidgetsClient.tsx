@@ -10,6 +10,7 @@ import Emblem from "@/components/Emblem";
 import { FIDGETS } from "@/lib/data";
 import { fidgetStats } from "@/lib/products";
 import ProductToolbar from "@/components/ProductToolbar";
+import Pager, { usePaged } from "@/components/Pager";
 import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 import { fidgetKind, FIDGET_KIND_TABS, FIDGET_KIND_LABEL, type FidgetKindFilter } from "@/lib/fidget-kind";
 import { useOrderStore } from "@/lib/order-store";
@@ -230,9 +231,6 @@ function FidgetCard({
   );
 }
 
-/** How many cards a phone shows before asking. Mirrors .mobile-cap in globals.css. */
-const MOBILE_CAP = 24;
-
 export default function FidgetsClient() {
   const [listing, setListing] = useState<ListingState>(DEFAULT_LISTING);
   const [kind, setKind] = useState<FidgetKindFilter>("all");
@@ -246,8 +244,6 @@ export default function FidgetsClient() {
     const withPhoto = FIDGETS.filter((f) => !!(f.thumbnail ?? f.images?.[0]));
     return kind === "all" ? withPhoto : withPhoto.filter((f) => fidgetKind(f) === kind);
   }, [kind]);
-
-  const [showAll, setShowAll] = useState(false);
 
   const items = useMemo(() => {
     const withStats = pool.map((f) => ({
@@ -263,6 +259,7 @@ export default function FidgetsClient() {
     }));
     return applyListing(withStats, listing);
   }, [pool, listing]);
+  const { shown, at, pages, go } = usePaged(items);
 
   const addToOrder = (id: string, variantId?: string) => {
     const f = FIDGETS.find((x) => x.id === id);
@@ -365,30 +362,13 @@ export default function FidgetsClient() {
         </div>
       </Link>
 
-      {/* Grid */}
-      <div
-        className={cn(
-          "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4",
-          // Phones see the first 24 until they ask for the rest. See the
-          // .mobile-cap rule in globals.css for why, and note that it stops
-          // at 640px — the desktop grid is untouched.
-          !showAll && "mobile-cap",
-        )}
-      >
-        {items.map((f) => (
+      {/* Grid — same page size and columns as every other shelf. */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {shown.map((f) => (
           <FidgetCard key={f.id} f={f} onAdd={addToOrder} />
         ))}
       </div>
-
-      {!showAll && items.length > MOBILE_CAP && (
-        <button
-          type="button"
-          onClick={() => setShowAll(true)}
-          className="sm:hidden mt-5 w-full h-12 rounded-xl border border-ink-700 bg-ink-900 text-sm font-bold text-ink-100 active:scale-[0.99] transition-transform motion-reduce:transition-none"
-        >
-          הצג עוד {items.length - MOBILE_CAP} דגמים
-        </button>
-      )}
+      <Pager at={at} pages={pages} go={go} />
 
       {items.length === 0 && (
         <div className="text-center py-16 text-ink-400">
