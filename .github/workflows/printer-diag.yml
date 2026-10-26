@@ -54,9 +54,14 @@ jobs:
         run: |
           SB=$(node -e "console.log(require('./public/shop.json').supabaseUrl.replace(/\/$/,''))")
           curl -s "$SB/storage/v1/object/public/printer/live.jpg" -o cam.jpg
-          for q in 75 62 50 40 30; do
-            convert cam.jpg -resize 960x -quality $q small.jpg
-            [ "$(stat -c %s small.jpg)" -lt 46000 ] && break
-          done
-          echo "::notice title=frame size::$(identify -format '%wx%h' cam.jpg) -> $(stat -c %s small.jpg) bytes"
+          pip install -q pillow
+          python3 -c "
+          from PIL import Image
+          import os
+          im = Image.open('cam.jpg'); print('::notice title=frame size::%dx%d' % im.size)
+          im = im.convert('RGB'); im.thumbnail((960, 960))
+          for q in (80, 68, 56, 45, 35):
+              im.save('small.jpg', quality=q)
+              if os.path.getsize('small.jpg') < 46000: break
+          "
           base64 -w0 small.jpg | fold -w 7000 | head -n 9 | nl -v1 | while read -r n chunk; do echo "::notice title=frame $n::$chunk"; done
