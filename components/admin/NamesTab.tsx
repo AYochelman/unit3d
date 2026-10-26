@@ -102,8 +102,10 @@ export default function NamesTab() {
           : only === "edited" ? r.id in names
           : only === "removed" ? r.gone
           : true)
-      .filter((r) => !needle || r.current.includes(needle) || r.original.toLowerCase().includes(needle.toLowerCase()) || r.id.includes(needle))
-      .slice(0, 300);
+      // Every row, not the first 300: the owner looks for a product with the
+      // browser's own Ctrl+F as often as with the box above, and that only
+      // sees what is on the page. Thumbnails are lazy, so 600 rows stay cheap.
+      .filter((r) => !needle || r.current.includes(needle) || r.original.toLowerCase().includes(needle.toLowerCase()) || r.id.includes(needle));
   }, [names, q, only, shelves, removed]);
 
   const english = useMemo(() => IMPORTED.filter((m) => !HEB.test(names[m.id] ?? HE_NAMES[m.id] ?? HE_NAMES_AUTO[m.id] ?? m.name)).length, [names]);
