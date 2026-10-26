@@ -4,6 +4,11 @@ name: Printer diagnosis
 
 on:
   workflow_dispatch:
+    inputs:
+      frame:
+        description: "Also return the current camera still (base64, for layout mockups)"
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths: [".github/workflows/printer-diag.yml"]
@@ -42,3 +47,16 @@ jobs:
             echo "::notice title=sample $i::$(curl -s "${H[@]}" "$SB/rest/v1/printer_status?id=eq.live&select=state,nozzle_temp,bed_temp,job_name,progress,updated_at" | head -c 300)"
             sleep 3
           done
+      # The camera still, as base64 in chunks — the only way out of a run that
+      # needs no artifact download. 10 notices per step, so it is its own step.
+      - name: Camera still
+        if: ${{ inputs.frame }}
+        run: |
+          SB=$(node -e "console.log(require('./public/shop.json').supabaseUrl.replace(/\/$/,''))")
+          curl -s "$SB/storage/v1/object/public/printer/live.jpg" -o cam.jpg
+          for q in 75 62 50 40 30; do
+            convert cam.jpg -resize 960x -quality $q small.jpg
+            [ "$(stat -c %s small.jpg)" -lt 46000 ] && break
+          done
+          echo "::notice title=frame size::$(identify -format '%wx%h' cam.jpg) -> $(stat -c %s small.jpg) bytes"
+          base64 -w0 small.jpg | fold -w 7000 | head -n 9 | nl -v1 | while read -r n chunk; do echo "::notice title=frame $n::$chunk"; done
