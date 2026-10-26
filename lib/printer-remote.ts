@@ -141,3 +141,52 @@ export async function youtubeStatus(token: string): Promise<{ status: YoutubeSta
     return { status: null, pending: false };
   }
 }
+
+/**
+ * Instagram / TikTok: a stream URL + key for ONE broadcast. The agent reads it
+ * within seconds, keeps it in memory only, and overwrites the row with
+ * "received"; when the print ends it stops and forgets it.
+ */
+export type LiveTarget = { platform: "instagram" | "tiktok"; url: string; key: string };
+
+export async function saveLiveTargets(token: string, targets: LiveTarget[]): Promise<boolean> {
+  const a = await auth(token);
+  if (!a) return false;
+  try {
+    const res = await fetch(`${a.url}/rest/v1/shop_settings?on_conflict=key`, {
+      method: "POST",
+      headers: { ...a.headers, Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({ key: "live_targets", value: { targets, at: new Date().toISOString() } }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** What the agent says about a manual live: the ready title, the ntfy topic, what is streaming. */
+export type LiveNow = {
+  printing: boolean;
+  title: string | null;
+  description: string | null;
+  topic: string | null;
+  social: Record<string, string>;
+  at: string;
+};
+
+export async function liveNow(token: string): Promise<{ now: LiveNow | null; pending: boolean }> {
+  const a = await auth(token);
+  if (!a) return { now: null, pending: false };
+  try {
+    const res = await fetch(`${a.url}/rest/v1/shop_settings?key=in.(live_now,live_targets)&select=key,value`, { headers: a.headers, cache: "no-store" });
+    if (!res.ok) return { now: null, pending: false };
+    const rows = (await res.json()) as { key: string; value: Record<string, unknown> }[];
+    const t = rows.find((r) => r.key === "live_targets")?.value;
+    return {
+      now: (rows.find((r) => r.key === "live_now")?.value as LiveNow | undefined) ?? null,
+      pending: !!t && !t.received,
+    };
+  } catch {
+    return { now: null, pending: false };
+  }
+}

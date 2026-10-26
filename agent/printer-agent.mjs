@@ -790,7 +790,7 @@ function testBroadcastWanted() {
 let hlsYtKey = "";   // the YouTube key the running encoder was started with
 
 function startLive() {
-  if ((!R2 && !ytKey()) || cfg.live?.enabled === false) return;
+  if ((!R2 && !ytKey() && !social.length) || cfg.live?.enabled === false) return;
   const url = rtspUrl();
   if (!url) return;
   if (hls && hlsStartedFor === url) return;
@@ -1092,12 +1092,173 @@ async function ensureLiveCors() {
   log(`  ${JSON.stringify([{ AllowedOrigins: LIVE_ORIGINS, AllowedMethods: ["GET", "HEAD"], AllowedHeaders: ["*"], MaxAgeSeconds: 3600 }])}`);
 }
 
+// ─── Instagram and TikTok: one key per broadcast ─────────────────────────────
+// Neither gives a stream key that stays the same, or a way to start a live from
+// software: the key is made when the owner presses "Live" and is good for that
+// broadcast only. So this half cannot be automatic, only quick:
+//
+//   1. a print starts → a phone notification (ntfy) says so;
+//   2. the owner opens a live on instagram.com, pastes URL + key in /admin;
+//   3. within seconds this streams to it — vertical, 9:16 — and the owner
+//      presses "Go live" there;
+//   4. the print ends → this stops, and the key is forgotten.
+//
+// It reads the encoder's own local pieces rather than the printer: the printer
+// gives one video connection, and the encoder (site + YouTube) already has it.
+// A few seconds of extra delay, and nothing that already works is touched.
+const TARGETS_KEY = "live_targets";
+let social = [];                 // [{ platform, url }] — in memory only, never in config.json
+const socialProcs = new Map();   // platform → { proc, started }
+const socialWhy = {};            // platform → what happened last, for /admin
+
+const joinKey = (url, key) => {
+  const u = String(url || "").trim();
+  const k = String(key || "").trim();
+  if (!k) return u;
+  return u.endsWith("/") ? u + k : `${u}/${k}`;
+};
+
+async function checkSocialTargets() {
+  try {
+    const res = await fetch(`${SB}/rest/v1/shop_settings?key=eq.${TARGETS_KEY}&select=value`, { headers: sbHeaders, cache: "no-store" });
+    if (!res.ok) return;
+    const v = (await res.json())[0]?.value;
+    if (!v || typeof v !== "object" || v.received) return;
+    const next = (Array.isArray(v.targets) ? v.targets : [])
+      .filter((t) => t && /^rtmps?:\/\//i.test(String(t.url || "").trim()))
+      .map((t) => ({ platform: String(t.platform || "other").replace(/[^a-z]/gi, "").slice(0, 16) || "other", url: joinKey(t.url, t.key) }));
+    stopSocial();
+    social = next;
+    for (const t of social) socialWhy[t.platform] = "waiting";
+    // The key is good for one broadcast and lives only in this process now.
+    await setSetting(TARGETS_KEY, { received: true, platforms: social.map((t) => t.platform) });
+    log(social.length ? `social live: got a key for ${social.map((t) => t.platform).join(", ")}` : "social live: cleared from the site");
+    void reportLiveNow();
+  } catch (e) {
+    log("social live check failed:", e.message);
+  }
+}
+setInterval(checkSocialTargets, 8_000);
+
+function stopSocial() {
+  for (const [, p] of socialProcs) { try { p.proc.kill(); } catch {} }
+  socialProcs.clear();
+}
+
+/** 9:16 with the whole picture in the middle and a blurred copy behind it. */
+const VERTICAL = "[0:v]split=2[a][b];[a]scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,boxblur=20:2[bg];[b]scale=720:-2[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2,format=yuv420p[v]";
+
+function socialTick(on) {
+  const playlist = path.join(HLS_DIR, "stream.m3u8");
+  if (!on || !social.length || !hls || !fs.existsSync(playlist)) {
+    if (socialProcs.size) stopSocial();
+    return;
+  }
+  const bin = findFfmpeg();
+  if (!bin) return;
+  for (const t of social) {
+    const running = socialProcs.get(t.platform);
+    if (running?.proc) continue;
+    if (running && Date.now() - running.started < 15_000) continue;
+    const args = [
+      "-nostdin", "-loglevel", "error",
+      "-re", "-i", playlist,
+      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
+      "-filter_complex", VERTICAL,
+      "-map", "[v]", "-map", "1:a:0",
+      "-c:v", "libx264", "-preset", "veryfast", "-b:v", "2000k", "-maxrate", "2500k", "-bufsize", "4000k",
+      "-g", "50", "-keyint_min", "50", "-r", "25",
+      "-c:a", "aac", "-b:a", "96k", "-ar", "44100",
+      "-f", "flv", t.url,
+    ];
+    const proc = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"] });
+    const entry = { proc, started: Date.now() };
+    socialProcs.set(t.platform, entry);
+    socialWhy[t.platform] = "streaming";
+    let said = 0;
+    proc.stderr?.on("data", (d) => {
+      if (said++ >= 3) return;
+      const text = String(d).replace(/rtmps?:\/\/[^\s]+/gi, "rtmp://<target>").trim();
+      if (text) { log(`${t.platform}:`, text.slice(0, 200)); socialWhy[t.platform] = text.slice(0, 120); }
+    });
+    proc.on("exit", (code) => {
+      entry.proc = null;
+      if (code && socialWhy[t.platform] === "streaming") socialWhy[t.platform] = `stopped (${code})`;
+      void reportLiveNow();
+    });
+    log(`${t.platform}: streaming (vertical 720x1280)`);
+    void reportLiveNow();
+  }
+}
+
+// ─── "A print started" ───────────────────────────────────────────────────────
+// A phone notification through ntfy (free app, no account): the topic is made
+// up once and kept in config.json, and /admin shows which one to subscribe to.
+if (!cfg.notify?.ntfyTopic) {
+  saveConfig({ ...cfg, notify: { ...(cfg.notify ?? {}), ntfyTopic: `unit3d-${Math.random().toString(36).slice(2, 12)}` } });
+}
+
+async function notifyPrintStarted(title) {
+  const topic = cfg.notify?.ntfyTopic;
+  if (!topic || cfg.notify?.enabled === false) return;
+  try {
+    await fetch("https://ntfy.sh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topic,
+        title: "התחילה הדפסה",
+        message: `${title}\nאפשר לעלות לייב באינסטגרם — מדביקים את המפתח באדמין.`,
+        click: `${(cfg.site || "https://unit-3d.com").replace(/\/$/, "")}/admin`,
+        tags: ["printer"],
+      }),
+    });
+  } catch { /* a missed notification is not worth a crash */ }
+}
+
+/** What /admin needs to help with a manual live: the ready title, the topic, and what is streaming. */
+async function reportLiveNow() {
+  const printing = state() === "printing";
+  const text = printing ? liveText() : null;
+  await setSetting("live_now", {
+    printing,
+    title: text?.title ?? null,
+    description: text?.description ?? null,
+    topic: cfg.notify?.ntfyTopic ?? null,
+    social: Object.fromEntries(social.map((t) => [t.platform, socialProcs.get(t.platform)?.proc ? "streaming" : socialWhy[t.platform] || "waiting"])),
+  });
+}
+
+let printingBefore = false;
+async function printStartWatch() {
+  const now = state() === "printing";
+  if (now && !printingBefore) {
+    printingBefore = true;
+    // The name settles a moment after RUNNING; give it a breath.
+    setTimeout(() => {
+      void notifyPrintStarted(liveText().title);
+      void reportLiveNow();
+    }, 15_000);
+  } else if (!now && printingBefore && state() !== "paused") {
+    printingBefore = false;
+    if (social.length) {
+      log("social live: the print ended - stopping, and forgetting the key");
+      stopSocial();
+      social = [];
+      await setSetting(TARGETS_KEY, { received: true, ended: true, platforms: [] });
+    }
+    void reportLiveNow();
+  }
+}
+setInterval(() => { printStartWatch().catch(() => {}); }, 3_000);
+setTimeout(() => { reportLiveNow().catch(() => {}); }, 12_000);
+
 let wasLive = false;
 let lastWhy = null;
 async function liveTick() {
   // The two outermost gates used to return here in silence, which is how a
   // machine with no R2 keys looked identical to one that was working.
-  if ((!R2 && !ytKey()) || cfg.live?.enabled === false) {
+  if ((!R2 && !ytKey() && !social.length) || cfg.live?.enabled === false) {
     const why = liveBlocker();
     if (why !== lastWhy) { lastWhy = why; log(`live: no video - ${BLOCKER_TEXT[why] || why}`); }
     return;
@@ -1111,6 +1272,7 @@ async function liveTick() {
     stopLive();
     youtube.forget();
   }
+  socialTick(shouldStream);
   // A stream the site is not allowed to read is not a stream from the site's
   // point of view, so it is reported as no video WITH the reason, rather than
   // as working video the page then fails to play for reasons of its own.
