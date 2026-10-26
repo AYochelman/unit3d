@@ -6,6 +6,7 @@ import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { accessCodeSetAt, agentInfo, agentStatus, saveAccessCode, validAccessCode, type AgentInfo, type AgentStatus } from "@/lib/printer-remote";
 import { cn } from "@/lib/cn";
 import YoutubeLive from "@/components/admin/YoutubeLive";
+import SocialLive from "@/components/admin/SocialLive";
 
 const STATE_HE: Record<string, string> = {
   printing: "מדפיסה",
@@ -147,6 +148,7 @@ export default function PrinterTab() {
         </div>
       )}
       {token && <YoutubeLive token={token} />}
+      {token && <SocialLive token={token} />}
     </div>
   );
 }
