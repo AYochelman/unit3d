@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/Field";
 import { useSupabaseSession } from "@/lib/use-supabase-session";
 import { accessCodeSetAt, agentInfo, agentStatus, saveAccessCode, validAccessCode, type AgentInfo, type AgentStatus } from "@/lib/printer-remote";
 import { cn } from "@/lib/cn";
+import YoutubeLive from "@/components/admin/YoutubeLive";
 
 const STATE_HE: Record<string, string> = {
   printing: "מדפיסה",
@@ -145,6 +146,7 @@ export default function PrinterTab() {
           {setAt && <p className="text-[11px] text-ink-500">עודכן מכאן לאחרונה: {when(setAt)}</p>}
         </div>
       )}
+      {token && <YoutubeLive token={token} />}
     </div>
   );
 }

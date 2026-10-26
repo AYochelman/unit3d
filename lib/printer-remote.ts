@@ -81,3 +81,63 @@ export async function agentInfo(token: string): Promise<AgentInfo | null> {
     return null;
   }
 }
+
+/**
+ * YouTube Live settings for the agent. Written once to `shop_settings`
+ * ("youtube_setup"); the agent moves them into its own config.json within a
+ * minute and overwrites the row with "received" — the stream key and client
+ * secret are not kept in the database and are never read back here.
+ */
+export type YoutubeSetup = {
+  streamKey?: string;
+  clientId?: string;
+  clientSecret?: string;
+  titleTemplate?: string;
+  descriptionTemplate?: string;
+  enabled?: boolean;
+  clear?: boolean;
+};
+
+export async function saveYoutubeSetup(token: string, setup: YoutubeSetup): Promise<boolean> {
+  const a = await auth(token);
+  if (!a) return false;
+  try {
+    const res = await fetch(`${a.url}/rest/v1/shop_settings?on_conflict=key`, {
+      method: "POST",
+      headers: { ...a.headers, Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({ key: "youtube_setup", value: { ...setup, at: new Date().toISOString() } }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** What the agent says about YouTube: the sign-in code to type, or what is live. */
+export type YoutubeStatus = {
+  state: "off" | "key-only" | "signing-in" | "needs-code" | "connected" | "live" | "signed-out" | "error";
+  code?: string;
+  url?: string;
+  until?: string;
+  title?: string;
+  video?: string;
+  why?: string;
+  at: string;
+};
+
+export async function youtubeStatus(token: string): Promise<{ status: YoutubeStatus | null; pending: boolean }> {
+  const a = await auth(token);
+  if (!a) return { status: null, pending: false };
+  try {
+    const res = await fetch(`${a.url}/rest/v1/shop_settings?key=in.(youtube_status,youtube_setup)&select=key,value`, { headers: a.headers, cache: "no-store" });
+    if (!res.ok) return { status: null, pending: false };
+    const rows = (await res.json()) as { key: string; value: Record<string, unknown> }[];
+    const setup = rows.find((r) => r.key === "youtube_setup")?.value;
+    return {
+      status: (rows.find((r) => r.key === "youtube_status")?.value as YoutubeStatus | undefined) ?? null,
+      pending: !!setup && !setup.received,
+    };
+  } catch {
+    return { status: null, pending: false };
+  }
+}

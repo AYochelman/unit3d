@@ -30,6 +30,7 @@ import { makeR2 } from "./r2.mjs";
 import { VERSION } from "./version.mjs";
 import { HINT } from "./hints.mjs";
 import { makeOrderMail } from "./order-mail.mjs";
+import { makeYoutube, rtmpOutput, cleanTitle } from "./youtube.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(HERE, "config.json");
@@ -246,6 +247,107 @@ async function reportWhereIAm() {
 }
 setTimeout(reportWhereIAm, 10_000);
 setInterval(reportWhereIAm, 10 * 60_000);
+
+// ─── YouTube Live ─────────────────────────────────────────────────────────────
+// While printing, the live encoder also sends its picture to YouTube (stream
+// key), and the broadcast is titled after the print (OAuth). See youtube.mjs.
+//
+// Set up from /admin → "מדפסת": the stream key and the OAuth client are written
+// to shop_settings ("youtube_setup"), picked up here within a minute, moved into
+// config.json, and wiped from the database — only "received at" stays there.
+// What the agent has to say back (the sign-in code, "live as …") goes to
+// "youtube_status".
+function saveConfig(next) {
+  fs.writeFileSync(CONFIG_PATH, JSON.stringify(next, null, 2) + "\n", "utf8");
+  for (const k of Object.keys(cfg)) delete cfg[k];
+  Object.assign(cfg, next);
+}
+
+async function setSetting(key, value) {
+  await fetch(`${SB}/rest/v1/shop_settings?on_conflict=key`, {
+    method: "POST",
+    headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify({ key, value: { ...value, at: new Date().toISOString() } }),
+  }).catch(() => {});
+}
+
+const youtube = makeYoutube({ cfg, saveConfig, report: (v) => setSetting("youtube_status", v), log });
+const ytKey = () => (cfg.youtube?.enabled === false ? "" : cfg.youtube?.streamKey || "");
+
+async function checkRemoteYoutube() {
+  try {
+    const res = await fetch(`${SB}/rest/v1/shop_settings?key=eq.youtube_setup&select=value`, { headers: sbHeaders, cache: "no-store" });
+    if (!res.ok) return;
+    const v = (await res.json())[0]?.value;
+    if (!v || typeof v !== "object" || v.received) return;
+    const before = cfg.youtube ?? {};
+    let next;
+    if (v.clear) {
+      next = {};
+      log("youtube: disconnected from the site");
+    } else {
+      next = { ...before };
+      for (const k of ["streamKey", "clientId", "clientSecret", "titleTemplate", "descriptionTemplate"]) {
+        if (typeof v[k] === "string" && v[k].trim()) next[k] = v[k].trim();
+      }
+      if (typeof v.enabled === "boolean") next.enabled = v.enabled;
+      // A different OAuth client cannot use the old client's sign-in.
+      if (next.clientId !== before.clientId) next.refreshToken = "";
+      log("youtube: new settings arrived from the site - saved");
+    }
+    // Status first: the sign-in loop starts the moment the client is saved, and
+    // its "type this code" must not be overwritten by this line.
+    await setSetting("youtube_status", {
+      state: !next.streamKey ? "off" : next.clientId && !next.refreshToken ? "signing-in" : next.clientId ? "connected" : "key-only",
+    });
+    saveConfig({ ...cfg, youtube: next });
+    // The secrets now live on this machine only.
+    await setSetting("youtube_setup", { received: true, hasKey: !!next.streamKey, hasClient: !!next.clientId });
+    // A running encoder was started without (or with the old) key.
+    if (hls && ytKey() !== hlsYtKey) stopLive();
+  } catch (e) {
+    log("youtube settings check failed:", e.message);
+  }
+}
+setTimeout(checkRemoteYoutube, 8_000);
+setInterval(checkRemoteYoutube, 60_000);
+setInterval(() => { youtube.signInIfNeeded().catch((e) => log("youtube sign-in error:", e.message)); }, 5_000);
+
+const pretty = (s) => String(s || "").replace(/UNIT3D-\d+/gi, "").replace(/[_]+/g, " ").replace(/\s+-\s+|\s{2,}/g, " · ").replace(/\s+/g, " ").trim();
+const fill = (tpl, vars) => tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
+
+const DEFAULT_TITLE = "🔴 מדפיסים עכשיו: {name} | Unit 3D";
+const DEFAULT_DESCRIPTION = [
+  "מה מודפס עכשיו: {name}",
+  "מדפסת: {model} · חומר: {filament}",
+  "{layers} שכבות · כ-{time} הדפסה",
+  "",
+  "הלייב משודר אוטומטית בכל פעם שהמדפסת שלנו מדפיסה.",
+  "צפו גם באתר: https://unit-3d.com/livestream",
+  "מזמינים הדפסה בהתאמה אישית: https://unit-3d.com",
+  "",
+  "#הדפסתתלתמימד #3DPrinting #Unit3D",
+].join("\n");
+
+/** Written once per print, so a countdown does not rename the video every minute. */
+let ytText = null;
+let ytTextFor = "";
+function liveText() {
+  const p = last.print ?? {};
+  const job = currentKey || jobName();
+  if (ytText && ytTextFor === job) return ytText;
+  const ref = orderRef(p);
+  const name = pretty(p.subtask_name || p.gcode_file?.replace(/\.(gcode|3mf)(\.\d+)?$/i, "").replace(/^.*\//, "")) || (ref ? `הזמנה ${ref}` : "הדפסה");
+  const mins = num(p.mc_remaining_time);
+  const time = mins == null ? "" : mins >= 60 ? `${Math.floor(mins / 60)} שעות ו-${mins % 60} דקות` : `${mins} דקות`;
+  const vars = { name, model, filament: filamentName() || "PLA", layers: String(num(p.total_layer_num) ?? ""), time, ref };
+  ytText = {
+    title: cleanTitle(fill(cfg.youtube?.titleTemplate || DEFAULT_TITLE, vars)),
+    description: fill(cfg.youtube?.descriptionTemplate || DEFAULT_DESCRIPTION, vars).replace(/[<>]/g, "").slice(0, 4900),
+  };
+  ytTextFor = job;
+  return ytText;
+}
 
 // ─── Watchdog: a connection that went quiet is a dead one ─────────────────────
 // Seen on 22.10: the agent kept writing its status every few seconds for days
@@ -685,8 +787,10 @@ function testBroadcastWanted() {
   return false;
 }
 
+let hlsYtKey = "";   // the YouTube key the running encoder was started with
+
 function startLive() {
-  if (!R2 || cfg.live?.enabled === false) return;
+  if ((!R2 && !ytKey()) || cfg.live?.enabled === false) return;
   const url = rtspUrl();
   if (!url) return;
   if (hls && hlsStartedFor === url) return;
@@ -713,6 +817,7 @@ function startLive() {
   hlsLastStart = Date.now();
   runId = Date.now().toString(36);
   hlsStartedFor = url;
+  hlsYtKey = ytKey();
 
   const authed = url.replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
   // Re-encoding rather than copying the printer's video: it forces a keyframe
@@ -762,8 +867,27 @@ function startLive() {
     "-hls_segment_filename", path.join(HLS_DIR, `seg_${runId}_%05d.ts`),
     path.join(HLS_DIR, "stream.m3u8"),
   ];
+  // YouTube rides on the same encode: one picture, two destinations, through
+  // ffmpeg's tee. YouTube wants an audio track, so a silent one is made up for
+  // it (the site's pieces stay video-only), and onfail=ignore means a refused
+  // or dropped YouTube connection never takes the site's video down with it.
+  // Relative names because the tee spec splits on ':' — a Windows path has one.
+  if (hlsYtKey) {
+    const at = args.indexOf("-an");
+    const hlsOpts = [
+      `hls_time=${SEG_SECONDS}`, "hls_list_size=10",
+      "hls_flags=delete_segments+independent_segments+temp_file",
+      `hls_segment_filename=seg_${runId}_%05d.ts`,
+    ].join(":");
+    args.splice(at, args.length - at,
+      "-map", "0:v:0", "-map", "1:a:0", "-c:a", "aac", "-b:a", "64k", "-flags", "+global_header",
+      "-f", "tee", `[select=v:f=hls:${hlsOpts}]stream.m3u8|[f=flv:onfail=ignore]${rtmpOutput(hlsYtKey)}`);
+    // The silent track is a second input; it has to come right after the printer.
+    const firstOut = args.indexOf("-vf");
+    args.splice(firstOut, 0, "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo");
+  }
 
-  hls = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"] });
+  hls = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"], cwd: HLS_DIR });
   // Only the FIRST chunk of output used to be printed, and the first thing
   // ffmpeg says is never the problem — so the line that mattered was the one
   // line that never appeared. A handful is enough to diagnose and few enough
@@ -771,13 +895,13 @@ function startLive() {
   let saidTimes = 0;
   hls.stderr?.on("data", (d) => {
     if (saidTimes >= 5) return;
-    const text = String(d).replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").trim();
+    const text = String(d).replace(/rtsps?:\/\/[^\s]+/gi, "rtsps://<printer>").replace(/rtmps?:\/\/[^\s\]|]+/gi, "rtmp://<youtube>").trim();
     if (!text) return;
     saidTimes++;
     log("live:", text.slice(0, 200));
   });
   hls.on("exit", () => { hls = null; hlsStartedFor = ""; liveOnAir = false; });
-  log(`live: streaming to the site in ${SEG_SECONDS}s pieces`);
+  log(`live: streaming to the site in ${SEG_SECONDS}s pieces${hlsYtKey ? " and to YouTube" : ""}`);
 }
 
 function stopLive() {
@@ -973,7 +1097,7 @@ let lastWhy = null;
 async function liveTick() {
   // The two outermost gates used to return here in silence, which is how a
   // machine with no R2 keys looked identical to one that was working.
-  if (!R2 || cfg.live?.enabled === false) {
+  if ((!R2 && !ytKey()) || cfg.live?.enabled === false) {
     const why = liveBlocker();
     if (why !== lastWhy) { lastWhy = why; log(`live: no video - ${BLOCKER_TEXT[why] || why}`); }
     return;
@@ -982,8 +1106,10 @@ async function liveTick() {
   if (shouldStream) {
     startLive();
     await pushLive();
+    if (hls && hlsYtKey && state() === "printing") void youtube.setLiveText(liveText()).catch((e) => log("youtube error:", e.message));
   } else if (hls) {
     stopLive();
+    youtube.forget();
   }
   // A stream the site is not allowed to read is not a stream from the site's
   // point of view, so it is reported as no video WITH the reason, rather than
