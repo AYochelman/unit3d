@@ -87,6 +87,8 @@ export default function NamesTab() {
   const [only, setOnly] = useState<"all" | "english" | "edited" | "removed">("all");
   /** Which row has its shelf picker open. One at a time keeps the list scannable. */
   const [openShelf, setOpenShelf] = useState<string | null>(null);
+  /** The row whose name is being typed. */
+  const [editing, setEditing] = useState<string | null>(null);
 
   const rows = useMemo(() => {
     const gone = new Set(removed);
@@ -159,12 +161,29 @@ export default function NamesTab() {
                   {r.image && <Image src={r.image} alt="" fill sizes="44px" className="object-cover" unoptimized />}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <Input
-                    value={r.current}
-                    onChange={(e) => setName(r.id, e.target.value)}
-                    className="h-9"
-                    aria-label={`שם ל-${r.original}`}
-                  />
+                  {/* Text until clicked, a field while editing. The browser's
+                      Ctrl+F never looks inside an <input>, so a list of 600
+                      fields could not be searched by the names it shows. */}
+                  {editing === r.id ? (
+                    <Input
+                      autoFocus
+                      value={r.current}
+                      onChange={(e) => setName(r.id, e.target.value)}
+                      onBlur={() => setEditing(null)}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === "Escape") setEditing(null); }}
+                      className="h-9"
+                      aria-label={`שם ל-${r.original}`}
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setEditing(r.id)}
+                      className="block h-9 w-full px-3.5 rounded-lg bg-ink-900 border border-ink-700 text-ink-50 text-right hover:border-ink-500 transition-colors truncate"
+                      title="לחיצה לעריכה"
+                    >
+                      {r.current}
+                    </button>
+                  )}
                   <span className="block mt-1 text-[11px] text-ink-500 truncate" dir="ltr" title={r.original}>
                     {r.original}
                   </span>
