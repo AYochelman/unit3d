@@ -14,7 +14,7 @@ import type { ImportedShelf } from "./imported";
 export const SHELF_MOVES: Record<string, ImportedShelf[]> = {
   "mw-1379807": ["smoke","trendy"],
   "mw-1994754": ["smoke","trendy"],
-  "mw-2856174": ["fidget","trendy"],
+  "mw-2856174": ["trendy","fidget"],
   "mw-3346591": ["smoke","trendy"],
   "mw-713529": ["smoke","trendy"],
 };
