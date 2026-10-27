@@ -478,6 +478,19 @@ function keepChamberLit() {
 // neither is told so, once, rather than failing silently.
 const CAM_FILE = path.join(HERE, ".cam.jpg");
 
+// The part of the picture that is the printer and not the room behind it: the
+// camera looks out through the door on its right, so ~24% goes on that side and
+// ~4% on the other. Applied to the still, the site's video, YouTube and the
+// vertical stream alike. config.json camera.crop: an ffmpeg crop to override,
+// or false for the whole picture.
+const CROP = cfg.camera?.crop === false ? "null" : (cfg.camera?.crop || "crop=iw*0.72:ih:iw*0.04:0");
+const BRAND_H = path.join(HERE, "overlay-horizontal.png");
+const BRAND_V = path.join(HERE, "overlay-vertical.png");
+/** Where the camera sits in each panel — the transparent window in the PNGs. */
+const BRAND_SLOT = { x: 240, w: 614, h: 480 };
+const BRAND_V_SLOT = { y: 290, w: 720, h: 562 };
+const branded = () => cfg.live?.branding !== false && fs.existsSync(BRAND_H);
+
 // The printer's stream is served with its own self-signed certificate — the
 // same one MQTT presents, and the same reason that connection passes
 // rejectUnauthorized: false. Recent ffmpeg verifies TLS by default and refuses,
@@ -537,7 +550,7 @@ function startStream() {
   // anyone might paste into a chat.
   const authed = url.replace(/^rtsps?:\/\//i, (m) => `${m}bblp:${encodeURIComponent(accessCode)}@`);
   const seconds = Math.max(2, Math.round(CAM_EVERY / 1000));
-  ff = spawn(bin, [...RTSP_IN(authed), "-vf", `fps=1/${seconds}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE],
+  ff = spawn(bin, [...RTSP_IN(authed), "-vf", `${CROP},fps=1/${seconds}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE],
     { stdio: ["ignore", "ignore", "pipe"] });
 
   let said = false;
@@ -790,7 +803,7 @@ function testBroadcastWanted() {
 let hlsYtKey = "";   // the YouTube key the running encoder was started with
 
 function startLive() {
-  if ((!R2 && !ytKey()) || cfg.live?.enabled === false) return;
+  if ((!R2 && !ytKey() && !social.length) || cfg.live?.enabled === false) return;
   const url = rtspUrl();
   if (!url) return;
   if (hls && hlsStartedFor === url) return;
@@ -826,32 +839,31 @@ function startLive() {
   // bitrate looks the same as the original and costs a fraction to send.
   const copy = cfg.live?.mode === "copy";
   const stillEvery = Math.max(2, Math.round(CAM_EVERY / 1000));
-  const args = [
-    ...RTSP_IN(authed),
-    // The still comes out of THIS connection too.
-    //
-    // The printer serves one video connection at a time, and until now two
-    // were asked for: this encoder, and the separate one that grabs the still
-    // picture. The still grabber gets there first and holds it, so the encoder
-    // connected to nothing and produced nothing — while the agent, which only
-    // checked that the encoder process existed, told the site video was on
-    // air. Stills worked, video never did, and nothing said why.
-    //
-    // One connection, two outputs: the same frames become the still and the
-    // video, so they cannot compete for the printer.
-    "-vf", `fps=1/${stillEvery}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE,
-    ...(copy
-      ? ["-c:v", "copy"]
-      : ["-c:v", "libx264", "-preset", "veryfast", "-tune", "zerolatency",
-         "-vf", "scale=-2:480", "-b:v", "900k", "-maxrate", "1000k", "-bufsize", "1600k",
-         "-g", String(SEG_SECONDS * 25), "-keyint_min", String(SEG_SECONDS * 25), "-sc_threshold", "0"]),
-    "-an",
-    "-f", "hls",
-    "-hls_time", String(SEG_SECONDS),
+  // Branding: the picture cropped to the printer (no room behind it) with the
+  // shop's panel beside it — agent/overlay-horizontal.png, made from
+  // agent/overlay.html. Copy mode passes the printer's video through untouched,
+  // so it can be neither cropped nor branded.
+  const brand = !copy && branded();
+  const inputs = [...RTSP_IN(authed)];
+  if (brand) inputs.push("-loop", "1", "-i", BRAND_H);
+  const audioIn = brand ? 2 : 1;
+  if (hlsYtKey) inputs.push("-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo");
+  const video = copy
+    ? ["-map", "0:v:0", "-c:v", "copy"]
+    : ["-filter_complex", brand
+        ? `[0:v]${CROP},scale=${BRAND_SLOT.w}:${BRAND_SLOT.h},setsar=1,pad=854:480:${BRAND_SLOT.x}:0:black[cam];[cam][1:v]overlay=0:0:shortest=1,format=yuv420p[v]`
+        : `[0:v]${CROP},scale=-2:480,setsar=1,format=yuv420p[v]`,
+       "-map", "[v]",
+       "-c:v", "libx264", "-preset", "veryfast", "-tune", "zerolatency",
+       "-b:v", "900k", "-maxrate", "1000k", "-bufsize", "1600k",
+       "-g", String(SEG_SECONDS * 25), "-keyint_min", String(SEG_SECONDS * 25), "-sc_threshold", "0"];
+
+  const hlsOpts = {
+    time: String(SEG_SECONDS),
     // A little more slack than the player needs, so a viewer who falls a
     // second behind still finds the piece he is asking for.
-    "-hls_list_size", "10",
-    "-hls_flags", "delete_segments+independent_segments+temp_file",
+    list: "10",
+    flags: "delete_segments+independent_segments+temp_file",
     // Every run gets its own name for its pieces.
     //
     // They used to be seg_00000, seg_00001 … starting again from zero on every
@@ -864,28 +876,41 @@ function startLive() {
     //
     // With a run id in the name, a name means one piece of video for ever, and
     // the year-long cache is simply true.
-    "-hls_segment_filename", path.join(HLS_DIR, `seg_${runId}_%05d.ts`),
-    path.join(HLS_DIR, "stream.m3u8"),
-  ];
+    segments: `seg_${runId}_%05d.ts`,
+  };
+
   // YouTube rides on the same encode: one picture, two destinations, through
   // ffmpeg's tee. YouTube wants an audio track, so a silent one is made up for
   // it (the site's pieces stay video-only), and onfail=ignore means a refused
   // or dropped YouTube connection never takes the site's video down with it.
-  // Relative names because the tee spec splits on ':' — a Windows path has one.
-  if (hlsYtKey) {
-    const at = args.indexOf("-an");
-    const hlsOpts = [
-      `hls_time=${SEG_SECONDS}`, "hls_list_size=10",
-      "hls_flags=delete_segments+independent_segments+temp_file",
-      `hls_segment_filename=seg_${runId}_%05d.ts`,
-    ].join(":");
-    args.splice(at, args.length - at,
-      "-map", "0:v:0", "-map", "1:a:0", "-c:a", "aac", "-b:a", "64k", "-flags", "+global_header",
-      "-f", "tee", `[select=v:f=hls:${hlsOpts}]stream.m3u8|[f=flv:onfail=ignore]${rtmpOutput(hlsYtKey)}`);
-    // The silent track is a second input; it has to come right after the printer.
-    const firstOut = args.indexOf("-vf");
-    args.splice(firstOut, 0, "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo");
-  }
+  // Relative names (cwd is HLS_DIR) because the tee spec splits on ':' — a
+  // Windows path has one.
+  const output = hlsYtKey
+    ? ["-map", `${audioIn}:a:0`, "-c:a", "aac", "-b:a", "64k", "-flags", "+global_header",
+       "-f", "tee",
+       `[select=v:f=hls:hls_time=${hlsOpts.time}:hls_list_size=${hlsOpts.list}:hls_flags=${hlsOpts.flags}:hls_segment_filename=${hlsOpts.segments}]stream.m3u8|[f=flv:onfail=ignore]${rtmpOutput(hlsYtKey)}`]
+    : ["-an", "-f", "hls",
+       "-hls_time", hlsOpts.time, "-hls_list_size", hlsOpts.list, "-hls_flags", hlsOpts.flags,
+       "-hls_segment_filename", path.join(HLS_DIR, hlsOpts.segments),
+       path.join(HLS_DIR, "stream.m3u8")];
+
+  const args = [
+    ...inputs,
+    // The still comes out of THIS connection too.
+    //
+    // The printer serves one video connection at a time, and until now two
+    // were asked for: this encoder, and the separate one that grabs the still
+    // picture. The still grabber gets there first and holds it, so the encoder
+    // connected to nothing and produced nothing — while the agent, which only
+    // checked that the encoder process existed, told the site video was on
+    // air. Stills worked, video never did, and nothing said why.
+    //
+    // One connection, two outputs: the same frames become the still and the
+    // video, so they cannot compete for the printer.
+    "-map", "0:v:0", "-vf", `${CROP},fps=1/${stillEvery}`, "-q:v", "5", "-update", "1", "-y", CAM_FILE,
+    ...video,
+    ...output,
+  ];
 
   hls = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"], cwd: HLS_DIR });
   // Only the FIRST chunk of output used to be printed, and the first thing
@@ -1092,12 +1117,183 @@ async function ensureLiveCors() {
   log(`  ${JSON.stringify([{ AllowedOrigins: LIVE_ORIGINS, AllowedMethods: ["GET", "HEAD"], AllowedHeaders: ["*"], MaxAgeSeconds: 3600 }])}`);
 }
 
+// ─── Instagram and TikTok: one key per broadcast ─────────────────────────────
+// Neither gives a stream key that stays the same, or a way to start a live from
+// software: the key is made when the owner presses "Live" and is good for that
+// broadcast only. So this half cannot be automatic, only quick:
+//
+//   1. a print starts → a phone notification (ntfy) says so;
+//   2. the owner opens a live on instagram.com, pastes URL + key in /admin;
+//   3. within seconds this streams to it — vertical, 9:16 — and the owner
+//      presses "Go live" there;
+//   4. the print ends → this stops, and the key is forgotten.
+//
+// It reads the encoder's own local pieces rather than the printer: the printer
+// gives one video connection, and the encoder (site + YouTube) already has it.
+// A few seconds of extra delay, and nothing that already works is touched.
+const TARGETS_KEY = "live_targets";
+let social = [];                 // [{ platform, url }] — in memory only, never in config.json
+const socialProcs = new Map();   // platform → { proc, started }
+const socialWhy = {};            // platform → what happened last, for /admin
+
+const joinKey = (url, key) => {
+  const u = String(url || "").trim();
+  const k = String(key || "").trim();
+  if (!k) return u;
+  return u.endsWith("/") ? u + k : `${u}/${k}`;
+};
+
+async function checkSocialTargets() {
+  try {
+    const res = await fetch(`${SB}/rest/v1/shop_settings?key=eq.${TARGETS_KEY}&select=value`, { headers: sbHeaders, cache: "no-store" });
+    if (!res.ok) return;
+    const v = (await res.json())[0]?.value;
+    if (!v || typeof v !== "object" || v.received) return;
+    const next = (Array.isArray(v.targets) ? v.targets : [])
+      .filter((t) => t && /^rtmps?:\/\//i.test(String(t.url || "").trim()))
+      .map((t) => ({ platform: String(t.platform || "other").replace(/[^a-z]/gi, "").slice(0, 16) || "other", url: joinKey(t.url, t.key) }));
+    stopSocial();
+    social = next;
+    for (const t of social) socialWhy[t.platform] = "waiting";
+    // The key is good for one broadcast and lives only in this process now.
+    await setSetting(TARGETS_KEY, { received: true, platforms: social.map((t) => t.platform) });
+    log(social.length ? `social live: got a key for ${social.map((t) => t.platform).join(", ")}` : "social live: cleared from the site");
+    void reportLiveNow();
+  } catch (e) {
+    log("social live check failed:", e.message);
+  }
+}
+setInterval(checkSocialTargets, 8_000);
+
+function stopSocial() {
+  for (const [, p] of socialProcs) { try { p.proc.kill(); } catch {} }
+  socialProcs.clear();
+}
+
+/**
+ * 9:16. The local pieces are already the branded horizontal picture, so the
+ * camera's window is cut back out of it and set into the vertical panel
+ * (agent/overlay-vertical.png). Without branding: the whole picture in the
+ * middle, over a blurred copy of itself.
+ */
+const verticalFilter = (brand) => brand
+  ? `[0:v]crop=${BRAND_SLOT.w}:${BRAND_SLOT.h}:${BRAND_SLOT.x}:0,scale=${BRAND_V_SLOT.w}:${BRAND_V_SLOT.h},setsar=1,pad=720:1280:0:${BRAND_V_SLOT.y}:black[cam];[cam][2:v]overlay=0:0:shortest=1,format=yuv420p[v]`
+  : "[0:v]split=2[a][b];[a]scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,boxblur=20:2[bg];[b]scale=720:-2[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2,format=yuv420p[v]";
+
+function socialTick(on) {
+  const playlist = path.join(HLS_DIR, "stream.m3u8");
+  if (!on || !social.length || !hls || !fs.existsSync(playlist)) {
+    if (socialProcs.size) stopSocial();
+    return;
+  }
+  const bin = findFfmpeg();
+  if (!bin) return;
+  // The horizontal pieces carry the panel only when the encoder was branded.
+  const vBrand = cfg.live?.mode !== "copy" && branded() && fs.existsSync(BRAND_V);
+  for (const t of social) {
+    const running = socialProcs.get(t.platform);
+    if (running?.proc) continue;
+    if (running && Date.now() - running.started < 15_000) continue;
+    const args = [
+      "-nostdin", "-loglevel", "error",
+      "-re", "-i", playlist,
+      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
+      ...(vBrand ? ["-loop", "1", "-i", BRAND_V] : []),
+      "-filter_complex", verticalFilter(vBrand),
+      "-map", "[v]", "-map", "1:a:0",
+      "-c:v", "libx264", "-preset", "veryfast", "-b:v", "2000k", "-maxrate", "2500k", "-bufsize", "4000k",
+      "-g", "50", "-keyint_min", "50", "-r", "25",
+      "-c:a", "aac", "-b:a", "96k", "-ar", "44100",
+      "-f", "flv", t.url,
+    ];
+    const proc = spawn(bin, args, { stdio: ["ignore", "ignore", "pipe"] });
+    const entry = { proc, started: Date.now() };
+    socialProcs.set(t.platform, entry);
+    socialWhy[t.platform] = "streaming";
+    let said = 0;
+    proc.stderr?.on("data", (d) => {
+      if (said++ >= 3) return;
+      const text = String(d).replace(/rtmps?:\/\/[^\s]+/gi, "rtmp://<target>").trim();
+      if (text) { log(`${t.platform}:`, text.slice(0, 200)); socialWhy[t.platform] = text.slice(0, 120); }
+    });
+    proc.on("exit", (code) => {
+      entry.proc = null;
+      if (code && socialWhy[t.platform] === "streaming") socialWhy[t.platform] = `stopped (${code})`;
+      void reportLiveNow();
+    });
+    log(`${t.platform}: streaming (vertical 720x1280)`);
+    void reportLiveNow();
+  }
+}
+
+// ─── "A print started" ───────────────────────────────────────────────────────
+// A phone notification through ntfy (free app, no account): the topic is made
+// up once and kept in config.json, and /admin shows which one to subscribe to.
+if (!cfg.notify?.ntfyTopic) {
+  saveConfig({ ...cfg, notify: { ...(cfg.notify ?? {}), ntfyTopic: `unit3d-${Math.random().toString(36).slice(2, 12)}` } });
+}
+
+async function notifyPrintStarted(title) {
+  const topic = cfg.notify?.ntfyTopic;
+  if (!topic || cfg.notify?.enabled === false) return;
+  try {
+    await fetch("https://ntfy.sh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topic,
+        title: "התחילה הדפסה",
+        message: `${title}\nאפשר לעלות לייב באינסטגרם — מדביקים את המפתח באדמין.`,
+        click: `${(cfg.site || "https://unit-3d.com").replace(/\/$/, "")}/admin`,
+        tags: ["printer"],
+      }),
+    });
+  } catch { /* a missed notification is not worth a crash */ }
+}
+
+/** What /admin needs to help with a manual live: the ready title, the topic, and what is streaming. */
+async function reportLiveNow() {
+  const printing = state() === "printing";
+  const text = printing ? liveText() : null;
+  await setSetting("live_now", {
+    printing,
+    title: text?.title ?? null,
+    description: text?.description ?? null,
+    topic: cfg.notify?.ntfyTopic ?? null,
+    social: Object.fromEntries(social.map((t) => [t.platform, socialProcs.get(t.platform)?.proc ? "streaming" : socialWhy[t.platform] || "waiting"])),
+  });
+}
+
+let printingBefore = false;
+async function printStartWatch() {
+  const now = state() === "printing";
+  if (now && !printingBefore) {
+    printingBefore = true;
+    // The name settles a moment after RUNNING; give it a breath.
+    setTimeout(() => {
+      void notifyPrintStarted(liveText().title);
+      void reportLiveNow();
+    }, 15_000);
+  } else if (!now && printingBefore && state() !== "paused") {
+    printingBefore = false;
+    if (social.length) {
+      log("social live: the print ended - stopping, and forgetting the key");
+      stopSocial();
+      social = [];
+      await setSetting(TARGETS_KEY, { received: true, ended: true, platforms: [] });
+    }
+    void reportLiveNow();
+  }
+}
+setInterval(() => { printStartWatch().catch(() => {}); }, 3_000);
+setTimeout(() => { reportLiveNow().catch(() => {}); }, 12_000);
+
 let wasLive = false;
 let lastWhy = null;
 async function liveTick() {
   // The two outermost gates used to return here in silence, which is how a
   // machine with no R2 keys looked identical to one that was working.
-  if ((!R2 && !ytKey()) || cfg.live?.enabled === false) {
+  if ((!R2 && !ytKey() && !social.length) || cfg.live?.enabled === false) {
     const why = liveBlocker();
     if (why !== lastWhy) { lastWhy = why; log(`live: no video - ${BLOCKER_TEXT[why] || why}`); }
     return;
@@ -1111,6 +1307,7 @@ async function liveTick() {
     stopLive();
     youtube.forget();
   }
+  socialTick(shouldStream);
   // A stream the site is not allowed to read is not a stream from the site's
   // point of view, so it is reported as no video WITH the reason, rather than
   // as working video the page then fails to play for reasons of its own.

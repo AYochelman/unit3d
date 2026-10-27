@@ -1,0 +1,64 @@
+<!doctype html><html dir="rtl"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800;900&family=JetBrains+Mono:wght@700;800&display=block" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:transparent;font-family:Heebo,sans-serif;color:#F5F5F7}
+.v{position:relative;width:720px;height:1280px;overflow:hidden}
+.v .top,.v .bot{position:absolute;left:0;right:0;background:radial-gradient(120% 90% at 50% 0%,#0d3a22 0%,#06150e 60%,#030a07 100%)}
+.v .top{top:0;height:290px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;border-bottom:4px solid #089a47}
+.v .bot{top:852px;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-top:4px solid #089a47;background:radial-gradient(120% 90% at 50% 100%,#0d3a22 0%,#06150e 60%,#030a07 100%)}
+.logo{display:flex;align-items:center;gap:16px;direction:ltr}
+.word{font-family:'JetBrains Mono',monospace;font-weight:800;letter-spacing:.22em;font-size:34px}
+.word b{color:#089a47}
+.pill{display:inline-flex;align-items:center;gap:12px;padding:10px 22px;border-radius:999px;background:rgba(8,154,71,.16);border:2px solid rgba(63,184,114,.55);font-weight:800;font-size:30px}
+.dot{width:16px;height:16px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 14px #ff3b3b}
+.live{font-family:'JetBrains Mono',monospace;font-weight:800;color:#ff5a5a;letter-spacing:.08em}
+.q{font-size:44px;font-weight:900}
+.s{font-size:27px;font-weight:600;color:#cfd8d3}
+.url{margin-top:18px;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:58px;color:#fff;background:#089a47;padding:10px 30px;border-radius:18px;direction:ltr;box-shadow:0 10px 40px rgba(8,154,71,.45)}
+.tags{margin-top:16px;font-size:22px;color:#8fa59a}
+/* horizontal */
+.h{position:relative;width:854px;height:480px;overflow:hidden}
+.h .side{position:absolute;top:0;bottom:0;left:0;width:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:0 14px;border-right:3px solid #089a47;background:radial-gradient(140% 70% at 0% 50%,#0d3a22 0%,#06150e 60%,#030a07 100%)}
+.h .word{font-size:17px}
+.h .pill{font-size:16px;padding:6px 12px;gap:8px}
+.h .dot{width:10px;height:10px}
+.h .q{font-size:22px;line-height:1.15}
+.h .s{font-size:14px}
+.h .url{font-size:22px;padding:6px 12px;border-radius:10px;margin-top:6px}
+.h .tags{font-size:12px;margin-top:4px}
+</style></head><body>
+<template id="logo"><svg viewBox="34 19 452 249" width="SIZEW" height="SIZEH" aria-hidden="true">
+<g transform="translate(260 25)"><rect x="-38" y="0" width="76" height="40" rx="6" fill="#F5F5F7"/><rect x="-26" y="10" width="52" height="6" rx="2" fill="#0A0A0B"/><rect x="-26" y="22" width="52" height="6" rx="2" fill="#0A0A0B"/><path d="M-28 40 L28 40 L12 64 L-12 64 Z" fill="#F5F5F7"/></g>
+<path d="M260 89 C260 112 260 137 274 137" fill="none" stroke="#3FB872" stroke-width="14" stroke-linecap="round"/>
+<path d="M57 120 V209 A36 36 0 0 0 93 245 H140 A19 19 0 0 0 159 226 V120" fill="none" stroke="#F5F5F7" stroke-width="34" stroke-linejoin="round"/>
+<path d="M200 137 H276 A27 27 0 0 1 276 191 H248 H276 A27 27 0 0 1 276 245 H204" fill="none" stroke="#089a47" stroke-width="34" stroke-linejoin="round"/>
+<path d="M361 137 V245 H409 A54 54 0 0 0 409 137 Z" fill="none" stroke="#F5F5F7" stroke-width="34" stroke-linejoin="round"/></svg></template>
+
+<div class="v" id="v">
+  <div class="top">
+    <div class="logo"><span class="mk" data-h="70"></span><span class="word">UNIT<b> 3D</b></span></div>
+    <div class="pill"><span class="dot"></span><span class="live">LIVE</span> מדפיסים עכשיו בשידור חי</div>
+  </div>
+  <div class="bot">
+    <div class="q">רוצים אחד כזה?</div>
+    <div class="s">הדפסות תלת־מימד בהתאמה אישית — בעיצוב שלכם</div>
+    <div class="url">unit-3d.com</div>
+    <div class="tags">מחזיקי מפתחות · סמלי יחידות · פידג׳טים · מתנות לעסקים</div>
+  </div>
+</div>
+
+<div class="h" id="h">
+  <div class="side">
+    <div class="logo" style="flex-direction:column;gap:8px"><span class="mk" data-h="40"></span><span class="word">UNIT<b> 3D</b></span></div>
+    <div class="pill"><span class="dot"></span><span class="live">LIVE</span> בשידור חי</div>
+    <div class="q">רוצים אחד כזה?</div>
+    <div class="s">הדפסות תלת־מימד<br>בהתאמה אישית</div>
+    <div class="url">unit-3d.com</div>
+  </div>
+</div>
+<script>
+const t=document.getElementById('logo').innerHTML;
+document.querySelectorAll('.mk').forEach(m=>{const h=+m.dataset.h;m.innerHTML=t.replace('SIZEW',String(Math.round(h*452/249))).replace('SIZEH',String(h));});
+</script>
+</body></html>
