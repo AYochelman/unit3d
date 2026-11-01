@@ -40,7 +40,7 @@ export default function ScreenClient() {
         {[
           { t: "פירוט גבוה", d: "שכבה של 0.12mm. על פנים, שרירים ורשתות זה ההבדל בין צעצוע לפסל." },
           { t: "בלי תמיכות מכוערות", d: "כל דגם נבחר או ממוקם כך שנקודות המגע לא נופלות על החזית." },
-          { t: "אפשר גם צבוע", d: "גולמי בצבע אחד, או צבוע ביד בתוספת. תגיד לי מה מתאים לך." },
+          { t: "אפשר גם צבוע", d: "גולמי בצבע אחד, או צבוע ביד בתוספת. תגיד לנו מה מתאים לך." },
         ].map((b) => (
           <div key={b.t} className="p-4 rounded-xl border border-ink-800 bg-ink-950/40">
             <div className="font-bold mb-1.5">{b.t}</div>
@@ -59,7 +59,7 @@ export default function ScreenClient() {
           </span>
           <div className="flex-1 min-w-[200px]">
             <div className="font-bold mb-0.5">לא מצאת את הדמות שלך?</div>
-            <div className="text-sm text-ink-300">תכתוב לי איזו, ואחפש דגם מתאים ואגיד לך מחיר וזמן.</div>
+            <div className="text-sm text-ink-300">תכתוב לנו איזו, ונחפש דגם מתאים ונגיד לך מחיר וזמן.</div>
           </div>
           <span className="inline-flex items-center gap-1.5 text-cyan2 font-semibold text-sm">
             לבקשה<Icon name="arrowLeft" size={14} />

@@ -186,7 +186,7 @@ export default function ReviewsRow() {
             </p>
             <p className="text-ink-300 max-w-lg mx-auto leading-relaxed mb-6">
               החנות חדשה, ואנחנו מעדיפים מקום ריק על פני ביקורות שלא נכתבו.
-              הזמנת ממני? תכתוב מה יצא — ועם רשותך זה יופיע כאן ראשון.
+              הזמנת מאיתנו? תכתוב מה יצא — ועם רשותך זה יופיע כאן ראשון.
             </p>
             <Btn as="a" href="/reviews" icon="star">
               כתוב את הביקורת הראשונה

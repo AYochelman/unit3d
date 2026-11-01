@@ -91,7 +91,7 @@ export default function PersonalizeClient() {
       </ProximityH1>
       <p className="text-ink-300 mb-8">
         שם, תאריך, מספר אישי או משפט. כותבים, בוחרים צבע, והמחיר המעודכן מופיע למטה —
-        ואני חוזר אליך עם תצוגה לפני שמתחילים להדפיס.
+        ואנחנו חוזרים אליך עם תצוגה לפני שמתחילים להדפיס.
       </p>
 
       {/* the product, filled in from the button that sent us here */}
