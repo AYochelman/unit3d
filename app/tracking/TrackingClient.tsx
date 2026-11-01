@@ -12,7 +12,7 @@ const STEPS = [
   { key: "approved", label: "עיצוב אושר", sub: "Render סופי אישרת ושילמת.", date: "13.10 · 09:08" },
   { key: "printing", label: "במדפסת", sub: "ה-G-code נטען. תוכל לצפות בלייב.", date: "13.10 · 11:30" },
   { key: "shipped", label: "נשלח", sub: "מספר מעקב יישלח בוואטסאפ.", date: "" },
-  { key: "delivered", label: "הגיע", sub: "תיהנה. אם משהו לא בסדר — דבר איתי.", date: "" },
+  { key: "delivered", label: "הגיע", sub: "תיהנה. אם משהו לא בסדר — דבר איתנו.", date: "" },
 ];
 
 export default function TrackingClient() {

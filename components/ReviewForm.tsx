@@ -214,8 +214,8 @@ export default function ReviewForm({ itemName, compact }: Props) {
           {sent === "published"
             ? "הביקורת שלך פורסמה באתר. רענן את הדף כדי לראות אותה בין השאר."
             : sent === "no-photo"
-              ? "הביקורת שלך פורסמה באתר, אבל התמונה לא עלתה. אפשר לשלוח לי אותה בוואטסאפ ואני אצרף אותה."
-              : "משהו אצלי לא עבד, וזה לא בגללך. הטקסט שכתבת שמור כאן למטה — שלח לי אותו ואני מעלה אותו ידנית."}
+              ? "הביקורת שלך פורסמה באתר, אבל התמונה לא עלתה. אפשר לשלוח לנו אותה בוואטסאפ ונצרף אותה."
+              : "משהו אצלנו לא עבד, וזה לא בגללך. הטקסט שכתבת שמור כאן למטה — שלח לנו אותו ונעלה אותו ידנית."}
         </p>
 
         {/* The words themselves, on the screen.
@@ -411,11 +411,11 @@ export default function ReviewForm({ itemName, compact }: Props) {
           disabled={!canSend || !!busy}
           className="text-sm text-ink-400 hover:text-flame transition-colors disabled:opacity-40"
         >
-          או שלח לי במייל
+          או שלח לנו במייל
         </button>
       </div>
       <p className="mt-2 text-[11px] text-ink-500 leading-relaxed">
-        הביקורת מתפרסמת באתר מיד, בלי אישור מראש. אפשר לבקש ממני להוריד אותה בכל רגע.
+        הביקורת מתפרסמת באתר מיד, בלי אישור מראש. אפשר לבקש מאיתנו להוריד אותה בכל רגע.
       </p>
     </form>
   );

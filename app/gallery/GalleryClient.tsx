@@ -37,7 +37,7 @@ export default function GalleryClient() {
   const wantSimilar = (g: GalleryItem) => {
     setOrder({
       title: `דומה ל-${g.title}`,
-      summary: [`השראה: ${g.title}`, g.meta, "אני רוצה משהו דומה — דבר איתי על התאמות"],
+      summary: [`השראה: ${g.title}`, g.meta, "אני רוצה משהו דומה — דברו איתי על התאמות"],
       price: null,
       source: "gallery",
       meta: { galleryId: g.id },

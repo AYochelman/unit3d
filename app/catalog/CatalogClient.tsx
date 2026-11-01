@@ -302,11 +302,11 @@ export default function CatalogClient() {
           <div className="flex-1 min-w-[200px]">
             <div className="font-bold mb-0.5">לא רואה את היחידה שלך?</div>
             <div className="text-sm text-ink-300">
-              תשלח לי תמונה של הסמל בוואטסאפ או בטופס — אכין לך אותו תוך 24 שעות.
+              תשלח לנו תמונה של הסמל בוואטסאפ או בטופס — נכין לך אותו תוך 24 שעות.
             </div>
           </div>
           <span className="inline-flex items-center gap-1.5 text-flame font-semibold text-sm">
-            דבר איתי
+            דבר איתנו
             <Icon name="arrowLeft" size={14} />
           </span>
         </div>

@@ -58,7 +58,7 @@ const TIERS = [
 
 const INCLUDED: { iconKey: IconName; title: string; desc: string }[] = [
   { iconKey: "file", title: "חשבונית מס", desc: "מסודרת. רואי-חשבון שלכם יאהבו." },
-  { iconKey: "sparkles", title: "עיצוב הלוגו", desc: "אני אתאים את הלוגו שלכם להדפסה בתלת מימד." },
+  { iconKey: "sparkles", title: "עיצוב הלוגו", desc: "נתאים את הלוגו שלכם להדפסה בתלת מימד." },
   { iconKey: "droplet", title: "צבע מותג מדויק", desc: "פילמנטים שתואמים את הפנטון שלכם." },
   { iconKey: "package", title: "אריזה ממותגת", desc: "אריזה אישית לכל יחידה — מותג שלכם בחוץ." },
   { iconKey: "truck", title: "משלוח מרוכז", desc: "למשרד אחד או לכמה כתובות. הכל מתואם." },
@@ -101,8 +101,8 @@ export default function B2BClient() {
             <span className="text-flame">עבור החברה שלך.</span>
           </ProximityH1>
           <p className="text-ink-300 max-w-2xl mx-auto text-base md:text-lg">
-            10 יחידות, 100, או 1000. אני עובד מול חברות מאז 2021 — חשבונית מס,
-            מחירון מדורג, ומשלוחים מתואמים. דבר איתי, בלי תיווך.
+            10 יחידות, 100, או 1000. אנחנו עובדים מול חברות מאז 2021 — חשבונית מס,
+            מחירון מדורג, ומשלוחים מתואמים. דברו איתנו, בלי תיווך.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
             <Btn as="a" href="#b2b-form" size="lg">
@@ -157,7 +157,7 @@ export default function B2BClient() {
             USE CASES
           </div>
           <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
-            למה חברות מזמינות אצלי.
+            למה חברות מזמינות אצלנו.
           </ProximityH2>
           <div className="grid md:grid-cols-3 gap-5">
             {USE_CASES.map((u) => (
@@ -350,9 +350,9 @@ export default function B2BClient() {
               <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-good/20 text-good mb-4">
                 <Icon name="check" size={28} strokeWidth={2.5} />
               </div>
-              <div className="font-bold text-2xl mb-2">קיבלתי. תודה.</div>
+              <div className="font-bold text-2xl mb-2">קיבלנו. תודה.</div>
               <p className="text-ink-300 mb-5 max-w-md mx-auto">
-                אני חוזר אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי,
+                נחזור אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי,
                 ולוז ייצור.
               </p>
               <div className="font-mono text-[11px] text-ink-500" dir="ltr">

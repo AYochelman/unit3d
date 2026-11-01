@@ -179,7 +179,7 @@ export default function FinderClient() {
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Btn as="a" href={CONTACT.whatsapp} variant="outline" icon="whatsapp" target="_blank" rel="noreferrer"
               onClick={() => track("whatsapp_click", { from: "finder" })}>
-              עדיין לא בטוח? דבר איתי
+              עדיין לא בטוח? דבר איתנו
             </Btn>
             <button type="button" onClick={() => { setAnswers({}); setStep(0); }} className="text-sm text-ink-300 inline-flex items-center gap-1.5">
               <Icon name="rotate" size={16} /> מהתחלה
@@ -191,7 +191,7 @@ export default function FinderClient() {
       {done && !top && (
         <section>
           <p className="text-ink-300">לא הצלחנו לכוון — אבל בן אדם כן יכול.</p>
-          <div className="mt-4"><Btn as="a" href={CONTACT.whatsapp} icon="whatsapp" target="_blank" rel="noreferrer">דבר איתי</Btn></div>
+          <div className="mt-4"><Btn as="a" href={CONTACT.whatsapp} icon="whatsapp" target="_blank" rel="noreferrer">דבר איתנו</Btn></div>
         </section>
       )}
     </div>
