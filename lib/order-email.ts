@@ -71,9 +71,9 @@ const infoRow = (label: string, value: string, strong = false): string => `
   </tr>`;
 
 const STEPS: [string, string][] = [
-  ["1", "אני עובר על ההזמנה ומאשר אותה מולך בוואטסאפ."],
+  ["1", "אנחנו עוברים על ההזמנה ומאשרים אותה מולך בוואטסאפ."],
   ["2", "כשההזמנה עולה למדפסת תקבל מייל עם קישור לשידור החי — כל פריט מודפס בנפרד, לפי החומר והצבע שבחרת."],
-  ["3", "מעדכן אותך כשהכל מוכן, ומתאמים מסירה."],
+  ["3", "נעדכן אותך כשהכל מוכן, ונתאם מסירה."],
 ];
 
 /**
@@ -120,7 +120,7 @@ export function orderEmailHtml(o: PlacedOrder): string {
 
   return shell(`
   <tr><td style="padding:28px 24px 4px;">
-    <div style="font:700 22px/1.4 ${FONT};color:${INK};">קיבלתי את ההזמנה שלך 🎉</div>
+    <div style="font:700 22px/1.4 ${FONT};color:${INK};">קיבלנו את ההזמנה שלך 🎉</div>
     <div style="font:400 15px/1.7 ${FONT};color:${MUTED};margin-top:6px;">
       ${o.customer.name ? esc(o.customer.name) + ", " : ""}תודה. זה הפירוט המלא — שמור אותו, מספר ההזמנה הוא מה שמזהה אותה מולי.
     </div>
@@ -207,7 +207,7 @@ export function liveEmailHtml(o: PlacedOrder): string {
   <tr><td style="padding:20px 24px 0;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${PAPER};border-radius:12px;">
       <tr><td style="padding:14px 18px;">
-        <div style="font:700 12px/1 ${FONT};letter-spacing:2px;color:${MUTED};padding-bottom:8px;">הערה ממני</div>
+        <div style="font:700 12px/1 ${FONT};letter-spacing:2px;color:${MUTED};padding-bottom:8px;">הערה מאיתנו</div>
         <div style="font:400 14px/1.7 ${FONT};color:${INK};">${esc(note)}</div>
       </td></tr>
     </table>
@@ -335,8 +335,8 @@ export function readyEmailHtml(o: PlacedOrder): string {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${INK};border-radius:12px;">
       <tr><td style="padding:16px 20px;font:400 14px/1.7 ${FONT};color:#FAFAFA;">
         ${pickup
-          ? `האיסוף מגבעתיים, בתיאום מראש. כתוב לי מתי נוח לך ואני אהיה כאן.`
-          : `אעדכן אותך ברגע שהיא בדרך. אם משהו בכתובת השתנה — עכשיו הזמן לומר.`}
+          ? `האיסוף מגבעתיים, בתיאום מראש. כתוב לנו מתי נוח לך ונהיה כאן.`
+          : `נעדכן אותך ברגע שהיא בדרך. אם משהו בכתובת השתנה — עכשיו הזמן לומר.`}
       </td></tr>
     </table>
   </td></tr>

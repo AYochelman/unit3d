@@ -30,13 +30,13 @@ export default function FAQPage() {
       <div className="mt-12 p-5 rounded-2xl border border-ink-800 bg-ink-900 text-center">
         <div className="font-bold mb-1.5">לא מצאת תשובה?</div>
         <div className="text-ink-300 text-sm mb-4">
-          תשלח לי שאלה — אחזור אליך תוך 24 שעות.
+          תשלח לנו שאלה — נחזור אליך תוך 24 שעות.
         </div>
         <a
           href="/contact"
           className="inline-flex items-center gap-1.5 text-flame font-semibold text-sm"
         >
-          דבר איתי
+          דבר איתנו
         </a>
       </div>
     </div>

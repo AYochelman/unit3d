@@ -520,7 +520,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
           <p className="text-[11px] text-ink-500 leading-relaxed border-r-2 border-amber-500/40 pr-2.5">
             התמונות הן של המעצב המקורי, לא של ההדפסה שלנו. אנחנו מדפיסים בצבע שתבחר —
             <span className="text-ink-300"> לא כל דגם אפשרי בכל צבע או חומר</span>, ואם משהו לא
-            מסתדר אני אומר לך לפני שמתחילים.
+            מסתדר נגיד לך לפני שמתחילים.
           </p>
 
           <CheaperOptions productName={f.name} />
@@ -579,8 +579,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 <Icon name="clock" size={15} className="mt-0.5 shrink-0" />
                 <span>
                   {matInStock
-                    ? `נגמר לי ${selectedFilament?.name ?? ""} ב${mat.name}. אפשר לבחור צבע אחר למעלה.`
-                    : `נגמר לי ה${mat.name}. המוצר אינו זמין כרגע.`}
+                    ? `נגמר לנו ${selectedFilament?.name ?? ""} ב${mat.name}. אפשר לבחור צבע אחר למעלה.`
+                    : `נגמר לנו ה${mat.name}. המוצר אינו זמין כרגע.`}
                 </span>
               </div>
               <button

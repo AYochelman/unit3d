@@ -61,7 +61,7 @@ export default function SmokeClient() {
           </span>
           <div className="flex-1 min-w-[200px]">
             <div className="font-bold mb-0.5">מחפש משהו ספציפי?</div>
-            <div className="text-sm text-ink-300">תכתוב לי מה, ואחפש דגם מתאים ואגיד לך מחיר וזמן.</div>
+            <div className="text-sm text-ink-300">תכתוב לנו מה, ונחפש דגם מתאים ונגיד לך מחיר וזמן.</div>
           </div>
           <span className="inline-flex items-center gap-1.5 text-cyan2 font-semibold text-sm">
             לבקשה<Icon name="arrowLeft" size={14} />

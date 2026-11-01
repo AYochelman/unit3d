@@ -499,7 +499,7 @@ export default function ConfiguratorClient({
                       </p>
                       <div className="rounded-xl border border-cyan2/30 bg-cyan2/5 p-3 text-xs text-ink-300 leading-relaxed">
                         <div className="font-semibold text-cyan2 mb-1">איך זה מודפס</div>
-                        כל צבע בעיצוב הוא פילמנט נפרד ב-AMS, עד 4 צבעים על מוצר. קווים דקים מ-1mm ואותיות קטנות מ-4mm לא יוצאים חדים, ואני אתאים אותם איתך לפני ההדפסה.
+                        כל צבע בעיצוב הוא פילמנט נפרד ב-AMS, עד 4 צבעים על מוצר. קווים דקים מ-1mm ואותיות קטנות מ-4mm לא יוצאים חדים, ונתאים אותם איתך לפני ההדפסה.
                       </div>
                       <div className="mt-4 font-mono text-[11px] text-ink-400 flex flex-wrap gap-x-3 gap-y-1" dir="ltr">
                         <span>elements: {design.elements.length}</span>
@@ -549,8 +549,8 @@ export default function ConfiguratorClient({
                   <h3 className="text-xl font-extrabold mb-1">צבע פילמנט</h3>
                   <p className="text-sm text-ink-400 mb-5">
                     {product.material === "tpu"
-                      ? "קייסים מודפסים ב-TPU גמיש. הצבעים שיש לי ב-TPU כרגע:"
-                      : `בחר מתוך ${colorChoices.length} צבעים שיש לי במלאי כרגע. החומר נקבע לפי הצבע.`}
+                      ? "קייסים מודפסים ב-TPU גמיש. הצבעים שיש לנו ב-TPU כרגע:"
+                      : `בחר מתוך ${colorChoices.length} צבעים שיש לנו במלאי כרגע. החומר נקבע לפי הצבע.`}
                   </p>
                   <div className="grid grid-cols-4 gap-2">
                     {colorChoices.map((f) => (
@@ -611,7 +611,7 @@ export default function ConfiguratorClient({
               {current === "qty" && (
                 <div>
                   <h3 className="text-xl font-extrabold mb-1">כמה לעשות?</h3>
-                  <p className="text-sm text-ink-400 mb-5">הזמנות מעל 5: הנחה של 10% אוטומטית. הזמנות לטקסים או לעסק, דבר איתי בוואטסאפ.</p>
+                  <p className="text-sm text-ink-400 mb-5">הזמנות מעל 5: הנחה של 10% אוטומטית. הזמנות לטקסים או לעסק, דבר איתנו בוואטסאפ.</p>
                   <div className="flex items-center gap-3 mb-6">
                     <button onClick={() => update("qty", Math.max(1, config.qty - 1))} aria-label="הפחת" className="w-12 h-12 rounded-xl bg-ink-800 hover:bg-ink-700 flex items-center justify-center">
                       <Icon name="minus" />

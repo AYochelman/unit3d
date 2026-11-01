@@ -21,7 +21,7 @@ type Step = { index: string; iconKey: IconName; title: string; desc: string };
 
 const STEPS: Step[] = [
   { index: "01", iconKey: "sparkles", title: "בוחרים", desc: "בקטלוג, במעצב, או שולחים קובץ." },
-  { index: "02", iconKey: "settings", title: "מתאמים", desc: "אני חוזר אליך בוואטסאפ עם הצעה." },
+  { index: "02", iconKey: "settings", title: "מתאמים", desc: "אנחנו חוזרים אליך בוואטסאפ עם הצעה." },
   { index: "03", iconKey: "check", title: "מאשרים", desc: "רואים render סופי, מאשרים, ומשלמים." },
   { index: "04", iconKey: "package", title: "מקבלים", desc: "3-5 ימים בדואר או אצלך הביתה." },
 ];

@@ -167,14 +167,14 @@ export default function ContactClient() {
             <Icon name="check" size={40} strokeWidth={2.5} />
           </div>
           <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
-            {bought ? "תודה על הקנייה!" : "תודה! קיבלתי את הפנייה."}
+            {bought ? "תודה על הקנייה!" : "תודה! קיבלנו את הפנייה."}
           </ProximityH1>
           <p className="text-ink-300 text-body md:text-lg md:leading-[1.6] max-w-xl mx-auto mb-8">
             {bought
-              ? "אנחנו מיד מתחילים לעבוד על זה. אני מעדכן אותך בוואטסאפ ברגע שההדפסה עולה על הפלטה."
+              ? "אנחנו מיד מתחילים לעבוד על זה. נעדכן אותך בוואטסאפ ברגע שההדפסה עולה על הפלטה."
               : cust === "b2b"
-                ? "אני חוזר אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי, ולוז ייצור."
-                : "אני חוזר אליך תוך 24 שעות בוואטסאפ. אם זה דחוף — אפשר לקפוץ ישר לשם."}
+                ? "נחזור אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי, ולוז ייצור."
+                : "נחזור אליך תוך 24 שעות בוואטסאפ. אם זה דחוף — אפשר לקפוץ ישר לשם."}
           </p>
         </div>
 
@@ -276,10 +276,10 @@ export default function ContactClient() {
           CONTACT · 24H RESPONSE
         </Pill>
         <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
-          ספר לי מה אתה צריך.
+          ספר לנו מה אתה צריך.
         </ProximityH1>
         <p className="mt-3 text-ink-300 max-w-2xl">
-          הטופס הזה הולך ישר לוואטסאפ שלי. אני חוזר אליך תוך 24 שעות — בדרך כלל הרבה פחות.
+          הטופס הזה הולך ישר לוואטסאפ שלנו. נחזור אליך תוך 24 שעות — בדרך כלל הרבה פחות.
         </p>
       </header>
 
@@ -627,8 +627,8 @@ export default function ContactClient() {
                 required={items.length === 0}
                 placeholder={
                   items.length > 0
-                    ? "פרטים נוספים, שינויים שאתה רוצה, או כל מידע שיעזור לי…"
-                    : "ספר לי על ההזמנה — כמה, באיזה צבע, מתי צריך, ולמי זה."
+                    ? "פרטים נוספים, שינויים שאתה רוצה, או כל מידע שיעזור לנו…"
+                    : "ספר לנו על ההזמנה — כמה, באיזה צבע, מתי צריך, ולמי זה."
                 }
               />
             </Field>

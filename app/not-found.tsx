@@ -43,7 +43,7 @@ export default function NotFound() {
           לדף הבית
         </Btn>
         <Btn as="a" href="/contact/" variant="outline" size="lg">
-          דבר איתי
+          דבר איתנו
         </Btn>
       </div>
 

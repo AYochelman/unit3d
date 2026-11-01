@@ -78,7 +78,7 @@ export default function UploadClient() {
           יש קובץ. תעלה.
         </ProximityH1>
         <p className="text-ink-300 max-w-2xl">
-          STL, OBJ, או 3MF — עד 50MB. אני אסתכל ואחזור אליך עם הצעת מחיר תוך 24 שעות.
+          STL, OBJ, או 3MF — עד 50MB. נסתכל ונחזור אליך עם הצעת מחיר תוך 24 שעות.
         </p>
       </header>
 
@@ -304,7 +304,7 @@ export default function UploadClient() {
         <Icon name="info" size={18} className="text-cyan2 shrink-0 mt-0.5" />
         <p className="text-sm text-ink-300 leading-relaxed">
           לפני שאני מתחיל להדפיס — אם הקובץ דורש התאמות (קירות דקים, אזורים פתוחים, scaling),
-          אני אסביר לך לפני שאתה משלם.
+          נסביר לך לפני שאתה משלם.
         </p>
       </div>
 
