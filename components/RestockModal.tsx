@@ -105,7 +105,7 @@ export default function RestockModal({ open, onClose, itemId, itemName, material
             </div>
             <div className="font-bold mb-1">נרשמת</div>
             <p className="text-sm text-ink-300 leading-relaxed">
-              הבקשה נפתחה בחלון שליחה — שלח אותה ואעדכן אותך ב-{email} ברגע שה{matName} חוזר.
+              הבקשה נפתחה בחלון שליחה — שלח אותה ונעדכן אותך ב-{email} ברגע שה{matName} חוזר.
             </p>
             <Btn variant="ghost" size="sm" className="mt-4" onClick={onClose}>סגור</Btn>
           </div>
@@ -118,7 +118,7 @@ export default function RestockModal({ open, onClose, itemId, itemName, material
             }}
           >
             <p className="text-sm text-ink-300 leading-relaxed">
-              נגמר לי ה<span className="text-ink-100">{matName}</span>. תשאיר מייל ואעדכן אותך
+              נגמר לנו ה<span className="text-ink-100">{matName}</span>. תשאיר מייל ונעדכן אותך
               ברגע שהגליל מגיע — בלי ספאם, הודעה אחת.
             </p>
 
@@ -171,7 +171,7 @@ export default function RestockModal({ open, onClose, itemId, itemName, material
             {alternatives.length > 0 && (
               <p className="text-[11px] text-ink-500 leading-relaxed border-t border-ink-800 pt-3">
                 יש במלאי {alternatives.length} צבעים אחרים ב{matName}. אם אתה גמיש בצבע —
-                כתוב לי ונמצא פתרון היום.
+                כתוב לנו ונמצא פתרון היום.
               </p>
             )}
           </form>

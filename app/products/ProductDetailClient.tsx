@@ -556,7 +556,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
             <p className="text-[11px] text-ink-500 leading-relaxed border-r-2 border-amber-500/40 pr-2.5">
               התמונה היא של המעצב המקורי, לא של ההדפסה שלנו. אנחנו מדפיסים בצבע שתבחר למעלה —
               <span className="text-ink-300"> לא כל דגם אפשרי בכל צבע או חומר</span>, ואם משהו לא
-              מסתדר אני אומר לך לפני שמתחילים.
+              מסתדר נגיד לך לפני שמתחילים.
             </p>
           )}
 
@@ -601,7 +601,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
               </Link>
               <p className="text-[11px] text-ink-500 leading-relaxed border-r-2 border-flame/40 pr-2.5">
                 הדפסה של {Math.round(grams)} גרם ו-{hours.toFixed(0)} שעות מכונה. בגודל הזה
-                אני מתמחר לפי מה שבאמת צריך — צבע, כמות, לוח זמנים — במקום להדביק מחיר מדף.
+                אנחנו מתמחרים לפי מה שבאמת צריך — צבע, כמות, לוח זמנים — במקום להדביק מחיר מדף.
               </p>
             </div>
           ) : sellable ? (
@@ -618,8 +618,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 <Icon name="clock" size={15} className="mt-0.5 shrink-0" />
                 <span>
                   {matInStock
-                    ? `נגמר לי ${color.name} ב${mat.name}. אפשר לבחור צבע אחר למעלה.`
-                    : `נגמר לי ה${mat.name}. המוצר אינו זמין כרגע.`}
+                    ? `נגמר לנו ${color.name} ב${mat.name}. אפשר לבחור צבע אחר למעלה.`
+                    : `נגמר לנו ה${mat.name}. המוצר אינו זמין כרגע.`}
                 </span>
               </div>
               <button

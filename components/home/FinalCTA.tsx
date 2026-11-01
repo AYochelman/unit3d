@@ -19,7 +19,7 @@ export default function FinalCTA() {
             התחל להזמין
           </Btn>
           <Btn as="a" href="/contact" size="lg" variant="ghost" icon="whatsapp">
-            דבר איתי
+            דבר איתנו
           </Btn>
         </div>
       </div>

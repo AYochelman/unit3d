@@ -70,7 +70,7 @@ export default function ReviewsClient() {
         <div className="p-10 rounded-2xl border border-dashed border-ink-700 text-center">
           <p className="text-ink-100 font-semibold text-lg mb-2">עוד אין ביקורות כאן.</p>
           <p className="text-ink-300 max-w-md mx-auto leading-relaxed">
-            החנות חדשה, ואנחנו מעדיפים עמוד ריק על פני ביקורות שלא נכתבו. הזמנת ממני?
+            החנות חדשה, ואנחנו מעדיפים עמוד ריק על פני ביקורות שלא נכתבו. הזמנת מאיתנו?
             תכתוב מה יצא — עם רשותך זה יופיע כאן ראשון.
           </p>
         </div>

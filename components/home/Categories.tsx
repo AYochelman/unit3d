@@ -94,7 +94,7 @@ const CATS: Cat[] = [
     index: "09",
     title: "הדפסה לפי הקובץ שלך",
     cta: "הדפסה",
-    desc: "STL/OBJ/3MF — אני מתאים, צובע, ומדפיס.",
+    desc: "STL/OBJ/3MF — אנחנו מתאימים, צובעים ומדפיסים.",
     href: "/upload",
     hue: 280,
     art: "upload",
