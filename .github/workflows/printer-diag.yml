@@ -37,8 +37,18 @@ jobs:
           echo "::notice title=status row::$(echo "$row" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const r=JSON.parse(s)[0]||{};for(const k of Object.keys(r))if(/key|token|secret|url/i.test(k))delete r[k];console.log(JSON.stringify(r).slice(0,900))})")"
           echo "::notice title=agent info::$(curl -s "${H[@]}" "$SB/rest/v1/shop_settings?key=eq.agent_info&select=value" | head -c 400)"
           echo "::notice title=access code set at::$(curl -s "${H[@]}" "$SB/rest/v1/shop_settings?key=eq.printer_access_code&select=at:value->>at" | head -c 200)"
-          jobs=$(curl -s "${H[@]}" "$SB/rest/v1/printer_jobs?select=key,name,state,started_at,ended_at&order=started_at.desc&limit=4")
-          echo "::notice title=last jobs::$(echo "$jobs" | head -c 900)"
+          # Usage, for maintenance: every finished job the agent has filed.
+          curl -s "${H[@]}" "$SB/rest/v1/printer_jobs?select=name,finished_at,ok,minutes,layers&order=finished_at.asc&limit=5000" > jobs.json
+          echo "::notice title=usage::$(node -e "
+            const j = JSON.parse(require('fs').readFileSync('jobs.json','utf8'));
+            if (!Array.isArray(j)) { console.log(JSON.stringify(j).slice(0,300)); process.exit(); }
+            const min = j.reduce((a, r) => a + (Number(r.minutes) || 0), 0);
+            const ok = j.filter((r) => r.ok).length;
+            const noMin = j.filter((r) => !r.minutes).length;
+            const last30 = j.filter((r) => Date.now() - Date.parse(r.finished_at) < 30 * 864e5);
+            const m30 = last30.reduce((a, r) => a + (Number(r.minutes) || 0), 0);
+            console.log(JSON.stringify({ jobs: j.length, ok, failed: j.length - ok, hours: +(min / 60).toFixed(1), jobsWithoutMinutes: noMin, first: j[0]?.finished_at, last: j.at(-1)?.finished_at, last30days: { jobs: last30.length, hours: +(m30 / 60).toFixed(1) }, longest: j.reduce((a, r) => (Number(r.minutes) || 0) > (Number(a?.minutes) || 0) ? r : a, null) }));
+          ")"
           if [ -n "$LIVE" ]; then
             echo "::notice title=live status::$(curl -s -m 10 "$LIVE/live/status.json" | head -c 700)"
           fi

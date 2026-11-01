@@ -384,10 +384,15 @@ client.on("message", (_topic, buf) => {
 // A job is filed once, when the printer says it is done and it was one we saw
 // running — so a printer sitting on FINISH all night does not file it nightly.
 let wasPrinting = false;
+// When the agent first saw this job running. The P2S does not report a print
+// time (mc_print_time stays empty), so 102 jobs were filed with no minutes and
+// the printer's hours — what maintenance is scheduled by — were unknown.
+let printStartedAt = 0;
 async function watchFinish() {
   const s = state();
   const name = jobName();
   if (s === "printing" && name) {
+    if (!wasPrinting) printStartedAt = Date.now();
     wasPrinting = true;
     void tellPrinting(orderRef(last.print ?? {}));
     currentKey = currentKey || `${name}·${new Date().toISOString().slice(0, 16)}`;
@@ -399,7 +404,7 @@ async function watchFinish() {
       name: name || "ללא שם",
       finished_at: new Date().toISOString(),
       ok: s === "finished",
-      minutes: num(last.print?.mc_print_time) ?? null,
+      minutes: num(last.print?.mc_print_time) ?? (printStartedAt ? Math.round((Date.now() - printStartedAt) / 60_000) : null),
       layers: num(last.print?.total_layer_num),
     });
     log(s === "finished" ? "print finished - logged:" : "print stopped - logged:", name);
@@ -409,6 +414,7 @@ async function watchFinish() {
     // marked dealt-with and never uploaded.
     pullTimelapseAfterPrint(s === "finished");
     wasPrinting = false;
+    printStartedAt = 0;
     currentKey = "";
   }
 }
