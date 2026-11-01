@@ -629,7 +629,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
             {[
               { icon: "check" as const, label: "הדפסה בארץ" },
               { icon: "truck" as const, label: "משלוח מהיר" },
-              { icon: "rotate" as const, label: "אחריות 30 יום" },
+              { icon: "rotate" as const, label: "הגיע פגום? מוחלף" },
             ].map((b) => (
               <div key={b.label} className="flex flex-col items-center gap-1 py-2 px-1 rounded-xl bg-ink-900/50 border border-ink-800">
                 <Icon name={b.icon} size={14} className="text-flame" />
