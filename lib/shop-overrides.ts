@@ -22,6 +22,7 @@ export const SHELF_MOVES: Record<string, ImportedShelf[]> = {
 /** Ids taken off the shop entirely. */
 export const REMOVED_BY_OWNER: string[] = [
   "mw-1074963",
+  "mw-1107929",
   "mw-115260",
   "mw-1203450",
   "mw-1292618",
@@ -38,9 +39,16 @@ export const REMOVED_BY_OWNER: string[] = [
   "mw-2624902",
   "mw-27048",
   "mw-2745579",
+  "mw-2774013",
   "mw-2845840",
   "mw-2863365",
   "mw-2872917",
   "mw-3244067",
-  "mw-624571"
+  "mw-3252105",
+  "mw-3268045",
+  "mw-3268146",
+  "mw-3269182",
+  "mw-585144",
+  "mw-624571",
+  "mw-74959"
 ];

@@ -145,7 +145,7 @@ export default function Footer() {
           </nav>
           <address className="mt-4 not-italic text-[13px] leading-relaxed text-ink-400">
             <span className="text-ink-300">{orPending(BUSINESS.legalName) || BUSINESS.tradingName}</span>
-            {" · "}{BUSINESS.entityType} {orPending(BUSINESS.vatId)}
+            {BUSINESS.vatId && <>{" · "}{BUSINESS.entityType} {BUSINESS.vatId}</>}
             {" · "}{addressLine()}
             {" · "}
             <a href={`tel:${BUSINESS.phone}`} dir="ltr" className="inline-flex items-center min-h-6 hover:text-flame transition-colors">{BUSINESS.phoneDisplay}</a>

@@ -30,7 +30,6 @@ export const HD_IMAGES: Record<string, string> = {
   "mw-654785": "img/hd/mw-654785.webp",
   "mw-697819": "img/hd/mw-697819.webp",
   "mw-710726": "img/hd/mw-710726.webp",
-  "mw-74959": "img/hd/mw-74959.webp",
   "mw-819327": "img/hd/mw-819327.webp",
   "mw-849620": "img/hd/mw-849620.webp",
 };
