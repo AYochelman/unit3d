@@ -1,9 +1,10 @@
 import LegalPage, { Row, Section } from "@/components/legal/LegalPage";
 import Link from "next/link";
+import ConsentReset from "@/components/ConsentReset";
 
 export const metadata = {
   title: "מדיניות עוגיות · Unit 3D",
-  description: "האתר לא משתמש בעוגיות ולא באחסון מקומי. זה העמוד שמסביר בדיוק מה כן ומה לא.",
+  description: "אילו עוגיות יש באתר (רק Google Analytics, ורק בהסכמה), מה נמדד בלעדיהן, ואיך משנים את הבחירה.",
   alternates: { canonical: "/cookies/" },
 };
 
@@ -12,36 +13,46 @@ export default function CookiesPage() {
     <LegalPage
       current="/cookies"
       title="מדיניות עוגיות"
-      lead="לרוב האתרים יש כאן רשימה ארוכה. לנו אין, וזו לא התחמקות — זו פשוט האמת, והעמוד הזה מסביר אותה ואת מה שנעשה כדי לוודא אותה."
+      lead="רשימה קצרה: עוגייה אחת שזוכרת את הבחירה שלך, ועוגיות של Google Analytics — רק אם אישרת."
     >
-      <Section n="1" title="האתר הזה לא מציב עוגיות">
+      <Section n="1" title="Google Analytics — רק בהסכמה">
         <p>
-          <strong className="text-ink-100">אין באתר אף עוגייה.</strong> לא עוגיות שלנו ולא של אף
-          אחד אחר. אין גם שימוש ב־localStorage או ב־sessionStorage בזמן גלישה רגילה.
+          כדי להבין איך גולשים באתר (אילו עמודים נצפים, מאיפה מגיעים, מאיזה מכשיר) אנחנו משתמשים
+          ב־Google Analytics. <strong className="text-ink-100">הוא לא נטען עד שאתה מאשר</strong> בחלון
+          שמופיע בכניסה הראשונה, ובאותו חלון אפשר לדחות בלחיצה אחת, באותה קלות.
+        </p>
+        <dl className="mt-1">
+          <Row k="מה הוא מציב">עוגיות בשם <span dir="ltr">_ga</span> ו־<span dir="ltr">_ga_…</span>, לתקופה של עד שנתיים.</Row>
+          <Row k="מי מפעיל">Google LLC. המידע מעובד בשרתים מחוץ לישראל, לפי מדיניות הפרטיות של Google.</Row>
+          <Row k="מה לא">לא שם, לא טלפון ולא דוא״ל. לא משמש לפרסום ולא לרימרקטינג.</Row>
+        </dl>
+        <ConsentReset />
+        <p className="text-ink-400 text-sm">בדחייה, או בשינוי הבחירה לדחייה, עוגיות ה־Analytics שכבר הוצבו נמחקות.</p>
+      </Section>
+
+      <Section n="2" title="עוגייה אחת שזוכרת את הבחירה">
+        <dl className="mt-1">
+          <Row k="u3d_consent">
+            שומרת &quot;אישרת&quot; או &quot;דחית&quot; לשנה, כדי שלא נשאל אותך שוב בכל עמוד. היא
+            חיונית לכך שהבחירה שלך תכובד, ולכן לא נדרשת עליה הסכמה.
+          </Row>
+        </dl>
+      </Section>
+
+      <Section n="3" title="המדידה שלנו — בלי עוגיות">
+        <p>
+          בנוסף, האתר רושם אצלנו סטטיסטיקה אנונימית: איזה עמוד נפתח, מאיזה מקור הגעת (למשל גוגל
+          או אינסטגרם), וסוג המכשיר (טלפון / טאבלט / מחשב). אין בה שם, טלפון, דוא״ל או כתובת IP.
         </p>
         <p>
-          בדקנו את זה בקוד, לא הנחנו: האתר בנוי כך שהסל, הבחירות והעדפות התצוגה חיים בזיכרון
-          הדפדפן בלבד ונעלמים ברגע שסוגרים את הלשונית.
+          כדי שכמה עמודים של אותו ביקור לא ייספרו כמה אנשים, נשמר מזהה אקראי ב־sessionStorage של
+          הלשונית. הוא לא מזהה אותך, ונמחק ברגע שסוגרים את הלשונית.
         </p>
       </Section>
 
-      <Section n="2" title="ולכן אין באנר עוגיות">
-        <p>
-          חובת ההסכמה — בישראל לפי חוק הגנת הפרטיות ובאירופה לפי הנחיית ePrivacy — חלה על שמירת
-          מידע במכשיר המשתמש למטרות שאינן חיוניות. <strong className="text-ink-100">אין כאן שמירה
-          כזו, ולכן אין מה לבקש עליו הסכמה.</strong>
-        </p>
-        <p>
-          חלון קופץ שמבקש הסכמה לדבר שלא קורה הוא בלבול, לא ציות. אם ביום מן הימים נוסיף כלי
-          שמציב עוגיות, נוסיף גם באנר הסכמה אמיתי — כזה שאפשר לסרב בו באותה קלות שבה מאשרים,
-          ולפני שהכלי נטען.
-        </p>
-      </Section>
-
-      <Section n="3" title="מה גם לא קיים כאן">
+      <Section n="4" title="מה לא קיים כאן">
         <p>נבדק אחד־אחד בקוד המקור:</p>
         <dl className="mt-1">
-          <Row k="Google Analytics">לא מותקן.</Row>
           <Row k="פיקסל פייסבוק / מטא">לא מותקן.</Row>
           <Row k="פיקסל טיקטוק">לא מותקן.</Row>
           <Row k="רשתות פרסום ורימרקטינג">אין.</Row>
@@ -52,7 +63,7 @@ export default function CookiesPage() {
         </dl>
       </Section>
 
-      <Section n="4" title="שני חריגים, לשם דיוק">
+      <Section n="5" title="שני חריגים, לשם דיוק">
         <dl className="mt-1">
           <Row k="ממשק הניהול">
             עמוד הניהול (לבעל העסק בלבד) שומר את פרטי ההתחברות שלו ב־localStorage. זה אחסון חיוני
@@ -66,10 +77,10 @@ export default function CookiesPage() {
         </dl>
       </Section>
 
-      <Section n="5" title="איך לבדוק אותנו">
+      <Section n="6" title="איך לבדוק אותנו">
         <p>
-          לא צריך להאמין לנו. בכל דפדפן: F12 ← לשונית Application (או Storage) ← Cookies. תראה
-          רשימה ריקה.
+          בכל דפדפן: F12 ← לשונית Application (או Storage) ← Cookies. לפני שבחרת לא תראה שם כלום;
+          אחרי דחייה — רק <span dir="ltr">u3d_consent</span>.
         </p>
       </Section>
     </LegalPage>

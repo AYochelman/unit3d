@@ -18,9 +18,9 @@ export default function TermsPage() {
       <Section n="1" title="מי מפעיל את האתר">
         <dl className="mt-1">
           <Row k="שם מסחרי">{BUSINESS.tradingName}</Row>
-          <Row k="שם משפטי">{orPending(BUSINESS.legalName)}</Row>
-          <Row k="סוג עוסק">{BUSINESS.entityType}</Row>
-          <Row k="מספר עוסק">{orPending(BUSINESS.vatId)}</Row>
+          <Row k="שם העסק">{orPending(BUSINESS.legalName)}</Row>
+          {BUSINESS.entityType && <Row k="סוג עוסק">{BUSINESS.entityType}</Row>}
+          {BUSINESS.vatId && <Row k="מספר עוסק">{BUSINESS.vatId}</Row>}
           <Row k="כתובת">{addressLine()}</Row>
           <Row k="יצירת קשר"><span dir="ltr">{BUSINESS.phoneDisplay}</span> · <span dir="ltr">{BUSINESS.email}</span></Row>
         </dl>

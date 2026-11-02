@@ -19,22 +19,22 @@ export const BUSINESS = {
   /**
    * The name on the עוסק מורשה certificate — a person's full name unless a
    * company was registered.
-   * ⚠️ TODO: replace with the real name.
+   * The owner's choice (2.11): the trading name, no personal name.
    */
-  legalName: "",
+  legalName: "Unit3D",
 
-  /** "עוסק מורשה" | "עוסק פטור" | "חברה בע\"מ" */
-  entityType: "עוסק מורשה",
+  /** "עוסק מורשה" | "עוסק פטור" | "חברה בע\"מ" — empty while there is no registration number to go with it. */
+  entityType: "",
 
   /**
    * The 9-digit מספר עוסק מורשה.
-   * ⚠️ TODO: replace with the real number.
+   * None yet (2.11). Empty = the line is left out, never shown as "pending".
    */
   vatId: "",
 
   /** Where the studio is. A street address is required; the city alone is not. */
   city: "גבעתיים",
-  street: "",
+  street: "סירקין 20",
   country: "ישראל",
 
   phone: CONTACT.phone,
@@ -51,12 +51,12 @@ export const BUSINESS = {
   contactPerson: "ארז",
 
   /** Last time the legal pages were reviewed. Shown on each of them. */
-  legalUpdated: "2026-09-11",
+  legalUpdated: "2026-11-02",
 } as const;
 
 /** Is there enough here to print a lawful "who we are" block? */
 export const businessDetailsComplete = (): boolean =>
-  Boolean(BUSINESS.legalName && BUSINESS.vatId && BUSINESS.street);
+  Boolean(BUSINESS.legalName && BUSINESS.street);
 
 /** The address as one line, with whatever is actually known. */
 export const addressLine = (): string =>

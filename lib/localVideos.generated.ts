@@ -20,7 +20,6 @@ export const LOCAL_VIDEOS: Record<string, string> = {
   "mw-3237023": "img/catalog-video/3237023.mp4",
   "mw-3238682": "img/catalog-video/3238682.mp4",
   "mw-3239344": "img/catalog-video/3239344.mp4",
-  "mw-3252105": "img/catalog-video/3252105.mp4",
   "mw-3258291": "img/catalog-video/3258291.mp4",
   "mw-3258776": "img/catalog-video/3258776.mp4",
   "mw-3260310": "img/catalog-video/3260310.mp4",
