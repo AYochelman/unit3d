@@ -11,6 +11,7 @@ import AnalyticsBoot from "@/components/AnalyticsBoot";
 import OrdersBoot from "@/components/OrdersBoot";
 import CouponsBoot from "@/components/CouponsBoot";
 import GoogleTag from "@/components/GoogleTag";
+import CookieConsent from "@/components/CookieConsent";
 import DesignPreview from "@/components/DesignPreview";
 
 export const metadata: Metadata = {
@@ -88,6 +89,7 @@ export default function RootLayout({
         <DesignPreview />
         <HelpBot />
         <GoogleTag />
+        <CookieConsent />
       </body>
     </html>
   );
