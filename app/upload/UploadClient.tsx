@@ -303,7 +303,7 @@ export default function UploadClient() {
       <div className="mt-8 p-5 rounded-2xl border border-cyan2/30 bg-cyan2/5 flex items-start gap-3">
         <Icon name="info" size={18} className="text-cyan2 shrink-0 mt-0.5" />
         <p className="text-sm text-ink-300 leading-relaxed">
-          לפני שאני מתחיל להדפיס — אם הקובץ דורש התאמות (קירות דקים, אזורים פתוחים, scaling),
+          לפני שנתחיל להדפיס — אם הקובץ דורש התאמות (קירות דקים, אזורים פתוחים, scaling),
           נסביר לך לפני שאתה משלם.
         </p>
       </div>
