@@ -101,7 +101,7 @@ export default function B2BClient() {
             <span className="text-flame">עבור החברה שלך.</span>
           </ProximityH1>
           <p className="text-ink-300 max-w-2xl mx-auto text-base md:text-lg">
-            10 יחידות, 100, או 1000. אנחנו עובדים מול חברות מאז 2021 — חשבונית מס,
+            10 יחידות, 100, או 1000. אנחנו עובדים מול חברות — חשבונית מס,
             מחירון מדורג, ומשלוחים מתואמים. דברו איתנו, בלי תיווך.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">

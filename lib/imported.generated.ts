@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-11-01T10:50:39.198Z
-// Items: 632
+// Items: 624
 
 import type { ImportedModel } from "./imported";
 
@@ -7178,38 +7178,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ]
   },
   {
-    "id": "mw-74959",
-    "name": "Flexi Toothless Dragon (3MF Multi-color)",
-    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
-    "shelf": "screen",
-    "hours": 2.84,
-    "grams": 56,
-    "size": "~100mm",
-    "colors": 1,
-    "image": "https://makerworld.bblmw.com/makerworld/model/US105481a9e00df5/design/2024-01-05_b7f4dd8a264ce.png?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "Saber3D",
-    "sourceUrl": "https://makerworld.com/en/models/74959-flexi-toothless-dragon-3mf-multi-color",
-    "license": "Standard Digital File License",
-    "downloads": 91268,
-    "hue": 340,
-    "art": "lowpoly",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "also": [
-      "flexi"
-    ],
-    "hoursAms": 5.99,
-    "gramsAms": 108,
-    "material": "pla",
-    "colorHex": "#000000",
-    "images": [
-      "https://makerworld.bblmw.com/makerworld/model/US105481a9e00df5/design/2024-01-05_b7f4dd8a264ce.png",
-      "https://makerworld.bblmw.com/makerworld/model/US105481a9e00df5/design/2023-11-26_b7653c6c5c7138.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/US105481a9e00df5/design/2023-11-26_c8378d65de9ab8.jpg"
-    ]
-  },
-  {
     "id": "mw-103266",
     "name": "Organizer Box",
     "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
@@ -7581,49 +7549,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "https://makerworld.bblmw.com/makerworld/model/US8779fef0a2305/design/2024-07-15_510aec3470b14.jpeg",
       "https://makerworld.bblmw.com/makerworld/model/US8779fef0a2305/design/2024-07-15_99cad788f2a5f.jpeg",
       "https://makerworld.bblmw.com/makerworld/model/US8779fef0a2305/design/2024-07-15_8be262f956f48.jpeg"
-    ]
-  },
-  {
-    "id": "mw-585144",
-    "name": "Articulated Dragon toothless Night Fury Cute Flexi",
-    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
-    "shelf": "flexi",
-    "hours": 0.62,
-    "grams": 10,
-    "size": "~60mm",
-    "colors": 1,
-    "image": "https://makerworld.bblmw.com/makerworld/model/USa0d3c5a9da1535/design/2024-08-14_c67722a1c39b3.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "PinkyWings",
-    "sourceUrl": "https://makerworld.com/en/models/585144-articulated-dragon-toothless-night-fury-cute-flexi",
-    "license": "Standard Digital File License",
-    "downloads": 93267,
-    "hue": 90,
-    "art": "keychain",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "also": [
-      "screen"
-    ],
-    "hoursAms": 1.41,
-    "gramsAms": 23,
-    "plates": [
-      {
-        "g": 10,
-        "h": 0.62
-      },
-      {
-        "g": 99,
-        "h": 4.57
-      }
-    ],
-    "material": "pla",
-    "colorHex": "#00FF00",
-    "images": [
-      "https://makerworld.bblmw.com/makerworld/model/USa0d3c5a9da1535/design/2024-08-14_c67722a1c39b3.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USa0d3c5a9da1535/design/2024-08-12_a8b96c6ec185b.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USa0d3c5a9da1535/design/2024-08-12_28fd68869be92.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USa0d3c5a9da1535/design/2024-08-12_9c7bbde06ee5f.jpg"
     ]
   },
   {
@@ -9097,40 +9022,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "gramsAms": 999
   },
   {
-    "id": "mw-3252105",
-    "name": "UNO Card Deck Box with Lid & Playing Tray",
-    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
-    "shelf": "home",
-    "hours": 1.97,
-    "grams": 42,
-    "size": "~100mm",
-    "colors": 2,
-    "image": "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/142c37fa57c0fe17.png?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "Niklas",
-    "sourceUrl": "https://makerworld.com/en/models/3252105-uno-card-deck-box-with-lid-playing-tray",
-    "license": "MakerWorld Exclusive License",
-    "downloads": 190,
-    "hue": 260,
-    "art": "planter",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "hoursAms": 1.54,
-    "gramsAms": 25,
-    "material": "pla",
-    "colorHex": "#000000",
-    "images": [
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/142c37fa57c0fe17.png",
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/44ffb56377c7bc49.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/4934a834c93d639c.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/01618fef933b9ed2.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/4325aaf70cbbcce9.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/d7734d4b861fb661.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/f084fce0d33ea7b2.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/USd36187d9d0abb2/design/2539769585d76e8b.jpg"
-    ]
-  },
-  {
     "id": "mw-3252367",
     "name": "Jason Hair Clip | Jason Hair Pin",
     "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
@@ -9357,29 +9248,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "https://makerworld.bblmw.com/makerworld/model/USbc0221a3315793/design/ee1c14f3822cb673.png",
       "https://makerworld.bblmw.com/makerworld/model/USbc0221a3315793/design/8e871d07d18b962b.png",
       "https://makerworld.bblmw.com/makerworld/model/USbc0221a3315793/design/885296207e1173eb.png"
-    ]
-  },
-  {
-    "id": "mw-3269182",
-    "name": "GHOST FACE CANDLE HOLDER ASSEMBLY",
-    "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
-    "shelf": "screen",
-    "hours": 5.06,
-    "grams": 137,
-    "size": "~160mm",
-    "colors": 2,
-    "image": "https://makerworld.bblmw.com/makerworld/model/US697e06c347da4f/design/1c6ed36a2a0ff5e8.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "Newuser92",
-    "sourceUrl": "https://makerworld.com/en/models/3269182-ghost-face-candle-holder-assembly",
-    "license": "MakerWorld Exclusive License",
-    "downloads": 418,
-    "hue": 340,
-    "art": "lowpoly",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "also": [
-      "home"
     ]
   },
   {
@@ -10158,33 +10026,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "https://makerworld.bblmw.com/makerworld/model/US4321d004b32a94/design/c22c0e0dd3ca8ec4.gif",
       "https://makerworld.bblmw.com/makerworld/model/US4321d004b32a94/design/7b265b0ce6480c3a.gif",
       "https://makerworld.bblmw.com/makerworld/model/US4321d004b32a94/design/3f2308062374c045.gif"
-    ]
-  },
-  {
-    "id": "mw-3268045",
-    "name": "Bone Queen",
-    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
-    "shelf": "statues",
-    "hours": 53.66,
-    "grams": 904,
-    "size": "~250mm",
-    "colors": 2,
-    "image": "https://makerworld.bblmw.com/makerworld/model/US9d871c1d175f9a/design/4bccab2ec8c692f1.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "3DXAV",
-    "sourceUrl": "https://makerworld.com/en/models/3268045-bone-queen",
-    "license": "Standard Digital File License",
-    "downloads": 46,
-    "hue": 320,
-    "art": "lowpoly",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "material": "pla",
-    "colorHex": "#000000",
-    "images": [
-      "https://makerworld.bblmw.com/makerworld/model/US9d871c1d175f9a/design/4bccab2ec8c692f1.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/US9d871c1d175f9a/design/58c9f093f29f7fcd.jpg",
-      "https://makerworld.bblmw.com/makerworld/model/US9d871c1d175f9a/design/11be26e5bac0b58f.jpg"
     ]
   },
   {
@@ -11137,35 +10978,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "material": "petg",
     "colorHex": "#FFFFFF"
-  },
-  {
-    "id": "mw-1107929",
-    "name": "Octashot - Shot dispenser - 8 Shots at Once",
-    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
-    "shelf": "home",
-    "hours": 18.81,
-    "grams": 455,
-    "size": "~250mm",
-    "colors": 1,
-    "image": "https://makerworld.bblmw.com/makerworld/model/USc2f7d6e35384b2/design/2025-02-14_46da083e3226f8.webp?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "MG3Design",
-    "sourceUrl": "https://makerworld.com/en/models/1107929-octashot-eight-shot-dispenser",
-    "license": "Standard Digital File License",
-    "downloads": 8618,
-    "hue": 260,
-    "art": "planter",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "also": [
-      "trendy"
-    ],
-    "hoursAms": 20.32,
-    "gramsAms": 513,
-    "images": [
-      "https://makerworld.bblmw.com/makerworld/model/USc2f7d6e35384b2/design/2025-02-14_46da083e3226f8.webp",
-      "https://makerworld.bblmw.com/makerworld/model/USc2f7d6e35384b2/design/2025-02-14_3d869969767858.webp"
-    ]
   },
   {
     "id": "mw-1122798",
@@ -12931,35 +12743,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "colorHex": "#807E79"
   },
   {
-    "id": "mw-2774013",
-    "name": "PORTAROTOLO da Cucina / Scottex a coste",
-    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
-    "shelf": "home",
-    "hours": 17.19,
-    "grams": 470,
-    "size": "~250mm",
-    "colors": 1,
-    "image": "https://makerworld.bblmw.com/makerworld/model/US3235d39c33f198/design/a07d5f24ae015a92.jpeg?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "formastampa",
-    "sourceUrl": "https://makerworld.com/en/models/2774013-ribbed-kitchen-paper-towel-holder",
-    "license": "Standard Digital File License",
-    "downloads": 1023,
-    "hue": 260,
-    "art": "planter",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "also": [
-      "office"
-    ],
-    "images": [
-      "https://makerworld.bblmw.com/makerworld/model/US3235d39c33f198/design/a07d5f24ae015a92.jpeg",
-      "https://makerworld.bblmw.com/makerworld/model/US3235d39c33f198/design/ac5eb7c1ff554658.jpeg",
-      "https://makerworld.bblmw.com/makerworld/model/US3235d39c33f198/design/db3e490f9c5e1c2d.jpeg",
-      "https://makerworld.bblmw.com/makerworld/model/US3235d39c33f198/design/b828fb88882fe4ca.jpeg"
-    ]
-  },
-  {
     "id": "mw-2810709",
     "name": "Homelander Sitting Figure - The Boys",
     "desc": "פריט תצוגה מהמסך. הדפסה איטית בשכבות דקות.",
@@ -13337,33 +13120,6 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     ],
     "material": "pla",
     "colorHex": "#0ACC38"
-  },
-  {
-    "id": "mw-3268146",
-    "name": "Fidget Cube Puzzle",
-    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
-    "shelf": "fidget",
-    "hours": 3.78,
-    "grams": 112,
-    "size": "~100mm",
-    "colors": 1,
-    "image": "https://makerworld.bblmw.com/makerworld/model/US7fa5aa0edddc6e/design/58d9ee8c7b055496.png?x-oss-process=image/resize,w_400/format,webp",
-    "creator": "BMA 3D",
-    "sourceUrl": "https://makerworld.com/en/models/3268146-fidget-cube-puzzle",
-    "license": "Standard Digital File License",
-    "downloads": 508,
-    "hue": 280,
-    "art": "keychain",
-    "status": "live",
-    "holds": [],
-    "licenseChecked": true,
-    "images": [
-      "https://makerworld.bblmw.com/makerworld/model/US7fa5aa0edddc6e/design/58d9ee8c7b055496.png",
-      "https://makerworld.bblmw.com/makerworld/model/US7fa5aa0edddc6e/design/bbe95cc2fc458354.jpeg",
-      "https://makerworld.bblmw.com/makerworld/model/US7fa5aa0edddc6e/design/e2037b3ccb704198.jpeg",
-      "https://makerworld.bblmw.com/makerworld/model/US7fa5aa0edddc6e/design/a6ea616f609b4ab5.jpeg",
-      "https://makerworld.bblmw.com/makerworld/model/US7fa5aa0edddc6e/design/875c59bf6ce303da.jpeg"
-    ]
   },
   {
     "id": "mw-3268477",

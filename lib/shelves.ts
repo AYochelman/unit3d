@@ -58,7 +58,6 @@ export const SHELF_FIX: Record<string, ShelfOverride> = {
   "mw-657056": { shelf: "smoke" },   // קופסה ל-9 סיגריות
 
   // מוזג שוטים הוא פריט מסיבות, לא יצור מפרקי
-  "mw-1107929": { shelf: "home" },
 };
 
 /** Applies the corrections to a freshly imported row. */

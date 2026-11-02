@@ -18,9 +18,9 @@ export default function PrivacyPage() {
       <Section n="1" title="מי אנחנו">
         <dl className="mt-1">
           <Row k="שם מסחרי">{BUSINESS.tradingName}</Row>
-          <Row k="שם משפטי">{orPending(BUSINESS.legalName)}</Row>
-          <Row k="סוג עוסק">{BUSINESS.entityType}</Row>
-          <Row k="מספר עוסק">{orPending(BUSINESS.vatId)}</Row>
+          <Row k="שם העסק">{orPending(BUSINESS.legalName)}</Row>
+          {BUSINESS.entityType && <Row k="סוג עוסק">{BUSINESS.entityType}</Row>}
+          {BUSINESS.vatId && <Row k="מספר עוסק">{BUSINESS.vatId}</Row>}
           <Row k="כתובת">{addressLine()}</Row>
           <Row k="טלפון"><span dir="ltr">{BUSINESS.phoneDisplay}</span></Row>
           <Row k="דוא״ל"><span dir="ltr">{BUSINESS.email}</span></Row>
@@ -30,10 +30,11 @@ export default function PrivacyPage() {
 
       <Section n="2" title="השורה התחתונה, לפני הפרטים">
         <p>
-          <strong className="text-ink-100">גלישה באתר לא אוספת עליך שום דבר.</strong> אין באתר
-          Google Analytics, אין פיקסל של פייסבוק או טיקטוק, אין רשת פרסום, אין כלי הקלטת מסך ואין
-          עוגיות מעקב. הגופנים והתמונות מוגשים מהשרת של האתר עצמו, כך שגם לא נוצרת פנייה לשרת של
-          חברה אחרת בזמן שאתה מסתכל על מוצר.
+          <strong className="text-ink-100">גלישה באתר לא אוספת עליך מידע מזהה.</strong> נרשמת
+          סטטיסטיקה אנונימית (איזה עמוד, מאיזה מקור, סוג מכשיר), ו־Google Analytics נטען רק אם
+          אישרת אותו בחלון ההסכמה. אין פיקסל של פייסבוק או טיקטוק, אין רשת פרסום ואין כלי הקלטת
+          מסך. הגופנים והתמונות מוגשים מהשרת של האתר עצמו. הפרטים ב־
+          <Link href="/cookies" className="text-flame-300 underline hover:text-flame">מדיניות העוגיות</Link>.
         </p>
         <p>
           מידע אישי נאסף רק כשאתה בעצמך שולח אותו — בהזמנה, בפנייה או בהעלאת קובץ.
@@ -64,6 +65,11 @@ export default function PrivacyPage() {
           ה־IP, סוג הדפדפן והעמוד שנטען. אין לנו גישה ליומנים האלה ואיננו משתמשים בהם. זה קורה
           בכל אתר באינטרנט ולא מיוחד לנו.
         </p>
+        <p>
+          בנוסף, האתר עצמו רושם סטטיסטיקה אנונימית על הגלישה — העמוד, המקור וסוג המכשיר, עם מזהה
+          אקראי שנמחק בסגירת הלשונית — ואם אישרת, גם Google Analytics. ראה{" "}
+          <Link href="/cookies" className="text-flame-300 underline hover:text-flame">מדיניות העוגיות</Link>.
+        </p>
       </Section>
 
       <Section n="4" title="למה זה משמש">
@@ -77,7 +83,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section n="5" title="מי עוד רואה את המידע">
-        <p>שלושה ספקי שירות בלבד, וכל אחד רואה רק את מה שנחוץ לתפקידו:</p>
+        <p>ספקי שירות בלבד, וכל אחד רואה רק את מה שנחוץ לתפקידו:</p>
         <dl className="mt-1">
           <Row k="Supabase">
             מסד הנתונים שבו נשמרת שורת ההזמנה (שם, טלפון, דוא״ל, פרטי ההזמנה). השרתים מחוץ לישראל.
@@ -87,6 +93,7 @@ export default function PrivacyPage() {
             שולח את מייל אישור ההזמנה. מקבל את כתובת הדוא״ל, השם ותוכן האישור. רק אם השארת דוא״ל.
           </Row>
           <Row k="GitHub Pages">מארח את קבצי האתר. יומני שרת בלבד, כאמור בסעיף 3ג.</Row>
+          <Row k="Google Analytics">רק אם אישרת בחלון ההסכמה: נתוני גלישה מצטברים, בלי שם, טלפון או דוא״ל. השרתים מחוץ לישראל.</Row>
         </dl>
         <p className="mt-4">
           בנוסף, אם בחרת לשלוח את ההזמנה בוואטסאפ — ההודעה עוברת דרך WhatsApp בהתאם למדיניות
@@ -100,7 +107,7 @@ export default function PrivacyPage() {
 
       <Section n="6" title="העברת מידע אל מחוץ לישראל">
         <p>
-          Supabase ו־EmailJS הן חברות זרות ששרתיהן מחוץ לישראל, ולכן פרטי ההזמנה נשמרים ומעובדים
+          Supabase, EmailJS ו־Google (אם אישרת Analytics) הן חברות זרות ששרתיהן מחוץ לישראל, ולכן פרטי ההזמנה נשמרים ומעובדים
           מחוץ לישראל. המדינות שבהן הן פועלות מקיימות רמת הגנה על מידע המוכרת כנאותה. בשליחת
           ההזמנה אתה מסכים להעברה הזו; בלעדיה אין דרך טכנית להעביר אלינו הזמנה מאתר סטטי.
         </p>
@@ -150,8 +157,8 @@ export default function PrivacyPage() {
 
       <Section n="11" title="שינויים במדיניות">
         <p>
-          נעדכן את המסמך הזה אם נוסיף כלי או שירות שמשנה את התמונה — למשל אם ביום מן הימים יותקן
-          כלי אנליטיקה. התאריך בראש העמוד תמיד משקף את הגרסה התקפה.
+          נעדכן את המסמך הזה אם נוסיף כלי או שירות שמשנה את התמונה. התאריך בראש העמוד תמיד משקף
+          את הגרסה התקפה.
         </p>
       </Section>
     </LegalPage>

@@ -437,6 +437,49 @@ const lightIsOn = () => {
   return chamber ? String(chamber.mode).toLowerCase() === "on" : null;
 };
 
+// ─── Bed at 58°C from the first layer to the end ─────────────────────────────
+// The owner's rule (2.11): from the moment layer 1 starts and for the whole
+// print, the bed is held at 58°C. The sliced file sets its own bed temperature
+// again for the later layers, so a single command would last one layer: the
+// target is watched, and put back whenever it moves.
+//
+// Guarded by what the print itself asked for at the first layer: only when that
+// was a PLA-range bed (45-68°C). A PETG or ABS print heats the bed to 70-100 on
+// purpose, and holding it at 58 is a warped, unstuck print — those are left
+// alone for the whole job.
+// config.json: bed.temp (default 58), or false to turn it off.
+const HOLD_BED = cfg.bed?.temp === false || cfg.bed?.firstLayerTemp === false ? 0 : Number(cfg.bed?.temp ?? cfg.bed?.firstLayerTemp ?? 58);
+let bedJob = "";          // the print this decision belongs to
+let bedHold = false;      // whether this print is one we hold
+let bedSentAt = 0;
+
+function holdBed() {
+  if (!HOLD_BED || !client.connected) return;
+  const p = last.print ?? {};
+  if (state() !== "printing") { bedJob = ""; bedHold = false; return; }
+  const job = currentKey || jobName();
+  const layer = num(p.layer_num);
+  const target = num(p.bed_target_temper);
+  if (!job || layer == null || layer < 1 || target == null) return;
+
+  if (bedJob !== job) {
+    bedJob = job;
+    bedHold = target === HOLD_BED || (target >= 45 && target <= 68);
+    log(bedHold
+      ? `bed: first layer at ${target}°C - holding ${HOLD_BED}°C until the print ends`
+      : `bed: first layer at ${target}°C - not a PLA bed, leaving it alone`);
+  }
+  if (!bedHold || target === HOLD_BED) return;
+  // The printer takes a moment to report the new target; do not repeat the
+  // command into that gap.
+  if (Date.now() - bedSentAt < 10_000) return;
+  bedSentAt = Date.now();
+  client.publish(`device/${serial}/request`, JSON.stringify({
+    print: { sequence_id: String(Date.now() % 100000), command: "gcode_line", param: `M140 S${HOLD_BED}\n` },
+  }));
+  log(`bed: layer ${layer} - ${target}°C -> ${HOLD_BED}°C`);
+}
+
 function setChamberLight(on) {
   if (!client.connected) return;
   client.publish(
@@ -1507,6 +1550,7 @@ every(STATUS_EVERY, async () => {
   try {
     await upsertStatus(statusRow());
     await watchFinish();
+    holdBed();
   } catch (e) { log("status error:", e.message); }
 });
 every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)));
