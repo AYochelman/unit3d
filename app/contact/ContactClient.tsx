@@ -698,7 +698,7 @@ export default function ContactClient() {
                 only in a footer link — and it has to name where the details
                 actually go. */}
             <p className="text-xs text-ink-400 max-w-md leading-relaxed">
-              בלחיצה על הכפתור אתה מאשר שאני יכול לחזור אליך בוואטסאפ עם פרטי ההזמנה,
+              בלחיצה על הכפתור אתה מאשר שנוכל לחזור אליך בוואטסאפ עם פרטי ההזמנה,
               ומסכים ל
               <Link href="/terms" className="text-flame-300 underline hover:text-flame">תנאי השימוש</Link>
               {" ול"}
