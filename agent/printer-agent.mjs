@@ -437,6 +437,38 @@ const lightIsOn = () => {
   return chamber ? String(chamber.mode).toLowerCase() === "on" : null;
 };
 
+// ─── Bed temperature once the first layer starts ─────────────────────────────
+// The owner's rule (2.11): as soon as layer 1 is printing, set the bed to 58°C.
+// Once per print, on the first layer only — from layer 2 the sliced file's own
+// "other layers" temperature takes over, as it always did.
+//
+// Guarded by what the print itself asked for: only when the sliced target is
+// already a PLA-range bed (45-68°C). A PETG or ABS print heats the bed to 70-100
+// on purpose, and dropping it to 58 is a warped, unstuck print.
+// config.json: bed.firstLayerTemp (default 58), or false to turn it off.
+const FIRST_LAYER_BED = cfg.bed?.firstLayerTemp === false ? 0 : Number(cfg.bed?.firstLayerTemp ?? 58);
+let bedSetFor = "";
+
+function firstLayerBed() {
+  if (!FIRST_LAYER_BED || !client.connected) return;
+  const p = last.print ?? {};
+  if (state() !== "printing") { bedSetFor = ""; return; }
+  const job = currentKey || jobName();
+  if (!job || bedSetFor === job) return;
+  if (num(p.layer_num) !== 1) return;
+  const target = num(p.bed_target_temper);
+  bedSetFor = job; // decided once per print, whichever way
+  if (target == null || target === FIRST_LAYER_BED) return;
+  if (target < 45 || target > 68) {
+    log(`bed: first layer at ${target}°C - not a PLA bed, leaving it alone (rule is ${FIRST_LAYER_BED}°C for PLA)`);
+    return;
+  }
+  client.publish(`device/${serial}/request`, JSON.stringify({
+    print: { sequence_id: String(Date.now() % 100000), command: "gcode_line", param: `M140 S${FIRST_LAYER_BED}\n` },
+  }));
+  log(`bed: first layer started - bed ${target}°C -> ${FIRST_LAYER_BED}°C`);
+}
+
 function setChamberLight(on) {
   if (!client.connected) return;
   client.publish(
@@ -1507,6 +1539,7 @@ every(STATUS_EVERY, async () => {
   try {
     await upsertStatus(statusRow());
     await watchFinish();
+    firstLayerBed();
   } catch (e) { log("status error:", e.message); }
 });
 every(CAM_EVERY, () => pushCamera().catch((e) => log("camera error:", e.message)));
