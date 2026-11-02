@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 11
-// Collected: 2026-11-02T13:20:45.157Z
+// Collected: 2026-11-02T15:02:07.963Z
 
 import type { Candidate } from "./candidates";
 
@@ -15,8 +15,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Treddigineer",
     "image": "https://makerworld.bblmw.com/makerworld/model/US99345aaf9a2bc8/design/2024-09-13_af345da096602.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 4203,
-    "likes": 2904,
+    "downloads": 4204,
+    "likes": 2903,
     "grams": 1101,
     "hours": 38.62,
     "colors": 1,
@@ -34,8 +34,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Ties",
     "image": "https://makerworld.bblmw.com/makerworld/model/US33d9006ac5d2ce/design/56eeb9b0b7cea39f.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1210,
-    "likes": 773,
+    "downloads": 1212,
+    "likes": 775,
     "grams": 31,
     "hours": 1.97,
     "colors": 1,
@@ -54,7 +54,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "Greco 2077",
     "image": "https://makerworld.bblmw.com/makerworld/model/USda7c824854b807/design/a6b4656d33a3012a.png?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 511,
-    "likes": 330,
+    "likes": 331,
     "grams": 25,
     "hours": 4.96,
     "colors": 1,
@@ -91,7 +91,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Tommy´s",
     "image": "https://makerworld.bblmw.com/makerworld/model/US180015be510676/design/d0c449085762a525.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 112,
+    "downloads": 113,
     "likes": 207,
     "grams": 102,
     "hours": 7.18,
@@ -110,8 +110,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "formastampa",
     "image": "https://makerworld.bblmw.com/makerworld/model/USdc237567ab8b68/design/ecd466875d1ec6c0.jpeg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 939,
-    "likes": 1520,
+    "downloads": 940,
+    "likes": 1524,
     "grams": 107,
     "hours": 3,
     "colors": 1,
