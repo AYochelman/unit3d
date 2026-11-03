@@ -59,7 +59,7 @@ export default function PrinterTab() {
     const ok = await saveAccessCode(token, code);
     setSaving(false);
     setMsg(ok
-      ? { ok: true, text: "נשמר. הסוכן יקלוט אותו תוך דקה ויתחבר מחדש — המצב למטה יתעדכן לבד." }
+      ? { ok: true, text: "נשמר. הסוכן יקלוט אותו תוך 5 דקות ויתחבר מחדש — המצב למטה יתעדכן לבד." }
       : { ok: false, text: "השמירה נכשלה. נסה שוב." });
     if (ok) { setCode(""); refresh(); }
   };
@@ -130,7 +130,7 @@ export default function PrinterTab() {
             <button type="button" onClick={signOut} className="text-[11px] text-ink-500 hover:text-bad underline">יציאה</button>
           </div>
           <p className="text-[12px] text-ink-400">
-            במסך המדפסת: Settings ← LAN Only ← Access Code. הדבק אותו כאן — הסוכן יעדכן את עצמו תוך דקה.
+            במסך המדפסת: Settings ← LAN Only ← Access Code. הדבק אותו כאן — הסוכן יעדכן את עצמו תוך 5 דקות.
           </p>
           <div className="flex gap-2">
             <Input
