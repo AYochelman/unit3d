@@ -7,10 +7,10 @@
     "newToQueue": 9
   },
   "nightly": {
-    "ranAt": "2026-11-02T15:01:41.697Z",
+    "ranAt": "2026-11-03T12:53:39.907Z",
     "blockedCollections": 8,
     "collections": 8,
-    "newForApproval": 12,
+    "newForApproval": 3,
     "alreadyHandled": 336
   },
   "decisions": {
