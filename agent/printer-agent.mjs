@@ -52,8 +52,15 @@ if (!host || !serial || !accessCode || !SB || !KEY) {
 // seconds. Those exact numbers are the old defaults rather than a choice anyone
 // made, so an existing config is brought up to the live pace; any other value
 // is left as the person set it.
-const STATUS_EVERY = (cfg.statusEverySeconds == null || cfg.statusEverySeconds === 5 ? 2 : cfg.statusEverySeconds) * 1000;
-const CAM_EVERY = (cfg.camera?.everySeconds == null || cfg.camera?.everySeconds === 15 ? 6 : cfg.camera.everySeconds) * 1000;
+//
+// 3.11.2026: the live pace (2s / 6s) burned the free Supabase quota in under a
+// month - every open page pulled the 80 KB still every 6 seconds through
+// Supabase's CDN ("cached egress") and the whole organisation was switched off
+// with HTTP 402. The still now goes to R2 (free to serve) and the pace is
+// slower: 5s for the numbers, 10s for the still. A value below those floors in
+// an old config.json is raised to them.
+const STATUS_EVERY = Math.max(5, cfg.statusEverySeconds ?? 5) * 1000;
+const CAM_EVERY = Math.max(10, cfg.camera?.everySeconds ?? 10) * 1000;
 const TL_EVERY = (cfg.timelapse?.everyMinutes ?? 30) * 60 * 1000;
 
 const log = (...a) => console.log(new Date().toLocaleTimeString("he-IL"), ...a);
@@ -75,6 +82,22 @@ async function upsertStatus(row) {
     body: JSON.stringify({ id: "live", ...row, updated_at: new Date().toISOString() }),
   });
   if (!res.ok) log("status write failed:", res.status, (await res.text()).slice(0, 200));
+}
+
+// Written when something a viewer would notice changed, or as a heartbeat —
+// not every 2 seconds regardless (3.11, Supabase usage). The page calls a row
+// older than 60s "offline", so idle heartbeats stay well inside that.
+let lastStatusKey = "";
+let lastStatusAt = 0;
+async function writeStatusIfDue() {
+  const row = statusRow();
+  const printing = row.state === "printing";
+  const key = JSON.stringify([row.state, row.job_name, row.progress, row.layer, row.minutes_left, row.nozzle_target, row.bed_target, row.speed_level]);
+  const heartbeat = printing ? 10_000 : 30_000;
+  if (key === lastStatusKey && Date.now() - lastStatusAt < heartbeat) return;
+  lastStatusKey = key;
+  lastStatusAt = Date.now();
+  await upsertStatus(row);
 }
 
 // "It is on the printer now" — once per order, when its job starts (order-mail.mjs).
@@ -224,7 +247,7 @@ async function checkRemoteAccessCode() {
   }
 }
 setTimeout(checkRemoteAccessCode, 5_000);
-setInterval(checkRemoteAccessCode, 60_000);
+setInterval(checkRemoteAccessCode, 5 * 60_000);
 
 // ─── Where this agent runs ───────────────────────────────────────────────────
 // On 22.10 nobody could find the Pi: it was writing to the site, but its
@@ -310,7 +333,7 @@ async function checkRemoteYoutube() {
   }
 }
 setTimeout(checkRemoteYoutube, 8_000);
-setInterval(checkRemoteYoutube, 60_000);
+setInterval(checkRemoteYoutube, 5 * 60_000);
 setInterval(() => { youtube.signInIfNeeded().catch((e) => log("youtube sign-in error:", e.message)); }, 5_000);
 
 const pretty = (s) => String(s || "").replace(/UNIT3D-\d+/gi, "").replace(/[_]+/g, " ").replace(/\s+-\s+|\s{2,}/g, " · ").replace(/\s+/g, " ").trim();
@@ -707,6 +730,11 @@ function watchStream() {
 /** A file still being written is not a picture yet. JPEG ends with FFD9. */
 const wholeJpeg = (b) => b.length > 1000 && b[b.length - 2] === 0xff && b[b.length - 1] === 0xd9;
 
+const CAM_UPLOAD_PRINTING = (cfg.camera?.uploadPrintingSeconds ?? 10) * 1000;
+const CAM_UPLOAD_IDLE = (cfg.camera?.uploadIdleSeconds ?? 300) * 1000;
+const CAM_KEY = "live/live.jpg"; // beside the video; the site reads it from here
+let camLastUpload = 0;
+
 async function pushCamera() {
   if (cfg.camera?.enabled === false) return;
   keepChamberLit();
@@ -754,6 +782,20 @@ async function pushCamera() {
   if (camWarned) log("camera: pictures are coming through again");
   camFailures = 0;
   camWarned = false;
+  // Uploaded far less often than it is grabbed (3.11): every page view of the
+  // home page and /livestream downloaded this picture every few seconds, which
+  // is what ran the Supabase plan out of egress. While printing it changes
+  // every 10s; otherwise there is nothing to see, so every 5 minutes.
+  const gap = state() === "printing" ? CAM_UPLOAD_PRINTING : CAM_UPLOAD_IDLE;
+  if (Date.now() - camLastUpload < gap) return;
+  camLastUpload = Date.now();
+  // R2 first: serving from it costs nothing, while every read of the Supabase
+  // copy counts against the free plan's cached-egress quota. The site reads
+  // `${liveUrl}/live/live.jpg`; the Supabase copy is written only without R2.
+  if (R2) {
+    const r = await R2.put(CAM_KEY, jpeg, "image/jpeg", "no-cache, max-age=0").catch(() => null);
+    if (r?.ok) return;
+  }
   await upload("printer", "live.jpg", jpeg, "image/jpeg");
 }
 
@@ -1053,6 +1095,7 @@ async function pushLiveFlag(live, why) {
     ...(live ? {} : { why: why || "unknown" }),
     agent: VERSION,
     segment_seconds: SEG_SECONDS,
+    camera: CAM_KEY,
     updated_at: new Date().toISOString(),
   }));
   await R2.put(`${HLS_KEY}/status.json`, body, "application/json", "no-cache, max-age=0");
@@ -1212,7 +1255,14 @@ async function checkSocialTargets() {
     log("social live check failed:", e.message);
   }
 }
-setInterval(checkSocialTargets, 8_000);
+// Fast only while there is something to stream to; otherwise rarely.
+let socialChecked = 0;
+setInterval(() => {
+  const every = state() === "printing" ? 20_000 : 3 * 60_000;
+  if (Date.now() - socialChecked < every) return;
+  socialChecked = Date.now();
+  void checkSocialTargets();
+}, 5_000);
 
 function stopSocial() {
   for (const [, p] of socialProcs) { try { p.proc.kill(); } catch {} }
@@ -1499,7 +1549,15 @@ async function pushTimelapses(keep = true) {
     for (const f of fresh.slice(0, cfg.timelapse?.perRun ?? 4)) {
       const body = await ftp.download(`${dir}/${f.name}`);
       if (!body || body.length < 100_000) { log("timelapse: came back empty -", f.name); continue; }
-      const ok = await upload("printer", `timelapse/${f.name}`, body, "video/mp4");
+      // R2 when it is set up — a clip is tens of MB and every play of it was
+      // Supabase egress.
+      let url = `${SB}/storage/v1/object/public/printer/timelapse/${encodeURIComponent(f.name)}`;
+      let ok = false;
+      if (R2) {
+        const r = await R2.put(`timelapse/${f.name}`, body, "video/mp4", "public, max-age=31536000, immutable").catch(() => null);
+        if (r?.ok) { ok = true; url = `${PUBLIC_URL}/timelapse/${encodeURIComponent(f.name)}`; }
+      }
+      if (!ok) ok = await upload("printer", `timelapse/${f.name}`, body, "video/mp4");
       if (!ok) continue;
       tlState.done.add(f.name);
       tlState.cutoff = Math.max(tlState.cutoff, +f.at);
@@ -1509,7 +1567,7 @@ async function pushTimelapses(keep = true) {
         headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
         body: JSON.stringify({
           file: f.name,
-          url: `${SB}/storage/v1/object/public/printer/timelapse/${encodeURIComponent(f.name)}`,
+          url,
           size_mb: Math.round((body.length / 1048576) * 10) / 10,
           recorded_at: f.at.toISOString(),
         }),
@@ -1548,7 +1606,7 @@ const every = (ms, fn) => { fn(); return setInterval(fn, ms); };
 
 every(STATUS_EVERY, async () => {
   try {
-    await upsertStatus(statusRow());
+    await writeStatusIfDue();
     await watchFinish();
     holdBed();
   } catch (e) { log("status error:", e.message); }

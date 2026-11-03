@@ -20621,7 +20621,10 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "hoursAms": 1.01,
     "gramsAms": 16,
     "material": "pla",
-    "colorHex": "#FFFFFF"
+    "colorHex": "#FFFFFF",
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/US9427b1749b46ec/design/2025-06-06_c87a2884049c68.gif"
+    ]
   },
   {
     "id": "mw-1535819",
@@ -20949,7 +20952,10 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       }
     ],
     "material": "petg",
-    "colorHex": "#000000"
+    "colorHex": "#000000",
+    "images": [
+      "https://makerworld.bblmw.com/makerworld/model/USd1b0b28e20f0b0/design/02b4d2d4a90c9c34.png"
+    ]
   },
   {
     "id": "mw-1024945",

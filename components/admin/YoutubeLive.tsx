@@ -67,7 +67,7 @@ export default function YoutubeLive({ token }: { token: string }) {
       setMsg({ ok: false, text: "ה-Client ID נגמר ב-.apps.googleusercontent.com — בדוק שהעתקת את כולו." });
       return;
     }
-    void send(setup, "נשמר. הסוכן יקלוט את זה תוך דקה — המצב למטה יתעדכן לבד.");
+    void send(setup, "נשמר. הסוכן יקלוט את זה תוך 5 דקות — המצב למטה יתעדכן לבד.");
   };
 
   const s = status?.state ?? "off";
@@ -82,7 +82,7 @@ export default function YoutubeLive({ token }: { token: string }) {
       <div className="rounded-xl border border-ink-800 bg-ink-950/40 p-3 space-y-1.5">
         <div className="flex items-center gap-2 text-sm">
           <span className={cn("h-2.5 w-2.5 rounded-full", s === "live" ? "bg-bad animate-pulse" : s === "connected" || s === "key-only" ? "bg-good" : s === "off" ? "bg-ink-600" : "bg-amber-400")} />
-          {pending ? "נשלח לסוכן, מחכה שיקלוט (עד דקה)…" : STATE_TEXT[s]}
+          {pending ? "נשלח לסוכן, מחכה שיקלוט (עד 5 דקות)…" : STATE_TEXT[s]}
         </div>
         {s === "needs-code" && status?.code && (
           <div className="space-y-1">
@@ -139,7 +139,7 @@ export default function YoutubeLive({ token }: { token: string }) {
         {s !== "off" && (
           <button
             type="button"
-            onClick={() => { if (confirm("לנתק את הלייב ביוטיוב? הסוכן ימחק את המפתח ואת החיבור לערוץ.")) void send({ clear: true }, "נשלח. הסוכן יתנתק תוך דקה."); }}
+            onClick={() => { if (confirm("לנתק את הלייב ביוטיוב? הסוכן ימחק את המפתח ואת החיבור לערוץ.")) void send({ clear: true }, "נשלח. הסוכן יתנתק תוך 5 דקות."); }}
             className="text-[12px] text-ink-500 hover:text-bad underline"
           >
             ניתוק
