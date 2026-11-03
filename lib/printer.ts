@@ -72,13 +72,13 @@ const fresh = (row: PrinterLive | null): PrinterLive | null => {
 /**
  * The machine's state, kept current on its own.
  *
- * The agent writes a new row every couple of seconds, so this reads at the same
+ * The agent writes a new row every five seconds, so this reads at the same
  * pace: the numbers on screen move while you watch them, without a refresh. The
  * chamber still is heavier than a row of numbers, so it has its own, slower
  * beat. Both pause while the tab is in the background — a page nobody is
  * looking at has no reason to keep asking.
  */
-export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
+export function usePrinterLive(everyMs = 5_000, cameraEveryMs = 10_000) {
   const [live, setLive] = useState<PrinterLive | null>(null);
   const [camera, setCamera] = useState<string | null>(null);
   const [stream, setStream] = useState<string | null>(null);
@@ -123,7 +123,13 @@ export function usePrinterLive(everyMs = 2_000, cameraEveryMs = 6_000) {
       const c = await shopConfig();
       if (!alive || !isConfigured(c)) return;
       // The still is overwritten in place, so the URL needs a new tail each time.
-      setCamera(`${c.supabaseUrl}/storage/v1/object/public/printer/live.jpg?t=${Date.now()}`);
+      // It is read from R2 beside the video (free to serve); the Supabase copy
+      // is only for a setup without a live bucket, because every read of it
+      // counts against the free plan's cached-egress quota - on 3.11.2026 that
+      // quota ran out and Supabase switched the whole organisation off.
+      setCamera(c.liveUrl
+        ? `${c.liveUrl}/live/live.jpg?t=${Date.now()}`
+        : `${c.supabaseUrl}/storage/v1/object/public/printer/live.jpg?t=${Date.now()}`);
       // The video only exists while a print is running, and the agent says so
       // in a small file beside it — cheaper and simpler than a database column,
       // and it costs nothing to read from where the video already lives.

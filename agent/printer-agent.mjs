@@ -52,8 +52,15 @@ if (!host || !serial || !accessCode || !SB || !KEY) {
 // seconds. Those exact numbers are the old defaults rather than a choice anyone
 // made, so an existing config is brought up to the live pace; any other value
 // is left as the person set it.
-const STATUS_EVERY = (cfg.statusEverySeconds == null || cfg.statusEverySeconds === 5 ? 2 : cfg.statusEverySeconds) * 1000;
-const CAM_EVERY = (cfg.camera?.everySeconds == null || cfg.camera?.everySeconds === 15 ? 6 : cfg.camera.everySeconds) * 1000;
+//
+// 3.11.2026: the live pace (2s / 6s) burned the free Supabase quota in under a
+// month - every open page pulled the 80 KB still every 6 seconds through
+// Supabase's CDN ("cached egress") and the whole organisation was switched off
+// with HTTP 402. The still now goes to R2 (free to serve) and the pace is
+// slower: 5s for the numbers, 10s for the still. A value below those floors in
+// an old config.json is raised to them.
+const STATUS_EVERY = Math.max(5, cfg.statusEverySeconds ?? 5) * 1000;
+const CAM_EVERY = Math.max(10, cfg.camera?.everySeconds ?? 10) * 1000;
 const TL_EVERY = (cfg.timelapse?.everyMinutes ?? 30) * 60 * 1000;
 
 const log = (...a) => console.log(new Date().toLocaleTimeString("he-IL"), ...a);
@@ -754,6 +761,15 @@ async function pushCamera() {
   if (camWarned) log("camera: pictures are coming through again");
   camFailures = 0;
   camWarned = false;
+  // R2 first: serving from it costs nothing, while every read of the Supabase
+  // copy counts against the free plan's cached-egress quota. The site reads
+  // `${liveUrl}/live/live.jpg` and falls back to Supabase only when no live
+  // bucket is configured, so the Supabase copy is written only in that case.
+  if (R2) {
+    const ok = await R2.put(`${HLS_KEY}/live.jpg`, jpeg, "image/jpeg", "no-cache, max-age=0")
+      .then(() => true, (e) => { log("camera: R2 upload failed:", e.message); return false; });
+    if (ok) return;
+  }
   await upload("printer", "live.jpg", jpeg, "image/jpeg");
 }
 
