@@ -51,7 +51,7 @@ export default function SocialLive({ token }: { token: string }) {
   const start = () => {
     if (!/^rtmps?:\/\//i.test(url.trim())) { setMsg({ ok: false, text: "הכתובת מתחילה ב-rtmps:// — העתק את Stream URL כמו שהוא." }); return; }
     if (!key.trim()) { setMsg({ ok: false, text: "חסר מפתח השידור (Stream key)." }); return; }
-    void send([{ platform, url: url.trim(), key: key.trim() }], "נשלח. תוך כמה שניות התצוגה המקדימה תופיע שם — ואז לוחצים Go live.");
+    void send([{ platform, url: url.trim(), key: key.trim() }], "נשלח. תוך חצי דקה בערך התצוגה המקדימה תופיע שם — ואז לוחצים Go live.");
   };
 
   const streaming = Object.entries(now?.social ?? {});
@@ -60,7 +60,7 @@ export default function SocialLive({ token }: { token: string }) {
     <div className="p-4 rounded-2xl border border-ink-800 bg-ink-900/40 space-y-3">
       <div className="text-sm font-bold">לייב באינסטגרם / טיקטוק</div>
       <p className="text-[12px] text-ink-400">
-        שם אין מפתח קבוע, אז כל לייב נפתח ביד: פותחים לייב ב-instagram.com, מדביקים כאן את הכתובת והמפתח, וה-Pi משדר לשם תוך שניות, במסך אנכי.
+        שם אין מפתח קבוע, אז כל לייב נפתח ביד: פותחים לייב ב-instagram.com, מדביקים כאן את הכתובת והמפתח, וה-Pi משדר לשם תוך חצי דקה, במסך אנכי.
         כשההדפסה נגמרת השידור נעצר לבד והמפתח נשכח.
       </p>
 
@@ -117,7 +117,7 @@ export default function SocialLive({ token }: { token: string }) {
       <div className="flex items-center gap-2">
         <Btn size="sm" onClick={start} disabled={saving}>{saving ? "שולח…" : "התחל לשדר לשם"}</Btn>
         {streaming.length > 0 && (
-          <button type="button" onClick={() => void send([], "נשלח. השידור לשם ייעצר תוך כמה שניות.")} className="text-[12px] text-ink-500 hover:text-bad underline">
+          <button type="button" onClick={() => void send([], "נשלח. השידור לשם ייעצר תוך חצי דקה.")} className="text-[12px] text-ink-500 hover:text-bad underline">
             עצור
           </button>
         )}

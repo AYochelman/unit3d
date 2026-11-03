@@ -78,7 +78,12 @@ const fresh = (row: PrinterLive | null): PrinterLive | null => {
  * beat. Both pause while the tab is in the background — a page nobody is
  * looking at has no reason to keep asking.
  */
-export function usePrinterLive(everyMs = 5_000, cameraEveryMs = 10_000) {
+// Slowed on 3.11: every open page polled these every 2 and 6 seconds, and the
+// camera still came from Supabase Storage — together that ran the plan out of
+// egress. The agent now writes the status only when something changes (or a
+// heartbeat) and the still every 10s while printing, so faster polling here
+// would only fetch the same thing again.
+export function usePrinterLive(everyMs = 10_000, cameraEveryMs = 15_000) {
   const [live, setLive] = useState<PrinterLive | null>(null);
   const [camera, setCamera] = useState<string | null>(null);
   const [stream, setStream] = useState<string | null>(null);
