@@ -41,7 +41,8 @@ const num = (v: number | null | undefined, suffix = "") =>
   v == null ? "—" : `${Math.round(v)}${suffix}`;
 
 export default function PrinterPanel() {
-  const { live, camera, ready, online } = usePrinterLive();
+  // The home page is the busiest page; it gets the slowest refresh.
+  const { live, camera, ready, online } = usePrinterLive(15_000, 30_000);
   const [hasVideo, setHasVideo] = useState(false);
   // Same as the livestream page: a URL is not a picture. Remembering WHICH url
   // failed rather than a bare flag means the next poll is a fresh attempt, so
