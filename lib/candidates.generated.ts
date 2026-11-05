@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 11
-// Collected: 2026-11-05T13:13:28.562Z
+// Collected: 2026-11-05T14:17:04.866Z
 
 import type { Candidate } from "./candidates";
 
@@ -34,8 +34,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Ties",
     "image": "https://makerworld.bblmw.com/makerworld/model/US33d9006ac5d2ce/design/56eeb9b0b7cea39f.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1274,
-    "likes": 789,
+    "downloads": 1275,
+    "likes": 790,
     "grams": 31,
     "hours": 1.97,
     "colors": 1,
@@ -92,7 +92,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "Tommy´s",
     "image": "https://makerworld.bblmw.com/makerworld/model/US180015be510676/design/d0c449085762a525.jpg?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 122,
-    "likes": 219,
+    "likes": 220,
     "grams": 102,
     "hours": 7.18,
     "colors": 1,
@@ -111,7 +111,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "formastampa",
     "image": "https://makerworld.bblmw.com/makerworld/model/USdc237567ab8b68/design/ecd466875d1ec6c0.jpeg?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 1017,
-    "likes": 1587,
+    "likes": 1588,
     "grams": 107,
     "hours": 3,
     "colors": 1,
