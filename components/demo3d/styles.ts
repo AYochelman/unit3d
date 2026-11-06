@@ -25,11 +25,11 @@ export const FONT_FILES: Record<FontId, string> = {
 };
 
 export const STYLES: { id: StyleId; label: string; hint: string; colours: 1 | 2; ink: string; base: string }[] = [
-  { id: "plate", label: "סטייל 1 · לוחית", hint: "לוחית עם הכיתוב מורם", colours: 2, ink: "#6a2bb5", base: "#1d1f1e" },
-  { id: "outline", label: "סטייל 2 · Olivia", hint: "כתב יד עבה על מתאר שחור, טבעת קטנה בצד", colours: 2, ink: "#e8915a", base: "#1d1f1e" },
-  { id: "script", label: "סטייל 3 · Slay", hint: "כתב יד בקו אחיד, צבע אחד", colours: 1, ink: "#e2557c", base: "#e2557c" },
-  { id: "bold", label: "סטייל 4 · Name", hint: "אותיות עבות על מתאר לבן רחב", colours: 2, ink: "#1d1f1e", base: "#f1f1ee" },
-  { id: "bar", label: "סטייל 5 · Chevrolet", hint: "כתב נטוי בתוך פס כהה עם שוליים בהירים", colours: 2, ink: "#f1f1ee", base: "#1d1f1e" },
+  { id: "plate", label: "סטייל 1", hint: "לוחית עם הכיתוב מורם", colours: 2, ink: "#6a2bb5", base: "#1d1f1e" },
+  { id: "outline", label: "סטייל 2", hint: "כתב יד עבה על מתאר שחור, טבעת קטנה בצד", colours: 2, ink: "#e8915a", base: "#1d1f1e" },
+  { id: "script", label: "סטייל 3", hint: "כתב יד בקו אחיד, צבע אחד", colours: 1, ink: "#e2557c", base: "#e2557c" },
+  { id: "bold", label: "סטייל 4", hint: "אותיות עבות על מתאר לבן רחב", colours: 2, ink: "#1d1f1e", base: "#f1f1ee" },
+  { id: "bar", label: "סטייל 5", hint: "כתב נטוי בתוך פס כהה עם שוליים בהירים", colours: 2, ink: "#f1f1ee", base: "#1d1f1e" },
 ];
 
 /**
@@ -48,12 +48,31 @@ export const fontFor = (style: StyleId, text: string): FontId => {
   return "heebo";
 };
 
+/**
+ * The stocked filament closest to a style's colour. The styles carry the
+ * reference file's exact colours; the shop has the spools it has, so each
+ * style opens on the nearest one rather than on whatever happened to match.
+ */
+export function nearestFilament<T extends { id: string; hex: string }>(hex: string, list: T[]): T | undefined {
+  const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [r, g, b] = rgb(hex);
+  let best: T | undefined, d = Infinity;
+  for (const f of list) {
+    if (!/^#[0-9a-f]{6}$/i.test(f.hex)) continue;
+    const [r2, g2, b2] = rgb(f.hex);
+    // Weighted for the eye: green counts most, blue least.
+    const e = 2 * (r - r2) ** 2 + 4 * (g - g2) ** 2 + 3 * (b - b2) ** 2;
+    if (e < d) { d = e; best = f; }
+  }
+  return best;
+}
+
 type Poly = { X: number; Y: number }[];
 const K = 1000; // clipper works in integers: micrometres
 
 /** The text as filled polygons in mm, overlapping glyphs merged (script fonts overlap). */
-function textPolys(font: Font, text: string, size: number): Poly[] {
-  const path = font.getPath(visualOrder(text), 0, 0, size);
+function textPolys(font: Font, text: string, size: number, tracking = 0): Poly[] {
+  const path = font.getPath(visualOrder(text), 0, 0, size, tracking ? { tracking } : undefined);
   const polys: Poly[] = [];
   let cur: Poly = [];
   let x0 = 0, y0 = 0;
@@ -170,35 +189,61 @@ function extrude(p: Poly[], z0: number, depth: number, bevel = 0) {
  * are joined by a stroke as thick as the letters.
  */
 function joined(p: Poly[], width: number): Poly[] {
-  let parts = union(p);
+  const { parts, bridges } = bridgesFor(p, width);
+  return bridges.length ? union(parts, bridges) : parts;
+}
+
+/**
+ * The joins on their own, so a style can make them quiet: in the hand-line
+ * style they are thinner than the letters, low down near the baseline (where
+ * handwriting joins anyway), and printed lower than the letters — a strut
+ * that holds the piece together without reading as part of the word.
+ */
+function bridgesFor(p: Poly[], width: number, preferLow = false) {
+  const parts = union(p);
+  const bridges: Poly[] = [];
+  const all = bounds(parts);
+  const lowLimit = all.y0 + (all.y1 - all.y0) * 0.4;
+  let current = parts;
   for (let guard = 0; guard < 24; guard++) {
     const c = new ClipperLib.Clipper();
-    c.AddPaths(parts, ClipperLib.PolyType.ptSubject, true);
+    c.AddPaths(current, ClipperLib.PolyType.ptSubject, true);
     const tree = new ClipperLib.PolyTree();
     c.Execute(ClipperLib.ClipType.ctUnion, tree, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
     type Node = { Contour: () => Poly };
     const outers = ((tree as unknown as { Childs: () => Node[] }).Childs()).map((n) => n.Contour());
-    if (outers.length < 2) return parts;
-    // The closest pair of points between the first piece and any other.
-    let best = { d: Infinity, a: outers[0][0], b: outers[1][0] };
-    const step = (q: Poly) => Math.max(1, Math.floor(q.length / 120));
-    for (let j = 1; j < outers.length; j++) {
-      for (let i = 0; i < outers[0].length; i += step(outers[0])) {
-        const a = outers[0][i];
-        for (let m = 0; m < outers[j].length; m += step(outers[j])) {
-          const bq = outers[j][m];
-          const d = (a.X - bq.X) ** 2 + (a.Y - bq.Y) ** 2;
-          if (d < best.d) best = { d, a, b: bq };
+    if (outers.length < 2) break;
+    // The closest pair of points between the first piece and any other —
+    // preferring the lower part of the word when asked, so joins sit low.
+    const pick = (low: boolean) => {
+      let best = { d: Infinity, a: outers[0][0], b: outers[1][0] };
+      const step = (q: Poly) => Math.max(1, Math.floor(q.length / 120));
+      const ok = (q: { Y: number }) => !low || q.Y / K <= lowLimit;
+      for (let j = 1; j < outers.length; j++) {
+        for (let i = 0; i < outers[0].length; i += step(outers[0])) {
+          const a = outers[0][i];
+          if (!ok(a)) continue;
+          for (let m = 0; m < outers[j].length; m += step(outers[j])) {
+            const bq = outers[j][m];
+            if (!ok(bq)) continue;
+            const d = (a.X - bq.X) ** 2 + (a.Y - bq.Y) ** 2;
+            if (d < best.d) best = { d, a, b: bq };
+          }
         }
       }
-    }
+      return best;
+    };
+    let best = preferLow ? pick(true) : pick(false);
+    // A low join much longer than the shortest one is worse than a high one.
+    if (preferLow) { const any = pick(false); if (!isFinite(best.d) || best.d > any.d * 4) best = any; }
     const co = new ClipperLib.ClipperOffset(2, 0.02 * K);
     co.AddPath([best.a, best.b], ClipperLib.JoinType.jtRound, ClipperLib.EndType.etOpenRound);
     const stroke: Poly[] = [];
     co.Execute(stroke, (width / 2) * K);
-    parts = union(parts, stroke);
+    bridges.push(...stroke);
+    current = union(current, stroke);
   }
-  return parts;
+  return { parts, bridges };
 }
 
 export type Built = { geometry: THREE.BufferGeometry; slot: 1 | 2 }[];
@@ -214,15 +259,20 @@ export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: str
   }
 
   // The text, scaled to a keychain: about 16mm tall, at most 70mm long.
-  let t = textPolys(font, text, 10);
+  // Amatic (the Hebrew hand line) is tall, narrow and widely spaced; set a
+  // little tighter, its letters nearly touch and the joins stay short.
+  const hebLine = style === "script" && Amatic(fontFor(style, text));
+  let t = textPolys(font, text, 10, hebLine ? -25 : 0);
   if (!t.length) return [];
   let b = bounds(t);
   // Each reference file's own proportions: Olivia is 78mm with ~20mm letters,
   // Slay a tall loose script (38mm on a 50mm name), the Chevrolet bar slim.
-  const tall = style === "script" ? 34 : style === "bar" ? 9 : style === "outline" ? 21 : 16;
+  const tall = style === "script" ? (hebLine ? 20 : 34) : style === "bar" ? 9 : style === "outline" ? 21 : 16;
   const k = Math.min(tall / (b.y1 - b.y0), (style === "script" ? 60 : 72) / (b.x1 - b.x0));
   t = transform(t, (x, y) => [(x - (b.x0 + b.x1) / 2) * k, (y - (b.y0 + b.y1) / 2) * k]);
   if (style === "bar") t = transform(t, (x, y) => [x + y * (rtl ? -0.24 : 0.08), y]);
+  // ...and widened, so a Hebrew name is not a row of tall posts.
+  if (hebLine) t = transform(t, (x, y) => [x * 1.35, y]);
   b = bounds(t);
 
   // A small tab with a hole, at the end the name starts from: left for Latin,
@@ -245,8 +295,11 @@ export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: str
     // Slay: one even line, as if drawn with a round pen, every letter joined
     // into a single piece; one colour, no tab (it hangs from its own loops).
     const pen = Amatic(fontFor(style, text)) ? 0.55 : 0.8;
-    const line = joined(offset(t, pen), pen * 2 + 0.6);
-    return [{ geometry: extrude(line, 0, 3.4), slot: 1 }];
+    const { parts, bridges } = bridgesFor(offset(t, pen), pen * 1.6, true);
+    return [
+      { geometry: extrude(parts, 0, 3.4), slot: 1 },
+      ...(bridges.length ? [{ geometry: extrude(union(bridges), 0, 1.6), slot: 1 as const }] : []),
+    ];
   }
   if (style === "bold") {
     // Name: heavy sans letters on a wide light outline, tab inside the outline.

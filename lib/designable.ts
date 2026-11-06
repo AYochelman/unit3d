@@ -75,6 +75,7 @@ const BASE_BY_ID: Record<string, ConfigProductId> = {
   "mw-1379807": "lighter_case",
   "mw-1487479": "lighter_case",
   "mw-2335039": "dog_tag",     // דיסקית צבאית
+  "mw-65972": "name_keychain", // מחזיק מפתחות עם שם — the 3D name keychain is this, editable
 };
 
 /** Otherwise the drawing tells us what shape it is. */
@@ -122,6 +123,9 @@ const textOf = (p: Pick<Product, "name" | "nameEn">): string => `${p.name} ${p.n
 function baseFromText(text: string): ConfigProductId | undefined {
   const t = text.toLowerCase();
   if (/luggage|מזוודה/.test(t)) return "luggage_tag";
+  // A name cut out as the keychain itself goes to the 3D name keychain; a
+  // spinner or fidget with a name on it is a different object and does not.
+  if (/(name.{0,12}key ?(chain|ring)|key ?(chain|ring).{0,15}name|מחזיק.{0,20}עם שם)/.test(t) && !/spinner|fidget|מסתובב|פידג/.test(t)) return "name_keychain";
   if (/keychain|key ?ring|מחזיק מפתחות/.test(t)) return "keychain";
   if (/pet tag|dog tag|תג לחיה|תג לכלב|תג לחתול/.test(t)) return "pet_tag";
   if (/name tag|תג שם/.test(t)) return "name_plate";

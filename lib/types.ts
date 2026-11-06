@@ -414,6 +414,7 @@ export type Product = {
 // ─── Configurator products ───────────────────────────────────────────────────
 export type ConfigProductId =
   | "keychain"
+  | "name_keychain"
   | "pet_tag"
   | "dog_tag"
   | "phone_case"
