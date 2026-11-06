@@ -8,6 +8,7 @@ import ShinyButton from "@/components/ui/shiny-button";
 import MorphGalleryDemo from "./MorphGalleryDemo";
 import GlyphPortalDemo from "./GlyphPortalDemo";
 import StackSpreadDemo from "./StackSpreadDemo";
+import Demo3DSections from "@/components/demo3d/Demo3DSections";
 import { Signature } from "@/components/OwnerSignature";
 import VariableFontCursorProximityHero from "@/components/ui/m-variable-font-cursor-proximity-1";
 
@@ -54,6 +55,17 @@ export default function DesignLabTab() {
           התצוגה משנה צבעים, גופן, עובי כותרות ועיגול פינות. פריסה, טקסטים ומילה בגופן אחר דורשים עבודה בקוד אם תבחר כיוון.
         </span>
       </div>
+
+      <section className="grid gap-3">
+        <h2 className="font-black text-lg">רכיב: תצוגת תלת-מימד</h2>
+        <p className="text-sm text-ink-400">
+          שתי דרכים להראות מוצר מכל הכיוונים. 1: המחזיק נבנה בתלת-מימד מהטקסט שמקלידים — למעצב האישי.
+          2: סיבוב 360° מתמונות — למוצרים המיובאים, בלי לחשוף את קובץ הדגם.
+        </p>
+        <div className="rounded-2xl border border-ink-800 p-4 md:p-6">
+          <Demo3DSections />
+        </div>
+      </section>
 
       {(["QClay", "Island", "Ovia", "Zajno"] as const).map((brief) => (
         <section key={brief} className="grid gap-3">
