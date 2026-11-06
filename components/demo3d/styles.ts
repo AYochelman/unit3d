@@ -5,32 +5,44 @@ import { buildKeychain, visualOrder } from "./keychain-geometry";
 
 /**
  * Keychain styles, each rebuilt from scratch around whatever text is typed —
- * so the text is always editable, in every style. Each one recreates a look
- * from a real file (the owner sent them as references): the text's own
- * outline as a coloured base (Olivia), joined script letters (Slay), a bold
- * name on a thick border (Name), a vertical name (the trio), a bar with a rim
- * (Chevrolet), and the first plate.
+ * so the text is always editable, in every style. Each one follows a real file
+ * the owner sent as a reference, as closely as a live build allows: the same
+ * kind of letter, the same layers and proportions, the same default colours —
+ * Olivia (heavy script on a black outline), Slay (thin script line, one
+ * colour), Name (heavy sans on a wide light outline), Chevrolet (italic set
+ * into a dark bar on a light rim) — plus the first plate.
  *
  * All in millimetres. Two colour slots: 1 = the text, 2 = the base.
  */
 
-export type StyleId = "plate" | "outline" | "script" | "bold" | "vertical" | "bar";
-export type FontId = "heebo" | "rubik" | "pacifico";
+export type StyleId = "plate" | "outline" | "script" | "bold" | "bar";
+export type FontId = "heebo" | "rubik" | "lobster" | "sacramento" | "amatic" | "arimo" | "arimoItalic";
 
-export const STYLES: { id: StyleId; label: string; hint: string; colours: 1 | 2 }[] = [
-  { id: "plate", label: "סטייל 1 · לוחית", hint: "לוחית עם הכיתוב מורם", colours: 2 },
-  { id: "outline", label: "סטייל 2 · מתאר", hint: "כתב יד על מתאר בצבע שני", colours: 2 },
-  { id: "script", label: "סטייל 3 · כתב יד", hint: "האותיות מחוברות, צבע אחד", colours: 1 },
-  { id: "bold", label: "סטייל 4 · בולט", hint: "אותיות עבות על מסגרת עבה", colours: 2 },
-  { id: "vertical", label: "סטייל 5 · אנכי", hint: "השם לאורך, הטבעת למטה", colours: 2 },
-  { id: "bar", label: "סטייל 6 · פס עם מסגרת", hint: "פס מעוגל, שפה מורמת והכיתוב בפנים", colours: 2 },
+/** Every font a style can ask for, by file in public/fonts. */
+export const FONT_FILES: Record<FontId, string> = {
+  heebo: "heebo-800", rubik: "rubik-900", lobster: "lobster", sacramento: "sacramento",
+  amatic: "amatic-700", arimo: "arimo-700", arimoItalic: "arimo-700i",
+};
+
+export const STYLES: { id: StyleId; label: string; hint: string; colours: 1 | 2; ink: string; base: string }[] = [
+  { id: "plate", label: "סטייל 1 · לוחית", hint: "לוחית עם הכיתוב מורם", colours: 2, ink: "#6a2bb5", base: "#1d1f1e" },
+  { id: "outline", label: "סטייל 2 · Olivia", hint: "כתב יד עבה על מתאר שחור, טבעת קטנה בצד", colours: 2, ink: "#e8915a", base: "#1d1f1e" },
+  { id: "script", label: "סטייל 3 · Slay", hint: "כתב יד בקו אחיד, צבע אחד", colours: 1, ink: "#e2557c", base: "#e2557c" },
+  { id: "bold", label: "סטייל 4 · Name", hint: "אותיות עבות על מתאר לבן רחב", colours: 2, ink: "#1d1f1e", base: "#f1f1ee" },
+  { id: "bar", label: "סטייל 5 · Chevrolet", hint: "כתב נטוי בתוך פס כהה עם שוליים בהירים", colours: 2, ink: "#f1f1ee", base: "#1d1f1e" },
 ];
 
-/** Which font a style wants. Pacifico has no Hebrew, so Hebrew falls back to Rubik. */
+/**
+ * Which font a style uses — the reference file's own kind of letter. Lobster
+ * and Sacramento have no Hebrew, so Hebrew gets the nearest Hebrew face:
+ * Rubik for the heavy script, Amatic (a hand-drawn line) for the thin one.
+ */
 export const fontFor = (style: StyleId, text: string): FontId => {
-  const heb = /[֐-׿]/.test(text);
-  if (style === "outline" || style === "script") return heb ? "rubik" : "pacifico";
-  if (style === "bold" || style === "vertical") return "rubik";
+  const heb = /[\u0590-\u05FF]/.test(text);
+  if (style === "outline") return heb ? "rubik" : "lobster";
+  if (style === "script") return heb ? "amatic" : "sacramento";
+  if (style === "bold") return "arimo";
+  if (style === "bar") return "arimoItalic";
   return "heebo";
 };
 
@@ -98,10 +110,15 @@ function circle(cx: number, cy: number, r: number): Poly {
   });
 }
 
-function roundedBar(x0: number, y0: number, x1: number, y1: number): Poly {
-  const r = (y1 - y0) / 2, pts: Poly = [];
-  for (let i = 0; i <= 24; i++) { const a = -Math.PI / 2 + (i / 24) * Math.PI; pts.push({ X: Math.round((x1 - r + Math.cos(a) * r) * K), Y: Math.round((y0 + r + Math.sin(a) * r) * K) }); }
-  for (let i = 0; i <= 24; i++) { const a = Math.PI / 2 + (i / 24) * Math.PI; pts.push({ X: Math.round((x0 + r + Math.cos(a) * r) * K), Y: Math.round((y0 + r + Math.sin(a) * r) * K) }); }
+function roundedRect(x0: number, y0: number, x1: number, y1: number, r: number): Poly {
+  const pts: Poly = [];
+  const corner = (cx: number, cy: number, a0: number) => {
+    for (let i = 0; i <= 8; i++) { const a = a0 + (i / 8) * (Math.PI / 2); pts.push({ X: Math.round((cx + Math.cos(a) * r) * K), Y: Math.round((cy + Math.sin(a) * r) * K) }); }
+  };
+  corner(x1 - r, y0 + r, -Math.PI / 2);
+  corner(x1 - r, y1 - r, 0);
+  corner(x0 + r, y1 - r, Math.PI / 2);
+  corner(x0 + r, y0 + r, Math.PI);
   return pts;
 }
 
@@ -160,39 +177,49 @@ export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: str
   let t = textPolys(font, text, 10);
   if (!t.length) return [];
   let b = bounds(t);
-  const k = Math.min(16 / (b.y1 - b.y0), 70 / (b.x1 - b.x0));
+  // Slay is a tall, loose script (38mm on a 50mm name), so it gets the height.
+  const tall = style === "script" ? 30 : style === "bar" ? 9 : 16;
+  const k = Math.min(tall / (b.y1 - b.y0), (style === "script" ? 60 : 70) / (b.x1 - b.x0));
   t = transform(t, (x, y) => [(x - (b.x0 + b.x1) / 2) * k, (y - (b.y0 + b.y1) / 2) * k]);
-  if (style === "vertical") t = transform(t, (x, y) => [-y, x]); // reads bottom to top
+  // The Chevrolet letters lean forward; the italic file alone barely does.
+  if (style === "bar") t = transform(t, (x, y) => [x + y * (rtl ? -0.22 : 0.22), y]);
   b = bounds(t);
 
-  // The ring sits at the end the name starts from — left for Latin, right for
-  // Hebrew — and at the bottom when the name stands up.
-  const ring = (base: Poly[], pad: number) => {
-    const cx = style === "vertical" ? (b.x0 + b.x1) / 2 : rtl ? b.x1 + pad + 2.5 : b.x0 - pad - 2.5;
-    const cy = style === "vertical" ? b.y0 - pad - 2.5 : (b.y0 + b.y1) / 2;
-    return difference(union(base, [circle(cx, cy, 4.6)]), [circle(cx, cy, 2.3)]);
+  // A small tab with a hole, at the end the name starts from: left for Latin,
+  // right for Hebrew, centred on the height — as in the reference files.
+  const tab = (base: Poly[], reach: number, r = 4.2, hole = 2) => {
+    const bb = bounds(base);
+    const cx = rtl ? bb.x1 + r - reach : bb.x0 - r + reach;
+    const cy = (bb.y0 + bb.y1) / 2;
+    return difference(union(base, [circle(cx, cy, r)]), [circle(cx, cy, hole)]);
   };
 
   if (style === "outline") {
-    const base = ring(offset(t, 2.2), 1.4);
-    return [{ geometry: extrude(base, 0, 2.4), slot: 2 }, { geometry: extrude(t, 2.4, 1.2, 0.15), slot: 1 }];
+    // Olivia: the letters on an even black outline about 2.6mm wide.
+    const base = tab(offset(t, 2.6), 1.6);
+    return [{ geometry: extrude(base, 0, 2.2), slot: 2 }, { geometry: extrude(t, 2.2, 1.2, 0.15), slot: 1 }];
   }
   if (style === "script") {
-    const base = ring(offset(t, 0.7), 0);
-    return [{ geometry: extrude(base, 0, 2.8), slot: 1 }, { geometry: extrude(t, 2.8, 0.6, 0.12), slot: 1 }];
+    // Slay: a thin handwriting line, thickened evenly so it prints and holds
+    // together; one colour, no tab (it hangs from its own loops).
+    const line = offset(t, Amatic(fontFor(style, text)) ? 0.45 : 0.6);
+    return [{ geometry: extrude(line, 0, 3.4, 0.35), slot: 1 }];
   }
-  if (style === "bold" || style === "vertical") {
-    const base = ring(offset(t, 3), 2.2);
-    return [{ geometry: extrude(base, 0, 2), slot: 2 }, { geometry: extrude(t, 2, 2, 0.15), slot: 1 }];
+  if (style === "bold") {
+    // Name: heavy sans letters on a wide light outline, tab inside the outline.
+    const base = tab(offset(t, 3.4), 2.6, 4.6, 2.2);
+    return [{ geometry: extrude(base, 0, 2), slot: 2 }, { geometry: extrude(t, 2, 2, 0.12), slot: 1 }];
   }
-  // bar: a rounded bar around the text, a raised rim, the text level with the rim
-  const pad = 3.2;
-  const bar = [roundedBar(b.x0 - pad - 1.5, b.y0 - pad, b.x1 + pad + 1.5, b.y1 + pad)];
-  const withTab = ring(bar, pad + 1.5);
-  const rim = difference(bar, offset(bar, -1.3));
+  // bar (Chevrolet): italic letters in the light colour, set flush into a dark
+  // rounded bar, and the bar on a light rim with the tab.
+  const padX = 3.4, padY = 2.4;
+  const inner = [roundedRect(b.x0 - padX, b.y0 - padY, b.x1 + padX, b.y1 + padY, 2.6)];
+  const rim = tab(offset(inner, 1.6), 1.2, 4.2, 2);
   return [
-    { geometry: extrude(withTab, 0, 2), slot: 2 },
-    { geometry: extrude(rim, 2, 1.2, 0.15), slot: 1 },
-    { geometry: extrude(t, 2, 1.2, 0.15), slot: 1 },
+    { geometry: extrude(rim, 0, 2), slot: 1 },
+    { geometry: extrude(difference(inner, t), 2, 1.2, 0.12), slot: 2 },
+    { geometry: extrude(t, 2, 1.2, 0.12), slot: 1 },
   ];
 }
+
+const Amatic = (f: FontId) => f === "amatic";
