@@ -1,0 +1,25 @@
+{
+ "size": [
+  86.7,
+  25.4,
+  4.0
+ ],
+ "parts": [
+  {
+   "filament": 1,
+   "colour": "#000000",
+   "vertices": 1712,
+   "triangles": 2561,
+   "v": 0,
+   "i": 20544
+  },
+  {
+   "filament": 2,
+   "colour": "#FFFFFF",
+   "vertices": 2793,
+   "triangles": 4731,
+   "v": 51276,
+   "i": 84792
+  }
+ ]
+}
