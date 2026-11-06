@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 11
-// Collected: 2026-11-06T13:00:06.126Z
+// Collected: 2026-11-06T14:02:46.668Z
 
 import type { Candidate } from "./candidates";
 
@@ -15,8 +15,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Treddigineer",
     "image": "https://makerworld.bblmw.com/makerworld/model/US99345aaf9a2bc8/design/2024-09-13_af345da096602.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 4227,
-    "likes": 2913,
+    "downloads": 4228,
+    "likes": 2914,
     "grams": 1101,
     "hours": 38.62,
     "colors": 1,
@@ -34,7 +34,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Ties",
     "image": "https://makerworld.bblmw.com/makerworld/model/US33d9006ac5d2ce/design/56eeb9b0b7cea39f.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1297,
+    "downloads": 1298,
     "likes": 796,
     "grams": 31,
     "hours": 1.97,
@@ -110,7 +110,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "formastampa",
     "image": "https://makerworld.bblmw.com/makerworld/model/USdc237567ab8b68/design/ecd466875d1ec6c0.jpeg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1034,
+    "downloads": 1036,
     "likes": 1615,
     "grams": 107,
     "hours": 3,
@@ -146,7 +146,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Mister Kashanka",
     "image": "https://makerworld.bblmw.com/makerworld/model/US59afd747f59aa9/design/4d7ae2e876330a30.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 340,
+    "downloads": 341,
     "likes": 307,
     "grams": 6,
     "hours": 1.22,
