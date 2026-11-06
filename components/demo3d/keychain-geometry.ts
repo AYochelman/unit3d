@@ -80,9 +80,12 @@ export function buildKeychain(font: Font, spec: KeychainSpec) {
   });
 
   // The text area: the plate minus a margin and minus the ring hole.
-  const areaW = w - 6 - (holeR * 2 + 4);
+  // Centred on the plate, not on what is left of it beside the hole: the same
+  // clearance on both sides reads as centred, the other way as pushed aside.
+  const clear = holeR * 2 + 4.4;
+  const areaW = w - 2 * clear;
   const areaH = h * 0.56;
-  const areaCx = -(holeR * 2 + 4) / 2;
+  const areaCx = 0;
 
   let textGeo: THREE.ExtrudeGeometry | null = null;
   const shown = visualOrder(spec.text.trim());

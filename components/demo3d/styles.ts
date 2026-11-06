@@ -25,11 +25,11 @@ export const FONT_FILES: Record<FontId, string> = {
 };
 
 export const STYLES: { id: StyleId; label: string; hint: string; colours: 1 | 2; ink: string; base: string }[] = [
-  { id: "plate", label: "סטייל 1 · לוחית", hint: "לוחית עם הכיתוב מורם", colours: 2, ink: "#6a2bb5", base: "#1d1f1e" },
-  { id: "outline", label: "סטייל 2 · Olivia", hint: "כתב יד עבה על מתאר שחור, טבעת קטנה בצד", colours: 2, ink: "#e8915a", base: "#1d1f1e" },
-  { id: "script", label: "סטייל 3 · Slay", hint: "כתב יד בקו אחיד, צבע אחד", colours: 1, ink: "#e2557c", base: "#e2557c" },
-  { id: "bold", label: "סטייל 4 · Name", hint: "אותיות עבות על מתאר לבן רחב", colours: 2, ink: "#1d1f1e", base: "#f1f1ee" },
-  { id: "bar", label: "סטייל 5 · Chevrolet", hint: "כתב נטוי בתוך פס כהה עם שוליים בהירים", colours: 2, ink: "#f1f1ee", base: "#1d1f1e" },
+  { id: "plate", label: "סטייל 1", hint: "לוחית עם הכיתוב מורם", colours: 2, ink: "#6a2bb5", base: "#1d1f1e" },
+  { id: "outline", label: "סטייל 2", hint: "כתב יד עבה על מתאר שחור, טבעת קטנה בצד", colours: 2, ink: "#e8915a", base: "#1d1f1e" },
+  { id: "script", label: "סטייל 3", hint: "כתב יד בקו אחיד, צבע אחד", colours: 1, ink: "#e2557c", base: "#e2557c" },
+  { id: "bold", label: "סטייל 4", hint: "אותיות עבות על מתאר לבן רחב", colours: 2, ink: "#1d1f1e", base: "#f1f1ee" },
+  { id: "bar", label: "סטייל 5", hint: "כתב נטוי בתוך פס כהה עם שוליים בהירים", colours: 2, ink: "#f1f1ee", base: "#1d1f1e" },
 ];
 
 /**
@@ -52,8 +52,8 @@ type Poly = { X: number; Y: number }[];
 const K = 1000; // clipper works in integers: micrometres
 
 /** The text as filled polygons in mm, overlapping glyphs merged (script fonts overlap). */
-function textPolys(font: Font, text: string, size: number): Poly[] {
-  const path = font.getPath(visualOrder(text), 0, 0, size);
+function textPolys(font: Font, text: string, size: number, tracking = 0): Poly[] {
+  const path = font.getPath(visualOrder(text), 0, 0, size, tracking ? { tracking } : undefined);
   const polys: Poly[] = [];
   let cur: Poly = [];
   let x0 = 0, y0 = 0;
@@ -214,15 +214,20 @@ export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: str
   }
 
   // The text, scaled to a keychain: about 16mm tall, at most 70mm long.
-  let t = textPolys(font, text, 10);
+  // Amatic (the Hebrew hand line) is tall, narrow and widely spaced; set a
+  // little tighter, its letters nearly touch and the joins stay short.
+  const hebLine = style === "script" && Amatic(fontFor(style, text));
+  let t = textPolys(font, text, 10, hebLine ? -25 : 0);
   if (!t.length) return [];
   let b = bounds(t);
   // Each reference file's own proportions: Olivia is 78mm with ~20mm letters,
   // Slay a tall loose script (38mm on a 50mm name), the Chevrolet bar slim.
-  const tall = style === "script" ? 34 : style === "bar" ? 9 : style === "outline" ? 21 : 16;
+  const tall = style === "script" ? (hebLine ? 20 : 34) : style === "bar" ? 9 : style === "outline" ? 21 : 16;
   const k = Math.min(tall / (b.y1 - b.y0), (style === "script" ? 60 : 72) / (b.x1 - b.x0));
   t = transform(t, (x, y) => [(x - (b.x0 + b.x1) / 2) * k, (y - (b.y0 + b.y1) / 2) * k]);
   if (style === "bar") t = transform(t, (x, y) => [x + y * (rtl ? -0.24 : 0.08), y]);
+  // ...and widened, so a Hebrew name is not a row of tall posts.
+  if (hebLine) t = transform(t, (x, y) => [x * 1.35, y]);
   b = bounds(t);
 
   // A small tab with a hole, at the end the name starts from: left for Latin,
