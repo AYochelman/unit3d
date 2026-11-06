@@ -27,7 +27,7 @@ import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
 import type { ConfigProduct, ConfigProductId, Design, ShapeId, SizeId } from "@/lib/types";
 import StyledKeychain3D from "@/components/demo3d/StyledKeychain3D";
-import { STYLES, type StyleId } from "@/components/demo3d/styles";
+import { STYLES, nearestFilament, type StyleId } from "@/components/demo3d/styles";
 
 type Mode = "text" | "design";
 
@@ -122,9 +122,12 @@ function itemOverride(id?: string): Partial<ConfigProduct> & { href?: string; im
 export default function ConfiguratorClient({
   initialProduct,
   fromItem,
+  keychain3d,
 }: {
   initialProduct?: ConfigProductId;
   fromItem?: string;
+  /** Choices already made on /name-keychain: open on the last step with them. */
+  keychain3d?: { style: string; text: string; color: string; color2: string };
 }) {
   // The built-in palette plus any spool the owner added in /admin.
   const FILAMENTS = useFilaments();
@@ -139,7 +142,8 @@ export default function ConfiguratorClient({
   const settings = useAdminStore((s) => s.settings);
 
   const startProduct = initialProduct && Object.hasOwn(CONFIG_PRODUCT_BY_ID, initialProduct) ? initialProduct : "keychain";
-  const [step, setStep] = useState(startProduct === "keychain" ? 0 : 1);
+  // From /name-keychain everything but the quantity is chosen already.
+  const [step, setStep] = useState(keychain3d ? 4 : startProduct === "keychain" ? 0 : 1);
   const [config, setConfig] = useState<Config>({
     product: startProduct,
     model: CONFIG_PRODUCT_BY_ID[startProduct].models?.items[0]?.id ?? "",
@@ -152,8 +156,9 @@ export default function ConfiguratorClient({
     qty: 1,
     mode: "text",
     design: emptyDesign(CONFIG_PRODUCT_BY_ID[startProduct].face[0], CONFIG_PRODUCT_BY_ID[startProduct].face[1]),
-    style: "outline",
-    color2: "black",
+    style: (STYLES.some((x) => x.id === keychain3d?.style) ? keychain3d!.style : "outline") as StyleId,
+    color2: keychain3d?.color2 || "black",
+    ...(keychain3d ? { text: keychain3d.text.slice(0, 16), ...(FILAMENTS.some((f) => f.id === keychain3d.color) ? { color: keychain3d.color } : {}) } : {}),
   });
 
   const update = <K extends keyof Config>(k: K, v: Config[K]) => setConfig((c) => ({ ...c, [k]: v }));
@@ -480,8 +485,8 @@ export default function ConfiguratorClient({
                           ...c,
                           style: st.id,
                           // Open on the style's own colours when they are in stock.
-                          color: colorChoices.find((f) => f.hex.toLowerCase() === st.ink)?.id ?? c.color,
-                          color2: colorChoices.find((f) => f.hex.toLowerCase() === st.base)?.id ?? c.color2,
+                          color: nearestFilament(st.ink, colorChoices)?.id ?? c.color,
+                          color2: nearestFilament(st.base, colorChoices)?.id ?? c.color2,
                         }))}
                         className={cn(
                           "w-full p-4 rounded-xl border-2 flex items-center gap-4 text-right transition-all",
@@ -586,6 +591,23 @@ export default function ConfiguratorClient({
                   ) : (
                     <>
                       <p className="text-sm text-ink-400 mb-5">שם, מספר אישי, או שניהם. עד 12 תווים בכל שדה.</p>
+                      {product.id === "keychain" && (
+                        // The classic plate takes any text; a name cut out as the
+                        // keychain itself is the 3D product — offered here, where
+                        // the name is being typed.
+                        <button
+                          type="button"
+                          onClick={() => { const name = config.text; selectProduct("name_keychain"); update("text", name); }}
+                          className="mb-5 w-full flex items-center gap-3 p-3 rounded-xl border border-cyan2/40 bg-cyan2/5 text-right hover:border-cyan2"
+                        >
+                          <Icon name="sparkles" size={16} className="text-cyan2 shrink-0" />
+                          <span className="flex-1 text-sm">
+                            <b>רוצה שהשם עצמו יהיה המחזיק?</b>
+                            <span className="block text-xs text-ink-400">5 סטיילים בתלת-מימד, עד שני צבעים</span>
+                          </span>
+                          <Icon name="arrowLeft" size={14} className="text-cyan2" />
+                        </button>
+                      )}
                       <div className="space-y-3 mb-5">
                         <Field label="שורה ראשונה (שם)">
                           <Input value={config.text} onChange={(e) => update("text", e.target.value.slice(0, 12))} placeholder="יואב" />

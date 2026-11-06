@@ -48,6 +48,25 @@ export const fontFor = (style: StyleId, text: string): FontId => {
   return "heebo";
 };
 
+/**
+ * The stocked filament closest to a style's colour. The styles carry the
+ * reference file's exact colours; the shop has the spools it has, so each
+ * style opens on the nearest one rather than on whatever happened to match.
+ */
+export function nearestFilament<T extends { id: string; hex: string }>(hex: string, list: T[]): T | undefined {
+  const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [r, g, b] = rgb(hex);
+  let best: T | undefined, d = Infinity;
+  for (const f of list) {
+    if (!/^#[0-9a-f]{6}$/i.test(f.hex)) continue;
+    const [r2, g2, b2] = rgb(f.hex);
+    // Weighted for the eye: green counts most, blue least.
+    const e = 2 * (r - r2) ** 2 + 4 * (g - g2) ** 2 + 3 * (b - b2) ** 2;
+    if (e < d) { d = e; best = f; }
+  }
+  return best;
+}
+
 type Poly = { X: number; Y: number }[];
 const K = 1000; // clipper works in integers: micrometres
 
