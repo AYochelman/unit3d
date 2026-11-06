@@ -1,9 +1,9 @@
 "use client";
 // The two 3D demos, shared by /demo-3d and /admin → "תצוגת עיצוב".
 import { useState } from "react";
-import Keychain3D from "@/components/demo3d/Keychain3D";
+import StyledKeychain3D from "@/components/demo3d/StyledKeychain3D";
+import { STYLES, type StyleId } from "@/components/demo3d/styles";
 import SpinViewer from "@/components/demo3d/SpinViewer";
-import Model3D, { type ModelInfo } from "@/components/demo3d/Model3D";
 import { Input } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
 
@@ -16,64 +16,6 @@ const COLORS = [
   { name: "סגול", hex: "#6a2bb5" },
   { name: "צהוב", hex: "#e6b420" },
 ];
-
-// Converted from the owner's own .3mf files with scripts/3mf-to-web.py.
-const MODELS = [
-  { id: "olivia", label: "Olivia · שם" },
-  { id: "slay", label: "Slay" },
-  { id: "playground", label: "Playground" },
-  { id: "multi", label: "שלישייה" },
-  { id: "chevrolet", label: "Chevrolet" },
-];
-
-function ModelGallery() {
-  const [model, setModel] = useState(MODELS[0].id);
-  const [info, setInfo] = useState<ModelInfo | null>(null);
-  const [colours, setColours] = useState<Record<string, Record<number, string>>>({});
-  const mine = colours[model] ?? {};
-  const setColour = (f: number, hex: string) => setColours((c) => ({ ...c, [model]: { ...(c[model] ?? {}), [f]: hex } }));
-
-  return (
-    <section className="grid md:grid-cols-2 gap-6 items-start">
-      <Model3D key={model} src={`/demo/models/${model}`} colours={mine} onInfo={setInfo} />
-      <div className="space-y-4">
-        <div className="font-mono text-[11px] tracking-widest text-flame">2 · קבצי הדפסה אמיתיים</div>
-        <h2 className="text-2xl font-extrabold">הקובץ עצמו, כל צבע ניתן לשינוי</h2>
-        <p className="text-sm text-ink-300 leading-relaxed">
-          קבצי ה-3MF ששלחת, כמו שהם יוצאים מ-Bambu Studio: כל חלק או אזור צבוע מקבל את הפילמנט שלו, ואפשר להחליף כל צבע
-          ולראות מיד. הטקסט עצמו &quot;אפוי&quot; בקובץ ולא ניתן לשינוי — לטקסט שהלקוח כותב יש את המחזיק שלמעלה.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {MODELS.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              onClick={() => { setInfo(null); setModel(m.id); }}
-              className={cn("px-3 h-9 rounded-lg text-sm border", model === m.id ? "border-flame text-flame bg-flame/10" : "border-ink-700 text-ink-300")}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
-        {info && (
-          <div className="space-y-3">
-            <div className="text-[12px] text-ink-500" dir="rtl">
-              מידות: <bdi dir="ltr">{info.size[0]}×{info.size[1]}×{info.size[2]} mm</bdi> · {info.parts.length} צבעים
-            </div>
-            {info.parts.map((p, i) => (
-              <Swatches
-                key={p.filament}
-                label={`צבע ${i + 1}`}
-                value={mine[p.filament] ?? p.colour}
-                onChange={(h) => setColour(p.filament, h)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
 
 const FRAMES = Array.from({ length: 72 }, (_, i) => `/demo/spin/f${String(i).padStart(2, "0")}.webp`);
 
@@ -99,36 +41,49 @@ function Swatches({ value, onChange, label }: { value: string; onChange: (h: str
 }
 
 export default function Demo3DSections() {
+  const [style, setStyle] = useState<StyleId>("plate");
   const [text, setText] = useState("גדוד צבר 432");
-  const [plate, setPlate] = useState("#1d1f1e");
+  const [base, setBase] = useState("#1d1f1e");
   const [ink, setInk] = useState("#6a2bb5");
+  const current = STYLES.find((s) => s.id === style)!;
 
   return (
     <div className="space-y-14">
       <section className="grid md:grid-cols-2 gap-6 items-start">
-        <Keychain3D text={text} plateColor={plate} textColor={ink} />
+        <StyledKeychain3D style={style} text={text} textColor={ink} baseColor={base} />
         <div className="space-y-4">
           <div className="font-mono text-[11px] tracking-widest text-flame">1 · במעצב האישי</div>
-          <h2 className="text-2xl font-extrabold">תלת-מימד אמיתי, בזמן אמת</h2>
+          <h2 className="text-2xl font-extrabold">תלת-מימד אמיתי, בכל סטייל</h2>
           <p className="text-sm text-ink-300 leading-relaxed">
-            זה הדגם עצמו, נבנה בדפדפן מהטקסט שהלקוח מקליד: לוחית עם חור לטבעת, והכיתוב מורם מעליה. כותבים, מחליפים צבע,
-            ורואים את המחזיק מכל צד לפני שמזמינים. אין כאן קובץ של אף מעצב, אז אין בעיית רישיון.
+            הדגם נבנה בדפדפן מהטקסט שהלקוח מקליד, בסטייל שהוא בוחר. כל סטייל משחזר מראה מאחד הקבצים ששלחת, אבל נבנה מאפס
+            סביב הטקסט, ולכן בכולם אפשר לערוך את הכיתוב. אין כאן קובץ של אף מעצב, אז אין בעיית רישיון.
           </p>
+          <div className="flex flex-wrap gap-2">
+            {STYLES.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setStyle(s.id)}
+                className={cn("px-3 h-9 rounded-lg text-sm border", style === s.id ? "border-flame text-flame bg-flame/10" : "border-ink-700 text-ink-300")}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-[12px] text-ink-500">{current.hint}</p>
           <label className="block">
             <span className="text-[12px] text-ink-400">הטקסט על המחזיק</span>
-            <Input value={text} maxLength={24} onChange={(e) => setText(e.target.value)} className="mt-1" />
+            <Input value={text} maxLength={20} onChange={(e) => setText(e.target.value)} className="mt-1" />
           </label>
-          <Swatches label="צבע הלוחית" value={plate} onChange={setPlate} />
-          <Swatches label="צבע הכיתוב (שני צבעים = AMS)" value={ink} onChange={setInk} />
+          <Swatches label={current.colours === 1 ? "צבע" : "צבע הכיתוב"} value={ink} onChange={setInk} />
+          {current.colours === 2 && <Swatches label="צבע הבסיס (שני צבעים = AMS)" value={base} onChange={setBase} />}
         </div>
       </section>
-
-      <ModelGallery />
 
       <section className="grid md:grid-cols-2 gap-6 items-start">
         <SpinViewer frames={FRAMES} />
         <div className="space-y-4">
-          <div className="font-mono text-[11px] tracking-widest text-flame">3 · במוצרים המיובאים</div>
+          <div className="font-mono text-[11px] tracking-widest text-flame">2 · במוצרים המיובאים</div>
           <h2 className="text-2xl font-extrabold">סיבוב 360° מתמונות</h2>
           <p className="text-sm text-ink-300 leading-relaxed">
             72 תמונות של הדגם מסביב, וגרירה בוחרת איזו מוצגת. מרגיש כמו תלת-מימד, אבל לדפדפן מגיעות רק תמונות, ולא קובץ
