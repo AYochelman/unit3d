@@ -16,12 +16,12 @@ import { buildKeychain, visualOrder } from "./keychain-geometry";
  */
 
 export type StyleId = "plate" | "outline" | "script" | "bold" | "bar";
-export type FontId = "heebo" | "rubik" | "lobster" | "sacramento" | "amatic" | "arimo" | "arimoItalic";
+export type FontId = "heebo" | "rubik" | "lobster" | "sacramento" | "amatic" | "arimo" | "kanitItalic";
 
 /** Every font a style can ask for, by file in public/fonts. */
 export const FONT_FILES: Record<FontId, string> = {
   heebo: "heebo-800", rubik: "rubik-900", lobster: "lobster", sacramento: "sacramento",
-  amatic: "amatic-700", arimo: "arimo-700", arimoItalic: "arimo-700i",
+  amatic: "amatic-700", arimo: "arimo-700", kanitItalic: "kanit-700i",
 };
 
 export const STYLES: { id: StyleId; label: string; hint: string; colours: 1 | 2; ink: string; base: string }[] = [
@@ -42,7 +42,9 @@ export const fontFor = (style: StyleId, text: string): FontId => {
   if (style === "outline") return heb ? "rubik" : "lobster";
   if (style === "script") return heb ? "amatic" : "sacramento";
   if (style === "bold") return "arimo";
-  if (style === "bar") return "arimoItalic";
+  // Kanit's sharp italic is the closest to the Chevrolet letters; it has no
+  // Hebrew, so Hebrew gets Arimo, leaned by the same skew.
+  if (style === "bar") return heb ? "arimo" : "kanitItalic";
   return "heebo";
 };
 
@@ -95,9 +97,9 @@ function difference(a: Poly[], b: Poly[]): Poly[] {
   return out;
 }
 
-function offset(p: Poly[], mm: number): Poly[] {
+function offset(p: Poly[], mm: number, sharp = false): Poly[] {
   const co = new ClipperLib.ClipperOffset(2, 0.02 * K);
-  co.AddPaths(p, ClipperLib.JoinType.jtRound, ClipperLib.EndType.etClosedPolygon);
+  co.AddPaths(p, sharp ? ClipperLib.JoinType.jtMiter : ClipperLib.JoinType.jtRound, ClipperLib.EndType.etClosedPolygon);
   const out: Poly[] = [];
   co.Execute(out, mm * K);
   return out;
@@ -153,12 +155,50 @@ function toShapes(p: Poly[]): THREE.Shape[] {
   return shapes;
 }
 
-function extrude(p: Poly[], z0: number, depth: number, bevel = 0.25) {
+function extrude(p: Poly[], z0: number, depth: number, bevel = 0) {
   const g = new THREE.ExtrudeGeometry(toShapes(p), {
     depth: depth - bevel * 2, bevelEnabled: bevel > 0, bevelSize: bevel, bevelThickness: bevel, bevelSegments: 2, curveSegments: 4,
   });
   g.translate(0, 0, z0 + bevel);
   return g;
+}
+
+/**
+ * One piece, always. A keychain that comes off the plate as three loose
+ * letters is not a keychain: wherever the shape falls apart (letters that do
+ * not quite touch, the dot of an i), the nearest points of neighbouring pieces
+ * are joined by a stroke as thick as the letters.
+ */
+function joined(p: Poly[], width: number): Poly[] {
+  let parts = union(p);
+  for (let guard = 0; guard < 24; guard++) {
+    const c = new ClipperLib.Clipper();
+    c.AddPaths(parts, ClipperLib.PolyType.ptSubject, true);
+    const tree = new ClipperLib.PolyTree();
+    c.Execute(ClipperLib.ClipType.ctUnion, tree, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
+    type Node = { Contour: () => Poly };
+    const outers = ((tree as unknown as { Childs: () => Node[] }).Childs()).map((n) => n.Contour());
+    if (outers.length < 2) return parts;
+    // The closest pair of points between the first piece and any other.
+    let best = { d: Infinity, a: outers[0][0], b: outers[1][0] };
+    const step = (q: Poly) => Math.max(1, Math.floor(q.length / 120));
+    for (let j = 1; j < outers.length; j++) {
+      for (let i = 0; i < outers[0].length; i += step(outers[0])) {
+        const a = outers[0][i];
+        for (let m = 0; m < outers[j].length; m += step(outers[j])) {
+          const bq = outers[j][m];
+          const d = (a.X - bq.X) ** 2 + (a.Y - bq.Y) ** 2;
+          if (d < best.d) best = { d, a, b: bq };
+        }
+      }
+    }
+    const co = new ClipperLib.ClipperOffset(2, 0.02 * K);
+    co.AddPath([best.a, best.b], ClipperLib.JoinType.jtRound, ClipperLib.EndType.etOpenRound);
+    const stroke: Poly[] = [];
+    co.Execute(stroke, (width / 2) * K);
+    parts = union(parts, stroke);
+  }
+  return parts;
 }
 
 export type Built = { geometry: THREE.BufferGeometry; slot: 1 | 2 }[];
@@ -177,12 +217,12 @@ export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: str
   let t = textPolys(font, text, 10);
   if (!t.length) return [];
   let b = bounds(t);
-  // Slay is a tall, loose script (38mm on a 50mm name), so it gets the height.
-  const tall = style === "script" ? 30 : style === "bar" ? 9 : 16;
-  const k = Math.min(tall / (b.y1 - b.y0), (style === "script" ? 60 : 70) / (b.x1 - b.x0));
+  // Each reference file's own proportions: Olivia is 78mm with ~20mm letters,
+  // Slay a tall loose script (38mm on a 50mm name), the Chevrolet bar slim.
+  const tall = style === "script" ? 34 : style === "bar" ? 9 : style === "outline" ? 21 : 16;
+  const k = Math.min(tall / (b.y1 - b.y0), (style === "script" ? 60 : 72) / (b.x1 - b.x0));
   t = transform(t, (x, y) => [(x - (b.x0 + b.x1) / 2) * k, (y - (b.y0 + b.y1) / 2) * k]);
-  // The Chevrolet letters lean forward; the italic file alone barely does.
-  if (style === "bar") t = transform(t, (x, y) => [x + y * (rtl ? -0.22 : 0.22), y]);
+  if (style === "bar") t = transform(t, (x, y) => [x + y * (rtl ? -0.24 : 0.08), y]);
   b = bounds(t);
 
   // A small tab with a hole, at the end the name starts from: left for Latin,
@@ -194,31 +234,34 @@ export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: str
     return difference(union(base, [circle(cx, cy, r)]), [circle(cx, cy, hole)]);
   };
 
+  // Walls are straight, as printed: no rounded edges, which is what made the
+  // first version look soft next to the files.
   if (style === "outline") {
-    // Olivia: the letters on an even black outline about 2.6mm wide.
-    const base = tab(offset(t, 2.6), 1.6);
-    return [{ geometry: extrude(base, 0, 2.2), slot: 2 }, { geometry: extrude(t, 2.2, 1.2, 0.15), slot: 1 }];
+    // Olivia: Lobster on a black outline about 2.8mm wide, letters slightly raised.
+    const base = tab(joined(offset(t, 2.8), 2.4), 1.6, 4, 1.9);
+    return [{ geometry: extrude(base, 0, 2.2), slot: 2 }, { geometry: extrude(t, 2.2, 1), slot: 1 }];
   }
   if (style === "script") {
-    // Slay: a thin handwriting line, thickened evenly so it prints and holds
-    // together; one colour, no tab (it hangs from its own loops).
-    const line = offset(t, Amatic(fontFor(style, text)) ? 0.45 : 0.6);
-    return [{ geometry: extrude(line, 0, 3.4, 0.35), slot: 1 }];
+    // Slay: one even line, as if drawn with a round pen, every letter joined
+    // into a single piece; one colour, no tab (it hangs from its own loops).
+    const pen = Amatic(fontFor(style, text)) ? 0.55 : 0.8;
+    const line = joined(offset(t, pen), pen * 2 + 0.6);
+    return [{ geometry: extrude(line, 0, 3.4), slot: 1 }];
   }
   if (style === "bold") {
     // Name: heavy sans letters on a wide light outline, tab inside the outline.
-    const base = tab(offset(t, 3.4), 2.6, 4.6, 2.2);
-    return [{ geometry: extrude(base, 0, 2), slot: 2 }, { geometry: extrude(t, 2, 2, 0.12), slot: 1 }];
+    const base = tab(joined(offset(t, 3.4), 3), 2.6, 4.6, 2.2);
+    return [{ geometry: extrude(base, 0, 2), slot: 2 }, { geometry: extrude(t, 2, 2), slot: 1 }];
   }
-  // bar (Chevrolet): italic letters in the light colour, set flush into a dark
-  // rounded bar, and the bar on a light rim with the tab.
-  const padX = 3.4, padY = 2.4;
-  const inner = [roundedRect(b.x0 - padX, b.y0 - padY, b.x1 + padX, b.y1 + padY, 2.6)];
-  const rim = tab(offset(inner, 1.6), 1.2, 4.2, 2);
+  // bar (Chevrolet): sharp italic letters in the light colour, set flush into a
+  // dark bar, and the bar on a light rim with the tab — square-cut throughout.
+  const padX = 2.6, padY = 1.9;
+  const inner = [roundedRect(b.x0 - padX, b.y0 - padY, b.x1 + padX, b.y1 + padY, 1.6)];
+  const rim = tab(offset(inner, 1.4, true), 1.2, 4, 1.9);
   return [
     { geometry: extrude(rim, 0, 2), slot: 1 },
-    { geometry: extrude(difference(inner, t), 2, 1.2, 0.12), slot: 2 },
-    { geometry: extrude(t, 2, 1.2, 0.12), slot: 1 },
+    { geometry: extrude(difference(inner, t), 2, 1.1), slot: 2 },
+    { geometry: extrude(t, 2, 1.1), slot: 1 },
   ];
 }
 
