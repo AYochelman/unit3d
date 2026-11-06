@@ -122,12 +122,9 @@ function itemOverride(id?: string): Partial<ConfigProduct> & { href?: string; im
 export default function ConfiguratorClient({
   initialProduct,
   fromItem,
-  keychain3d,
 }: {
   initialProduct?: ConfigProductId;
   fromItem?: string;
-  /** Choices already made on /name-keychain: open on the last step with them. */
-  keychain3d?: { style: string; text: string; color: string; color2: string };
 }) {
   // The built-in palette plus any spool the owner added in /admin.
   const FILAMENTS = useFilaments();
@@ -142,8 +139,7 @@ export default function ConfiguratorClient({
   const settings = useAdminStore((s) => s.settings);
 
   const startProduct = initialProduct && Object.hasOwn(CONFIG_PRODUCT_BY_ID, initialProduct) ? initialProduct : "keychain";
-  // From /name-keychain everything but the quantity is chosen already.
-  const [step, setStep] = useState(keychain3d ? 4 : startProduct === "keychain" ? 0 : 1);
+  const [step, setStep] = useState(startProduct === "keychain" ? 0 : 1);
   const [config, setConfig] = useState<Config>({
     product: startProduct,
     model: CONFIG_PRODUCT_BY_ID[startProduct].models?.items[0]?.id ?? "",
@@ -156,9 +152,8 @@ export default function ConfiguratorClient({
     qty: 1,
     mode: "text",
     design: emptyDesign(CONFIG_PRODUCT_BY_ID[startProduct].face[0], CONFIG_PRODUCT_BY_ID[startProduct].face[1]),
-    style: (STYLES.some((x) => x.id === keychain3d?.style) ? keychain3d!.style : "outline") as StyleId,
-    color2: keychain3d?.color2 || "black",
-    ...(keychain3d ? { text: keychain3d.text.slice(0, 16), ...(FILAMENTS.some((f) => f.id === keychain3d.color) ? { color: keychain3d.color } : {}) } : {}),
+    style: "outline",
+    color2: "black",
   });
 
   const update = <K extends keyof Config>(k: K, v: Config[K]) => setConfig((c) => ({ ...c, [k]: v }));
