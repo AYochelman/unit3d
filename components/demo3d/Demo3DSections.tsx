@@ -43,10 +43,11 @@ function Swatches({ value, onChange, label }: { value: string; onChange: (h: str
 }
 
 export default function Demo3DSections() {
-  const [style, setStyle] = useState<StyleId>("plate");
-  const [text, setText] = useState("גדוד צבר 432");
-  const [base, setBase] = useState("#1d1f1e");
-  const [ink, setInk] = useState("#6a2bb5");
+  // Opens on style 2 — the owner's pick.
+  const [style, setStyle] = useState<StyleId>("outline");
+  const [text, setText] = useState("Olivia");
+  const [base, setBase] = useState(STYLES[1].base);
+  const [ink, setInk] = useState(STYLES[1].ink);
   const current = STYLES.find((s) => s.id === style)!;
 
   return (

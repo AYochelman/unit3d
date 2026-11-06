@@ -507,6 +507,14 @@ const COASTER_SIZES: Size[] = [
 
 const CONFIG_PRODUCTS_ALL: ConfigProduct[] = [
   {
+    // Built live in 3D from the typed name, in one of five styles
+    // (components/demo3d/styles.ts). The 2D preview, shapes and free designer
+    // do not apply: the style decides the shape and the font.
+    id: "name_keychain", label: "מחזיק עם שם · תלת-מימד", desc: "5 סטיילים, השם שלך, עד שני צבעים. רואים אותו מכל צד.",
+    art: "keychain", image: "/img/products/name-keychain-3d.webp", basePrice: 45, hours: 0.9, grams: 8, material: "pla_plus",
+    hasShape: false, hasSize: false, hasText: true, hasDesigner: false, face: [70, 24],
+  },
+  {
     id: "keychain", label: "מחזיק מפתחות", desc: "שם, מספר אישי, סמל יחידה.",
     art: "keychain", image: shelfPhoto("mw-65972"), basePrice: 55, hours: 1.5, grams: 12, material: "pla_plus",
     hasShape: true, hasSize: true, hasText: true, hasDesigner: true, face: [50, 35],

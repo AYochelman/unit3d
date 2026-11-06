@@ -26,6 +26,8 @@ import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
 import type { ConfigProduct, ConfigProductId, Design, ShapeId, SizeId } from "@/lib/types";
+import StyledKeychain3D from "@/components/demo3d/StyledKeychain3D";
+import { STYLES, nearestFilament, type StyleId } from "@/components/demo3d/styles";
 
 type Mode = "text" | "design";
 
@@ -41,13 +43,17 @@ type Config = {
   qty: number;
   mode: Mode;
   design: Design;
+  /** name_keychain: the 3D style, and the base colour when the style has two. */
+  style: StyleId;
+  color2: string;
 };
 
-type StepId = "product" | "model" | "shape" | "text" | "color" | "size" | "qty";
+type StepId = "product" | "model" | "style" | "shape" | "text" | "color" | "size" | "qty";
 
 const STEP_LABEL: Record<StepId, string> = {
   product: "מוצר",
   model: "דגם",
+  style: "סטייל",
   shape: "צורה",
   text: "טקסט ועיצוב",
   color: "צבע",
@@ -146,6 +152,8 @@ export default function ConfiguratorClient({
     qty: 1,
     mode: "text",
     design: emptyDesign(CONFIG_PRODUCT_BY_ID[startProduct].face[0], CONFIG_PRODUCT_BY_ID[startProduct].face[1]),
+    style: "outline",
+    color2: "black",
   });
 
   const update = <K extends keyof Config>(k: K, v: Config[K]) => setConfig((c) => ({ ...c, [k]: v }));
@@ -157,6 +165,11 @@ export default function ConfiguratorClient({
   const sizes = product.sizes ?? SIZES;
   const sizeObj = product.hasSize ? (sizes.find((s) => s.id === config.size) ?? sizes[0]) : null;
   const colorObj = FILAMENTS.find((f) => f.id === config.color)!;
+  const is3d = config.product === "name_keychain";
+  const styleObj = STYLES.find((s) => s.id === config.style) ?? STYLES[1];
+  const color2Obj = FILAMENTS.find((f) => f.id === config.color2) ?? colorObj;
+  // A second filament only when the style has two parts and they differ.
+  const twoColour3d = is3d && styleObj.colours === 2 && color2Obj.id !== colorObj.id;
   const fontObj = FONTS.find((f) => f.id === config.font)!;
   const materialId = product.material === "tpu" ? "tpu" : materialFromFilamentDesc(colorObj.desc);
   const material = MATERIAL_BY_ID[materialId];
@@ -168,6 +181,9 @@ export default function ConfiguratorClient({
   const designColors = hasDesign ? designColorCount(design) : 0;
 
   const steps = useMemo<StepId[]>(() => {
+    // The 3D name keychain: the style is the shape and the font, so it is
+    // style → colours → name, and nothing else.
+    if (product.id === "name_keychain") return ["product", "style", "color", "text", "qty"];
     const s: StepId[] = ["product"];
     if (product.models) s.push("model");
     if (product.hasShape) s.push("shape");
@@ -198,7 +214,8 @@ export default function ConfiguratorClient({
     (sizeObj?.priceAdd ?? 0) +
     matSurcharge +
     (product.hasShape && shape === "emblem" ? 10 : 0) +
-    (hasDesign ? DESIGN_SURCHARGE + Math.max(0, designColors - 1) * DESIGN_EXTRA_COLOR : 0);
+    (hasDesign ? DESIGN_SURCHARGE + Math.max(0, designColors - 1) * DESIGN_EXTRA_COLOR : 0) +
+    (twoColour3d ? DESIGN_EXTRA_COLOR : 0);
   const discount = bulkDiscount(config.qty);
   const totalPrice = lineTotal(unitPrice, config.qty);
 
@@ -209,7 +226,7 @@ export default function ConfiguratorClient({
   const pieces = Number(sizeObj?.dim.match(/×\s*(\d+)\s*$/)?.[1] ?? 1);
   const grams = Math.round(product.grams * Math.max(0.4, areaRatio) * pieces);
   const cost = estimateCost(
-    { grams, hours, material: materialId, colors: hasDesign ? designColors : 1, qty: config.qty, price: totalPrice / config.qty },
+    { grams, hours, material: materialId, colors: hasDesign ? designColors : twoColour3d ? 2 : 1, qty: config.qty, price: totalPrice / config.qty },
     settings,
   );
   const timeLabel = sizeObj?.time ?? `${product.hours}h`;
@@ -237,8 +254,14 @@ export default function ConfiguratorClient({
     if (override?.href) lines.push(`מתוך הקטלוג: ${product.label}`);
     if (modelLabel) lines.push(`${product.models!.label}: ${modelLabel}`);
     if (product.hasShape) lines.push(`צורה: ${shapes.find((s) => s.id === shape)?.label ?? ""}`);
-    lines.push(`צבע: ${colorObj.name} · ${material.name}`);
-    if (product.hasText) {
+    if (is3d) {
+      lines.push(`${styleObj.label} · ${styleObj.hint}`);
+      lines.push(styleObj.colours === 2
+        ? `צבע הכיתוב: ${colorObj.name} · צבע הבסיס: ${color2Obj.name} · ${material.name}`
+        : `צבע: ${colorObj.name} · ${material.name}`);
+      lines.push(`שם: "${config.text}"`);
+    } else lines.push(`צבע: ${colorObj.name} · ${material.name}`);
+    if (product.hasText && !is3d) {
       if (hasDesign) lines.push(...designSummary(design));
       else lines.push(`טקסט: "${config.text}${config.number ? " " + config.number : ""}" · ${fontObj.name}`);
     }
@@ -327,7 +350,17 @@ export default function ConfiguratorClient({
             ) : (
               <div className="rounded-2xl border border-ink-800 bg-ink-900 overflow-hidden">
                 <div className="relative aspect-square md:aspect-[4/3] timelapse printer-grid flex items-center justify-center overflow-hidden">
-                  <ProductPreview
+                  {is3d ? (
+                    <div className="absolute inset-0 [&>div]:!aspect-auto [&>div]:!h-full [&>div]:!rounded-none [&>div]:!border-0 [&>div]:!bg-transparent">
+                      <StyledKeychain3D
+                        style={config.style}
+                        text={config.text}
+                        textColor={colorObj.hex}
+                        baseColor={styleObj.colours === 2 ? color2Obj.hex : colorObj.hex}
+                        exportName={adminUnlocked ? `keychain-${config.style}-${config.text}` : undefined}
+                      />
+                    </div>
+                  ) : <ProductPreview
                     product={product}
                     shape={shape}
                     text={config.text}
@@ -337,7 +370,7 @@ export default function ConfiguratorClient({
                     design={config.mode === "design" ? design : null}
                     face={face}
                     modelLabel={modelLabel}
-                  />
+                  />}
                   <div className="absolute top-4 right-4 font-mono text-[10px] tracking-widest text-ink-400 flex items-center gap-2" dir="ltr">
                     <span className="w-1.5 h-1.5 bg-cyan2 rounded-full live-dot" />
                     LIVE PREVIEW
@@ -434,6 +467,42 @@ export default function ConfiguratorClient({
                 </div>
               )}
 
+              {current === "style" && (
+                <div>
+                  <h3 className="text-xl font-extrabold mb-1">סטייל</h3>
+                  <p className="text-sm text-ink-400 mb-5">כל סטייל נבנה סביב השם שתכתוב. אפשר לסובב את המחזיק בתצוגה ולראות אותו מכל צד.</p>
+                  <div className="space-y-2">
+                    {STYLES.map((st) => (
+                      <button
+                        key={st.id}
+                        type="button"
+                        onClick={() => setConfig((c) => ({
+                          ...c,
+                          style: st.id,
+                          // Open on the style's own colours when they are in stock.
+                          color: nearestFilament(st.ink, colorChoices)?.id ?? c.color,
+                          color2: nearestFilament(st.base, colorChoices)?.id ?? c.color2,
+                        }))}
+                        className={cn(
+                          "w-full p-4 rounded-xl border-2 flex items-center gap-4 text-right transition-all",
+                          config.style === st.id ? "border-flame bg-flame/5" : "border-ink-800 bg-ink-950 hover:border-ink-700",
+                        )}
+                      >
+                        <span className="flex -space-x-1.5 shrink-0" dir="ltr">
+                          <span className="w-6 h-6 rounded-full border border-ink-700" style={{ background: st.ink }} />
+                          {st.colours === 2 && <span className="w-6 h-6 rounded-full border border-ink-700" style={{ background: st.base }} />}
+                        </span>
+                        <span className="flex-1">
+                          <span className="block font-bold">{st.label}</span>
+                          <span className="block text-xs text-ink-400">{st.hint}</span>
+                        </span>
+                        <span className="text-[11px] font-mono text-ink-500">{st.colours === 2 ? "2 צבעים" : "צבע אחד"}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {current === "shape" && (
                 <div>
                   <h3 className="text-xl font-extrabold mb-1">בחר צורת בסיס</h3>
@@ -492,7 +561,14 @@ export default function ConfiguratorClient({
                     )}
                   </div>
 
-                  {config.mode === "design" && product.hasDesigner ? (
+                  {is3d ? (
+                    <div>
+                      <p className="text-sm text-ink-400 mb-5">השם על המחזיק. הגופן נקבע לפי הסטייל, והמחזיק נבנה מחדש עם כל אות.</p>
+                      <Field label="שם">
+                        <Input value={config.text} onChange={(e) => update("text", e.target.value.slice(0, 16))} placeholder="Olivia" />
+                      </Field>
+                    </div>
+                  ) : config.mode === "design" && product.hasDesigner ? (
                     <div>
                       <p className="text-sm text-ink-400 mb-4">
                         כמו בפאוורפוינט: טקסט בפונטים שונים, צורות, צבעים. גרור, שנה גודל, סובב. הקנבס הוא בגודל האמיתי של המוצר ({face[0]}×{face[1]}mm).
@@ -510,6 +586,23 @@ export default function ConfiguratorClient({
                   ) : (
                     <>
                       <p className="text-sm text-ink-400 mb-5">שם, מספר אישי, או שניהם. עד 12 תווים בכל שדה.</p>
+                      {product.id === "keychain" && (
+                        // The classic plate takes any text; a name cut out as the
+                        // keychain itself is the 3D product — offered here, where
+                        // the name is being typed.
+                        <button
+                          type="button"
+                          onClick={() => { const name = config.text; selectProduct("name_keychain"); update("text", name); }}
+                          className="mb-5 w-full flex items-center gap-3 p-3 rounded-xl border border-cyan2/40 bg-cyan2/5 text-right hover:border-cyan2"
+                        >
+                          <Icon name="sparkles" size={16} className="text-cyan2 shrink-0" />
+                          <span className="flex-1 text-sm">
+                            <b>רוצה שהשם עצמו יהיה המחזיק?</b>
+                            <span className="block text-xs text-ink-400">5 סטיילים בתלת-מימד, עד שני צבעים</span>
+                          </span>
+                          <Icon name="arrowLeft" size={14} className="text-cyan2" />
+                        </button>
+                      )}
                       <div className="space-y-3 mb-5">
                         <Field label="שורה ראשונה (שם)">
                           <Input value={config.text} onChange={(e) => update("text", e.target.value.slice(0, 12))} placeholder="יואב" />
@@ -546,7 +639,7 @@ export default function ConfiguratorClient({
 
               {current === "color" && (
                 <div>
-                  <h3 className="text-xl font-extrabold mb-1">צבע פילמנט</h3>
+                  <h3 className="text-xl font-extrabold mb-1">{is3d && styleObj.colours === 2 ? "צבע הכיתוב" : "צבע פילמנט"}</h3>
                   <p className="text-sm text-ink-400 mb-5">
                     {product.material === "tpu"
                       ? "קייסים מודפסים ב-TPU גמיש. הצבעים שיש לנו ב-TPU כרגע:"
@@ -572,6 +665,28 @@ export default function ConfiguratorClient({
                       </button>
                     ))}
                   </div>
+                  {is3d && styleObj.colours === 2 && (
+                    <div className="mt-6">
+                      <h3 className="text-xl font-extrabold mb-1">צבע הבסיס</h3>
+                      <p className="text-sm text-ink-400 mb-3">
+                        שני צבעים מודפסים יחד ב-AMS
+                        {twoColour3d ? <span className="font-mono text-flame"> (+{fmtILS(DESIGN_EXTRA_COLOR)})</span> : " — אותו צבע בשניהם, בלי תוספת"}.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {colorChoices.map((f) => (
+                          <button
+                            key={f.id}
+                            type="button"
+                            title={f.name}
+                            aria-label={f.name}
+                            onClick={() => update("color2", f.id)}
+                            className={cn("h-9 w-9 rounded-full border-2", config.color2 === f.id ? "border-flame scale-110" : "border-ink-700")}
+                            style={{ backgroundColor: f.hex }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="mt-4 text-xs text-ink-400">
                     חומר: <span className="text-ink-100 font-semibold">{material.name}</span>
                     {matSurcharge > 0 && <span className="font-mono text-flame"> (+{fmtILS(matSurcharge)})</span>}
