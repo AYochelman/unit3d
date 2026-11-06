@@ -23,6 +23,7 @@ const NAV = [
   { href: "/home", label: "לבית" },
   { href: "/office", label: "למשרד" },
   { href: "/configurator", label: "מעצב" },
+  { href: "/name-keychain", label: "שם בתלת-מימד" },
   { href: "/upload", label: "העלאת קובץ" },
   { href: "/b2b", label: "עסקים" },
 ];

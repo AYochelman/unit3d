@@ -1,3 +1,4 @@
+import NameKeychainTeaser from "@/components/home/NameKeychainTeaser";
 import Hero from "@/components/home/Hero";
 import AudienceSwitcher from "@/components/home/AudienceSwitcher";
 import Categories from "@/components/home/Categories";
@@ -41,6 +42,7 @@ export default function HomePage() {
         before a scroll happens, and fading in what someone is already looking
         at is a stutter, not an entrance.
       */}
+      <Reveal><NameKeychainTeaser /></Reveal>
       <Reveal><AudienceSwitcher /></Reveal>
       <Reveal><Categories /></Reveal>
       <Reveal><ProductShowcase /></Reveal>
