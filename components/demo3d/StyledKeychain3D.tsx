@@ -19,15 +19,16 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor }: 
     let cleanup = () => {};
     (async () => {
       try {
-        const [THREE, { OrbitControls }, opentype, { buildStyle }] = await Promise.all([
+        const [THREE, { OrbitControls }, opentype, { buildStyle, FONT_FILES }] = await Promise.all([
           import("three"),
           import("three/examples/jsm/controls/OrbitControls.js"),
           import("opentype.js"),
           import("./styles"),
         ]);
         const load = async (f: string) => opentype.parse(await fetch(assetSrc(`/fonts/${f}.ttf`)).then((r) => r.arrayBuffer())) as Font;
-        const [heebo, rubik, pacifico] = await Promise.all([load("heebo-800"), load("rubik-900"), load("pacifico")]);
-        const fonts: Record<FontId, Font> = { heebo, rubik, pacifico };
+        const ids = Object.keys(FONT_FILES) as FontId[];
+        const loaded = await Promise.all(ids.map((id) => load(FONT_FILES[id])));
+        const fonts = Object.fromEntries(ids.map((id, i) => [id, loaded[i]])) as Record<FontId, Font>;
         const el = host.current;
         if (disposed || !el) return;
 
@@ -70,15 +71,18 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor }: 
           const box = new THREE.Box3().setFromObject(group);
           const c = box.getCenter(new THREE.Vector3());
           group.position.set(group.position.x - c.x, group.position.y - c.y, group.position.z - c.z);
+          // Keep the whole keychain in view as the text grows or the style
+          // changes: the camera keeps its angle and only moves in or out.
+          const size = box.getSize(new THREE.Vector3());
+          const span = Math.max(size.x, size.y, 30);
           if (s !== lastStyle) {
             lastStyle = s;
-            const size = box.getSize(new THREE.Vector3());
-            const span = Math.max(size.x, size.y, 30);
-            camera.position.set(0, -span * 0.9, span * 1.5);
+            camera.position.set(0, -0.9, 1.5);
             controls.target.set(0, 0, 0);
-            controls.minDistance = span * 0.6;
-            controls.maxDistance = span * 4;
           }
+          camera.position.setLength(span * 2.1);
+          controls.minDistance = span * 0.6;
+          controls.maxDistance = span * 4;
         };
         api.current = { update };
 

@@ -15,6 +15,8 @@ const COLORS = [
   { name: "כחול", hex: "#2449b8" },
   { name: "סגול", hex: "#6a2bb5" },
   { name: "צהוב", hex: "#e6b420" },
+  { name: "אפרסק", hex: "#e8915a" },
+  { name: "ורוד", hex: "#e2557c" },
 ];
 
 const FRAMES = Array.from({ length: 72 }, (_, i) => `/demo/spin/f${String(i).padStart(2, "0")}.webp`);
@@ -63,7 +65,7 @@ export default function Demo3DSections() {
               <button
                 key={s.id}
                 type="button"
-                onClick={() => setStyle(s.id)}
+                onClick={() => { setStyle(s.id); setInk(s.ink); setBase(s.base); }}
                 className={cn("px-3 h-9 rounded-lg text-sm border", style === s.id ? "border-flame text-flame bg-flame/10" : "border-ink-700 text-ink-300")}
               >
                 {s.label}
