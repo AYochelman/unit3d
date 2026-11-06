@@ -13,9 +13,5 @@ export default function ConfiguratorFromQuery() {
   const product = (Object.hasOwn(CONFIG_PRODUCT_BY_ID, raw) ? raw : undefined) as ConfigProductId | undefined;
   // ?from=<catalogue id> — which shelf product sent the customer here.
   const from = params?.get("item") || params?.get("from") || undefined;
-  // /name-keychain hands over what was already chosen there.
-  const keychain3d = product === "name_keychain" && params?.get("text")
-    ? { style: params.get("style") ?? "", text: params.get("text") ?? "", color: params.get("c1") ?? "", color2: params.get("c2") ?? "" }
-    : undefined;
-  return <ConfiguratorClient key={`${product ?? "default"}:${from ?? ""}`} initialProduct={product} fromItem={from} keychain3d={keychain3d} />;
+  return <ConfiguratorClient key={`${product ?? "default"}:${from ?? ""}`} initialProduct={product} fromItem={from} />;
 }

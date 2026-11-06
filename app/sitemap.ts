@@ -21,7 +21,7 @@ const BROWSE = [
 ];
 
 /** Make-it-yours pages: the designer, personalisation, file upload. */
-const TOOLS = ["/name-keychain", "/configurator", "/personalize", "/upload", "/finder"];
+const TOOLS = ["/configurator", "/personalize", "/upload", "/finder"];
 
 /** Everything else a customer reads before buying. */
 const INFO = ["/shipping", "/faq", "/reviews", "/gallery", "/livestream", "/timelapses", "/contact"];
