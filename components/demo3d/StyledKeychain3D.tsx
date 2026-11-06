@@ -9,9 +9,15 @@ import type { FontId, StyleId } from "./styles";
  * typed text and two colours. three.js, clipper and the fonts load only when
  * this mounts.
  */
-export default function StyledKeychain3D({ style, text, textColor, baseColor }: { style: StyleId; text: string; textColor: string; baseColor: string }) {
+/**
+ * `exportName`: when set (the owner, with /admin open), a button downloads the
+ * keychain as a two-part .3mf — the file to print the order from, exactly as
+ * the customer saw it. Bambu Studio opens it as one object with two parts,
+ * one per filament.
+ */
+export default function StyledKeychain3D({ style, text, textColor, baseColor, exportName }: { style: StyleId; text: string; textColor: string; baseColor: string; exportName?: string }) {
   const host = useRef<HTMLDivElement>(null);
-  const api = useRef<{ update: (s: StyleId, t: string, c1: string, c2: string) => void } | null>(null);
+  const api = useRef<{ update: (s: StyleId, t: string, c1: string, c2: string) => void; export3mf: (name: string) => Promise<void> } | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -84,7 +90,18 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor }: 
           controls.minDistance = span * 0.6;
           controls.maxDistance = span * 4;
         };
-        api.current = { update };
+        const export3mf = async (name: string) => {
+          const { build3mf } = await import("./export3mf");
+          const parts = (group.children as InstanceType<typeof THREE.Mesh>[]).map((m) => ({ geometry: m.geometry, slot: m.material === mat1 ? 1 : 2 }));
+          const zip = await build3mf(parts, name);
+          const url = URL.createObjectURL(new Blob([zip as BlobPart], { type: "model/3mf" }));
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${name.replace(/[\\/:*?"<>|]+/g, "_")}.3mf`;
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+        };
+        api.current = { update, export3mf };
 
         let raf = 0;
         const loop = () => { raf = requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); };
@@ -124,6 +141,16 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor }: 
       <div ref={host} className="absolute inset-0" />
       {failed && <div className="absolute inset-0 grid place-items-center text-sm text-ink-400">הדפדפן לא תומך בתצוגת תלת-מימד</div>}
       <div className="pointer-events-none absolute bottom-3 inset-x-0 text-center text-[11px] text-ink-400">גוררים כדי לסובב · צובטים כדי להתקרב</div>
+      {exportName && (
+        <button
+          type="button"
+          onClick={() => void api.current?.export3mf(exportName)}
+          className="absolute top-3 left-3 rounded-lg border border-ink-600 bg-ink-900/90 px-3 h-8 text-xs font-semibold text-ink-100 hover:border-flame"
+          title="רק למנהל: קובץ להדפסה, שני חלקים לפי צבע"
+        >
+          הורדת 3MF
+        </button>
+      )}
     </div>
   );
 }
