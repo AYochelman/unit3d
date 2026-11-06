@@ -194,5 +194,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # The site is ~850MB (model photos and clips), and Pages takes longer than
+      # the action's default 10 minutes to process that much: two deploys on
+      # 6.11 timed out with the build fine. 30 minutes, as the action allows.
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000
