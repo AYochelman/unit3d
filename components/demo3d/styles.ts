@@ -170,35 +170,61 @@ function extrude(p: Poly[], z0: number, depth: number, bevel = 0) {
  * are joined by a stroke as thick as the letters.
  */
 function joined(p: Poly[], width: number): Poly[] {
-  let parts = union(p);
+  const { parts, bridges } = bridgesFor(p, width);
+  return bridges.length ? union(parts, bridges) : parts;
+}
+
+/**
+ * The joins on their own, so a style can make them quiet: in the hand-line
+ * style they are thinner than the letters, low down near the baseline (where
+ * handwriting joins anyway), and printed lower than the letters — a strut
+ * that holds the piece together without reading as part of the word.
+ */
+function bridgesFor(p: Poly[], width: number, preferLow = false) {
+  const parts = union(p);
+  const bridges: Poly[] = [];
+  const all = bounds(parts);
+  const lowLimit = all.y0 + (all.y1 - all.y0) * 0.4;
+  let current = parts;
   for (let guard = 0; guard < 24; guard++) {
     const c = new ClipperLib.Clipper();
-    c.AddPaths(parts, ClipperLib.PolyType.ptSubject, true);
+    c.AddPaths(current, ClipperLib.PolyType.ptSubject, true);
     const tree = new ClipperLib.PolyTree();
     c.Execute(ClipperLib.ClipType.ctUnion, tree, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
     type Node = { Contour: () => Poly };
     const outers = ((tree as unknown as { Childs: () => Node[] }).Childs()).map((n) => n.Contour());
-    if (outers.length < 2) return parts;
-    // The closest pair of points between the first piece and any other.
-    let best = { d: Infinity, a: outers[0][0], b: outers[1][0] };
-    const step = (q: Poly) => Math.max(1, Math.floor(q.length / 120));
-    for (let j = 1; j < outers.length; j++) {
-      for (let i = 0; i < outers[0].length; i += step(outers[0])) {
-        const a = outers[0][i];
-        for (let m = 0; m < outers[j].length; m += step(outers[j])) {
-          const bq = outers[j][m];
-          const d = (a.X - bq.X) ** 2 + (a.Y - bq.Y) ** 2;
-          if (d < best.d) best = { d, a, b: bq };
+    if (outers.length < 2) break;
+    // The closest pair of points between the first piece and any other —
+    // preferring the lower part of the word when asked, so joins sit low.
+    const pick = (low: boolean) => {
+      let best = { d: Infinity, a: outers[0][0], b: outers[1][0] };
+      const step = (q: Poly) => Math.max(1, Math.floor(q.length / 120));
+      const ok = (q: { Y: number }) => !low || q.Y / K <= lowLimit;
+      for (let j = 1; j < outers.length; j++) {
+        for (let i = 0; i < outers[0].length; i += step(outers[0])) {
+          const a = outers[0][i];
+          if (!ok(a)) continue;
+          for (let m = 0; m < outers[j].length; m += step(outers[j])) {
+            const bq = outers[j][m];
+            if (!ok(bq)) continue;
+            const d = (a.X - bq.X) ** 2 + (a.Y - bq.Y) ** 2;
+            if (d < best.d) best = { d, a, b: bq };
+          }
         }
       }
-    }
+      return best;
+    };
+    let best = preferLow ? pick(true) : pick(false);
+    // A low join much longer than the shortest one is worse than a high one.
+    if (preferLow) { const any = pick(false); if (!isFinite(best.d) || best.d > any.d * 4) best = any; }
     const co = new ClipperLib.ClipperOffset(2, 0.02 * K);
     co.AddPath([best.a, best.b], ClipperLib.JoinType.jtRound, ClipperLib.EndType.etOpenRound);
     const stroke: Poly[] = [];
     co.Execute(stroke, (width / 2) * K);
-    parts = union(parts, stroke);
+    bridges.push(...stroke);
+    current = union(current, stroke);
   }
-  return parts;
+  return { parts, bridges };
 }
 
 export type Built = { geometry: THREE.BufferGeometry; slot: 1 | 2 }[];
@@ -250,8 +276,11 @@ export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: str
     // Slay: one even line, as if drawn with a round pen, every letter joined
     // into a single piece; one colour, no tab (it hangs from its own loops).
     const pen = Amatic(fontFor(style, text)) ? 0.55 : 0.8;
-    const line = joined(offset(t, pen), pen * 2 + 0.6);
-    return [{ geometry: extrude(line, 0, 3.4), slot: 1 }];
+    const { parts, bridges } = bridgesFor(offset(t, pen), pen * 1.6, true);
+    return [
+      { geometry: extrude(parts, 0, 3.4), slot: 1 },
+      ...(bridges.length ? [{ geometry: extrude(union(bridges), 0, 1.6), slot: 1 as const }] : []),
+    ];
   }
   if (style === "bold") {
     // Name: heavy sans letters on a wide light outline, tab inside the outline.
