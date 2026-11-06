@@ -18,7 +18,8 @@ export default function SpinViewer({ frames }: { frames: string[] }) {
   // Turn on its own until someone takes hold of it.
   useEffect(() => {
     if (touched) return;
-    const id = setInterval(() => setAt((a) => (a + 1) % n), 90);
+    // One turn in about 3.3 seconds, whatever the number of frames.
+    const id = setInterval(() => setAt((a) => (a + 1) % n), Math.round(3300 / n));
     return () => clearInterval(id);
   }, [touched, n]);
 
@@ -30,8 +31,7 @@ export default function SpinViewer({ frames }: { frames: string[] }) {
   };
   const onMove = (e: React.PointerEvent) => {
     if (!drag.current) return;
-    // About a full turn across the width of a phone.
-    const step = Math.round((e.clientX - drag.current.x) / 9);
+    const step = Math.round(((e.clientX - drag.current.x) / 360) * n); // a full turn across a phone
     setAt((((drag.current.at - step) % n) + n) % n);
   };
   const onUp = () => { drag.current = null; setHeld(false); };

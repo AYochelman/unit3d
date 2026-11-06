@@ -2,16 +2,16 @@
 import { useEffect, useRef, useState } from "react";
 import type { Font } from "opentype.js";
 import { assetSrc } from "@/lib/assets";
-import { buildKeychain } from "./keychain-geometry";
+import type { FontId, StyleId } from "./styles";
 
 /**
- * A live 3D keychain: drag to turn it, pinch or scroll to zoom. Rebuilds as the
- * text or colours change. three.js and the font load only when this mounts, so
- * nothing on any other page gets heavier.
+ * The keychain in 3D, in any of the styles (./styles.ts), rebuilt live from the
+ * typed text and two colours. three.js, clipper and the fonts load only when
+ * this mounts.
  */
-export default function Keychain3D({ text, plateColor, textColor }: { text: string; plateColor: string; textColor: string }) {
+export default function StyledKeychain3D({ style, text, textColor, baseColor }: { style: StyleId; text: string; textColor: string; baseColor: string }) {
   const host = useRef<HTMLDivElement>(null);
-  const api = useRef<{ update: (t: string, p: string, c: string) => void } | null>(null);
+  const api = useRef<{ update: (s: StyleId, t: string, c1: string, c2: string) => void } | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -19,13 +19,16 @@ export default function Keychain3D({ text, plateColor, textColor }: { text: stri
     let cleanup = () => {};
     (async () => {
       try {
-        const [THREE, { OrbitControls }, opentype] = await Promise.all([
+        const [THREE, { OrbitControls }, opentype, { buildStyle, FONT_FILES }] = await Promise.all([
           import("three"),
           import("three/examples/jsm/controls/OrbitControls.js"),
           import("opentype.js"),
+          import("./styles"),
         ]);
-        const buf = await fetch(assetSrc("/fonts/heebo-800.ttf")).then((r) => r.arrayBuffer());
-        const font = opentype.parse(buf) as Font;
+        const load = async (f: string) => opentype.parse(await fetch(assetSrc(`/fonts/${f}.ttf`)).then((r) => r.arrayBuffer())) as Font;
+        const ids = Object.keys(FONT_FILES) as FontId[];
+        const loaded = await Promise.all(ids.map((id) => load(FONT_FILES[id])));
+        const fonts = Object.fromEntries(ids.map((id, i) => [id, loaded[i]])) as Record<FontId, Font>;
         const el = host.current;
         if (disposed || !el) return;
 
@@ -36,18 +39,17 @@ export default function Keychain3D({ text, plateColor, textColor }: { text: stri
         el.appendChild(renderer.domElement);
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(32, el.clientWidth / el.clientHeight, 1, 1000);
-        camera.position.set(0, -55, 95);
+        const camera = new THREE.PerspectiveCamera(32, el.clientWidth / el.clientHeight, 1, 2000);
         scene.add(new THREE.HemisphereLight(0xffffff, 0x1a2a22, 1.6));
         const key = new THREE.DirectionalLight(0xffffff, 2.2);
-        key.position.set(40, -30, 80);
+        key.position.set(60, -50, 120);
         scene.add(key);
-        const rim = new THREE.DirectionalLight(0x9fffc8, 0.8);
-        rim.position.set(-60, 50, 20);
+        const rim = new THREE.DirectionalLight(0x9fffc8, 0.7);
+        rim.position.set(-80, 60, 30);
         scene.add(rim);
 
-        const plateMat = new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0.05 });
-        const textMat = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.05 });
+        const mat1 = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.05 });
+        const mat2 = new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0.05 });
         const group = new THREE.Group();
         scene.add(group);
 
@@ -55,31 +57,38 @@ export default function Keychain3D({ text, plateColor, textColor }: { text: stri
         controls.enableDamping = true;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 2.2;
-        controls.minDistance = 50;
-        controls.maxDistance = 220;
         controls.enablePan = false;
-        // Stop the turntable once someone takes hold of it.
         controls.addEventListener("start", () => { controls.autoRotate = false; });
 
-        const update = (t: string, p: string, c: string) => {
+        let lastStyle: StyleId | null = null;
+        const update = (s: StyleId, t: string, c1: string, c2: string) => {
           group.children.forEach((m) => (m as InstanceType<typeof THREE.Mesh>).geometry.dispose());
           group.clear();
-          const { plateGeo, textGeo } = buildKeychain(font, { text: t, width: 62, height: 24, plate: 3, raise: 1.4 });
-          plateMat.color.set(p);
-          textMat.color.set(c);
-          group.add(new THREE.Mesh(plateGeo, plateMat));
-          if (textGeo) group.add(new THREE.Mesh(textGeo, textMat));
+          mat1.color.set(c1);
+          mat2.color.set(c2);
+          for (const part of buildStyle(s, fonts, t)) group.add(new THREE.Mesh(part.geometry, part.slot === 1 ? mat1 : mat2));
+          // Centre it, and frame it again when the style (and so the size) changes.
+          const box = new THREE.Box3().setFromObject(group);
+          const c = box.getCenter(new THREE.Vector3());
+          group.position.set(group.position.x - c.x, group.position.y - c.y, group.position.z - c.z);
+          // Keep the whole keychain in view as the text grows or the style
+          // changes: the camera keeps its angle and only moves in or out.
+          const size = box.getSize(new THREE.Vector3());
+          const span = Math.max(size.x, size.y, 30);
+          if (s !== lastStyle) {
+            lastStyle = s;
+            camera.position.set(0, -0.9, 1.5);
+            controls.target.set(0, 0, 0);
+          }
+          camera.position.setLength(span * 2.1);
+          controls.minDistance = span * 0.6;
+          controls.maxDistance = span * 4;
         };
         api.current = { update };
 
         let raf = 0;
-        const loop = () => {
-          raf = requestAnimationFrame(loop);
-          controls.update();
-          renderer.render(scene, camera);
-        };
+        const loop = () => { raf = requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); };
         loop();
-
         const ro = new ResizeObserver(() => {
           renderer.setSize(el.clientWidth, el.clientHeight);
           camera.aspect = el.clientWidth / el.clientHeight;
@@ -94,7 +103,6 @@ export default function Keychain3D({ text, plateColor, textColor }: { text: stri
           renderer.dispose();
           renderer.domElement.remove();
         };
-        // First build with whatever the props are by now.
         el.dispatchEvent(new Event("k3d-ready"));
       } catch {
         if (!disposed) setFailed(true);
@@ -103,14 +111,13 @@ export default function Keychain3D({ text, plateColor, textColor }: { text: stri
     return () => { disposed = true; cleanup(); api.current = null; };
   }, []);
 
-  // Rebuild on every change, and once the scene above becomes ready.
   useEffect(() => {
     const el = host.current;
-    const run = () => api.current?.update(text, plateColor, textColor);
+    const run = () => api.current?.update(style, text, textColor, baseColor);
     run();
     el?.addEventListener("k3d-ready", run);
     return () => el?.removeEventListener("k3d-ready", run);
-  }, [text, plateColor, textColor]);
+  }, [style, text, textColor, baseColor]);
 
   return (
     <div className="relative w-full aspect-square rounded-2xl border border-ink-800 bg-[radial-gradient(circle_at_50%_40%,#123a26,#06150e_70%)] overflow-hidden touch-none">
