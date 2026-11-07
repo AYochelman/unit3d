@@ -2,7 +2,7 @@
 // The two 3D demos, shared by /demo-3d and /admin → "תצוגת עיצוב".
 import { useState } from "react";
 import StyledKeychain3D from "@/components/demo3d/StyledKeychain3D";
-import { STYLES, type StyleId } from "@/components/demo3d/styles";
+import { STYLES, type StyleId } from "@/components/demo3d/style-meta";
 import SpinViewer from "@/components/demo3d/SpinViewer";
 import { Input } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
