@@ -45,7 +45,7 @@ const SLIDES: Slide[] = [
     title: "עיצוב עסקי",
     line: "כרטיסי ביקור, שלטים ומתנות ללקוחות — עם הלוגו שלכם בולט מהחומר.",
     href: "/b2b",
-    photo: "/img/products/biz-card-v2-1.webp",
+    photo: "/img/hero/biz-card-unit3d.webp",
   },
   {
     id: "soldiers",
