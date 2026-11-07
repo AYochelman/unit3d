@@ -2,12 +2,31 @@
 import { useEffect, useRef, useState } from "react";
 import type { Font } from "opentype.js";
 import { assetSrc } from "@/lib/assets";
-import type { FontId, StyleId } from "./styles";
+import { FONT_FILES, fontFor, shownText, type FontId, type StyleId } from "./style-meta";
+
+/**
+ * Font files, fetched once per page and only when a style asks for one. The
+ * first is asked for as the viewer mounts, so it downloads alongside three.js
+ * rather than after it.
+ */
+const fontBytes = new Map<FontId, Promise<ArrayBuffer>>();
+const fetchFont = (id: FontId) => {
+  let p = fontBytes.get(id);
+  if (!p) {
+    p = fetch(assetSrc(`/fonts/${FONT_FILES[id]}.ttf`)).then((r) => {
+      if (!r.ok) throw new Error(`font ${id}: ${r.status}`);
+      return r.arrayBuffer();
+    });
+    p.catch(() => fontBytes.delete(id)); // a failed fetch may be retried
+    fontBytes.set(id, p);
+  }
+  return p;
+};
 
 /**
  * The keychain in 3D, in any of the styles (./styles.ts), rebuilt live from the
- * typed text and two colours. three.js, clipper and the fonts load only when
- * this mounts.
+ * typed text and two colours. three.js and clipper load only when this mounts,
+ * and each font only when a style first needs it.
  */
 /**
  * `exportName`: when set (the owner, with /admin open), a button downloads the
@@ -17,24 +36,38 @@ import type { FontId, StyleId } from "./styles";
  */
 export default function StyledKeychain3D({ style, text, textColor, baseColor, exportName }: { style: StyleId; text: string; textColor: string; baseColor: string; exportName?: string }) {
   const host = useRef<HTMLDivElement>(null);
-  const api = useRef<{ update: (s: StyleId, t: string, c1: string, c2: string) => void; export3mf: (name: string) => Promise<void> } | null>(null);
+  const api = useRef<{ update: (s: StyleId, t: string, c1: string, c2: string) => Promise<void>; export3mf: (name: string) => Promise<void> } | null>(null);
   const [failed, setFailed] = useState(false);
+  const [ready, setReady] = useState(false);
+  // Start the first font now, before the effect below waits on three.js.
+  const firstFont = useRef(false);
+  useEffect(() => {
+    if (firstFont.current) return;
+    firstFont.current = true;
+    void fetchFont(fontFor(style, shownText(text))).catch(() => {});
+  }, [style, text]);
 
   useEffect(() => {
     let disposed = false;
     let cleanup = () => {};
     (async () => {
       try {
-        const [THREE, { OrbitControls }, opentype, { buildStyle, FONT_FILES }] = await Promise.all([
+        const [THREE, { OrbitControls }, opentype, { buildStyle }] = await Promise.all([
           import("three"),
           import("three/examples/jsm/controls/OrbitControls.js"),
           import("opentype.js"),
           import("./styles"),
         ]);
-        const load = async (f: string) => opentype.parse(await fetch(assetSrc(`/fonts/${f}.ttf`)).then((r) => r.arrayBuffer())) as Font;
-        const ids = Object.keys(FONT_FILES) as FontId[];
-        const loaded = await Promise.all(ids.map((id) => load(FONT_FILES[id])));
-        const fonts = Object.fromEntries(ids.map((id, i) => [id, loaded[i]])) as Record<FontId, Font>;
+        const parsed = new Map<FontId, Promise<Font>>();
+        const font = (id: FontId) => {
+          let p = parsed.get(id);
+          if (!p) {
+            p = fetchFont(id).then((b) => opentype.parse(b) as Font);
+            p.catch(() => parsed.delete(id));
+            parsed.set(id, p);
+          }
+          return p;
+        };
         const el = host.current;
         if (disposed || !el) return;
 
@@ -67,12 +100,19 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor, ex
         controls.addEventListener("start", () => { controls.autoRotate = false; });
 
         let lastStyle: StyleId | null = null;
-        const update = (s: StyleId, t: string, c1: string, c2: string) => {
+        // Each call supersedes the one before: a font that arrives after the
+        // customer has already moved on draws nothing.
+        let seq = 0;
+        const update = async (s: StyleId, t: string, c1: string, c2: string) => {
+          const mine = ++seq;
+          let f: Font;
+          try { f = await font(fontFor(s, shownText(t))); } catch { return; }
+          if (mine !== seq || disposed) return;
           group.children.forEach((m) => (m as InstanceType<typeof THREE.Mesh>).geometry.dispose());
           group.clear();
           mat1.color.set(c1);
           mat2.color.set(c2);
-          for (const part of buildStyle(s, fonts, t)) group.add(new THREE.Mesh(part.geometry, part.slot === 1 ? mat1 : mat2));
+          for (const part of buildStyle(s, f, t)) group.add(new THREE.Mesh(part.geometry, part.slot === 1 ? mat1 : mat2));
           // Centre it, and frame it again when the style (and so the size) changes.
           const box = new THREE.Box3().setFromObject(group);
           const c = box.getCenter(new THREE.Vector3());
@@ -89,6 +129,7 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor, ex
           camera.position.setLength(span * 2.1);
           controls.minDistance = span * 0.6;
           controls.maxDistance = span * 4;
+          setReady(true);
         };
         const export3mf = async (name: string) => {
           const { build3mf } = await import("./export3mf");
@@ -130,7 +171,7 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor, ex
 
   useEffect(() => {
     const el = host.current;
-    const run = () => api.current?.update(style, text, textColor, baseColor);
+    const run = () => void api.current?.update(style, text, textColor, baseColor);
     run();
     el?.addEventListener("k3d-ready", run);
     return () => el?.removeEventListener("k3d-ready", run);
@@ -139,6 +180,14 @@ export default function StyledKeychain3D({ style, text, textColor, baseColor, ex
   return (
     <div className="relative w-full aspect-square rounded-2xl border border-ink-800 bg-[radial-gradient(circle_at_50%_40%,#123a26,#06150e_70%)] overflow-hidden touch-none">
       <div ref={host} className="absolute inset-0" />
+      {!ready && !failed && (
+        <div className="absolute inset-0 grid place-items-center pointer-events-none">
+          <div className="flex flex-col items-center gap-2 text-[12px] text-ink-400">
+            <span className="h-7 w-7 rounded-full border-2 border-ink-600 border-t-flame animate-spin" />
+            טוען תצוגת תלת-מימד…
+          </div>
+        </div>
+      )}
       {failed && <div className="absolute inset-0 grid place-items-center text-sm text-ink-400">הדפדפן לא תומך בתצוגת תלת-מימד</div>}
       <div className="pointer-events-none absolute bottom-3 inset-x-0 text-center text-[11px] text-ink-400">גוררים כדי לסובב · צובטים כדי להתקרב</div>
       {exportName && (

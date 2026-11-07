@@ -27,7 +27,7 @@ import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
 import type { ConfigProduct, ConfigProductId, Design, ShapeId, SizeId } from "@/lib/types";
 import StyledKeychain3D from "@/components/demo3d/StyledKeychain3D";
-import { STYLES, nearestFilament, type StyleId } from "@/components/demo3d/styles";
+import { STYLES, nearestFilament, type StyleId } from "@/components/demo3d/style-meta";
 
 type Mode = "text" | "design";
 
