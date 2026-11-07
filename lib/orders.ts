@@ -218,6 +218,19 @@ const productTitle = (l: OrderLine): string => {
 
 const hoursOf = (l: OrderLine): string => pick(l.summary, "זמן הדפסה") ?? "—";
 
+/** Lines the message already gives a field of their own. */
+const SHOWN = /^(מוצר|חומר|צבע|כמות|זמן הדפסה|גודל|כיתוב):/;
+
+/**
+ * Everything else the customer chose — the name and its spelling, the style,
+ * the two colours, the font, each element of a free design. Without these a
+ * designed order reached WhatsApp as "מחזיק מותאם · כמות 1" and the details
+ * had to be asked for again. Marked with "•" so the admin reads them back
+ * into the line and never mistakes one for a field of the order.
+ */
+const detailsOf = (l: OrderLine): string[] =>
+  l.summary.map((s) => s.trim()).filter((s) => s && !SHOWN.test(s)).map((s) => `• ${s}`);
+
 /**
  * The whole order, written so it reads on a phone screen in one glance: who
  * ordered, then each product with the four things Erez needs before he starts
@@ -244,6 +257,7 @@ export function orderMessage(o: PlacedOrder): string {
     out.push(
       "",
       `${i + 1}. ${productTitle(l)}`,
+      ...detailsOf(l),
       `חומר וצבע: ${materialColor(l)}`,
       `כמות: ${l.qty}`,
       `מחיר: ${l.price == null ? "לפי הזמנה" : fmtILS(l.price)}`,
@@ -313,6 +327,8 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
       cur = { title, summary: [], qty, price: null };
       continue;
     }
+
+    if (t.startsWith("• ")) { if (cur) cur.summary.push(t.slice(2).trim()); continue; }
 
     const mc = field(t, "חומר וצבע");
     if (mc && cur) {

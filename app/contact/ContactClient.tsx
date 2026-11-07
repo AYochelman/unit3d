@@ -75,6 +75,9 @@ export default function ContactClient() {
   const initialInquiry: Inquiry = items.length > 0 ? (cust === "b2b" ? "bulk" : "new") : "question";
   const [inquiry, setInquiry] = useState<Inquiry>(initialInquiry);
   const [submitted, setSubmitted] = useState(false);
+  const [review, setReview] = useState(false);
+  const [reviewOk, setReviewOk] = useState(false);
+  const needsReview = items.some((it) => it.source === "configurator");
   // The fields were uncontrolled, so nothing the customer typed ever left the
   // page — the form showed a thank-you and told nobody. They are read now.
   const [name, setName] = useState("");
@@ -154,6 +157,83 @@ export default function ContactClient() {
   useEffect(() => {
     if (submitted) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [submitted]);
+
+  // Sends the order: WhatsApp first (still inside the click, or the popup
+  // blocker takes it), then the shop's queue and the customer's mail.
+  const sendOrder = () => {
+            const ref = makeRef();
+            setRefCode(ref);
+
+            // An order with nothing in the cart is still an enquiry worth
+            // sending; the message just carries the free text instead of lines.
+            const order: PlacedOrder = {
+              ref,
+              at: new Date().toISOString(),
+              customer: {
+                name: name.trim(),
+                phone: phone.trim(),
+                ...(email.trim() ? { email: email.trim() } : {}),
+                kind: CUST_OPTIONS.find((o) => o.id === cust)?.label ?? "",
+                ...(unitName.trim() ? { unit: unitName.trim() } : {}),
+                ...(company.trim() ? { company: `${company.trim()}${vat.trim() ? ` · ח.פ. ${vat.trim()}` : ""}${bulkQty.trim() ? ` · ${bulkQty.trim()} יח׳` : ""}` } : {}),
+                ...(wantsAddress && address.trim() ? { address: address.trim() } : {}),
+              },
+              inquiry: inquiries.find((q) => q.id === inquiry)?.label ?? "",
+              delivery,
+              ...(message.trim() ? { note: message.trim() } : {}),
+              lines: items.map((it) => {
+                // Each page writes its own key into meta; this normalises them
+                // to the one id the admin can look a source file up by.
+                const src = modelSourceFromMeta(it.meta);
+                return {
+                  title: it.baseTitle,
+                  summary: it.summary,
+                  qty: it.qty,
+                  price: it.price ?? null,
+                  ...(src?.id ? { itemId: src.id } : {}),
+                  ...(typeof it.meta?.designSvg === "string" ? { designSvg: it.meta.designSvg } : {}),
+                };
+              }),
+              itemsTotal,
+              // Re-checked at the moment of sending: a code that expired while
+              // the page sat open must not travel with the order.
+              ...(applied
+                ? (() => {
+                    const fresh = discountFor(codes, applied.code, itemsTotal, new Date(), codeLines).applied;
+                    return fresh ? { discount: fresh } : {};
+                  })()
+                : {}),
+              decision: "pending",
+            };
+
+            // The message goes first: opening a window is only allowed while
+            // the click is still the browser's own event, and an await here
+            // would hand it to a popup blocker instead of to WhatsApp.
+            window.open(orderWhatsapp(order), "_blank", "noopener,noreferrer");
+
+            // And the same order is written to the shop's queue, so it is
+            // already waiting on Erez's screen instead of being carried there
+            // by hand. If that write fails the message still holds everything.
+            // The end of the funnel. Page views only mean something next to
+            // this number.
+            track("order_sent", { items: order.lines.length, total: order.itemsTotal, delivery: order.delivery });
+
+            setFiled("pending");
+            void placeOrder(order).then((r) => setFiled(r === "saved" ? "saved" : "failed"));
+
+            // And the customer's own copy of what they just ordered.
+            setMailed("pending");
+            setMailTo(order.customer.email ?? "");
+            void sendOrderEmail(order).then(setMailed);
+
+            if (items.length) {
+              setOrdered(items);
+              setCoupon(makeCoupon());
+              clearCart();
+            }
+            setReview(false);
+            setSubmitted(true);
+  };
 
   if (submitted) {
     // An order and a question are not the same moment. Someone who just bought
@@ -283,6 +363,100 @@ export default function ContactClient() {
         </p>
       </header>
 
+      {review && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="review-title"
+          onClick={(e) => { if (e.target === e.currentTarget) setReview(false); }}
+        >
+          <div className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-ink-900 border border-ink-700 p-5 sm:p-6 space-y-5">
+            <div>
+              <h2 id="review-title" className="text-xl font-extrabold">סיכום הזמנה</h2>
+              <p className="text-sm text-ink-300 mt-1">
+                מה שכתוב כאן הוא בדיוק מה שנדפיס. כדאי לעבור על השם, האיות, הצבעים והכמות לפני השליחה.
+              </p>
+            </div>
+
+            <ol className="space-y-3">
+              {items.map((it, i) => (
+                <li key={it.id} className="rounded-xl border border-ink-800 bg-ink-950/60 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="font-bold text-ink-50">{i + 1}. {it.baseTitle}</div>
+                    {it.price != null && <div className="font-mono text-sm shrink-0">{fmtILS(it.price)}</div>}
+                  </div>
+                  {typeof it.meta?.designSvg === "string" && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={`data:image/svg+xml;utf8,${encodeURIComponent(it.meta.designSvg)}`}
+                      alt="העיצוב שלך"
+                      className="mt-3 w-full max-h-48 object-contain rounded-lg bg-white/5"
+                    />
+                  )}
+                  <ul className="mt-2 space-y-1">
+                    {it.summary.map((line, k) => (
+                      // Each "label: value" and each " · " part isolated, so
+                      // "70×24mm" and "PLA+" keep their order inside a Hebrew line.
+                      <li key={k} className="text-[13px] text-ink-300">
+                        {line.split(" · ").map((part, j) => {
+                          const at = part.indexOf(":");
+                          return (
+                            <span key={j}>
+                              {j > 0 && " · "}
+                              {at > 0 ? <><span className="text-ink-500">{part.slice(0, at + 1)}</span> <bdi>{part.slice(at + 1).trim()}</bdi></> : <bdi>{part}</bdi>}
+                            </span>
+                          );
+                        })}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+
+            <dl className="rounded-xl border border-ink-800 p-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[13px]">
+              <dt className="text-ink-500">שם</dt><dd>{name.trim() || "—"}</dd>
+              <dt className="text-ink-500">טלפון</dt><dd><bdi dir="ltr">{phone.trim()}</bdi></dd>
+              {email.trim() && (<><dt className="text-ink-500">מייל</dt><dd><bdi dir="ltr">{email.trim()}</bdi></dd></>)}
+              <dt className="text-ink-500">מסירה</dt><dd>{DELIVERY.find((d) => d.id === delivery)?.label ?? ""}</dd>
+              {wantsAddress && (<><dt className="text-ink-500">כתובת</dt><dd>{address.trim()}</dd></>)}
+              {message.trim() && (<><dt className="text-ink-500">הערות</dt><dd className="whitespace-pre-line">{message.trim()}</dd></>)}
+              {applied && (<><dt className="text-ink-500">הנחה</dt><dd>{applied.code} · <bdi dir="ltr">-{fmtILS(applied.off)}</bdi></dd></>)}
+              {itemsTotal != null && (
+                <>
+                  <dt className="text-ink-500 font-bold">סה&quot;כ</dt>
+                  <dd className="font-bold"><bdi dir="ltr">{fmtILS(Math.max(0, itemsTotal - (applied?.off ?? 0)))}</bdi> <span className="text-ink-500 font-normal">+ משלוח אם יש</span></dd>
+                </>
+              )}
+            </dl>
+
+            <label className="flex items-start gap-3 cursor-pointer rounded-xl border border-ink-800 p-3 hover:border-ink-700">
+              <input
+                type="checkbox"
+                checked={reviewOk}
+                onChange={(e) => setReviewOk(e.target.checked)}
+                className="mt-0.5 h-5 w-5 accent-[#089a47] shrink-0"
+              />
+              <span className="text-sm">בדקתי את כל הפרטים: השם, האיות, הצבעים והכמות נכונים.</span>
+            </label>
+
+            <div className="flex flex-col-reverse sm:flex-row gap-2">
+              <Btn type="button" variant="ghost" icon="arrowRight" onClick={() => setReview(false)}>חזרה לתיקון</Btn>
+              <button
+                type="button"
+                disabled={!reviewOk}
+                onClick={sendOrder}
+                className="flex-1 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl bg-[#089a47] hover:bg-[#0bb455] disabled:opacity-40 disabled:hover:bg-[#089a47] text-white font-extrabold transition-colors"
+              >
+                <Icon name="whatsapp" size={20} />
+                אישור ושליחה בוואטסאפ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Form column */}
         <form
@@ -294,77 +468,11 @@ export default function ContactClient() {
             // a parcel with no address is the one mistake on this form that
             // costs a delivery rather than a follow-up message.
             if (wantsAddress && !address.trim()) return;
-            const ref = makeRef();
-            setRefCode(ref);
-
-            // An order with nothing in the cart is still an enquiry worth
-            // sending; the message just carries the free text instead of lines.
-            const order: PlacedOrder = {
-              ref,
-              at: new Date().toISOString(),
-              customer: {
-                name: name.trim(),
-                phone: phone.trim(),
-                ...(email.trim() ? { email: email.trim() } : {}),
-                kind: CUST_OPTIONS.find((o) => o.id === cust)?.label ?? "",
-                ...(unitName.trim() ? { unit: unitName.trim() } : {}),
-                ...(company.trim() ? { company: `${company.trim()}${vat.trim() ? ` · ח.פ. ${vat.trim()}` : ""}${bulkQty.trim() ? ` · ${bulkQty.trim()} יח׳` : ""}` } : {}),
-                ...(wantsAddress && address.trim() ? { address: address.trim() } : {}),
-              },
-              inquiry: inquiries.find((q) => q.id === inquiry)?.label ?? "",
-              delivery,
-              ...(message.trim() ? { note: message.trim() } : {}),
-              lines: items.map((it) => {
-                // Each page writes its own key into meta; this normalises them
-                // to the one id the admin can look a source file up by.
-                const src = modelSourceFromMeta(it.meta);
-                return {
-                  title: it.baseTitle,
-                  summary: it.summary,
-                  qty: it.qty,
-                  price: it.price ?? null,
-                  ...(src?.id ? { itemId: src.id } : {}),
-                  ...(typeof it.meta?.designSvg === "string" ? { designSvg: it.meta.designSvg } : {}),
-                };
-              }),
-              itemsTotal,
-              // Re-checked at the moment of sending: a code that expired while
-              // the page sat open must not travel with the order.
-              ...(applied
-                ? (() => {
-                    const fresh = discountFor(codes, applied.code, itemsTotal, new Date(), codeLines).applied;
-                    return fresh ? { discount: fresh } : {};
-                  })()
-                : {}),
-              decision: "pending",
-            };
-
-            // The message goes first: opening a window is only allowed while
-            // the click is still the browser's own event, and an await here
-            // would hand it to a popup blocker instead of to WhatsApp.
-            window.open(orderWhatsapp(order), "_blank", "noopener,noreferrer");
-
-            // And the same order is written to the shop's queue, so it is
-            // already waiting on Erez's screen instead of being carried there
-            // by hand. If that write fails the message still holds everything.
-            // The end of the funnel. Page views only mean something next to
-            // this number.
-            track("order_sent", { items: order.lines.length, total: order.itemsTotal, delivery: order.delivery });
-
-            setFiled("pending");
-            void placeOrder(order).then((r) => setFiled(r === "saved" ? "saved" : "failed"));
-
-            // And the customer's own copy of what they just ordered.
-            setMailed("pending");
-            setMailTo(order.customer.email ?? "");
-            void sendOrderEmail(order).then(setMailed);
-
-            if (items.length) {
-              setOrdered(items);
-              setCoupon(makeCoupon());
-              clearCart();
-            }
-            setSubmitted(true);
+            // Something the customer designed is printed exactly as written:
+            // a typo in a name is a wasted print. So it stops at a summary
+            // they confirm before it goes anywhere.
+            if (needsReview) { setReviewOk(false); setReview(true); return; }
+            sendOrder();
           }}
           className="lg:col-span-2 space-y-8"
         >

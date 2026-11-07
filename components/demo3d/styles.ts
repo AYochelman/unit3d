@@ -15,57 +15,9 @@ import { buildKeychain, visualOrder } from "./keychain-geometry";
  * All in millimetres. Two colour slots: 1 = the text, 2 = the base.
  */
 
-export type StyleId = "plate" | "outline" | "script" | "bold" | "bar";
-export type FontId = "heebo" | "rubik" | "lobster" | "sacramento" | "amatic" | "arimo" | "kanitItalic";
+import { type StyleId, type FontId, fontFor, shownText } from "./style-meta";
+export { type StyleId, type FontId, FONT_FILES, STYLES, fontFor, shownText, nearestFilament } from "./style-meta";
 
-/** Every font a style can ask for, by file in public/fonts. */
-export const FONT_FILES: Record<FontId, string> = {
-  heebo: "heebo-800", rubik: "rubik-900", lobster: "lobster", sacramento: "sacramento",
-  amatic: "amatic-700", arimo: "arimo-700", kanitItalic: "kanit-700i",
-};
-
-export const STYLES: { id: StyleId; label: string; hint: string; colours: 1 | 2; ink: string; base: string }[] = [
-  { id: "plate", label: "סטייל 1", hint: "לוחית עם הכיתוב מורם", colours: 2, ink: "#6a2bb5", base: "#1d1f1e" },
-  { id: "outline", label: "סטייל 2", hint: "כתב יד עבה על מתאר שחור, טבעת קטנה בצד", colours: 2, ink: "#e8915a", base: "#1d1f1e" },
-  { id: "script", label: "סטייל 3", hint: "כתב יד בקו אחיד, צבע אחד", colours: 1, ink: "#e2557c", base: "#e2557c" },
-  { id: "bold", label: "סטייל 4", hint: "אותיות עבות על מתאר לבן רחב", colours: 2, ink: "#1d1f1e", base: "#f1f1ee" },
-  { id: "bar", label: "סטייל 5", hint: "כתב נטוי בתוך פס כהה עם שוליים בהירים", colours: 2, ink: "#f1f1ee", base: "#1d1f1e" },
-];
-
-/**
- * Which font a style uses — the reference file's own kind of letter. Lobster
- * and Sacramento have no Hebrew, so Hebrew gets the nearest Hebrew face:
- * Rubik for the heavy script, Amatic (a hand-drawn line) for the thin one.
- */
-export const fontFor = (style: StyleId, text: string): FontId => {
-  const heb = /[\u0590-\u05FF]/.test(text);
-  if (style === "outline") return heb ? "rubik" : "lobster";
-  if (style === "script") return heb ? "amatic" : "sacramento";
-  if (style === "bold") return "arimo";
-  // Kanit's sharp italic is the closest to the Chevrolet letters; it has no
-  // Hebrew, so Hebrew gets Arimo, leaned by the same skew.
-  if (style === "bar") return heb ? "arimo" : "kanitItalic";
-  return "heebo";
-};
-
-/**
- * The stocked filament closest to a style's colour. The styles carry the
- * reference file's exact colours; the shop has the spools it has, so each
- * style opens on the nearest one rather than on whatever happened to match.
- */
-export function nearestFilament<T extends { id: string; hex: string }>(hex: string, list: T[]): T | undefined {
-  const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-  const [r, g, b] = rgb(hex);
-  let best: T | undefined, d = Infinity;
-  for (const f of list) {
-    if (!/^#[0-9a-f]{6}$/i.test(f.hex)) continue;
-    const [r2, g2, b2] = rgb(f.hex);
-    // Weighted for the eye: green counts most, blue least.
-    const e = 2 * (r - r2) ** 2 + 4 * (g - g2) ** 2 + 3 * (b - b2) ** 2;
-    if (e < d) { d = e; best = f; }
-  }
-  return best;
-}
 
 type Poly = { X: number; Y: number }[];
 const K = 1000; // clipper works in integers: micrometres
@@ -248,9 +200,9 @@ function bridgesFor(p: Poly[], width: number, preferLow = false) {
 
 export type Built = { geometry: THREE.BufferGeometry; slot: 1 | 2 }[];
 
-export function buildStyle(style: StyleId, fonts: Record<FontId, Font>, raw: string): Built {
-  const text = raw.trim() || "שם";
-  const font = fonts[fontFor(style, text)];
+/** `font` must be the one `fontFor(style, shownText(raw))` names. */
+export function buildStyle(style: StyleId, font: Font, raw: string): Built {
+  const text = shownText(raw);
   const rtl = /[֐-׿]/.test(text);
 
   if (style === "plate") {
