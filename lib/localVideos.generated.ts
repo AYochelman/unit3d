@@ -2,7 +2,7 @@
 //
 // The designer's clip for a model, served from this site. Product id → path.
 // Items: 30
-// Updated: 2026-11-03T11:37:15.373Z
+// Updated: 2026-11-08T11:23:18.849Z
 
 export const LOCAL_VIDEOS: Record<string, string> = {
   "mw-1271221": "img/catalog-video/1271221.mp4",
