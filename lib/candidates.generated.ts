@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 158
-// Collected: 2026-11-08T11:58:20.296Z
+// Collected: 2026-11-08T13:02:49.774Z
 
 import type { Candidate } from "./candidates";
 
@@ -52,7 +52,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "maydei_",
     "image": "https://makerworld.bblmw.com/makerworld/model/US3cd3f9efa3c086/design/87e4619e752ff333.jpg?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 224,
-    "likes": 236,
+    "likes": 238,
     "grams": 54,
     "hours": 2.32,
     "colors": 1,
@@ -88,7 +88,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "DK Design",
     "image": "https://makerworld.bblmw.com/makerworld/model/USc8378fce23e8/design/73db0cb3fd865ae0.png?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 77,
-    "likes": 112,
+    "likes": 111,
     "grams": 70,
     "hours": 4.48,
     "colors": 1,
@@ -216,7 +216,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "WazzyPrints3D",
     "image": "https://makerworld.bblmw.com/makerworld/model/US335c01a3b34d55/design/2025-11-08_e22432272b35a8.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1400,
+    "downloads": 1401,
     "likes": 1213,
     "grams": 41,
     "hours": 3.86,
@@ -250,8 +250,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "JANBERRY DESIGN",
     "image": "https://makerworld.bblmw.com/makerworld/model/US81ec0f891b7651/design/12c4715d1c3d130c.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 2056,
-    "likes": 824,
+    "downloads": 2063,
+    "likes": 826,
     "grams": 17,
     "hours": 1.8,
     "colors": 1,
@@ -267,7 +267,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "formastampa",
     "image": "https://makerworld.bblmw.com/makerworld/model/USdc237567ab8b68/design/ecd466875d1ec6c0.jpeg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1078,
+    "downloads": 1080,
     "likes": 1660,
     "grams": 107,
     "hours": 3,
