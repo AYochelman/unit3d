@@ -6,6 +6,8 @@ import Link from "next/link";
 import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
+import CartUpsell, { pickUpsell, type UpsellPick } from "@/components/CartUpsell";
+import { useLivePricer } from "@/lib/live-price";
 import { modelSourceFromMeta } from "@/lib/model-source";
 import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -77,6 +79,9 @@ export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [review, setReview] = useState(false);
   const [reviewOk, setReviewOk] = useState(false);
+  const [upsell, setUpsell] = useState<UpsellPick[] | null>(null);
+  const priceOf = useLivePricer();
+  const [upsellSeen, setUpsellSeen] = useState(false);
   const needsReview = items.some((it) => it.source === "configurator");
   // The fields were uncontrolled, so nothing the customer typed ever left the
   // page — the form showed a thank-you and told nobody. They are read now.
@@ -160,6 +165,13 @@ export default function ContactClient() {
 
   // Sends the order: WhatsApp first (still inside the click, or the popup
   // blocker takes it), then the shop's queue and the customer's mail.
+  // After the upsell: designed orders stop at the summary, the rest go out.
+  // Both run inside a click, so WhatsApp's window still opens.
+  const afterUpsell = () => {
+    if (needsReview) { setReviewOk(false); setReview(true); return; }
+    sendOrder();
+  };
+
   const sendOrder = () => {
             const ref = makeRef();
             setRefCode(ref);
@@ -363,6 +375,14 @@ export default function ContactClient() {
         </p>
       </header>
 
+      {upsell && (
+        <CartUpsell
+          picks={upsell}
+          onContinue={() => { setUpsell(null); afterUpsell(); }}
+          onClose={() => setUpsell(null)}
+        />
+      )}
+
       {review && (
         <div
           className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-6"
@@ -471,8 +491,13 @@ export default function ContactClient() {
             // Something the customer designed is printed exactly as written:
             // a typo in a name is a wasted print. So it stops at a summary
             // they confirm before it goes anywhere.
-            if (needsReview) { setReviewOk(false); setReview(true); return; }
-            sendOrder();
+            // An order (not a question) gets one "anything else?" first.
+            if (items.length && !upsellSeen) {
+              setUpsellSeen(true);
+              const picks = pickUpsell(items, priceOf);
+              if (picks.length) { setUpsell(picks); return; }
+            }
+            afterUpsell();
           }}
           className="lg:col-span-2 space-y-8"
         >

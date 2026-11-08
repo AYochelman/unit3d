@@ -262,6 +262,13 @@
   }
 }
 
+/* The "anything else?" sheet rises with a little overshoot. */
+@keyframes upsell-in {
+  from { transform: translateY(40px) scale(0.97); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { [class*="upsell-in"] { animation: none !important; } }
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
