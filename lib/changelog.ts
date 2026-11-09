@@ -34,6 +34,12 @@ export const KIND_HE: Record<ChangeKind, string> = {
 
 export const CHANGELOG: ChangeDay[] = [
   {
+    date: "2026-11-09",
+    items: [
+      { kind: "feature", text: "לפני שליחת הזמנה עולה חלון \"להוסיף משהו קטן?\" עם 4 פידג'טים זולים ופופולריים (עד ₪35) — לחיצה אחת מוסיפה לסל, נשלח באותה חבילה. מופיע פעם אחת בהזמנה." },
+    ],
+  },
+  {
     date: "2026-11-07",
     items: [
       { kind: "content", text: "דף הבית: תמונה חדשה בשקופית \"עיצוב עסקי\" — כרטיס הביקור של Unit 3D בשחור-ירוק." },
