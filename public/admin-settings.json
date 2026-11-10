@@ -17,7 +17,11 @@
     "amsWastePerColor": 0.1,
     "targetMargin": 0.3
   },
-  "overrides": {},
+  "overrides": {
+    "cfg-name_keychain": {
+      "price": 10
+    }
+  },
   "pricing": {
     "auto": true,
     "round": 3
