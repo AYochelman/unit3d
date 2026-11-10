@@ -57,8 +57,8 @@ def main():
         mm, fm = j.magnets()
         mags += [(mm.translate(list(off[j.male])), MAGNET), (fm.translate(list(off[j.female])), MAGNET)]
     glb_ex = export_glb(ex + mags, os.path.join(PRE, "UNIT3D_exploded.glb"))
-    exv = [dict(az=22, el=12, out=os.path.join(IMG, "exploded_front.png"), fit=0.74, target=[0, 0, 58]),
-           dict(az=200, el=-28, out=os.path.join(IMG, "exploded_from_below.png"), fit=0.74, target=[0, 0, 58])]
+    exv = [dict(az=22, el=10, out=os.path.join(IMG, "exploded_front.png"), fit=0.80, target=[0, 0, 62]),
+           dict(az=200, el=-28, out=os.path.join(IMG, "exploded_from_below.png"), fit=0.80, target=[0, 0, 62])]
     # ---- section through the joints (front half removed) with magnets in place
     cut = box_minmax((-80, -80, -10), (80, -1.5, 140))   # removes y < -1.5 (front)
     sec = [((v - cut), COLS[c]) for k in parts for c, v in vols[k].items()]
@@ -83,7 +83,7 @@ def main():
     for i in range(len(PLATES)):
         g = os.path.join(PRE, f"plate_{i + 1}.glb")
         jobs.append(dict(glb=g, width=1200, height=900, background="#22272e", grid=dict(size=256, div=16, cx=128, cz=-128),
-                         views=[dict(az=0, el=55, out=os.path.join(IMG, f"plate_{i + 1}.png"), target=[118, 115, 0], dist=330, fov=30)]))
+                         views=[dict(az=0, el=55, out=os.path.join(IMG, f"plate_{i + 1}.png"), target=[108, 112, 0], dist=250, fov=30)]))
     render(jobs, os.path.join(os.path.dirname(PKG), "jobs_docs.json"))
 
     sheet([os.path.join(IMG, f"assembled_{n}.png") for n, _, _ in names], os.path.join(IMG, "multiview_5.png"), scale=0.6)

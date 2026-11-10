@@ -34,11 +34,12 @@ t = chk["text"]
 step_ok = all(r.get("valid") for r in st["readback"]) and len(st["readback"]) == 7
 vol_match = all(abs(a.get("volume", a.get("volume_mm3", -1)) - b) < 0.05 for a, b in zip(st["readback"], st["expected_volumes"].values()))
 lo = {k: v["layer_overhangs"] for k, v in chk["parts"].items()}
+hand_gap = [i["min_gap_mm"] for i in chk["interference"] if {i["a"], i["b"]} == {"head", "arm_R"}][0]
 thin_worst = max(c["lost_below_1_line_pct"] for p in chk["parts"].values() for c in p["thin_features"].values())
 check_rows = [
     ("רשתות סגורות (Watertight / Manifold)", f"{'עבר' if parts_ok and colours_ok else 'נכשל'} – 7 חלקים, כל אחד גוף אחד סגור; כל נפחי הצבע סגורים, וסכומם שווה בדיוק לנפח החלק"),
     ("גובה מורכב", f"<span class='num'>{chk['assembled_height_mm']} mm</span> מסוליה עד קצה הכובע"),
-    ("התנגשויות בין חלקים (21 זוגות, במצב מורכב)", f"נפח חפיפה מרבי <span class='num'>{inter} mm³</span>; המרווח הקטן ביותר בחיבורים <span class='num'>{gaps[0]}–{gaps[-1]} mm</span>; יד V מול האוזן <span class='num'>2.9 mm</span>"),
+    ("התנגשויות בין חלקים (21 זוגות, במצב מורכב)", f"נפח חפיפה מרבי <span class='num'>{inter} mm³</span>; המרווח הקטן ביותר בחיבורים <span class='num'>{gaps[0]}–{gaps[-1]} mm</span>; יד V מול הראש <span class='num'>{'≥ ' if hand_gap >= 3.0 else ''}{hand_gap} mm</span>"),
     ("מגנטים במודל (6×2) – מגע ישיר", f"בכל 6 החיבורים המגנטים נוגעים (מרחק <span class='num'>{touch} mm</span>), בלי חפיפה ובלי לגעת בפלסטיק"),
     ("מידות כיסים שנמדדו על הרשת", f"קוטר <span class='num'>{pd} mm</span> (המצולע חוסם מעגל של 6.25 בדיוק), עומק <span class='num'>{depths[0]}–{depths[-1]} mm</span>, בליטת מגנט <span class='num'>0.2 mm</span>"),
     ("בליטת יישור", "גובה <span class='num'>2.0 mm</span>, כניסה לשקע <span class='num'>1.7 mm</span>, מרווח <span class='num'>0.2 mm</span> לצד, שיפועי הכוונה <span class='num'>0.4</span>"),
@@ -46,7 +47,7 @@ check_rows = [
     ("רגליים ונעליים סגורות מאחור", "כן – הרגל היא גוף מלא אחד בלי חללים פנימיים (genus 0, קליפה אחת)"),
     ("כיתוב UNIT3D", f"גובה אות <span class='num'>{t['cap_height_mm']} mm</span>, רוחב <span class='num'>{t['width_mm']} mm</span>, קו דק ביותר <span class='num'>{t['min_stroke_mm']} mm</span> (≈{t['lines_at_0p42']} קווי דיזה), בולט <span class='num'>{t['raised_mm']}</span> + משובץ <span class='num'>{t['inlay_mm']} mm</span>"),
     ("פרטים דקים (חיתוך כל שכבה ב-0.12)", f"שטח שהולך לאיבוד בבדיקת קו אחד (0.42): לכל היותר {thin_worst}% מנפח צבע (פינות של אותיות/לוגו); אין חלק שנעלם"),
-    ("תליות (סריקת שכבה-שכבה)", "רק תקרות מגושרות של שקעים וכיסים (עד 14 mm), ושוליים זעירים (&lt;3 mm²). אין צורך בתמיכות"),
+    ("תליות (סריקת שכבה-שכבה)", "רק תקרות מגושרות: תוך הכובע (≈21 mm), שקעים וכיסים, ושוליים זעירים (עד ~3 mm² לשכבה). אין צורך בתמיכות"),
     ("Slice עצמאי ב-PrusaSlicer 2.7.2", "כל 4 הפלטות נחתכו בהצלחה, manifold = yes. מנגנון התמיכות האוטומטי (המחמיר) סימן רק את תוך השקעים והכיסים ואת השוליים התחתונים של האותיות הבולטות – לכן התמיכות כבויות בפרויקט"),
     ("מבנה ה-3MF מול קוד הטעינה של Bambu Studio", "שני הקבצים: אין שגיאות (XML, מזהים, שיוך פלטות, 635 מפתחות הגדרה, פריסטים P2S)"),
     ("STEP", f"{'נקרא חזרה ב-OpenCascade כ-7 גופים מוצקים תקינים' if step_ok else 'בעיה בקריאה'}{', נפחים זהים לקובצי ההדפסה' if vol_match else ''} ({st['size_kb'] // 1024} MB)"),
@@ -62,7 +63,7 @@ rep = os.path.join(PKG, "reports"); os.makedirs(rep, exist_ok=True)
 for f in ("out/checks.json", "out/swaps.json", "out/slice/prusa_slice_test_thr0.json", "out/step_report.json"):
     shutil.copy(os.path.join(HERE, f), rep)
 src = os.path.join(PKG, "source"); os.makedirs(src, exist_ok=True)
-for f in ("mascot.py", "geom.py", "orient.py", "coupon.py", "export_all.py", "checks.py", "bambu3mf.py",
+for f in ("mascot.py", "sdf.py", "geom.py", "orient.py", "coupon.py", "export_all.py", "checks.py", "bambu3mf.py",
           "bambu3mf_p2s_base.json", "verify.py", "step_faceted.py", "section_drawing.py", "render_all.py", "viz.py",
           "slice_test.py", "swaps.py"):
     shutil.copy(os.path.join(HERE, f), src)

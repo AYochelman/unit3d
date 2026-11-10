@@ -58,10 +58,10 @@ def joint_pairs():
     out["m1"], out["f1"], out["J1"] = m1, f1, J1
     # ---- pair 2: female upright with socket in a side wall (like torso arm sockets);
     #              male lies on its flat face with the key flush to the plate (like the arms)
-    J2 = Joint("test-side", (1.9, -1.5, 10.0), (1, 0, 0), (0, 0, 1), 11, 9, 2.5, male="m2", female="f2", region=30,
+    J2 = Joint("test-side", (1.9, -2.1, 10.0), (1, 0, 0), (0, 0, 1), 10, 8.8, 2.5, male="m2", female="f2", region=30,
                headroom_dir=(0, 0, 1))
     f2 = box_minmax((0.0, -11.0, 0.0), (14.0, 8.0, 20.0))
-    m2 = box_minmax((-16.0, -11.0, 1.0), (0.5, 3.0, 19.0))
+    m2 = box_minmax((-16.0, -11.0, 1.0), (0.5, 2.3, 19.0))
     m2 = ((m2 - J2.male_cut()) + J2.boss()) - J2.male_pocket()
     f2 = (f2 - J2.female_cut()) - J2.socket() - J2.female_pocket()
     f2 = engrave_top(f2, "2F", 7.0, -1.5, 20.0, 3.6, 90)

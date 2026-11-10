@@ -4,7 +4,7 @@ import numpy as np
 import trimesh
 from PIL import Image
 
-from geom import to_trimesh
+from geom import to_trimesh, clean_mesh
 from mascot import build_all, FILAMENTS, COLOR_NAME, JOINTS, CREAM
 from orient import ORIENT, PLATES, pose_matrix
 from coupon import coupon_parts_print, COUPON_LAYOUT
@@ -36,14 +36,14 @@ WIPE_TOWER = (178.0, 178.0)
 
 
 def write_stl(m, path):
-    t = to_trimesh(m)
+    V, F = clean_mesh(m)
+    t = trimesh.Trimesh(V, F, process=False)
     t.export(path)
     return t
 
 
 def mf(m):
-    t = to_trimesh(m)
-    return np.asarray(t.vertices), np.asarray(t.faces)
+    return clean_mesh(m)
 
 
 def main():

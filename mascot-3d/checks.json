@@ -7,8 +7,8 @@
     "is_volume": true,
     "shells": 1,
     "genus": 0,
-    "triangles": 5882,
-    "volume_mm3": 12339.89
+    "triangles": 29846,
+    "volume_mm3": 7902.89
    },
    "colours": {
     "Cream": {
@@ -17,8 +17,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 3,
-     "triangles": 930,
-     "volume_mm3": 79.4
+     "triangles": 2754,
+     "volume_mm3": 68.09
     },
     "Mint": {
      "watertight": true,
@@ -26,8 +26,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 538,
-     "volume_mm3": 398.59
+     "triangles": 1816,
+     "volume_mm3": 228.04
     },
     "Charcoal": {
      "watertight": true,
@@ -35,79 +35,87 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 6138,
-     "volume_mm3": 11861.9
+     "triangles": 29130,
+     "volume_mm3": 7606.76
     }
    },
    "colour_volume_sum_matches_body": true,
    "print_bbox_mm": [
-    42.0,
-    47.4,
-    14.4
+    42.8,
+    50.3,
+    15.2
    ],
    "thin_features": {
     "Cream": {
-     "lost_below_1_line_pct": 2.308,
-     "lost_below_2_lines_pct": 5.745,
+     "lost_below_1_line_pct": 2.515,
+     "lost_below_2_lines_pct": 6.36,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.61,
-       12.18
-      ],
-      [
-       0.343,
-       8.34
+       0.588,
+       11.94
       ],
       [
        0.341,
-       8.1
+       8.34
+      ],
+      [
+       0.34,
+       8.22
       ]
      ]
     },
     "Mint": {
-     "lost_below_1_line_pct": 0.051,
-     "lost_below_2_lines_pct": 0.175,
+     "lost_below_1_line_pct": 0.026,
+     "lost_below_2_lines_pct": 0.08,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.242,
-       0.78
-      ],
-      [
-       0.242,
+       0.075,
        0.06
       ],
       [
-       0.242,
-       0.54
+       0.071,
+       0.66
+      ],
+      [
+       0.071,
+       0.3
       ]
      ]
     },
     "Charcoal": {
-     "lost_below_1_line_pct": 0.009,
-     "lost_below_2_lines_pct": 0.025,
+     "lost_below_1_line_pct": 0.013,
+     "lost_below_2_lines_pct": 0.037,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.542,
+       0.594,
+       4.74
+      ],
+      [
+       0.507,
+       10.5
+      ],
+      [
+       0.484,
        8.22
-      ],
-      [
-       0.539,
-       4.38
-      ],
-      [
-       0.472,
-       8.1
       ]
      ]
     }
    },
    "overhangs": {
-    "area_over_50deg_mm2": 159.7,
-    "area_over_60deg_mm2": 152.7,
-    "area_over_75deg_mm2": 145.3,
+    "area_over_50deg_mm2": 541.2,
+    "area_over_60deg_mm2": 502.1,
+    "area_over_75deg_mm2": 488.4,
     "ceilings_gt75deg": [
      {
-      "z": 2.1,
+      "z": 6.89,
+      "area_mm2": 343.8,
+      "xy_size_mm": [
+       25.7,
+       20.9
+      ]
+     },
+     {
+      "z": 8.9,
       "area_mm2": 113.7,
       "xy_size_mm": [
        14.4,
@@ -115,26 +123,26 @@
       ]
      },
      {
-      "z": 3.9,
+      "z": 10.7,
       "area_mm2": 30.7,
       "xy_size_mm": [
        6.3,
        6.3
-      ]
-     },
-     {
-      "z": 2.8,
-      "area_mm2": 0.9,
-      "xy_size_mm": [
-       1.5,
-       0.6
       ]
      }
     ]
    },
    "layer_overhangs": [
     {
-     "z": 2.1,
+     "z": 7.02,
+     "area_mm2": 333.6,
+     "size_mm": [
+      25.5,
+      20.5
+     ]
+    },
+    {
+     "z": 8.94,
      "area_mm2": 102.82,
      "size_mm": [
       13.9,
@@ -142,15 +150,7 @@
      ]
     },
     {
-     "z": 2.82,
-     "area_mm2": 0.54,
-     "size_mm": [
-      1.5,
-      0.4
-     ]
-    },
-    {
-     "z": 4.02,
+     "z": 10.74,
      "area_mm2": 25.98,
      "size_mm": [
       5.8,
@@ -166,8 +166,8 @@
     "is_volume": true,
     "shells": 1,
     "genus": 0,
-    "triangles": 6902,
-    "volume_mm3": 58270.89
+    "triangles": 28156,
+    "volume_mm3": 27931.21
    },
    "colours": {
     "Mint": {
@@ -176,8 +176,8 @@
      "is_volume": true,
      "shells": 4,
      "genus": -1,
-     "triangles": 2488,
-     "volume_mm3": 283.44
+     "triangles": 3894,
+     "volume_mm3": 178.88
     },
     "Charcoal": {
      "watertight": true,
@@ -185,8 +185,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 1500,
-     "volume_mm3": 2550.37
+     "triangles": 5992,
+     "volume_mm3": 1495.19
     },
     "Cream": {
      "watertight": true,
@@ -194,158 +194,110 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 8278,
-     "volume_mm3": 55437.08
+     "triangles": 26702,
+     "volume_mm3": 26257.13
     }
    },
    "colour_volume_sum_matches_body": true,
    "print_bbox_mm": [
-    56.8,
-    34.0,
-    39.2
+    41.2,
+    34.8,
+    30.0
    ],
    "thin_features": {
     "Mint": {
-     "lost_below_1_line_pct": 1.454,
-     "lost_below_2_lines_pct": 3.408,
+     "lost_below_1_line_pct": 2.056,
+     "lost_below_2_lines_pct": 4.979,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.353,
-       20.58
+       0.692,
+       12.42
       ],
       [
-       0.353,
-       15.42
+       0.687,
+       12.54
       ],
       [
-       0.353,
-       22.38
+       0.685,
+       13.02
       ]
      ]
     },
     "Charcoal": {
-     "lost_below_1_line_pct": 0.0,
-     "lost_below_2_lines_pct": 0.0,
+     "lost_below_1_line_pct": 0.12,
+     "lost_below_2_lines_pct": 0.383,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.0,
-       36.18
+       0.232,
+       12.42
       ],
       [
-       0.0,
-       36.78
+       0.228,
+       12.54
       ],
       [
-       0.0,
-       36.66
+       0.223,
+       12.66
       ]
      ]
     },
     "Cream": {
-     "lost_below_1_line_pct": 0.007,
-     "lost_below_2_lines_pct": 0.024,
+     "lost_below_1_line_pct": 0.008,
+     "lost_below_2_lines_pct": 0.029,
      "worst_layers_z(lost<1line mm2)": [
       [
-       7.728,
-       37.14
+       0.279,
+       15.54
       ],
       [
-       3.351,
-       37.26
+       0.279,
+       15.78
       ],
       [
-       0.445,
-       37.38
+       0.278,
+       15.66
       ]
      ]
     }
    },
    "overhangs": {
-    "area_over_50deg_mm2": 51.3,
-    "area_over_60deg_mm2": 44.3,
-    "area_over_75deg_mm2": 33.5,
+    "area_over_50deg_mm2": 289.5,
+    "area_over_60deg_mm2": 117.0,
+    "area_over_75deg_mm2": 86.1,
     "ceilings_gt75deg": [
      {
-      "z": 25.51,
-      "area_mm2": 17.3,
+      "z": 2.1,
+      "area_mm2": 55.4,
       "xy_size_mm": [
-       10.2,
-       1.7
+       10.4,
+       9.2
       ]
      },
      {
-      "z": 13.5,
-      "area_mm2": 10.7,
+      "z": 3.9,
+      "area_mm2": 30.7,
       "xy_size_mm": [
-       6.7,
-       1.6
-      ]
-     },
-     {
-      "z": 22.02,
-      "area_mm2": 2.9,
-      "xy_size_mm": [
-       1.6,
-       1.8
-      ]
-     },
-     {
-      "z": 22.02,
-      "area_mm2": 2.5,
-      "xy_size_mm": [
-       1.6,
-       1.5
+       6.3,
+       6.3
       ]
      }
     ]
    },
    "layer_overhangs": [
     {
-     "z": 13.62,
-     "area_mm2": 10.21,
+     "z": 2.1,
+     "area_mm2": 47.11,
      "size_mm": [
-      6.9,
-      1.5
+      9.9,
+      8.7
      ]
     },
     {
-     "z": 22.02,
-     "area_mm2": 0.6,
+     "z": 4.02,
+     "area_mm2": 25.98,
      "size_mm": [
-      1.9,
-      31.6
-     ]
-    },
-    {
-     "z": 22.14,
-     "area_mm2": 3.17,
-     "size_mm": [
-      1.2,
-      31.7
-     ]
-    },
-    {
-     "z": 25.5,
-     "area_mm2": 0.35,
-     "size_mm": [
-      10.5,
-      1.5
-     ]
-    },
-    {
-     "z": 25.62,
-     "area_mm2": 1.14,
-     "size_mm": [
-      9.8,
-      1.5
-     ]
-    },
-    {
-     "z": 25.74,
-     "area_mm2": 13.02,
-     "size_mm": [
-      8.6,
-      1.6
+      5.8,
+      5.8
      ]
     }
    ]
@@ -357,8 +309,8 @@
     "is_volume": true,
     "shells": 1,
     "genus": 0,
-    "triangles": 15232,
-    "volume_mm3": 57849.47
+    "triangles": 42686,
+    "volume_mm3": 23855.64
    },
    "colours": {
     "Mint": {
@@ -366,9 +318,9 @@
      "winding_consistent": true,
      "is_volume": true,
      "shells": 4,
-     "genus": -2,
-     "triangles": 14810,
-     "volume_mm3": 10737.1
+     "genus": -1,
+     "triangles": 21418,
+     "volume_mm3": 3736.93
     },
     "Cream": {
      "watertight": true,
@@ -376,8 +328,8 @@
      "is_volume": true,
      "shells": 6,
      "genus": -5,
-     "triangles": 2194,
-     "volume_mm3": 139.44
+     "triangles": 2398,
+     "volume_mm3": 91.61
     },
     "Orange": {
      "watertight": true,
@@ -385,103 +337,103 @@
      "is_volume": true,
      "shells": 2,
      "genus": -1,
-     "triangles": 260,
-     "volume_mm3": 165.95
+     "triangles": 456,
+     "volume_mm3": 26.59
     },
     "Charcoal": {
      "watertight": true,
      "winding_consistent": true,
      "is_volume": true,
      "shells": 2,
-     "genus": -1,
-     "triangles": 17282,
-     "volume_mm3": 46806.97
+     "genus": 1,
+     "triangles": 47058,
+     "volume_mm3": 20000.5
     }
    },
    "colour_volume_sum_matches_body": true,
    "print_bbox_mm": [
-    46.0,
-    33.7,
-    49.7
+    39.0,
+    25.0,
+    40.7
    ],
    "thin_features": {
     "Mint": {
-     "lost_below_1_line_pct": 0.012,
-     "lost_below_2_lines_pct": 0.03,
+     "lost_below_1_line_pct": 0.054,
+     "lost_below_2_lines_pct": 0.17,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.353,
-       27.78
+       0.812,
+       37.98
       ],
       [
-       0.265,
-       29.22
+       0.681,
+       37.14
       ],
       [
-       0.265,
-       28.98
+       0.493,
+       37.26
       ]
      ]
     },
     "Cream": {
-     "lost_below_1_line_pct": 2.031,
-     "lost_below_2_lines_pct": 4.809,
+     "lost_below_1_line_pct": 2.599,
+     "lost_below_2_lines_pct": 6.153,
      "worst_layers_z(lost<1line mm2)": [
       [
        0.529,
-       31.62
+       22.86
       ],
       [
        0.529,
-       30.18
+       22.74
       ],
       [
        0.529,
-       30.54
+       24.42
       ]
      ]
     },
     "Orange": {
-     "lost_below_1_line_pct": 0.665,
-     "lost_below_2_lines_pct": 1.595,
+     "lost_below_1_line_pct": 0.25,
+     "lost_below_2_lines_pct": 1.004,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.176,
-       34.5
+       0.224,
+       27.18
       ],
       [
-       0.176,
-       34.02
+       0.114,
+       27.3
       ],
       [
-       0.176,
-       34.86
+       0.084,
+       27.06
       ]
      ]
     },
     "Charcoal": {
-     "lost_below_1_line_pct": 0.016,
-     "lost_below_2_lines_pct": 0.054,
+     "lost_below_1_line_pct": 0.066,
+     "lost_below_2_lines_pct": 0.206,
      "worst_layers_z(lost<1line mm2)": [
       [
-       3.285,
-       24.18
+       6.547,
+       35.46
       ],
       [
-       1.855,
-       45.78
+       5.378,
+       33.78
       ],
       [
-       1.506,
-       45.9
+       5.057,
+       34.74
       ]
      ]
     }
    },
    "overhangs": {
-    "area_over_50deg_mm2": 221.9,
-    "area_over_60deg_mm2": 214.5,
-    "area_over_75deg_mm2": 203.4,
+    "area_over_50deg_mm2": 327.6,
+    "area_over_60deg_mm2": 259.1,
+    "area_over_75deg_mm2": 216.9,
     "ceilings_gt75deg": [
      {
       "z": 2.1,
@@ -516,23 +468,31 @@
       ]
      },
      {
-      "z": 40.24,
-      "area_mm2": 6.4,
+      "z": 32.24,
+      "area_mm2": 6.9,
       "xy_size_mm": [
        1.7,
-       3.7
+       4.0
       ]
      },
      {
-      "z": 40.24,
-      "area_mm2": 6.4,
+      "z": 32.24,
+      "area_mm2": 6.9,
       "xy_size_mm": [
        1.7,
-       3.7
+       4.0
       ]
      },
      {
-      "z": 37.22,
+      "z": 27.3,
+      "area_mm2": 6.0,
+      "xy_size_mm": [
+       30.6,
+       0.3
+      ]
+     },
+     {
+      "z": 29.72,
       "area_mm2": 2.9,
       "xy_size_mm": [
        1.8,
@@ -540,7 +500,7 @@
       ]
      },
      {
-      "z": 37.22,
+      "z": 29.72,
       "area_mm2": 2.9,
       "xy_size_mm": [
        1.8,
@@ -548,34 +508,26 @@
       ]
      },
      {
-      "z": 26.1,
-      "area_mm2": 1.4,
+      "z": 18.71,
+      "area_mm2": 2.0,
       "xy_size_mm": [
-       3.5,
-       0.4
+       0.4,
+       9.7
       ]
      },
      {
-      "z": 30.14,
-      "area_mm2": 0.9,
+      "z": 18.71,
+      "area_mm2": 1.9,
       "xy_size_mm": [
-       2.2,
-       0.4
+       0.2,
+       9.6
       ]
      },
      {
-      "z": 26.02,
-      "area_mm2": 0.9,
+      "z": 21.1,
+      "area_mm2": 1.2,
       "xy_size_mm": [
-       2.1,
-       0.4
-      ]
-     },
-     {
-      "z": 26.02,
-      "area_mm2": 0.8,
-      "xy_size_mm": [
-       2.1,
+       3.0,
        0.4
       ]
      }
@@ -583,10 +535,10 @@
    },
    "layer_overhangs": [
     {
-     "z": 2.1,
+     "z": 2.22,
      "area_mm2": 98.18,
      "size_mm": [
-      32.3,
+      25.1,
       8.9
      ]
     },
@@ -594,72 +546,96 @@
      "z": 3.9,
      "area_mm2": 51.95,
      "size_mm": [
-      28.2,
+      21.0,
       5.8
      ]
     },
     {
-     "z": 24.18,
-     "area_mm2": 3.17,
+     "z": 10.5,
+     "area_mm2": 2.72,
      "size_mm": [
-      28.5,
-      31.8
+      27.9,
+      19.0
      ]
     },
     {
-     "z": 26.1,
-     "area_mm2": 1.75,
+     "z": 18.78,
+     "area_mm2": 6.07,
      "size_mm": [
-      28.5,
+      35.5,
+      9.9
+     ]
+    },
+    {
+     "z": 18.9,
+     "area_mm2": 0.43,
+     "size_mm": [
+      35.8,
+      11.2
+     ]
+    },
+    {
+     "z": 21.18,
+     "area_mm2": 1.57,
+     "size_mm": [
+      25.5,
       0.1
      ]
     },
     {
-     "z": 30.06,
-     "area_mm2": 0.37,
-     "size_mm": [
-      5.0,
-      0.1
-     ]
-    },
-    {
-     "z": 30.18,
+     "z": 24.54,
      "area_mm2": 0.32,
      "size_mm": [
-      8.4,
+      4.4,
       0.1
      ]
     },
     {
-     "z": 37.26,
-     "area_mm2": 1.07,
+     "z": 29.7,
+     "area_mm2": 0.56,
      "size_mm": [
-      41.8,
-      1.6
+      34.8,
+      1.9
      ]
     },
     {
-     "z": 37.38,
-     "area_mm2": 2.41,
+     "z": 29.82,
+     "area_mm2": 2.61,
      "size_mm": [
-      41.8,
-      0.8
+      34.8,
+      1.3
      ]
     },
     {
-     "z": 40.26,
-     "area_mm2": 0.32,
+     "z": 32.34,
+     "area_mm2": 1.24,
      "size_mm": [
-      45.3,
-      5.6
-     ]
-    },
-    {
-     "z": 40.38,
-     "area_mm2": 9.92,
-     "size_mm": [
-      45.4,
+      38.3,
       5.0
+     ]
+    },
+    {
+     "z": 32.46,
+     "area_mm2": 9.29,
+     "size_mm": [
+      38.4,
+      3.8
+     ]
+    },
+    {
+     "z": 32.82,
+     "area_mm2": 0.4,
+     "size_mm": [
+      5.5,
+      0.2
+     ]
+    },
+    {
+     "z": 32.94,
+     "area_mm2": 0.48,
+     "size_mm": [
+      7.6,
+      0.4
      ]
     }
    ]
@@ -671,8 +647,8 @@
     "is_volume": true,
     "shells": 1,
     "genus": 0,
-    "triangles": 9892,
-    "volume_mm3": 3148.55
+    "triangles": 23848,
+    "volume_mm3": 1786.48
    },
    "colours": {
     "Charcoal": {
@@ -681,8 +657,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 3076,
-     "volume_mm3": 639.58
+     "triangles": 1686,
+     "volume_mm3": 124.24
     },
     "Mint": {
      "watertight": true,
@@ -690,88 +666,88 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 1766,
-     "volume_mm3": 737.3
+     "triangles": 4968,
+     "volume_mm3": 521.92
     },
     "Cream": {
      "watertight": true,
      "winding_consistent": true,
      "is_volume": true,
      "shells": 2,
-     "genus": 0,
-     "triangles": 6450,
-     "volume_mm3": 1771.67
+     "genus": -1,
+     "triangles": 19626,
+     "volume_mm3": 1140.32
     }
    },
    "colour_volume_sum_matches_body": true,
    "print_bbox_mm": [
-    23.8,
-    44.6,
-    12.0
+    19.5,
+    38.5,
+    11.0
    ],
    "thin_features": {
     "Charcoal": {
-     "lost_below_1_line_pct": 0.118,
-     "lost_below_2_lines_pct": 0.39,
+     "lost_below_1_line_pct": 0.761,
+     "lost_below_2_lines_pct": 2.812,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.269,
-       6.06
+       0.301,
+       4.02
       ],
       [
-       0.185,
-       5.46
-      ],
-      [
-       0.185,
+       0.275,
        0.54
+      ],
+      [
+       0.246,
+       1.38
       ]
      ]
     },
     "Mint": {
-     "lost_below_1_line_pct": 0.158,
-     "lost_below_2_lines_pct": 0.491,
+     "lost_below_1_line_pct": 0.059,
+     "lost_below_2_lines_pct": 0.246,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.162,
+       0.116,
+       5.94
+      ],
+      [
+       0.07,
+       6.06
+      ],
+      [
+       0.059,
        0.06
-      ],
-      [
-       0.149,
-       0.18
-      ],
-      [
-       0.148,
-       5.58
       ]
      ]
     },
     "Cream": {
-     "lost_below_1_line_pct": 0.17,
-     "lost_below_2_lines_pct": 0.413,
+     "lost_below_1_line_pct": 0.177,
+     "lost_below_2_lines_pct": 0.564,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.664,
-       2.1
+       1.771,
+       6.66
       ],
       [
-       0.647,
-       2.22
+       1.057,
+       6.78
       ],
       [
-       0.63,
-       2.34
+       0.631,
+       6.9
       ]
      ]
     }
    },
    "overhangs": {
-    "area_over_50deg_mm2": 9.1,
-    "area_over_60deg_mm2": 6.1,
+    "area_over_50deg_mm2": 9.7,
+    "area_over_60deg_mm2": 6.3,
     "area_over_75deg_mm2": 2.5,
     "ceilings_gt75deg": [
      {
-      "z": 7.52,
+      "z": 7.42,
       "area_mm2": 2.5,
       "xy_size_mm": [
        1.5,
@@ -785,16 +761,24 @@
      "z": 0.18,
      "area_mm2": 0.42,
      "size_mm": [
-      1.4,
-      7.8
+      8.5,
+      6.8
+     ]
+    },
+    {
+     "z": 7.5,
+     "area_mm2": 0.73,
+     "size_mm": [
+      1.3,
+      1.5
      ]
     },
     {
      "z": 7.62,
-     "area_mm2": 1.08,
+     "area_mm2": 0.43,
      "size_mm": [
-      1.3,
-      1.4
+      1.4,
+      0.5
      ]
     }
    ]
@@ -806,8 +790,8 @@
     "is_volume": true,
     "shells": 1,
     "genus": 0,
-    "triangles": 7244,
-    "volume_mm3": 2237.68
+    "triangles": 19222,
+    "volume_mm3": 1755.83
    },
    "colours": {
     "Charcoal": {
@@ -816,8 +800,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 2812,
-     "volume_mm3": 468.83
+     "triangles": 1158,
+     "volume_mm3": 121.5
     },
     "Mint": {
      "watertight": true,
@@ -825,8 +809,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 1764,
-     "volume_mm3": 747.78
+     "triangles": 4880,
+     "volume_mm3": 528.07
     },
     "Cream": {
      "watertight": true,
@@ -834,79 +818,79 @@
      "is_volume": true,
      "shells": 2,
      "genus": -1,
-     "triangles": 3770,
-     "volume_mm3": 1021.08
+     "triangles": 15220,
+     "volume_mm3": 1106.26
     }
    },
    "colour_volume_sum_matches_body": true,
    "print_bbox_mm": [
-    17.3,
-    34.6,
-    12.0
+    13.0,
+    43.2,
+    11.0
    ],
    "thin_features": {
     "Charcoal": {
-     "lost_below_1_line_pct": 0.169,
-     "lost_below_2_lines_pct": 0.397,
+     "lost_below_1_line_pct": 0.331,
+     "lost_below_2_lines_pct": 0.864,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.365,
-       8.82
+       0.075,
+       2.82
       ],
       [
-       0.121,
-       8.7
+       0.075,
+       1.5
       ],
       [
-       0.111,
-       8.58
+       0.075,
+       3.3
       ]
      ]
     },
     "Mint": {
-     "lost_below_1_line_pct": 0.145,
-     "lost_below_2_lines_pct": 0.402,
+     "lost_below_1_line_pct": 0.064,
+     "lost_below_2_lines_pct": 0.251,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.188,
-       6.78
+       0.081,
+       6.18
       ],
       [
-       0.187,
-       6.66
+       0.068,
+       1.38
       ],
       [
-       0.186,
-       6.54
+       0.066,
+       0.06
       ]
      ]
     },
     "Cream": {
-     "lost_below_1_line_pct": 0.119,
-     "lost_below_2_lines_pct": 0.375,
+     "lost_below_1_line_pct": 0.183,
+     "lost_below_2_lines_pct": 0.572,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.263,
+       1.57,
        6.66
       ],
       [
-       0.25,
+       0.976,
        6.78
       ],
       [
-       0.21,
-       6.9
+       0.61,
+       6.54
       ]
      ]
     }
    },
    "overhangs": {
-    "area_over_50deg_mm2": 7.9,
+    "area_over_50deg_mm2": 8.2,
     "area_over_60deg_mm2": 5.5,
     "area_over_75deg_mm2": 2.5,
     "ceilings_gt75deg": [
      {
-      "z": 7.52,
+      "z": 7.42,
       "area_mm2": 2.5,
       "xy_size_mm": [
        1.5,
@@ -917,11 +901,19 @@
    },
    "layer_overhangs": [
     {
-     "z": 7.62,
-     "area_mm2": 1.08,
+     "z": 7.5,
+     "area_mm2": 0.73,
      "size_mm": [
       1.3,
-      1.4
+      1.5
+     ]
+    },
+    {
+     "z": 7.62,
+     "area_mm2": 0.43,
+     "size_mm": [
+      1.4,
+      0.5
      ]
     }
    ]
@@ -933,8 +925,8 @@
     "is_volume": true,
     "shells": 1,
     "genus": 0,
-    "triangles": 5710,
-    "volume_mm3": 8627.2
+    "triangles": 22564,
+    "volume_mm3": 6222.54
    },
    "colours": {
     "Mint": {
@@ -943,8 +935,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 380,
-     "volume_mm3": 1026.37
+     "triangles": 3342,
+     "volume_mm3": 550.17
     },
     "Cream": {
      "watertight": true,
@@ -952,8 +944,8 @@
      "is_volume": true,
      "shells": 3,
      "genus": -2,
-     "triangles": 6190,
-     "volume_mm3": 4871.98
+     "triangles": 14496,
+     "volume_mm3": 4153.07
     },
     "Charcoal": {
      "watertight": true,
@@ -961,68 +953,68 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 1414,
-     "volume_mm3": 2728.85
+     "triangles": 7990,
+     "volume_mm3": 1519.3
     }
    },
    "colour_volume_sum_matches_body": true,
    "print_bbox_mm": [
-    20.4,
-    31.0,
-    27.0
+    15.2,
+    26.8,
+    46.0
    ],
    "thin_features": {
     "Mint": {
      "lost_below_1_line_pct": 0.0,
-     "lost_below_2_lines_pct": 0.0,
+     "lost_below_2_lines_pct": 0.002,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.0,
+       0.005,
+       3.78
+      ],
+      [
+       0.003,
        3.9
       ],
       [
-       0.0,
-       5.1
-      ],
-      [
-       0.0,
-       5.22
+       0.003,
+       3.66
       ]
      ]
     },
     "Cream": {
-     "lost_below_1_line_pct": 0.012,
-     "lost_below_2_lines_pct": 0.04,
+     "lost_below_1_line_pct": 0.004,
+     "lost_below_2_lines_pct": 0.013,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.894,
-       13.02
+       0.164,
+       8.46
       ],
       [
-       0.366,
-       12.9
+       0.063,
+       8.34
       ],
       [
-       0.249,
-       12.78
+       0.05,
+       8.22
       ]
      ]
     },
     "Charcoal": {
-     "lost_below_1_line_pct": 0.104,
-     "lost_below_2_lines_pct": 0.384,
+     "lost_below_1_line_pct": 0.015,
+     "lost_below_2_lines_pct": 0.041,
      "worst_layers_z(lost<1line mm2)": [
       [
-       2.146,
-       15.42
+       0.059,
+       5.1
       ],
       [
-       1.79,
-       14.7
+       0.059,
+       4.86
       ],
       [
-       1.657,
-       14.58
+       0.058,
+       5.46
       ]
      ]
     }
@@ -1042,8 +1034,8 @@
     "is_volume": true,
     "shells": 1,
     "genus": 0,
-    "triangles": 5710,
-    "volume_mm3": 8627.2
+    "triangles": 22504,
+    "volume_mm3": 6222.56
    },
    "colours": {
     "Mint": {
@@ -1052,8 +1044,8 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 380,
-     "volume_mm3": 1026.37
+     "triangles": 3338,
+     "volume_mm3": 550.17
     },
     "Cream": {
      "watertight": true,
@@ -1061,8 +1053,8 @@
      "is_volume": true,
      "shells": 3,
      "genus": -2,
-     "triangles": 6190,
-     "volume_mm3": 4871.98
+     "triangles": 14464,
+     "volume_mm3": 4153.1
     },
     "Charcoal": {
      "watertight": true,
@@ -1070,68 +1062,68 @@
      "is_volume": true,
      "shells": 1,
      "genus": 0,
-     "triangles": 1414,
-     "volume_mm3": 2728.85
+     "triangles": 7922,
+     "volume_mm3": 1519.29
     }
    },
    "colour_volume_sum_matches_body": true,
    "print_bbox_mm": [
-    20.4,
-    31.0,
-    27.0
+    15.2,
+    26.8,
+    46.0
    ],
    "thin_features": {
     "Mint": {
      "lost_below_1_line_pct": 0.0,
-     "lost_below_2_lines_pct": 0.0,
+     "lost_below_2_lines_pct": 0.002,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.0,
+       0.005,
+       3.78
+      ],
+      [
+       0.003,
        3.9
       ],
       [
-       0.0,
-       5.1
-      ],
-      [
-       0.0,
-       5.22
+       0.003,
+       3.66
       ]
      ]
     },
     "Cream": {
-     "lost_below_1_line_pct": 0.012,
-     "lost_below_2_lines_pct": 0.04,
+     "lost_below_1_line_pct": 0.004,
+     "lost_below_2_lines_pct": 0.013,
      "worst_layers_z(lost<1line mm2)": [
       [
-       0.894,
-       13.02
+       0.164,
+       8.46
       ],
       [
-       0.366,
-       12.9
+       0.063,
+       8.34
       ],
       [
-       0.249,
-       12.78
+       0.05,
+       8.22
       ]
      ]
     },
     "Charcoal": {
-     "lost_below_1_line_pct": 0.104,
-     "lost_below_2_lines_pct": 0.384,
+     "lost_below_1_line_pct": 0.015,
+     "lost_below_2_lines_pct": 0.041,
      "worst_layers_z(lost<1line mm2)": [
       [
-       2.146,
-       15.42
+       0.059,
+       5.1
       ],
       [
-       1.79,
-       14.7
+       0.059,
+       4.86
       ],
       [
-       1.657,
-       14.58
+       0.058,
+       5.46
       ]
      ]
     }
@@ -1153,7 +1145,7 @@
    "origin_mm": [
     0.0,
     0.0,
-    107.5
+    113.5
    ],
    "axis": [
     0.0,
@@ -1173,14 +1165,14 @@
    "pocket_depth": 1.8,
    "magnet_protrusion": 0.2,
    "male_magnet_overlap_with_male_part_mm3": -0.0,
-   "female_magnet_overlap_with_female_part_mm3": -0.0,
+   "female_magnet_overlap_with_female_part_mm3": 0.0,
    "male_magnet_overlap_with_female_part_mm3": 0.0,
    "female_magnet_overlap_with_male_part_mm3": 0.0,
    "magnets_touch_gap_mm": 0.0,
    "magnets_overlap_mm3": 0.0,
    "parts_gap_mm": 0.185,
    "key_vs_socket_overlap_correct_mm3": 0.0,
-   "key_vs_socket_overlap_turned_180_mm3": 14.49,
+   "key_vs_socket_overlap_turned_180_mm3": 13.43,
    "male_pocket_measured": {
     "diameter_at_mid_depth_mm": 6.251,
     "depth_mm": 1.81
@@ -1199,7 +1191,7 @@
    "origin_mm": [
     0.0,
     0.0,
-    75.2
+    85.2
    ],
    "axis": [
     0.0,
@@ -1207,9 +1199,9 @@
     1.0
    ],
    "key_mm": [
-    16,
-    12,
-    4.0
+    10,
+    8.8,
+    2.5
    ],
    "key_height": 2.0,
    "socket_depth": 2.1,
@@ -1218,15 +1210,15 @@
    "pocket_d": 6.25,
    "pocket_depth": 1.8,
    "magnet_protrusion": 0.2,
-   "male_magnet_overlap_with_male_part_mm3": 0.0,
-   "female_magnet_overlap_with_female_part_mm3": 0.0,
+   "male_magnet_overlap_with_male_part_mm3": -0.0,
+   "female_magnet_overlap_with_female_part_mm3": -0.0,
    "male_magnet_overlap_with_female_part_mm3": 0.0,
    "female_magnet_overlap_with_male_part_mm3": 0.0,
    "magnets_touch_gap_mm": 0.0,
    "magnets_overlap_mm3": 0.0,
    "parts_gap_mm": 0.185,
    "key_vs_socket_overlap_correct_mm3": 0.0,
-   "key_vs_socket_overlap_turned_180_mm3": 20.57,
+   "key_vs_socket_overlap_turned_180_mm3": 3.38,
    "male_pocket_measured": {
     "diameter_at_mid_depth_mm": 6.251,
     "depth_mm": 1.81
@@ -1243,9 +1235,9 @@
    "male": "arm_R",
    "female": "torso",
    "origin_mm": [
-    -21.1,
-    -1.5,
-    59.5
+    -17.6,
+    -2.1,
+    71.0
    ],
    "axis": [
     1.0,
@@ -1253,8 +1245,8 @@
     0.0
    ],
    "key_mm": [
-    11,
-    9,
+    10,
+    8.8,
     2.5
    ],
    "key_height": 2.0,
@@ -1264,7 +1256,7 @@
    "pocket_d": 6.25,
    "pocket_depth": 1.8,
    "magnet_protrusion": 0.2,
-   "male_magnet_overlap_with_male_part_mm3": 0.0,
+   "male_magnet_overlap_with_male_part_mm3": -0.0,
    "female_magnet_overlap_with_female_part_mm3": 0.0,
    "male_magnet_overlap_with_female_part_mm3": 0.0,
    "female_magnet_overlap_with_male_part_mm3": 0.0,
@@ -1272,7 +1264,7 @@
    "magnets_overlap_mm3": 0.0,
    "parts_gap_mm": 0.199,
    "key_vs_socket_overlap_correct_mm3": 0.0,
-   "key_vs_socket_overlap_turned_180_mm3": 3.6,
+   "key_vs_socket_overlap_turned_180_mm3": 1.62,
    "male_pocket_measured": {
     "diameter_at_mid_depth_mm": 6.251,
     "depth_mm": 1.81
@@ -1289,9 +1281,9 @@
    "male": "arm_L",
    "female": "torso",
    "origin_mm": [
-    21.1,
-    -1.5,
-    59.5
+    17.6,
+    -2.1,
+    71.0
    ],
    "axis": [
     -1.0,
@@ -1299,8 +1291,8 @@
     0.0
    ],
    "key_mm": [
-    11,
-    9,
+    10,
+    8.8,
     2.5
    ],
    "key_height": 2.0,
@@ -1310,7 +1302,7 @@
    "pocket_d": 6.25,
    "pocket_depth": 1.8,
    "magnet_protrusion": 0.2,
-   "male_magnet_overlap_with_male_part_mm3": 0.0,
+   "male_magnet_overlap_with_male_part_mm3": -0.0,
    "female_magnet_overlap_with_female_part_mm3": 0.0,
    "male_magnet_overlap_with_female_part_mm3": 0.0,
    "female_magnet_overlap_with_male_part_mm3": 0.0,
@@ -1318,7 +1310,7 @@
    "magnets_overlap_mm3": 0.0,
    "parts_gap_mm": 0.199,
    "key_vs_socket_overlap_correct_mm3": 0.0,
-   "key_vs_socket_overlap_turned_180_mm3": 3.6,
+   "key_vs_socket_overlap_turned_180_mm3": 1.62,
    "male_pocket_measured": {
     "diameter_at_mid_depth_mm": 6.251,
     "depth_mm": 1.81
@@ -1335,9 +1327,9 @@
    "male": "leg_R",
    "female": "torso",
    "origin_mm": [
-    -11.2,
+    -7.6,
     0.0,
-    27.2
+    46.2
    ],
    "axis": [
     0.0,
@@ -1381,9 +1373,9 @@
    "male": "leg_L",
    "female": "torso",
    "origin_mm": [
-    11.2,
+    7.6,
     0.0,
-    27.2
+    46.2
    ],
    "axis": [
     0.0,
@@ -1470,7 +1462,7 @@
    "a": "head",
    "b": "arm_R",
    "overlap_mm3": 0.0,
-   "min_gap_mm": 2.9
+   "min_gap_mm": 3.0
   },
   {
    "a": "head",
@@ -1548,7 +1540,7 @@
    "a": "leg_R",
    "b": "leg_L",
    "overlap_mm3": 0.0,
-   "min_gap_mm": 3.0
+   "min_gap_mm": 2.0
   }
  ],
  "assembled_height_mm": 120.0,
@@ -1558,16 +1550,16 @@
  },
  "text": {
   "string": "UNIT3D",
-  "cap_height_mm": 5.6,
-  "width_mm": 33.57,
+  "cap_height_mm": 4.8,
+  "width_mm": 28.77,
   "raised_mm": 0.4,
   "inlay_mm": 0.9,
-  "min_stroke_mm": 1.3,
-  "lines_at_0p42": 3.1
+  "min_stroke_mm": 1.1,
+  "lines_at_0p42": 2.6
  },
  "cap_logo": {
-  "hex_circumradius_mm": 4.2,
-  "line_mm": 1.25,
+  "hex_circumradius_mm": 3.9,
+  "line_mm": 1.2,
   "raised_mm": 0.6
  }
 }

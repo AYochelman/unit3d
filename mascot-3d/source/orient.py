@@ -1,6 +1,6 @@
 """Print orientation + plate layout (P2S bed 256 x 256 mm)."""
 import numpy as np
-from mascot import TORSO_Z0, CAP_Z0
+from mascot import TORSO_Z0, CAP_RIM_Z
 
 # rotation (x, y, z) -> (x, z, -y): figure's back (+Y) goes down onto the plate
 R_BACK_DOWN = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], float)
@@ -13,8 +13,8 @@ ORIENT = {
     "leg_L": (I3, "עומדת (סוליה על המשטח)", "Upright: sole on plate, key + pocket on top."),
     "arm_R": (R_BACK_DOWN, "שוכבת על הגב השטוח", "Flat back on plate: fingers print along their length, key lies flat on the plate."),
     "arm_L": (R_BACK_DOWN, "שוכבת על הגב השטוח", "Flat back on plate."),
-    "head": (R_BACK_DOWN, "פנים כלפי מעלה (גב הראש על המשטח)", "Face-up: visor + eyes are top surfaces; ears have 45 deg skirts toward the plate; back edge chamfered 45 deg."),
-    "cap": (I3, "כתר למעלה (בסיס + מצחייה על המשטח)", "Crown up: brim flat on plate, socket bridges (<=11.4 mm)."),
+    "head": (I3, "עומד (תחתית הראש על המשטח)", "Upright: flat bottom with 45 deg jaw bevel, neck socket bridges, ear discs have 45 deg rims, cap key on top."),
+    "cap": (I3, "כתר למעלה (שפת הכובע + מצחייה על המשטח)", "Crown up: brim and skirt rim flat on the plate; the inside follows the head at 45 deg and the top bridges."),
 }
 
 # plates: (name_en, name_he, [(part, x, y)]) ; x,y = where the part's footprint centre goes

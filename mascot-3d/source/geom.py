@@ -218,3 +218,47 @@ def text_cs(text, font_path, cap_height, spacing=0.0, tol=0.04):
 def cs_bounds(cs):
     b = cs.bounds()
     return np.array(b[:2]), np.array(b[2:])
+
+
+def fix_needles(V, F, eps=1e-12, max_iter=20):
+    """Remove zero-area 'needle' triangles by flipping their long edge with the neighbouring face.
+    Keeps the mesh closed and consistently oriented (used before writing STEP/STL/3MF)."""
+    V = np.asarray(V, float)
+    F = np.array(F, dtype=np.int64)
+    for _ in range(max_iter):
+        n = np.cross(V[F[:, 1]] - V[F[:, 0]], V[F[:, 2]] - V[F[:, 0]])
+        bad = np.where(np.linalg.norm(n, axis=1) < eps)[0]
+        if len(bad) == 0:
+            break
+        edge_face = {}
+        for fi, (a, b, c) in enumerate(F):
+            edge_face[(a, b)] = fi; edge_face[(b, c)] = fi; edge_face[(c, a)] = fi
+        done = set()
+        for fi in bad:
+            if fi in done:
+                continue
+            f = F[fi]
+            L = [np.linalg.norm(V[f[(i + 1) % 3]] - V[f[i]]) for i in range(3)]
+            i = int(np.argmax(L))
+            pi, pj, pk = f[i], f[(i + 1) % 3], f[(i + 2) % 3]
+            gi = edge_face.get((pj, pi))
+            if gi is None or gi in done:
+                continue
+            g = list(F[gi])
+            x = [v for v in g if v != pi and v != pj][0]
+            F[fi] = (pk, pi, x)
+            F[gi] = (pk, x, pj)
+            done.update((fi, gi))
+    return F
+
+
+def clean_mesh(m, digits=6, eps=1e-12):
+    """Manifold -> (V, F) without zero-length edges or needle triangles, still closed."""
+    import trimesh
+    t = to_trimesh(m)
+    t.merge_vertices(digits_vertex=digits)
+    F = t.faces[(t.faces[:, 0] != t.faces[:, 1]) & (t.faces[:, 1] != t.faces[:, 2]) & (t.faces[:, 2] != t.faces[:, 0])]
+    F = fix_needles(t.vertices, F, eps=eps)
+    t2 = trimesh.Trimesh(t.vertices, F, process=False)
+    t2.remove_unreferenced_vertices()
+    return np.asarray(t2.vertices), np.asarray(t2.faces)
