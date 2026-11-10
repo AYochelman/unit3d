@@ -135,7 +135,7 @@ export default function RestockModal({ open, onClose, itemId, itemName, material
             </Field>
 
             <div>
-              <div className="text-[11px] font-mono tracking-widest text-ink-500 uppercase mb-2">
+              <div className="text-xs font-semibold text-ink-500 mb-2">
                 צבע שמעניין אותך (לא חובה)
               </div>
               <div className="flex flex-wrap gap-1.5">

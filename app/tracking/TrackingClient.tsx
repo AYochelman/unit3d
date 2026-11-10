@@ -22,9 +22,6 @@ export default function TrackingClient() {
   return (
     <div className="max-w-3xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-10 text-center">
-        <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-          ORDER TRACKING
-        </div>
         <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
           איפה ההזמנה שלי?
         </ProximityH1>
@@ -86,7 +83,7 @@ export default function TrackingClient() {
                       isFuture && "border-ink-700 bg-ink-900 text-ink-500",
                     )}
                   >
-                    {isDone ? "✓" : isFuture ? i + 1 : ""}
+                    {isDone ? <Icon name="check" size={11} strokeWidth={3} /> : isFuture ? i + 1 : ""}
                     {isActive && (
                       <span className="absolute inset-0 rounded-full bg-flame opacity-40 animate-ping" />
                     )}

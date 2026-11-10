@@ -81,8 +81,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
-              SHOP
+            <h4 className="text-xs font-semibold text-ink-400 mb-4">
+              החנות
             </h4>
             <ul className="space-y-0 sm:space-y-2.5 text-sm">
               {SHOP.map((it) => (
@@ -99,8 +99,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
-              SUPPORT
+            <h4 className="text-xs font-semibold text-ink-400 mb-4">
+              שירות
             </h4>
             <ul className="space-y-0 sm:space-y-2.5 text-sm">
               {SUPPORT.map((it) => (
@@ -117,13 +117,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
-              FAQ · QUICK
+            <h4 className="text-xs font-semibold text-ink-400 mb-4">
+              שאלות נפוצות
             </h4>
             <ul className="space-y-2.5 text-sm">
               {QUICK.map((q) => (
                 <li key={q.label} className="text-ink-200">
-                  <div className="text-[11px] text-ink-400 font-mono uppercase tracking-wider">
+                  <div className="text-xs text-ink-400">
                     {q.label}
                   </div>
                   <div>{q.value}</div>
@@ -161,8 +161,8 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 border-t border-ink-800 flex flex-col md:flex-row items-center justify-between gap-3">
           {/* The owner's signature: the shop and this site are his work. */}
           <OwnerSignature />
-          <div className="font-mono text-[11px] tracking-wider text-ink-400" dir="ltr">
-            © 2026 Unit3D · MADE IN GIVATAYIM · NOZZLE 0.4mm · v2.6
+          <div className="text-xs text-ink-400">
+            © 2026 Unit3D · מודפס בגבעתיים
           </div>
           <PrinterDot />
         </div>

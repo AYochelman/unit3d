@@ -19,9 +19,6 @@ export default function FAQPage() {
           result can never drift apart. */}
       <JsonLd data={faqJsonLd(FAQS)} />
       <header className="mb-10">
-        <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-          FAQ · 8 ANSWERS
-        </div>
         <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           שאלות. תשובות.
         </ProximityH1>

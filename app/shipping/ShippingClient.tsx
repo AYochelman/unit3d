@@ -78,7 +78,7 @@ export default function ShippingClient() {
         {/* ── Inputs ────────────────────────────────────────────────────── */}
         <div className="space-y-5 p-5 rounded-2xl bg-ink-900 border border-ink-800 h-fit">
           <div>
-            <div className="text-[11px] font-mono tracking-widest text-ink-500 uppercase mb-2">מוצר לדוגמה</div>
+            <div className="text-xs font-semibold text-ink-500 mb-2">מוצר לדוגמה</div>
             <div className="flex flex-wrap gap-1.5">
               {PRESETS.map((id) => {
                 const p = PRODUCTS.find((x) => x.id === id);
@@ -100,7 +100,7 @@ export default function ShippingClient() {
           <Num label="משקל המוצר (גרם)" value={grams} onChange={setGrams} step={5} />
 
           <div>
-            <div className="text-[11px] font-mono tracking-widest text-ink-500 uppercase mb-2">מידות (מ&quot;מ)</div>
+            <div className="text-xs font-semibold text-ink-500 mb-2">מידות (מ&quot;מ)</div>
             <div className="grid grid-cols-3 gap-2">
               <Num label="אורך" value={l} onChange={setL} step={5} compact />
               <Num label="רוחב" value={w} onChange={setW} step={5} compact />
@@ -119,7 +119,7 @@ export default function ShippingClient() {
           />
 
           <div>
-            <div className="text-[11px] font-mono tracking-widest text-ink-500 uppercase mb-2">
+            <div className="text-xs font-semibold text-ink-500 mb-2">
               כמה חבילות אתה שולח בחודש
             </div>
             <select

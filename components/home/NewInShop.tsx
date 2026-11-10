@@ -18,9 +18,6 @@ export default function NewInShop() {
   return (
     <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-          NEW IN THE SHOP
-        </div>
         <ProximityH2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-heading">
           מה נכנס לחנות <span className="text-flame">עכשיו</span>.
         </ProximityH2>

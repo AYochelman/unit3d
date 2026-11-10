@@ -2,7 +2,6 @@
 import { ProximityH1 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import { useFilaments } from "@/lib/palette";
@@ -71,9 +70,6 @@ export default function UploadClient() {
   return (
     <div className="max-w-5xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
-        <Pill tone="cyan" className="mb-3">
-          UPLOAD · STL · OBJ · 3MF
-        </Pill>
         <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
           יש קובץ. תעלה.
         </ProximityH1>
@@ -190,8 +186,8 @@ export default function UploadClient() {
         <div className="mt-8 grid lg:grid-cols-2 gap-6">
           {/* Preview cube */}
           <div className="rounded-2xl border border-ink-800 bg-ink-900 p-6">
-            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-              PREVIEW · TINTED
+            <div className="text-xs font-semibold text-ink-500 mb-3">
+              תצוגה מקדימה
             </div>
             <div
               className="aspect-square rounded-xl overflow-hidden stripes flex items-center justify-center"

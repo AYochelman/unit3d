@@ -158,11 +158,11 @@ export default function GalleryClient() {
                   </div>
                   <div className="space-y-4 text-sm leading-relaxed text-ink-300">
                     <div>
-                      <div className="font-mono text-[10px] text-flame uppercase tracking-widest mb-1">החומר</div>
+                      <div className="text-xs font-semibold text-flame mb-1">החומר</div>
                       <p>נבחר לפי שילוב של עמידות, גימור ועלות. רוב ההזמנות יוצאות ב-PLA או PLA+.</p>
                     </div>
                     <div>
-                      <div className="font-mono text-[10px] text-flame uppercase tracking-widest mb-1">הצילום</div>
+                      <div className="text-xs font-semibold text-flame mb-1">הצילום</div>
                       <p>התמונה היא ההדפסה עצמה, כפי שיצאה מהמדפסת הזאת. בלי רינדור ובלי תמונת יצרן.</p>
                     </div>
                   </div>

@@ -1,7 +1,6 @@
 "use client";
 import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useState } from "react";
-import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon, { type IconName } from "@/components/ui/Icon";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
@@ -92,9 +91,6 @@ export default function B2BClient() {
           }}
         />
         <div className="max-w-7xl mx-auto px-6 md:px-10 text-center">
-          <Pill tone="flame" className="mb-5">
-            UNIT3D · BUSINESS
-          </Pill>
           <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-4">
             הדפסות בכמויות.
             <br />
@@ -116,9 +112,6 @@ export default function B2BClient() {
       <section className="py-16 border-t border-ink-800">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="mb-8">
-            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-              WHAT COMPANIES ORDER
-            </div>
             <ProximityH2 className="text-3xl md:text-4xl font-black tracking-tightest mb-2">
               מוצרים שאפשר למתג.
             </ProximityH2>
@@ -153,9 +146,6 @@ export default function B2BClient() {
       {/* Use cases */}
       <section className="py-16 md:py-20 bg-ink-900/40 border-y border-ink-800/60">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-            USE CASES
-          </div>
           <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest leading-heading mb-10">
             למה חברות מזמינות אצלנו.
           </ProximityH2>
@@ -183,9 +173,6 @@ export default function B2BClient() {
       <section className="py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="text-center mb-10">
-            <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-              VOLUME PRICING
-            </div>
             <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
               ככל שיותר, יותר זול.
             </ProximityH2>
@@ -202,8 +189,8 @@ export default function B2BClient() {
                 )}
               >
                 {t.featured && (
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-flame mb-3">
-                    MOST POPULAR
+                  <div className="text-xs font-semibold text-flame mb-3">
+                    הכי פופולרי
                   </div>
                 )}
                 <div className="font-mono text-sm text-ink-400 mb-1" dir="ltr">
@@ -261,9 +248,6 @@ export default function B2BClient() {
       <section id="b2b-form" className="py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6 md:px-10">
           <div className="text-center mb-8">
-            <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-              REQUEST A QUOTE
-            </div>
             <ProximityH2 className="text-3xl md:text-4xl font-extrabold tracking-tightest">
               קבל הצעת מחיר תוך 24 שעות.
             </ProximityH2>
