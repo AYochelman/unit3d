@@ -65,6 +65,8 @@ const STEP_LABEL: Record<StepId, string> = {
 // product, and a second filament for it.
 const DESIGN_SURCHARGE = PERSONALIZE_PRICE;
 const DESIGN_EXTRA_COLOR = EXTRA_COLOR_PRICE;
+/** The 3D name keychain's second colour: one swap between base and letters, so less (owner, 10.11). */
+const KEYCHAIN_3D_EXTRA_COLOR = 5;
 const TPU_COLORS = new Set(["black", "white", "red", "blue", "orange", "green"]);
 
 /** "50×35mm" / "Ø90mm" / "Ø90mm ×4" → [w, h] in mm. */
@@ -215,7 +217,7 @@ export default function ConfiguratorClient({
     matSurcharge +
     (product.hasShape && shape === "emblem" ? 10 : 0) +
     (hasDesign ? DESIGN_SURCHARGE + Math.max(0, designColors - 1) * DESIGN_EXTRA_COLOR : 0) +
-    (twoColour3d ? DESIGN_EXTRA_COLOR : 0);
+    (twoColour3d ? KEYCHAIN_3D_EXTRA_COLOR : 0);
   const discount = bulkDiscount(config.qty);
   const totalPrice = lineTotal(unitPrice, config.qty);
 
@@ -669,7 +671,7 @@ export default function ConfiguratorClient({
                       <h3 className="text-xl font-extrabold mb-1">צבע הבסיס</h3>
                       <p className="text-sm text-ink-400 mb-3">
                         שני צבעים מודפסים יחד ב-AMS
-                        {twoColour3d ? <span className="font-mono text-flame"> (+{fmtILS(DESIGN_EXTRA_COLOR)})</span> : " — אותו צבע בשניהם, בלי תוספת"}.
+                        {twoColour3d ? <span className="font-mono text-flame"> (+{fmtILS(KEYCHAIN_3D_EXTRA_COLOR)})</span> : " — אותו צבע בשניהם, בלי תוספת"}.
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {colorChoices.map((f) => (
