@@ -73,7 +73,7 @@ export default function RestockModal({ open, onClose, itemId, itemName, material
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/80 backdrop-blur-sm"
+      className="m-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/80 backdrop-blur-sm"
       onClick={onClose}
       role="presentation"
     >
@@ -83,7 +83,7 @@ export default function RestockModal({ open, onClose, itemId, itemName, material
         aria-label="עדכון חזרה למלאי"
         dir="rtl"
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-2xl bg-ink-900 border border-ink-700 shadow-2xl overflow-hidden"
+        className="m-pop w-full max-w-md rounded-2xl bg-ink-900 border border-ink-700 shadow-2xl overflow-hidden"
       >
         <header className="flex items-center gap-3 p-4 border-b border-ink-800">
           <span className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400 shrink-0">
