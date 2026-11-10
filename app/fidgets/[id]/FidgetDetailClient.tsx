@@ -197,7 +197,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
       {/* Toast */}
       {added && (
         <div className="fixed top-20 inset-x-0 flex justify-center z-50 pointer-events-none">
-          <div className="inline-flex items-center gap-2 bg-good text-ink-950 px-5 py-2.5 rounded-full shadow-xl font-semibold text-sm">
+          <div style={{ transformOrigin: "top center" }} className="m-pop inline-flex items-center gap-2 bg-good text-ink-950 px-5 py-2.5 rounded-full shadow-xl font-semibold text-sm">
             <Icon name="check" size={16} strokeWidth={3} />
             נוסף לסל · {cartCount} {cartCount === 1 ? "פריט" : "פריטים"}
             <Link href="/contact" className="pointer-events-auto underline opacity-80 hover:opacity-100 mr-1">

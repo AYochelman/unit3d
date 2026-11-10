@@ -7,6 +7,7 @@ import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import CartUpsell, { pickUpsell, type UpsellPick } from "@/components/CartUpsell";
 import { useLivePricer } from "@/lib/live-price";
+import { useExit } from "@/lib/use-exit";
 import { modelSourceFromMeta } from "@/lib/model-source";
 import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -78,6 +79,7 @@ export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [review, setReview] = useState(false);
   const [reviewOk, setReviewOk] = useState(false);
+  const reviewExit = useExit();
   const [upsell, setUpsell] = useState<UpsellPick[] | null>(null);
   const priceOf = useLivePricer();
   const [upsellSeen, setUpsellSeen] = useState(false);
@@ -381,13 +383,14 @@ export default function ContactClient() {
 
       {review && (
         <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-6"
+          data-closing={reviewExit.closing || undefined}
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="review-title"
-          onClick={(e) => { if (e.target === e.currentTarget) setReview(false); }}
         >
-          <div className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-ink-900 border border-ink-700 p-5 sm:p-6 space-y-5">
+          <div className="m-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => reviewExit.close(() => setReview(false))} />
+          <div className="m-sheet m-sm-pop relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-ink-900 border border-ink-700 p-5 sm:p-6 space-y-5">
             <div>
               <h2 id="review-title" className="text-xl font-extrabold">סיכום הזמנה</h2>
               <p className="text-sm text-ink-300 mt-1">
@@ -458,7 +461,7 @@ export default function ContactClient() {
             </label>
 
             <div className="flex flex-col-reverse sm:flex-row gap-2">
-              <Btn type="button" variant="ghost" icon="arrowRight" onClick={() => setReview(false)}>חזרה לתיקון</Btn>
+              <Btn type="button" variant="ghost" icon="arrowRight" onClick={() => reviewExit.close(() => setReview(false))}>חזרה לתיקון</Btn>
               <button
                 type="button"
                 disabled={!reviewOk}

@@ -9,6 +9,7 @@ import Btn from "./ui/Btn";
 import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
+import { useExit } from "@/lib/use-exit";
 import { CONTACT } from "@/lib/contact";
 
 const NAV = [
@@ -43,6 +44,7 @@ export default function Header() {
   // Remembered so "back" on a product page can name the shelf it came from.
   useEffect(() => { if (pathname) notePath(pathname); }, [pathname]);
   const [open, setOpen] = useState(false);
+  const { closing: menuClosing, close: menuClose } = useExit();
   const [scrolled, setScrolled] = useState(false);
   const cartCount = useOrderStore((s) => s.items.length);
 
@@ -82,7 +84,7 @@ export default function Header() {
     body.style.top = `-${y}px`;
     body.style.width = "100%";
 
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") menuClose(() => setOpen(false)); };
     window.addEventListener("keydown", onKey);
 
     return () => {
@@ -92,7 +94,7 @@ export default function Header() {
       window.scrollTo(0, y);
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, menuClose]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname?.startsWith(href);
@@ -205,14 +207,14 @@ export default function Header() {
       </header>
 
       {open && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" data-closing={menuClosing || undefined}>
           <button
             type="button"
             aria-label="סגור תפריט"
-            onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={() => menuClose(() => setOpen(false))}
+            className="m-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm"
           />
-          <div className="absolute bottom-0 inset-x-0 bg-ink-950 border-t border-ink-800 rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto pb-[max(2rem,calc(1.5rem+env(safe-area-inset-bottom)))]">
+          <div className="m-sheet absolute bottom-0 inset-x-0 bg-ink-950 border-t border-ink-800 rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto pb-[max(2rem,calc(1.5rem+env(safe-area-inset-bottom)))]">
             <div className="mx-auto mb-4 w-10 h-1 rounded-full bg-ink-700" />
 
             {/* The two things someone opens this menu to do, at the top where

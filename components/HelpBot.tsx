@@ -7,6 +7,7 @@ import { helpBotNow, loadHelpBot, warmHelpBot } from "@/lib/helpbot-lazy";
 import MorphOrb, { type MorphOrbApi, type MorphOrbPhase } from "@/components/ui/ai-thiking-orb-and-input";
 import type { BotAnswer, BotLink } from "@/lib/helpbot";
 import { askAI, type AiTurn } from "@/lib/helpbot-ai";
+import { useExit } from "@/lib/use-exit";
 
 /**
  * The site's help bot, asked through the thinking orb.
@@ -22,6 +23,8 @@ import { askAI, type AiTurn } from "@/lib/helpbot-ai";
  */
 export default function HelpBot() {
   const [open, setOpen] = useState(false);
+  const { closing: exitClosing, close: exitClose } = useExit(160);
+  const exit = { closing: exitClosing, close: exitClose };
   const [seenPrompt, setSeenPrompt] = useState(false);
   const [phase, setPhase] = useState<MorphOrbPhase>("idle");
   const [links, setLinks] = useState<BotLink[]>([]);
@@ -33,11 +36,11 @@ export default function HelpBot() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && phase === "idle") setOpen(false);
+      if (e.key === "Escape" && phase === "idle") exitClose(() => setOpen(false));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, phase]);
+  }, [open, phase, exitClose]);
 
   // Fetch the engine in the background as soon as the page is quiet, so the
   // first question is answered without a wait.
@@ -94,7 +97,8 @@ export default function HelpBot() {
       <button
         type="button"
         onClick={() => {
-          setOpen((o) => !o);
+          if (open) exit.close(() => setOpen(false));
+          else setOpen(true);
           setSeenPrompt(true);
         }}
         aria-label={open ? "סגור את העוזר" : "פתח את העוזר"}
@@ -117,7 +121,11 @@ export default function HelpBot() {
           aria-modal="false"
           aria-labelledby={titleId}
           dir="rtl"
-          className="fixed right-4 left-4 sm:left-auto sm:w-[380px] z-40 bottom-[calc(var(--fab-bottom)+4.25rem)] rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(80vh,600px)]"
+          data-closing={exit.closing || undefined}
+          // Grows out of the button that opened it (bottom right) and shrinks
+          // back into it.
+          style={{ transformOrigin: "bottom right" }}
+          className="m-pop-self fixed right-4 left-4 sm:left-auto sm:w-[380px] z-40 bottom-[calc(var(--fab-bottom)+4.25rem)] rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(80vh,600px)]"
         >
           <header className="flex items-center gap-3 p-3.5 border-b border-ink-800 bg-ink-950/60">
             <span className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-flame/15 text-flame shrink-0">
@@ -132,7 +140,7 @@ export default function HelpBot() {
             </div>
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => exit.close(() => setOpen(false))}
               aria-label="סגור"
               className="text-ink-500 hover:text-ink-100 transition-colors"
             >

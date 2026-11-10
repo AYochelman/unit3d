@@ -120,10 +120,10 @@ export default function GalleryClient() {
             type="button"
             aria-label="סגור"
             onClick={() => setActive(null)}
-            className="absolute inset-0 bg-ink-950/80 backdrop-blur-sm"
+            className="m-backdrop absolute inset-0 bg-ink-950/80 backdrop-blur-sm"
           />
           <div className="relative h-full flex items-center justify-center p-4">
-            <div className="relative bg-ink-900 border border-ink-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="m-pop relative bg-ink-900 border border-ink-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <button
                 type="button"
                 onClick={() => setActive(null)}
