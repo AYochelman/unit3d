@@ -18,6 +18,18 @@
     font-family: var(--font-sans), system-ui, sans-serif;
     letter-spacing: normal;
     line-height: 1.15;
+    /* No one-word last line on a heading: the lines come out even. */
+    text-wrap: balance;
+  }
+  /* Running text avoids a lone word on its last line. */
+  p {
+    text-wrap: pretty;
+  }
+  /* Numbers that sit in columns or change in place (prices, timers, counts)
+     keep a fixed width, so a total doesn't jitter as it updates. */
+  .font-mono,
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
   body {
     font-family: var(--font-sans), system-ui, sans-serif;
@@ -261,6 +273,16 @@
     filter: drop-shadow(0 0 24px rgba(8, 154, 71, 0.25));
   }
 }
+
+/* The cart badge pops when something is added. */
+@keyframes badge-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.45); }
+  65% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.badge-pop { animation: badge-pop 0.45s ease-out; }
+@media (prefers-reduced-motion: reduce) { .badge-pop { animation: none; } }
 
 /* The "anything else?" sheet rises with a little overshoot. */
 @keyframes upsell-in {

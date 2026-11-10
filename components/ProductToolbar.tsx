@@ -48,7 +48,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
 
       <div className={cn("sm:block", open ? "block mt-3" : "hidden")}>
       <div className="flex flex-wrap items-center gap-2">
-        <span className="font-mono text-[10px] tracking-widest text-ink-500 uppercase ml-1">מיון</span>
+        <span className="text-xs font-semibold text-ink-500 ml-1">מיון</span>
         {SORTS.map((s) => (
           <button
             key={s.id}
@@ -64,7 +64,7 @@ export default function ProductToolbar({ state, onChange, shown, total }: Props)
         ))}
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <span className="font-mono text-[10px] tracking-widest text-ink-500 uppercase ml-1">סינון</span>
+        <span className="text-xs font-semibold text-ink-500 ml-1">סינון</span>
         <div className="inline-flex rounded-full border border-ink-700 bg-ink-900 p-0.5">
           {COLOR_FILTERS.map((f) => (
             <button

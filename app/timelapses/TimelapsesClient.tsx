@@ -39,7 +39,6 @@ export default function TimelapsesClient() {
         חזרה למדפסת בלייב
       </Link>
 
-      <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">TIMELAPSE</div>
       <ProximityH1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">כל ההדפסות שצולמו.</ProximityH1>
       <p className="text-sm text-ink-400 mb-8">
         כל סרטון הוא הדפסה אחת, מהשכבה הראשונה עד האחרונה. מהחדשה לישנה.

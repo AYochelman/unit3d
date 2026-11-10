@@ -313,7 +313,7 @@ export default function LivestreamClient() {
                     <div className="text-ink-400 text-sm">
                       {!ready ? "טוען…" : shot === "missing" ? "אין תמונה מהמצלמה" : "אין תמונה כרגע"}
                     </div>
-                    <div className="text-ink-600 text-xs mt-1">
+                    <div className="text-ink-500 text-xs mt-1">
                       {shot === "missing" ? "המצלמה לא שולחת כרגע. הנתונים למטה עדיין חיים." : "המצלמה משדרת כשהמדפסת דולקת"}
                     </div>
                   </div>
@@ -326,7 +326,7 @@ export default function LivestreamClient() {
                 no R2 keys looks exactly like one that is working. */}
             {showWhy && !videoOn && (unreachable || liveWhy || playWhy) && (
               <div className="absolute bottom-4 right-4 z-20 max-w-[min(92%,30rem)] rounded-lg border border-amber-500/40 bg-ink-950/85 backdrop-blur px-3 py-2 text-[11px] leading-relaxed text-amber-200">
-                <span className="font-mono text-[10px] tracking-widest uppercase text-amber-400/80">ADMIN · אין וידאו</span>
+                <span className="text-xs font-semibold text-amber-400/80">ADMIN · אין וידאו</span>
                 <div className="mt-0.5 text-ink-100">
                   {/* The player appends the HTTP code to its reason, so the
                       lookup uses the reason alone and the code stays in the
@@ -393,7 +393,6 @@ export default function LivestreamClient() {
                 <div className="bg-gradient-to-t from-ink-950 via-ink-950/85 to-transparent p-4 pt-14">
                   <div className="flex flex-wrap items-end justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="font-mono text-[10px] tracking-widest uppercase text-ink-500" dir="ltr">READY</div>
                       <ProximityH2 className="font-extrabold text-lg md:text-xl mt-0.5">
                         הפלטה פנויה — מחכים רק <span className="text-flame">להזמנה שלך</span>.
                       </ProximityH2>
@@ -436,19 +435,18 @@ export default function LivestreamClient() {
           <div className="col-span-2 p-5 rounded-2xl bg-ink-900 border border-ink-800">
             <div className="flex items-center justify-between mb-2">
               <Pill tone={printing ? "flame" : "neutral"}>{STATE_HE[state]}</Pill>
-              <span className="font-mono text-[10px] tracking-widest text-ink-500" dir="ltr">CURRENT JOB</span>
             </div>
             <div className="font-bold text-base mb-3 truncate">{live?.job_name || (online ? "אין הדפסה פעילה" : "—")}</div>
             <div className="grid grid-cols-2 divide-x divide-ink-800 rtl:divide-x-reverse" dir="ltr">
               <div className="text-center">
                 <div className="font-mono text-2xl font-bold tabular-nums">{fmtLeft(live?.minutes_left ?? null)}</div>
-                <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">REMAINING</div>
+                <div className="text-xs font-semibold text-ink-500 mt-0.5">נשאר</div>
               </div>
               <div className="text-center">
                 <div className="font-mono text-2xl font-bold tabular-nums">
                   {live?.layer != null && live?.layers_total ? `${live.layer} / ${live.layers_total}` : "—"}
                 </div>
-                <div className="text-[10px] text-ink-500 uppercase tracking-widest mt-0.5">LAYER</div>
+                <div className="text-xs font-semibold text-ink-500 mt-0.5">שכבה</div>
               </div>
             </div>
           </div>
@@ -471,7 +469,6 @@ export default function LivestreamClient() {
       {/* The numbers, openly */}
       {jobs.length > 0 && (
         <section className="mt-12">
-          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">THE NUMBERS</div>
           <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה יצא מהמדפסת הזאת.</ProximityH2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {[
@@ -494,7 +491,6 @@ export default function LivestreamClient() {
       {/* Timelapses */}
       {clips.length > 0 && (
         <section className="mt-12">
-          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">TIMELAPSE</div>
           <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
             <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight">שעות בתוך חצי דקה.</ProximityH2>
             <Link
@@ -522,7 +518,6 @@ export default function LivestreamClient() {
       {/* Last prints */}
       {jobs.length > 0 && (
         <section className="mt-12">
-          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-2">RECENT</div>
           <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">מה רץ כאן לאחרונה.</ProximityH2>
           <div className="space-y-2">
             {jobs.slice(0, 8).map((j) => (

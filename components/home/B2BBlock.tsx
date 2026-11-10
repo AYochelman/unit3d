@@ -1,6 +1,5 @@
 import { ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import Btn from "@/components/ui/Btn";
-import Pill from "@/components/ui/Pill";
 import Icon from "@/components/ui/Icon";
 import { fmtILS } from "@/lib/format";
 
@@ -42,9 +41,6 @@ export default function B2BBlock() {
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <Pill tone="flame" className="mb-4">
-              B2B · BUSINESSES
-            </Pill>
             <ProximityH2 className="text-3xl md:text-5xl font-extrabold tracking-tightest leading-heading">
               מזמינים לחברה?
               <br />
@@ -68,8 +64,8 @@ export default function B2BBlock() {
           </div>
 
           <div className="rounded-2xl bg-ink-900 border border-ink-800 p-6 md:p-7">
-            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-4">
-              VOLUME PRICING · ILS PER UNIT
+            <div className="text-xs font-semibold text-ink-500 mb-4">
+              מחיר ליחידה לפי כמות
             </div>
             <div className="grid grid-cols-3 gap-3">
               {TIERS.map((t, i) => {

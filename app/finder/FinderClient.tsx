@@ -127,7 +127,7 @@ export default function FinderClient() {
             onClick={() => track("shelf_open", { from: "finder", shelf: top.id })}
             className="block p-6 rounded-3xl border border-flame bg-flame/10 hover:bg-flame/15 transition-colors"
           >
-            <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-2">ההמלצה שלנו</div>
+            <div className="text-xs font-semibold text-flame mb-2">ההמלצה שלנו</div>
             <div className="text-2xl font-black">{top.title}</div>
             <p className="mt-2 text-ink-200 leading-relaxed">{top.blurb}</p>
             <div className="mt-4 flex items-center justify-between">
@@ -140,7 +140,7 @@ export default function FinderClient() {
 
           {picks.length > 0 ? (
             <>
-              <div className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mt-10 mb-3">
+              <div className="text-xs font-semibold text-ink-400 mt-10 mb-3">
                 כמה מוצרים שמתאימים לבחירה שלך
               </div>
               <ProductGrid cards={picks} />
@@ -159,7 +159,7 @@ export default function FinderClient() {
 
           {rest.length > 0 && (
             <>
-              <div className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mt-8 mb-3">גם יכול להתאים</div>
+              <div className="text-xs font-semibold text-ink-400 mt-8 mb-3">גם יכול להתאים</div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {rest.map((s) => (
                   <Link

@@ -199,7 +199,7 @@ export default function HelpBot() {
               ))}
           </div>
 
-          <p className="px-3.5 pb-3 text-[10px] text-ink-600 leading-relaxed">
+          <p className="px-3.5 pb-3 text-[11px] text-ink-500 leading-relaxed">
             העוזר עונה מתוך המידע שמופיע באתר. לשאלה שהוא לא מכיר — הוא יעביר אותך אלינו.
           </p>
         </div>
