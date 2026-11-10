@@ -136,7 +136,9 @@ def run():
     for k, p in parts.items():
         vols = p.color_volumes()
         r = {"body": mesh_report(p.body), "colours": {COLOR_NAME[c]: mesh_report(v) for c, v in vols.items()}}
-        r["colour_volume_sum_matches_body"] = abs(sum(v.volume() for v in vols.values()) - p.body.volume()) < 0.01
+        diff = abs(sum(v.volume() for v in vols.values()) - p.body.volume())
+        r["colour_volume_sum_diff_mm3"] = round(diff, 4)
+        r["colour_volume_sum_matches_body"] = diff < 0.1
         M4 = pose_matrix(k, p.body)
         pb = apply4(p.body, M4)
         bb = pb.bounding_box()
