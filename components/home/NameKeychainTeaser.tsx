@@ -16,7 +16,7 @@ export default function NameKeychainTeaser() {
         className="group grid md:grid-cols-2 items-center gap-6 md:gap-10 rounded-3xl border border-ink-800 bg-[radial-gradient(circle_at_30%_40%,#123a26,#06150e_70%)] p-6 md:p-10 hover:border-flame/60 transition-colors"
       >
         <div className="order-2 md:order-1">
-          <div className="font-mono text-[11px] tracking-widest text-flame mb-3">חדש · תלת-מימד חי</div>
+          <div className="text-xs font-semibold text-flame mb-3">חדש · תלת-מימד חי</div>
           <h2 className="text-3xl md:text-5xl font-black tracking-tightest leading-heading mb-3">
             כותבים שם.
             <br />

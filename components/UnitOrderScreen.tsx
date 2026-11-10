@@ -316,7 +316,7 @@ export default function UnitOrderScreen({
 
           {/* Finish */}
           <section className="space-y-5">
-            <div className="text-[11px] font-mono tracking-widest text-ink-500 uppercase">העיצוב</div>
+            <div className="text-xs font-semibold text-ink-500">העיצוב</div>
 
             <div>
               <div className="text-sm font-bold text-ink-200 mb-1">

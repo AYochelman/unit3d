@@ -26,9 +26,6 @@ export default function NotFound() {
   return (
     <div className="max-w-3xl mx-auto px-6 md:px-10 py-16 md:py-24">
       <header className="mb-10">
-        <div className="font-mono text-[11px] tracking-widest uppercase text-flame mb-3">
-          404 · PAGE NOT FOUND
-        </div>
         <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading mb-4">
           הדף הזה לא קיים.
         </ProximityH1>
@@ -47,7 +44,7 @@ export default function NotFound() {
         </Btn>
       </div>
 
-      <div className="font-mono text-[11px] tracking-widest uppercase text-ink-400 mb-4">
+      <div className="text-xs font-semibold text-ink-400 mb-4">
         המדפים
       </div>
       <div className="grid gap-3 sm:grid-cols-2">

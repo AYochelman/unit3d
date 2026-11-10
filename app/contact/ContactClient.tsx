@@ -3,7 +3,6 @@ import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-p
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Pill from "@/components/ui/Pill";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
 import CartUpsell, { pickUpsell, type UpsellPick } from "@/components/CartUpsell";
@@ -364,9 +363,6 @@ export default function ContactClient() {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8">
-        <Pill tone="flame" className="mb-3">
-          CONTACT · 24H RESPONSE
-        </Pill>
         <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest leading-heading">
           ספר לנו מה אתה צריך.
         </ProximityH1>
@@ -701,8 +697,8 @@ export default function ContactClient() {
           {/* B2B extra fields */}
           {cust === "b2b" && (
             <section className="p-5 rounded-2xl border border-cyan2/30 bg-cyan2/5 space-y-4">
-              <div className="font-mono text-[11px] tracking-widest uppercase text-cyan2">
-                B2B · ADDITIONAL DETAILS
+              <div className="text-xs font-semibold text-cyan2">
+                פרטי החברה
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <Field label="שם החברה" required>
@@ -857,8 +853,8 @@ export default function ContactClient() {
         {/* Aside */}
         <aside className="space-y-4">
           <div className="p-5 rounded-2xl bg-ink-900 border border-ink-800">
-            <div className="font-mono text-[10px] tracking-widest uppercase text-flame mb-2">
-              RESPONSE TIME
+            <div className="text-xs font-semibold text-flame mb-2">
+              זמן מענה
             </div>
             <div className="text-3xl font-extrabold tracking-tight">תוך 24 שעות</div>
             <div className="text-sm text-ink-400 mt-1">

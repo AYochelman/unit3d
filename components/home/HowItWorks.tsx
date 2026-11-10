@@ -87,7 +87,7 @@ export default function HowItWorks() {
         /* Tapping a letter chooses it; the extra picker would sit on the finder bubble. */
         [data-hiw] [data-gp-touch-picker]{display:none!important;}
         [data-hiw] [data-gp-select]{border-color:#16402A;border-radius:10px;background:#0D2117;color:#C9D6CE;}
-        [data-hiw-eyebrow]{position:absolute;inset:auto 24px calc(100% - var(--gp-word-top,35%) + 28px);margin:0;text-align:center;font-size:12px;letter-spacing:.2em;color:#5FE39A;font-family:"JetBrains Mono",monospace;}
+        [data-hiw-eyebrow]{position:absolute;inset:auto 24px calc(100% - var(--gp-word-top,35%) + 28px);margin:0;text-align:center;font-size:14px;font-weight:700;color:#5FE39A;}
         [data-hiw-support]{position:absolute;inset:calc(var(--gp-word-bottom,50%) + 24px) 24px auto;margin:0;text-align:center;font-size:17px;color:#A8B8AE;}
         [data-hiw-scroll]{position:absolute;inset:auto 24px 6%;text-align:center;color:#8FA598;font-size:12px;}
         @media(any-pointer:coarse){[data-hiw-scroll]{bottom:auto;top:calc(var(--gp-word-bottom,50%) + 132px);}}
@@ -116,7 +116,7 @@ export default function HowItWorks() {
           style={{ "--gp-paper": "#04110B", "--gp-ink": "#F7FAF8", "--gp-field": "#0b3b25", "--gp-foreground": "#F7FAF8", fontFamily: face }}
           front={
             <div dir="rtl">
-              <p data-hiw-eyebrow>HOW IT WORKS · 4 STEPS</p>
+              <p data-hiw-eyebrow>4 שלבים</p>
               <p data-hiw-support>מהרעיון לקופסה אצלך הביתה.</p>
               <span data-hiw-scroll>גללו פנימה ↓</span>
             </div>

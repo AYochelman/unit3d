@@ -167,8 +167,11 @@ export default function Header() {
             >
               <Icon name="package" size={18} />
               {cartCount > 0 && (
+                // Keyed on the count, so every add replays the pop: the
+                // customer sees the item land without looking for a toast.
                 <span
-                  className="absolute -top-1 -right-1 h-5 min-w-[20px] px-1 rounded-full bg-flame-600 text-white text-[10px] font-black flex items-center justify-center leading-none"
+                  key={cartCount}
+                  className="badge-pop absolute -top-1 -right-1 h-5 min-w-[20px] px-1 rounded-full bg-flame-600 text-white text-[10px] font-black flex items-center justify-center leading-none tabular-nums"
                   dir="ltr"
                 >
                   {cartCount > 9 ? "9+" : cartCount}
@@ -234,7 +237,7 @@ export default function Header() {
             {/* Grouped, because a flat list of twenty-one is a wall. The
                 shelves are what people came for; everything else is the shop's
                 own pages and reads as a second tier. */}
-            <p className="mt-5 mb-2 font-mono text-[10px] tracking-widest uppercase text-ink-500">החנות</p>
+            <p className="mt-5 mb-2 text-xs font-semibold text-ink-500">החנות</p>
             <div className="grid grid-cols-2 gap-2">
               {NAV.map((item) => (
                 <Link
@@ -253,7 +256,7 @@ export default function Header() {
               ))}
             </div>
 
-            <p className="mt-5 mb-2 font-mono text-[10px] tracking-widest uppercase text-ink-500">עוד</p>
+            <p className="mt-5 mb-2 text-xs font-semibold text-ink-500">עוד</p>
             <div className="grid grid-cols-2 gap-2">
               {SECONDARY.map((item) => (
                 <Link

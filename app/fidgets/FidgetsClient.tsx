@@ -83,27 +83,8 @@ function FidgetCard({
           </div>
         )}
 
-        {/* License badge — top right */}
-        {f.license && (
-          <span
-            className={cn(
-              "absolute top-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider border backdrop-blur",
-              f.license === "CC0"
-                ? "bg-good/20 text-good border-good/40"
-                : "bg-ink-950/70 text-ink-100 border-ink-50/20",
-            )}
-            dir="ltr"
-            title={
-              f.license === "CC0"
-                ? "Public Domain"
-                : f.license === "Bambu-Open"
-                  ? "Bambu Creator's Open License"
-                  : "Creative Commons Attribution"
-            }
-          >
-            {f.license === "Bambu-Open" ? "OPEN" : f.license}
-          </span>
-        )}
+        {/* The licence is in the credit line under the photo ("by … · CC-BY"); a
+            badge on the photo repeated it on every card. */}
 
         {/* AMS / colors badge — top left, below tag */}
         {/* A variant that IS several colours says so; otherwise the badge
@@ -134,7 +115,7 @@ function FidgetCard({
           aria-label={`לעמוד המוצר של ${f.name}`}
         >
           <Icon name="expand" size={20} className="text-flame" />
-          <span className="font-mono text-[10px] tracking-widest uppercase">צבע · חומר · AMS</span>
+          <span className="text-xs font-semibold">צבע · חומר · AMS</span>
         </Link>
       </div>
 
@@ -294,9 +275,6 @@ export default function FidgetsClient() {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
       <header className="mb-8 md:mb-10">
-        <Pill tone="cyan" className="mb-4">
-          פלקסי ופידג&apos;טים · ANTI-BOREDOM
-        </Pill>
         <ProximityH1 className="text-4xl md:text-6xl font-black tracking-tightest leading-heading mb-3">
           שני מדפים. אותה מדפסת.
         </ProximityH1>
@@ -378,9 +356,6 @@ export default function FidgetsClient() {
 
       {/* Why fidgets */}
       <section className="mt-16 p-6 md:p-8 rounded-2xl bg-ink-900 border border-ink-800">
-        <div className="font-mono text-[11px] tracking-widest uppercase text-ink-500 mb-3">
-          WHY FIDGETS
-        </div>
         <ProximityH2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-5">
           למה זה עובד.
         </ProximityH2>

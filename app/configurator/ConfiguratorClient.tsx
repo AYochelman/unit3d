@@ -313,7 +313,6 @@ export default function ConfiguratorClient({
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12">
       <header className="mb-6 md:mb-10">
-        <Pill tone="cyan" className="mb-3">CONFIGURATOR · LIVE PREVIEW</Pill>
         <ProximityH1 className="text-3xl md:text-5xl font-extrabold tracking-tightest mb-2">מעצב אישי</ProximityH1>
         <p className="text-ink-300">
           בוחרים מוצר, כותבים טקסט או מציירים עיצוב חופשי, בוחרים צבע. הכל מתעדכן בזמן אמת ונוסע איתך לטופס.
@@ -371,9 +370,9 @@ export default function ConfiguratorClient({
                     face={face}
                     modelLabel={modelLabel}
                   />}
-                  <div className="absolute top-4 right-4 font-mono text-[10px] tracking-widest text-ink-400 flex items-center gap-2" dir="ltr">
+                  <div className="absolute top-4 right-4 text-xs font-semibold text-ink-400 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-cyan2 rounded-full live-dot" />
-                    LIVE PREVIEW
+                    תצוגה חיה
                   </div>
                   <div className="absolute bottom-4 right-4 left-4 flex items-end justify-between gap-3 font-mono text-[10px] text-ink-400" dir="ltr">
                     <span>{face[0]}×{face[1]}mm · ~{timeLabel}</span>
