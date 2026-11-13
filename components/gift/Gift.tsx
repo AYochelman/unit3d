@@ -2,7 +2,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Icon from "@/components/ui/Icon";
 import { useOrderStore } from "@/lib/order-store";
-import { GIFT, giftMissing, giftTotal, isGift, useGiftStore } from "@/lib/gift";
+import { GIFT, giftChoices, giftLine, giftMissing, giftTotal, isGift, useGiftStore, type GiftChoice } from "@/lib/gift";
+import Image from "next/image";
+import { useLivePricer } from "@/lib/live-price";
+import { heName } from "@/lib/he-names";
+import { useExit, usePauseBehind } from "@/lib/use-exit";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -25,7 +29,7 @@ export function GiftWatcher() {
     const before = prev.current;
     prev.current = total;
     if (total >= GIFT.threshold && !gift) {
-      addItem({ title: `מתנה: ${GIFT.title}`, summary: [GIFT.line], price: 0, source: "fidgets", meta: { gift: true, qty: 1, baseUnitPrice: 0 } });
+      addItem(giftLine());
       if (before !== null && before < GIFT.threshold) fire();
     } else if (total < GIFT.threshold && gift) {
       removeItem(gift.id);
@@ -37,7 +41,7 @@ export function GiftWatcher() {
 }
 
 /** The bar: how far to the gift, the gift waiting at its end. */
-export function GiftProgress({ compact }: { compact?: boolean }) {
+export function GiftProgress({ compact, onPick }: { compact?: boolean; onPick?: () => void }) {
   const items = useOrderStore((s) => s.items);
   const total = giftTotal(items);
   if (total <= 0) return null;
@@ -45,20 +49,22 @@ export function GiftProgress({ compact }: { compact?: boolean }) {
   const done = missing === 0;
   const pct = Math.min(100, (total / GIFT.threshold) * 100);
   return (
-    <div className={cn("gift-prog rounded-2xl border px-4", compact ? "py-2.5" : "py-3.5", done ? "border-good/50 bg-good/10" : "border-[#ffd23d]/35 bg-[#ffd23d]/[0.06]")}>
+    <div className={cn("gift-prog rounded-2xl border px-4", compact ? "py-2.5" : "py-3.5", done ? "border-[#3b82f6]/60 bg-[#3b82f6]/15" : "border-[#3b82f6]/35 bg-[#3b82f6]/[0.07]")}>
       <div className="flex items-center justify-between gap-3 text-sm">
         <span className="font-bold">
           {done
-            ? <>יש! <span className="text-good">{GIFT.title} עלינו</span></>
-            : <>עוד <bdi className="text-[#ffd23d] tabular-nums">{fmtILS(Math.ceil(missing))}</bdi> ומקבלים מתנה מאיתנו</>}
+            ? <>יש! <span className="text-[#6aa8ff]">{(items.find(isGift)?.meta?.giftFidgetId ? items.find(isGift)!.baseTitle.replace(/^מתנה: /, "") : GIFT.title)} עלינו</span></>
+            : <>עוד <bdi className="text-[#6aa8ff] tabular-nums">{fmtILS(Math.ceil(missing))}</bdi> ומקבלים מתנה מאיתנו</>}
         </span>
-        <span className="text-[11px] text-ink-400 tabular-nums"><bdi>{fmtILS(Math.round(total))}</bdi> / <bdi>{fmtILS(GIFT.threshold)}</bdi></span>
+        {done && onPick
+          ? <button type="button" onClick={onPick} className="shrink-0 rounded-full bg-[#3b82f6] px-3 py-1 text-xs font-bold text-white active:scale-[0.97] transition-transform">{items.find(isGift)?.meta?.giftFidgetId ? "להחליף" : "לבחור מתנה"}</button>
+          : <span className="text-[11px] text-ink-400 tabular-nums"><bdi>{fmtILS(Math.round(total))}</bdi> / <bdi>{fmtILS(GIFT.threshold)}</bdi></span>}
       </div>
       <div className="relative mt-2.5 h-3 rounded-full bg-white/10">
-        <div className={cn("gift-fill absolute inset-y-0 right-0 rounded-full", done ? "bg-good" : "bg-gradient-to-l from-[#ffd23d] to-[#ff9f2e]")} style={{ width: `${pct}%` }}>
+        <div className={cn("gift-fill absolute inset-y-0 right-0 rounded-full", done ? "bg-[#3b82f6]" : "bg-gradient-to-l from-[#6aa8ff] to-[#2f6bff]")} style={{ width: `${pct}%` }}>
           {!done && <span className="gift-shine" aria-hidden />}
         </div>
-        <span className={cn("absolute -left-1 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full border-2", done ? "bg-good border-good text-ink-950 gift-got" : "bg-ink-900 border-[#ffd23d] text-[#ffd23d] gift-wait")}>
+        <span className={cn("absolute -left-1 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full border-2", done ? "bg-[#3b82f6] border-[#3b82f6] text-white gift-got" : "bg-ink-900 border-[#6aa8ff] text-[#6aa8ff] gift-wait")}>
           <Icon name={done ? "check" : "gift"} size={15} strokeWidth={2.5} />
         </span>
       </div>
@@ -88,12 +94,12 @@ export function CartGiftRing() {
     <>
       <svg className="pointer-events-none absolute -inset-[3px] h-[calc(100%+6px)] w-[calc(100%+6px)] -rotate-90" viewBox="0 0 46 46" aria-hidden>
         <circle cx="23" cy="23" r="21" fill="none" stroke="rgba(255,255,255,.08)" strokeWidth="2.5" />
-        <circle cx="23" cy="23" r="21" fill="none" stroke={missing === 0 ? "#089a47" : "#ffd23d"} strokeWidth="2.5" strokeLinecap="round"
+        <circle cx="23" cy="23" r="21" fill="none" stroke={missing === 0 ? "#3b82f6" : "#6aa8ff"} strokeWidth="2.5" strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - pct)} style={{ transition: "stroke-dashoffset .6s var(--ease-out), stroke .3s" }} />
       </svg>
       {shownHint > 0 && missing > 0 && (
-        <span key={shownHint} className="gift-hint pointer-events-none absolute top-full left-0 mt-2 whitespace-nowrap rounded-xl bg-ink-900 border border-[#ffd23d]/40 px-3 py-2 text-xs font-bold text-ink-100 shadow-xl z-[60]">
-          עוד <bdi className="text-[#ffd23d]">{fmtILS(Math.ceil(missing))}</bdi> למתנה
+        <span key={shownHint} className="gift-hint pointer-events-none absolute top-full left-0 mt-2 whitespace-nowrap rounded-xl bg-ink-900 border border-[#3b82f6]/50 px-3 py-2 text-xs font-bold text-ink-100 shadow-xl z-[60]">
+          עוד <bdi className="text-[#6aa8ff]">{fmtILS(Math.ceil(missing))}</bdi> למתנה
         </span>
       )}
     </>
@@ -112,22 +118,80 @@ function GiftCelebration() {
   }, [celebrate]);
   const bits = useMemo(() => Array.from({ length: 60 }, (_, i) => {
     const a = (i / 60) * Math.PI * 2 + (i % 3) * 0.2, d = 140 + ((i * 37) % 150);
-    return { dx: Math.cos(a) * d, dy: Math.sin(a) * d - 80, r: (i * 47) % 720, c: ["#089a47", "#ffd23d", "#ff3d5a", "#ffffff", "#5ab8ff"][i % 5], w: 8 + (i % 4) * 3, h: 10 + ((i * 7) % 4) * 4, delay: (i % 8) * 16 };
+    return { dx: Math.cos(a) * d, dy: Math.sin(a) * d - 80, r: (i * 47) % 720, c: ["#3b82f6", "#6aa8ff", "#ffd23d", "#ffffff", "#9cc4ff"][i % 5], w: 8 + (i % 4) * 3, h: 10 + ((i * 7) % 4) * 4, delay: (i % 8) * 16 };
   }), []);
   if (!shown) return null;
   return (
     <div key={shown} className="fixed inset-0 z-[80] grid place-items-center pointer-events-none" role="status" aria-live="polite">
-      <div className="gift-cel pointer-events-auto relative w-[min(88vw,340px)] rounded-3xl border border-good/40 bg-ink-950/95 px-6 pt-8 pb-6 text-center shadow-2xl" onClick={() => setShown(0)}>
+      <div className="gift-cel pointer-events-auto relative w-[min(88vw,340px)] rounded-3xl border border-[#3b82f6]/50 bg-ink-950/95 px-6 pt-8 pb-6 text-center shadow-2xl" onClick={() => setShown(0)}>
         <div className="relative mx-auto h-36 w-36">
           <div className="bf-rays" aria-hidden />
           {bits.map((b, i) => (
             <span key={i} className="bf-bit" aria-hidden style={{ "--dx": `${b.dx}px`, "--dy": `${b.dy}px`, "--r": `${b.r}deg`, background: b.c, width: b.w, height: b.h, animationDelay: `${600 + b.delay}ms` } as React.CSSProperties} />
           ))}
-          <div className="bf-box"><div className="bf-lid" /><div className="bf-body" /></div>
+          <div className="bf-box gift-blue"><div className="bf-lid" /><div className="bf-body" /></div>
         </div>
         <div className="bf-unlock-text mt-4">
           <div className="text-2xl font-black">פתחתם מתנה!</div>
           <div className="text-ink-300 mt-1">{GIFT.title} עלינו, נשלח עם ההזמנה</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Pick the gift: every fidget under GIFT.maxValue, or leave it as a surprise.
+ * Opened at checkout once the gift is earned, and from the bar in the cart.
+ */
+export function GiftPicker({ onDone, onCancel }: { onDone: () => void; onCancel: () => void }) {
+  const items = useOrderStore((s) => s.items);
+  const addItem = useOrderStore((s) => s.addItem);
+  const removeItem = useOrderStore((s) => s.removeItem);
+  const priceOf = useLivePricer();
+  const choices = useMemo(() => giftChoices(priceOf), [priceOf]);
+  const { closing, close } = useExit();
+  usePauseBehind(true);
+  const current = items.find(isGift);
+  const chosen = current?.meta?.giftFidgetId as string | undefined;
+
+  const pick = (c: GiftChoice | null) => {
+    if (current) removeItem(current.id);
+    addItem(giftLine(c ? { id: c.f.id, name: heName(c.f.id, c.f.name) } : null));
+    // Done inside the same click, so the order can go on to WhatsApp from it.
+    onDone();
+  };
+
+  return (
+    <div data-closing={closing || undefined} className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="gift-pick-title">
+      <div className="m-backdrop absolute inset-0 bg-black/80" onClick={() => close(onCancel)} />
+      <div className="m-sheet m-sm-pop relative w-full sm:max-w-xl max-h-[92vh] flex flex-col rounded-t-3xl sm:rounded-3xl border border-[#3b82f6]/40 bg-ink-950 overflow-hidden">
+        <div className="px-5 sm:px-6 pt-6 pb-3 text-center shrink-0" style={{ background: "radial-gradient(120% 140% at 50% 0%, rgba(59,130,246,.28), transparent 60%)" }}>
+          <span className="gift-wait mx-auto mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#3b82f6] text-white"><Icon name="gift" size={24} /></span>
+          <h2 id="gift-pick-title" className="text-2xl font-black">בחרו את המתנה שלכם</h2>
+          <p className="text-sm text-ink-300 mt-1">{choices.length} פידג&apos;טים, עלינו. נשלח עם ההזמנה.</p>
+        </div>
+        <div className="flex-1 overflow-y-auto px-5 sm:px-6 pb-4">
+          <div className="m-stagger grid grid-cols-3 gap-2.5">
+            {choices.map((c, i) => {
+              const on = chosen === c.f.id;
+              return (
+                <button key={c.f.id} type="button" onClick={() => pick(c)} aria-pressed={on} style={{ "--i": Math.min(i, 12) } as React.CSSProperties}
+                  className={cn("relative text-right rounded-2xl overflow-hidden bg-white/[0.04] border-2 transition-all active:scale-[0.97]", on ? "border-[#3b82f6]" : "border-white/10 hover:border-[#6aa8ff]/60")}>
+                  <div className="relative aspect-square">
+                    <Image src={c.f.thumbnail!} alt="" fill sizes="(max-width: 640px) 30vw, 170px" className="object-cover" unoptimized loading={i < 12 ? "eager" : "lazy"} />
+                    <span className="absolute top-1.5 right-1.5 rounded-full bg-[#3b82f6] px-2 py-0.5 text-[10px] font-black text-white">מתנה</span>
+                  </div>
+                  <div className="p-2 text-[12px] font-semibold leading-snug line-clamp-2 min-h-[2.6em]">{heName(c.f.id, c.f.name)}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="shrink-0 border-t border-white/10 px-5 sm:px-6 py-3">
+          <button type="button" onClick={() => pick(null)} className="w-full h-12 rounded-2xl bg-white/10 font-bold active:scale-[0.98] transition-transform">
+            תפתיעו אותי
+          </button>
         </div>
       </div>
     </div>
