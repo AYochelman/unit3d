@@ -12,6 +12,8 @@ import OrdersBoot from "@/components/OrdersBoot";
 import CouponsBoot from "@/components/CouponsBoot";
 import GoogleTag from "@/components/GoogleTag";
 import CookieConsent from "@/components/CookieConsent";
+import BlackFridayBar from "@/components/bf/BlackFridayBar";
+import BlackFridayPopup from "@/components/bf/BlackFridayPopup";
 import DesignPreview from "@/components/DesignPreview";
 
 export const metadata: Metadata = {
@@ -75,6 +77,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col">
         <a href="#main" className="skip-link">דלג לתוכן הראשי</a>
+        <BlackFridayBar />
         <Header />
         <main id="main" tabIndex={-1} className="flex-1">
           {children}
@@ -90,6 +93,7 @@ export default function RootLayout({
         <HelpBot />
         <GoogleTag />
         <CookieConsent />
+        <BlackFridayPopup />
       </body>
     </html>
   );
