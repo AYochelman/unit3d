@@ -1,4 +1,5 @@
 "use client";
+import { useCallback } from "react";
 import { useAdminStore, type ItemOverride, type PricingMode } from "./admin-store";
 import { estimateCost, type CostSettings } from "./costing";
 import { DEFAULT_MATERIAL } from "./inventory";
@@ -81,10 +82,14 @@ export function useLivePrice(item: Priceable): number {
   return resolvePrice(item, overrides, settings, pricing);
 }
 
-/** Same, for a list — one subscription instead of one per row. */
+/**
+ * Same, for a list — one subscription instead of one per row. The function
+ * keeps its identity until a setting changes, so a list memoised on it is
+ * computed once, not on every render.
+ */
 export function useLivePricer(): (item: Priceable) => number {
   const overrides = useAdminStore((s) => s.overrides);
   const settings = useAdminStore((s) => s.settings);
   const pricing = useAdminStore((s) => s.pricing);
-  return (item) => resolvePrice(item, overrides, settings, pricing);
+  return useCallback((item: Priceable) => resolvePrice(item, overrides, settings, pricing), [overrides, settings, pricing]);
 }
