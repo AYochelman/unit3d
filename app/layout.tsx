@@ -14,6 +14,7 @@ import GoogleTag from "@/components/GoogleTag";
 import CookieConsent from "@/components/CookieConsent";
 import BlackFridayBar from "@/components/bf/BlackFridayBar";
 import BlackFridayPopup from "@/components/bf/BlackFridayPopup";
+import { GiftWatcher } from "@/components/gift/Gift";
 import DesignPreview from "@/components/DesignPreview";
 
 export const metadata: Metadata = {
@@ -94,6 +95,7 @@ export default function RootLayout({
         <GoogleTag />
         <CookieConsent />
         <BlackFridayPopup />
+        <GiftWatcher />
       </body>
     </html>
   );

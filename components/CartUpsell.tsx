@@ -12,6 +12,7 @@ import { heName } from "@/lib/he-names";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { useExit, usePauseBehind } from "@/lib/use-exit";
+import { GiftProgress } from "@/components/gift/Gift";
 
 /** Small enough to add without thinking about it. */
 const MAX_PRICE = 35;
@@ -122,6 +123,8 @@ export default function CartUpsell({ picks, onContinue, onClose }: { picks: Upse
             );
           })}
         </div>
+
+        <GiftProgress compact />
 
         <div className="flex items-center justify-between rounded-xl bg-ink-950/60 border border-ink-800 px-4 py-2.5 text-sm">
           <span className="text-ink-400">בסל עכשיו · {items.length} {items.length === 1 ? "פריט" : "פריטים"}</span>
