@@ -598,7 +598,7 @@ export default function ContactClient() {
                       <div className="flex flex-col items-end gap-2 shrink-0 mt-0.5">
                         {item.price !== null && (
                           isBfFree(item) || isGift(item)
-                            ? <span className="text-sm font-black text-good">{isGift(item) ? "מתנה" : "חינם"}</span>
+                            ? <span className={cn("text-sm font-black", isGift(item) ? "text-[#6aa8ff]" : "text-good")}>{isGift(item) ? "מתנה" : "חינם"}</span>
                             : <span className="font-mono text-sm font-bold text-flame" dir="ltr">{fmtILS(item.price)}</span>
                         )}
                         {!isBfFree(item) && !isGift(item) && (
