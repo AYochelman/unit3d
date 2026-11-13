@@ -28,6 +28,8 @@ export const BF = {
    * a "left" number that never moves is a number nobody believes.
    */
   mysteryLeft: 30,
+  /** What a regular mystery box holds; the sale edition adds one more on us. */
+  mysteryItems: 5,
 };
 
 export type BfPhase = "before" | "live" | "over";

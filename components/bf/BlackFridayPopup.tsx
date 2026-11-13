@@ -139,15 +139,28 @@ export default function BlackFridayPopup() {
                 </div>
               </button>
 
-              <Link href="/products/mystery-box" onClick={dismiss} style={{ "--i": 1 } as React.CSSProperties}
-                className="flex items-center gap-4 rounded-2xl p-4 bg-white/[0.04] border border-white/10 hover:border-white/25 transition-colors">
-                <Image src={assetSrc("/img/products/mystery-box.webp")} alt="" width={84} height={84} className="h-20 w-20 rounded-xl object-cover shrink-0" unoptimized />
-                <div className="min-w-0 flex-1">
-                  <div className="font-black text-lg">מיסטרי בוקס · מהדורת בלאק פריידי</div>
-                  <div className="text-sm text-white/70">כמות מוגבלת. <b className="text-[#ff3d5a]">נשארו {BF.mysteryLeft}</b></div>
-                </div>
-                <Icon name="arrowLeft" size={18} className="text-white/50" />
-              </Link>
+              {(() => {
+                // The limited edition opens with the sale, like the fidget deal.
+                const inner = (
+                  <>
+                    <Image src={assetSrc("/img/products/mystery-box.webp")} alt="" width={84} height={84} className="h-20 w-20 rounded-xl object-cover shrink-0" unoptimized />
+                    <div className="min-w-0 flex-1">
+                      <div className="font-black text-lg">מיסטרי בוקס · מהדורת בלאק פריידי</div>
+                      <div className="text-sm text-white/80">פריט אחד נוסף עלינו: <b className="text-white">{BF.mysteryItems + 1} במקום {BF.mysteryItems}</b>.</div>
+                      <div className="text-sm text-white/60">
+                        {live ? <>כמות מוגבלת. <b className="text-[#ff3d5a]">נשארו {BF.mysteryLeft}</b></> : <>נפתח ב-<bdi>27.11</bdi> · {BF.mysteryLeft} קופסאות בלבד</>}
+                      </div>
+                    </div>
+                    {live && <Icon name="arrowLeft" size={18} className="text-white/50" />}
+                  </>
+                );
+                const cls = "flex items-center gap-4 rounded-2xl p-4 bg-white/[0.04] border border-white/10";
+                return live ? (
+                  <Link href="/products/mystery-box" onClick={dismiss} style={{ "--i": 1 } as React.CSSProperties} className={cn(cls, "hover:border-white/25 transition-colors")}>{inner}</Link>
+                ) : (
+                  <div style={{ "--i": 1 } as React.CSSProperties} className={cls}>{inner}</div>
+                );
+              })()}
               <p className="text-[12px] text-white/50 pt-1" style={{ "--i": 2 } as React.CSSProperties}>
                 המבצע בתוקף <bdi>27.11–30.11</bdi>. מתנה אחת בהזמנה. נשלח באותה חבילה.
               </p>

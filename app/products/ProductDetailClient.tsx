@@ -1,7 +1,7 @@
 "use client";
 import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
 import { useNow, usePhase } from "@/components/bf/BlackFridayBar";
-import { BF } from "@/lib/black-friday";
+import { BF, bfForced, bfPhase } from "@/lib/black-friday";
 import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
@@ -215,6 +215,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
     if (p.engraving?.second && engrave2) lines.push(`${p.engraving.second.label}: "${engrave2}"`);
     if (amsOn) lines.push(`AMS ${amsColors} צבעים (+${fmtILS(amsSurcharge)})`);
     if (qty > 1) lines.push(`כמות: ${qty}`);
+    // Ordered during Black Friday: the limited edition, one more item on us.
+    if (id === "mystery-box" && bfPhase(Date.now(), bfForced()) === "live") {
+      lines.push(`מהדורת בלאק פריידי: פריט נוסף עלינו (${BF.mysteryItems + 1} פריטים)`);
+    }
     addItem({
       title: p.name + (qty > 1 ? ` × ${qty}` : ""),
       summary: lines,
@@ -736,10 +740,13 @@ function MysteryBfBadge() {
   const phase = usePhase(useNow());
   if (!phase || phase === "over") return null;
   return (
-    <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-black border border-[#ff3d5a]/50 px-3 py-1 text-sm">
+    <div className="mb-2 inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-2xl bg-black border border-[#ff3d5a]/50 px-3 py-1.5 text-sm">
       <span className="h-2 w-2 rounded-full bg-[#ff3d5a] live-dot" />
       <span className="font-bold text-[#ff3d5a]">מהדורת בלאק פריידי</span>
-      <span className="text-white/80">· נשארו {BF.mysteryLeft}</span>
+      <span className="text-white/80">· פריט אחד נוסף עלינו ({BF.mysteryItems + 1} במקום {BF.mysteryItems})</span>
+      <span className="text-white/60">
+        {phase === "live" ? <>· נשארו {BF.mysteryLeft}</> : <>· נפתח ב-<bdi>27.11</bdi></>}
+      </span>
     </div>
   );
 }
