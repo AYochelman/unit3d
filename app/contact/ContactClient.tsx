@@ -9,6 +9,8 @@ import CartUpsell, { pickUpsell, type UpsellPick } from "@/components/CartUpsell
 import { useLivePricer } from "@/lib/live-price";
 import { useExit } from "@/lib/use-exit";
 import { bfForced, bfFreeEarned, bfPhase, isBfFree } from "@/lib/black-friday";
+import { isGift } from "@/lib/gift";
+import { GiftProgress } from "@/components/gift/Gift";
 import { modelSourceFromMeta } from "@/lib/model-source";
 import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -552,9 +554,13 @@ export default function ContactClient() {
                 </button>
               </div>
 
+              <div className="px-5 pb-3"><GiftProgress /></div>
+
               <div className="divide-y divide-flame/10">
                 {items.map((item, idx) => (
                   <div key={item.id} className="px-5 py-3 relative">
+                    {/* The gift comes and goes with the total; it has no remove button. */}
+                    {!isGift(item) && (
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
@@ -563,6 +569,7 @@ export default function ContactClient() {
                     >
                       <Icon name="x" size={11} />
                     </button>
+                    )}
                     <div className="flex items-start gap-2 pr-1">
                       <span className="inline-flex items-center justify-center h-5 w-5 mt-0.5 rounded-full bg-flame/20 text-flame text-[10px] font-black shrink-0">
                         {idx + 1}
@@ -590,11 +597,11 @@ export default function ContactClient() {
                       </div>
                       <div className="flex flex-col items-end gap-2 shrink-0 mt-0.5">
                         {item.price !== null && (
-                          isBfFree(item)
-                            ? <span className="text-sm font-black text-good">חינם</span>
+                          isBfFree(item) || isGift(item)
+                            ? <span className="text-sm font-black text-good">{isGift(item) ? "מתנה" : "חינם"}</span>
                             : <span className="font-mono text-sm font-bold text-flame" dir="ltr">{fmtILS(item.price)}</span>
                         )}
-                        {!isBfFree(item) && (
+                        {!isBfFree(item) && !isGift(item) && (
                         <div className="inline-flex items-center rounded-lg border border-ink-700 bg-ink-950/60" dir="ltr" aria-label="כמות">
                           <button
                             type="button"
