@@ -8,6 +8,7 @@ import Icon from "@/components/ui/Icon";
 import CartUpsell, { pickUpsell, type UpsellPick } from "@/components/CartUpsell";
 import { useLivePricer } from "@/lib/live-price";
 import { useExit } from "@/lib/use-exit";
+import { bfForced, bfFreeEarned, bfPhase, isBfFree } from "@/lib/black-friday";
 import { modelSourceFromMeta } from "@/lib/model-source";
 import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -84,6 +85,13 @@ export default function ContactClient() {
   const priceOf = useLivePricer();
   const [upsellSeen, setUpsellSeen] = useState(false);
   const needsReview = items.some((it) => it.source === "configurator");
+
+  // A Black Friday gift stays only while it is earned: two paid fidgets in the
+  // cart, and the sale still on.
+  useEffect(() => {
+    const gift = items.find(isBfFree);
+    if (gift && (!bfFreeEarned(items) || bfPhase(Date.now(), bfForced()) !== "live")) removeItem(gift.id);
+  }, [items, removeItem]);
   // The fields were uncontrolled, so nothing the customer typed ever left the
   // page — the form showed a thank-you and told nobody. They are read now.
   const [name, setName] = useState("");
@@ -531,7 +539,7 @@ export default function ContactClient() {
           {items.length > 0 && (
             <section className="rounded-2xl bg-gradient-to-bl from-flame/10 to-cyan2/5 border border-flame/30 overflow-hidden">
               <div className="flex items-center justify-between px-5 pt-4 pb-2">
-                <div className="font-mono text-[10px] tracking-widest uppercase text-flame">
+                <div className="text-xs font-semibold text-flame">
                   סל קנייה · {items.length} {items.length === 1 ? "פריט" : "פריטים"}
                 </div>
                 <button
@@ -582,10 +590,11 @@ export default function ContactClient() {
                       </div>
                       <div className="flex flex-col items-end gap-2 shrink-0 mt-0.5">
                         {item.price !== null && (
-                          <span className="font-mono text-sm font-bold text-flame" dir="ltr">
-                            {fmtILS(item.price)}
-                          </span>
+                          isBfFree(item)
+                            ? <span className="text-sm font-black text-good">חינם</span>
+                            : <span className="font-mono text-sm font-bold text-flame" dir="ltr">{fmtILS(item.price)}</span>
                         )}
+                        {!isBfFree(item) && (
                         <div className="inline-flex items-center rounded-lg border border-ink-700 bg-ink-950/60" dir="ltr" aria-label="כמות">
                           <button
                             type="button"
@@ -606,6 +615,7 @@ export default function ContactClient() {
                             <Icon name="plus" size={11} />
                           </button>
                         </div>
+                        )}
                         {item.unitPrice != null && item.qty > 1 && (
                           <span className="font-mono text-[10px] text-ink-500" dir="ltr">{fmtILS(item.unitPrice)} ליחידה</span>
                         )}

@@ -1,5 +1,7 @@
 "use client";
 import { ProximityH1, ProximityH2 } from "@/components/ui/variable-font-cursor-proximity";
+import { useNow, usePhase } from "@/components/bf/BlackFridayBar";
+import { BF } from "@/lib/black-friday";
 import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
@@ -285,6 +287,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
         <div className="flex flex-col gap-5">
           <div>
             <div className="pd-eyebrow text-xs font-semibold tracking-wider text-ink-400 mb-1.5">{CATEGORY_LABEL[p.category]}</div>
+            {p.id === "mystery-box" && <MysteryBfBadge />}
             <ProximityH1 className="pd-title text-2xl md:text-3xl font-black tracking-tightest leading-tight">{p.name}</ProximityH1>
             <p className="mt-2 text-ink-300 text-body">{p.desc}</p>
             {(() => {
@@ -724,6 +727,19 @@ export default function ProductDetailClient({ id }: { id: string }) {
         </p>
         <ReviewForm itemName={p.name} compact />
       </section>
+    </div>
+  );
+}
+
+/** Black Friday: the mystery box's limited run, while the sale is coming or on. */
+function MysteryBfBadge() {
+  const phase = usePhase(useNow());
+  if (!phase || phase === "over") return null;
+  return (
+    <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-black border border-[#ff3d5a]/50 px-3 py-1 text-sm">
+      <span className="h-2 w-2 rounded-full bg-[#ff3d5a] live-dot" />
+      <span className="font-bold text-[#ff3d5a]">מהדורת בלאק פריידי</span>
+      <span className="text-white/80">· נשארו {BF.mysteryLeft}</span>
     </div>
   );
 }
