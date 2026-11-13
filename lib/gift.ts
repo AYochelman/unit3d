@@ -1,6 +1,11 @@
 "use client";
 import { create } from "zustand";
 import type { CartItem } from "./order-store";
+import type { useLivePricer } from "./live-price";
+import type { Fidget } from "./types";
+import { FIDGETS } from "./data";
+import { fidgetGrams } from "./products";
+import { parseHours } from "./costing";
 
 /**
  * Spend over a threshold, get a gift on us.
@@ -39,3 +44,19 @@ export const useGiftStore = create<{
   fire: () => set((s) => ({ celebrate: s.celebrate + 1 })),
   nudge: () => set((s) => ({ hint: s.hint + 1 })),
 }));
+
+export type GiftChoice = { f: Fidget; price: number };
+
+/** What the customer may pick as the gift: photographed fidgets under GIFT.maxValue, most liked first. */
+export const giftChoices = (priceOf: ReturnType<typeof useLivePricer>): GiftChoice[] =>
+  FIDGETS.filter((f) => f.thumbnail)
+    .map((f) => ({ f, price: priceOf({ id: f.id, price: f.price, grams: fidgetGrams(f), hours: parseHours(f.time) }) }))
+    .filter((x) => x.price > 0 && x.price < GIFT.maxValue)
+    .sort((a, b) => (b.f.downloads ?? 0) - (a.f.downloads ?? 0));
+
+/** The gift line, as a surprise or as the fidget the customer picked. */
+export function giftLine(pick?: { id: string; name: string } | null) {
+  return pick
+    ? { title: `מתנה: ${pick.name}`, summary: [`מתנה מאיתנו בקנייה מעל ₪${GIFT.threshold}`, `פידג'ט: ${pick.name}`, "צבע: כמו בתמונה"], price: 0, source: "fidgets" as const, meta: { gift: true, giftFidgetId: pick.id, qty: 1, baseUnitPrice: 0 } }
+    : { title: `מתנה: ${GIFT.title}`, summary: [GIFT.line], price: 0, source: "fidgets" as const, meta: { gift: true, qty: 1, baseUnitPrice: 0 } };
+}

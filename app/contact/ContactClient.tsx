@@ -10,7 +10,7 @@ import { useLivePricer } from "@/lib/live-price";
 import { useExit } from "@/lib/use-exit";
 import { bfForced, bfFreeEarned, bfPhase, isBfFree } from "@/lib/black-friday";
 import { isGift } from "@/lib/gift";
-import { GiftProgress } from "@/components/gift/Gift";
+import { GiftPicker, GiftProgress } from "@/components/gift/Gift";
 import { modelSourceFromMeta } from "@/lib/model-source";
 import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -86,6 +86,9 @@ export default function ContactClient() {
   const [upsell, setUpsell] = useState<UpsellPick[] | null>(null);
   const priceOf = useLivePricer();
   const [upsellSeen, setUpsellSeen] = useState(false);
+  // The gift picker: opened at checkout once the gift is earned, or from the cart.
+  const [giftPick, setGiftPick] = useState<null | "checkout" | "cart">(null);
+  const [giftPickSeen, setGiftPickSeen] = useState(false);
   const needsReview = items.some((it) => it.source === "configurator");
 
   // A Black Friday gift stays only while it is earned: two paid fidgets in the
@@ -178,6 +181,14 @@ export default function ContactClient() {
   // blocker takes it), then the shop's queue and the customer's mail.
   // After the upsell: designed orders stop at the summary, the rest go out.
   // Both run inside a click, so WhatsApp's window still opens.
+  // After the upsell: an earned gift that is still "a surprise" gets one
+  // chance to be picked, then the order goes on.
+  const afterUpsellStep = () => {
+    const g = items.find(isGift);
+    if (g && !g.meta?.giftFidgetId && !giftPickSeen) { setGiftPickSeen(true); setGiftPick("checkout"); return; }
+    afterUpsell();
+  };
+
   const afterUpsell = () => {
     if (needsReview) { setReviewOk(false); setReview(true); return; }
     sendOrder();
@@ -386,8 +397,15 @@ export default function ContactClient() {
       {upsell && (
         <CartUpsell
           picks={upsell}
-          onContinue={() => { setUpsell(null); afterUpsell(); }}
+          onContinue={() => { setUpsell(null); afterUpsellStep(); }}
           onClose={() => setUpsell(null)}
+        />
+      )}
+
+      {giftPick && (
+        <GiftPicker
+          onDone={() => { const mode = giftPick; setGiftPick(null); if (mode === "checkout") afterUpsell(); }}
+          onCancel={() => setGiftPick(null)}
         />
       )}
 
@@ -506,7 +524,7 @@ export default function ContactClient() {
               const picks = pickUpsell(items, priceOf);
               if (picks.length) { setUpsell(picks); return; }
             }
-            afterUpsell();
+            afterUpsellStep();
           }}
           className="lg:col-span-2 space-y-8"
         >
@@ -554,7 +572,7 @@ export default function ContactClient() {
                 </button>
               </div>
 
-              <div className="px-5 pb-3"><GiftProgress /></div>
+              <div className="px-5 pb-3"><GiftProgress onPick={() => setGiftPick("cart")} /></div>
 
               <div className="divide-y divide-flame/10">
                 {items.map((item, idx) => (
