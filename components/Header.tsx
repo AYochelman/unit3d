@@ -9,7 +9,7 @@ import Btn from "./ui/Btn";
 import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
-import { useExit } from "@/lib/use-exit";
+import { useExit, usePauseBehind } from "@/lib/use-exit";
 import { CONTACT } from "@/lib/contact";
 
 const NAV = [
@@ -45,6 +45,7 @@ export default function Header() {
   useEffect(() => { if (pathname) notePath(pathname); }, [pathname]);
   const [open, setOpen] = useState(false);
   const { closing: menuClosing, close: menuClose } = useExit();
+  usePauseBehind(open);
   const [scrolled, setScrolled] = useState(false);
   const cartCount = useOrderStore((s) => s.items.length);
 
