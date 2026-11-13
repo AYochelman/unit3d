@@ -10,6 +10,7 @@ import QuickSearch from "./QuickSearch";
 import { cn } from "@/lib/cn";
 import { useOrderStore } from "@/lib/order-store";
 import { useExit, usePauseBehind } from "@/lib/use-exit";
+import { CartGiftRing } from "@/components/gift/Gift";
 import { CONTACT } from "@/lib/contact";
 
 const NAV = [
@@ -169,6 +170,7 @@ export default function Header() {
               className="relative inline-flex items-center justify-center h-11 w-11 md:h-10 md:w-10 rounded-lg border border-ink-700/60 text-ink-300 hover:text-ink-100 hover:border-ink-600 transition-colors"
             >
               <Icon name="package" size={18} />
+              <CartGiftRing />
               {cartCount > 0 && (
                 // Keyed on the count, so every add replays the pop: the
                 // customer sees the item land without looking for a toast.

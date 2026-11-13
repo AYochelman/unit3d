@@ -44,6 +44,7 @@ export type IconName =
   | "info"
   | "shieldMini"
   | "building"
+  | "gift"
   | "mail";
 
 type Props = {
@@ -261,6 +262,13 @@ const PATHS: Record<IconName, React.ReactNode> = {
   ),
   shieldMini: (
     <path d="M12 2 L20 5 L20 12 Q20 18 12 22 Q4 18 4 12 L4 5 Z" />
+  ),
+  gift: (
+    <>
+      <rect x="3" y="8" width="18" height="4" rx="1" />
+      <path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" />
+      <path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5" />
+    </>
   ),
   building: (
     <>

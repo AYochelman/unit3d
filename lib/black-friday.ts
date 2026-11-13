@@ -71,7 +71,7 @@ export const isBfPaid = (it: CartItem) => it.meta?.bfPaid === true;
 
 /** The free fidget stays only while the two it was earned with are still in the cart. */
 export const bfFreeEarned = (items: CartItem[]) =>
-  items.filter((it) => it.source === "fidgets" && !isBfFree(it)).reduce((n, it) => n + it.qty, 0) >= BF.need;
+  items.filter((it) => it.source === "fidgets" && !isBfFree(it) && it.meta?.gift !== true).reduce((n, it) => n + it.qty, 0) >= BF.need;
 
 /** The popup, opened from the bar, from a timer, or from anywhere else. */
 export const useBfStore = create<{ open: boolean; seen: boolean; show: () => void; hide: () => void }>((set) => ({
