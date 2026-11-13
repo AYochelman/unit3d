@@ -30,3 +30,17 @@ export function useExit(ms = EXIT_MS) {
 
   return { closing, close };
 }
+
+/**
+ * Freezes the page's own animations behind an open dialog. Waits for the
+ * dialog's entrance (about 300ms) so the restyle happens while nothing moves,
+ * and lifts it when the dialog unmounts — after its exit has played.
+ */
+export function usePauseBehind(active: boolean) {
+  useEffect(() => {
+    if (!active) return;
+    const root = document.documentElement;
+    const id = setTimeout(() => root.classList.add("bg-paused"), 320);
+    return () => { clearTimeout(id); root.classList.remove("bg-paused"); };
+  }, [active]);
+}

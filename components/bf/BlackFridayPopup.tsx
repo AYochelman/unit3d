@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "@/components/ui/Icon";
-import { Countdown, useNow, usePhase } from "@/components/bf/BlackFridayBar";
+import { LiveCountdown, useNow, usePhase } from "@/components/bf/BlackFridayBar";
 import { BF, bfFreeChoices, bfPaidChoices, isBfFree, useBfStore, type BfPick } from "@/lib/black-friday";
 import { useLivePricer } from "@/lib/live-price";
 import { useOrderStore } from "@/lib/order-store";
@@ -13,7 +13,7 @@ import { assetSrc } from "@/lib/assets";
 import { FIDGETS } from "@/lib/data";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
-import { useExit } from "@/lib/use-exit";
+import { useExit, usePauseBehind } from "@/lib/use-exit";
 
 type View = "intro" | "pick" | "unlock" | "free" | "done";
 
@@ -29,13 +29,16 @@ const name = (p: BfPick) => heName(p.f.id, p.f.name);
  * everything up to BF.freeMax. Opens by itself once per visit, and from the bar.
  */
 export default function BlackFridayPopup() {
-  const now = useNow();
+  // The phase only changes twice in the whole sale; check it every 30s, and let
+  // the countdown tick by itself.
+  const now = useNow(30_000);
   const phase = usePhase(now);
   const { open, seen, show, hide } = useBfStore();
   const path = usePathname() ?? "";
   const { items, addItem, removeItem } = useOrderStore();
   const priceOf = useLivePricer();
   const { closing, close } = useExit();
+  usePauseBehind(open);
   const [view, setView] = useState<View>("intro");
   const [freeId, setFreeId] = useState<string | null>(null);
 
@@ -48,7 +51,7 @@ export default function BlackFridayPopup() {
 
   const paidChoices = useMemo(() => (open ? bfPaidChoices(priceOf) : []), [open, priceOf]);
   const freeChoices = useMemo(() => (open ? bfFreeChoices(priceOf) : []), [open, priceOf]);
-  const freeCount = useMemo(() => bfFreeChoices(priceOf).length, [priceOf]);
+  const freeCount = freeChoices.length;
 
   const paidInCart = items.filter((it) => it.meta?.bfPaid === true);
   const freeInCart = items.find(isBfFree);
@@ -102,7 +105,7 @@ export default function BlackFridayPopup() {
 
   return (
     <div data-closing={closing || undefined} className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="bf-title">
-      <div className="m-backdrop absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={dismiss} />
+      <div className="m-backdrop absolute inset-0 bg-black/85" onClick={dismiss} />
       <div className="m-sheet m-sm-pop bf-panel relative w-full sm:max-w-2xl max-h-[92vh] flex flex-col rounded-t-3xl sm:rounded-3xl border border-[#ff3d5a]/30 bg-[#07090a] text-white overflow-hidden">
         <button type="button" onClick={dismiss} aria-label="סגור" className="absolute top-3 left-3 z-10 h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 inline-flex items-center justify-center">
           <Icon name="x" size={18} />
@@ -114,7 +117,7 @@ export default function BlackFridayPopup() {
           <h2 id="bf-title" className="text-3xl sm:text-4xl font-black leading-none mt-1">בלאק פריידי</h2>
           <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm">
             <span className="h-2 w-2 rounded-full bg-[#ff3d5a] live-dot" />
-            {live ? "נגמר בעוד" : "נפתח בעוד"} <Countdown to={live ? BF.end : BF.start} now={now} className="font-bold" />
+            {live ? "נגמר בעוד" : "נפתח בעוד"} <LiveCountdown to={live ? BF.end : BF.start} className="font-bold" />
           </div>
           {view !== "intro" && view !== "done" && <Progress step={step} unlocked={view === "free" || view === "unlock"} />}
         </div>

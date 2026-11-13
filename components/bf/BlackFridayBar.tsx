@@ -4,15 +4,26 @@ import { usePathname } from "next/navigation";
 import Icon from "@/components/ui/Icon";
 import { BF, bfForced, bfPhase, useBfStore, type BfPhase } from "@/lib/black-friday";
 
-/** Ticks once a second; null until mounted, so the static HTML never carries a stale time. */
-export function useNow(): number | null {
+/**
+ * The time, refreshed every `every` ms; null until mounted, so the static HTML
+ * never carries a stale time. Only a clock should tick every second — anything
+ * bigger re-renders its whole tree with it.
+ */
+export function useNow(every = 1000): number | null {
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
     const first = setTimeout(() => setNow(Date.now()), 0);
-    const id = setInterval(() => setNow(Date.now()), 1000);
+    const id = setInterval(() => setNow(Date.now()), every);
     return () => { clearTimeout(first); clearInterval(id); };
-  }, []);
+  }, [every]);
   return now;
+}
+
+/** A countdown that ticks on its own, so whatever holds it stays still. */
+export function LiveCountdown({ to, className }: { to: Date; className?: string }) {
+  const now = useNow();
+  if (now == null) return null;
+  return <Countdown to={to} now={now} className={className} />;
 }
 
 export function usePhase(now: number | null): BfPhase | null {

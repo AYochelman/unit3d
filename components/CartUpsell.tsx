@@ -11,7 +11,7 @@ import type { Fidget } from "@/lib/types";
 import { heName } from "@/lib/he-names";
 import { fmtILS } from "@/lib/format";
 import { cn } from "@/lib/cn";
-import { useExit } from "@/lib/use-exit";
+import { useExit, usePauseBehind } from "@/lib/use-exit";
 
 /** Small enough to add without thinking about it. */
 const MAX_PRICE = 35;
@@ -44,6 +44,7 @@ export function pickUpsell(items: CartItem[], priceOf: ReturnType<typeof useLive
 export default function CartUpsell({ picks, onContinue, onClose }: { picks: UpsellPick[]; onContinue: () => void; onClose: () => void }) {
   const { items, addItem, removeItem } = useOrderStore();
   const { closing, close } = useExit();
+  usePauseBehind(true);
   const added = useMemo(() => {
     const m = new Map<string, string>();
     for (const it of items) if (it.meta?.upsell && typeof it.meta.fidgetId === "string") m.set(it.meta.fidgetId, it.id);

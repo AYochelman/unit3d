@@ -300,6 +300,14 @@
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
+/* While a dialog is open, the page behind it holds still: its animations keep
+   repainting under the backdrop and steal frames from the dialog's own.
+   lib/use-exit.ts (usePauseBehind) sets the class once the dialog has finished
+   opening, so the restyle never lands in the middle of its entrance. */
+.bg-paused main *,
+.bg-paused footer *,
+.bg-paused .bf-bar * { animation-play-state: paused !important; }
+
 @keyframes m-fade-in { from { opacity: 0; } }
 @keyframes m-fade-out { to { opacity: 0; } }
 @keyframes m-sheet-in { from { transform: translateY(100%); } }
@@ -313,13 +321,13 @@
 .m-backdrop[data-closing] { animation: m-fade-out 160ms var(--ease-in) both; }
 
 /* A bottom sheet on a phone; from sm up the same element is a centred dialog. */
-.m-sheet { animation: m-sheet-in 280ms var(--ease-out) both; }
+.m-sheet { animation: m-sheet-in 280ms var(--ease-out) both; will-change: transform; }
 [data-closing] .m-sheet { animation: m-sheet-out 220ms var(--ease-in) both; }
 @media (min-width: 640px) {
   .m-sheet.m-sm-pop { animation: m-pop-in 200ms var(--ease-out) both; }
   [data-closing] .m-sheet.m-sm-pop { animation: m-pop-out 160ms var(--ease-in) both; }
 }
-.m-pop { animation: m-pop-in 200ms var(--ease-out) both; }
+.m-pop { animation: m-pop-in 200ms var(--ease-out) both; will-change: transform, opacity; }
 [data-closing] .m-pop { animation: m-pop-out 160ms var(--ease-in) both; }
 /* Same, when the element carries data-closing itself. */
 .m-pop-self { animation: m-pop-in 200ms var(--ease-out) both; }
