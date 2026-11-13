@@ -45,20 +45,20 @@ export function GiftProgress({ compact }: { compact?: boolean }) {
   const done = missing === 0;
   const pct = Math.min(100, (total / GIFT.threshold) * 100);
   return (
-    <div className={cn("gift-prog rounded-2xl border px-4", compact ? "py-2.5" : "py-3.5", done ? "border-good/50 bg-good/10" : "border-[#ffd23d]/35 bg-[#ffd23d]/[0.06]")}>
+    <div className={cn("gift-prog rounded-2xl border px-4", compact ? "py-2.5" : "py-3.5", done ? "border-[#3b82f6]/60 bg-[#3b82f6]/15" : "border-[#3b82f6]/35 bg-[#3b82f6]/[0.07]")}>
       <div className="flex items-center justify-between gap-3 text-sm">
         <span className="font-bold">
           {done
-            ? <>יש! <span className="text-good">{GIFT.title} עלינו</span></>
-            : <>עוד <bdi className="text-[#ffd23d] tabular-nums">{fmtILS(Math.ceil(missing))}</bdi> ומקבלים מתנה מאיתנו</>}
+            ? <>יש! <span className="text-[#6aa8ff]">{GIFT.title} עלינו</span></>
+            : <>עוד <bdi className="text-[#6aa8ff] tabular-nums">{fmtILS(Math.ceil(missing))}</bdi> ומקבלים מתנה מאיתנו</>}
         </span>
         <span className="text-[11px] text-ink-400 tabular-nums"><bdi>{fmtILS(Math.round(total))}</bdi> / <bdi>{fmtILS(GIFT.threshold)}</bdi></span>
       </div>
       <div className="relative mt-2.5 h-3 rounded-full bg-white/10">
-        <div className={cn("gift-fill absolute inset-y-0 right-0 rounded-full", done ? "bg-good" : "bg-gradient-to-l from-[#ffd23d] to-[#ff9f2e]")} style={{ width: `${pct}%` }}>
+        <div className={cn("gift-fill absolute inset-y-0 right-0 rounded-full", done ? "bg-[#3b82f6]" : "bg-gradient-to-l from-[#6aa8ff] to-[#2f6bff]")} style={{ width: `${pct}%` }}>
           {!done && <span className="gift-shine" aria-hidden />}
         </div>
-        <span className={cn("absolute -left-1 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full border-2", done ? "bg-good border-good text-ink-950 gift-got" : "bg-ink-900 border-[#ffd23d] text-[#ffd23d] gift-wait")}>
+        <span className={cn("absolute -left-1 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full border-2", done ? "bg-[#3b82f6] border-[#3b82f6] text-white gift-got" : "bg-ink-900 border-[#6aa8ff] text-[#6aa8ff] gift-wait")}>
           <Icon name={done ? "check" : "gift"} size={15} strokeWidth={2.5} />
         </span>
       </div>
@@ -88,12 +88,12 @@ export function CartGiftRing() {
     <>
       <svg className="pointer-events-none absolute -inset-[3px] h-[calc(100%+6px)] w-[calc(100%+6px)] -rotate-90" viewBox="0 0 46 46" aria-hidden>
         <circle cx="23" cy="23" r="21" fill="none" stroke="rgba(255,255,255,.08)" strokeWidth="2.5" />
-        <circle cx="23" cy="23" r="21" fill="none" stroke={missing === 0 ? "#089a47" : "#ffd23d"} strokeWidth="2.5" strokeLinecap="round"
+        <circle cx="23" cy="23" r="21" fill="none" stroke={missing === 0 ? "#3b82f6" : "#6aa8ff"} strokeWidth="2.5" strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - pct)} style={{ transition: "stroke-dashoffset .6s var(--ease-out), stroke .3s" }} />
       </svg>
       {shownHint > 0 && missing > 0 && (
-        <span key={shownHint} className="gift-hint pointer-events-none absolute top-full left-0 mt-2 whitespace-nowrap rounded-xl bg-ink-900 border border-[#ffd23d]/40 px-3 py-2 text-xs font-bold text-ink-100 shadow-xl z-[60]">
-          עוד <bdi className="text-[#ffd23d]">{fmtILS(Math.ceil(missing))}</bdi> למתנה
+        <span key={shownHint} className="gift-hint pointer-events-none absolute top-full left-0 mt-2 whitespace-nowrap rounded-xl bg-ink-900 border border-[#3b82f6]/50 px-3 py-2 text-xs font-bold text-ink-100 shadow-xl z-[60]">
+          עוד <bdi className="text-[#6aa8ff]">{fmtILS(Math.ceil(missing))}</bdi> למתנה
         </span>
       )}
     </>
@@ -112,18 +112,18 @@ function GiftCelebration() {
   }, [celebrate]);
   const bits = useMemo(() => Array.from({ length: 60 }, (_, i) => {
     const a = (i / 60) * Math.PI * 2 + (i % 3) * 0.2, d = 140 + ((i * 37) % 150);
-    return { dx: Math.cos(a) * d, dy: Math.sin(a) * d - 80, r: (i * 47) % 720, c: ["#089a47", "#ffd23d", "#ff3d5a", "#ffffff", "#5ab8ff"][i % 5], w: 8 + (i % 4) * 3, h: 10 + ((i * 7) % 4) * 4, delay: (i % 8) * 16 };
+    return { dx: Math.cos(a) * d, dy: Math.sin(a) * d - 80, r: (i * 47) % 720, c: ["#3b82f6", "#6aa8ff", "#ffd23d", "#ffffff", "#9cc4ff"][i % 5], w: 8 + (i % 4) * 3, h: 10 + ((i * 7) % 4) * 4, delay: (i % 8) * 16 };
   }), []);
   if (!shown) return null;
   return (
     <div key={shown} className="fixed inset-0 z-[80] grid place-items-center pointer-events-none" role="status" aria-live="polite">
-      <div className="gift-cel pointer-events-auto relative w-[min(88vw,340px)] rounded-3xl border border-good/40 bg-ink-950/95 px-6 pt-8 pb-6 text-center shadow-2xl" onClick={() => setShown(0)}>
+      <div className="gift-cel pointer-events-auto relative w-[min(88vw,340px)] rounded-3xl border border-[#3b82f6]/50 bg-ink-950/95 px-6 pt-8 pb-6 text-center shadow-2xl" onClick={() => setShown(0)}>
         <div className="relative mx-auto h-36 w-36">
           <div className="bf-rays" aria-hidden />
           {bits.map((b, i) => (
             <span key={i} className="bf-bit" aria-hidden style={{ "--dx": `${b.dx}px`, "--dy": `${b.dy}px`, "--r": `${b.r}deg`, background: b.c, width: b.w, height: b.h, animationDelay: `${600 + b.delay}ms` } as React.CSSProperties} />
           ))}
-          <div className="bf-box"><div className="bf-lid" /><div className="bf-body" /></div>
+          <div className="bf-box gift-blue"><div className="bf-lid" /><div className="bf-body" /></div>
         </div>
         <div className="bf-unlock-text mt-4">
           <div className="text-2xl font-black">פתחתם מתנה!</div>

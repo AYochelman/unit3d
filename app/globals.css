@@ -385,6 +385,9 @@
 .gift-got { animation: bf-check .45s var(--ease-out) both; }
 .gift-hint { transform-origin: top left; animation: m-pop-in .2s var(--ease-out) both, m-fade-out .25s 2.5s var(--ease-in) forwards; }
 .gift-cel { animation: m-pop-in .25s var(--ease-out) both; }
+/* The spend-over gift is blue, so it is never mistaken for the Black Friday one. */
+.gift-blue .bf-body { background: linear-gradient(#4f8dff, #1f5fe0); box-shadow: 0 18px 40px rgba(47,107,255,.45); }
+.gift-blue .bf-lid { background: linear-gradient(#7aaaff, #4f8dff); }
 @media (prefers-reduced-motion: reduce) {
   .gift-fill { transition: none; }
   .gift-shine, .gift-wait, .gift-got, .gift-hint, .gift-cel { animation: none !important; }

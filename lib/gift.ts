@@ -13,8 +13,10 @@ import type { CartItem } from "./order-store";
 export const GIFT = {
   threshold: 100,
   title: "פידג'ט הפתעה",
-  /** One line in the cart and in the WhatsApp message. */
-  line: "מתנה מאיתנו בקנייה מעל ₪100 · פידג'ט קטן לפי בחירתנו",
+  /** The surprise is picked from fidgets that sell for less than this. */
+  maxValue: 10,
+  /** One line in the cart and in the WhatsApp message (tells the owner what to pack). */
+  line: "מתנה מאיתנו בקנייה מעל ₪100 · פידג'ט הפתעה בשווי מתחת ל-₪10, לפי בחירתנו",
 };
 
 export const isGift = (it: CartItem) => it.meta?.gift === true;
