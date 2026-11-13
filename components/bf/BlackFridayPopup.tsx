@@ -71,7 +71,7 @@ export default function BlackFridayPopup() {
     if (paidInCart.length >= BF.need) return;
     addItem({
       title: name(p),
-      summary: [`פידג'ט: ${name(p)}`, `גודל: ${p.f.size}`, `זמן הדפסה: ${p.f.time}`, "צבע: כמו בתמונה", "בלאק פריידי · 2+1"],
+      summary: [`פידג'ט: ${name(p)}`, `גודל: ${p.f.size}`, `זמן הדפסה: ${p.f.time}`, "צבע: כמו בתמונה", "בלאק פריידי · קונים 2, מקבלים 1"],
       price: p.price,
       source: "fidgets",
       meta: { fidgetId: p.f.id, qty: 1, baseUnitPrice: p.price, bfPaid: true },
@@ -127,12 +127,12 @@ export default function BlackFridayPopup() {
                 <div className="flex items-start gap-4">
                   <span className="bf-gift-mini shrink-0" aria-hidden><span /></span>
                   <div className="min-w-0 flex-1">
-                    <div className="text-2xl font-black">2+1 על פידג&apos;טים</div>
+                    <div className="text-2xl font-black">קונים 2, מקבלים 1 חינם</div>
                     <div className="text-sm text-white/80 mt-1">
-                      קונים {BF.need}, השלישי עד <bdi>{fmtILS(BF.freeMax)}</bdi> עלינו. <b className="text-white">{freeCount}</b> פידג&apos;טים לבחירה.
+                      המתנה: כל פידג&apos;ט עד <bdi>{fmtILS(BF.freeMax)}</bdi>.{" "}<b className="text-white">{freeCount}</b>{" "}פידג&apos;טים לבחירה.
                     </div>
                     <div className={cn("mt-3 inline-flex items-center gap-2 h-11 px-5 rounded-full font-bold", live ? "bg-[#ff3d5a] text-white group-active:scale-[0.97] transition-transform" : "bg-white/10 text-white/70")}>
-                      {freeInCart ? "המתנה כבר בסל · לצפייה" : live ? "לבחירה מהירה" : <>נפתח ב-<bdi>27.11</bdi></>}
+                      {freeInCart ? "המתנה כבר בסל · לצפייה" : live ? "לבחירה מהירה" : <span>נפתח ב-<bdi>27.11</bdi></span>}
                       {live && <Icon name="arrowLeft" size={16} />}
                     </div>
                   </div>
