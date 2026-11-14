@@ -74,5 +74,10 @@ scripts/sync-daily.log
 # The Supabase service key on the owner PC, for the one-off folder import.
 agent/supabase-key.txt
 
+# Reference Studio keeps its library (uploads, notes, settings) out of git.
+tools/reference-studio/data/
+tools/reference-studio/.next/
+tools/reference-studio/node_modules/
+
 # Which sweep this machine already folded in — per-machine, not shared.
 data/collected-state.json
