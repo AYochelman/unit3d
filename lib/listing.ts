@@ -93,13 +93,18 @@ export const PRICE_FILTERS: { id: PriceFilter; label: string }[] = [
  */
 export const PINNED: string[] = ["mystery-box", "biz-card-3d"];
 
-/** Position in PINNED, or -1. Lower index wins; -1 means "not pinned". */
-const pinRank = (it: ListingStats): number => {
-  const i = PINNED.indexOf(it.itemId ?? it.id);
-  return i === -1 ? PINNED.indexOf(it.id) : i;
+/** Position in `pins`, or -1. Lower index wins; -1 means "not pinned". */
+const pinRank = (it: ListingStats, pins: string[]): number => {
+  const i = pins.indexOf(it.itemId ?? it.id);
+  return i === -1 ? pins.indexOf(it.id) : i;
 };
 
-export function applyListing<T extends ListingStats>(items: T[], s: ListingState): T[] {
+/**
+ * `lead` puts a shelf's own picks ahead of PINNED, on that shelf only — /trendy
+ * opens with the folding business card without moving it on office or b2b.
+ */
+export function applyListing<T extends ListingStats>(items: T[], s: ListingState, lead: string[] = []): T[] {
+  const pins = lead.length ? [...lead, ...PINNED.filter((id) => !lead.includes(id))] : PINNED;
   let out = items.filter((it) => {
     if (s.colors === "1" && it.colors !== 1) return false;
     if (s.colors === "2" && it.colors !== 2) return false;
@@ -153,7 +158,7 @@ export function applyListing<T extends ListingStats>(items: T[], s: ListingState
       default: {
         // Pinned first, in the order they are listed; everything else by the
         // download count, highest first.
-        const pa = pinRank(a), pb = pinRank(b);
+        const pa = pinRank(a, pins), pb = pinRank(b, pins);
         if (pa !== -1 || pb !== -1) {
           if (pa === -1) return 1;
           if (pb === -1) return -1;

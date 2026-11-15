@@ -9,10 +9,13 @@ import ProductToolbar from "@/components/ProductToolbar";
 import { trendingCards } from "@/lib/trending";
 import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 
+/** Opens the shelf, ahead of the mystery box: the owner's folding card that becomes a phone stand. */
+const TRENDY_LEAD = ["biz-card-stand"];
+
 export default function TrendyClient() {
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
   const all = useMemo(() => trendingCards(), []);
-  const items = useMemo(() => applyListing(all, state), [all, state]);
+  const items = useMemo(() => applyListing(all, state, TRENDY_LEAD), [all, state]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
