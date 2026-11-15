@@ -9,8 +9,8 @@ import ProductToolbar from "@/components/ProductToolbar";
 import { trendingCards } from "@/lib/trending";
 import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing";
 
-/** Opens the shelf, ahead of the mystery box: the owner's folding card that becomes a phone stand. */
-const TRENDY_LEAD = ["biz-card-stand"];
+/** Open the shelf, ahead of the mystery box: the folding card that becomes a phone stand, then the custom door sign. */
+const TRENDY_LEAD = ["biz-card-stand", "home-door-sign-custom"];
 
 export default function TrendyClient() {
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);

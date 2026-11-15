@@ -283,6 +283,27 @@ export const OFFICE_PRODUCTS: Product[] = [
     engraving: { label: "טקסט על השלט", placeholder: "משפחת ישראלי", max: 18 },
   },
   {
+    // The owner's own design and photo (23×14cm, Bambu P2S plate). Grams and
+    // hours are estimated from the model volume — the file came unsliced.
+    id: "home-door-sign-custom",
+    category: "home",
+    categories: ["home", "trendy"],
+    name: "שלט לדלת בעיצוב אישי",
+    desc: "הדבר הראשון שאורחים רואים כשהם מגיעים אליכם. שולחים לנו את שם המשפחה, מספר הדירה ואיור שמתאים לכם: הכלב שלכם, לוגו, או סמל שבחרתם. אנחנו מכינים עיצוב ושולחים לאישור לפני ההדפסה. האותיות והאיור בולטים מהשלט ומודפסים בצבע שני, כך שהם נקראים גם מרחוק. מתנה מושלמת לבית חדש.",
+    price: 40, size: "230×140×3.2mm", time: "4h", hours: 4, grams: 101,
+    art: "doorsign", hue: 30, ams: true, colors: 2, material: "pla_matte",
+    tag: "חדש",
+    isNew: true,
+    image: "/img/products/door-sign-custom-1.webp",
+    images: ["/img/products/door-sign-custom-1.webp", "/img/products/door-sign-custom-2.webp"],
+    engraving: {
+      label: "שם המשפחה",
+      placeholder: "משפחת ישראלי",
+      max: 18,
+      second: { label: "מספר דירה / איור", placeholder: "דירה 12 · כלב", max: 26 },
+    },
+  },
+  {
     id: "off-organizer",
     category: "office",
     name: "מארגן מגירה",
