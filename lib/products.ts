@@ -295,7 +295,13 @@ export const OFFICE_PRODUCTS: Product[] = [
     tag: "חדש",
     isNew: true,
     image: "/img/products/door-sign-custom-1.webp",
-    images: ["/img/products/door-sign-custom-1.webp", "/img/products/door-sign-custom-2.webp"],
+    // 1-2: the owner's own door. 3-4: renders of other designs the sign can take.
+    images: [
+      "/img/products/door-sign-custom-1.webp",
+      "/img/products/door-sign-custom-2.webp",
+      "/img/products/door-sign-custom-3.webp",
+      "/img/products/door-sign-custom-4.webp",
+    ],
     engraving: {
       label: "שם המשפחה",
       placeholder: "משפחת ישראלי",
