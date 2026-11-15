@@ -36,6 +36,7 @@ export const CHANGELOG: ChangeDay[] = [
   {
     date: "2026-11-15",
     items: [
+      { kind: "content", text: "גם בעמוד העסקים הכרטיס שהופך למעמד לטלפון ראשון" },
       { kind: "content", text: "בטרנדי: הכרטיס שהופך למעמד לטלפון פותח את המדף, לפני המיסטרי בוקס" },
     ],
   },

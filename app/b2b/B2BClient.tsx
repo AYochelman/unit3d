@@ -65,10 +65,15 @@ const INCLUDED: { iconKey: IconName; title: string; desc: string }[] = [
 
 // The "PRODUCED FOR" client wall is gone — see the note in B2BBlock.tsx.
 
+const B2B_LEAD = "biz-card-stand";
+
 export default function B2BClient() {
   // Real, brandable products with real photographs, instead of a page that only
   // describes what a corporate order could be.
-  const b2bCards = useProductsByCategory("b2b").map(productToCard);
+  // The folding card that becomes a phone stand leads, as it does on /trendy.
+  const b2bCards = useProductsByCategory("b2b")
+    .map(productToCard)
+    .sort((a, b) => Number(b.id === B2B_LEAD) - Number(a.id === B2B_LEAD));
   const ideaPhotos = photoMix(["office", "home", "statues"], 5);
 
   const [submitted, setSubmitted] = useState(false);
