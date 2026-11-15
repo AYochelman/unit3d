@@ -12,11 +12,14 @@ import { applyListing, DEFAULT_LISTING, type ListingState } from "@/lib/listing"
 
 
 
+/** The custom door sign opens the home shelf. */
+const HOME_LEAD = ["home-door-sign-custom"];
+
 export default function HomeClient() {
   const [state, setState] = useState<ListingState>(DEFAULT_LISTING);
   const both = useProductsByCategory("home");
   const scoped = useMemo(() => both.map(productToCard), [both]);
-  const items = useMemo(() => applyListing(scoped, state), [scoped, state]);
+  const items = useMemo(() => applyListing(scoped, state, HOME_LEAD), [scoped, state]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 md:py-16">
