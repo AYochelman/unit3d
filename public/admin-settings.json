@@ -20,6 +20,9 @@
   "overrides": {
     "cfg-name_keychain": {
       "price": 10
+    },
+    "home-door-sign-custom": {
+      "price": 40
     }
   },
   "pricing": {

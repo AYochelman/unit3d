@@ -60,9 +60,9 @@ const SLIDES: Slide[] = [
     id: "home",
     kicker: "לבית",
     title: "מוצרים אישיים לבית",
-    line: "אגרטלים, תחתיות ומארגנים שנראים כמו חנות עיצוב ולא כמו הדפסה.",
+    line: "שלטים לדלת בעיצוב אישי, אגרטלים ומארגנים שנראים כמו חנות עיצוב ולא כמו הדפסה.",
     href: "/home",
-    photo: "img/catalog/87e328817abb9345.webp",
+    photo: "/img/hero/door-signs.webp",
   },
   {
     id: "office",
