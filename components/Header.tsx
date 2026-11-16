@@ -217,7 +217,7 @@ export default function Header() {
             onClick={() => menuClose(() => setOpen(false))}
             className="m-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm"
           />
-          <div className="m-sheet absolute bottom-0 inset-x-0 bg-ink-950 border-t border-ink-800 rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto pb-[max(2rem,calc(1.5rem+env(safe-area-inset-bottom)))]">
+          <div className="m-sheet absolute bottom-0 inset-x-0 surface-raised border-t border-ink-800 rounded-t-2xl p-5 max-h-[85dvh] overflow-y-auto pb-[max(2rem,calc(1.5rem+env(safe-area-inset-bottom)))]">
             <div className="mx-auto mb-4 w-10 h-1 rounded-full bg-ink-700" />
 
             {/* The two things someone opens this menu to do, at the top where

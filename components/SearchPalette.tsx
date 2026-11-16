@@ -302,7 +302,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
             )}
           </div>
 
-          <div className="h-[min(52vh,460px)] overflow-y-auto overscroll-contain pb-1 [contain:strict]" onClick={() => setPicker(false)}>
+          <div className="h-[min(52dvh,460px)] overflow-y-auto overscroll-contain pb-1 [contain:strict]" onClick={() => setPicker(false)}>
             {loading &&
               [0, 1].map((g) => (
                 <div key={g} className="px-4 py-2">
