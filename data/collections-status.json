@@ -1,11 +1,11 @@
 {
-  "readAt": "2026-11-15T13:44:15.166Z",
+  "readAt": "2026-11-16T13:37:33.531Z",
   "signedIn": true,
   "blocked": [
     "p2s (Cloudflare)",
-    "fidget (Cloudflare)",
-    "statue (Cloudflare)",
     "others (Cloudflare)",
+    "statue (Cloudflare)",
+    "fidget (Cloudflare)",
     "game (Cloudflare)",
     "mine (Cloudflare)",
     "flexi (Cloudflare)",
@@ -14,6 +14,6 @@
   "probes": [],
   "inCollections": 0,
   "likesNotInShop": 0,
-  "newForApproval": 23,
-  "alreadyHandled": 336
+  "newForApproval": 27,
+  "alreadyHandled": 361
 }
