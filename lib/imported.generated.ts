@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-11-01T10:50:39.198Z
-// Items: 624
+// Items: 661
 
 import type { ImportedModel } from "./imported";
 
@@ -21649,6 +21649,978 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
       "https://makerworld.bblmw.com/makerworld/model/USe3919afea92437/design/d69b7c3473a1dcdc.jpeg"
     ],
     "colorHex": "#FFFFFF"
+  },
+  {
+    "id": "mw-13859",
+    "name": "Cute Mini Octopus",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 1.59,
+    "grams": 22,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US7275b0b14b2b1b/design/2023-08-16_b0qekzgmoxkm.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "mcgybeer",
+    "sourceUrl": "https://makerworld.com/en/models/13859-cute-mini-octopus",
+    "license": "BY-NC-ND",
+    "downloads": 136233,
+    "hue": 90,
+    "art": "keychain",
+    "status": "hold",
+    "holds": [
+      "license-nc"
+    ],
+    "licenseChecked": true,
+    "hoursAms": 1.34,
+    "gramsAms": 19,
+    "plates": [
+      {
+        "g": 22,
+        "h": 1.59
+      },
+      {
+        "g": 43,
+        "h": 3.8
+      },
+      {
+        "g": 116,
+        "h": 4.83
+      },
+      {
+        "g": 972,
+        "h": 28.11
+      }
+    ]
+  },
+  {
+    "id": "mw-30246",
+    "name": "Ratcheted Toothpaste Tube Squeezer",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.76,
+    "grams": 19,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US70602555aad0d1/design/2023-10-01_xx2dgkhdxv3i.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Roland Deschain",
+    "sourceUrl": "https://makerworld.com/en/models/30246-ratcheted-toothpaste-tube-squeezer",
+    "license": "BY-NC-SA",
+    "downloads": 92498,
+    "hue": 260,
+    "art": "planter",
+    "status": "hold",
+    "holds": [
+      "license-nc"
+    ],
+    "licenseChecked": true,
+    "hoursAms": 1.41,
+    "gramsAms": 20
+  },
+  {
+    "id": "mw-62388",
+    "name": "Strong Flying Propeller / Pull Copter No Supports",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 1.87,
+    "grams": 47,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfd936b3557b2fa/design/2023-11-10_kptkhly9euxv.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Meister Edel",
+    "sourceUrl": "https://makerworld.com/en/models/62388-strong-flying-propeller-pull-copter-no-supports",
+    "license": "BY-NC-SA",
+    "downloads": 101035,
+    "hue": 280,
+    "art": "keychain",
+    "status": "hold",
+    "holds": [
+      "license-nc"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "trendy"
+    ],
+    "hoursAms": 2.44,
+    "gramsAms": 44,
+    "plates": [
+      {
+        "g": 47,
+        "h": 1.87
+      },
+      {
+        "g": 72,
+        "h": 3.45
+      },
+      {
+        "g": 167,
+        "h": 6.24
+      }
+    ]
+  },
+  {
+    "id": "mw-436531",
+    "name": "Sweeping 2-line name plate - customizable",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 1.05,
+    "grams": 25,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US28bcbaecf7487c/design/2024-05-09_4771cd4be87318.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Makkuro",
+    "sourceUrl": "https://makerworld.com/en/models/436531-sweeping-2-line-name-plate-customizable",
+    "license": "BY-NC-SA",
+    "downloads": 105737,
+    "hue": 200,
+    "art": "penholder",
+    "status": "hold",
+    "holds": [
+      "license-nc"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "b2b"
+    ],
+    "plates": [
+      {
+        "g": 25,
+        "h": 1.05
+      },
+      {
+        "g": 38,
+        "h": 2.15
+      },
+      {
+        "g": 73,
+        "h": 3.23
+      }
+    ]
+  },
+  {
+    "id": "mw-635073",
+    "name": "Kaws Stormtrooper Star Wars",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 38.62,
+    "grams": 1101,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US99345aaf9a2bc8/design/2024-09-13_af345da096602.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Treddigineer",
+    "sourceUrl": "https://makerworld.com/en/models/635073-kaws-stormtrooper-star-wars",
+    "license": "Standard Digital File License",
+    "downloads": 4282,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-984298",
+    "name": "Modern Tea Organizer, Tea Dispenser",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 7.12,
+    "grams": 344,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USeb6c81343d6311/design/2025-01-12_669c2c9dbdc52.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Deltaprints",
+    "sourceUrl": "https://makerworld.com/en/models/984298-modern-tea-organizer-tea-dispenser",
+    "license": "BY-NC-ND",
+    "downloads": 31465,
+    "hue": 260,
+    "art": "planter",
+    "status": "hold",
+    "holds": [
+      "license-nc"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "office",
+      "b2b"
+    ],
+    "hoursAms": 8.55,
+    "gramsAms": 306,
+    "plates": [
+      {
+        "g": 344,
+        "h": 7.12
+      },
+      {
+        "g": 481,
+        "h": 12.03
+      },
+      {
+        "g": 920,
+        "h": 15.46
+      }
+    ]
+  },
+  {
+    "id": "mw-1033319",
+    "name": "Stainless Katana Sword (Print in Place)",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 4.72,
+    "grams": 119,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US52d3273012b962/design/2025-01-24_535c31b8d18188.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Mr_Andre",
+    "sourceUrl": "https://makerworld.com/en/models/1033319-stainless-katana-sword-print-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 159906,
+    "hue": 145,
+    "art": "keychain",
+    "status": "hold",
+    "holds": [
+      "weapon",
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "fidget"
+    ],
+    "hoursAms": 4.43,
+    "gramsAms": 122,
+    "plates": [
+      {
+        "g": 119,
+        "h": 4.72
+      },
+      {
+        "g": 324,
+        "h": 11.81
+      }
+    ]
+  },
+  {
+    "id": "mw-1925739",
+    "name": "Cute Snakey - Free to Sell - No AMS",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 0.29,
+    "grams": 3,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US361deadef200/design/2025-11-13_32e322732f9b5.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Amanda Roos",
+    "sourceUrl": "https://makerworld.com/en/models/1925739-cute-snakey-free-to-sell-no-ams",
+    "license": "CC0",
+    "downloads": 99272,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 1.15,
+    "gramsAms": 15,
+    "plates": [
+      {
+        "g": 3,
+        "h": 0.29
+      },
+      {
+        "g": 6,
+        "h": 0.46
+      },
+      {
+        "g": 11,
+        "h": 0.98
+      },
+      {
+        "g": 15,
+        "h": 1.22
+      },
+      {
+        "g": 22,
+        "h": 1.83
+      },
+      {
+        "g": 34,
+        "h": 2.82
+      },
+      {
+        "g": 93,
+        "h": 7.08
+      }
+    ]
+  },
+  {
+    "id": "mw-1975209",
+    "name": "BIC - Biomorphic Voronoi-Lattice Lighter Sleeve",
+    "desc": "אביזר עישון מודפס, לבגירים בלבד. למאפרות מומלץ PETG.",
+    "shelf": "smoke",
+    "hours": 3.86,
+    "grams": 41,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US335c01a3b34d55/design/2025-11-08_e22432272b35a8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "WazzyPrints3D",
+    "sourceUrl": "https://makerworld.com/en/models/1975209-bic-biomorphic-voronoi-lattice-lighter-sleeve",
+    "license": "Standard Digital File License",
+    "downloads": 1454,
+    "hue": 25,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2408229",
+    "name": "Shot Roulette - Compact Drinking Game",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 1.89,
+    "grams": 55,
+    "size": "~100mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US4e26fadbae8547/design/4b7b6d8c0d3532af.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Ocular Dynamic",
+    "sourceUrl": "https://makerworld.com/en/models/2408229-shot-roulette-compact-drinking-game",
+    "license": "Standard Digital File License",
+    "downloads": 375,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2702442",
+    "name": "Bearbrick yeezy style",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 1.97,
+    "grams": 31,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US33d9006ac5d2ce/design/56eeb9b0b7cea39f.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Ties",
+    "sourceUrl": "https://makerworld.com/en/models/2702442-bearbrick-yeezy-style",
+    "license": "Standard Digital File License",
+    "downloads": 1716,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2837551",
+    "name": "Chrome Hearts Cross Embossed Ashtray",
+    "desc": "אביזר עישון מודפס, לבגירים בלבד. למאפרות מומלץ PETG.",
+    "shelf": "smoke",
+    "hours": 3.04,
+    "grams": 48,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US4df74971dcbe0b/design/c1dd362539cda321.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "harry L",
+    "sourceUrl": "https://makerworld.com/en/models/2837551-chrome-hearts-cross-embossed-ashtray",
+    "license": "Standard Digital File License",
+    "downloads": 798,
+    "hue": 25,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2841083",
+    "name": "Kaws Companion (Holding Snowboard)",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 4.65,
+    "grams": 135,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USbc4b0ff03cdd83/design/1ef151efd6b2b1d4.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Dylanpi",
+    "sourceUrl": "https://makerworld.com/en/models/2841083-kaws-companion-holding-snowboard",
+    "license": "MakerWorld Exclusive License",
+    "downloads": 264,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2892860",
+    "name": "KAWS Globus-Figur",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 13.25,
+    "grams": 125,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US9dded9bba87cdb/design/833ef48fb815cc1b.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "David",
+    "sourceUrl": "https://makerworld.com/en/models/2892860-kaws-globe-figure",
+    "license": "Standard Digital File License",
+    "downloads": 495,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2902493",
+    "name": "NIKE SOCK VASE (without ams)",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 3,
+    "grams": 107,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USdc237567ab8b68/design/ecd466875d1ec6c0.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "formastampa",
+    "sourceUrl": "https://makerworld.com/en/models/2902493-nike-sock-vase-without-ams",
+    "license": "Standard Digital File License",
+    "downloads": 1291,
+    "hue": 260,
+    "art": "planter",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-2914435",
+    "name": "Chrome Hearts Clipper Sleeve",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 1.22,
+    "grams": 6,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US59afd747f59aa9/design/4d7ae2e876330a30.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Mister Kashanka",
+    "sourceUrl": "https://makerworld.com/en/models/2914435-chrome-hearts-clipper-sleeve",
+    "license": "Standard Digital File License",
+    "downloads": 387,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3002583",
+    "name": "Kaws Sujetalibros V2",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 12.65,
+    "grams": 442,
+    "size": "~250mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USb0616a636e57c2/design/e98499461a522263.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Nakoma",
+    "sourceUrl": "https://makerworld.com/en/models/3002583-kaws-bookends-v2",
+    "license": "Standard Digital File License",
+    "downloads": 72,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ]
+  },
+  {
+    "id": "mw-3017967",
+    "name": "Kaws x Banksy Flower throwing bomber art",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 3.6,
+    "grams": 38,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US53bf6b9172a00c/design/7fb521ff92b1e728.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Realox89",
+    "sourceUrl": "https://makerworld.com/en/models/3017967-kaws-x-banksy-flower-throwing-bomber-art",
+    "license": "Standard Digital File License",
+    "downloads": 370,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3216555",
+    "name": "KAWS MARBLE UNDER SHEET",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 7.18,
+    "grams": 102,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US180015be510676/design/d0c449085762a525.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Tommy´s",
+    "sourceUrl": "https://makerworld.com/en/models/3216555-kaws-marble-under-sheet",
+    "license": "Standard Digital File License",
+    "downloads": 164,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3217694",
+    "name": "Claude x Rodin",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 2.32,
+    "grams": 54,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US3cd3f9efa3c086/design/87e4619e752ff333.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "maydei_",
+    "sourceUrl": "https://makerworld.com/en/models/3217694-claude-x-rodin",
+    "license": "Standard Digital File License - Community Use",
+    "downloads": 314,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3229973",
+    "name": "Tactical_Grip_Lighter_Case_v1.stl",
+    "desc": "אביזר עישון מודפס, לבגירים בלבד. למאפרות מומלץ PETG.",
+    "shelf": "smoke",
+    "hours": 2.5,
+    "grams": 34,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USb538a286d57e7a/design/a762a495dd0c5ae3.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "3D Maya Lab",
+    "sourceUrl": "https://makerworld.com/en/models/3229973-tactical_grip_lighter_case_v1-stl",
+    "license": "Standard Digital File License",
+    "downloads": 399,
+    "hue": 25,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3235008",
+    "name": "Customizable Claude Code Mascot",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 0.49,
+    "grams": 15,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USc595fa37984f9c/design/bbab9e628b0bd848.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Shrek",
+    "sourceUrl": "https://makerworld.com/en/models/3235008-customizable-claude-code-mascot",
+    "license": "Standard Digital File License",
+    "downloads": 294,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3283346",
+    "name": "Schmelzender Ballon Hund",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 1.54,
+    "grams": 28,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US6335f057d854c1/design/bd7d6f90ed54d22e.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Jan",
+    "sourceUrl": "https://makerworld.com/en/models/3283346-melting-balloon-dog",
+    "license": "Standard Digital File License",
+    "downloads": 434,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3318458",
+    "name": "BRICKMANUS I - Roman Bust Brick Man Edition",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 4.48,
+    "grams": 70,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USc8378fce23e8/design/73db0cb3fd865ae0.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "DK Design",
+    "sourceUrl": "https://makerworld.com/en/models/3318458-brickmanus-i-roman-bust-brick-man-edition",
+    "license": "Standard Digital File License",
+    "downloads": 192,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 17.26,
+    "gramsAms": 214,
+    "plates": [
+      {
+        "g": 70,
+        "h": 4.48
+      },
+      {
+        "g": 159,
+        "h": 7.71
+      }
+    ]
+  },
+  {
+    "id": "mw-3393687",
+    "name": "Figura Kaws sentada",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 2.15,
+    "grams": 54,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US45774050ed186c/design/5f758638561980df.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "PoliCrow",
+    "sourceUrl": "https://makerworld.com/en/models/3393687-sitting-kaws-figure",
+    "license": "Standard Digital File License",
+    "downloads": 533,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3403077",
+    "name": "Modern Skull Head Sculpture",
+    "desc": "פריט תצוגה בהדפסה איטית ובשכבות דקות. למדף, לא לכיס.",
+    "shelf": "statues",
+    "hours": 1.44,
+    "grams": 44,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5e47f70345a49/design/44b31c7fde95e5f2.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "PoliCrow",
+    "sourceUrl": "https://makerworld.com/en/models/3403077-modern-skull-head-sculpture",
+    "license": "Standard Digital File License",
+    "downloads": 110,
+    "hue": 320,
+    "art": "lowpoly",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3477869",
+    "name": "Minimal Laptop Riser – Compact & Lightweight",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 1.8,
+    "grams": 17,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US81ec0f891b7651/design/12c4715d1c3d130c.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "JANBERRY DESIGN",
+    "sourceUrl": "https://makerworld.com/en/models/3477869-minimal-laptop-riser-compact-lightweight",
+    "license": "Standard Digital File License",
+    "downloads": 3533,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "trendy",
+      "b2b"
+    ]
+  },
+  {
+    "id": "mw-3482295",
+    "name": "Mini OneWheel - Fidget Toy",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.65,
+    "grams": 16,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USfda611f9943668/design/49ff4e4f05c5eabc.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Ironage 3D",
+    "sourceUrl": "https://makerworld.com/en/models/3482295-mini-onewheel-fidget-toy",
+    "license": "Standard Digital File License - Community Use",
+    "downloads": 1716,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-3483882",
+    "name": "Fidget Clicker with Quiet / Silent Mode | SNAP DUO",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.8,
+    "grams": 19,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USf268968dcd3e00/design/8570aed134d7a1f7.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "oddmio",
+    "sourceUrl": "https://makerworld.com/en/models/3483882-fidget-clicker-with-quiet-silent-mode-snap-duo",
+    "license": "Standard Digital File License",
+    "downloads": 754,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.77,
+    "gramsAms": 20
+  },
+  {
+    "id": "mw-3550791",
+    "name": "Mini Sliding Photo Book Keychain - 2×3 & 3×4 cm",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 2.04,
+    "grams": 29,
+    "size": "~60mm",
+    "colors": 3,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USd487362ae24e59/design/b0ccfd1e780fd8e1.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "TH Design",
+    "sourceUrl": "https://makerworld.com/en/models/3550791-mini-sliding-photo-book-keychain-2x3-3x4-cm",
+    "license": "Standard Digital File License",
+    "downloads": 2851,
+    "hue": 145,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 2.18,
+    "gramsAms": 32
+  },
+  {
+    "id": "mw-3561864",
+    "name": "Flexi Skeleton T-Rex dinosaur (Tiny & XL Size)",
+    "desc": "יצור פלקסי שיוצא מהמדפסת כשהוא כבר זז. בלי דבק, בלי הרכבה.",
+    "shelf": "flexi",
+    "hours": 3.75,
+    "grams": 80,
+    "size": "~100mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US625b8e2d6ffdac/design/3bd0d5f81f3a2f1f.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "PinkyWings",
+    "sourceUrl": "https://makerworld.com/en/models/3561864-flexi-skeleton-t-rex-dinosaur-tiny-xl-size",
+    "license": "Standard Digital File License",
+    "downloads": 4453,
+    "hue": 90,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 49.47,
+    "gramsAms": 1004,
+    "plates": [
+      {
+        "g": 80,
+        "h": 3.75
+      },
+      {
+        "g": 172,
+        "h": 6.13
+      },
+      {
+        "g": 281,
+        "h": 9.2
+      },
+      {
+        "g": 821,
+        "h": 21.59
+      }
+    ]
+  },
+  {
+    "id": "mw-3562941",
+    "name": "Ultra Flexi Starfish – Print-in-Place Hex Fidget",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 3.23,
+    "grams": 36,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US5d065ce3b754ed/design/e129e8d5fdd2e88d.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "EqualisticZz",
+    "sourceUrl": "https://makerworld.com/en/models/3562941-ultra-flexi-starfish-print-in-place-hex-fidget",
+    "license": "Standard Digital File License",
+    "downloads": 1912,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 36,
+        "h": 3.23
+      },
+      {
+        "g": 59,
+        "h": 5.11
+      },
+      {
+        "g": 107,
+        "h": 9.71
+      }
+    ]
+  },
+  {
+    "id": "mw-3563841",
+    "name": "Mirror Swallow Half Bird Mirror Decoration",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 0.57,
+    "grams": 6,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US278ca6a3816c76/design/f1a4744511cd00c2.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "K3Dprints",
+    "sourceUrl": "https://makerworld.com/en/models/3563841-mirror-swallow-half-bird-mirror-decoration",
+    "license": "Standard Digital File License",
+    "downloads": 978,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "plates": [
+      {
+        "g": 6,
+        "h": 0.57
+      },
+      {
+        "g": 40,
+        "h": 3.68
+      }
+    ]
+  },
+  {
+    "id": "mw-3566476",
+    "name": "Token Fornite x One Piece",
+    "desc": "מודל פופולרי מהקהילה, מודפס אצלנו בצבע שתבחר.",
+    "shelf": "trendy",
+    "hours": 0.86,
+    "grams": 13,
+    "size": "~60mm",
+    "colors": 2,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US14d2059dbdd65a/design/77a297906dbb4762.jpeg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Will Of Ray",
+    "sourceUrl": "https://makerworld.com/en/models/3566476-token-fornite-x-one-piece",
+    "license": "Standard Digital File License - Community Use",
+    "downloads": 2178,
+    "hue": 145,
+    "art": "keychain",
+    "status": "hold",
+    "holds": [
+      "brand"
+    ],
+    "licenseChecked": true,
+    "hoursAms": 0.36,
+    "gramsAms": 6
+  },
+  {
+    "id": "mw-3567384",
+    "name": "Ultimate Flip & Slide Fidget Toy (Print in Place)",
+    "desc": "צעצוע שולחני להעסקת הידיים. הדפסה אחת, מוכן לשימוש.",
+    "shelf": "fidget",
+    "hours": 0.63,
+    "grams": 21,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US3754a11968908a/design/c6d5448a1988c193.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "AbyssalCactus",
+    "sourceUrl": "https://makerworld.com/en/models/3567384-ultimate-flip-slide-fidget-toy-print-in-place",
+    "license": "Standard Digital File License",
+    "downloads": 4453,
+    "hue": 280,
+    "art": "keychain",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "hoursAms": 0.84,
+    "gramsAms": 22
+  },
+  {
+    "id": "mw-3569394",
+    "name": "iPhone USB-C Cable Saver | Clip-On Cable Protector",
+    "desc": "פריט לשולחן העבודה. אפשר עם שם או לוגו.",
+    "shelf": "office",
+    "hours": 0.2,
+    "grams": 2,
+    "size": "~60mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USc4688e88663a0a/design/59b082f866860e8b.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "VexaroLab",
+    "sourceUrl": "https://makerworld.com/en/models/3569394-iphone-usb-c-cable-saver-clip-on-cable-protector",
+    "license": "Standard Digital File License",
+    "downloads": 2115,
+    "hue": 200,
+    "art": "penholder",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true,
+    "also": [
+      "home"
+    ]
+  },
+  {
+    "id": "mw-3583443",
+    "name": "GTA 6 (GTA VI) PS5 DualSense Controller Stand",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.71,
+    "grams": 87,
+    "size": "~100mm",
+    "colors": 4,
+    "image": "https://makerworld.bblmw.com/makerworld/model/US49ec297ae49d10/design/5c51237d7109ec44.png?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "Václav Buben",
+    "sourceUrl": "https://makerworld.com/en/models/3583443-gta-6-gta-vi-ps5-dualsense-controller-stand",
+    "license": "Standard Digital File License",
+    "downloads": 709,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
   }
 ];
 
