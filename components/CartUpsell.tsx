@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
+import IconSwap from "@/components/ui/IconSwap";
 import { FIDGETS } from "@/lib/data";
 import { fidgetGrams } from "@/lib/products";
 import { parseHours } from "@/lib/costing";
@@ -74,7 +75,7 @@ export default function CartUpsell({ picks, onContinue, onClose }: { picks: Upse
       aria-labelledby="upsell-title"
     >
       <div className="m-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => close(onClose)} />
-      <div className="m-sheet m-sm-pop relative w-full sm:max-w-xl max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-ink-900 border border-ink-700 p-5 sm:p-6 space-y-4">
+      <div className="m-sheet m-sm-pop relative w-full sm:max-w-xl max-h-[92dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl surface-raised border border-ink-700 p-5 sm:p-6 space-y-4">
         <div className="mx-auto h-1.5 w-12 rounded-full bg-ink-700 sm:hidden" />
         <div className="text-center">
           <div className="text-xs font-bold text-flame">רגע לפני שמסיימים</div>
@@ -111,11 +112,7 @@ export default function CartUpsell({ picks, onContinue, onClose }: { picks: Upse
                       on ? "bg-good text-ink-950" : "bg-ink-800 text-ink-100 group-hover:bg-ink-700",
                     )}
                   >
-                    {/* The two icons cross-fade through a blur instead of swapping. */}
-                    <span className="relative h-4 w-4">
-                      <Icon name="plus" size={16} strokeWidth={3} className={cn("absolute inset-0 transition-[opacity,transform,filter] duration-200 ease-[var(--ease-out)]", on ? "opacity-0 scale-50 blur-[2px]" : "opacity-100")} />
-                      <Icon name="check" size={16} strokeWidth={3} className={cn("absolute inset-0 transition-[opacity,transform,filter] duration-200 ease-[var(--ease-out)]", on ? "opacity-100" : "opacity-0 scale-50 blur-[2px]")} />
-                    </span>
+                    <IconSwap from="plus" to="check" on={on} size={16} strokeWidth={3} />
                     {on ? "נוסף" : "הוספה"}
                   </div>
                 </div>

@@ -52,7 +52,7 @@ export default function ProductGallery({
       </div>
 
       {images.length > 1 && (
-        <div className="sm:hidden flex gap-2 overflow-x-auto pb-0.5 mt-3">
+        <div className="edge-fade sm:hidden flex gap-2 overflow-x-auto pb-0.5 mt-3">
           {images.map((src, i) => (
             <button
               key={src}

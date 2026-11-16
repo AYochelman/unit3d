@@ -406,7 +406,7 @@ export default function ConfiguratorClient({
         <div className="lg:col-span-2 order-1 lg:order-2">
           <div className="rounded-2xl border border-ink-800 bg-ink-900 p-5 md:p-6">
             {/* Stepper */}
-            <div className="flex items-center gap-1 mb-6 overflow-x-auto">
+            <div className="edge-fade flex items-center gap-1 mb-6 overflow-x-auto">
               {steps.map((id, i) => (
                 <button key={id} onClick={() => setStep(i)} className="flex-1 min-w-[56px] text-right group">
                   <div className={cn("h-1 rounded-full mb-2 transition-colors", i <= step ? "bg-flame" : "bg-ink-800")} />

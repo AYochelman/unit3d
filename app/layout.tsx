@@ -76,7 +76,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
         />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-dvh flex flex-col">
         <a href="#main" className="skip-link">דלג לתוכן הראשי</a>
         <BlackFridayBar />
         <Header />
