@@ -1,19 +1,16 @@
 {
-  "readAt": "2026-11-16T13:37:33.531Z",
+  "readAt": "2026-11-16T14:56:47.177Z",
   "signedIn": true,
   "blocked": [
-    "p2s (Cloudflare)",
-    "others (Cloudflare)",
-    "statue (Cloudflare)",
-    "fidget (Cloudflare)",
-    "game (Cloudflare)",
-    "mine (Cloudflare)",
-    "flexi (Cloudflare)",
-    "buisness (Cloudflare)"
+    "Flexi (Cloudflare)",
+    "Fidget (Cloudflare)",
+    "Mine (Cloudflare)",
+    "Statue (Cloudflare)",
+    "Game (Cloudflare)"
   ],
   "probes": [],
   "inCollections": 0,
   "likesNotInShop": 0,
-  "newForApproval": 27,
+  "newForApproval": 25,
   "alreadyHandled": 361
 }
