@@ -619,3 +619,18 @@ html:is([data-product-look="gift-a"], [data-product-look="gift-c"]) .pd-root :is
 @media (prefers-reduced-motion: reduce) {
   .sp-in, .sp-pop, .sp-group, .sp-chip, .sp-shim { animation: none; }
 }
+
+/* A horizontal scroll row fades out at both ends instead of being cut off,
+   so it reads as "there is more" rather than as a clipped edge. */
+.edge-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+}
+
+/* In dark mode a shadow barely shows, so depth comes from lightness: a sheet
+   or menu that floats above the page is a step lighter than it, with a faint
+   light edge on top. Cards inside it stay page-dark and read as recessed. */
+.surface-raised {
+  background-color: #0b1d14;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 -12px 40px rgb(0 0 0 / 0.45);
+}

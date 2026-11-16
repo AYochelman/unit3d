@@ -2,6 +2,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
+import IconSwap from "@/components/ui/IconSwap";
 import { cn } from "@/lib/cn";
 import { helpBotNow, loadHelpBot, warmHelpBot } from "@/lib/helpbot-lazy";
 import MorphOrb, { type MorphOrbApi, type MorphOrbPhase } from "@/components/ui/ai-thiking-orb-and-input";
@@ -108,7 +109,7 @@ export default function HelpBot() {
           open ? "bg-ink-800 text-ink-100" : "btn-shiny",
         )}
       >
-        <Icon name={open ? "x" : "sparkles"} size={24} />
+        <IconSwap from="sparkles" to="x" on={open} size={24} />
         {!open && !seenPrompt && (
           <span className="absolute -top-0.5 -left-0.5 h-3.5 w-3.5 rounded-full bg-cyan2 border-2 border-ink-950" />
         )}
@@ -125,7 +126,7 @@ export default function HelpBot() {
           // Grows out of the button that opened it (bottom right) and shrinks
           // back into it.
           style={{ transformOrigin: "bottom right" }}
-          className="m-pop-self fixed right-4 left-4 sm:left-auto sm:w-[380px] z-40 bottom-[calc(var(--fab-bottom)+4.25rem)] rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(80vh,600px)]"
+          className="m-pop-self fixed right-4 left-4 sm:left-auto sm:w-[380px] z-40 bottom-[calc(var(--fab-bottom)+4.25rem)] rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl flex flex-col overflow-hidden max-h-[min(80dvh,600px)]"
         >
           <header className="flex items-center gap-3 p-3.5 border-b border-ink-800 bg-ink-950/60">
             <span className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-flame/15 text-flame shrink-0">
@@ -148,7 +149,7 @@ export default function HelpBot() {
             </button>
           </header>
 
-          <div className="h-[380px] max-h-[48vh] min-h-[340px] shrink-0">
+          <div className="h-[380px] max-h-[48dvh] min-h-[340px] shrink-0">
             <MorphOrb
               onSubmit={answer}
               onPhaseChange={onPhase}

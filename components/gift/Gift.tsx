@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Icon from "@/components/ui/Icon";
+import IconSwap from "@/components/ui/IconSwap";
 import { useOrderStore } from "@/lib/order-store";
 import { GIFT, giftChoices, giftLine, giftMissing, giftTotal, isGift, useGiftStore, type GiftChoice } from "@/lib/gift";
 import Image from "next/image";
@@ -65,7 +66,7 @@ export function GiftProgress({ compact, onPick }: { compact?: boolean; onPick?: 
           {!done && <span className="gift-shine" aria-hidden />}
         </div>
         <span className={cn("absolute -left-1 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full border-2", done ? "bg-[#3b82f6] border-[#3b82f6] text-white gift-got" : "bg-ink-900 border-[#6aa8ff] text-[#6aa8ff] gift-wait")}>
-          <Icon name={done ? "check" : "gift"} size={15} strokeWidth={2.5} />
+          <IconSwap from="gift" to="check" on={done} size={15} strokeWidth={2.5} />
         </span>
       </div>
     </div>
@@ -165,7 +166,7 @@ export function GiftPicker({ onDone, onCancel }: { onDone: () => void; onCancel:
   return (
     <div data-closing={closing || undefined} className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="gift-pick-title">
       <div className="m-backdrop absolute inset-0 bg-black/80" onClick={() => close(onCancel)} />
-      <div className="m-sheet m-sm-pop relative w-full sm:max-w-xl max-h-[92vh] flex flex-col rounded-t-3xl sm:rounded-3xl border border-[#3b82f6]/40 bg-ink-950 overflow-hidden">
+      <div className="m-sheet m-sm-pop relative w-full sm:max-w-xl max-h-[92dvh] flex flex-col rounded-t-3xl sm:rounded-3xl border border-[#3b82f6]/40 bg-ink-950 overflow-hidden">
         <div className="px-5 sm:px-6 pt-6 pb-3 text-center shrink-0" style={{ background: "radial-gradient(120% 140% at 50% 0%, rgba(59,130,246,.28), transparent 60%)" }}>
           <span className="gift-wait mx-auto mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#3b82f6] text-white"><Icon name="gift" size={24} /></span>
           <h2 id="gift-pick-title" className="text-2xl font-black">בחרו את המתנה שלכם</h2>

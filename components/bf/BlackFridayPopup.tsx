@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "@/components/ui/Icon";
+import IconSwap from "@/components/ui/IconSwap";
 import { LiveCountdown, useNow, usePhase } from "@/components/bf/BlackFridayBar";
 import { BF, bfFreeChoices, bfPaidChoices, isBfFree, useBfStore, type BfPick } from "@/lib/black-friday";
 import { useLivePricer } from "@/lib/live-price";
@@ -106,7 +107,7 @@ export default function BlackFridayPopup() {
   return (
     <div data-closing={closing || undefined} className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="bf-title">
       <div className="m-backdrop absolute inset-0 bg-black/85" onClick={dismiss} />
-      <div className="m-sheet m-sm-pop bf-panel relative w-full sm:max-w-2xl max-h-[92vh] flex flex-col rounded-t-3xl sm:rounded-3xl border border-[#ff3d5a]/30 bg-[#07090a] text-white overflow-hidden">
+      <div className="m-sheet m-sm-pop bf-panel relative w-full sm:max-w-2xl max-h-[92dvh] flex flex-col rounded-t-3xl sm:rounded-3xl border border-[#ff3d5a]/30 bg-[#07090a] text-white overflow-hidden">
         <button type="button" onClick={dismiss} aria-label="סגור" className="absolute top-3 left-3 z-10 h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 inline-flex items-center justify-center">
           <Icon name="x" size={18} />
         </button>
@@ -218,7 +219,7 @@ function Progress({ step, unlocked }: { step: number; unlocked: boolean }) {
         <span key={i} className={cn("h-2 flex-1 rounded-full transition-colors duration-300", i < step ? "bg-[#ff3d5a]" : "bg-white/15")} />
       ))}
       <span className={cn("bf-gift-slot inline-flex h-9 w-9 items-center justify-center rounded-full border-2 transition-all duration-300", unlocked ? "border-[#38e08a] bg-[#38e08a]/20 text-[#38e08a] bf-glow" : "border-white/20 text-white/40")}>
-        <Icon name={unlocked ? "check" : "plus"} size={16} strokeWidth={3} />
+        <IconSwap from="plus" to="check" on={unlocked} size={16} strokeWidth={3} />
       </span>
     </div>
   );

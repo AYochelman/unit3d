@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Btn from "@/components/ui/Btn";
 import Icon from "@/components/ui/Icon";
+import IconSwap from "@/components/ui/IconSwap";
 import CartUpsell, { pickUpsell, type UpsellPick } from "@/components/CartUpsell";
 import { useLivePricer } from "@/lib/live-price";
 import { useExit } from "@/lib/use-exit";
@@ -312,7 +313,7 @@ export default function ContactClient() {
               dir="ltr"
             >
               {coupon}
-              <Icon name={copied ? "check" : "file"} size={14} />
+              <IconSwap from="file" to="check" on={copied} size={14} />
             </button>
             <div className="mt-2 text-[11px] text-ink-500">{copied ? "הועתק" : "לחיצה מעתיקה"}</div>
           </div>
@@ -418,7 +419,7 @@ export default function ContactClient() {
           aria-labelledby="review-title"
         >
           <div className="m-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => reviewExit.close(() => setReview(false))} />
-          <div className="m-sheet m-sm-pop relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-ink-900 border border-ink-700 p-5 sm:p-6 space-y-5">
+          <div className="m-sheet m-sm-pop relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl surface-raised border border-ink-700 p-5 sm:p-6 space-y-5">
             <div>
               <h2 id="review-title" className="text-xl font-extrabold">סיכום הזמנה</h2>
               <p className="text-sm text-ink-300 mt-1">
