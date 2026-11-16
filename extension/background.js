@@ -50,8 +50,33 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
  * bottom repeatedly because the list loads as you go, and the read stops when
  * a few passes in a row stop finding anything new.
  */
+/**
+ * A tab to read a page in, whether or not a Chrome window is open.
+ *
+ * "No current window" (16.11): the extension runs in the background with every
+ * Chrome window closed, and chrome.tabs.create with no windowId means "in the
+ * current window" -- of which there was none. So: an existing normal window if
+ * there is one, named by id, and otherwise a window of our own, minimized and
+ * unfocused, closed again with the tab.
+ */
+async function openTab(url) {
+  const wins = await chrome.windows.getAll({ windowTypes: ["normal"] });
+  if (wins.length) {
+    const tab = await chrome.tabs.create({ windowId: wins[0].id, url, active: false, pinned: true });
+    return { tabId: tab.id, close: () => chrome.tabs.remove(tab.id) };
+  }
+  let w;
+  try {
+    w = await chrome.windows.create({ url, focused: false, state: "minimized" });
+  } catch {
+    w = await chrome.windows.create({ url, focused: false, width: 480, height: 640 });
+  }
+  return { tabId: w.tabs[0].id, close: () => chrome.windows.remove(w.id) };
+}
+
 async function readPage(url) {
-  const tab = await chrome.tabs.create({ url, active: false, pinned: true });
+  const tab = await openTab(url);
+  const tabId = tab.tabId;
   try {
     let best = [];
     let quiet = 0;
@@ -60,7 +85,7 @@ async function readPage(url) {
       let html = "";
       try {
         const [res] = await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
+          target: { tabId },
           func: () => {
             window.scrollTo(0, document.body.scrollHeight);
             return document.documentElement.innerHTML;
@@ -76,7 +101,7 @@ async function readPage(url) {
     }
     return best;
   } finally {
-    try { await chrome.tabs.remove(tab.id); } catch { /* already gone */ }
+    try { await tab.close(); } catch { /* already gone */ }
   }
 }
 
