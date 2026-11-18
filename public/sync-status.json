@@ -1,17 +1,17 @@
 {
   "sweep": {
-    "readAt": "2026-11-15T17:53:30.612+00:00",
-    "checkedAt": "2026-11-17T15:28:37.190Z",
-    "models": 301,
+    "readAt": "2026-11-17T15:36:02.149+00:00",
+    "checkedAt": "2026-11-18T13:37:58.617Z",
+    "models": 272,
     "likes": 20,
-    "newToQueue": 0
+    "newToQueue": 5
   },
   "nightly": {
-    "ranAt": "2026-11-17T15:47:56.300Z",
+    "ranAt": "2026-11-18T13:57:17.106Z",
     "blockedCollections": 8,
     "collections": 8,
-    "newForApproval": 1,
-    "alreadyHandled": 385
+    "newForApproval": 4,
+    "alreadyHandled": 387
   },
   "decisions": {
     "appliedAt": "2026-11-18T12:10:09.910Z",
