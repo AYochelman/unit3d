@@ -2,7 +2,7 @@
 //
 // Re-run `npm run import:makerworld` to refresh.
 // Weights and times last rechecked: 2026-11-01T10:50:39.198Z
-// Items: 661
+// Items: 662
 
 import type { ImportedModel } from "./imported";
 
@@ -22616,6 +22616,26 @@ export const IMPORTED_GENERATED: ImportedModel[] = [
     "sourceUrl": "https://makerworld.com/en/models/3583443-gta-6-gta-vi-ps5-dualsense-controller-stand",
     "license": "Standard Digital File License",
     "downloads": 709,
+    "hue": 260,
+    "art": "planter",
+    "status": "live",
+    "holds": [],
+    "licenseChecked": true
+  },
+  {
+    "id": "mw-1167542",
+    "name": "Kitchen Roll Holder - baking paper, cling film etc",
+    "desc": "פריט שימושי לבית. אפשר לבחור צבע וגודל.",
+    "shelf": "home",
+    "hours": 2.75,
+    "grams": 125,
+    "size": "~160mm",
+    "colors": 1,
+    "image": "https://makerworld.bblmw.com/makerworld/model/USda29b4552e9b30/design/2026-01-04_fd7cc8660c51a8.jpg?x-oss-process=image/resize,w_400/format,webp",
+    "creator": "GK Design - Grzegorz Kolasa",
+    "sourceUrl": "https://makerworld.com/en/models/1167542-kitchen-roll-holder-baking-paper-cling-film-etc",
+    "license": "Standard Digital File License",
+    "downloads": 20221,
     "hue": 260,
     "art": "planter",
     "status": "live",
