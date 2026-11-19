@@ -227,9 +227,18 @@ export default function HeroCarousel() {
                   s.art && !shown[s.id] ? "text-center items-center max-w-xl" : "text-right",
                 )}
               >
-                <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase text-flame block mb-1.5">
-                  {s.kicker}
-                </span>
+                {s.id === "daily" ? (
+                  // The day's pick reads as a badge, not as the quiet mono label
+                  // the other slides carry.
+                  <span className="self-start inline-flex items-center gap-1.5 rounded-full bg-flame/15 border border-flame/40 px-3 py-1 mb-2.5 text-sm md:text-base font-extrabold text-flame">
+                    <Icon name="sparkles" size={15} strokeWidth={2.25} />
+                    {s.kicker}
+                  </span>
+                ) : (
+                  <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase text-flame block mb-1.5">
+                    {s.kicker}
+                  </span>
+                )}
                 <span className="block text-2xl md:text-4xl font-black tracking-tight text-ink-50 leading-tight">
                   {s.title}
                 </span>
