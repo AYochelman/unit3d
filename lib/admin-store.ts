@@ -71,6 +71,11 @@ export type AdminExport = {
   colors?: Filament[];
   /** Non-filament parts on hand (rings, magnets, chains…) — see lib/parts.ts. */
   parts?: PartCounts;
+  /**
+   * "מוצר היום" on the home page, picked by the owner: "product:<id>" or
+   * "fidget:<id>". Absent or null means the site picks one by the date.
+   */
+  daily?: string | null;
 };
 
 type AdminState = {
@@ -143,6 +148,9 @@ type AdminState = {
    * goes into the export file or a log.
    */
   ghToken: string;
+  /** "מוצר היום" — see AdminExport.daily. */
+  daily: string | null;
+  setDaily(key: string | null): void;
 
   unlock(pin: string): boolean;
   /**
@@ -220,6 +228,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   materials: [],
   colors: [],
   ghToken: "",   // hydrated from the device on first render, see AdminUnlock
+  daily: null,
+  setDaily: (key) => set({ daily: key }),
 
   unlock: (pin) => {
     const ok = pin.trim() === ADMIN_PASSWORD;
@@ -408,8 +418,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     set({ settings: DEFAULT_COST_SETTINGS, overrides: {}, stock: {}, parts: {}, interest: [], pricing: DEFAULT_PRICING, materials: [], colors: [] }),
 
   exportJson: () => {
-    const { settings, overrides, stock, parts, interest, pricing, shelves, materials, colors } = get();
-    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, parts, interest, shelves, materials, colors };
+    const { settings, overrides, stock, parts, interest, pricing, shelves, materials, colors, daily } = get();
+    const payload: AdminExport = { version: 1, settings, overrides, pricing, stock, parts, interest, shelves, materials, colors, daily };
     return JSON.stringify(payload, null, 2);
   },
 
@@ -427,6 +437,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         shelves: parsed.shelves ?? {},
         materials: parsed.materials ?? [],
         colors: parsed.colors ?? [],
+        daily: parsed.daily ?? null,
       });
       return true;
     } catch {

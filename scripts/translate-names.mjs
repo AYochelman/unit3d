@@ -14,6 +14,11 @@
  * brands and model numbers kept as they are), otherwise Google Translate's
  * public endpoint — plainer, but it needs no key, so the run never does nothing.
  *
+ * It is also the daily Hebrew scan: descriptions with no Hebrew in them are
+ * translated into lib/he-descs.auto.generated.ts (below lib/he-descs.ts), and
+ * tags still in English are reported. It runs again inside the candidates
+ * workflow, so a model approved in the afternoon is Hebrew the same run.
+ *
  *   --dry   print what would be translated, write nothing
  */
 import fs from "node:fs";
@@ -23,6 +28,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "lib", "he-names.auto.generated.ts");
+const OUT_DESC = path.join(ROOT, "lib", "he-descs.auto.generated.ts");
 const DRY = process.argv.includes("--dry");
 const HEB = /[֐-׿]/;
 
@@ -32,6 +38,7 @@ const { PRODUCTS } = jiti(path.join(ROOT, "lib", "products.ts"));
 const { FIDGETS } = jiti(path.join(ROOT, "lib", "data.ts"));
 const { HE_NAMES } = jiti(path.join(ROOT, "lib", "he-names.ts"));
 const { HE_NAMES_AUTO } = jiti(path.join(ROOT, "lib", "he-names.auto.generated.ts"));
+const { HE_DESCS_AUTO } = jiti(OUT_DESC);
 
 // What a shopper sees right now; an English one is either new or untranslated.
 const seen = new Map();
@@ -45,9 +52,14 @@ if (process.env.TEST_TITLE) {
   todo.push({ id: "test", en: process.env.TEST_TITLE });
 }
 
-console.log(`${seen.size} products · ${todo.length} still in English`);
-if (!todo.length) process.exit(0);
-if (DRY) { for (const t of todo) console.log(`  ${t.id} | ${t.en}`); process.exit(0); }
+// The rest of the scan: descriptions and tags a shopper reads.
+const descTodo = process.env.TEST_TITLE ? [] : [...seen.values()].filter((p) => p.desc && !HEB.test(p.desc)).map((p) => ({ id: p.id, en: String(p.desc).trim() }));
+const tagsEn = [...seen.values()].filter((p) => p.tag && !HEB.test(p.tag) && !/^[A-Z0-9 ·+]{1,6}$/.test(p.tag));
+for (const p of tagsEn) console.log(`::warning::tag in English: ${p.id} "${p.tag}"`);
+
+console.log(`${seen.size} products · ${todo.length} names, ${descTodo.length} descriptions, ${tagsEn.length} tags still in English`);
+if (!todo.length && !descTodo.length) process.exit(0);
+if (DRY) { for (const t of [...todo, ...descTodo]) console.log(`  ${t.id} | ${t.en.slice(0, 90)}`); process.exit(0); }
 
 const clean = (s) => String(s ?? "").replace(/^["'\s]+|["'\s]+$/g, "").replace(/\s+/g, " ").slice(0, 70);
 
@@ -103,6 +115,7 @@ for (let i = 0; i < todo.length; i += 40) {
       try { he = clean(await withGoogle(t.en)); } catch (e) { console.log(`  ${t.id}: ${e.message}`); continue; }
     }
     if (HEB.test(he)) got[t.id] = he;
+    else console.log(`::warning::no Hebrew came back for ${t.id} "${t.en}"`);
   }
   console.log(`::notice::engine: ${ai ? "Claude" : "Google Translate"}`);
 }
@@ -112,9 +125,31 @@ if (process.env.TEST_TITLE) {
   process.exit(0);
 }
 
+// Descriptions: Google is enough for a sentence, and needs no key.
+const gotDesc = {};
+for (const t of descTodo) {
+  try {
+    const he = String(await withGoogle(t.en)).replace(/\s+/g, " ").trim().slice(0, 300);
+    if (HEB.test(he)) gotDesc[t.id] = he;
+  } catch (e) { console.log(`  desc ${t.id}: ${e.message}`); }
+}
+if (Object.keys(gotDesc).length) {
+  const m = { ...HE_DESCS_AUTO, ...gotDesc };
+  const b = Object.keys(m).sort().map((id) => `  ${JSON.stringify(id)}: ${JSON.stringify(m[id])},`).join("\n");
+  const h = fs.readFileSync(OUT_DESC, "utf8").split("export const")[0];
+  fs.writeFileSync(OUT_DESC, `${h}export const HE_DESCS_AUTO: Record<string, string> = {\n${b}\n};\n`);
+  console.log(`::notice::translated ${Object.keys(gotDesc).length} of ${descTodo.length} descriptions`);
+}
+
 const merged = { ...HE_NAMES_AUTO, ...got };
 for (const [id, he] of Object.entries(got)) console.log(`::notice::${id} | ${seen.get(id)?.name} → ${he}`);
 const body = Object.keys(merged).sort().map((id) => `  ${JSON.stringify(id)}: ${JSON.stringify(merged[id])},`).join("\n");
 const head = fs.readFileSync(OUT, "utf8").split("export const")[0];
 fs.writeFileSync(OUT, `${head}export const HE_NAMES_AUTO: Record<string, string> = {\n${body}${body ? "\n" : ""}};\n`);
 console.log(`::notice::translated ${Object.keys(got).length} of ${todo.length} product names`);
+// Nothing translated while names wait is a broken engine, not a quiet day:
+// Google answers datacenter addresses with a captcha page. Say so loudly, so
+// the run is not a green tick over English shelves.
+if (todo.length && !Object.keys(got).length) {
+  console.log("::error::0 names translated — Google refused and there is no ANTHROPIC_API_KEY secret. Add the secret, or write the names in /admin → \"שמות\".");
+}
