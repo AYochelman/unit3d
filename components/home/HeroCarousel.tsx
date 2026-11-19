@@ -4,6 +4,11 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import { photoSrc, assetSrc } from "@/lib/assets";
 import { cn } from "@/lib/cn";
+import { useNow } from "@/components/bf/BlackFridayBar";
+import { useAdminStore } from "@/lib/admin-store";
+import { useLivePricer } from "@/lib/live-price";
+import { dailyPick } from "@/lib/daily";
+import { fmtILS } from "@/lib/format";
 
 /**
  * The five things this shop does, one at a time.
@@ -85,7 +90,29 @@ const SLIDES: Slide[] = [
 
 const EVERY_MS = 6000;
 
+/**
+ * "מוצר היום" as the first slide — the same pick as the home-page section
+ * (the owner's choice from /admin, or the one the date points at). Added after
+ * mount only: the static HTML was built on another day.
+ */
+function useSlides(): Slide[] {
+  const now = useNow(60_000);
+  const daily = useAdminStore((s) => s.daily);
+  const priceOf = useLivePricer();
+  if (now == null) return SLIDES;
+  const pick = dailyPick(daily, now);
+  if (!pick) return SLIDES;
+  const it = pick.item;
+  const price = priceOf({ id: it.id, price: it.price, grams: it.grams, hours: it.hours, material: it.material, colors: 1 });
+  const desc = it.desc.length > 90 ? `${it.desc.slice(0, 88).trimEnd()}…` : it.desc;
+  return [
+    { id: "daily", kicker: "מוצר היום", title: it.name, line: price > 0 ? `\u2066${fmtILS(price)}\u2069 · ${desc}` : desc, href: it.href, photo: it.image },
+    ...SLIDES,
+  ];
+}
+
 export default function HeroCarousel() {
+  const slides = useSlides();
   const [at, setAt] = useState(0);
   // Which "art" slides turned out to have a real photograph behind them.
   //
@@ -107,7 +134,8 @@ export default function HeroCarousel() {
     return () => { alive = false; };
   }, []);
   const [paused, setPaused] = useState(false);
-  const go = useCallback((i: number) => setAt(((i % SLIDES.length) + SLIDES.length) % SLIDES.length), []);
+  const n = slides.length;
+  const go = useCallback((i: number) => setAt(((i % n) + n) % n), [n]);
 
   // Someone who asked for less motion gets none: the slides stay where they
   // are and the dots still work.
@@ -122,9 +150,9 @@ export default function HeroCarousel() {
 
   useEffect(() => {
     if (!auto || paused) return;
-    const id = setInterval(() => setAt((i) => (i + 1) % SLIDES.length), EVERY_MS);
+    const id = setInterval(() => setAt((i) => (i + 1) % n), EVERY_MS);
     return () => clearInterval(id);
-  }, [auto, paused]);
+  }, [auto, paused, n]);
 
   // A swipe is how this is used on a phone.
   const touchX = useRef(0);
@@ -153,7 +181,7 @@ export default function HeroCarousel() {
             panel, each picture is shown at a size it can actually fill, and the
             words sit beside it instead of on top of it. */}
         <div className="relative min-h-[320px] sm:min-h-[360px] md:min-h-[420px]">
-          {SLIDES.map((s, i) => (
+          {slides.map((s, i) => (
             <Link
               key={s.id}
               href={s.href}
@@ -199,9 +227,18 @@ export default function HeroCarousel() {
                   s.art && !shown[s.id] ? "text-center items-center max-w-xl" : "text-right",
                 )}
               >
-                <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase text-flame block mb-1.5">
-                  {s.kicker}
-                </span>
+                {s.id === "daily" ? (
+                  // The day's pick reads as a badge, not as the quiet mono label
+                  // the other slides carry.
+                  <span className="self-start inline-flex items-center gap-1.5 rounded-full bg-flame/15 border border-flame/40 px-3 py-1 mb-2.5 text-sm md:text-base font-extrabold text-flame">
+                    <Icon name="sparkles" size={15} strokeWidth={2.25} />
+                    {s.kicker}
+                  </span>
+                ) : (
+                  <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase text-flame block mb-1.5">
+                    {s.kicker}
+                  </span>
+                )}
                 <span className="block text-2xl md:text-4xl font-black tracking-tight text-ink-50 leading-tight">
                   {s.title}
                 </span>
@@ -211,7 +248,7 @@ export default function HeroCarousel() {
                 <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-flame">
                   {/* RTL: forward is a left-pointing arrow. */}
                   <Icon name="arrowLeft" size={16} />
-                  {s.id === "live" ? "לצפייה בשידור" : "לצפייה במדף"}
+                  {s.id === "live" ? "לצפייה בשידור" : s.id === "daily" ? "לפרטים" : "לצפייה במדף"}
                 </span>
               </span>
             </Link>
@@ -233,7 +270,7 @@ export default function HeroCarousel() {
           <Icon name="arrowRight" size={16} />
         </button>
 
-        {SLIDES.map((s, i) => (
+        {slides.map((s, i) => (
           <button
             key={s.id}
             type="button"
