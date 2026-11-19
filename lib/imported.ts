@@ -6,6 +6,7 @@ import { applyShelf } from "./shelves";
 import { REMOVED_BY_OWNER, SHELF_MOVES } from "./shop-overrides";
 import { retiredMaterial } from "./materials";
 import { HE_DESCS } from "./he-descs";
+import { HE_DESCS_AUTO } from "./he-descs.auto.generated";
 import { heName } from "./he-names";
 
 // ─── Models imported from a maker site ───────────────────────────────────────
@@ -254,7 +255,7 @@ export function importedFidgets(): Fidget[] {
       kind: m.shelf === "flexi" ? "flexi" : "fidget",
       name: heName(m.id, m.name),
       nameEn: m.name,
-      desc: HE_DESCS[m.id] ?? m.desc,
+      desc: HE_DESCS[m.id] ?? HE_DESCS_AUTO[m.id] ?? m.desc,
       price: suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus"),
       defaultColor: m.colorHex,
       size: m.size,
@@ -290,7 +291,7 @@ export function importedProducts(): Product[] {
         .map((sh) => SHELF_TO_CATEGORY[sh as Exclude<ImportedShelf, "flexi" | "fidget">]),
       name: heName(m.id, m.name),
       nameEn: m.name,
-      desc: HE_DESCS[m.id] ?? m.desc,
+      desc: HE_DESCS[m.id] ?? HE_DESCS_AUTO[m.id] ?? m.desc,
       price: suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus"),
       defaultColor: m.colorHex,
       size: m.size,
