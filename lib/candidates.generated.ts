@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 41
-// Collected: 2026-11-19T14:24:08.256Z
+// Collected: 2026-11-19T15:32:34.396Z
 
 import type { Candidate } from "./candidates";
 
@@ -52,7 +52,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "xlebniy",
     "image": "https://makerworld.bblmw.com/makerworld/model/US4fb9a93422876f/design/613253a1d1bb4132.png?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 67,
-    "likes": 223,
+    "likes": 224,
     "grams": 3,
     "hours": 0.34,
     "colors": 1,
