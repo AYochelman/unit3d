@@ -115,6 +115,7 @@ for (let i = 0; i < todo.length; i += 40) {
       try { he = clean(await withGoogle(t.en)); } catch (e) { console.log(`  ${t.id}: ${e.message}`); continue; }
     }
     if (HEB.test(he)) got[t.id] = he;
+    else console.log(`::warning::no Hebrew came back for ${t.id} "${t.en}"`);
   }
   console.log(`::notice::engine: ${ai ? "Claude" : "Google Translate"}`);
 }
@@ -146,3 +147,9 @@ const body = Object.keys(merged).sort().map((id) => `  ${JSON.stringify(id)}: ${
 const head = fs.readFileSync(OUT, "utf8").split("export const")[0];
 fs.writeFileSync(OUT, `${head}export const HE_NAMES_AUTO: Record<string, string> = {\n${body}${body ? "\n" : ""}};\n`);
 console.log(`::notice::translated ${Object.keys(got).length} of ${todo.length} product names`);
+// Nothing translated while names wait is a broken engine, not a quiet day:
+// Google answers datacenter addresses with a captcha page. Say so loudly, so
+// the run is not a green tick over English shelves.
+if (todo.length && !Object.keys(got).length) {
+  console.log("::error::0 names translated — Google refused and there is no ANTHROPIC_API_KEY secret. Add the secret, or write the names in /admin → \"שמות\".");
+}
