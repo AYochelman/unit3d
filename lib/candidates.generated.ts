@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 41
-// Collected: 2026-11-18T15:22:41.678Z
+// Collected: 2026-11-19T14:24:08.256Z
 
 import type { Candidate } from "./candidates";
 
@@ -15,8 +15,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Legends Only Win",
     "image": "https://makerworld.bblmw.com/makerworld/model/USdc28b09b2d38b8/design/c2b8c1372922bcc1.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 10,
-    "likes": 19,
+    "downloads": 12,
+    "likes": 23,
     "grams": 49,
     "hours": 2.53,
     "colors": 1,
@@ -34,8 +34,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "NTS",
     "image": "https://makerworld.bblmw.com/makerworld/model/US928a422343479a/design/50c18d5b27618afc.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 215,
-    "likes": 94,
+    "downloads": 223,
+    "likes": 98,
     "grams": 1149,
     "hours": 57.65,
     "colors": 4,
@@ -51,8 +51,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "BY-NC-SA",
     "creator": "xlebniy",
     "image": "https://makerworld.bblmw.com/makerworld/model/US4fb9a93422876f/design/613253a1d1bb4132.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 63,
-    "likes": 214,
+    "downloads": 67,
+    "likes": 223,
     "grams": 3,
     "hours": 0.34,
     "colors": 1,
