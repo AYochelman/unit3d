@@ -83,6 +83,14 @@ jobs:
         run: npm run fetch:videos
         continue-on-error: true
 
+      # A model approved this run gets its Hebrew name now, not at tomorrow's
+      # scan -- on 18.11 ten approved models sat on the shelves in English.
+      - name: Hebrew names and descriptions for anything new
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/translate-names.mjs
+
       - name: Type check
         run: npx tsc --noEmit
 
@@ -99,6 +107,7 @@ jobs:
                    data/model-videos.json data/makerworld-raw.json \
                    data/rejected-models.json public/model-decisions.json \
                    public/sync-status.json lib/he-names.overrides.ts \
+                   lib/he-names.auto.generated.ts lib/he-descs.auto.generated.ts \
                    public/img/catalog public/img/catalog-video; do
             if [ -e "$p" ]; then git add "$p"; fi
           done

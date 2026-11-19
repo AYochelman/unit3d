@@ -1,4 +1,5 @@
 import NameKeychainTeaser from "@/components/home/NameKeychainTeaser";
+import ProductOfDay from "@/components/home/ProductOfDay";
 import Hero from "@/components/home/Hero";
 import AudienceSwitcher from "@/components/home/AudienceSwitcher";
 import Categories from "@/components/home/Categories";
@@ -42,6 +43,8 @@ export default function HomePage() {
         before a scroll happens, and fading in what someone is already looking
         at is a stutter, not an entrance.
       */}
+      {/* "מוצר היום" — the owner picks it in place when /admin is open. */}
+      <Reveal><ProductOfDay /></Reveal>
       <Reveal><NameKeychainTeaser /></Reveal>
       <Reveal><AudienceSwitcher /></Reveal>
       <Reveal><Categories /></Reveal>
