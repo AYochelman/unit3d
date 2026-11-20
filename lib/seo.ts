@@ -24,7 +24,9 @@ export const abs = (path: string): string => {
  */
 export const businessJsonLd = () => ({
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  // Store is a LocalBusiness subtype: "a shop", stated as precisely as
+  // schema.org allows — classifiers and search engines both read it.
+  "@type": ["LocalBusiness", "Store"],
   "@id": `${SITE_URL}/#business`,
   name: "Unit 3D",
   alternateName: "יוניט 3D",
@@ -33,6 +35,8 @@ export const businessJsonLd = () => ({
   image: abs("/icon.svg"),
   description:
     "סטודיו הדפסת תלת מימד בגבעתיים: סמלי יחידה, מתנות לעובדים, פידג'טים, פסלים והדפסה לפי קובץ.",
+  disambiguatingDescription:
+    "Israeli online shop for custom 3D-printed products: personalised keychains, unit emblems, gifts, fidget toys, home and office items. Family-friendly; no adult content.",
   telephone: CONTACT.phone,
   email: CONTACT.email,
   priceRange: "₪₪",

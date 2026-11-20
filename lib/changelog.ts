@@ -34,6 +34,12 @@ export const KIND_HE: Record<ChangeKind, string> = {
 
 export const CHANGELOG: ChangeDay[] = [
   {
+    date: "2026-11-20",
+    items: [
+      { kind: "fix", text: "סינון אינטרנט סיווג את האתר בטעות כאתר למבוגרים: נוסף לאתר סימון \"מתאים לכל גיל\" ותיאור באנגלית של חנות, כדי שהסריקות האוטומטיות יסווגו נכון" },
+    ],
+  },
+  {
     date: "2026-11-19",
     items: [
       { kind: "content", text: "מוצר היום: מעמד לשלט PS5 בעיצוב GTA 6, והכיתוב \"מוצר היום\" בהירו מודגש" },

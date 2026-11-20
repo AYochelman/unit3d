@@ -40,6 +40,15 @@ export const metadata: Metadata = {
   //
   // A base path means this is the /preview staging copy — belt and braces with
   // its robots.txt, since a stray link into staging must not get indexed.
+  // Web filters (FortiGuard, Cisco, Zscaler…) classify a site by machine, and
+  // on 20.11 one of them filed this shop under "Pornography" — a friend on a
+  // filtered network could not open it. These two say plainly what the site
+  // is: `rating: general` is the standard tag for "no adult content" (the one
+  // SafeSearch reads), and the English keywords give an English-trained
+  // classifier something to read on an all-Hebrew page. The real fix is the
+  // re-rating request at each filter; this keeps the next automatic scan right.
+  keywords: ["3D printing", "custom 3D printed gifts", "3D printing shop Israel", "keychains", "fidget toys", "הדפסת תלת מימד", "מתנות", "Unit 3D"],
+  other: { rating: "general" },
   robots: process.env.NEXT_PUBLIC_BASE_PATH
     ? { index: false, follow: false }
     : { index: true, follow: true },
