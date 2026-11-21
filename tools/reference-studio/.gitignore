@@ -1,0 +1,6 @@
+# Everything the studio stores at runtime: uploads, captures, notes, settings.
+# Local tool, local data - it never belongs in the shop's repository.
+data/
+.next/
+node_modules/
+next-env.d.ts
