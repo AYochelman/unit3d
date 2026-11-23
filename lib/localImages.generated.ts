@@ -2,7 +2,7 @@
 //
 // Remote photo URL → the copy of it stored in public/. Run
 // `npm run fetch:images` after adding models.
-// Images: 4325
+// Images: 4335
 
 export const LOCAL_IMAGES: Record<string, string> = {
   "https://dl2.myminifactory.com/object-assets/5992b909866ea/images/720X720-imgp5831.jpg": "img/catalog/f4da1d23d4d5c008.webp",
@@ -433,6 +433,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US2346d69c69c362/design/5083e8f1c068d37e.png": "img/catalog/52409827e7093dbf.webp",
   "https://makerworld.bblmw.com/makerworld/model/US2346d69c69c362/design/5083e8f1c068d37e.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/bace7bce5ac2239a.webp",
   "https://makerworld.bblmw.com/makerworld/model/US236abf3d9a004a/design/2023-09-24_d3c986040a2f4.jpg": "img/catalog/1f1d5d4d89d0c49d.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US23b0b55ed3fdc3/design/f6b8b8dff85db919.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/6b9dc6061463601f.webp",
   "https://makerworld.bblmw.com/makerworld/model/US23f09f3925c64d/design/160a0da5a7243972.webp": "img/catalog/18d3a8244ceb86d7.webp",
   "https://makerworld.bblmw.com/makerworld/model/US23f09f3925c64d/design/51fad181b3b6fa7b.png": "img/catalog/c87cf7d504f075eb.webp",
   "https://makerworld.bblmw.com/makerworld/model/US23f09f3925c64d/design/51fad181b3b6fa7b.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/8e0e130f4de7f79b.webp",
@@ -737,6 +738,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US347ea3a70ba4a0/design/071af4e4fed2a193.jpg": "img/catalog/8e3497a502943660.webp",
   "https://makerworld.bblmw.com/makerworld/model/US347ea3a70ba4a0/design/5eec2ec446fa2149.jpg": "img/catalog/e4aad7f30e8069f0.webp",
   "https://makerworld.bblmw.com/makerworld/model/US347ea3a70ba4a0/design/5eec2ec446fa2149.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/45d5d8f91c23ce41.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US34ae014942a467/design/1900fb9a61bc310a.jpeg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/6e925b7beb3bb7f0.webp",
   "https://makerworld.bblmw.com/makerworld/model/US34e47b2b87858c/design/2ba8f1932d5aca88.png": "img/catalog/a8ed0f095c183b88.webp",
   "https://makerworld.bblmw.com/makerworld/model/US34e47b2b87858c/design/7a88de2ffdbba31d.png": "img/catalog/8a27c726ad179874.webp",
   "https://makerworld.bblmw.com/makerworld/model/US34e47b2b87858c/design/8480918852750bf4.png": "img/catalog/5e160e584272a8e0.webp",
@@ -976,6 +978,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US404eff9075f03c/design/52392070f5d99283.webp": "img/catalog/dbd93fc97064143c.webp",
   "https://makerworld.bblmw.com/makerworld/model/US404eff9075f03c/design/52392070f5d99283.webp?x-oss-process=image/resize,w_400/format,webp": "img/catalog/2184ec13bb059850.webp",
   "https://makerworld.bblmw.com/makerworld/model/US4062f72d75d117/design/7871cb63b6815b9c.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/9c8f1fa908995286.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US4069eb18c81ef0/design/c146feebb0023ebb.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/4736eadd6e63a2da.webp",
   "https://makerworld.bblmw.com/makerworld/model/US409a3417bc9fd4/design/2025-07-27_6e18c370409fb.png": "img/catalog/a2632dfd65219a0a.webp",
   "https://makerworld.bblmw.com/makerworld/model/US409a3417bc9fd4/design/2025-07-27_742f4433fd4868.png": "img/catalog/a48f6fe079729eb8.webp",
   "https://makerworld.bblmw.com/makerworld/model/US409a3417bc9fd4/design/2025-07-27_e000b0bc21f2.jpg": "img/catalog/e04e6beb0ea3f8ba.webp",
@@ -1384,6 +1387,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US56cd8d56350b83/design/cc13550d287b784a.png": "img/catalog/5ee634493669608e.webp",
   "https://makerworld.bblmw.com/makerworld/model/US56cd8d56350b83/design/f56e2272a47a9101.png": "img/catalog/c0fef236c6d2456b.webp",
   "https://makerworld.bblmw.com/makerworld/model/US56cd8d56350b83/design/fad6effb9c75cc5f.png": "img/catalog/42ec0c5f9717cc9c.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US57133f4695901/design/56c00e3663987f13.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/3698eb60ce85d018.webp",
   "https://makerworld.bblmw.com/makerworld/model/US5725b46ea65cf/design/2024-10-27_12df08f9e0121.gif": "img/catalog/edfe8803d45af6c1.anim.webp",
   "https://makerworld.bblmw.com/makerworld/model/US5725b46ea65cf/design/2024-10-27_12df08f9e0121.gif?x-oss-process=image/resize,w_400/format,webp": "img/catalog/ebc21c726f89c6db.webp",
   "https://makerworld.bblmw.com/makerworld/model/US5725b46ea65cf/design/2024-10-28_469ab39cdee77.gif": "img/catalog/a50176f0b93ac3b8.anim.webp",
@@ -2069,6 +2073,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US7ea63c10a0d61/design/2025-01-11_a131787f8425f.gif?x-oss-process=image/resize,w_400/format,webp": "img/catalog/a89fa9e47f818384.webp",
   "https://makerworld.bblmw.com/makerworld/model/US7ea63c10a0d61/design/2025-01-11_a6901416731dc.jpeg": "img/catalog/e77317ca5f75f3c0.webp",
   "https://makerworld.bblmw.com/makerworld/model/US7ea63c10a0d61/design/2025-01-11_c0fa7c46d4faf.jpeg": "img/catalog/e785ecf2c7e459d0.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US7fb1059e36727b/design/786a16252bf3a40d.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/0c6a5c2742b7d2bf.webp",
   "https://makerworld.bblmw.com/makerworld/model/US7fbc77e08df1d9/design/2025-06-19_71dc23a1d9fe28.jpg": "img/catalog/7dc36cabf546a5cc.webp",
   "https://makerworld.bblmw.com/makerworld/model/US7fbc77e08df1d9/design/2025-06-19_9b337640a3fe28.jpg": "img/catalog/da6183d7e288015a.webp",
   "https://makerworld.bblmw.com/makerworld/model/US7fbc77e08df1d9/design/2025-06-19_a01c6bdb9164a8.jpg": "img/catalog/79c335e8184e4ddc.webp",
@@ -2199,6 +2204,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/US871ceb7addc46/design/cf57cd423b2bed1e.jpg": "img/catalog/50bb49c1b2df8267.webp",
   "https://makerworld.bblmw.com/makerworld/model/US871ceb7addc46/design/eb6d34ee575aae57.jpg": "img/catalog/56769b572f27fbb2.webp",
   "https://makerworld.bblmw.com/makerworld/model/US871ceb7addc46/design/eb6d34ee575aae57.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/9c5d1088f6b0f750.webp",
+  "https://makerworld.bblmw.com/makerworld/model/US8737522855aea8/design/98d4c800acba926f.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/69c812e1ba179c34.webp",
   "https://makerworld.bblmw.com/makerworld/model/US874e5862e33b26/design/0fe8dd5758ce551b.jpg": "img/catalog/b64ef4933d15e843.webp",
   "https://makerworld.bblmw.com/makerworld/model/US874e5862e33b26/design/8b0270202f113fe3.jpg": "img/catalog/5d41990979f68847.webp",
   "https://makerworld.bblmw.com/makerworld/model/US874e5862e33b26/design/8b0270202f113fe3.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/6b4811b39c98d387.webp",
@@ -2836,6 +2842,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/USace2765331880a/design/2025-06-12_8c2939c85ecbf8.jpg": "img/catalog/07362300f815e45f.webp",
   "https://makerworld.bblmw.com/makerworld/model/USace2765331880a/design/2025-06-12_b913e2253cadf.jpg": "img/catalog/6db522392634d440.webp",
   "https://makerworld.bblmw.com/makerworld/model/USace2765331880a/design/2025-06-12_e84970f367df4.jpg": "img/catalog/4f89cff1198ae2d3.webp",
+  "https://makerworld.bblmw.com/makerworld/model/USad5977deb4e435/design/2025-08-10_b746080b72d4a.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/dfd619b137ed4445.webp",
   "https://makerworld.bblmw.com/makerworld/model/USada22ef907102b/design/2025-03-01_5f75afdda2911.jpg": "img/catalog/49f9d1e06ebcef3c.webp",
   "https://makerworld.bblmw.com/makerworld/model/USada22ef907102b/design/4b00b608-1a30-4567-81ee-0c59578e4cdc.webp": "img/catalog/6966da6a4f0b455c.webp",
   "https://makerworld.bblmw.com/makerworld/model/USada22ef907102b/design/5d236212-d89b-4f9c-8fd3-30d29ea0a152.webp": "img/catalog/b14832b475e844fb.webp",
@@ -3053,6 +3060,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/USb8e7004f4e14c9/design/6d149c986caefd87.jpg": "img/catalog/29228dd581bb6948.webp",
   "https://makerworld.bblmw.com/makerworld/model/USb8e7004f4e14c9/design/723f749fbd2899df.jpg": "img/catalog/eb9835f8799bba31.webp",
   "https://makerworld.bblmw.com/makerworld/model/USb8e7004f4e14c9/design/c7eacc3ea958f824.jpg": "img/catalog/7539d0ca5cf45cb6.webp",
+  "https://makerworld.bblmw.com/makerworld/model/USb99101035ced10/design/4c298d729939e9b6.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/99daf993b0c260ed.webp",
   "https://makerworld.bblmw.com/makerworld/model/USb9f49a206bc423/744266005/instance/5bc4c6c6c98ab554.jpg": "img/catalog/899c81c84927ffce.webp",
   "https://makerworld.bblmw.com/makerworld/model/USb9f49a206bc423/design/2025-05-22_139fc067c9698.jpg": "img/catalog/a5edaa4c68b0dfa3.webp",
   "https://makerworld.bblmw.com/makerworld/model/USba3bba8f377b03/design/1fd473fd10d74e38.jpg": "img/catalog/0b8355b67bffd45f.webp",
@@ -3304,6 +3312,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/USc85e8a08907f7e/design/f2a08213180edc1a.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/22beb62eabea89fa.webp",
   "https://makerworld.bblmw.com/makerworld/model/USc8e0ea4d0c144c/design/0cd6e1e87134db7c.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/01b85d9d2ffa1e3d.webp",
   "https://makerworld.bblmw.com/makerworld/model/USc8e4aec64b88d/design/8545bca500cb8c7e.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/d6230f597491e78d.webp",
+  "https://makerworld.bblmw.com/makerworld/model/USca74e2f06b58ed/design/c54b11e17f470285.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/7849de7e28ec5c0a.webp",
   "https://makerworld.bblmw.com/makerworld/model/UScad4786bd4da70/design/2025-03-14_368f978c5819d.png": "img/catalog/837a6ac49fa7d690.webp",
   "https://makerworld.bblmw.com/makerworld/model/UScad4786bd4da70/design/2025-03-14_6ff26f0194c7a.png": "img/catalog/cc596676e7c1ac4f.webp",
   "https://makerworld.bblmw.com/makerworld/model/UScad4786bd4da70/design/2025-03-14_6ff26f0194c7a.png?x-oss-process=image/resize,w_400/format,webp": "img/catalog/53b49137309f7453.webp",
@@ -3586,6 +3595,7 @@ export const LOCAL_IMAGES: Record<string, string> = {
   "https://makerworld.bblmw.com/makerworld/model/USd883a216c90a94/design/2025-07-24_b9ad2d8b03514.png": "img/catalog/fd468a3105fe4ebb.webp",
   "https://makerworld.bblmw.com/makerworld/model/USd883a216c90a94/design/2025-07-24_cde99bdea492f.jpg": "img/catalog/3eae9e1ea94df039.webp",
   "https://makerworld.bblmw.com/makerworld/model/USd883a216c90a94/design/2025-07-24_d2a44a5db4cd68.png": "img/catalog/3ed80da51fc3a872.webp",
+  "https://makerworld.bblmw.com/makerworld/model/USd8928131b9653e/design/b11e43ba26c84530.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/a10022d0c76d987a.webp",
   "https://makerworld.bblmw.com/makerworld/model/USd9cdaf3e41277f/design/2025-05-14_3f2e34e8817558.jpg": "img/catalog/4ad170d4b160372b.webp",
   "https://makerworld.bblmw.com/makerworld/model/USd9cdaf3e41277f/design/2025-05-14_3f2e34e8817558.jpg?x-oss-process=image/resize,w_400/format,webp": "img/catalog/066bde6c17c5b754.webp",
   "https://makerworld.bblmw.com/makerworld/model/USd9cdaf3e41277f/design/2025-05-14_4109164b19641.jpg": "img/catalog/3fb706e7a992e0cd.webp",
