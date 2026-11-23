@@ -37,6 +37,7 @@ import { useLivePrice, useQuoteOnly } from "@/lib/live-price";
 
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
+import { BULK_MIN_QTY, BULK_RATE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
@@ -54,6 +55,9 @@ const AMS_OPTIONS = [
   { colors: 4, label: "4 צבעים", surcharge: 35 },
 ] as const;
 
+
+/** Read at the click, not during render — the clock is not render state. */
+const bfLiveAtClick = () => bfPhase(Date.now(), bfForced()) === "live";
 export default function ProductDetailClient({ id }: { id: string }) {
   // The built-in palette plus any spool the owner added in /admin.
   const FILAMENTS = useFilaments();
@@ -178,7 +182,10 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
   const matSurcharge = Math.max(0, mat.priceAdd - baseMatAdd);
   const unitPrice = basePrice + plateExtra + scaleAdd + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
-  const total = unitPrice * qty;
+  // The same quantity tier the configurator and the cart apply (lib/pricing.ts).
+  // Without it the page quoted five units at full price and the cart only
+  // took the 10% off once the quantity was touched there.
+  const total = lineTotal(unitPrice, qty);
 
   // An AMS print is a different plate: MakerWorld publishes its own weight and
   // time for it, and they are far higher than the single-colour ones. Costing
@@ -216,7 +223,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
     if (amsOn) lines.push(`AMS ${amsColors} צבעים (+${fmtILS(amsSurcharge)})`);
     if (qty > 1) lines.push(`כמות: ${qty}`);
     // Ordered during Black Friday: the limited edition, one more item on us.
-    if (id === "mystery-box" && bfPhase(Date.now(), bfForced()) === "live") {
+    if (id === "mystery-box" && bfLiveAtClick()) {
       lines.push(`מהדורת בלאק פריידי: פריט נוסף עלינו (${BF.mysteryItems + 1} פריטים)`);
     }
     addItem({
@@ -521,6 +528,24 @@ export default function ProductDetailClient({ id }: { id: string }) {
                 <Icon name="plus" size={16} />
               </button>
             </div>
+            {/* Goal-gradient: the tier is a goal, so show how close it is. Only
+                once someone is already past one unit, so a single gift is not
+                pushed to buy five. */}
+            {!quoteOnly && qty > 1 && (
+              <div className="mt-2 text-xs">
+                {bulkDiscount(qty) ? (
+                  <span className="inline-flex items-center gap-1 font-bold text-good">
+                    <Icon name="check" size={12} strokeWidth={3} />
+                    הנחת כמות <bdi dir="ltr">{Math.round(BULK_RATE * 100)}%</bdi> כבר במחיר
+                  </span>
+                ) : (
+                  <span className="text-ink-300">
+                    עוד <bdi className="font-bold text-flame">{BULK_MIN_QTY - qty}</bdi> {BULK_MIN_QTY - qty === 1 ? "יחידה" : "יחידות"} ו
+                    <span className="font-bold text-flame">-<bdi dir="ltr">{Math.round(BULK_RATE * 100)}%</bdi></span> על הכל
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Price */}
@@ -532,7 +557,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
               ) : (
                 <>
                   <div className="pd-price text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
-                  {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(unitPrice)} ליחידה</div>}
+                  {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(Math.round(total / qty))} ליחידה</div>}
                   <div className="pd-price-note text-xs text-ink-400 mt-1">כולל מע&quot;מ · משלוח מ-₪25, חינם מעל ₪200</div>
                 </>
               )}

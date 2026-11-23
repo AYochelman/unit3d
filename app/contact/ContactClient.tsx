@@ -31,6 +31,12 @@ import { cn } from "@/lib/cn";
 type CustType = "private" | "soldier" | "b2b";
 type Inquiry = "new" | "bulk" | "question" | "modify" | "support";
 
+/** What people most often ask for, as one-tap starters for the message. */
+const QUICK_PICKS = ["מחזיק מפתחות עם שם", "סמל יחידה", "מתנה לחייל", "קייס למצית עם סמל", "שלט לדלת", "יש לי קובץ להדפסה"];
+
+/** The order's road after this screen. Stage 2 is where it is now. */
+const NEXT_STEPS = ["ההזמנה אצלנו", "עולה להדפסה", "נארזת ביד", "אצלך"];
+
 const CUST_OPTIONS: { id: CustType; label: string }[] = [
   { id: "private", label: "לקוח פרטי" },
   { id: "soldier", label: "חייל/ת" },
@@ -114,6 +120,24 @@ export default function ContactClient() {
   // one from a delivery the customer changed their mind about, puts a street
   // on an order nobody is posting anything to.
   const wantsAddress = needsAddress(delivery);
+
+  // Goal-gradient: what is still missing before the order can go, named, so
+  // the last steps feel short instead of the form feeling long.
+  const missing: string[] = [];
+  if (!name.trim()) missing.push("שם");
+  if (!phoneLooksReal(phone)) missing.push("טלפון");
+  if (!/^\S+@\S+\.\S+$/.test(email.trim())) missing.push("מייל");
+  if (items.length === 0 && !message.trim()) missing.push("מה אתה צריך");
+  if (wantsAddress && !address.trim()) missing.push("כתובת");
+  if (cust === "soldier" && inquiry === "bulk" && !unitName.trim()) missing.push("יחידה");
+  if (cust === "b2b") {
+    if (!company.trim()) missing.push("שם החברה");
+    if (!vat.trim()) missing.push("ח.פ.");
+    if (!bulkQty.trim()) missing.push("כמות");
+  }
+  const requiredCount = 3 + (items.length === 0 ? 1 : 0) + (wantsAddress ? 1 : 0)
+    + (cust === "soldier" && inquiry === "bulk" ? 1 : 0) + (cust === "b2b" ? 3 : 0);
+  const doneShare = (requiredCount - missing.length) / requiredCount;
 
   // A discount code is checked against the list Erez wrote in /admin, which
   // every browser loads at boot (CouponsBoot) — so the customer sees the money
@@ -292,6 +316,36 @@ export default function ContactClient() {
                 : "נחזור אליך תוך 24 שעות בוואטסאפ. אם זה דחוף — אפשר לקפוץ ישר לשם."}
           </p>
         </div>
+
+        {/* Peak-end: the last screen is what the order is remembered by, and
+            an open next step keeps it in mind (Zeigarnik). Four real stages,
+            the first already done; the rest arrive by WhatsApp. */}
+        {bought && (
+          <ol className="max-w-xl mx-auto mb-10 grid grid-cols-4 gap-2 text-center" aria-label="מה קורה עכשיו">
+            {NEXT_STEPS.map((step, i) => (
+              <li key={step} className="relative">
+                {i > 0 && (
+                  <span aria-hidden className={cn("absolute top-4 left-1/2 w-full h-0.5", i === 1 ? "bg-good/60" : "bg-ink-800")} />
+                )}
+                <span
+                  className={cn(
+                    "relative z-10 mx-auto flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-black",
+                    i === 0
+                      ? "border-good bg-good text-ink-950"
+                      : i === 1
+                        ? "border-good text-good bg-ink-950 animate-pulse motion-reduce:animate-none"
+                        : "border-ink-700 text-ink-500 bg-ink-950",
+                  )}
+                >
+                  {i === 0 ? <Icon name="check" size={14} strokeWidth={3} /> : i + 1}
+                </span>
+                <span className={cn("mt-2 block text-[11px] sm:text-xs font-semibold", i < 2 ? "text-ink-100" : "text-ink-500")}>
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )}
 
         {bought && coupon && (
           <div className="max-w-xl mx-auto mb-10 rounded-2xl border border-flame/40 bg-flame/5 p-5 text-center">
@@ -800,6 +854,28 @@ export default function ContactClient() {
                 }
               />
             </Field>
+            {/* Recognition over recall: picking what we make is easier than
+                describing it from nothing. Only for an empty cart — with items
+                the order already says what it is. */}
+            {items.length === 0 && (
+              <div className="-mt-2 flex flex-wrap gap-1.5" aria-label="רעיונות נפוצים">
+                {QUICK_PICKS.map((q) => (
+                  <button
+                    key={q}
+                    type="button"
+                    onClick={() => setMessage((m) => (m.includes(q) ? m : (m.trim() ? `${m.trim()}\n${q}` : q)))}
+                    className={cn(
+                      "px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors",
+                      message.includes(q)
+                        ? "border-flame bg-flame/10 text-ink-50"
+                        : "border-ink-700 bg-ink-900 text-ink-300 hover:border-ink-600",
+                    )}
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
             <Field label="העלאת קובץ" hint="STL/OBJ/3MF/PNG · עד 50MB" optional>
               <Input type="file" accept=".stl,.obj,.3mf,.png,.jpg,.svg,.pdf" />
             </Field>
@@ -878,6 +954,23 @@ export default function ContactClient() {
                 Solid brand green, not the glassy primary that sat back into
                 the page. Orders say what the click does; questions stay a
                 "פנייה". */}
+            <div className="w-full sm:w-auto sm:min-w-[16rem] space-y-1.5">
+              <div className="h-1.5 rounded-full bg-ink-800 overflow-hidden" aria-hidden>
+                <div
+                  className="h-full rounded-full bg-[#089a47] transition-[width] duration-300 motion-reduce:transition-none"
+                  style={{ width: `${Math.round(doneShare * 100)}%` }}
+                />
+              </div>
+              <div className="text-xs" aria-live="polite">
+                {missing.length === 0 ? (
+                  <span className="font-bold text-good">הכל מוכן. נשאר רק ללחוץ.</span>
+                ) : (
+                  <span className="text-ink-400">
+                    {missing.length === 1 ? "נשאר רק" : `נשארו ${missing.length}:`}{" "}
+                    <span className="text-ink-200">{missing.join(", ")}</span>
+                  </span>
+                )}
+              </div>
             <button
               type="submit"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 h-16 px-10 rounded-2xl bg-[#089a47] hover:bg-[#0bb455] active:scale-[0.98] text-white text-lg font-extrabold shadow-[0_0_0_4px_rgba(8,154,71,0.22),0_12px_32px_-8px_rgba(8,154,71,0.75)] hover:shadow-[0_0_0_6px_rgba(8,154,71,0.28),0_14px_40px_-8px_rgba(11,180,85,0.9)] transition-all"
@@ -886,6 +979,7 @@ export default function ContactClient() {
               {inquiry === "new" || inquiry === "bulk" ? "לסיום הזמנה" : "שלח פנייה"}
               <Icon name="arrowLeft" size={20} />
             </button>
+            </div>
           </section>
         </form>
 
