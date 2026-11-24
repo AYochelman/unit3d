@@ -91,6 +91,15 @@ export type PlacedOrder = {
   /** The code the customer used, and what it took off. */
   discount?: AppliedDiscount;
   /**
+   * Whether the customer agreed to marketing by email and SMS at checkout.
+   *
+   * Recorded on the order itself, with its date, because under the Israeli
+   * anti-spam law (Communications Law §30A) the shop has to be able to show
+   * that consent was given before it sends anything promotional. Absent on
+   * orders from before the checkbox existed — treat those as "no".
+   */
+  marketing?: boolean;
+  /**
    * Which lines are already printed and ready, aligned to `lines`.
    *
    * An approved order is not a finished one: it sits on the bench until every
@@ -271,6 +280,7 @@ export function orderMessage(o: PlacedOrder): string {
     `מסירה: ${d.label}${d.price ? ` · ${fmtILS(d.price)}` : " · חינם"}`,
     ...(needsAddress(o.delivery) ? [`כתובת: ${o.customer.address?.trim() || "—"}`] : []),
     `הערות: ${o.note?.trim() || "—"}`,
+    ...(o.marketing != null ? [`דיוור שיווקי (מייל ו-SMS): ${o.marketing ? "מאשר/ת" : "לא"}`] : []),
     total == null ? "סה\"כ לתשלום: לפי הזמנה" : `סה"כ לתשלום: ${fmtILS(total)}`,
     "",
     SITE_URL,
@@ -304,6 +314,7 @@ const field = (line: string, label: string): string | null =>
 export function parseOrderMessage(text: string): PlacedOrder | null {
   const rows = (text || "").split(/\r?\n/);
   let ref = "", phone = "", email = "", kind = "", note = "", address = "";
+  let marketing: boolean | undefined;
   let delivery: DeliveryId = "pickup";
   let discount: AppliedDiscount | undefined;
   const lines: OrderLine[] = [];
@@ -353,6 +364,8 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
     if (addr) address = addr === "—" ? "" : addr;
     const rem = field(t, "הערות");
     if (rem) note = rem === "—" ? "" : rem;
+    const mk = field(t, "דיוור שיווקי (מייל ו-SMS)");
+    if (mk) marketing = mk.startsWith("מאשר");
     const disc = field(t, "הנחה");
     if (disc) {
       const [dcode, dlabel, doff] = disc.split(" · ");
@@ -380,5 +393,6 @@ export function parseOrderMessage(text: string): PlacedOrder | null {
     lines,
     itemsTotal: priced ? lines.reduce((s, l) => s + (l.price ?? 0), 0) : null,
     ...(discount ? { discount } : {}),
+    ...(marketing != null ? { marketing } : {}),
   };
 }

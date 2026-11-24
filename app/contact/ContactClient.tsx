@@ -153,6 +153,12 @@ export default function ContactClient() {
   const [mailed, setMailed] = useState<"pending" | "sent" | "no-address" | "not-configured" | "failed">("pending");
   const [mailTo, setMailTo] = useState("");
   const [copied, setCopied] = useState(false);
+  // Checkout consents. The policy one is required: the order does not go out
+  // without it. Marketing starts ticked, as the owner asked, and the customer
+  // can untick it; what they chose travels with the order (`marketing`).
+  const [agreed, setAgreed] = useState(false);
+  const [agreeErr, setAgreeErr] = useState(false);
+  const [marketing, setMarketing] = useState(true);
 
   // Four more from the same shelves, minus what is already on its way.
   const similar = useMemo(() => {
@@ -216,6 +222,7 @@ export default function ContactClient() {
               inquiry: inquiries.find((q) => q.id === inquiry)?.label ?? "",
               delivery,
               ...(message.trim() ? { note: message.trim() } : {}),
+              marketing,
               lines: items.map((it) => {
                 // Each page writes its own key into meta; this normalises them
                 // to the one id the admin can look a source file up by.
@@ -512,6 +519,8 @@ export default function ContactClient() {
             e.preventDefault();
             // The field says why; sending a half-number helps nobody.
             if (!phoneLooksReal(phone)) return;
+            // No order goes out without the terms and privacy policy accepted.
+            if (!agreed) { setAgreeErr(true); return; }
             // The browser blocks this too (the input below is `required`), but
             // a parcel with no address is the one mistake on this form that
             // costs a delivery rather than a follow-up message.
@@ -865,15 +874,43 @@ export default function ContactClient() {
             {/* The disclosure has to be visible where the data is given, not
                 only in a footer link — and it has to name where the details
                 actually go. */}
-            <p className="text-xs text-ink-400 max-w-md leading-relaxed">
-              בלחיצה על הכפתור אתה מאשר שנוכל לחזור אליך בוואטסאפ עם פרטי ההזמנה,
-              ומסכים ל
-              <Link href="/terms" className="text-flame-300 underline hover:text-flame">תנאי השימוש</Link>
-              {" ול"}
-              <Link href="/privacy" className="text-flame-300 underline hover:text-flame">מדיניות הפרטיות</Link>.
-              {" "}הפרטים משמשים לביצוע ההזמנה בלבד ולא נמסרים לאף אחד לצורכי שיווק.{" "}
-              <Link href="/returns" className="text-flame-300 underline hover:text-flame">זכות הביטול</Link>.
-            </p>
+            <div className="w-full max-w-xl space-y-3 text-sm">
+              {/* Required: the order is not sent until this is ticked. */}
+              <label className={cn("flex items-start gap-3 cursor-pointer rounded-xl border p-3 transition-colors", agreeErr && !agreed ? "border-red-500/70 bg-red-500/5" : "border-ink-800 hover:border-ink-700")}>
+                <input
+                  type="checkbox"
+                  required
+                  checked={agreed}
+                  onChange={(e) => { setAgreed(e.target.checked); if (e.target.checked) setAgreeErr(false); }}
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#089a47]"
+                  aria-invalid={agreeErr && !agreed}
+                />
+                <span className="text-ink-200 leading-relaxed">
+                  קראתי ואני מסכים/ה ל
+                  <Link href="/terms" className="text-flame-300 underline hover:text-flame">תנאי השימוש</Link>
+                  {" ול"}
+                  <Link href="/privacy" className="text-flame-300 underline hover:text-flame">מדיניות הפרטיות</Link>,
+                  ושנחזור אליך בוואטסאפ עם פרטי ההזמנה. <span className="text-red-400">*</span>
+                </span>
+              </label>
+              {agreeErr && !agreed && <p className="text-xs text-red-400 -mt-1" role="alert">צריך לאשר את התנאים ואת מדיניות הפרטיות כדי לשלוח.</p>}
+
+              {/* Ticked by default; the customer can untick it. */}
+              <label className="flex items-start gap-3 cursor-pointer rounded-xl border border-ink-800 hover:border-ink-700 p-3 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={marketing}
+                  onChange={(e) => setMarketing(e.target.checked)}
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#089a47]"
+                />
+                <span className="text-ink-300 leading-relaxed">
+                  אשמח לקבל מבצעים, הנחות ומוצרים חדשים <span className="whitespace-nowrap">במייל וב-SMS</span>. אפשר להסיר את הסימון עכשיו, או להסיר את עצמך בכל הודעה.
+                </span>
+              </label>
+              <p className="text-xs text-ink-500">
+                <Link href="/returns" className="text-flame-300 underline hover:text-flame">זכות הביטול</Link>
+              </p>
+            </div>
             {/* The one button the whole site leads to — it should look like it.
                 Solid brand green, not the glassy primary that sat back into
                 the page. Orders say what the click does; questions stay a
