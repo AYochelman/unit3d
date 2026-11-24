@@ -754,7 +754,7 @@ export default function ConfiguratorClient({
             <div className="flex items-center gap-2 mt-6 pt-6 border-t border-ink-800">
               <Btn variant="ghost" icon="arrowRight" onClick={goPrev} disabled={step === 0}>הקודם</Btn>
               {step < steps.length - 1 ? (
-                <Btn variant="primary" iconRight="arrowLeft" onClick={goNext} className="flex-1">המשך</Btn>
+                <Btn variant="primary" iconRight="arrowLeft" onClick={goNext} className="flex-1">{`המשך ל${STEP_LABEL[steps[Math.min(step + 1, steps.length - 1)]]}`}</Btn>
               ) : (
                 <Btn variant="primary" iconRight="arrowLeft" onClick={proceed} className="flex-1">המשך לטופס</Btn>
               )}

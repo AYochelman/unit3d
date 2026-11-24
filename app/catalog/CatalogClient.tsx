@@ -320,6 +320,16 @@ export default function CatalogClient() {
               ? "לא נמצאו תוצאות לחיפוש"
               : `נמצאו ${searchResults.length} גדודים`}
           </div>
+          {/* A unit that is not in the list can still be printed from its emblem. */}
+          {searchResults.length === 0 && (
+            <div className="mb-6 flex flex-wrap items-center gap-3 rounded-2xl border border-ink-800 bg-ink-900 p-4 text-sm">
+              <span className="text-ink-300">היחידה שלך לא ברשימה? שלחו לנו את הסמל ונדפיס אותו.</span>
+              <Link href="/upload" className="ms-auto inline-flex items-center gap-2 rounded-xl bg-flame px-4 py-2 font-bold text-white hover:bg-flame-600 transition-colors">
+                שליחת הסמל
+                <Icon name="arrowLeft" size={16} />
+              </Link>
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {searchResults.map(({ battalion, brigade, corps, branch }) => (
               <BattalionCard
