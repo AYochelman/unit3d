@@ -154,11 +154,13 @@ export default function ContactClient() {
   const [mailTo, setMailTo] = useState("");
   const [copied, setCopied] = useState(false);
   // Checkout consents. The policy one is required: the order does not go out
-  // without it. Marketing starts ticked, as the owner asked, and the customer
-  // can untick it; what they chose travels with the order (`marketing`).
+  // without it. Marketing starts UNticked: Israeli anti-spam law (§30A) wants
+  // explicit consent, and a pre-ticked box is generally not that — the owner
+  // asked for it ticked, then unticked once he heard the risk (24.11). What
+  // the customer chose travels with the order (`marketing`).
   const [agreed, setAgreed] = useState(false);
   const [agreeErr, setAgreeErr] = useState(false);
-  const [marketing, setMarketing] = useState(true);
+  const [marketing, setMarketing] = useState(false);
 
   // Four more from the same shelves, minus what is already on its way.
   const similar = useMemo(() => {
@@ -895,7 +897,7 @@ export default function ContactClient() {
               </label>
               {agreeErr && !agreed && <p className="text-xs text-red-400 -mt-1" role="alert">צריך לאשר את התנאים ואת מדיניות הפרטיות כדי לשלוח.</p>}
 
-              {/* Ticked by default; the customer can untick it. */}
+              {/* Off by default: the customer opts in. */}
               <label className="flex items-start gap-3 cursor-pointer rounded-xl border border-ink-800 hover:border-ink-700 p-3 transition-colors">
                 <input
                   type="checkbox"
@@ -904,7 +906,7 @@ export default function ContactClient() {
                   className="mt-0.5 h-5 w-5 shrink-0 accent-[#089a47]"
                 />
                 <span className="text-ink-300 leading-relaxed">
-                  אשמח לקבל מבצעים, הנחות ומוצרים חדשים <span className="whitespace-nowrap">במייל וב-SMS</span>. אפשר להסיר את הסימון עכשיו, או להסיר את עצמך בכל הודעה.
+                  אשמח לקבל מבצעים, הנחות ומוצרים חדשים <span className="whitespace-nowrap">במייל וב-SMS</span>. אפשר להסיר את עצמך בכל הודעה.
                 </span>
               </label>
               <p className="text-xs text-ink-500">
