@@ -508,8 +508,8 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                 {fmtILS(totalPrice)}
               </div>
               {qty > 1 && (
-                <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">
-                  {fmtILS(unitPrice)} ליחידה
+                <div className="text-[11px] text-ink-500 mt-0.5">
+                  <bdi dir="ltr" className="font-mono">{fmtILS(unitPrice)}</bdi> ליחידה
                 </div>
               )}
             </div>

@@ -318,9 +318,17 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
 
             {!loading && typed && dTyped && !groups.length && (
               <p className="px-6 py-8 text-center text-sm leading-relaxed" style={{ color: "var(--p-sub)" }}>
-                לא מצאתי כלום על <span style={{ color: "var(--p-fg)" }}>״{q}״</span>{shelves.length ? " במדפים שבחרת" : ""}.
+                לא מצאנו כלום על <span style={{ color: "var(--p-fg)" }}>״{q}״</span>{shelves.length ? " במדפים שבחרת" : ""}.
                 <br />
-                אפשר מילה אחרת, או לשאול בוואטסאפ.
+                אפשר לנסות מילה אחרת, או לבקש שנדפיס את זה בשבילך.
+                <span className="mt-4 flex flex-wrap justify-center gap-2">
+                  <button type="button" onClick={() => { onClose(); router.push("/contact"); }} className="rounded-xl px-4 py-2 text-sm font-bold" style={{ background: "var(--p-accent)", color: "#04110B" }}>
+                    לבקש הדפסה לפי הזמנה
+                  </button>
+                  <button type="button" onClick={() => window.open(`${CONTACT.whatsapp}?text=${encodeURIComponent(`היי, אני מחפש/ת ${q}`)}`, "_blank", "noopener")} className="rounded-xl px-4 py-2 text-sm font-semibold" style={{ border: "1px solid var(--p-sub)", color: "var(--p-fg)" }}>
+                    לשאול בוואטסאפ
+                  </button>
+                </span>
               </p>
             )}
 

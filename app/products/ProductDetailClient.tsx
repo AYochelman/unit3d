@@ -532,7 +532,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
               ) : (
                 <>
                   <div className="pd-price text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
-                  {qty > 1 && <div className="text-[11px] text-ink-500 font-mono mt-0.5" dir="ltr">{fmtILS(unitPrice)} ליחידה</div>}
+                  {qty > 1 && <div className="text-[11px] text-ink-500 mt-0.5"><bdi dir="ltr" className="font-mono">{fmtILS(unitPrice)}</bdi> ליחידה</div>}
                   <div className="pd-price-note text-xs text-ink-400 mt-1">כולל מע&quot;מ · משלוח מ-₪25, חינם מעל ₪200</div>
                 </>
               )}

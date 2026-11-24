@@ -326,7 +326,21 @@ export default function ProductGrid({ cards }: { cards: ListingCard[] }) {
   const { shown, at, pages, go } = usePaged(cards);
 
   if (!cards.length) {
-    return <div className="text-center py-16 text-ink-400">אין מוצרים שמתאימים לסינון הזה.</div>;
+    // An empty shelf still leads somewhere: anything can be printed to order.
+    return (
+      <div className="text-center py-16 space-y-4">
+        <p className="text-ink-400">אין מוצרים שמתאימים לסינון הזה.</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Link href="/configurator" className="inline-flex items-center gap-2 rounded-xl bg-flame px-5 py-3 font-bold text-white hover:bg-flame-600 transition-colors">
+            <Icon name="sparkles" size={18} />
+            לעצב משהו משלך
+          </Link>
+          <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl border border-ink-700 px-5 py-3 font-semibold text-ink-200 hover:border-flame hover:text-flame transition-colors">
+            לבקש הדפסה לפי הזמנה
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
