@@ -3,7 +3,7 @@
 // Models waiting for approval in /admin → "מודלים לאישור". Nothing here is
 // on the shop; the owner decides, one by one, in that tab.
 // Items: 94
-// Collected: 2026-11-24T15:49:03.548Z
+// Collected: 2026-11-24T17:15:52.530Z
 
 import type { Candidate } from "./candidates";
 
@@ -35,7 +35,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "NTS",
     "image": "https://makerworld.bblmw.com/makerworld/model/US928a422343479a/design/50c18d5b27618afc.png?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 256,
-    "likes": 117,
+    "likes": 119,
     "grams": 1149,
     "hours": 57.65,
     "colors": 4,
@@ -52,7 +52,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "Trial and Error",
     "image": "https://makerworld.bblmw.com/makerworld/model/USad5977deb4e435/design/2025-08-10_b746080b72d4a.jpg?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 44,
-    "likes": 135,
+    "likes": 136,
     "grams": 26,
     "hours": 2.45,
     "colors": 1,
@@ -85,8 +85,8 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "BTR",
     "image": "https://makerworld.bblmw.com/makerworld/model/US57133f4695901/design/56c00e3663987f13.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 8255,
-    "likes": 4302,
+    "downloads": 8258,
+    "likes": 4304,
     "grams": 131,
     "hours": 7.74,
     "colors": 3,
@@ -102,7 +102,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "MakerWorld Exclusive License",
     "creator": "NateTheGreat",
     "image": "https://makerworld.bblmw.com/makerworld/model/USd8928131b9653e/design/b11e43ba26c84530.jpg?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1570,
+    "downloads": 1576,
     "likes": 766,
     "grams": 22,
     "hours": 1.86,
@@ -119,7 +119,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "CherrysCollection",
     "image": "https://makerworld.bblmw.com/makerworld/model/US7fb1059e36727b/design/786a16252bf3a40d.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 1448,
+    "downloads": 1455,
     "likes": 477,
     "grams": 110,
     "hours": 6.87,
@@ -136,7 +136,7 @@ export const CANDIDATES: Candidate[] = [
     "license": "Standard Digital File License",
     "creator": "Malli",
     "image": "https://makerworld.bblmw.com/makerworld/model/US4069eb18c81ef0/design/c146feebb0023ebb.png?x-oss-process=image/resize,w_400/format,webp",
-    "downloads": 149,
+    "downloads": 150,
     "likes": 125,
     "grams": 20,
     "hours": 1.93,
@@ -154,7 +154,7 @@ export const CANDIDATES: Candidate[] = [
     "creator": "xlebniy",
     "image": "https://makerworld.bblmw.com/makerworld/model/US4fb9a93422876f/design/613253a1d1bb4132.png?x-oss-process=image/resize,w_400/format,webp",
     "downloads": 85,
-    "likes": 278,
+    "likes": 279,
     "grams": 3,
     "hours": 0.34,
     "colors": 1,
