@@ -34,9 +34,6 @@ type Inquiry = "new" | "bulk" | "question" | "modify" | "support";
 /** What people most often ask for, as one-tap starters for the message. */
 const QUICK_PICKS = ["מחזיק מפתחות עם שם", "סמל יחידה", "מתנה לחייל", "קייס למצית עם סמל", "שלט לדלת", "יש לי קובץ להדפסה"];
 
-/** The order's road after this screen. Stage 2 is where it is now. */
-const NEXT_STEPS = ["ההזמנה אצלנו", "עולה להדפסה", "נארזת ביד", "אצלך"];
-
 const CUST_OPTIONS: { id: CustType; label: string }[] = [
   { id: "private", label: "לקוח פרטי" },
   { id: "soldier", label: "חייל/ת" },
@@ -63,6 +60,15 @@ const INQUIRY_FOR: Record<CustType, { id: Inquiry; label: string }[]> = {
     { id: "support", label: "תמיכה" },
   ],
 };
+
+/** The road an order takes, shown on the thank-you screen with the first step done. */
+const THANKS_STEPS = ["ההזמנה התקבלה", "בהדפסה", "בדרך אליך"];
+
+/** Confetti for the thank-you check — brand greens with a little gold. */
+const THANKS_BITS = Array.from({ length: 36 }, (_, i) => {
+  const a = (i / 36) * Math.PI * 2 + (i % 3) * 0.2, d = 90 + ((i * 37) % 110);
+  return { dx: Math.cos(a) * d, dy: Math.sin(a) * d - 60, r: (i * 47) % 720, c: ["#089a47", "#5FE39A", "#ffd23d", "#ffffff", "#2ee88a"][i % 5], w: 6 + (i % 4) * 2, h: 8 + ((i * 7) % 4) * 3, delay: (i % 8) * 14 };
+});
 
 export default function ContactClient() {
   const { items, removeItem, clearCart, setQty, addItem } = useOrderStore();
@@ -177,6 +183,14 @@ export default function ContactClient() {
   const [mailed, setMailed] = useState<"pending" | "sent" | "no-address" | "not-configured" | "failed">("pending");
   const [mailTo, setMailTo] = useState("");
   const [copied, setCopied] = useState(false);
+  // Checkout consents. The policy one is required: the order does not go out
+  // without it. Marketing starts UNticked: Israeli anti-spam law (§30A) wants
+  // explicit consent, and a pre-ticked box is generally not that — the owner
+  // asked for it ticked, then unticked once he heard the risk (24.11). What
+  // the customer chose travels with the order (`marketing`).
+  const [agreed, setAgreed] = useState(false);
+  const [agreeErr, setAgreeErr] = useState(false);
+  const [marketing, setMarketing] = useState(false);
 
   // Four more from the same shelves, minus what is already on its way.
   const similar = useMemo(() => {
@@ -240,6 +254,7 @@ export default function ContactClient() {
               inquiry: inquiries.find((q) => q.id === inquiry)?.label ?? "",
               delivery,
               ...(message.trim() ? { note: message.trim() } : {}),
+              marketing,
               lines: items.map((it) => {
                 // Each page writes its own key into meta; this normalises them
                 // to the one id the admin can look a source file up by.
@@ -302,8 +317,16 @@ export default function ContactClient() {
     return (
       <div className="max-w-5xl mx-auto px-6 md:px-10 py-16 md:py-20">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good mb-6">
-            <Icon name="check" size={40} strokeWidth={2.5} />
+          {/* Peak-end: a purchase ends on a small celebration, not a form
+              that went quiet. A question gets the plain tick. */}
+          <div className="relative inline-flex mb-6">
+            {bought && <div className="bf-rays" aria-hidden />}
+            {bought && THANKS_BITS.map((b, i) => (
+              <span key={i} className="bf-bit" aria-hidden style={{ "--dx": `${b.dx}px`, "--dy": `${b.dy}px`, "--r": `${b.r}deg`, background: b.c, width: b.w, height: b.h, top: "50%", animationDelay: `${350 + b.delay}ms` } as React.CSSProperties} />
+            ))}
+            <div className={cn("relative inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good", bought && "bf-done-check")}>
+              <Icon name="check" size={40} strokeWidth={2.5} />
+            </div>
           </div>
           <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
             {bought ? "תודה על הקנייה!" : "תודה! קיבלנו את הפנייה."}
@@ -315,37 +338,21 @@ export default function ContactClient() {
                 ? "נחזור אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי, ולוז ייצור."
                 : "נחזור אליך תוך 24 שעות בוואטסאפ. אם זה דחוף — אפשר לקפוץ ישר לשם."}
           </p>
+          {/* Where the order is: the first step already done, so what is left
+              reads as a short road rather than a wait. */}
+          {bought && (
+            <ol className="m-stagger mx-auto mb-10 flex max-w-md items-start justify-between gap-2 text-xs sm:text-sm" aria-label="מצב ההזמנה">
+              {THANKS_STEPS.map((label, i) => (
+                <li key={label} style={{ "--i": i + 4 } as React.CSSProperties} className="flex flex-1 flex-col items-center gap-2">
+                  <span className={cn("inline-flex h-9 w-9 items-center justify-center rounded-full border-2 font-bold", i === 0 ? "border-good bg-good text-ink-950" : "border-ink-700 text-ink-500")}>
+                    {i === 0 ? <Icon name="check" size={16} strokeWidth={3} /> : i + 1}
+                  </span>
+                  <span className={i === 0 ? "font-bold text-ink-100" : "text-ink-400"}>{label}</span>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
-
-        {/* Peak-end: the last screen is what the order is remembered by, and
-            an open next step keeps it in mind (Zeigarnik). Four real stages,
-            the first already done; the rest arrive by WhatsApp. */}
-        {bought && (
-          <ol className="max-w-xl mx-auto mb-10 grid grid-cols-4 gap-2 text-center" aria-label="מה קורה עכשיו">
-            {NEXT_STEPS.map((step, i) => (
-              <li key={step} className="relative">
-                {i > 0 && (
-                  <span aria-hidden className={cn("absolute top-4 left-1/2 w-full h-0.5", i === 1 ? "bg-good/60" : "bg-ink-800")} />
-                )}
-                <span
-                  className={cn(
-                    "relative z-10 mx-auto flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-black",
-                    i === 0
-                      ? "border-good bg-good text-ink-950"
-                      : i === 1
-                        ? "border-good text-good bg-ink-950 animate-pulse motion-reduce:animate-none"
-                        : "border-ink-700 text-ink-500 bg-ink-950",
-                  )}
-                >
-                  {i === 0 ? <Icon name="check" size={14} strokeWidth={3} /> : i + 1}
-                </span>
-                <span className={cn("mt-2 block text-[11px] sm:text-xs font-semibold", i < 2 ? "text-ink-100" : "text-ink-500")}>
-                  {step}
-                </span>
-              </li>
-            ))}
-          </ol>
-        )}
 
         {bought && coupon && (
           <div className="max-w-xl mx-auto mb-10 rounded-2xl border border-flame/40 bg-flame/5 p-5 text-center">
@@ -566,6 +573,8 @@ export default function ContactClient() {
             e.preventDefault();
             // The field says why; sending a half-number helps nobody.
             if (!phoneLooksReal(phone)) return;
+            // No order goes out without the terms and privacy policy accepted.
+            if (!agreed) { setAgreeErr(true); return; }
             // The browser blocks this too (the input below is `required`), but
             // a parcel with no address is the one mistake on this form that
             // costs a delivery rather than a follow-up message.
@@ -941,15 +950,43 @@ export default function ContactClient() {
             {/* The disclosure has to be visible where the data is given, not
                 only in a footer link — and it has to name where the details
                 actually go. */}
-            <p className="text-xs text-ink-400 max-w-md leading-relaxed">
-              בלחיצה על הכפתור אתה מאשר שנוכל לחזור אליך בוואטסאפ עם פרטי ההזמנה,
-              ומסכים ל
-              <Link href="/terms" className="text-flame-300 underline hover:text-flame">תנאי השימוש</Link>
-              {" ול"}
-              <Link href="/privacy" className="text-flame-300 underline hover:text-flame">מדיניות הפרטיות</Link>.
-              {" "}הפרטים משמשים לביצוע ההזמנה בלבד ולא נמסרים לאף אחד לצורכי שיווק.{" "}
-              <Link href="/returns" className="text-flame-300 underline hover:text-flame">זכות הביטול</Link>.
-            </p>
+            <div className="w-full max-w-xl space-y-3 text-sm">
+              {/* Required: the order is not sent until this is ticked. */}
+              <label className={cn("flex items-start gap-3 cursor-pointer rounded-xl border p-3 transition-colors", agreeErr && !agreed ? "border-red-500/70 bg-red-500/5" : "border-ink-800 hover:border-ink-700")}>
+                <input
+                  type="checkbox"
+                  required
+                  checked={agreed}
+                  onChange={(e) => { setAgreed(e.target.checked); if (e.target.checked) setAgreeErr(false); }}
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#089a47]"
+                  aria-invalid={agreeErr && !agreed}
+                />
+                <span className="text-ink-200 leading-relaxed">
+                  קראתי ואני מסכים/ה ל
+                  <Link href="/terms" className="text-flame-300 underline hover:text-flame">תנאי השימוש</Link>
+                  {" ול"}
+                  <Link href="/privacy" className="text-flame-300 underline hover:text-flame">מדיניות הפרטיות</Link>,
+                  ושנחזור אליך בוואטסאפ עם פרטי ההזמנה. <span className="text-red-400">*</span>
+                </span>
+              </label>
+              {agreeErr && !agreed && <p className="text-xs text-red-400 -mt-1" role="alert">צריך לאשר את התנאים ואת מדיניות הפרטיות כדי לשלוח.</p>}
+
+              {/* Off by default: the customer opts in. */}
+              <label className="flex items-start gap-3 cursor-pointer rounded-xl border border-ink-800 hover:border-ink-700 p-3 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={marketing}
+                  onChange={(e) => setMarketing(e.target.checked)}
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#089a47]"
+                />
+                <span className="text-ink-300 leading-relaxed">
+                  אשמח לקבל מבצעים, הנחות ומוצרים חדשים <span className="whitespace-nowrap">במייל וב-SMS</span>. אפשר להסיר את עצמך בכל הודעה.
+                </span>
+              </label>
+              <p className="text-xs text-ink-500">
+                <Link href="/returns" className="text-flame-300 underline hover:text-flame">זכות הביטול</Link>
+              </p>
+            </div>
             {/* The one button the whole site leads to — it should look like it.
                 Solid brand green, not the glassy primary that sat back into
                 the page. Orders say what the click does; questions stay a
