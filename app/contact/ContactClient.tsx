@@ -58,6 +58,15 @@ const INQUIRY_FOR: Record<CustType, { id: Inquiry; label: string }[]> = {
   ],
 };
 
+/** The road an order takes, shown on the thank-you screen with the first step done. */
+const THANKS_STEPS = ["ההזמנה התקבלה", "בהדפסה", "בדרך אליך"];
+
+/** Confetti for the thank-you check — brand greens with a little gold. */
+const THANKS_BITS = Array.from({ length: 36 }, (_, i) => {
+  const a = (i / 36) * Math.PI * 2 + (i % 3) * 0.2, d = 90 + ((i * 37) % 110);
+  return { dx: Math.cos(a) * d, dy: Math.sin(a) * d - 60, r: (i * 47) % 720, c: ["#089a47", "#5FE39A", "#ffd23d", "#ffffff", "#2ee88a"][i % 5], w: 6 + (i % 4) * 2, h: 8 + ((i * 7) % 4) * 3, delay: (i % 8) * 14 };
+});
+
 export default function ContactClient() {
   const { items, removeItem, clearCart, setQty, addItem } = useOrderStore();
 
@@ -287,8 +296,16 @@ export default function ContactClient() {
     return (
       <div className="max-w-5xl mx-auto px-6 md:px-10 py-16 md:py-20">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good mb-6">
-            <Icon name="check" size={40} strokeWidth={2.5} />
+          {/* Peak-end: a purchase ends on a small celebration, not a form
+              that went quiet. A question gets the plain tick. */}
+          <div className="relative inline-flex mb-6">
+            {bought && <div className="bf-rays" aria-hidden />}
+            {bought && THANKS_BITS.map((b, i) => (
+              <span key={i} className="bf-bit" aria-hidden style={{ "--dx": `${b.dx}px`, "--dy": `${b.dy}px`, "--r": `${b.r}deg`, background: b.c, width: b.w, height: b.h, top: "50%", animationDelay: `${350 + b.delay}ms` } as React.CSSProperties} />
+            ))}
+            <div className={cn("relative inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-good/15 text-good", bought && "bf-done-check")}>
+              <Icon name="check" size={40} strokeWidth={2.5} />
+            </div>
           </div>
           <ProximityH1 className="text-4xl md:text-5xl font-black tracking-tightest mb-4">
             {bought ? "תודה על הקנייה!" : "תודה! קיבלנו את הפנייה."}
@@ -300,6 +317,20 @@ export default function ContactClient() {
                 ? "נחזור אליך תוך 24 שעות עם הצעת מחיר מפורטת, mock-up דיגיטלי, ולוז ייצור."
                 : "נחזור אליך תוך 24 שעות בוואטסאפ. אם זה דחוף — אפשר לקפוץ ישר לשם."}
           </p>
+          {/* Where the order is: the first step already done, so what is left
+              reads as a short road rather than a wait. */}
+          {bought && (
+            <ol className="m-stagger mx-auto mb-10 flex max-w-md items-start justify-between gap-2 text-xs sm:text-sm" aria-label="מצב ההזמנה">
+              {THANKS_STEPS.map((label, i) => (
+                <li key={label} style={{ "--i": i + 4 } as React.CSSProperties} className="flex flex-1 flex-col items-center gap-2">
+                  <span className={cn("inline-flex h-9 w-9 items-center justify-center rounded-full border-2 font-bold", i === 0 ? "border-good bg-good text-ink-950" : "border-ink-700 text-ink-500")}>
+                    {i === 0 ? <Icon name="check" size={16} strokeWidth={3} /> : i + 1}
+                  </span>
+                  <span className={i === 0 ? "font-bold text-ink-100" : "text-ink-400"}>{label}</span>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
 
         {bought && coupon && (
