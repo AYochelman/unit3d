@@ -15,14 +15,8 @@ import { parseHours } from "./costing";
  * gift line is added and removed by components/gift/GiftWatcher as the total
  * crosses the threshold, so the order always says whether it was earned.
  */
-export const GIFT = {
-  threshold: 100,
-  title: "פידג'ט הפתעה",
-  /** The surprise is picked from fidgets that sell for less than this. */
-  maxValue: 10,
-  /** One line in the cart and in the WhatsApp message (tells the owner what to pack). */
-  line: "מתנה מאיתנו בקנייה מעל ₪100 · פידג'ט הפתעה בשווי מתחת ל-₪10, לפי בחירתנו",
-};
+export { GIFT } from "./promos";
+import { GIFT } from "./promos";
 
 export const isGift = (it: CartItem) => it.meta?.gift === true;
 
