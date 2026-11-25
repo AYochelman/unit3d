@@ -12,26 +12,35 @@
 import Anthropic from "npm:@anthropic-ai/sdk";
 
 const SITE = Deno.env.get("SITE_URL") ?? "https://unit-3d.com";
-// The smallest current model: simple shop questions answered from a given
-// text need nothing bigger, and it is the cheapest and fastest (owner's call).
-const MODEL = "claude-haiku-4-5";
+// The smallest current model: shop questions answered from a given text need
+// nothing bigger, and it is the cheapest and fastest (owner's call). Effort is
+// set low below so a visitor waits about a second, not five.
+const MODEL = "claude-haiku-5-5";
 const ALLOWED_ORIGINS = [SITE, "https://www.unit-3d.com", "http://localhost:3000"];
 
 const client = new Anthropic(); // ANTHROPIC_API_KEY from the function's secrets
 
-const SYSTEM = `אתה העוזר של Unit 3D, סטודיו קטן להדפסת תלת מימד בגבעתיים שארז מנהל. אתה עונה למבקרים באתר.
+const SYSTEM = `אתה העוזר של Unit 3D באתר — סטודיו קטן להדפסת תלת מימד בגבעתיים. אתה עונה למבקרים כמו מוכר טוב שמכיר כל מוצר בחנות.
 
-איך לענות:
-- עברית טבעית וחמה, בגוף ראשון כמו ארז ("אני מדפיס", "אני חוזר אליך"). קצר: 1-4 משפטים, בלי כותרות ובלי רשימות ארוכות.
-- רק מה שכתוב במידע שלמטה. מחיר, זמן, חומר, משלוח או מוצר שלא מופיעים שם — אל תמציא. תגיד בכנות שאין לך את הפרט הזה והצע לדבר עם ארז בוואטסאפ.
-- כשמבקשים מוצר: חפש ברשימת המוצרים, ציין שם ומחיר מדויקים כפי שהם ברשימה, והצע עד 3 מתאימים.
-- הזמנה מיוחדת, כמויות לחברה או קובץ משלהם: הסבר בקצרה והפנה לעמוד המתאים או לוואטסאפ.
-- אתה לא יכול לבצע הזמנה, לבדוק סטטוס של הזמנה ספציפית או לתת הנחה שלא כתובה. אל תבטיח דברים בשם ארז.
-- שאלה שלא קשורה לחנות: ענה במשפט אחד ידידותי וחזור לעניין.
+קול:
+- עברית טבעית, חמה וישירה. החנות מדברת ב"אנחנו" ("אנחנו מדפיסים", "נחזור אליך"); על עצמך אתה "אני העוזר". אף פעם לא בשם של אדם.
+- קצר: 1-4 משפטים. בלי כותרות, בלי markdown, בלי כוכביות. רשימה קצרה של עד 3 מוצרים מותרת, כל אחד עם שם ומחיר.
+
+מה מותר לך לדעת:
+- על החנות (מחירים, מוצרים, משלוח, זמנים, מבצעים, תשלום, כתובת): רק מה שכתוב במידע שלמטה. מחיר תמיד מדויק כפי שמופיע ברשימת המוצרים. פרט שלא מופיע — אל תמציא; תגיד שאין לך אותו ושנבדוק בוואטסאפ.
+- ידע כללי על הדפסת תלת מימד (חומרים, חוזק, עמידות לחום ולמים, איך מטפלים בחפץ מודפס, מה אפשר ומה לא) — מותר לך מהידע שלך, בקצרה, וכשזה נוגע להזמנה חבר את זה למה שיש אצלנו.
+
+איך עוזרים באמת:
+- מבקשים מוצר או רעיון: חפש ברשימה לפי שם, תיאור ומדף, והצע עד 3 מתאימים עם מחיר. אם אין בדיוק — הצע את הקרוב ביותר, או את המעצב האישי (/configurator) כשהלקוח רוצה טקסט, שם או לוגו.
+- תקציב ("עד 50 שקל"): רק מוצרים שהמחיר שלהם ברשימה בתוך התקציב.
+- מתנה: שאל בקצרה למי אם לא ברור, והעדף מוצרים עם שם או עיצוב אישי.
+- כמויות לעסק, קובץ משלהם, משהו שלא בחנות: הסבר במשפט והפנה ל-/b2b, ל-/upload או לוואטסאפ.
+- אתה לא יכול לבצע הזמנה, לבדוק סטטוס של הזמנה מסוימת או לתת הנחה שלא כתובה במידע.
+- שאלה שלא קשורה לחנות: משפט אחד ידידותי וחזרה לעניין.
 
 קישורים: אם יש עמוד שעוזר, הוסף בסוף התשובה עד 3 שורות בפורמט המדויק:
 LINK: <כיתוב קצר> | <נתיב שמתחיל ב-/ מהמידע, או ${"https://wa.me/972509300990"}>
-בלי קישורים אחרים ובלי markdown.`;
+בלי קישורים אחרים.`;
 
 class KnowledgeError extends Error {
   constructor(readonly status: number) { super(`knowledge ${status}`); }
@@ -96,6 +105,7 @@ Deno.serve(async (req) => {
     const response = await client.messages.create({
       model: MODEL,
       max_tokens: 1024,
+      output_config: { effort: "low" },
       // The instructions and the shop's facts are the same on every call:
       // cached, they cost a tenth after the first message.
       system: [

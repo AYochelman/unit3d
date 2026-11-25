@@ -1,6 +1,10 @@
 import { SHELF_LABEL } from "./candidates";
-import { sellableModels, suggestPrice, type ImportedModel, type ImportedShelf } from "./imported";
+import type { ImportedShelf } from "./imported";
 import { heName as heNameOf } from "./he-names";
+import { PRODUCTS, CONFIG_PRODUCTS, fidgetGrams } from "./products";
+import { FIDGETS } from "./data";
+import { parseHours } from "./costing";
+import { sitePrice } from "./site-price";
 
 /**
  * The help bot's knowledge of what is actually in the shop.
@@ -23,6 +27,8 @@ export type Found = {
   price: number;
   hours: number;
   href: string;
+  /** One line about the product, for the AI helper's knowledge file. */
+  desc: string;
   /** True when the words typed appear in the product's own name, not only in
    *  its description or its shelf. Lets the caller tell "יש לכם דרקון?" (a
    *  product) apart from "מה יש למשרד?" (a shelf, browsed). */
@@ -62,11 +68,54 @@ const STOP = new Set(
     .split(/\s+/).map((w) => fold(w)),
 );
 
-const heName = (m: ImportedModel): string =>
-  heNameOf(m.id, m.name);
+/**
+ * Everything the shop sells, as the bot knows it.
+ *
+ * It used to be the imported MakerWorld models only, priced with a formula of
+ * its own — so the bot did not know the shop's own products (door sign,
+ * business cards, mystery box, pet tags, the 3D name keychain) and quoted
+ * prices the site does not charge. Now it is every shelf product, every
+ * fidget and every designer product, priced by sitePrice() — the same rule
+ * the shelves use, from the same admin-settings.json.
+ */
+type Item = { id: string; name: string; en: string; shelf: ImportedShelf; shelfLabel: string; desc: string; price: number; hours: number; grams: number; href: string };
 
-const priceOf = (m: ImportedModel): number =>
-  suggestPrice(m.grams, m.hours, 1, m.material ?? "pla_plus");
+const SHELF_OF: Record<string, ImportedShelf> = { pets: "pets", home: "home", office: "office", statues: "statues", trendy: "trendy", b2b: "b2b", smoke: "smoke", screen: "screen" };
+
+function items(): Item[] {
+  const out: Item[] = [];
+  const seen = new Set<string>();
+  for (const p of PRODUCTS) {
+    if (seen.has(p.id)) continue;
+    seen.add(p.id);
+    const shelf = SHELF_OF[p.category] ?? "trendy";
+    out.push({
+      id: p.id, name: heNameOf(p.id, p.name), en: p.nameEn ?? "", shelf, shelfLabel: SHELF_LABEL[shelf] ?? "",
+      desc: p.desc ?? "", hours: p.hours, grams: p.grams, href: `/products/${p.id}`,
+      price: sitePrice({ id: p.id, price: p.price, grams: p.grams, hours: p.hours, material: p.material, colors: 1, pieces: p.pieces }),
+    });
+  }
+  for (const f of FIDGETS) {
+    if (seen.has(f.id)) continue;
+    seen.add(f.id);
+    const grams = fidgetGrams(f), hours = parseHours(f.time);
+    out.push({
+      id: f.id, name: heNameOf(f.id, f.name), en: f.name, shelf: "fidget", shelfLabel: SHELF_LABEL.fidget ?? "פידג'טים",
+      desc: f.desc ?? "", hours, grams, href: `/fidgets/${f.id}`,
+      price: sitePrice({ id: f.id, price: f.price, grams, hours }),
+    });
+  }
+  // The designer: things made from the customer's own text or design.
+  for (const c of CONFIG_PRODUCTS) {
+    const id = `cfg-${c.id}`;
+    out.push({
+      id, name: c.label, en: "", shelf: "trendy", shelfLabel: "מעצב אישי",
+      desc: c.desc, hours: c.hours, grams: c.grams, href: `/configurator?product=${c.id}`,
+      price: sitePrice({ id, price: c.basePrice, grams: c.grams, hours: c.hours, material: c.material }),
+    });
+  }
+  return out;
+}
 
 /**
  * Where a shelf actually lives.
@@ -88,34 +137,31 @@ export const SHELF_ROUTE: Record<ImportedShelf, string> = {
   b2b: "/b2b",
 };
 
-/** Same split for a single model: the bendy things have their own detail page. */
-const modelHref = (m: ImportedModel): string =>
-  m.shelf === "flexi" || m.shelf === "fidget" ? `/fidgets/${m.id}` : `/products/${m.id}`;
-
-const toFound = (m: ImportedModel, nameHit = false): Found => ({
+const toFound = (m: Item, nameHit = false): Found => ({
   id: m.id,
-  name: heName(m),
+  name: m.name,
   shelf: m.shelf,
-  shelfLabel: SHELF_LABEL[m.shelf] ?? "",
-  price: priceOf(m),
+  shelfLabel: m.shelfLabel,
+  price: m.price,
   hours: m.hours,
-  href: modelHref(m),
+  href: m.href,
+  desc: m.desc,
   nameHit,
 });
 
 /** Built once. The catalogue does not change while a page is open. */
-let index: { model: ImportedModel; title: string; haystack: string }[] | null = null;
+let index: { model: Item; title: string; haystack: string }[] | null = null;
 
 const build = () =>
-  (index ??= sellableModels().map((m) => {
+  (index ??= items().map((m) => {
     // The Hebrew name, the original title and the shelf all identify a product
     // to somebody: one person types "דרקון", another "dragon", another
     // "פידג'ט". The name is kept apart so a hit on it can count for more.
-    const title = fold(`${heName(m)} ${m.name}`);
+    const title = fold(`${m.name} ${m.en}`);
     return {
       model: m,
       title,
-      haystack: `${title} ${fold(`${SHELF_LABEL[m.shelf] ?? ""} ${m.desc ?? ""}`)}`,
+      haystack: `${title} ${fold(`${m.shelfLabel} ${m.desc}`)}`,
     };
   }));
 
@@ -136,7 +182,7 @@ export function findProducts(input: string, limit = 3): Found[] {
     .filter((w) => !STOP.has(w));
   if (!words.length) return [];
 
-  const scored: { m: ImportedModel; score: number; nameHit: boolean }[] = [];
+  const scored: { m: Item; score: number; nameHit: boolean }[] = [];
   for (const { model, title, haystack } of build()) {
     let score = 0;
     let nameHit = false;
@@ -145,7 +191,12 @@ export function findProducts(input: string, limit = 3): Found[] {
       // A longer word is a more specific claim; a whole-word hit beats a
       // fragment, which keeps "תג" from matching every word containing it.
       score += new RegExp(`(^| )${w}( |$)`).test(haystack) ? w.length * 2 : w.length;
-      if (title.includes(w)) nameHit = true;
+      // A word that is in the name counts again: "שלט לדלת" is the door
+      // sign, not every sign whose description mentions a door.
+      if (title.includes(w)) {
+        nameHit = true;
+        score += w.length;
+      }
     }
     if (score > 0) scored.push({ m: model, score, nameHit });
   }
