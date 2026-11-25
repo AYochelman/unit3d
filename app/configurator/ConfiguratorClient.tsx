@@ -67,6 +67,14 @@ const DESIGN_SURCHARGE = PERSONALIZE_PRICE;
 const DESIGN_EXTRA_COLOR = EXTRA_COLOR_PRICE;
 /** The 3D name keychain's second colour: one swap between base and letters, so less (owner, 10.11). */
 const KEYCHAIN_3D_EXTRA_COLOR = 5;
+
+/**
+ * The sample name a product opens with. Keychains start in English (owner's
+ * call, 25.11): most of them are ordered with a Latin name, and the script
+ * styles are drawn for Latin letters. Everything else keeps the Hebrew sample.
+ */
+const KEYCHAIN_IDS = new Set(["keychain", "name_keychain"]);
+const defaultText = (id: string) => (KEYCHAIN_IDS.has(id) ? "Olivia" : "יואב");
 const TPU_COLORS = new Set(["black", "white", "red", "blue", "orange", "green"]);
 
 /** "50×35mm" / "Ø90mm" / "Ø90mm ×4" → [w, h] in mm. */
@@ -146,7 +154,7 @@ export default function ConfiguratorClient({
     product: startProduct,
     model: CONFIG_PRODUCT_BY_ID[startProduct].models?.items[0]?.id ?? "",
     shape: "round",
-    text: "יואב",
+    text: defaultText(startProduct),
     number: "12345",
     font: "sans",
     color: CONFIG_PRODUCT_BY_ID[startProduct].material === "tpu" ? "black" : "orange",
@@ -240,6 +248,8 @@ export default function ConfiguratorClient({
       ...c,
       product: id,
       model: p.models?.items[0]?.id ?? "",
+      // A name nobody typed yet follows the product: keychains open in English.
+      text: c.text === defaultText(c.product) ? defaultText(id) : c.text,
       size: "sm",
       mode: p.hasDesigner ? c.mode : "text",
       design: emptyDesign(p.face[0], p.face[1]),
@@ -606,7 +616,7 @@ export default function ConfiguratorClient({
                       )}
                       <div className="space-y-3 mb-5">
                         <Field label="שורה ראשונה (שם)">
-                          <Input value={config.text} onChange={(e) => update("text", e.target.value.slice(0, 12))} placeholder="יואב" />
+                          <Input value={config.text} onChange={(e) => update("text", e.target.value.slice(0, 12))} placeholder="Olivia" />
                         </Field>
                         <Field label="שורה שנייה" optional>
                           <Input value={config.number} onChange={(e) => update("number", e.target.value.slice(0, 14))} placeholder="מספר אישי, יחידה, טלפון" />
