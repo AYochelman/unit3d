@@ -7,30 +7,9 @@ import type { useLivePricer } from "./live-price";
 import type { CartItem } from "./order-store";
 import type { Fidget } from "./types";
 
-/**
- * Black Friday 2026 — everything about the sale in one place.
- *
- * The deal: buy two fidgets, a third worth up to FREE_MAX is free. The bar,
- * the popup and the cart all read these numbers, so moving a date or the cap
- * is a one-line change here.
- */
-export const BF = {
-  /** Israel time. The sale runs Black Friday to the end of Cyber Monday. */
-  start: new Date("2026-11-27T00:00:00+02:00"),
-  end: new Date("2026-12-01T00:00:00+02:00"),
-  /** Fidgets the customer pays for before the free one unlocks. */
-  need: 2,
-  /** The free fidget's live price may be at most this. */
-  freeMax: 15,
-  /**
-   * Mystery boxes set aside for the sale. Typed by hand: there is no server
-   * that counts orders as they come in, so update it as boxes go out —
-   * a "left" number that never moves is a number nobody believes.
-   */
-  mysteryLeft: 30,
-  /** What a regular mystery box holds; the sale edition adds one more on us. */
-  mysteryItems: 5,
-};
+// The numbers live in lib/promos.ts (no "use client") so the help bot can quote them.
+export { BF } from "./promos";
+import { BF } from "./promos";
 
 export type BfPhase = "before" | "live" | "over";
 

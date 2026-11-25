@@ -6,6 +6,10 @@ import { allProducts, catalogueSize, findProducts, findShelf, fold as foldHe, sh
 // a second round trip. See lib/helpbot-lazy.ts.
 export * as catalog from "./helpbot-catalog";
 import type { ImportedShelf } from "./imported";
+import { BF, GIFT } from "./promos";
+
+/** "27.11" in Israel time, whatever zone the build machine runs in. */
+const ilDay = (d: Date) => d.toLocaleDateString("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric" });
 
 // A small, honest help bot: it matches what you typed against a list of
 // intents and answers from the same facts the site states elsewhere. There is
@@ -78,7 +82,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
   {
     id: "time",
     chip: "כמה זמן זה לוקח?",
-    keys: ["מתי יגיע", "זמן הדפסה", "מהר", "כמה ימים"],
+    keys: ["מתי יגיע", "זמן הדפסה", "מהר", "כמה ימים", "זמן אספקה", "כמה זמן", "תוך כמה", "מגיע"],
     frames: ["כמה זמן", "תוך כמה", "מתי"],
     text:
       "רוב ההזמנות יוצאות תוך 3-5 ימי עסקים מרגע שאישרנו את העיצוב. מחזיק מפתחות פשוט לרוב תוך 48 שעות. פסלים גדולים והזמנות בכמות יכולים לקחת 7-10 ימים. אם יש לך תאריך יעד — תגיד לנו אותו מראש ונגיד לך כן או לא.",
@@ -88,7 +92,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
   {
     id: "shipping",
     chip: "משלוחים",
-    keys: ["משלוח", "שילוח", "דואר", "שליח", "איסוף", "לאסוף", "כתובת"],
+    keys: ["משלוח", "שילוח", "דואר", "שליח"],
     text:
       "דואר רשום ₪25 (3-5 ימים), שליח עד הבית ₪45 (יום-יומיים), ואיסוף עצמי מגבעתיים בחינם. מעל ₪200 המשלוח חינם.",
     next: ["time", "payment"],
@@ -151,7 +155,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
     chip: "פידג'טים ופלקסי",
     keys: ["פידגט", "פידג'ט", "פלקסי", "flexi", "דרקון", "ספינר", "קוביה", "מפרקי"],
     text:
-      "שתי מדפים: פלקסי — יצורים מפרקיים (דרקונים, נחשים, תמנונים) שיוצאים מהמדפסת כשהם כבר זזים, בלי דבק והרכבה. ופידג'טים — ספינרים, קוביות אינסוף, סליידרים וכפתורים. אפשר לסנן ביניהם בראש העמוד.",
+      "שני מדפים: פלקסי — יצורים מפרקיים (דרקונים, נחשים, תמנונים) שיוצאים מהמדפסת כשהם כבר זזים, בלי דבק והרכבה. ופידג'טים — ספינרים, קוביות אינסוף, סליידרים וכפתורים. אפשר לסנן ביניהם בראש העמוד.",
     links: [{ label: "לפידג'טים", href: "/fidgets" }],
     next: ["price", "colors"],
   },
@@ -167,15 +171,40 @@ export const BOT_ANSWERS: BotAnswer[] = [
   {
     id: "b2b",
     chip: "הזמנה לעסק",
-    keys: ["עסק", "חברה", "לוגו", "עובדים", "כמות", "חשבונית", "b2b", "מוסד", "כנס"],
+    keys: ["עסק", "חברה", "לוגו", "עובדים", "כמות", "חשבונית", "b2b", "מוסד", "כנס", "עם לוגו", "ממותג", "יחידות עם", "כרטיס ביקור"],
     text:
       "לעסקים אנחנו עושים מ-10 יחידות ומעלה, עם הלוגו שלכם, אריזה אישית וחשבונית מס. מעל 5 יחידות יש 10% הנחת כמות אוטומטית.",
     links: [{ label: "עמוד עסקים", href: "/b2b" }],
     next: ["price", "shipping"],
   },
   {
+    id: "location",
+    chip: "איפה אתם?",
+    keys: ["איפה אתם", "נמצאים", "כתובת", "איסוף", "לאסוף", "איסוף עצמי", "שעות", "פתוחים", "פתוח", "גבעתיים", "להגיע אליכם", "חנות פיזית"],
+    text:
+      "אנחנו סטודיו להדפסה בסירקין 20, גבעתיים. אין חנות פתוחה עם שעות קבועות — איסוף עצמי הוא בחינם ובתיאום מראש בוואטסאפ, כשההזמנה מוכנה. אפשר לכתוב לנו בכל שעה, ונחזור הכי מהר שאפשר.",
+    links: [{ label: "וואטסאפ", href: CONTACT.whatsapp }],
+    next: ["shipping", "time"],
+  },
+  {
+    id: "blackfriday",
+    chip: "בלאק פריידי",
+    keys: ["בלאק פריידי", "בלק פריידי", "black friday", "בלאק", "סייבר מאנדיי", "cyber monday", "מבצע", "מבצעים"],
+    text:
+      `בלאק פריידי אצלנו: ${ilDay(BF.start)}-${ilDay(new Date(BF.end.getTime() - 1))}. קונים ${BF.need} פידג'טים — והשלישי עלינו (בשווי עד ₪${BF.freeMax}). קופסת המסתורין מקבלת פריט נוסף מתנה, ${BF.mysteryItems + 1} במקום ${BF.mysteryItems}. וכל השנה: בקנייה מעל ₪${GIFT.threshold} — ${GIFT.title} מתנה מאיתנו.`,
+    links: [{ label: "לפידג'טים", href: "/fidgets" }],
+    next: ["fidgets", "gift"],
+  },
+  {
+    id: "gift",
+    chip: "רעיון למתנה",
+    keys: ["מתנה", "מתנות", "יום הולדת", "יומולדת", "להפתיע", "הפתעה", "יום נישואין", "לחבר", "לחברה", "לאבא", "לאמא", "לילד"],
+    text: "",
+    next: ["designer", "price"],
+  },
+  {
     id: "discount",
-    keys: ["הנחה", "כמות", "זול יותר", "מבצע", "קופון"],
+    keys: ["הנחה", "כמות", "זול יותר", "קופון"],
     text:
       "מ-5 יחידות של אותו פריט יש 10% הנחה אוטומטית בסל. להזמנות עסקיות גדולות אפשר לדבר על מחיר נפרד.",
     next: ["b2b", "price"],
@@ -201,7 +230,7 @@ export const BOT_ANSWERS: BotAnswer[] = [
     id: "payment",
     keys: ["תשלום", "לשלם", "משלמים", "משלם", "תשלומים", "אשראי", "ביט", "פייבוקס", "העברה", "חשבונית"],
     text:
-      "התשלום נסגר מול ארז אחרי שמאשרים את ההזמנה — ביט, פייבוקס, העברה או אשראי. באתר עצמו לא נשמרים פרטי תשלום.",
+      "התשלום נסגר מולנו אחרי שמאשרים את ההזמנה — ביט, פייבוקס, העברה או אשראי. באתר עצמו לא נשמרים פרטי תשלום.",
     next: ["shipping", "contact"],
   },
   {
@@ -302,6 +331,61 @@ function shelfAnswer(shelf: { shelf: ImportedShelf; label: string }, examples: F
 }
 
 /**
+ * Gifts: the things people actually give — personal ones first, because a
+ * name on it is what turns an object into a present. Prices come from the
+ * same catalogue the shelves price from.
+ */
+const GIFT_IDS = ["cfg-name_keychain", "home-door-sign-custom", "mystery-box", "cfg-keychain"];
+function giftAnswer(): BotAnswer {
+  const all = allProducts();
+  const picks = GIFT_IDS.map((id) => all.find((f) => f.id === id)).filter((f): f is Found => !!f && f.price > 0);
+  const list = picks.map((f) => `${f.name} — ${ils(f.price)}`).join(" · ");
+  return {
+    id: "gift",
+    keys: [],
+    text:
+      `מתנה עם שם עליה תמיד עובדת: ${list}. לחיילים — סמל היחידה שלו, ולילדים — פידג'ט או דרקון גמיש. בקנייה מעל ₪${GIFT.threshold} מצרפים ${GIFT.title} מאיתנו. ספר לי למי ובאיזה תקציב ("עד 50 שקל") ואמצא משהו מדויק.`,
+    links: picks.slice(0, 3).map((f) => ({ label: f.name, href: f.href })),
+    next: ["designer", "units"],
+  };
+}
+
+/**
+ * "משהו עד 30 שקל" — a budget, not a product name. The number used to be
+ * searched as a word and matched a cigarette case for 20 cigarettes.
+ */
+function budgetAnswer(input: string): BotAnswer | null {
+  const m = input.match(/(?:עד|מתחת ל-?|פחות מ-?|ב-?|תקציב(?: של)?)\s*(?:₪\s*)?(\d{1,4})\s*(?:₪|ש"ח|שח|שקל|שקלים|nis)?/i);
+  if (!m) return null;
+  const cap = Number(m[1]);
+  if (!cap || !/(שקל|₪|ש"ח|שח|תקציב|עד|מתחת|פחות)/.test(input)) return null;
+  // Narrow by the rest of the sentence when it names something ("מתנה לכלב עד 40").
+  const rest = input.replace(m[0], " ");
+  const named = findProducts(rest, 40).filter((f) => f.price > 0 && f.price <= cap);
+  const pool = named.length
+    ? named
+    : allProducts()
+        .filter((f) => f.price > 0 && f.price <= cap && !f.id.startsWith("mw-"))
+        .sort((a, b) => b.price - a.price);
+  if (!pool.length) {
+    const cheapest = Math.min(...allProducts().map((f) => f.price).filter((p) => p > 0));
+    return { id: "budget", keys: [], text: `עד ₪${cap} אין לנו כרגע מוצר מוכן — הזול ביותר בחנות מתחיל ב-₪${cheapest}. אפשר לכתוב לנו ונראה מה אפשר לעשות.`, links: [{ label: "וואטסאפ", href: CONTACT.whatsapp }] };
+  }
+  // A spread rather than five of the same: one per shelf first.
+  const seen = new Set<string>();
+  const picks: Found[] = [];
+  for (const f of pool) if (!seen.has(f.shelfLabel) && picks.length < 4) { seen.add(f.shelfLabel); picks.push(f); }
+  for (const f of pool) if (picks.length < 4 && !picks.includes(f)) picks.push(f);
+  return {
+    id: "budget",
+    keys: [],
+    text: `עד ₪${cap} יש לנו למשל: ${picks.map((f) => `${f.name} — ${ils(f.price)}`).join(" · ")}.`,
+    links: picks.slice(0, 3).map((f) => ({ label: f.name, href: f.href })),
+    next: ["gift", "shipping"],
+  };
+}
+
+/**
  * Route free text to an intent: the answer whose keywords match the most
  * characters wins, so "כמה זמן לוקח משלוח" prefers the shipping answer over a
  * bare "כמה" match. Returns null when nothing is close enough — the caller
@@ -335,8 +419,12 @@ export function matchAnswer(input: string): BotAnswer | null {
     return winner;
   };
 
+  const budget = budgetAnswer(input);
+  if (budget) return budget;
+
   // A topic word always beats a bare question wrapper.
-  const topic = best((a) => a.keys);
+  const picked = best((a) => a.keys);
+  const topic = picked?.id === "gift" ? giftAnswer() : picked;
 
   /**
    * A named product beats a prepared answer.
@@ -358,12 +446,13 @@ export function matchAnswer(input: string): BotAnswer | null {
    * name a dragon, and "מתנה לעובדים בכמות" is a B2B question that happens to
    * contain the word gift.
    */
-  const PRODUCT_BEATS = new Set(["price", "pets", "fidgets", "statues", "colors", "materials"]);
+  const PRODUCT_BEATS = new Set(["price", "pets", "fidgets", "statues", "gift"]);
   // And only when the product's own NAME was typed. "באיזה חומר אתם מדפיסים"
   // is a question about materials, not about the one ashtray whose description
   // happens to mention them.
   const named = found.some((f) => f.nameHit);
-  const topicWins = topic !== null && (!PRODUCT_BEATS.has(topic.id) || !named);
+  const explain = /^(מה זה|מה זאת|מה ההבדל|מה עדיף|מה זה אומר)/.test(q);
+  const topicWins = topic !== null && (!PRODUCT_BEATS.has(topic.id) || !named || explain);
 
   // A browse question — the words typed name a shelf, not any product's name —
   // is answered by the shelf, with those products as the examples.
