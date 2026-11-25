@@ -32,7 +32,7 @@ export const fontFor = (style: StyleId, text: string): FontId => {
 };
 
 /** The text a style draws for what was typed (an empty field shows a placeholder). */
-export const shownText = (raw: string) => raw.trim() || "שם";
+export const shownText = (raw: string) => raw.trim() || "Name";
 
 
 export const STYLES: { id: StyleId; label: string; hint: string; colours: 1 | 2; ink: string; base: string }[] = [
