@@ -9,6 +9,7 @@ import DesignerCredit from "@/components/DesignerCredit";
 import { useFilaments } from "@/lib/palette";
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
+import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { cn } from "@/lib/cn";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/ui/Pill";
@@ -138,7 +139,10 @@ export default function FidgetDetailClient({ id }: { id: string }) {
   const baseMatAdd    = MATERIAL_BY_ID.pla_plus.priceAdd;
   const matSurcharge  = Math.max(0, mat.priceAdd - baseMatAdd);
   const unitPrice     = basePrice + scaleAdd + (variant?.surcharge ?? 0) + amsSurcharge + matSurcharge;
-  const totalPrice    = unitPrice * qty;
+  // The quantity tier the cart applies (lib/pricing.ts): without it, five
+  // fidgets carted from here went in at full price, and the 10% only came off
+  // if the quantity was then changed inside the cart.
+  const totalPrice    = lineTotal(unitPrice, qty);
   const displayColors = amsOn ? amsColors : variant?.colors ?? 1;
 
   const images: string[] = variant?.thumbnail
@@ -495,6 +499,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
                   {qty} × <span className="text-ink-300">{fmtILS(unitPrice)}</span>
                   {" = "}
                   <span className="text-ink-100 font-bold">{fmtILS(totalPrice)}</span>
+                  {bulkDiscount(qty) > 0 && <span className="text-good font-sans"> · {BULK_NOTE}</span>}
                 </span>
               )}
             </div>
@@ -509,7 +514,7 @@ export default function FidgetDetailClient({ id }: { id: string }) {
               </div>
               {qty > 1 && (
                 <div className="text-[11px] text-ink-500 mt-0.5">
-                  <bdi dir="ltr" className="font-mono">{fmtILS(unitPrice)}</bdi> ליחידה
+                  <bdi dir="ltr" className="font-mono">{fmtILS(Math.round(totalPrice / qty))}</bdi> ליחידה
                 </div>
               )}
             </div>
