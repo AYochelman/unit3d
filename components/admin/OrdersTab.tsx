@@ -12,7 +12,7 @@ import { useAdminStore } from "@/lib/admin-store";
 import { missingForLine } from "@/lib/parts-orders";
 import { restockLine } from "@/lib/parts";
 import {
-  DELIVERY_BY_ID, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
+  DELIVERY_BY_ID, deliveryPrice, decodeOrder, doneCount, fulfilment, lineDone, orderTotal, parseOrderMessage,
   type Fulfilment, type OrderDecision, type PlacedOrder,
 } from "@/lib/orders";
 import { adminDecide, adminOrders, adminProgress, isConfigured, markLiveEmailSent, markReadyEmailSent, saveShipment, sendLiveEmail, sendOrderEmail, sendReadyEmail, shopConfig, type EmailResult, type ShopConfig } from "@/lib/orders-remote";
@@ -635,7 +635,7 @@ function OrderRow({
               )}
               <div className="pt-1">
                 מסירה: <span className="text-ink-100">{d.label}</span>
-                <span className="text-ink-500"> · {d.price ? fmtILS(d.price) : "חינם"} · {d.note}</span>
+                <span className="text-ink-500"> · {deliveryPrice(d)} · {d.note}</span>
               </div>
             </div>
 

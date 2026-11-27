@@ -55,6 +55,9 @@ const AMS_OPTIONS = [
   { colors: 4, label: "4 צבעים", surcharge: 35 },
 ] as const;
 
+/** Read at the click, not during render: the clock is not render state. */
+const bfLiveAtClick = () => bfPhase(Date.now(), bfForced()) === "live";
+
 export default function ProductDetailClient({ id }: { id: string }) {
   // The built-in palette plus any spool the owner added in /admin.
   const FILAMENTS = useFilaments();
@@ -219,7 +222,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
     if (amsOn) lines.push(`AMS ${amsColors} צבעים (+${fmtILS(amsSurcharge)})`);
     if (qty > 1) lines.push(`כמות: ${qty}`);
     // Ordered during Black Friday: the limited edition, one more item on us.
-    if (id === "mystery-box" && bfPhase(Date.now(), bfForced()) === "live") {
+    if (id === "mystery-box" && bfLiveAtClick()) {
       lines.push(`מהדורת בלאק פריידי: פריט נוסף עלינו (${BF.mysteryItems + 1} פריטים)`);
     }
     addItem({
