@@ -20,11 +20,20 @@ import { fmtILS } from "./format";
  */
 export type DeliveryId = "pickup" | "post" | "courier";
 
-export const DELIVERY: { id: DeliveryId; label: string; price: number; note: string }[] = [
+/**
+ * Every way an order has ever been delivered. `off` hides one from the order
+ * form without forgetting it: old orders that chose it still parse and show
+ * their label in /admin. The home courier is off for now (owner, 27.11);
+ * delete the flag to bring it back.
+ */
+export const DELIVERY: { id: DeliveryId; label: string; price: number; note: string; off?: boolean }[] = [
   { id: "pickup", label: "איסוף עצמי", price: 0, note: "גבעתיים · בתיאום מראש" },
   { id: "post", label: "דואר רשום", price: 25, note: "3-5 ימי עסקים" },
-  { id: "courier", label: "שליח עד הבית", price: 45, note: "יום-יומיים" },
+  { id: "courier", label: "שליח עד הבית", price: 45, note: "יום-יומיים", off: true },
 ];
+
+/** What the customer can choose today. */
+export const DELIVERY_OPEN = DELIVERY.filter((d) => !d.off);
 
 export const DELIVERY_BY_ID = Object.fromEntries(DELIVERY.map((d) => [d.id, d])) as Record<DeliveryId, (typeof DELIVERY)[number]>;
 

@@ -17,7 +17,7 @@ import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
-import { DELIVERY, makeRef, needsAddress, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
+import { DELIVERY, DELIVERY_OPEN, makeRef, needsAddress, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
 import { placeOrder, sendOrderEmail } from "@/lib/orders-remote";
 import { track } from "@/lib/analytics";
 import { PRODUCTS } from "@/lib/products";
@@ -854,7 +854,7 @@ export default function ContactClient() {
               איך להעביר לך? <span className="text-flame">*</span>
             </div>
             <div className="grid sm:grid-cols-3 gap-2">
-              {DELIVERY.map((d) => (
+              {DELIVERY_OPEN.map((d) => (
                 <button
                   key={d.id}
                   type="button"
