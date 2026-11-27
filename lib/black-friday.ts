@@ -53,9 +53,22 @@ export const bfFreeEarned = (items: CartItem[]) =>
   items.filter((it) => it.source === "fidgets" && !isBfFree(it) && it.meta?.gift !== true).reduce((n, it) => n + it.qty, 0) >= BF.need;
 
 /** The popup, opened from the bar, from a timer, or from anywhere else. */
+/**
+ * Whether the popup already opened by itself in this browser session.
+ *
+ * A session cookie (no max-age: the browser drops it when it closes), because
+ * the in-memory flag forgot on every full page load — opening a link from
+ * Instagram, a refresh, a new tab — and the popup jumped up again each time.
+ * Not localStorage (the project keeps none); documented on /cookies and in
+ * the privacy policy. The bar above the header still opens it any time.
+ */
+const SEEN_COOKIE = "u3d_bf_seen";
+const seenBefore = () => typeof document !== "undefined" && document.cookie.includes(`${SEEN_COOKIE}=1`);
+const markSeen = () => { document.cookie = `${SEEN_COOKIE}=1; path=/; SameSite=Lax`; };
+
 export const useBfStore = create<{ open: boolean; seen: boolean; show: () => void; hide: () => void }>((set) => ({
   open: false,
-  seen: false,
-  show: () => set({ open: true, seen: true }),
+  seen: seenBefore(),
+  show: () => { markSeen(); set({ open: true, seen: true }); },
   hide: () => set({ open: false }),
 }));

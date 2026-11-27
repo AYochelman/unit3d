@@ -67,7 +67,8 @@ export default function PrivacyPage() {
         </p>
         <p>
           בנוסף, האתר עצמו רושם סטטיסטיקה אנונימית על הגלישה — העמוד, המקור וסוג המכשיר, עם מזהה
-          אקראי שנמחק בסגירת הלשונית — ואם אישרת, גם Google Analytics. ראה{" "}
+          אקראי שנמחק בסגירת הלשונית — ואם אישרת, גם Google Analytics. בזמן מבצע נשמרת גם עוגייה
+          שזוכרת שחלון המבצע כבר הוצג לך, ונמחקת בסגירת הדפדפן. ראה{" "}
           <Link href="/cookies" className="text-flame-300 underline hover:text-flame">מדיניות העוגיות</Link>.
         </p>
       </Section>

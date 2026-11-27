@@ -23,14 +23,21 @@ export type DeliveryId = "pickup" | "post" | "courier";
 /**
  * Every way an order has ever been delivered. `off` hides one from the order
  * form without forgetting it: old orders that chose it still parse and show
- * their label in /admin. The home courier is off for now (owner, 27.11);
- * delete the flag to bring it back.
+ * their label in /admin. `quote` means the price is worked out with the
+ * customer afterwards, so nothing is added to the total. The home courier is
+ * on request for now (owner, 27.11): give it a price and drop `quote` to sell
+ * it at a fixed rate again.
  */
-export const DELIVERY: { id: DeliveryId; label: string; price: number; note: string; off?: boolean }[] = [
+export const DELIVERY: { id: DeliveryId; label: string; price: number; note: string; off?: boolean; quote?: boolean }[] = [
   { id: "pickup", label: "איסוף עצמי", price: 0, note: "גבעתיים · בתיאום מראש" },
   { id: "post", label: "דואר רשום", price: 25, note: "3-5 ימי עסקים" },
-  { id: "courier", label: "שליח עד הבית", price: 45, note: "יום-יומיים", off: true },
+  // The label stays as it was: parseOrderMessage matches old orders by it.
+  { id: "courier", label: "שליח עד הבית", price: 0, note: "נבדוק מחיר וזמן ונחזור אליך", quote: true },
 ];
+
+/** "₪25", "חינם", or "בבירור" for a delivery priced afterwards. */
+export const deliveryPrice = (d: { price: number; quote?: boolean }): string =>
+  d.quote ? "בבירור" : d.price ? fmtILS(d.price) : "חינם";
 
 /** What the customer can choose today. */
 export const DELIVERY_OPEN = DELIVERY.filter((d) => !d.off);
@@ -286,7 +293,7 @@ export function orderMessage(o: PlacedOrder): string {
   out.push(
     "",
     ...(o.discount ? [`הנחה: ${o.discount.code} · ${o.discount.label} · -${fmtILS(o.discount.off)}`] : []),
-    `מסירה: ${d.label}${d.price ? ` · ${fmtILS(d.price)}` : " · חינם"}`,
+    `מסירה: ${d.label} · ${deliveryPrice(d)}`,
     ...(needsAddress(o.delivery) ? [`כתובת: ${o.customer.address?.trim() || "—"}`] : []),
     `הערות: ${o.note?.trim() || "—"}`,
     ...(o.marketing != null ? [`דיוור שיווקי (מייל ו-SMS): ${o.marketing ? "מאשר/ת" : "לא"}`] : []),

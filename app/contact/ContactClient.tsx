@@ -17,7 +17,7 @@ import { CONTACT, cleanPhone, phoneLooksReal } from "@/lib/contact";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useOrderStore, type CartItem } from "@/lib/order-store";
 import { readOrder } from "@/lib/order-link";
-import { DELIVERY, DELIVERY_OPEN, makeRef, needsAddress, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
+import { DELIVERY, DELIVERY_OPEN, deliveryPrice, makeRef, needsAddress, orderWhatsapp, type DeliveryId, type PlacedOrder } from "@/lib/orders";
 import { placeOrder, sendOrderEmail } from "@/lib/orders-remote";
 import { track } from "@/lib/analytics";
 import { PRODUCTS } from "@/lib/products";
@@ -869,8 +869,8 @@ export default function ContactClient() {
                 >
                   <span className="flex items-baseline justify-between gap-2">
                     <span className="font-semibold text-sm text-ink-50">{d.label}</span>
-                    <span className={cn("text-sm font-bold", d.price ? "text-ink-200" : "text-good")}>
-                      {d.price ? fmtILS(d.price) : "חינם"}
+                    <span className={cn("text-sm font-bold", d.price || d.quote ? "text-ink-200" : "text-good")}>
+                      {deliveryPrice(d)}
                     </span>
                   </span>
                   <span className="block text-[11px] text-ink-400 mt-0.5">{d.note}</span>

@@ -1,4 +1,4 @@
-import { DELIVERY_BY_ID, SITE_URL, needsAddress, orderTotal, type OrderLine, type PlacedOrder } from "./orders";
+import { DELIVERY_BY_ID, SITE_URL, deliveryPrice, needsAddress, orderTotal, type OrderLine, type PlacedOrder } from "./orders";
 import { CONTACT } from "./contact";
 import { fmtILS } from "./format";
 import { courierName, trackUrl } from "./couriers";
@@ -140,7 +140,7 @@ export function orderEmailHtml(o: PlacedOrder): string {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       ${items != null ? infoRow("פריטים", esc(fmtILS(items))) : ""}
       ${o.discount ? infoRow("הנחה", `<span style="color:${GREEN};font-weight:700;">-${esc(fmtILS(o.discount.off))}</span> <span style="color:${MUTED};">(${esc(o.discount.code)} · ${esc(o.discount.label)})</span>`) : ""}
-      ${infoRow("מסירה", `${esc(d.label)} · ${d.price ? esc(fmtILS(d.price)) : "חינם"}<div style="font:400 12px/1.6 ${FONT};color:${MUTED};">${esc(d.note)}</div>`)}
+      ${infoRow("מסירה", `${esc(d.label)} · ${esc(deliveryPrice(d))}<div style="font:400 12px/1.6 ${FONT};color:${MUTED};">${esc(d.note)}</div>`)}
       ${needsAddress(o.delivery) && o.customer.address ? infoRow("כתובת", esc(o.customer.address)) : ""}
       ${o.note ? infoRow("הערות שלך", esc(o.note)) : ""}
     </table>
