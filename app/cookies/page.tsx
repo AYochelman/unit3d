@@ -4,7 +4,7 @@ import ConsentReset from "@/components/ConsentReset";
 
 export const metadata = {
   title: "מדיניות עוגיות · Unit 3D",
-  description: "אילו עוגיות יש באתר (רק Google Analytics, ורק בהסכמה), מה נמדד בלעדיהן, ואיך משנים את הבחירה.",
+  description: "אילו עוגיות יש באתר (Google Analytics רק בהסכמה, ושתי עוגיות קטנות שזוכרות בחירות), מה נמדד בלעדיהן, ואיך משנים את הבחירה.",
   alternates: { canonical: "/cookies/" },
 };
 
@@ -13,7 +13,7 @@ export default function CookiesPage() {
     <LegalPage
       current="/cookies"
       title="מדיניות עוגיות"
-      lead="רשימה קצרה: עוגייה אחת שזוכרת את הבחירה שלך, ועוגיות של Google Analytics — רק אם אישרת."
+      lead="רשימה קצרה: עוגייה שזוכרת את הבחירה שלך, עוגייה שזוכרת שחלון המבצע כבר נפתח, ועוגיות של Google Analytics — רק אם אישרת."
     >
       <Section n="1" title="Google Analytics — רק בהסכמה">
         <p>
@@ -30,11 +30,15 @@ export default function CookiesPage() {
         <p className="text-ink-400 text-sm">בדחייה, או בשינוי הבחירה לדחייה, עוגיות ה־Analytics שכבר הוצבו נמחקות.</p>
       </Section>
 
-      <Section n="2" title="עוגייה אחת שזוכרת את הבחירה">
+      <Section n="2" title="שתי עוגיות שזוכרות בשבילך">
         <dl className="mt-1">
           <Row k="u3d_consent">
             שומרת &quot;אישרת&quot; או &quot;דחית&quot; לשנה, כדי שלא נשאל אותך שוב בכל עמוד. היא
             חיונית לכך שהבחירה שלך תכובד, ולכן לא נדרשת עליה הסכמה.
+          </Row>
+          <Row k="u3d_bf_seen">
+            זוכרת שחלון המבצע כבר נפתח לך, כדי שלא יקפוץ שוב בכל עמוד. מכילה רק &quot;1&quot;,
+            ונמחקת כשסוגרים את הדפדפן.
           </Row>
         </dl>
       </Section>
@@ -80,7 +84,8 @@ export default function CookiesPage() {
       <Section n="6" title="איך לבדוק אותנו">
         <p>
           בכל דפדפן: F12 ← לשונית Application (או Storage) ← Cookies. לפני שבחרת לא תראה שם כלום;
-          אחרי דחייה — רק <span dir="ltr">u3d_consent</span>.
+          אחרי דחייה — רק <span dir="ltr">u3d_consent</span>, ובזמן מבצע גם{" "}
+          <span dir="ltr">u3d_bf_seen</span>.
         </p>
       </Section>
     </LegalPage>
