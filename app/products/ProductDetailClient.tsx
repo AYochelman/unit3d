@@ -37,6 +37,7 @@ import { useLivePrice, useQuoteOnly } from "@/lib/live-price";
 
 import { useOrderStore } from "@/lib/order-store";
 import { fmtILS } from "@/lib/format";
+import { BULK_NOTE, bulkDiscount, lineTotal } from "@/lib/pricing";
 import { fmtHours } from "@/lib/costing";
 import { cn } from "@/lib/cn";
 import type { MaterialId } from "@/lib/types";
@@ -178,7 +179,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const baseMatAdd = MATERIAL_BY_ID[p.material ?? "pla"].priceAdd;
   const matSurcharge = Math.max(0, mat.priceAdd - baseMatAdd);
   const unitPrice = basePrice + plateExtra + scaleAdd + matSurcharge + (option?.priceAdd ?? 0) + amsSurcharge;
-  const total = unitPrice * qty;
+  // Same quantity tier as the cart (lib/pricing.ts), so 5 units cost the
+  // same whether chosen here or raised to 5 inside the cart.
+  const total = lineTotal(unitPrice, qty);
 
   // An AMS print is a different plate: MakerWorld publishes its own weight and
   // time for it, and they are far higher than the single-colour ones. Costing
@@ -532,7 +535,7 @@ export default function ProductDetailClient({ id }: { id: string }) {
               ) : (
                 <>
                   <div className="pd-price text-3xl md:text-4xl font-black font-mono text-flame" dir="ltr">{fmtILS(total)}</div>
-                  {qty > 1 && <div className="text-[11px] text-ink-500 mt-0.5"><bdi dir="ltr" className="font-mono">{fmtILS(unitPrice)}</bdi> ליחידה</div>}
+                  {qty > 1 && <div className="text-[11px] text-ink-500 mt-0.5"><bdi dir="ltr" className="font-mono">{fmtILS(Math.round(total / qty))}</bdi> ליחידה{bulkDiscount(qty) > 0 && <span className="text-good"> · {BULK_NOTE}</span>}</div>}
                   <div className="pd-price-note text-xs text-ink-400 mt-1">כולל מע&quot;מ · משלוח מ-₪25, חינם מעל ₪200</div>
                 </>
               )}

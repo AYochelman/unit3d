@@ -685,7 +685,7 @@ export default function ContactClient() {
                         </div>
                         )}
                         {item.unitPrice != null && item.qty > 1 && (
-                          <span className="text-[10px] text-ink-500"><bdi dir="ltr" className="font-mono">{fmtILS(item.unitPrice)}</bdi> ליחידה</span>
+                          <span className="text-[10px] text-ink-500"><bdi dir="ltr" className="font-mono">{fmtILS(item.price != null ? Math.round(item.price / item.qty) : item.unitPrice)}</bdi> ליחידה</span>
                         )}
                       </div>
                     </div>
